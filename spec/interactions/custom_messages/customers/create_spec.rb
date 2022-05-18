@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe CustomMessages::Create do
+RSpec.describe CustomMessages::Customers::Create do
   let(:service) { relation.online_service }
   let(:template) { "foo" }
-  let(:scenario) { CustomMessages::Template::ONLINE_SERVICE_PURCHASED }
+  let(:scenario) { CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED }
   let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
   let(:after_days) { nil }
   let(:args) do
@@ -34,7 +34,7 @@ RSpec.describe CustomMessages::Create do
       let(:after_days) { nil }
 
       it "creates a custom_message" do
-        expect(CustomMessages::Next).not_to receive(:perform_later)
+        expect(CustomMessages::Customers::Next).not_to receive(:perform_later)
 
         outcome
       end
@@ -44,11 +44,11 @@ RSpec.describe CustomMessages::Create do
       let(:after_days) { 1 }
 
       it "schedules to send all the available customers" do
-        allow(CustomMessages::Next).to receive(:perform_later)
+        allow(CustomMessages::Customers::Next).to receive(:perform_later)
 
         result = outcome.result
 
-        expect(CustomMessages::Next).to have_received(:perform_later).with({
+        expect(CustomMessages::Customers::Next).to have_received(:perform_later).with({
           custom_message: result,
           receiver: relation.customer,
           schedule_right_away: true

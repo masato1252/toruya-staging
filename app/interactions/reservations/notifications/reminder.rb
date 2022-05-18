@@ -15,7 +15,7 @@ module Reservations
 
       def message
         booking_page = ReservationCustomer.find_by!(customer: customer, reservation: reservation).booking_page
-        template = ::CustomMessages::Template.run!(product: booking_page, scenario: ::CustomMessages::Template::BOOKING_PAGE_ONE_DAY_REMINDER)
+        template = ::CustomMessages::Customers::Template.run!(product: booking_page, scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER)
 
         Translator.perform(template, {
           customer_name: customer.name,

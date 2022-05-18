@@ -28,9 +28,9 @@ module Users
           referral_token && (referee = User.find_by(referral_token: referral_token)) &&
           referee.business_member?
         compose(Referrals::Build, referee: referee, referrer: user)
-        Notifiers::Users::LineUserSignedUp.run(receiver: user)
-        # TODO: Send sequence message
       end
+
+      Notifiers::Users::UserSignedUp.run(receiver: user) if user.new_record?
       compose(GoogleOauth::Create, user: user, auth: auth)
       compose(Users::BuildDefaultData, user: user)
       user.save!

@@ -25,7 +25,7 @@ module Reservations
       private
 
       def message
-        template = ::CustomMessages::Template.run!(product: booking_page, scenario: ::CustomMessages::Template::BOOKING_PAGE_BOOKED)
+        template = ::CustomMessages::Customers::Template.run!(product: booking_page, scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED)
 
         Translator.perform(template, booking_page.message_template_variables(customer, reservation))
       end

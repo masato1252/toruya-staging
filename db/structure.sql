@@ -726,8 +726,8 @@ ALTER SEQUENCE public.contact_groups_id_seq OWNED BY public.contact_groups.id;
 CREATE TABLE public.custom_messages (
     id bigint NOT NULL,
     scenario character varying NOT NULL,
-    service_type character varying NOT NULL,
-    service_id bigint NOT NULL,
+    service_type character varying,
+    service_id bigint,
     content text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -4830,6 +4830,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220223132827'),
 ('20220414131015'),
 ('20220418132425'),
-('20220504105105');
+('20220504105105'),
+('20220518024042');
 
 

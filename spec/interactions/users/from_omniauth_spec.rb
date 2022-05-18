@@ -25,6 +25,7 @@ RSpec.describe Users::FromOmniauth do
 
   describe "#execute" do
     it "creates a user" do
+      expect(Notifiers::Users::UserSignedUp).to receive(:run)
       expect {
         outcome
       }.to change {

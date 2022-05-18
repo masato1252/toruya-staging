@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ::CustomMessages::Template do
+RSpec.describe ::CustomMessages::Customers::Template do
   let(:product) { nil }
   let(:scenario) { nil }
   let(:args) do

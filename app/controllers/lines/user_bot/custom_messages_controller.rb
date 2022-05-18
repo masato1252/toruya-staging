@@ -3,13 +3,13 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
     service = params[:service_type].constantize.find_by(user: current_user, id: params[:service_id])
 
     if params[:id]
-      outcome = CustomMessages::Update.run(
+      outcome = CustomMessages::Customers::Update.run(
         message: CustomMessage.find_by!(id: params[:id], service: service),
         template: params[:template],
         after_days: params[:after_days].presence
       )
     else
-      outcome = CustomMessages::Create.run(
+      outcome = CustomMessages::Customers::Create.run(
         service: service,
         scenario: params[:scenario],
         template: params[:template],
@@ -33,13 +33,13 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
 
     message =
       if params[:id]
-        CustomMessages::Update.run!(
+        CustomMessages::Customers::Update.run!(
           message: CustomMessage.find_by!(id: params[:id], service: service),
           template: params[:template],
           after_days: params[:after_days].presence
         )
       else
-        CustomMessages::Create.run!(
+        CustomMessages::Customers::Create.run!(
           service: service,
           scenario: params[:scenario],
           template: params[:template],

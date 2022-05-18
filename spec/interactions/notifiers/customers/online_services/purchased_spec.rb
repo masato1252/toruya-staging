@@ -17,12 +17,12 @@ RSpec.describe Notifiers::Customers::OnlineServices::Purchased do
   describe "#execute" do
     it "sends line" do
       online_service = sale_page.product
-      template = ::CustomMessages::Template.run!(product: online_service, scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED)
+      template = ::CustomMessages::Customers::Template.run!(product: online_service, scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED)
       content = Translator.perform(template, online_service.message_template_variables(receiver))
       expect(LineClient).to receive(:send).with(receiver.social_customer, content)
-      expect(CustomMessages::Next).to receive(:run).with({
+      expect(CustomMessages::Customers::Next).to receive(:run).with({
         product: sale_page.product,
-        scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED,
+        scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED,
         receiver: receiver
       })
 
