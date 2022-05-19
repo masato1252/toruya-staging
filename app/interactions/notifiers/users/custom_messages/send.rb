@@ -52,8 +52,10 @@ module Notifiers
         def execute
           super
 
-          custom_message.with_lock do
-            custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).map(&:to_s).uniq)
+          if errors.blank?
+            custom_message.with_lock do
+              custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).map(&:to_s).uniq)
+            end
           end
 
           ::CustomMessages::Users::Next.run(
