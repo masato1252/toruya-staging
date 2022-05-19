@@ -60,7 +60,15 @@ class SalePageSerializer
         object.customer_pictures.each_with_object({}) do |customer_picture, h|
           picture_variant = customer_picture.variant( combine_options: { resize: "360", flatten: true })
           filename = picture_variant.blob.filename.to_s
-          h[filename] = Rails.application.routes.url_helpers.url_for(picture_variant)
+
+          picture_url =
+            if customer_picture.service.exist?(picture_variant.key)
+              Rails.application.routes.url_helpers.url_for(picture_variant)
+            else
+              Rails.application.routes.url_helpers.url_for(customer_picture)
+            end
+
+          h[filename] = picture_url
         end
 
       object.sections_context["reviews"].map do |review|
