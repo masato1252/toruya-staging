@@ -1,0 +1,16 @@
+<%= render "admin/features" %>
+<h1>Scenario: <%= params[:scenario] %></h1>
+<ul>
+<% @sequence_messages.each.with_index do |message, index| %>
+  <li>
+    <%= render "lines/user_bot/field_row", path: edit_admin_custom_messages_path(scenario: params[:scenario], id: message.id), title: "( #{message.content_type} ) After user sign up #{message.after_days} days" %>
+  </li>
+<% end %>
+</ul>
+
+<div class="margin-around">
+  <%= link_to new_admin_custom_messages_path(params[:scenario]), class: "btn btn-yellow btn-save btn-tweak" do %>
+    <i class="fas fa-plus fa-2x"></i>
+    <div class="word"><%= I18n.t("action.add_more") %></div>
+  <% end %>
+</div>

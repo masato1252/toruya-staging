@@ -136,6 +136,7 @@ module LineMessages
               "text": title,
               "weight": "bold",
               "size": "lg",
+              "wrap": true,
               "contents": []
             },
             {

@@ -2,6 +2,7 @@
 
 class AdminController < ApplicationController
   include Devise::Controllers::Rememberable
+  include ControllerHelpers
   before_action :super_admin_required
 
   def as_user

@@ -13,7 +13,7 @@ module Notifiers
         validate :receiver_should_be_customer
 
         def message
-          Translator.perform(custom_message.content, custom_message.service.message_template_variables(receiver))
+          compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver)
         end
 
         def deliverable

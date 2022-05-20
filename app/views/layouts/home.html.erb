@@ -12,6 +12,10 @@
     <%= javascript_packs_with_chunks_tag "stylesheets" if Rails.env.development? %>
     <link rel="manifest" href="/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <script type="text/javascript">
+      I18n.defaultLocale = "<%= I18n.default_locale %>";
+      I18n.locale = "<%= I18n.locale %>";
+    </script>
     <%= render "layouts/google_analytics" %>
   </head>
 

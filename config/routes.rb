@@ -543,6 +543,18 @@ Rails.application.routes.draw do
           get "receipt"
         end
       end
+
+      resources :custom_messages, only: [] do
+        collection do
+          get "scenario/:scenario", action: "scenario", as: :scenario
+          get "scenario/:scenario/new", action: "new", as: :new
+          get "scenario/:scenario/edit/:id", action: "edit", as: :edit
+          post "scenario/:scenario", action: "create", as: :create
+          put "scenario/:scenario/:id", action: "update", as: :update
+          get "scenarios", action: "scenarios"
+          post "scenario/:scenario/demo", action: "demo", as: :demo
+        end
+      end
     end
   # end
 

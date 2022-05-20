@@ -39,12 +39,4 @@ class CustomMessage < ApplicationRecord
   belongs_to :service, polymorphic: true, optional: true # OnlineService, BookingPage or nil(Toruya user)
 
   has_one_attached :picture # content picture
-
-  def demo_message_content
-    Translator.perform(content, service.message_template_variables(service.user))
-  end
-
-  def demo_message_for_owner
-    LineClient.send(service.user.social_user, demo_message_content)
-  end
 end

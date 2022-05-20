@@ -214,9 +214,7 @@ class User < ApplicationRecord
   end
 
   def message_template_variables
-    {
-      user_name: display_last_name || ""
-    }
+    {}
   end
 
   def hi_message

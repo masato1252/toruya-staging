@@ -13,32 +13,7 @@ module Notifiers
         validate :receiver_should_be_user
 
         def message
-          case content_type
-          when ::CustomMessage::TEXT_TYPE
-            Translator.perform(custom_message.content, receiver.message_template_variables)
-          when ::CustomMessage::FLEX_TYPE
-            variables = JSON.parse(custom_message.content)
-
-            case custom_message.flex_template
-            when "video_description_card"
-              LineMessages::FlexTemplateContainer.template(
-                altText: variables["title"],
-                contents: LineMessages::FlexTemplateContent.video_description_card(
-                  picture_url: variables["picture_url"],
-                  content_url: variables["content_url"],
-                  title: variables["title"],
-                  context: Translator.perform(variables["context"], receiver.message_template_variables),
-                  action_templates: [
-                    LineActions::Uri.new(
-                      label: variables["title"],
-                      url: variables["content_url"],
-                      btn: "primary"
-                    )
-                  ].map(&:template)
-                )
-              )
-            end
-          end
+          compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver)
         end
 
         def content_type

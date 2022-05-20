@@ -34,17 +34,4 @@ class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboa
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_custom_messages_path(params[:service_id]) })
   end
-
-  def demo
-    online_service = current_user.online_services.find(params[:service_id])
-
-    message = CustomMessages::Customers::Update.run!(
-      service: online_service,
-      template: params[:template],
-      scenario: params[:scenario]
-    )
-    message.demo_message_for_owner
-
-    head :ok
-  end
 end

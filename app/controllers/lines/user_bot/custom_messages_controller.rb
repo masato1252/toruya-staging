@@ -46,7 +46,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
           after_days: params[:after_days].presence
         )
       end
-    message.demo_message_for_owner
+
+    CustomMessages::Demo.run!(custom_message: message, receiver: current_user)
 
     head :ok
   end

@@ -12,6 +12,9 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
+import Routes from '../js-routes.js';
+import I18n from 'i18n-js/index.js.erb';
+import toastr from 'toastr';
 
 var componentRequireContext = require.context("../javascripts/components", true, /^\.\/(management|shared)/)
 var ReactRailsUJS = require("react_ujs")
@@ -26,6 +29,10 @@ const context = require.context("../javascripts/controllers", true, /.js$/)
 application.load(definitionsFromContext(context))
 
 require.context('../assets/management', true)
+
+window.toastr = toastr;
+window.Routes = Routes;
+window.I18n = I18n;
 
 import Rails from 'rails-ujs';
 Rails.start();
