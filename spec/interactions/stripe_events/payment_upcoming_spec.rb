@@ -17,12 +17,12 @@ RSpec.describe StripeEvents::PaymentUpcoming do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    it "calls a charge reminder job" do
-      allow(Notifiers::CustomerPayments::ChargeReminder).to receive(:run)
+    xit "calls a charge reminder job" do
+      allow(Notifiers::Customers::OnlineServices::ChargeReminder).to receive(:run)
 
       outcome
 
-      expect(Notifiers::CustomerPayments::ChargeReminder).to have_received(:run).with(
+      expect(Notifiers::Customers::OnlineServices::ChargeReminder).to have_received(:run).with(
         receiver: customer,
         online_service_customer_relation: relation,
         online_service_customer_price: relation.price_details.first
