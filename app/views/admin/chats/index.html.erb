@@ -1,3 +1,5 @@
+<%= render "admin/features" %>
+
 <%= react_component("management/chats", {
   social_channel_id: AdminChannel::CHANNEL_NAME,
   social_customer: @selected_social_user ? SocialUserSerializer.new(@selected_social_user).attributes_hash : nil,

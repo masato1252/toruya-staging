@@ -144,7 +144,7 @@ class OnlineService < ApplicationRecord
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
-  has_one :message_template, -> { where(scenario: ::CustomMessages::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
+  has_one :message_template, -> { where(scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
   has_many :episodes
 
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
@@ -266,7 +266,7 @@ class OnlineService < ApplicationRecord
 
   def picture_url
     if message_template&.picture&.attached?
-      # use content8 ratio for the resize
+      # use video_description_card ratio for the resize
       Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
     elsif course? && lessons.exists?
       lessons.first.thumbnail_url || sale_page&.introduction_video_thumbnail_url || ContentHelper::VIDEO_THUMBNAIL_URL

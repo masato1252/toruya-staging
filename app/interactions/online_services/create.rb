@@ -51,7 +51,7 @@ module OnlineServices
         if message_template&.dig(:content) || message_template&.dig(:picture)
           message = CustomMessage.create(
             service: online_service,
-            scenario: ::CustomMessages::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE,
+            scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE,
             content: message_template[:content] || "",
             picture: message_template[:picture]
           )

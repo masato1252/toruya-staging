@@ -51,7 +51,7 @@ module OnlineServices
         when "start_at"
           online_service.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "message_template"
-          message = online_service.message_template || online_service.build_message_template(scenario: ::CustomMessages::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE)
+          message = online_service.message_template || online_service.build_message_template(scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE)
           message.content = attrs&.dig(:message_template, :content) || ''
           message.picture = attrs&.dig(:message_template, :picture) if attrs&.dig(:message_template, :picture).present?
           message.save

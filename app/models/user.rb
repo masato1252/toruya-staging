@@ -213,6 +213,10 @@ class User < ApplicationRecord
     stripe_provider&.publishable_key.present?
   end
 
+  def message_template_variables
+    {}
+  end
+
   def hi_message
     "👩 New user joined, user_id: #{id}"
   end

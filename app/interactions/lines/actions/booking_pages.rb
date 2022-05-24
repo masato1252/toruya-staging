@@ -54,9 +54,9 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
     # XXX: refactor to better query
     contents = user.booking_pages.includes(:booking_options, :booking_page_special_dates).where(draft: false, line_sharing: true).started.order("booking_pages.id").map do |booking_page|
       if booking_page.started? && !booking_page.ended?
-        LineMessages::FlexTemplateContent.content4(
+        LineMessages::FlexTemplateContent.two_header_card(
           title1: booking_page.title,
-          body1: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title),
+          title2: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title),
           action_templates: [
             LineActions::Uri.new(
               action: "book",

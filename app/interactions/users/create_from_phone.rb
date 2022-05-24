@@ -18,6 +18,7 @@ module Users
       user.skip_confirmation!
       user.skip_confirmation_notification!
       user.referral_token ||= Devise.friendly_token[0,5]
+      new_user = user.new_record?
 
       loop do
         if User.where(referral_token: user.referral_token).where.not(id: user.id).exists?
@@ -45,6 +46,8 @@ module Users
         })
         user
       end
+
+      Notifiers::Users::UserSignedUp.run(receiver: user) if user.persisted? && new_user
     end
   end
 end

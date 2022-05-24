@@ -12,7 +12,7 @@ module Lines
           social_customer,
           LineMessages::FlexTemplateContainer.template(
             altText: context[:desc],
-            contents: LineMessages::FlexTemplateContent.content2(
+            contents: LineMessages::FlexTemplateContent.two_header_card(
               title1: context[:title],
               title2: context[:desc],
               action_templates: context[:action_templates]

@@ -109,20 +109,22 @@ module Notifiers
     def send_line
       case target_line_user
       when SocialUser
-        SocialUserMessages::Create.run(
+        outcome = SocialUserMessages::Create.run(
           social_user: target_line_user,
           content: message,
           content_type: content_type,
           message_type: SocialMessage.message_types[:bot],
           readed: true
         )
+        errors.merge!(outcome.errors) if outcome.invalid?
       when SocialCustomer
-        SocialMessages::Create.run(
+        outcome = SocialMessages::Create.run(
           social_customer: target_line_user,
           content: message,
           message_type: SocialMessage.message_types[:bot],
           readed: true
         )
+        errors.merge!(outcome.errors) if outcome.invalid?
       else
         LineClient.send(target_line_user, message)
       end

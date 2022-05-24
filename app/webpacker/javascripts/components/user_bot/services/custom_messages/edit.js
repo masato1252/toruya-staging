@@ -1,17 +1,18 @@
 "use strict"
 
 import React, { useState, useRef, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import _ from "lodash";
 
 import { CustomMessageServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import { Translator } from "libraries/helper";
-import { ErrorMessage, BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
 
 let personalizeKeyword = "";
 
 const CustomMessageEdit =({props}) => {
-  const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
+  const { handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.message
     }
@@ -26,7 +27,6 @@ const CustomMessageEdit =({props}) => {
   }, [template.length])
 
   const onDemo = async (data) => {
-    let error, response;
     if (!isSendRightAway() && after_days === '') return;
 
     [error, response] = await CustomMessageServices.demo({
@@ -43,10 +43,9 @@ const CustomMessageEdit =({props}) => {
   }
 
   const onSubmit = async (data) => {
-    let error, response;
     if (!isSendRightAway() && after_days === '') return;
 
-    [error, response] = await CustomMessageServices.update({
+    const [error, response] = await CustomMessageServices.update({
       data: _.assign( data, {
         id: props.message.id,
         scenario: props.scenario,
@@ -132,7 +131,6 @@ const CustomMessageEdit =({props}) => {
             </div>
           </>
         );
-        break
     }
   }
 

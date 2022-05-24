@@ -8,7 +8,7 @@ module Templates
     object :social_customer
 
     def execute
-      LineMessages::FlexTemplateContent.content8(
+      LineMessages::FlexTemplateContent.video_description_card(
         picture_url: episode.thumbnail_url || online_service.picture_url,
         content_url: content_url,
         title: episode.name,

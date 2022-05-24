@@ -14,7 +14,7 @@ module Notifiers
 
         def message
           online_service = sale_page.product
-          template = ::CustomMessages::Template.run!(product: online_service, scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED)
+          template = ::CustomMessages::Customers::Template.run!(product: online_service, scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED)
 
           Translator.perform(template, online_service.message_template_variables(receiver))
         end
@@ -23,15 +23,15 @@ module Notifiers
           # XXX: Send message
           super
 
-          if custom_message = CustomMessage.scenario_of(sale_page.product, ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED).right_away.first
+          if custom_message = CustomMessage.scenario_of(sale_page.product, ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED).right_away.first
             custom_message.with_lock do
-              custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).uniq)
+              custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).map(&:to_s).uniq)
             end
           end
 
-          ::CustomMessages::Next.run(
+          ::CustomMessages::Customers::Next.run(
             product: sale_page.product,
-            scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED,
+            scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED,
             receiver: receiver
           )
         end

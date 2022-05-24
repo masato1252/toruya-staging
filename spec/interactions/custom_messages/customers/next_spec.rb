@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CustomMessages::Next do
+RSpec.describe CustomMessages::Customers::Next do
   let(:prev_custom_message) { FactoryBot.create(:custom_message, service: service, after_days: prev_after_days) }
   let(:prev_after_days) { nil }
   let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }

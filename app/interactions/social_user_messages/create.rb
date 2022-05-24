@@ -24,7 +24,7 @@ module SocialUserMessages
     def execute
       message = SocialUserMessage.create(
         social_user: social_user,
-        raw_content: content_type == FLEX_TYPE ? content["altText"] : content,
+        raw_content: content_type == FLEX_TYPE ? content[:altText] : content,
         readed_at: readed ? Time.zone.now : nil,
         message_type: message_type,
         schedule_at: schedule_at
@@ -33,19 +33,11 @@ module SocialUserMessages
       if message.errors.present?
         errors.merge!(message.errors)
       elsif message_type == SocialUserMessage.message_types[:bot] || message_type == SocialUserMessage.message_types[:admin]
-        case content_type
-        when TEXT_TYPE
-          if schedule_at
-            SocialUserMessages::Send.perform_at(schedule_at: schedule_at, social_user_message: message)
-          else
-            SocialUserMessages::Send.run(social_user_message: message)
-          end
-        when VIDEO_TYPE
-          LineClient.send_video(social_user, content)
-        when IMAGE_TYPE
-          LineClient.send_image(social_user, content)
-        when FLEX_TYPE
-          LineClient.flex(social_user, content)
+        if schedule_at
+          SocialUserMessages::Send.perform_at(schedule_at: schedule_at, social_user_message: message, content_type: content_type)
+        else
+          outcome = SocialUserMessages::Send.run(social_user_message: message, content_type: content_type)
+          errors.merge!(outcome.errors) if outcome.invalid?
         end
       elsif !readed && message_type == SocialUserMessage.message_types[:user]
         message.update(sent_at: Time.current)

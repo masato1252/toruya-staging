@@ -11,7 +11,7 @@ module Notifiers
         def message
           LineMessages::FlexTemplateContainer.template(
             altText: I18n.t("notifier.line_api_settings_finished.card_button"),
-            contents: LineMessages::FlexTemplateContent.content9(
+            contents: LineMessages::FlexTemplateContent.button_card(
               action_templates: [
                 LineActions::Uri.new(
                   label: I18n.t("notifier.line_api_settings_finished.card_button"),

@@ -18,7 +18,7 @@ RSpec.describe Notifiers::Customers::CustomMessages::Send do
     it "sends line" do
       content = Translator.perform(custom_message.content, custom_message.service.message_template_variables(receiver))
       expect(LineClient).to receive(:send).with(receiver.social_customer, content)
-      expect(CustomMessages::Next).to receive(:run).with({
+      expect(CustomMessages::Customers::Next).to receive(:run).with({
         custom_message: custom_message,
         receiver: receiver
       })
@@ -38,8 +38,8 @@ RSpec.describe Notifiers::Customers::CustomMessages::Send do
     context "when this custom message was ever sent before" do
       let(:custom_message) { FactoryBot.create(:custom_message, receiver_ids: [receiver.id]) }
 
-      it "doesn't send line" do
-        expect(CustomMessages::Next).not_to receive(:run)
+      it "doesn't send line but still schedule next message" do
+        expect(CustomMessages::Customers::Next).to receive(:run)
 
         expect {
           outcome
@@ -54,8 +54,8 @@ RSpec.describe Notifiers::Customers::CustomMessages::Send do
     context "when this custom message's customer was unavailable to use this product" do
       let(:relation) { FactoryBot.create(:online_service_customer_relation) }
 
-      it "doesn't send line" do
-        expect(CustomMessages::Next).not_to receive(:run)
+      it "doesn't send line but still schedule next message" do
+        expect(CustomMessages::Customers::Next).to receive(:run)
 
         expect {
           outcome
