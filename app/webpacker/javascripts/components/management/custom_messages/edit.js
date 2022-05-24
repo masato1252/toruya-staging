@@ -13,8 +13,7 @@ const CustomMessageEdit =({props}) => {
   const { handleSubmit, formState, register, watch } = useForm({
     defaultValues: {
       ...props.message,
-      ...props.message.flex_attributes,
-      flex_template: "video_description_card"
+      ...props.message.flex_attributes
     }
   });
   const textareaRef = useRef();

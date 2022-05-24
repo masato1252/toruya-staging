@@ -9,7 +9,7 @@ module Admin
     end
 
     def new
-      @message = CustomMessage.new(content_type: CustomMessage::TEXT_TYPE, after_days: 3)
+      @message = CustomMessage.new(content_type: CustomMessage::TEXT_TYPE, after_days: 3, flex_template: "video_description_card")
     end
 
     def edit
