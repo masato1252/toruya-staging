@@ -48,6 +48,8 @@ module Users
       end
 
       Notifiers::Users::UserSignedUp.run(receiver: user) if user.persisted? && new_user
+
+      user
     end
   end
 end
