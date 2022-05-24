@@ -8,3 +8,7 @@ ja:
       title: 全ての代理店申請者
     pending_withdrawals:
       title: 紹介料振込予定者
+    chat:
+      line_settings_finished: LINE連携設定
+      line_login_verified: LINE login 設定確認
+      message_api_verified: Messaging API設定確認
