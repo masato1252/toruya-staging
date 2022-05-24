@@ -5,6 +5,7 @@ module CustomMessages
     string :content_type
     string :flex_template
     hash :params, default: nil do
+      string :content, default: nil
       string :title, default: nil
       string :context, default: nil
       string :picture_url, default: nil
