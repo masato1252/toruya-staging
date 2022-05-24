@@ -81,34 +81,34 @@ export default () => {
       />
       <ul>
         <li>
-          {selected_customer.line_settings_finished ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} Line settings finished
+          {selected_customer.line_settings_finished ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_settings_finished")}
         </li>
         <li>
-          {selected_customer.login_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} Line login verified
+          {selected_customer.login_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_login_verified")}
         </li>
         <li>
-          {selected_customer.message_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>}  Message api verified
+          {selected_customer.message_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.message_api_verified")}
         </li>
         <li>
           {selected_customer.member_plan_name}
         </li>
         <li>
-          {selected_customer.booking_pages_count} booking pages
+          {I18n.t("admin.chat.booking_pages", { count: selected_customer.booking_pages_count } )}
         </li>
         <li>
-          {selected_customer.online_services_count} online services
+          {I18n.t("admin.chat.online_services", { count: selected_customer.online_services_count } )}
         </li>
         <li>
-          {selected_customer.sale_pages_count} sales pages
+          {I18n.t("admin.chat.sale_pages", { count: selected_customer.sale_pages_count } )}
         </li>
         <li>
-          {selected_customer.customers_count} customers
+          {I18n.t("admin.chat.customers", { count: selected_customer.customers_count } )}
         </li>
         <li>
-          {selected_customer.reservations_count} reservations
+          {I18n.t("admin.chat.reservations", { count: selected_customer.reservations_count } )}
         </li>
         <li>
-          next charge at {selected_customer.next_charge_date}
+          {I18n.t("admin.chat.next_charge_date", { date: selected_customer.next_charge_date || "" } )}
         </li>
         <li>
           <SubmitButton

@@ -12,3 +12,9 @@ ja:
       line_settings_finished: LINE連携設定
       line_login_verified: LINE login 設定確認
       message_api_verified: Messaging API設定確認
+      booking_pages: "予約ページ %{count}"
+      online_services: "サービス %{count}"
+      sale_pages: "販売ページ %{count}"
+      customers: "顧客データ %{count}"
+      reservations: "予約データ %{count}"
+      next_charge_date: "次回支払い %{date}"
