@@ -12,7 +12,7 @@ class SocialUserMessageSerializer
     begin
       JSON.parse(message.raw_content)
       true
-    rescue JSON::ParserError => e
+    rescue TypeError, JSON::ParserError => e
       false
     end
   end
@@ -25,7 +25,7 @@ class SocialUserMessageSerializer
       end
 
       content
-    rescue JSON::ParserError
+    rescue TypeError, JSON::ParserError
       message.raw_content
     end
   end
