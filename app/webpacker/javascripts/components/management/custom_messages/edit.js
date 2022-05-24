@@ -29,7 +29,8 @@ const CustomMessageEdit =({props}) => {
       url: Routes.demo_admin_custom_messages_path({scenario: props.scenario}),
       data: _.assign( data, {
         content: content,
-        after_days: after_days
+        after_days: after_days,
+        flex_template: data.flex_template || "video_description_card"
       })
     })
   }
@@ -42,7 +43,8 @@ const CustomMessageEdit =({props}) => {
         url: Routes.update_admin_custom_messages_path(props.scenario, props.message.id),
         data: _.assign( data, {
           content: content,
-          after_days: after_days
+          after_days: after_days,
+          flex_template: data.flex_template || "video_description_card"
         })
       })
     }
@@ -51,7 +53,8 @@ const CustomMessageEdit =({props}) => {
         url: Routes.create_admin_custom_messages_path({scenario: props.scenario}),
         data: _.assign( data, {
           content: content,
-          after_days: after_days
+          after_days: after_days,
+          flex_template: data.flex_template || "video_description_card"
         })
       })
     }
