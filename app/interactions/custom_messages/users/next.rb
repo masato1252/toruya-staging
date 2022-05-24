@@ -9,7 +9,7 @@ module CustomMessages
       boolean :schedule_right_away, default: false
 
       validate :validate_next_scenario
-      validates :scenario, inclusion: { in: [CustomMessages::Users::Template::USER_SIGN_UP] }, allow_nil: true
+      validates :scenario, inclusion: { in: CustomMessages::Users::Template::SCENARIOS }, allow_nil: true
 
       def execute
         if schedule_right_away
@@ -66,6 +66,8 @@ module CustomMessages
         case user_scenario
         when CustomMessages::Users::Template::USER_SIGN_UP
           receiver.created_at
+        else
+          Time.current
         end
       end
 

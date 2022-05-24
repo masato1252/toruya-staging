@@ -3,7 +3,7 @@
 module CustomMessages
   class BuildContent < ActiveInteraction::Base
     string :content_type
-    string :flex_template
+    string :flex_template, default: nil
     hash :params, default: nil do
       string :content, default: nil
       string :title, default: nil
