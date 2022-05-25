@@ -4,6 +4,7 @@
 # Table name: social_messages
 #
 #  id                 :bigint           not null, primary key
+#  content_type       :string
 #  message_type       :integer          default("bot")
 #  raw_content        :text
 #  readed_at          :datetime

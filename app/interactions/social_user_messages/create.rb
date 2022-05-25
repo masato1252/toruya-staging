@@ -35,9 +35,9 @@ module SocialUserMessages
         errors.merge!(message.errors)
       elsif message_type == SocialUserMessage.message_types[:bot] || message_type == SocialUserMessage.message_types[:admin]
         if schedule_at
-          SocialUserMessages::Send.perform_at!(schedule_at: schedule_at, social_user_message: message, content_type: content_type)
+          SocialUserMessages::Send.perform_at!(schedule_at: schedule_at, social_user_message: message)
         else
-          compose(SocialUserMessages::Send, social_user_message: message, content_type: content_type)
+          compose(SocialUserMessages::Send, social_user_message: message)
         end
       elsif !readed && message_type == SocialUserMessage.message_types[:user]
         message.update(sent_at: Time.current)

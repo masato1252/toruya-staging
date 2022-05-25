@@ -121,6 +121,7 @@ module Notifiers
         outcome = SocialMessages::Create.run(
           social_customer: target_line_user,
           content: message,
+          content_type: content_type,
           message_type: SocialMessage.message_types[:bot],
           readed: true
         )

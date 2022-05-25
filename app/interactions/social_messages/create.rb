@@ -8,7 +8,8 @@ module SocialMessages
     TEXT_TYPE = "text"
     VIDEO_TYPE = "video"
     IMAGE_TYPE = "image"
-    CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE, IMAGE_TYPE].freeze
+    FLEX_TYPE = "flex"
+    CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE, IMAGE_TYPE, FLEX_TYPE].freeze
 
     object :social_customer
     object :staff, default: nil
@@ -28,6 +29,7 @@ module SocialMessages
         social_customer: social_customer,
         staff: staff,
         raw_content: content,
+        content_type: content_type,
         readed_at: readed ? Time.zone.now : nil,
         sent_at: is_message_from_customer || !send_line ? Time.current : nil,
         schedule_at: schedule_at,

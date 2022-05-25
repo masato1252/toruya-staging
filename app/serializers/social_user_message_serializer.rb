@@ -2,7 +2,7 @@
 
 class SocialUserMessageSerializer
   include JSONAPI::Serializer
-  attribute :id, :created_at, :message_type
+  attribute :id, :created_at, :message_type, :content_type
 
   attribute :customer_id do |message|
     message.social_user.social_service_user_id
@@ -11,7 +11,7 @@ class SocialUserMessageSerializer
   attribute :is_image do |message|
     begin
       JSON.parse(message.raw_content)
-      true
+      message.content_type != SocialUserMessages::Create::FLEX_TYPE
     rescue TypeError, JSON::ParserError => e
       false
     end
@@ -24,7 +24,12 @@ class SocialUserMessageSerializer
         content["previewImageUrl"] = Rails.application.routes.url_helpers.url_for(message.image.variant(combine_options: { resize: "750", flatten: true }))
       end
 
-      content
+      case message.content_type
+      when SocialUserMessages::Create::FLEX_TYPE
+        content["altText"]
+      else
+        content
+      end
     rescue TypeError, JSON::ParserError
       message.raw_content
     end
