@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Notifiers::Users::PendingTasksSummary do
+RSpec.describe Notifiers::Users::PendingTasksSummary, :with_line do
   let(:receiver) { FactoryBot.create(:social_account).user }
   let(:shop) { FactoryBot.create(:shop, user: receiver) }
   let(:period) { 1.month.ago..Time.current.tomorrow }
@@ -22,7 +22,6 @@ RSpec.describe Notifiers::Users::PendingTasksSummary do
 
   describe "#execute" do
     it "sends line" do
-      allow(LineClient).to receive(:send)
       FactoryBot.create(:reservation, shop: shop, customers: [FactoryBot.create(:customer, user: receiver)])
       FactoryBot.create_list(:social_message, 2, social_account: receiver.social_account)
       FactoryBot.create_list(:online_service_customer_relation, 3, online_service: FactoryBot.create(:online_service, user: receiver))

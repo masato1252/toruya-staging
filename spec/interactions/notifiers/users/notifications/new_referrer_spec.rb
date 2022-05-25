@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Notifiers::Users::Notifications::NewReferrer do
+RSpec.describe Notifiers::Users::Notifications::NewReferrer, :with_line do
   let(:referral) { FactoryBot.create(:referral) }
   let(:referee) { referral.referee }
 

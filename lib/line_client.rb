@@ -31,8 +31,6 @@ class LineClient
   end
 
   def self.flex(social_customer, template)
-    return unless Rails.env.production?
-
     error_handler(__method__, social_customer.id, template) do
       parsed_template =
         begin
@@ -46,8 +44,6 @@ class LineClient
   end
 
   def self.send(social_customer, message)
-    return unless Rails.env.production?
-
     error_handler(__method__, social_customer.id, message) do
       social_customer.client.push_message(social_customer.social_user_id, {type: "text", text: message})
     end

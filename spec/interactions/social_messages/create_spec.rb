@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SocialMessages::Create do
+RSpec.describe SocialMessages::Create, :with_line do
   let!(:social_customer) { FactoryBot.create(:social_customer) }
   let(:user) { social_customer.user }
   let(:readed) { false }

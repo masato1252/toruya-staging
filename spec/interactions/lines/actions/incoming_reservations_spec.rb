@@ -3,7 +3,7 @@
 require "rails_helper"
 require "line_client"
 
-RSpec.describe Lines::Actions::IncomingReservations do
+RSpec.describe Lines::Actions::IncomingReservations, :with_line do
   let(:social_customer) { FactoryBot.create(:social_customer) }
   let(:customer) { social_customer.customer }
   let(:args) do

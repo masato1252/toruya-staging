@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Notifiers::Customers::Broadcast do
+RSpec.describe Notifiers::Customers::Broadcast, :with_line do
   let(:receiver) { FactoryBot.create(:social_customer).customer }
   let(:broadcast) { FactoryBot.create(:broadcast, user: receiver.user) }
   let(:args) do

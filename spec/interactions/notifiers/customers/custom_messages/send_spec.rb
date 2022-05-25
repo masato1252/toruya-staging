@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Notifiers::Customers::CustomMessages::Send do
+RSpec.describe Notifiers::Customers::CustomMessages::Send, :with_line do
   let(:receiver) { FactoryBot.create(:social_customer, customer: relation.customer).customer }
   let(:custom_message) { FactoryBot.create(:custom_message, service: relation.online_service) }
   let(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
