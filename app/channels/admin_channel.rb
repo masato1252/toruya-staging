@@ -44,6 +44,7 @@ class AdminChannel < ApplicationCable::Channel
     return unless data["channel_id"]
 
     social_users = SocialUser
+      .where("updated_at > ?", 6.months.ago)
       .includes(:social_user_messages, :memos)
       .order("social_users.updated_at DESC")
 

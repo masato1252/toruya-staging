@@ -34,7 +34,14 @@ class LineClient
     return unless Rails.env.production?
 
     error_handler(__method__, social_customer.id, template) do
-      social_customer.client.push_message(social_customer.social_user_id, template)
+      parsed_template =
+        begin
+          JSON.parse(template)
+        rescue TypeError, JSON::ParserError
+          template
+        end
+
+      social_customer.client.push_message(social_customer.social_user_id, parsed_template)
     end
   end
 

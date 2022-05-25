@@ -84,7 +84,7 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
         }.to change {
           SocialUserMessage.where(
             social_user: receiver.social_user,
-            raw_content: "title"
+            raw_content: CustomMessages::ReceiverContent.run!(custom_message: custom_message, receiver: receiver)
           ).count
         }.by(1)
       end

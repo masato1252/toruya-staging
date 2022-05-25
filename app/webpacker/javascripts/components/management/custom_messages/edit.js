@@ -30,7 +30,7 @@ const CustomMessageEdit =({props}) => {
       data: _.assign( data, {
         content: content,
         after_days: after_days,
-        flex_template: data.flex_template || "video_description_card"
+        flex_template: data.flex_template
       })
     })
   }
@@ -44,7 +44,7 @@ const CustomMessageEdit =({props}) => {
         data: _.assign( data, {
           content: content,
           after_days: after_days,
-          flex_template: data.flex_template || "video_description_card"
+          flex_template: data.flex_template
         })
       })
     }
@@ -54,7 +54,7 @@ const CustomMessageEdit =({props}) => {
         data: _.assign( data, {
           content: content,
           after_days: after_days,
-          flex_template: data.flex_template || "video_description_card"
+          flex_template: data.flex_template
         })
       })
     }
@@ -69,6 +69,10 @@ const CustomMessageEdit =({props}) => {
 
   const renderCorrespondField = () => {
     switch(props.scenario) {
+      case "first_booking_page_created":
+      case "second_booking_page_created":
+      case "eleventh_booking_page_created":
+      case "first_customer_data_manually_created":
       case "user_sign_up":
         return (
           <>

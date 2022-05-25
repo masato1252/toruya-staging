@@ -12,7 +12,7 @@ module SocialUserMessages
     CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE, IMAGE_TYPE, FLEX_TYPE].freeze
 
     object :social_user
-    object :content, class: Object # hash or string
+    string :content
     string :content_type, default: TEXT_TYPE
     boolean :readed
     integer :message_type
@@ -24,7 +24,7 @@ module SocialUserMessages
     def execute
       message = SocialUserMessage.create(
         social_user: social_user,
-        raw_content: content_type == FLEX_TYPE ? content[:altText] : content,
+        raw_content: content,
         readed_at: readed ? Time.zone.now : nil,
         message_type: message_type,
         schedule_at: schedule_at

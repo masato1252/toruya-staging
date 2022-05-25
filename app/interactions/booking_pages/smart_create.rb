@@ -55,6 +55,16 @@ module BookingPages
         )
 
         ::BookingPageCacheJob.perform_later(booking_page)
+
+        case super_user.booking_pages.count
+        when 1
+          Notifiers::Users::BookingPages::FirstCreation.run(receiver: super_user)
+        when 2
+          Notifiers::Users::BookingPages::SecondCreation.run(receiver: super_user)
+        when 11
+          Notifiers::Users::BookingPages::EleventhCreation.run(receiver: super_user)
+        end
+
         booking_page
       end
     end

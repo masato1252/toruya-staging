@@ -31,7 +31,7 @@ module CustomMessages
                 )
               ].map(&:template)
             )
-          )
+          ).to_json
         end
       end
     end

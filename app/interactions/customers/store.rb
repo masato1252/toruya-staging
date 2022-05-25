@@ -39,6 +39,11 @@ class Customers::Store < ActiveInteraction::Base
       errors.merge!(customer.errors)
     end
 
+    # first time create customer manually
+    if user.customers.left_outer_joins(:social_customer).where("social_customers.id is NULL").count == 1
+      Notifiers::Users::Customers::FirstManuallyCreation.run(receiver: current_user)
+    end
+
     customer
   end
 end
