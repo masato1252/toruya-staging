@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Notifiers::Users::Notifications::ActivateStaffAccount do
+RSpec.describe Notifiers::Users::Notifications::ActivateStaffAccount, :with_line do
   let(:user) { receiver.owner }
 
   let(:args) do
@@ -25,7 +25,8 @@ RSpec.describe Notifiers::Users::Notifications::ActivateStaffAccount do
         }.to change {
           SocialUserMessage.where(
             social_user: receiver.user.social_user,
-            raw_content: I18n.t("notifier.notifications.activate_staff_account.message")
+            raw_content: I18n.t("notifier.notifications.activate_staff_account.message"),
+            content_type: SocialUserMessages::Create::TEXT_TYPE
           ).count
         }.by(1)
       end

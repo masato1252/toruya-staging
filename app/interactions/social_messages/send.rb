@@ -7,17 +7,10 @@ module SocialMessages
     def execute
       response = LineClient.send(social_message.social_customer, social_message.raw_content)
 
-      if response&.code == "200" || Rails.env.test?
+      if response.code == "200"
         social_message.update(sent_at: Time.current)
       else
-        Rollbar.error(
-          "Line send message failed",
-          user_id: social_message.social_customer.user_id,
-          social_message_id: social_message.id,
-          response: response.body
-        )
-
-        raise ActiveRecord::Rollback
+        errors.add(:social_message, :sent_failed)
       end
     end
   end

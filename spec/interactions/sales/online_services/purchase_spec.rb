@@ -3,7 +3,7 @@
 require "rails_helper"
 require "line_client"
 
-RSpec.describe Sales::OnlineServices::Purchase do
+RSpec.describe Sales::OnlineServices::Purchase, :with_line do
   before { StripeMock.start }
   after { StripeMock.stop }
 

@@ -41,22 +41,22 @@ module SocialMessages
         # Switch user rich menu to tell users there are new messages
         ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
 
-        # Shop owner customer self send a confirmation message to torua shop owner user
+        # Shop owner customer self send a confirmation message to toruya shop owner user
         if social_customer.is_owner && content == social_user.social_service_user_id
-          Notifiers::Users::LineSettings::VerifiedMessage.perform_later(receiver: social_user)
-          Notifiers::Users::LineSettings::VerifiedVideo.perform_later(receiver: social_user)
+          Notifiers::Users::LineSettings::VerifiedMessage.perform_later!(receiver: social_user)
+          Notifiers::Users::LineSettings::VerifiedVideo.perform_later!(receiver: social_user)
         end
 
         case content_type
         when IMAGE_TYPE
           SocialMessages::FetchImage.perform_later(social_message: message)
         end
-      elsif !Rails.env.development? && send_line
+      elsif send_line
         # From staff or bot
         if schedule_at
-          SocialMessages::Send.perform_at(schedule_at: schedule_at, social_message: message)
+          SocialMessages::Send.perform_at!(schedule_at: schedule_at, social_message: message)
         else
-          SocialMessages::Send.run(social_message: message)
+          compose(SocialMessages::Send, social_message: message)
         end
       end
 

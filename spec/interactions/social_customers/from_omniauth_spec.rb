@@ -3,7 +3,7 @@
 require "rails_helper"
 require "message_encryptor"
 
-RSpec.describe SocialCustomers::FromOmniauth do
+RSpec.describe SocialCustomers::FromOmniauth, :with_line do
   let(:profile) { FactoryBot.create(:profile) }
   let(:social_account) { FactoryBot.create(:social_account, user: profile.user) }
   let(:who) { nil }

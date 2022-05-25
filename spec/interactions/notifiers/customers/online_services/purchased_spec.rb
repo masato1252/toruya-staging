@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Notifiers::Customers::OnlineServices::Purchased do
+RSpec.describe Notifiers::Customers::OnlineServices::Purchased, :with_line do
   let(:receiver) { FactoryBot.create(:social_customer, customer: relation.customer).customer }
   let(:sale_page) { FactoryBot.create(:sale_page, product: relation.online_service, user: receiver.user) }
   let(:relation) { FactoryBot.create(:online_service_customer_relation) }

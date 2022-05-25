@@ -18,7 +18,7 @@ module SocialUserMessages
           LineClient.flex(social_user, content)
         end
 
-      if response&.code == "200"
+      if response.code == "200"
         social_user_message.update(sent_at: Time.current)
       else
         errors.add(:social_user_message, :sent_failed)
