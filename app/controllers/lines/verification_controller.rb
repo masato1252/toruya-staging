@@ -30,35 +30,9 @@ class Lines::VerificationController < ActionController::Base
     if !@message_api_ready
       Notifiers::Users::LineSettings::LineLoginVerificationMessage.run(receiver: current_user.social_user)
       Notifiers::Users::LineSettings::LineLoginVerificationVideo.run(receiver: current_user.social_user)
+      outcome = Notifiers::Customers::LineSettings::LineLoginVerificationFlex.run(receiver: current_user.owner_social_customer)
 
-      line_response = LineClient.flex(
-        current_user.owner_social_customer,
-        LineMessages::FlexTemplateContainer.template(
-          altText: I18n.t("line_verification.confirmation_message.title1"),
-          contents: LineMessages::FlexTemplateContent.two_header_card(
-            title1: I18n.t("line_verification.confirmation_message.title1"),
-            title2: I18n.t("line_verification.confirmation_message.title2"),
-            action_templates: [
-              LineActions::Message.new(
-                label: I18n.t("line_verification.confirmation_message.action"),
-                text: current_user.social_user.social_service_user_id,
-                btn: 'primary'
-              ).template
-            ]
-          )
-        )
-      )
-
-      # send successfully as sign to interify
-      if line_response.is_a?(Net::HTTPOK)
-        SocialMessages::Create.run(
-          social_customer: current_user.owner_social_customer,
-          content: I18n.t("line_verification.confirmation_message.title1"),
-          readed: true,
-          message_type: SocialMessage.message_types[:bot],
-          send_line: false
-        )
-      elsif line_response.is_a?(Net::HTTPBadRequest)
+      if outcome.invalid?
         Notifiers::Users::LineSettings::VerifyFailedMessage.run(receiver: current_user.social_user)
         Notifiers::Users::LineSettings::VerifyFailedVideo.run(receiver: current_user.social_user)
       end
