@@ -12,7 +12,7 @@ module SocialUserMessages
     CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE, IMAGE_TYPE, FLEX_TYPE].freeze
 
     object :social_user
-    object :content, class: Object # hash or string
+    string :content
     string :content_type, default: TEXT_TYPE
     boolean :readed
     integer :message_type
