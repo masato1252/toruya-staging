@@ -2142,7 +2142,8 @@ CREATE TABLE public.social_messages (
     message_type integer DEFAULT 0,
     schedule_at timestamp without time zone,
     sent_at timestamp without time zone,
-    broadcast_id integer
+    broadcast_id integer,
+    content_type character varying
 );
 
 
@@ -4836,6 +4837,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220504105105'),
 ('20220518024042'),
 ('20220518152005'),
-('20220525090941');
+('20220525090941'),
+('20220525134226');
 
 

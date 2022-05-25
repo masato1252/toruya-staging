@@ -3,7 +3,6 @@ require "line_client"
 module SocialUserMessages
   class Send < ActiveInteraction::Base
     object :social_user_message
-    string :content_type
 
     def execute
       response =
@@ -33,6 +32,10 @@ module SocialUserMessages
 
     def content
       social_user_message.raw_content
+    end
+
+    def content_type
+      social_user_message.content_type
     end
   end
 end
