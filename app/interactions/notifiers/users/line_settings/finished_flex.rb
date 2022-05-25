@@ -20,7 +20,7 @@ module Notifiers
                 ).template
               ]
             )
-          )
+          ).to_json
         end
 
         def content_type
