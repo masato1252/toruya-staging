@@ -63,12 +63,13 @@ ja:
     pay_now: 今すぐ支払う
     online_service_actions:
       video: 視聴する
-      audio: 視聴する
       pdf: ダウンロード
+      external: サービスを表示
+      membership: サービスを表示
+      course: サービスを表示
+      audio: 視聴する
       questionnaire: アンケートに答える
       diagnosis: 登録する
-      external: 利用する
-      membership: 登録する
     verify_line: 動作テスト
   common:
     processing: 送信中
