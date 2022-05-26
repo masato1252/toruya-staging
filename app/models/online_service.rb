@@ -148,6 +148,7 @@ class OnlineService < ApplicationRecord
   has_many :episodes
 
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
+  # solution_type pdf, video, external, membership, course
 
   def external_url
     external_purchase_url.presence || content_url

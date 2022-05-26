@@ -187,5 +187,28 @@ module LineMessages
         }
       }
     end
+
+    def self.next_card(line_keyword:)
+      {
+        "type": "bubble",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "sm",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "message",
+                "label": "More",
+                "text": "サービスMore - #{line_keyword}"
+              },
+              "flex": 1,
+              "gravity": "center"
+            }
+          ]
+        }
+      }
+    end
   end
 end

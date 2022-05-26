@@ -19,7 +19,7 @@ module Sales
           else
             LineMessages::FlexTemplateContainer.template(
               altText: I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message", service_title: sale_page.product.name),
-              contents: compose(Templates::OnlineService, sale_page: sale_page, online_service: sale_page.product, social_customer: social_customer)
+              contents: compose(Templates::OnlineService, online_service_customer_relation: relation)
             )
           end
 

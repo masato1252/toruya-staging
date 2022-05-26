@@ -43,11 +43,12 @@ class Lines::MessageEvent < ActiveInteraction::Base
           else
             compose(Lines::Menus::Guest, social_customer: social_customer)
           end
-        when I18n.t("line.bot.keywords.services")
+        when /#{I18n.t("line.bot.keywords.services")}/
           is_keyword = true
 
           if social_customer.customer
-            Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer)
+            last_relation_id = event["message"]["text"].strip.match(/\d+$/).try(:[], 0)
+            Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer, last_relation_id: last_relation_id)
           else
             compose(Lines::Menus::Guest, social_customer: social_customer)
           end

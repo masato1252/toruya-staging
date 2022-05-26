@@ -4,6 +4,7 @@ require "line_client"
 
 class Lines::Actions::ActiveOnlineServices < ActiveInteraction::Base
   object :social_customer
+  integer :last_relation_id, default: nil
 
   def execute
     unless customer
@@ -12,7 +13,7 @@ class Lines::Actions::ActiveOnlineServices < ActiveInteraction::Base
       return
     end
 
-    compose(Notifiers::Customers::OnlineServices::ActiveRelations, receiver: customer)
+    compose(Notifiers::Customers::OnlineServices::ActiveRelations, receiver: customer, last_relation_id: last_relation_id)
   end
 
   private
