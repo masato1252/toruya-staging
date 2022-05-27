@@ -27,8 +27,6 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
       let(:payment_type) { SalePage::PAYMENTS[:free] }
 
       it "create a free relation" do
-        allow(LineClient).to receive(:flex)
-
         expect {
           outcome
         }.to change {
@@ -50,8 +48,6 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
       let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :one_time_payment) }
 
       it "create a paid relation" do
-        allow(LineClient).to receive(:flex)
-
         expect {
           outcome
         }.to change {
@@ -135,8 +131,6 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
           let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled, customer: customer) }
 
           it "create a free relation" do
-            allow(LineClient).to receive(:flex)
-
             expect {
               outcome
             }.to change {
