@@ -11,7 +11,7 @@ module Templates
         picture_url: online_service.picture_url,
         content_url: content_url,
         title: online_service.name,
-        context: "種類：#{I18n.t("user_bot.dashboards.online_service_creation.goals.#{online_service.goal_type}.title")}\n期限：#{online_service_customer_relation.end_date_text}",
+        context: "#{I18n.t("common.type")}：#{I18n.t("user_bot.dashboards.online_service_creation.goals.#{online_service.goal_type}.title")}\n#{I18n.t("common.term")}：#{online_service_customer_relation.end_date_text}",
         action_templates: [
           LineActions::Uri.new(
             label: I18n.t("action.online_service_actions.#{online_service.solution_type_for_message}"),
@@ -19,7 +19,7 @@ module Templates
             btn: "primary"
           ),
           LineActions::Uri.new(
-            label: "登録情報",
+            label: I18n.t("common.status_info"),
             url: customer_status_online_service_url,
             btn: "secondary"
           )

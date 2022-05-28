@@ -201,7 +201,7 @@ module LineMessages
               "action": {
                 "type": "message",
                 "label": "More",
-                "text": "サービスMore - #{line_keyword}"
+                "text": "#{I18n.t("common.more")} - #{line_keyword}"
               },
               "flex": 1,
               "gravity": "center"

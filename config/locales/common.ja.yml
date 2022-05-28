@@ -196,5 +196,9 @@ ja:
     year_pay: 年額プラン
     usage_status: ご利用状況
     recommend: (推奨)
+    more: ービスMore
+    status_info: 登録情報
+    type: 種類
+    term: 期限
   errors:
     invalid_url: 無効なURL

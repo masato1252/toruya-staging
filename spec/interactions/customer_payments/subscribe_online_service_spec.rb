@@ -7,6 +7,7 @@ RSpec.describe CustomerPayments::SubscribeOnlineService do
   after { StripeMock.stop }
   let(:subscription) { FactoryBot.create(:subscription, :with_stripe) }
   let(:customer) { FactoryBot.create(:customer, user: subscription.user, with_stripe: true) }
+  let(:social_customer) { FactoryBot.create(:social_customer, customer: customer) }
   let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, customer: customer) }
   let(:args) do
     {
@@ -17,6 +18,7 @@ RSpec.describe CustomerPayments::SubscribeOnlineService do
 
   context "when subscribes successfully" do
     it "changes to expected state" do
+      allow(Sales::OnlineServices::SendLineCard).to receive(:run)
       outcome
 
       expect(relation).to be_paid_payment_state

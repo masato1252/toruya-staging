@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe Sales::OnlineServices::Approve do
-  let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment) }
-  let(:customer) { relation.customer }
-  let(:online_service) { relation.online_service  }
+RSpec.describe Sales::OnlineServices::Approve, :with_line do
+  let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, customer: customer) }
+  let(:customer) { FactoryBot.create(:social_customer).customer }
+  let(:online_service) { relation.online_service }
   let(:args) do
     {
       relation: relation
@@ -15,7 +15,7 @@ RSpec.describe Sales::OnlineServices::Approve do
 
   describe "#execute" do
     context "when sale page is free" do
-      let(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
+      let(:relation) { FactoryBot.create(:online_service_customer_relation, :free, customer: customer) }
 
       it "updates relation states" do
         expect {
@@ -47,8 +47,9 @@ RSpec.describe Sales::OnlineServices::Approve do
       end
 
       context "when service is external" do
-        let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, online_service: external_online_service) }
+        let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, online_service: external_online_service, customer: customer, sale_page: sale_page) }
         let(:external_online_service) { FactoryBot.create(:online_service, :external) }
+        let(:sale_page) { FactoryBot.create(:sale_page, :one_time_payment, product: external_online_service) }
 
         it "marks payment_state as paid" do
           expect {
