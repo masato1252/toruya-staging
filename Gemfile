@@ -79,6 +79,7 @@ gem "strong_migrations"
 gem "ahoy_matey"
 gem "with_advisory_lock"
 gem 'acts-as-taggable-on', '~> 7.0'
+gem "blazer"
 
 group :development, :test do
   gem "byebug", platform: :mri
