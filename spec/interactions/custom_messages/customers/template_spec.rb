@@ -46,5 +46,25 @@ RSpec.describe ::CustomMessages::Customers::Template do
         end
       end
     end
+
+    context "when product is a shop" do
+      let(:product) { FactoryBot.create(:shop) }
+      let(:scenario) { described_class::BOOKING_PAGE_BOOKED }
+      let!(:custom_message) { FactoryBot.create(:custom_message, service: product, scenario: scenario) }
+
+      it "returns shop's custom message" do
+        expect(outcome.result).to eq(custom_message.content)
+      end
+    end
+
+    context "when custom_message_only is true" do
+      context "when there is no custom message match" do
+        it "returns nil" do
+          args.merge!(custom_message_only: true)
+
+          expect(outcome.result).to be_nil
+        end
+      end
+    end
   end
 end

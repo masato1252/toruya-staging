@@ -160,7 +160,7 @@ RSpec.describe CustomMessages::Customers::Next do
     context "when it is from first time customer purchased(without custom_message params)" do
       let(:new_custom_message_after_days ) { 0 }
       let(:custom_message) { nil }
-      let(:scenario) { "foo" }
+      let(:scenario) { CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED }
       let(:args) do
         {
           receiver: receiver,

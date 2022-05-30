@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "translator"
+
 module Reservations
   module Notifications
     class Booking < Notify
@@ -25,7 +27,17 @@ module Reservations
       private
 
       def message
-        template = ::CustomMessages::Customers::Template.run!(product: booking_page, scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED)
+        template = compose(
+          ::CustomMessages::Customers::Template,
+          product: booking_page,
+          scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED,
+          custom_message_only: true
+        )
+        template ||= compose(
+          ::CustomMessages::Customers::Template,
+          product: booking_page.shop,
+          scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED
+        )
 
         Translator.perform(template, booking_page.message_template_variables(customer, reservation))
       end

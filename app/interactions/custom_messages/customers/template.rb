@@ -8,14 +8,18 @@ module CustomMessages
       BOOKING_PAGE_BOOKED= "booking_page_booked"
       BOOKING_PAGE_ONE_DAY_REMINDER = "booking_page_one_day_reminder"
 
+      SCENARIOS = [ONLINE_SERVICE_PURCHASED, ONLINE_SERVICE_MESSAGE_TEMPLATE, BOOKING_PAGE_BOOKED, BOOKING_PAGE_ONE_DAY_REMINDER].freeze
+
       object :product, class: ApplicationRecord, default: nil
       string :scenario
+      boolean :custom_message_only, default: false
 
       validate :validate_product_type
 
       def execute
         message = CustomMessage.find_by(service: product, scenario: scenario, after_days: nil)
         return message.content if message
+        return if custom_message_only
 
         template = case scenario
                    when BOOKING_PAGE_BOOKED
@@ -36,7 +40,7 @@ module CustomMessages
       private
 
       def validate_product_type
-        if product.present? && [OnlineService, BookingPage].exclude?(product.class)
+        if product.present? && [OnlineService, BookingPage, Shop].exclude?(product.class)
           errors.add(:product, :invalid_type)
         end
       end
