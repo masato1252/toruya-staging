@@ -39,7 +39,7 @@ module Reservations
           scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED
         )
 
-        Translator.perform(template, booking_page.message_template_variables(customer, reservation))
+        Translator.perform(template, reservation.message_template_variables(customer))
       end
     end
   end

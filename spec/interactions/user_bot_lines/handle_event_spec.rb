@@ -30,7 +30,7 @@ RSpec.describe UserBotLines::HandleEvent do
 
   describe "#execute" do
     context "when message_type is message" do
-      xit "creates expected social_user and executes expected event" do
+      it "creates expected social_user and executes expected event" do
         response = Net::HTTPOK.new(1.0, "200", "OK")
         expect(LineClient).to receive(:profile).and_return(response)
         expect(response).to receive(:body) { {displayName: "foo", pictureUrl: "bar"}.to_json }

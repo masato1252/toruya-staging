@@ -15,14 +15,20 @@ module Reservations
 
       def message
         booking_page = ReservationCustomer.find_by!(customer: customer, reservation: reservation).booking_page
-        template = ::CustomMessages::Customers::Template.run!(product: booking_page, scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER)
+        template = compose(
+          ::CustomMessages::Customers::Template,
+          product: booking_page,
+          scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
+          custom_message_only: true
+        )
 
-        Translator.perform(template, {
-          customer_name: customer.name,
-          shop_name: reservation.shop.display_name,
-          shop_phone_number: reservation.shop.phone_number,
-          booking_time: "#{I18n.l(reservation.start_time, format: :long_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}"
-        })
+        template ||= compose(
+          ::CustomMessages::Customers::Template,
+          product: reservation.shop,
+          scenario: ::CustomMessages::Customers::Template::RESERVATION_ONE_DAY_REMINDER
+        )
+
+        Translator.perform(template, reservation.message_template_variables(customer))
       end
     end
   end

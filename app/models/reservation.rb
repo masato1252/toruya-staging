@@ -128,6 +128,24 @@ class Reservation < ApplicationRecord
     ACTIONS[aasm_state]
   end
 
+  def message_template_variables(customer_or_user)
+    booking_time =
+      case customer_or_user
+      when Customer
+        "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
+      when User
+        # XXX: only used for demo
+        "#{I18n.l(Time.current, format: :long_date_with_wday)} ~ #{I18n.l(Time.current.advance(hours: 1), format: :time_only)}"
+      end
+
+    {
+      customer_name: customer_or_user.display_last_name,
+      shop_name: shop.display_name,
+      shop_phone_number: shop.phone_number,
+      booking_time: booking_time
+    }
+  end
+
   private
 
   def end_time_larger_than_start_time

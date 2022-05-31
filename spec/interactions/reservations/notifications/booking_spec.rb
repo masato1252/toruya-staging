@@ -53,7 +53,7 @@ RSpec.describe Reservations::Notifications::Booking do
       let!(:social_customer) { FactoryBot.create(:social_customer, customer: customer, user: user) }
 
       it "calls Reservations::Notifications::SocialMessage" do
-        expected_message = Translator.perform(I18n.t("customer.notifications.sms.booking"), booking_page.message_template_variables(customer, reservation))
+        expected_message = Translator.perform(I18n.t("customer.notifications.sms.booking"), reservation.message_template_variables(customer))
 
         expect(Reservations::Notifications::SocialMessage).to receive(:run).with(
             social_customer: social_customer, message: expected_message

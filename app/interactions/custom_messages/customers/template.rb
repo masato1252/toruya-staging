@@ -5,10 +5,12 @@ module CustomMessages
     class Template < ActiveInteraction::Base
       ONLINE_SERVICE_PURCHASED = "online_service_purchased"
       ONLINE_SERVICE_MESSAGE_TEMPLATE = "online_service_message_template"
-      BOOKING_PAGE_BOOKED= "booking_page_booked"
+      BOOKING_PAGE_BOOKED = "booking_page_booked" # only for booking_page_booked
+      RESERVATION_CONFIRMED = "reservation_confirmed"
       BOOKING_PAGE_ONE_DAY_REMINDER = "booking_page_one_day_reminder"
+      RESERVATION_ONE_DAY_REMINDER = 'reservation_one_day_reminder'
 
-      SCENARIOS = [ONLINE_SERVICE_PURCHASED, ONLINE_SERVICE_MESSAGE_TEMPLATE, BOOKING_PAGE_BOOKED, BOOKING_PAGE_ONE_DAY_REMINDER].freeze
+      SCENARIOS = [ONLINE_SERVICE_PURCHASED, ONLINE_SERVICE_MESSAGE_TEMPLATE, BOOKING_PAGE_BOOKED, RESERVATION_CONFIRMED, BOOKING_PAGE_ONE_DAY_REMINDER, RESERVATION_ONE_DAY_REMINDER].freeze
 
       object :product, class: ApplicationRecord, default: nil
       string :scenario
@@ -24,7 +26,9 @@ module CustomMessages
         template = case scenario
                    when BOOKING_PAGE_BOOKED
                      I18n.t("customer.notifications.sms.booking")
-                   when BOOKING_PAGE_ONE_DAY_REMINDER
+                   when RESERVATION_CONFIRMED
+                     I18n.t("customer.notifications.sms.confirmation")
+                   when BOOKING_PAGE_ONE_DAY_REMINDER, RESERVATION_ONE_DAY_REMINDER
                      I18n.t("customer.notifications.sms.reminder")
                    when ONLINE_SERVICE_PURCHASED
                      I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message")
