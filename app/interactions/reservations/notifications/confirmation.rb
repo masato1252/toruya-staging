@@ -28,8 +28,6 @@ module Reservations
         )
 
         Translator.perform(template, reservation.message_template_variables(customer))
-
-        template
       end
     end
   end

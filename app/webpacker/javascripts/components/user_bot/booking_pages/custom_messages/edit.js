@@ -63,6 +63,7 @@ const CustomMessageEdit =({props}) => {
   const renderCorrespondField = () => {
     switch(props.scenario) {
       case "booking_page_booked":
+      case "reservation_confirmed":
       case "booking_page_one_day_reminder":
         return (
           <>

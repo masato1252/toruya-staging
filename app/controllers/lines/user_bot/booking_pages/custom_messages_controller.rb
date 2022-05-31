@@ -4,6 +4,7 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
   def index
     @booking_page = super_user.booking_pages.find(params[:booking_page_id])
     @booked_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED).right_away.first
+    @reservation_confirmed_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::RESERVATION_CONFIRMED).right_away.first
     @one_day_reminder_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER).right_away.first
   end
 
