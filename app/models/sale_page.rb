@@ -127,11 +127,11 @@ class SalePage < ApplicationRecord
   end
 
   def monthly_price_text
-    monthly_price ? Money.new(monthly_price.amount).format(:ja_default_format) : nil
+    monthly_price ? "#{I18n.t("common.month_pay")} #{Money.new(monthly_price.amount).format(:ja_default_format)}" : nil
   end
 
   def year_price_text
-    yearly_price ? Money.new(yearly_price.amount).format(:ja_default_format) : nil
+    yearly_price ? "#{I18n.t("common.year_pay")} #{Money.new(yearly_price.amount).format(:ja_default_format)}" : nil
   end
 
   def serializer(params = {})

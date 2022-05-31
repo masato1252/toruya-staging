@@ -139,16 +139,29 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     total_completed_payments_amount >= product_amount
   end
 
+  def order_completed
+    @order_completed ||= customer_payments.order("id DESC").each_with_object({}) do |payment, h|
+      next if h[payment.order_id] == true
+
+      h[payment.order_id] = payment.completed?
+    end
+  end
+
   def selling_prices_text
     if free_payment_state?
       I18n.t("common.free_price")
+    elsif online_service.recurring_charge_required?
+      # month_pay, year_pay
+      "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+    elsif online_service.external?
+      I18n.t("common.contact_owner_directly")
     elsif price_details.size == 1
-      price_details.first.amount_with_currency.format(:ja_default_format)
+      "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
     else
       times = price_details.size
       amount_with_currency = price_details.first.amount_with_currency
 
-      "#{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+      "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
     end
   end
 end
