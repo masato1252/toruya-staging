@@ -129,14 +129,12 @@ class Reservation < ApplicationRecord
   end
 
   def message_template_variables(customer)
-    booking_time = "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
-
-    {
-      customer_name: customer.display_last_name,
-      shop_name: shop.display_name,
-      shop_phone_number: shop.phone_number,
-      booking_time: booking_time
-    }
+    Templates::ReservationVariables.run!(
+      receiver: customer,
+      shop: shop,
+      start_time: start_time,
+      end_time: end_time
+    )
   end
 
   private

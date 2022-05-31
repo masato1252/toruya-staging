@@ -91,13 +91,11 @@ class BookingPage < ApplicationRecord
 
   # XXX: only used for demo
   def message_template_variables(user)
-    booking_time = "#{I18n.l(Time.current, format: :long_date_with_wday)} ~ #{I18n.l(Time.current.advance(hours: 1), format: :time_only)}"
-
-    {
-      customer_name: user.display_last_name,
-      shop_name: shop.display_name,
-      shop_phone_number: shop.phone_number,
-      booking_time: booking_time
-    }
+    Templates::ReservationVariables.run!(
+      receiver: user,
+      shop: shop,
+      start_time: Time.current,
+      end_time: Time.current.advance(hours: 1)
+    )
   end
 end
