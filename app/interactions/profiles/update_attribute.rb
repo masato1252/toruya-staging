@@ -26,6 +26,14 @@ module Profiles
             phonetic_last_name: attrs[:phonetic_last_name],
             phonetic_first_name: attrs[:phonetic_first_name]
           )
+
+          staff = profile.user.current_staff(profile.user)
+          staff.update!(
+            last_name: attrs[:last_name],
+            first_name: attrs[:first_name],
+            phonetic_last_name: attrs[:phonetic_last_name],
+            phonetic_first_name: attrs[:phonetic_first_name]
+          )
         when "company_name", "company_phone_number", "website"
           profile.update(attrs.slice(update_attribute))
         when "company_address_details"
