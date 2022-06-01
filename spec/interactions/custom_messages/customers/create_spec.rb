@@ -4,14 +4,14 @@ require "rails_helper"
 
 RSpec.describe CustomMessages::Customers::Create do
   let(:service) { relation.online_service }
-  let(:template) { "foo" }
+  let(:content) { "foo" }
   let(:scenario) { CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED }
   let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
   let(:after_days) { nil }
   let(:args) do
     {
       service: service,
-      template: template,
+      content: content,
       scenario: scenario,
       after_days: after_days,
     }
