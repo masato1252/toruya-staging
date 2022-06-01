@@ -14,9 +14,10 @@ module Reservations
       private
 
       def message
+        reservation_customer = ReservationCustomer.where(reservation: reservation, customer: customer).first
         template = compose(
           ::CustomMessages::Customers::Template,
-          product: reservation.booking_page,
+          product: reservation_customer.booking_page,
           scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
           custom_message_only: true
         )

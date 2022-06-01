@@ -77,6 +77,8 @@ ja:
           now_state: あなたは現在
           customer_info_state: 顧客情報があります
           sale_page_state: 販売ページがあります
+        custom_messages:
+          auto_message: 自動送信メッセージ(デフォルト)
         plans:
           save: 選択する
           save_and_pay: 選択する
