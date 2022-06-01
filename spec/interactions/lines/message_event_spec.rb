@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Lines::MessageEvent do
+RSpec.describe Lines::MessageEvent, :with_line do
   let(:message_type) { "text" }
   let(:event) do
     {
@@ -33,15 +33,22 @@ RSpec.describe Lines::MessageEvent do
 
   describe "#execute" do
     context "when event text match keyowrd" do
-      xit "creates a social messages" do
-        allow(LineClient).to receive(:send)
-        allow(LineClient).to receive(:flex)
-
+      it "creates a social messages" do
         expect {
           outcome
         }.to change {
           SocialMessage.where(social_customer: social_customer, message_type: SocialMessage.message_types[:customer_reply_bot]).count
         }.by(1)
+      end
+    end
+
+    context "when keyword match services" do
+      let(:last_relation_id) { "123" }
+      let(:text) { "#{I18n.t("common.more")} - #{I18n.t("line.bot.keywords.services")} #{last_relation_id}" }
+
+      it "extracts out the last_relation_id" do
+        expect(Lines::Actions::ActiveOnlineServices).to receive(:run).with(social_customer: social_customer, last_relation_id: last_relation_id)
+        outcome
       end
     end
   end

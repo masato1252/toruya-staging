@@ -9,5 +9,9 @@ FactoryBot.define do
     trait :completed do
       state { :completed }
     end
+
+    trait :processor_failed do
+      state { :processor_failed }
+    end
   end
 end

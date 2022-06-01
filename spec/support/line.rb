@@ -1,3 +1,5 @@
+require "line_client"
+
 RSpec.configure do |config|
   config.before(:each) do |example|
     if example.metadata[:with_line].present?

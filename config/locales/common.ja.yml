@@ -63,12 +63,13 @@ ja:
     pay_now: 今すぐ支払う
     online_service_actions:
       video: 視聴する
-      audio: 視聴する
       pdf: ダウンロード
+      external: サービスを表示
+      membership: サービスを表示
+      course: サービスを表示
+      audio: 視聴する
       questionnaire: アンケートに答える
       diagnosis: 登録する
-      external: 利用する
-      membership: 登録する
     verify_line: 動作テスト
   common:
     processing: 送信中
@@ -193,7 +194,12 @@ ja:
     multiple_times_pay: 分割払い
     month_pay: 月額プラン
     year_pay: 年額プラン
+    contact_owner_directly: 店舗に直接ご確認ください
     usage_status: ご利用状況
     recommend: (推奨)
+    more: ービスMore
+    status_info: 登録情報
+    type: 種類
+    term: 期限
   errors:
     invalid_url: 無効なURL

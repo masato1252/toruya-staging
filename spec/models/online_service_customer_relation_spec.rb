@@ -3,6 +3,25 @@
 require "rails_helper"
 
 RSpec.describe OnlineServiceCustomerRelation do
+  describe "#order_completed" do
+    let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :multiple_times_payment) }
+
+    it 'returns order id with completed status' do
+      expect(online_service_customer_relation.order_completed).to be_blank
+
+      first_order_id = online_service_customer_relation.price_details.first.order_id
+      FactoryBot.create(:customer_payment, :completed, product: online_service_customer_relation, order_id: first_order_id)
+      expect(OnlineServiceCustomerRelation.find(online_service_customer_relation.id).order_completed).to eq({ first_order_id => true })
+
+      second_order_id = online_service_customer_relation.price_details.second.order_id
+      FactoryBot.create(:customer_payment, :processor_failed, product: online_service_customer_relation, order_id: second_order_id)
+      expect(OnlineServiceCustomerRelation.find(online_service_customer_relation.id).order_completed).to eq({ first_order_id => true, second_order_id => false })
+
+      FactoryBot.create(:customer_payment, :completed, product: online_service_customer_relation, order_id: second_order_id)
+      expect(OnlineServiceCustomerRelation.find(online_service_customer_relation.id).order_completed).to eq({ first_order_id => true, second_order_id => true })
+    end
+  end
+
   describe "#state" do
     context "when service was started and doesn't end" do
       [

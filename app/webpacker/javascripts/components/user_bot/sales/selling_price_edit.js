@@ -29,7 +29,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
               }
             }}
           />
-          <span>１回払い</span>
+          <span>{I18n.t("common.one_time_pay")}</span>
           <br />
           {price.price_types.includes("one_time") && (
             <>
@@ -78,7 +78,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
                 }
               }}
             />
-            <span>分割払い</span>
+            <span>{I18n.t("common.multiple_times_pay")}</span>
             <br />
             {price.price_types.includes("multiple_times") && (
               <>

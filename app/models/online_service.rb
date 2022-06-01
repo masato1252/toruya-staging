@@ -148,6 +148,7 @@ class OnlineService < ApplicationRecord
   has_many :episodes
 
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
+  # solution_type pdf, video, external, membership, course
 
   def external_url
     external_purchase_url.presence || content_url
@@ -253,11 +254,7 @@ class OnlineService < ApplicationRecord
   end
 
   def solution_type_for_message
-    if course? && lessons.exists?
-      lessons.first.solution_type
-    else
-      solution_type
-    end
+    solution_type
   end
 
   def default_picture_url
@@ -269,9 +266,9 @@ class OnlineService < ApplicationRecord
       # use video_description_card ratio for the resize
       Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
     elsif course? && lessons.exists?
-      lessons.first.thumbnail_url || sale_page&.introduction_video_thumbnail_url || ContentHelper::VIDEO_THUMBNAIL_URL
+      lessons.first.thumbnail_url || default_picture_url
     else
-      thumbnail_url || sale_page&.introduction_video_thumbnail_url || ContentHelper::VIDEO_THUMBNAIL_URL
+      thumbnail_url || default_picture_url
     end
   end
 end
