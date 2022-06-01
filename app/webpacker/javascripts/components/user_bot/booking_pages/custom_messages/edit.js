@@ -31,7 +31,7 @@ const CustomMessageEdit =({props}) => {
       data: _.assign( data, {
         id: props.message.id,
         scenario: props.scenario,
-        template: template,
+        content: template,
         service_id: props.message.service_id,
         service_type: props.message.service_type
       })
@@ -45,7 +45,7 @@ const CustomMessageEdit =({props}) => {
       data: _.assign( data, {
         id: props.message.id,
         scenario: props.scenario,
-        template: template,
+        content: template,
         service_id: props.message.service_id,
         service_type: props.message.service_type
       })
@@ -65,6 +65,7 @@ const CustomMessageEdit =({props}) => {
       case "booking_page_booked":
       case "reservation_confirmed":
       case "booking_page_one_day_reminder":
+      case "reservation_one_day_reminder":
         return (
           <>
             <div className="field-row">{I18n.t(`user_bot.dashboards.settings.custom_message.booking_page.${props.scenario}`)}</div>
@@ -113,7 +114,7 @@ const CustomMessageEdit =({props}) => {
     <div className="form with-top-bar">
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_booking_page_custom_messages_path(props.message.service_id)}>
+          <a href={props.previous_path || Routes.lines_user_bot_booking_page_custom_messages_path(props.message.service_id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }

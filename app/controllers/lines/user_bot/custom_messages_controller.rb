@@ -5,14 +5,14 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
     if params[:id]
       outcome = CustomMessages::Customers::Update.run(
         message: CustomMessage.find_by!(id: params[:id], service: service),
-        template: params[:template],
+        content: params[:content],
         after_days: params[:after_days].presence
       )
     else
       outcome = CustomMessages::Customers::Create.run(
         service: service,
         scenario: params[:scenario],
-        template: params[:template],
+        content: params[:content],
         after_days: params[:after_days].presence
       )
     end
@@ -23,6 +23,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         lines_user_bot_service_custom_messages_path(params[:service_id])
       when BookingPage
         lines_user_bot_booking_page_custom_messages_path(params[:service_id])
+      when Shop
+        lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
       end
 
     return_json_response(outcome, { redirect_to: redirect_path })
@@ -31,21 +33,11 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
   def demo
     service = params[:service_type].constantize.find_by(user: current_user, id: params[:service_id])
 
-    message =
-      if params[:id]
-        CustomMessages::Customers::Update.run!(
-          message: CustomMessage.find_by!(id: params[:id], service: service),
-          template: params[:template],
-          after_days: params[:after_days].presence
-        )
-      else
-        CustomMessages::Customers::Create.run!(
-          service: service,
-          scenario: params[:scenario],
-          template: params[:template],
-          after_days: params[:after_days].presence
-        )
-      end
+    message = CustomMessage.new(
+      service: service,
+      content: message_content,
+      content_type: params[:content_type] || CustomMessage::TEXT_TYPE,
+    )
 
     CustomMessages::Demo.run!(custom_message: message, receiver: current_user)
 
@@ -63,8 +55,20 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         lines_user_bot_service_custom_messages_path(params[:service_id])
       when BookingPage
         lines_user_bot_booking_page_custom_messages_path(params[:service_id])
+      when Shop
+        lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
       end
 
     redirect_to redirect_path
+  end
+
+  private
+
+  def message_content
+    CustomMessages::BuildContent.run!(
+      content_type: params[:content_type] || CustomMessage::TEXT_TYPE,
+      flex_template: params[:flex_template],
+      params: params.permit!.to_h
+    )
   end
 end

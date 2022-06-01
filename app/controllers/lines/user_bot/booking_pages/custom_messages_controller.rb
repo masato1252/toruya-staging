@@ -13,11 +13,4 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
     @message = CustomMessage.find_by(service: @booking_page, id: params[:id])
     @template = @message ? @message.content : ::CustomMessages::Customers::Template.run!(product: @booking_page, scenario: params[:scenario])
   end
-
-  def update_scenario
-    booking_page = super_user.booking_pages.find(params[:booking_page_id])
-    outcome = CustomMessages::Customers::Update.run(service: booking_page, template: params[:template], scenario: params[:scenario])
-
-    return_json_response(outcome, { redirect_to: lines_user_bot_booking_page_custom_messages_path(params[:service_id]) })
-  end
 end

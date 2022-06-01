@@ -140,12 +140,23 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :shops, only: [:index, :show, :update, :edit]
+        resources :shops, only: [:index, :show, :update, :edit] do
+          collection do
+            get :custom_messages
+          end
+
+          resources :custom_messages, only: [:index] do
+            collection do
+              get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
+            end
+          end
+        end
         resources :menus, only: [:index, :show, :update, :edit] do
           collection do
             get "/social_service_user_id/:social_service_user_id", action: "index"
           end
         end
+
       end
 
       resources :settings, only: [:index] do

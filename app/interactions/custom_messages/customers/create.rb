@@ -2,7 +2,7 @@ module CustomMessages
   module Customers
     class Create < ActiveInteraction::Base
       object :service, class: ApplicationRecord
-      string :template
+      string :content
       string :scenario
       integer :after_days, default: nil
 
@@ -13,7 +13,7 @@ module CustomMessages
         message = CustomMessage.create(
           service: service,
           scenario: scenario,
-          content: template,
+          content: content,
           after_days: after_days
         )
 

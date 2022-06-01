@@ -1,0 +1,8 @@
+<div class="settings-dashboard form">
+  <h3><%= I18n.t("user_bot.dashboards.settings.dashboard.title") %></h3>
+  <% current_user.shops.each do |shop| %>
+    <%= link_to lines_user_bot_settings_shop_custom_messages_path(shop_id: shop.id), class: "field-row" do %>
+      <span><%= shop.name %></span><i class="fa fa-angle-right"></i>
+    <% end %>
+  <% end %>
+</div>
