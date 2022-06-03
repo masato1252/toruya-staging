@@ -5,6 +5,6 @@
     lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)),
     class: "btn btn-yellow",
     method: :get,
-    disabled: !social_account.line_settings_finished? || social_account.line_settings_verified?
+    disabled: !current_user.social_account&.line_settings_finished? || current_user.social_account&.line_settings_verified?
   %>
 </div>

@@ -3,7 +3,7 @@
 <%= react_component("user_bot/services/creation_flow", {
   props: {
     is_premium_member: current_user.premium_member?,
-    line_settings_verified: current_user.social_account.line_settings_verified?,
+    line_settings_verified: current_user.social_account&.line_settings_verified?,
     line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)),
     service_goals: ::OnlineService::GOALS,
     user_payable: current_user.payable?,
