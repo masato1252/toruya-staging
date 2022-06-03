@@ -1,6 +1,6 @@
 <div class="form">
   <h3 class="centerize header"><%= I18n.t("user_bot.dashboards.sales.new.what_to_sale") %></h3>
-  <% if !current_user.social_account.line_settings_verified? %>
+  <% if !current_user.social_account&.line_settings_verified? %>
     <div class="warning centerize">
       <%= t("line_verification.unverified_warning_message") %>
       <%= button_to t("action.verify_line"),
