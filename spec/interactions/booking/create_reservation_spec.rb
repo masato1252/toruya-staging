@@ -165,47 +165,93 @@ RSpec.describe Booking::CreateReservation do
       end
 
       context "when social_customer with customer" do
-        let(:existing_cusomter) { FactoryBot.create(:customer, user: user) }
-        let(:social_customer) { FactoryBot.create(:social_customer, customer: existing_cusomter) }
+        let(:existing_customer) { FactoryBot.create(:customer, user: user) }
 
-        it "updates social_customer's customer's info" do
-          customer_info_hash = {
-            customer_last_name: "foo",
-            customer_first_name: "bar",
-            customer_phonetic_last_name: "baz",
-            customer_phonetic_first_name: "qux",
-            customer_phone_number: "123456789",
-            customer_email: "example@email.com"
-          }
-          args.merge!(customer_info_hash)
+        context 'when this social_customer is not owner' do
+          let(:social_customer) { FactoryBot.create(:social_customer, customer: existing_customer) }
 
-          expect {
-            outcome
-          }.not_to change {
-            user.customers.count
-          }
+          it "updates social_customer's customer's info" do
+            customer_info_hash = {
+              customer_last_name: "foo",
+              customer_first_name: "bar",
+              customer_phonetic_last_name: "baz",
+              customer_phonetic_first_name: "qux",
+              customer_phone_number: "123456789",
+              customer_email: "example@email.com"
+            }
+            args.merge!(customer_info_hash)
 
-          result = outcome.result
-          customer = result[:customer]
-          reservation = result[:reservation]
+            expect {
+              outcome
+            }.not_to change {
+              user.customers.count
+            }
 
-          expect(customer.id).to eq(existing_cusomter.id)
-          expect(customer.last_name).to eq("foo")
-          expect(customer.first_name).to eq("bar")
-          expect(customer.phonetic_last_name).to eq("baz")
-          expect(customer.phonetic_first_name).to eq("qux")
+            result = outcome.result
+            customer = result[:customer]
+            reservation = result[:reservation]
 
-          reservation_customer = reservation.reservation_customers.first
-          expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
-            last_name: "foo",
-            first_name: "bar",
-            phonetic_last_name: "baz",
-            phonetic_first_name: "qux",
-            phone_number: "123456789",
-            email: "example@email.com"
-          }))
+            expect(customer.id).to eq(existing_customer.id)
+            expect(customer.last_name).to eq("foo")
+            expect(customer.first_name).to eq("bar")
+            expect(customer.phonetic_last_name).to eq("baz")
+            expect(customer.phonetic_first_name).to eq("qux")
 
-          expect(customer.social_customer).to eq(social_customer)
+            reservation_customer = reservation.reservation_customers.first
+            expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
+              last_name: "foo",
+              first_name: "bar",
+              phonetic_last_name: "baz",
+              phonetic_first_name: "qux",
+              phone_number: "123456789",
+              email: "example@email.com"
+            }))
+
+            expect(customer.social_customer).to eq(social_customer)
+          end
+        end
+
+        context 'when this social_customer is owner' do
+          let(:social_customer) { FactoryBot.create(:social_customer, :is_owner, customer: existing_customer) }
+
+          it 'creates a new customer' do
+            customer_info_hash = {
+              customer_last_name: "foo",
+              customer_first_name: "bar",
+              customer_phonetic_last_name: "baz",
+              customer_phonetic_first_name: "qux",
+              customer_phone_number: "123456789",
+              customer_email: "example@email.com"
+            }
+            args.merge!(customer_info_hash)
+
+            expect {
+              outcome
+            }.to change {
+              user.customers.count
+            }.by(1)
+            result = outcome.result
+            customer = result[:customer]
+            reservation = result[:reservation]
+
+            customer.reload
+            expect(customer.last_name).to eq("foo")
+            expect(customer.first_name).to eq("bar")
+            expect(customer.phonetic_last_name).to eq("baz")
+            expect(customer.phonetic_first_name).to eq("qux")
+
+            reservation_customer = reservation.reservation_customers.first
+            expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
+              last_name: "foo",
+              first_name: "bar",
+              phonetic_last_name: "baz",
+              phonetic_first_name: "qux",
+              phone_number: "123456789",
+              email: "example@email.com"
+            }))
+
+            expect(customer.social_customer).to be_nil
+          end
         end
       end
 
@@ -295,7 +341,7 @@ RSpec.describe Booking::CreateReservation do
 
         context "when there is a customer with same name and phone_number" do
           it "updates existing customer info" do
-            existing_cusomter = FactoryBot.create(
+            existing_customer = FactoryBot.create(
               :customer, user: user,
               last_name: "foo",
               first_name: "bar",

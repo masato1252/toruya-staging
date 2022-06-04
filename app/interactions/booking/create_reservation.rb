@@ -108,7 +108,7 @@ module Booking
             customer = user.customers.find(customer_info["id"])
           end
 
-          if customer ||= social_customer&.customer
+          if !social_customer&.is_owner && (customer ||= social_customer&.customer)
             if customer_phonetic_last_name && customer_phonetic_first_name
               customer_outcome = Customers::Store.run(
                 user: user,
@@ -152,7 +152,7 @@ module Booking
           end
 
           if customer
-            if social_customer
+            if social_customer && !social_customer.is_owner
               social_customer.update!(customer_id: customer.id)
             end
 
