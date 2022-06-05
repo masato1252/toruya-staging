@@ -116,7 +116,7 @@ const SalePageEdit =({props}) => {
         submittedData = { reviews: reviews.map((review) => _.pick(review, "customer_name", "content", "picture", "filename")) }
         break
       case "faq":
-        submittedData = { faq }
+        submittedData = { faq: faq.filter((f) => f.answer?.length && f.question?.length) }
         break
       case "introduction_video_url":
         break
