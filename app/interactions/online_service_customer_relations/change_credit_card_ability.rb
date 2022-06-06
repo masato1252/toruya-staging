@@ -5,7 +5,7 @@ class OnlineServiceCustomerRelations::ChangeCreditCardAbility < ActiveInteractio
 
   def execute
     return false if online_service.external?
-    return relation.legal_to_access? if online_service.recurring_charge_required?
+    return relation.payment_legal_to_access? if online_service.recurring_charge_required?
 
     # no fail order and not paid completed
     relation.order_completed.values.all?(true) && !relation.paid_completed?

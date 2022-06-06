@@ -7,7 +7,7 @@
   <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></div>
   <%= render "lines/user_bot/services/customers/info" %>
 
-  <% if @online_service.external? && @relation.legal_to_access? && @relation.current %>
+  <% if @online_service.external? && @relation.payment_legal_to_access? && @relation.current %>
     <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
       <%= link_to stop_lines_user_bot_service_customer_path(@online_service, @relation),
         method: :delete,

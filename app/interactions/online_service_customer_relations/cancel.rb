@@ -10,7 +10,7 @@ class OnlineServiceCustomerRelations::Cancel < ActiveInteraction::Base
 
   def execute
     relation.with_lock do
-      if !relation.legal_to_access? && stripe_subscription_canceled?
+      if !relation.payment_legal_to_access? && stripe_subscription_canceled?
         return relation
       end
 

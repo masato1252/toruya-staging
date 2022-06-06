@@ -116,14 +116,20 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
         context 'when customer already purchased this online service' do
           let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, payment_state: :paid, customer: customer, expire_at: 1.day.ago) }
 
-          it "doesn't touch customer" do
-            expect(LineClient).not_to receive(:flex)
-
+          it "purchases again" do
             expect {
               outcome
-            }.not_to change {
-              customer.updated_at
-            }
+            }.to change {
+              OnlineServiceCustomerRelation.where(
+                online_service: online_service_customer_relation.online_service,
+                customer: online_service_customer_relation.customer,
+                sale_page: online_service_customer_relation.sale_page,
+              ).count
+            }.by(1)
+
+            expect(online_service_customer_relation.reload.current).to be_nil
+            expect(OnlineServiceCustomerRelation.last.current).to eq(true)
+            expect(LineClient).to have_received(:flex)
           end
         end
 

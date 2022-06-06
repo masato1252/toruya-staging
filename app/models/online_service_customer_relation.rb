@@ -93,14 +93,18 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   # available means you are legal to use, but the service doesn't start yet
   def state
-    return "accessible" if legal_to_access? && active? && service_started?
-    return "available" if legal_to_access? && active? && !service_started?
-    return "pending" if legal_to_access? && pending?
+    return "accessible" if payment_legal_to_access? && active? && service_started?
+    return "available" if payment_legal_to_access? && active? && !service_started?
+    return "pending" if payment_legal_to_access? && pending?
     "inactive"
   end
 
   def legal_to_access?
-    @legal_to_access ||= current && ACTIVE_STATES.include?(payment_state) && unexpired?
+    payment_legal_to_access? && active?
+  end
+
+  def payment_legal_to_access? # payment is fine
+    @payment_legal_to_access ||= current && ACTIVE_STATES.include?(payment_state) && unexpired?
   end
 
   def service_started?
