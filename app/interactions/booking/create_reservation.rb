@@ -380,7 +380,7 @@ module Booking
     end
 
     def social_customer
-      SocialCustomer.find_by(social_user_id: social_user_id) if social_user_id
+      SocialCustomer.find_by(social_user_id: social_user_id, user_id: booking_page.user_id) if social_user_id
     end
   end
 end

@@ -21,7 +21,7 @@ RSpec.describe Booking::CreateReservation do
   let(:booking_end_at) { booking_start_at.advance(minutes: booking_option.minutes) }
   let(:staff) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
   let(:staff2) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
-  let(:social_customer) { FactoryBot.create(:social_customer) }
+  let(:social_customer) { FactoryBot.create(:social_customer, user: user) }
   let(:social_user_id) { social_customer.social_user_id }
   let(:args) do
     {
@@ -168,7 +168,7 @@ RSpec.describe Booking::CreateReservation do
         let(:existing_customer) { FactoryBot.create(:customer, user: user) }
 
         context 'when this social_customer is not owner' do
-          let(:social_customer) { FactoryBot.create(:social_customer, customer: existing_customer) }
+          let(:social_customer) { FactoryBot.create(:social_customer, customer: existing_customer, user: user) }
 
           it "updates social_customer's customer's info" do
             customer_info_hash = {
@@ -256,7 +256,7 @@ RSpec.describe Booking::CreateReservation do
       end
 
       context "when social_customer without customer(a new customer)" do
-        let(:social_customer) { FactoryBot.create(:social_customer, customer: nil) }
+        let(:social_customer) { FactoryBot.create(:social_customer, customer: nil, user: user) }
 
         it "records all the data" do
           customer_info_hash = {

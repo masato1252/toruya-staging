@@ -935,6 +935,11 @@ class BookingReservationForm extends React.Component {
 
     return (
       <div className="done-view">
+        {this.props.is_shop_owner && (
+          <div className="warning">
+            If you are booking for your customer, we won't connect your line account with your customer.
+          </div>
+        )}
         <h3 className="title">
           {title}
         </h3>
