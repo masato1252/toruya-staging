@@ -6,15 +6,6 @@
   <%= render "lines/user_bot/field_row", title: @shop.name %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
-  <%= render "lines/user_bot/field_row",
-    title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked"),
-    path: edit_scenario_lines_user_bot_settings_shop_custom_messages_path(
-      @shop,
-      scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED,
-      right_away: true,
-      id: @booked_message&.id
-    )
-  %>
 
   <%= render "lines/user_bot/field_row",
     title: t("user_bot.dashboards.settings.custom_message.booking_page.reservation_confirmed"),
