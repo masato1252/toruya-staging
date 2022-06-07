@@ -9,7 +9,8 @@ module Reservations
 
       def execute
         if customer.social_customer
-          Reservations::Notifications::SocialMessage.run!(
+          compose(
+            Reservations::Notifications::SocialMessage,
             social_customer: customer.social_customer,
             message: message
           )

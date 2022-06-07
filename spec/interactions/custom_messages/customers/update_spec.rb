@@ -6,25 +6,25 @@ RSpec.describe CustomMessages::Customers::Update do
   let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
   let(:service) { relation.online_service }
   let(:custom_message) { FactoryBot.create(:custom_message, service: service, after_days: nil) }
-  let(:template) { "foo" }
+  let(:content) { "foo" }
   let(:after_days) { nil }
   let(:args) do
     {
       message: custom_message,
-      template: template,
+      content: content,
       after_days: after_days,
     }
   end
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    let(:template) { "bar" }
+    let(:content) { "bar" }
     let(:after_days) { 3 }
 
     it "updates a custom_message" do
       outcome
 
-      expect(custom_message.content).to eq(template)
+      expect(custom_message.content).to eq(content)
       expect(custom_message.after_days).to eq(after_days)
     end
 

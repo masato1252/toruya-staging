@@ -7,7 +7,7 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
     price_details = relation.price_details.first
 
     relation.with_lock do
-      if relation.legal_to_access? && stripe_subscription_active?
+      if relation.payment_legal_to_access? && stripe_subscription_active?
         return relation
       end
 

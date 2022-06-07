@@ -32,8 +32,9 @@ class CustomMessage < ApplicationRecord
   scope :scenario_of, -> (service, scenario) { where(service: service, scenario: scenario) }
   scope :right_away, -> { where(after_days: nil) }
   scope :sequence, -> { where.not(after_days: nil) }
-  validates :service_type, inclusion: { in: %w(OnlineService BookingPage) }, allow_nil: true
+  validates :service_type, inclusion: { in: %w(OnlineService BookingPage Shop) }, allow_nil: true
   validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
+  validates :scenario, inclusion: { in: CustomMessages::Users::Template::SCENARIOS + CustomMessages::Customers::Template::SCENARIOS }, allow_nil: true
   validates :flex_template, inclusion: { in: LineMessages::FlexTemplateContent.singleton_methods(false).map(&:to_s) }, allow_nil: true
 
   belongs_to :service, polymorphic: true, optional: true # OnlineService, BookingPage or nil(Toruya user)

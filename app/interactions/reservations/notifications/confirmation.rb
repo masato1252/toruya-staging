@@ -14,18 +14,21 @@ module Reservations
       private
 
       def message
-        template = I18n.t(
-          "customer.notifications.sms.confirmation",
-          customer_name: customer.name,
-          shop_name: shop.display_name,
-          booking_time: "#{I18n.l(reservation.start_time, format: :long_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}"
+        reservation_customer = ReservationCustomer.where(reservation: reservation, customer: customer).first
+        template = compose(
+          ::CustomMessages::Customers::Template,
+          product: reservation_customer.booking_page,
+          scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
+          custom_message_only: true
         )
 
-        if shop.phone_number.present?
-          template = "#{template}#{I18n.t("customer.notifications.sms.change_from_phone_number", shop_phone_number: shop.phone_number)}"
-        end
+        template ||= compose(
+          ::CustomMessages::Customers::Template,
+          product: reservation.shop,
+          scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED
+        )
 
-        template
+        Translator.perform(template, reservation.message_template_variables(customer))
       end
     end
   end

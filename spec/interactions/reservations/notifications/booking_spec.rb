@@ -8,7 +8,6 @@ RSpec.describe Reservations::Notifications::Booking do
   let(:user) { subscription.user }
   let(:customer) { FactoryBot.create(:customer, user: user) }
   let(:reservation) { FactoryBot.create(:reservation, shop: FactoryBot.create(:shop, user: user)) }
-  let(:message) { "foo" }
   let(:booking_page) { FactoryBot.create(:booking_page, user: user) }
   let(:booking_option) { FactoryBot.create(:booking_option, user: user, booking_pages: [booking_page]) }
 
@@ -17,7 +16,6 @@ RSpec.describe Reservations::Notifications::Booking do
       phone_number: phone_number,
       customer: customer,
       reservation: reservation,
-      message: message,
       booking_page: booking_page,
       booking_option: booking_option
     }
@@ -52,12 +50,29 @@ RSpec.describe Reservations::Notifications::Booking do
     end
 
     context "when customer connected with social_customer" do
-      before { FactoryBot.create(:social_customer, customer: customer, user: user) }
+      let!(:social_customer) { FactoryBot.create(:social_customer, customer: customer, user: user) }
 
       it "calls Reservations::Notifications::SocialMessage" do
-        expect(Reservations::Notifications::SocialMessage).to receive(:run!)
+        expected_message = Translator.perform(I18n.t("customer.notifications.sms.booking"), reservation.message_template_variables(customer))
+
+        expect(Reservations::Notifications::SocialMessage).to receive(:run).with(
+            social_customer: social_customer, message: expected_message
+          ).and_return(double(invalid?: false, result: double))
 
         outcome
+      end
+
+      context "when there is shop custom message" do
+        let(:scenario) { ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED }
+        let!(:custom_message) { FactoryBot.create(:custom_message, service: booking_page.shop, scenario: scenario) }
+
+        it "uses shop custom message template" do
+          expect(Reservations::Notifications::SocialMessage).to receive(:run).with(
+            social_customer: social_customer, message: custom_message.content
+          ).and_return(double(invalid?: false, result: double))
+
+          outcome
+        end
       end
     end
   end

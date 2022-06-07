@@ -4,14 +4,14 @@ module CustomMessages
   module Customers
     class Update < ActiveInteraction::Base
       object :message, class: CustomMessage
-      string :template
+      string :content
       integer :after_days, default: nil
 
       validate :validate_purchased_message
       validate :validate_after_days
 
       def execute
-        message.content = template
+        message.content = content
         message.after_days = after_days
 
         if message.valid? && message.service.is_a?(OnlineService) && message.after_days_changed?

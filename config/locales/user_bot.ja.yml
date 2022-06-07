@@ -77,6 +77,8 @@ ja:
           now_state: あなたは現在
           customer_info_state: 顧客情報があります
           sale_page_state: 販売ページがあります
+        custom_messages:
+          auto_message: 自動送信メッセージ(デフォルト)
         plans:
           save: 選択する
           save_and_pay: 選択する
@@ -135,7 +137,9 @@ ja:
             online_booking: オンライン予約
             page_label: 予約ページ
             booking_page_booked: 仮予約の作成
+            reservation_confirmed: 予約確定時
             booking_page_one_day_reminder: 24時間前リマインダ
+            reservation_one_day_reminder: 24時間前リマインダ
           online_service:
             section_title: オンラインサービス
             service_page_title: サービスページ

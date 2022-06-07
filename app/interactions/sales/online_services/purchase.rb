@@ -24,7 +24,7 @@ module Sales
         )
 
         relation.with_lock do
-          return if relation.purchased?
+          return if relation.legal_to_access?
 
           if relation.inactive?
             relation = compose(

@@ -48,6 +48,9 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
     end
   end
 
+  def custom_messages
+  end
+
   private
 
   def shop_params

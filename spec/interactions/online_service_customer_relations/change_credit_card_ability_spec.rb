@@ -28,7 +28,7 @@ RSpec.describe OnlineServiceCustomerRelations::ChangeCreditCardAbility do
       let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, customer: customer) }
 
       it 'returns true' do
-        allow(relation).to receive(:legal_to_access?).and_return(true)
+        allow(relation).to receive(:payment_legal_to_access?).and_return(true)
 
         expect(outcome.result).to eq(true)
       end

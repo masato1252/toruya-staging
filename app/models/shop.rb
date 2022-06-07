@@ -75,4 +75,14 @@ class Shop < ApplicationRecord
   def logo_url
     ApplicationController.helpers.shop_logo_url(self, "260")
   end
+
+  # XXX: only used for demo
+  def message_template_variables(user)
+    Templates::ReservationVariables.run!(
+      receiver: user,
+      shop: self,
+      start_time: Time.current,
+      end_time: Time.current.advance(hours: 1)
+    )
+  end
 end

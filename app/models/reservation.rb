@@ -128,6 +128,15 @@ class Reservation < ApplicationRecord
     ACTIONS[aasm_state]
   end
 
+  def message_template_variables(customer)
+    Templates::ReservationVariables.run!(
+      receiver: customer,
+      shop: shop,
+      start_time: start_time,
+      end_time: end_time
+    )
+  end
+
   private
 
   def end_time_larger_than_start_time

@@ -4,6 +4,7 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
   def index
     @booking_page = super_user.booking_pages.find(params[:booking_page_id])
     @booked_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED).right_away.first
+    @reservation_confirmed_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::RESERVATION_CONFIRMED).right_away.first
     @one_day_reminder_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER).right_away.first
   end
 
@@ -11,12 +12,5 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
     @booking_page = super_user.booking_pages.find(params[:booking_page_id])
     @message = CustomMessage.find_by(service: @booking_page, id: params[:id])
     @template = @message ? @message.content : ::CustomMessages::Customers::Template.run!(product: @booking_page, scenario: params[:scenario])
-  end
-
-  def update_scenario
-    booking_page = super_user.booking_pages.find(params[:booking_page_id])
-    outcome = CustomMessages::Customers::Update.run(service: booking_page, template: params[:template], scenario: params[:scenario])
-
-    return_json_response(outcome, { redirect_to: lines_user_bot_booking_page_custom_messages_path(params[:service_id]) })
   end
 end
