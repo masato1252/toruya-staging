@@ -6,17 +6,20 @@ import { useForm  } from "react-hook-form";
 
 import { SocialUserMessagesServices } from "user_bot/api";
 import { SubmitButton } from "shared/components";
+import I18n from 'i18n-js/index.js.erb';
 
-const SupportModal = ({trigger_btn, content, btn, reply, defaultOpen}) => {
+const SupportModal = ({trigger_btn, content, btn, reply, defaultOpen, from_cancel}) => {
   const [submitted, setSubmitted] = useState(false)
   const { formState, register, handleSubmit} = useForm({})
 
   const onSubmit = async (data) => {
     console.log("data", data)
-    let error, response;
 
-    [error, response] = await SocialUserMessagesServices.create({
-      data
+    await SocialUserMessagesServices.create({
+      data: {
+        ...data,
+        content: from_cancel ? `${data.content}${I18n.t("common.cancel_request")}` : data.content
+      }
     })
 
     setSubmitted(true)

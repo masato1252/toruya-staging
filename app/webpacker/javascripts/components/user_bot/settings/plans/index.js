@@ -236,6 +236,7 @@ const Plans = ({props}) => {
                 content={props.i18n.unsubscribe_modal_content}
                 btn={props.i18n.unsubscribe_modal_button}
                 reply={I18n.t("common.support_reply_html")}
+                from_cancel={true}
               />
             )}
           </div>
