@@ -13,9 +13,14 @@ const CustomerList = () => {
   }, [subscription, selected_channel_id])
 
   return (
-    <div id="customer-box">
-      {channel_customers.map((customer, index) => <Customer customer={customer} key={`${customer.id}-${index}`}/>)}
-    </div>
+    <>
+      <div id="customer-box">
+        {channel_customers.map((customer, index) => <Customer customer={customer} key={`${customer.id}-${index}`}/>)}
+      </div>
+      <div className="btn btn-yellow" onClick={() => getCustomers(channel_customers[channel_customers.length - 1]?.updated_at) }>
+        MORE
+      </div>
+    </>
   )
 }
 

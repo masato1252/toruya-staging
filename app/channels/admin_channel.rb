@@ -44,9 +44,12 @@ class AdminChannel < ApplicationCable::Channel
     return unless data["channel_id"]
 
     social_users = SocialUser
-      .where("updated_at > ?", 6.months.ago)
       .includes(:social_user_messages, :memos)
-      .order("social_users.updated_at DESC")
+      .order("social_users.updated_at DESC").limit(20)
+
+    if data['last_updated_at']
+      social_users = social_users.where("social_users.updated_at < ?", data['last_updated_at'])
+    end
 
     _users = social_users.map { |user| SocialUserSerializer.new(user).attributes_hash }
     Rails.logger.debug("===users #{_users.size}")

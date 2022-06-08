@@ -2,7 +2,7 @@
 
 class SocialUserSerializer
   include JSONAPI::Serializer
-  attribute :created_at
+  attribute :created_at, :updated_at
 
   attribute :id do |social_user|
     social_user.social_service_user_id

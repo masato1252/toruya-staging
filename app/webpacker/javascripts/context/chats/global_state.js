@@ -57,9 +57,9 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  const getCustomers = () => {
+  const getCustomers = (last_updated_at = null) => {
     if (subscription) {
-      subscription.perform("get_customers", { channel_id: selected_channel_id });
+      subscription.perform("get_customers", { channel_id: selected_channel_id, last_updated_at: last_updated_at});
     }
   }
 
