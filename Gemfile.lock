@@ -192,6 +192,8 @@ GEM
     dante (0.2.0)
     database_cleaner (1.7.0)
     debug_inspector (0.0.3)
+    deep_cloneable (3.2.0)
+      activerecord (>= 3.1.0, < 8)
     default_value_for (3.4.0)
       activerecord (>= 3.2.0, < 7.0)
     delayed-web (0.4.5)
@@ -649,6 +651,7 @@ DEPENDENCIES
   custom_error_message (~> 1.2.1)!
   dalli
   database_cleaner
+  deep_cloneable (~> 3.2.0)
   default_value_for (~> 3.4)
   delayed-web
   delayed_job_active_record (~> 4.1.6)

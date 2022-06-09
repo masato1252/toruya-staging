@@ -80,6 +80,7 @@ gem "ahoy_matey"
 gem "with_advisory_lock"
 gem 'acts-as-taggable-on', '~> 7.0'
 gem "blazer"
+gem 'deep_cloneable', '~> 3.2.0'
 
 group :development, :test do
   gem "byebug", platform: :mri
