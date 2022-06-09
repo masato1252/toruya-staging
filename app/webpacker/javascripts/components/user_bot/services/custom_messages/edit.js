@@ -33,7 +33,7 @@ const CustomMessageEdit =({props}) => {
       data: _.assign( data, {
         id: props.message.id,
         scenario: props.scenario,
-        template: template,
+        content: template,
         service_id: props.message.service_id,
         service_type: props.message.service_type,
         after_days: after_days,
@@ -49,7 +49,7 @@ const CustomMessageEdit =({props}) => {
       data: _.assign( data, {
         id: props.message.id,
         scenario: props.scenario,
-        template: template,
+        content: template,
         service_id: props.message.service_id,
         service_type: props.message.service_type,
         after_days: after_days,

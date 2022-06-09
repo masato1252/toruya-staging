@@ -13,25 +13,4 @@ class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboa
     @message = CustomMessage.find_by(service: @online_service, id: params[:id])
     @template = @message ? @message.content : (params[:right_away] ? ::CustomMessages::Customers::Template.run!(product: @online_service, scenario: params[:scenario]) : "")
   end
-
-  def update_scenario
-    online_service = current_user.online_services.find(params[:service_id])
-
-    if params[:id]
-      outcome = CustomMessages::Customers::Update.run(
-        custom_message: CustomMessage.find_by!(id: params[:id], service: online_services),
-        template: params[:template],
-        after_days: params[:after_days]
-      )
-    else
-      outcome = CustomMessages::Customers::Create.run(
-        service: online_services,
-        scenario: params[:scenario],
-        template: params[:template],
-        after_days: params[:after_days]
-      )
-    end
-
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_custom_messages_path(params[:service_id]) })
-  end
 end
