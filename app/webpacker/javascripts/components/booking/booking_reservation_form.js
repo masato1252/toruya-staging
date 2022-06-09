@@ -931,10 +931,19 @@ class BookingReservationForm extends React.Component {
       title,
       message1,
       message2,
+      owner_warning1,
+      owner_warning2
     } = this.props.i18n.done
 
     return (
       <div className="done-view">
+        {this.props.is_shop_owner && (
+          <div className="warning">
+            {owner_warning1}
+            <br />
+            {owner_warning2}
+          </div>
+        )}
         <h3 className="title">
           {title}
         </h3>

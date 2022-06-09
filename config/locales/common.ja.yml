@@ -201,5 +201,6 @@ ja:
     status_info: 登録情報
     type: 種類
     term: 期限
+    cancel_request: (解約申請フォーム)
   errors:
     invalid_url: 無効なURL

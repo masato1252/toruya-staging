@@ -15,5 +15,9 @@ FactoryBot.define do
     trait :one_on_one do
       conversation_state { SocialCustomer.conversation_states[:one_on_one] }
     end
+
+    trait :is_owner do
+      is_owner { true }
+    end
   end
 end

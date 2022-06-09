@@ -94,6 +94,7 @@ ja:
           manual_switch_btn: 手動に切り替える
           auto_description_html: "自動に切り替えることで<br />Toruyaの機能と連動させたリッチメニューが<br />自動的に表示されます。"
           auto_switch_btn: 自動に切り替える
+          help_link: Toruyaのリッチメニュー活用法
         business_schedules:
           reservation_management: 予約管理
           business_time: 営業日時

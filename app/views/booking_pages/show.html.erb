@@ -26,6 +26,7 @@
   social_account_login_url: line_login_url(@social_account, booking_page_url(@booking_page.slug), customer_id: @customer&.id),
   social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
   stripe_key: @booking_page.user.stripe_provider&.publishable_key,
+  is_shop_owner: @social_customer&.is_owner,
   booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
     shop_name: @booking_page.shop.name,

@@ -48,8 +48,10 @@ ja:
       booking_code_failed_message: 確認コードが間違っています
       line_reminder_messages_html: まずはLINEでログインしてください
     done:
+      owner_warning1: 顧客の代わりに予約をされた為、
+      owner_warning2: 通知LINEはお客様へは送られません。
       title: 仮予約が完了しました
-      message1: LINEまたは携帯電話に
+      message1: LINEログインされたアカウントに
       message2: ご予約内容を送信しました
       desc1: の予約情報を
       desc2: あなたの予定と一緒に管理できる
