@@ -65,13 +65,16 @@ module SalePages
           sale_page.save
         when "reviews"
           sale_page.sections_context ||= {}
+          pictures = []
+
           Array.wrap(attrs[update_attribute]).each do |attr|
             if picture = attr.delete(:picture)
-              sale_page.customer_pictures.attach(io: picture, filename: picture.original_filename)
+              pictures.push(picture)
               attr.merge!(filename: picture.original_filename)
             end
           end
 
+          sale_page.customer_pictures.attach(pictures.map { |picture| { io: picture, filename: picture.original_filename } })
           sale_page.sections_context.merge!(attrs.slice(update_attribute))
           # TODO: handle purge
           sale_page.save
