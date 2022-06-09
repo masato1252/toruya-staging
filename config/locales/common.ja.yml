@@ -61,6 +61,7 @@ ja:
     stripe_sign_up: Stripeに新規登録
     change_credit_card: 精算カード変更
     pay_now: 今すぐ支払う
+    duplicate: 複製
     online_service_actions:
       video: 視聴する
       pdf: ダウンロード
@@ -202,5 +203,6 @@ ja:
     type: 種類
     term: 期限
     cancel_request: (解約申請フォーム)
+    copy: のコピー
   errors:
     invalid_url: 無効なURL

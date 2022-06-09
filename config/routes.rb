@@ -220,6 +220,10 @@ Rails.application.routes.draw do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
+
+        member do
+          post :clone
+        end
       end
 
       scope module: :sales, as: :sales, path: :sales do

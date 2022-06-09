@@ -95,6 +95,14 @@
   </div>
 
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+    <%= link_to clone_lines_user_bot_sale_path(@sale_page),
+      method: :post,
+      data: { disable_with: t("common.processing") },
+      class: "btn btn-yellow btn-circle btn-tweak btn-with-word btn-bottom-left" do %>
+      <i class="fa fa-copy fa-2x"></i>
+      <div class="word"><%= I18n.t("action.duplicate") %></div>
+    <% end %>
+
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@sale_page.updated_at, format: :long_date) %></span>
 
     <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
