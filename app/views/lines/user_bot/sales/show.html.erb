@@ -95,6 +95,14 @@
   </div>
 
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+    <%= link_to clone_lines_user_bot_sale_path(@sale_page),
+      method: :post,
+      data: { disable_with: t("common.processing") },
+      class: "btn btn-yellow btn-circle btn-tweak btn-with-word btn-bottom-left" do %>
+      <i class="fa fa-copy fa-2x"></i>
+      <div class="word"><%= I18n.t("action.duplicate") %></div>
+    <% end %>
+
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@sale_page.updated_at, format: :long_date) %></span>
 
     <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
@@ -137,8 +145,56 @@
           action: "click->clipboard#copy",
           clipboard_text: sale_page_url(slug: @sale_page.slug),
           clipboard_popup_text: t("common.copied")
-        } %>
-        <%= button_tag I18n.t("user_bot.dashboards.sales.edit.share_code_btn"), class: "btn btn-tarco", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: share_button_link(I18n.t("user_bot.dashboards.sales.edit.share_code_btn"), sale_page_url(slug: @sale_page.slug)), clipboard_popup_text: t("common.copied") } %>
+          } %>
+        <% if @sale_page.free? %>
+          <%= button_tag "#{t('common.free_price')}#{t('user_bot.dashboards.sales.edit.purchase_link_btn')}", class: "btn btn-tarco",
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: new_lines_customers_online_service_purchases_url(slug: @sale_page.slug, payment_type: SalePage::PAYMENTS[:free]),
+              clipboard_popup_text: t("common.copied")
+            } %>
+        <% end %>
+
+        <% if @sale_page.selling_price_amount.present? %>
+          <%= button_tag "#{t('common.one_time_pay')}#{t('user_bot.dashboards.sales.edit.purchase_link_btn')}", class: "btn btn-tarco",
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: new_lines_customers_online_service_purchases_url(slug: @sale_page.slug, payment_type: SalePage::PAYMENTS[:one_time]),
+              clipboard_popup_text: t("common.copied")
+            } %>
+        <% end %>
+
+        <% if @sale_page.selling_multiple_times_price.present? %>
+          <%= button_tag "#{t('common.multiple_times_pay')}#{t('user_bot.dashboards.sales.edit.purchase_link_btn')}", class: "btn btn-tarco",
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: new_lines_customers_online_service_purchases_url(slug: @sale_page.slug, payment_type: SalePage::PAYMENTS[:multiple_times]),
+              clipboard_popup_text: t("common.copied")
+            } %>
+        <% end %>
+
+        <% if @sale_page.monthly_price %>
+          <%= button_tag "#{t('common.month_pay')}#{t('user_bot.dashboards.sales.edit.purchase_link_btn')}", class: "btn btn-tarco",
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: new_lines_customers_online_service_purchases_url(slug: @sale_page.slug, payment_type: SalePage::PAYMENTS[:month]),
+              clipboard_popup_text: t("common.copied")
+            } %>
+        <% end %>
+
+        <% if @sale_page.yearly_price %>
+          <%= button_tag "#{t('common.year_pay')}#{t('user_bot.dashboards.sales.edit.purchase_link_btn')}", class: "btn btn-tarco",
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: new_lines_customers_online_service_purchases_url(slug: @sale_page.slug, payment_type: SalePage::PAYMENTS[:year]),
+              clipboard_popup_text: t("common.copied")
+            } %>
+        <% end %>
       </div>
     </div>
   </div>

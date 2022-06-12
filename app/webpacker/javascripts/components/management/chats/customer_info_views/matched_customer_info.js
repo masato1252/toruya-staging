@@ -54,6 +54,20 @@ export default () => {
     }
   }
 
+  const handleClearLineSettings = async () => {
+    if (confirm("Are you sure to clear Line settings?")) {
+      const [error, response] = await CommonServices.delete({
+        url: Routes.admin_social_account_path({format: "json"}),
+        data: {
+          customer_id: selected_customer.id
+        }
+      })
+
+      alert("Done")
+      window.location.replace(response.data.redirect_to)
+    }
+  }
+
   useEffect(() => {
     setMemo(selected_customer.memo)
   }, [selected_customer.id])
@@ -82,6 +96,10 @@ export default () => {
       <ul>
         <li>
           {selected_customer.line_settings_finished ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_settings_finished")}
+          <SubmitButton
+            handleSubmit={handleClearLineSettings}
+            btnWord={"Clear Line Settings"}
+          />
         </li>
         <li>
           {selected_customer.login_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_login_verified")}

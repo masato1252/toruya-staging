@@ -33,4 +33,16 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
       redirect_to lines_user_bot_sales_path
     end
   end
+
+  def clone
+    sale_page = current_user.sale_pages.find(params[:id])
+
+    outcome = SalePages::Clone.run(sale_page: sale_page)
+
+    if outcome.valid?
+      redirect_to lines_user_bot_sale_path(outcome.result)
+    else
+      redirect_to lines_user_bot_sale_path(sale_page)
+    end
+  end
 end
