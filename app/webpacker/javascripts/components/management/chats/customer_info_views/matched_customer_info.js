@@ -54,8 +54,8 @@ export default () => {
     }
   }
 
-  const handleClearLineSettings = async () => {
-    if (confirm("Are you sure to clear Line settings?")) {
+  const handleCleanLineSettings = async () => {
+    if (confirm("Are you sure to clean Line settings?")) {
       const [error, response] = await CommonServices.delete({
         url: Routes.admin_social_account_path({format: "json"}),
         data: {
@@ -97,8 +97,8 @@ export default () => {
         <li>
           {selected_customer.line_settings_finished ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_settings_finished")}
           <SubmitButton
-            handleSubmit={handleClearLineSettings}
-            btnWord={"Clear Line Settings"}
+            handleSubmit={handleCleanLineSettings}
+            btnWord={I18n.t("admin.chat.clean_line_settings")}
           />
         </li>
         <li>

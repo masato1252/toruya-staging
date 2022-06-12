@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SocialAccounts
-  class Clear < ActiveInteraction::Base
+  class Clean < ActiveInteraction::Base
     object :user
 
     def execute

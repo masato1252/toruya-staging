@@ -4,7 +4,7 @@ module Admin
   class SocialAccountsController < AdminController
     def destroy
       social_user = SocialUser.find_by(social_service_user_id: params[:customer_id])
-      SocialAccounts::Clear.run!(user: social_user.user)
+      SocialAccounts::Clean.run!(user: social_user.user)
 
       render json: {
         status: "successful",
