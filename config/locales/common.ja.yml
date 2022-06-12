@@ -203,6 +203,6 @@ ja:
     type: 種類
     term: 期限
     cancel_request: (解約申請フォーム)
-    copy: のコピー
+    copy: コピー
   errors:
     invalid_url: 無効なURL
