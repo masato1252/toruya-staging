@@ -17,6 +17,8 @@ jobs:
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle-test_test
+      - image: cimg/go:1.17
+      - image: cimg/redis:6.2.6
 
     working_directory: ~/kasaike
 
