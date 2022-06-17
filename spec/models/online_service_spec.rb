@@ -37,4 +37,28 @@ RSpec.describe OnlineService do
       end
     end
   end
+
+  describe "#recurring_charge_required?" do
+    context 'when service is bundler' do
+      let(:bundler_service) { FactoryBot.create(:online_service, :bundler) }
+
+      context 'when all services got end time' do
+        it 'is false' do
+          bundled_service_with_end_at = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.tomorrow)
+          bundled_service_with_end_of_days = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_on_days: 3)
+
+          expect(bundler_service.recurring_charge_required?).to eq(false)
+        end
+      end
+
+      context 'when one of services is forever' do
+        it 'is true' do
+          bundled_service_with_forever = FactoryBot.create(:bundled_service, bundler_service: bundler_service)
+          bundled_service_with_end_of_days = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_on_days: 3)
+
+          expect(bundler_service.recurring_charge_required?).to eq(true)
+        end
+      end
+    end
+  end
 end

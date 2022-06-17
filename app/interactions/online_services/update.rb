@@ -25,6 +25,16 @@ module OnlineServices
         file :picture, default: nil
         string :content, default: nil
       end
+      array :bundled_services, default: nil do
+        hash do
+          integer :id
+          hash :end_time, default: nil do
+            integer :end_on_days, default: nil
+            integer :end_on_months, default: nil
+            string :end_time_date_part, default: nil
+          end
+        end
+      end
     end
 
     def execute
@@ -57,6 +67,18 @@ module OnlineServices
           message.save
 
           errors.merge!(message.errors) if message.errors.present?
+        when "bundled_services"
+          if attrs[:bundled_services].present?
+            online_service.bundled_services.destroy_all
+            attrs[:bundled_services].each do |bundled_service|
+              online_service.bundled_services.create(
+                online_service_id: bundled_service[:id],
+                end_at: bundled_service.dig(:end_time, :end_time_date_part),
+                end_on_days: bundled_service.dig(:end_time, :end_on_days),
+                end_on_months: bundled_service.dig(:end_time, :end_on_months)
+              )
+            end
+          end
         end
 
         if online_service.errors.present?

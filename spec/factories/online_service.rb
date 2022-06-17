@@ -24,5 +24,10 @@ FactoryBot.define do
         ).id
       end
     end
+
+    trait :bundler do
+      goal_type { "bundler" }
+      solution_type { "bundler" }
+    end
   end
 end

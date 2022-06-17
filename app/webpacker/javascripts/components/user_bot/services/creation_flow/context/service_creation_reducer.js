@@ -13,7 +13,8 @@ const initialState = {
     picture: null,
     picture_url: [],
     content: ""
-  }
+  },
+  bundled_services: []
 }
 
 export default (state = initialState, action) => {

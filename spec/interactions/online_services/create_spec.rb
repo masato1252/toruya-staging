@@ -13,6 +13,7 @@ RSpec.describe OnlineServices::Create do
   let(:content_url) {}
   let(:end_time) {}
   let(:upsell) {}
+  let(:bundled_services) { [] }
   let(:selected_company) do
     {
       type: shop.class.to_s,
@@ -31,13 +32,14 @@ RSpec.describe OnlineServices::Create do
       end_time: end_time,
       upsell: upsell,
       selected_company: selected_company,
-      message_template: message_template
+      message_template: message_template,
+      bundled_services: bundled_services
     }
   end
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    context "when service is not course or membership" do
+    context "when service is not course or membership or bundler" do
       let(:selected_goal) { OnlineService.goal_types[:collection] }
       let(:selected_solution) { "video" }
       let(:content_url) { "https://google.com" }
@@ -79,6 +81,30 @@ RSpec.describe OnlineServices::Create do
             }
           )
         ).to be_present
+      end
+    end
+
+    context "when service is bundler" do
+      let(:selected_goal) { OnlineService.goal_types[:bundler] }
+      let(:online_service1) { FactoryBot.create(:online_service) }
+      let(:online_service2) { FactoryBot.create(:online_service) }
+      let(:bundled_services) do
+        [
+          {
+            id: online_service1.id
+          },
+          {
+            id: online_service2.id
+          }
+        ] 
+      end
+
+      it "creates bundled services without stripe" do
+        online_service = outcome.result
+
+        expect(online_service).to be_bundler
+        expect(online_service.bundled_services.pluck(:online_service_id)).to match_array([online_service1.id, online_service2.id])
+        expect(online_service.stripe_product_id).to be_nil
       end
     end
   end

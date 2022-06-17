@@ -26,7 +26,7 @@ const CompanyInfoStep = ({next, step, lastStep, step_key}) => {
           {company_info.logo_url && <img className="logo" src={company_info.logo_url} />}
 
           <div className="action-block">
-            {selected_goal === 'membership' ? (
+            {(selected_goal === 'membership' || selected_goal === 'bundler') ? (
               <SubmitButton
                 handleSubmit={createService}
                 submitCallback={lastStep}

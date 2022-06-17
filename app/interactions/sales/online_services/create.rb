@@ -64,6 +64,11 @@ module Sales
           responsible_staff.introduction = staff[:introduction]
           responsible_staff.save!
 
+          if sale_page.product.bundler? && recurring_prices.present? && sale_page.product.stripe_product_id.blank?
+            stripe_product = compose(OnlineServices::CreateStripeProduct, online_service: sale_page.product)
+            sale_page.product.update!(stripe_product_id: stripe_product.id)
+          end
+
           sale_page
         end
       end

@@ -89,6 +89,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.description"),
       enabled: true,
       stripe_required: true,
+      one_time_charge_required: true,
       premium_member_required: false,
       solutions: [
         VIDEO_SOLUTION,
@@ -100,6 +101,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.course.description"),
       enabled: true,
       stripe_required: true,
+      one_time_charge_required: true,
       premium_member_required: true,
       solutions: [
         PDF_SOLUTION,
@@ -125,9 +127,24 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
       enabled: true,
       stripe_required: false,
+      one_time_charge_required: true,
       premium_member_required: false,
       solutions: [
         EXTERNAL_SOLUTION
+      ]
+    },
+    {
+      key: "bundler",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.description"),
+      enabled: true,
+      stripe_required: true,
+      one_time_charge_required: true,
+      recurring_charge: false,
+      premium_member_required: true,
+      solutions: [
+        PDF_SOLUTION,
+        VIDEO_SOLUTION
       ]
     }
   ]
@@ -147,9 +164,12 @@ class OnlineService < ApplicationRecord
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
   has_one :message_template, -> { where(scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
   has_many :episodes
-
+  has_many :bundled_services, foreign_key: :bundler_online_service_id
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
   # solution_type pdf, video, external, membership, course
+
+
+  scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'course', 'membership']) }
 
   def external_url
     external_purchase_url.presence || content_url
@@ -160,11 +180,16 @@ class OnlineService < ApplicationRecord
   end
 
   def charge_required?
-    GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
+    GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || external?
+  end
+
+  def one_time_charge_required?
+    GOALS.find { |goal| goal_type == goal[:key] }[:one_time_charge]
   end
 
   def recurring_charge_required?
-    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge]
+    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge] ||
+      (bundler? && bundled_services.any? { |service| service.end_at.nil? && service.end_on_days.nil? && service.end_on_months.nil? })
   end
 
   def start_at_for_customer(customer)
@@ -273,3 +298,67 @@ class OnlineService < ApplicationRecord
     end
   end
 end
+
+
+# online service
+# goal_type: bundler
+# start time is the same?
+#
+# bundle_items
+# bundler_id => main online_service_id
+# online_service_id => item online_service_id
+#
+# end_on_days
+# end_at
+# subscription: true
+#
+# forever: subscription: false, end_on_days, end_at
+#
+# def current_expire_time
+#   if end_at
+#     end_at
+#   elsif end_on_days
+#     Time.current.advance(days: end_on_days)
+#   end
+# end
+#
+# before membership no forever
+#
+#
+# Any subscription:
+# show only recurring_charge
+
+# bundle item end time options
+# end_at
+# end on days
+# end on month
+# forever (no about this)
+#
+# bundler only could pick both type payments in sale page?
+#
+# one time
+# multiple
+# monthly
+# yearly
+#
+# Bundler service:  service item 1  end time    => sale page one time, recurring pay  => one time      => item2 is real forever
+#                   service item 2  forever                                           => recurring pay => item2 would be ended if charged failed
+#                   service item 3(membership) only end_on_months
+#
+# Bundler service:  service item 1  end time    => sale page one time
+#                   service item 2  end time
+#
+# Bundler service:  service item 1  forever     => sale page one time, recurring pay  => one time      => item1, item2 is real forever
+#                   service item 2  forever                                           => recurring pay => item1, item2 would be ended if bundler charged failed
+#
+# ------------
+#
+# Customer purchased service forever  => bundler service end time => pick better one, still forever
+# Customer purchased service end time => bundler service end time => pick better one
+#                                                       recurring => replace the original one(warn customer)
+#
+# Customer purchased service recurring => bundler service end of month => give free bonus 
+#                                                        recurring => use bundler, cancel another one(warn customer)
+#                                              - monthly vs yearly => use bundler one(warn customer)
+#
+#

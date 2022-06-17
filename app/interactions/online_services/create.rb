@@ -23,6 +23,16 @@ module OnlineServices
       file :picture, default: nil
       string :content, default: nil
     end
+    array :bundled_services, default: nil do
+      hash do
+        integer :id
+        hash :end_time, default: nil do
+          integer :end_on_days, default: nil
+          integer :end_on_months, default: nil
+          string :end_time_date_part, default: nil
+        end
+      end
+    end
 
     validate :validate_content_url
     validate :validate_solution
@@ -58,7 +68,19 @@ module OnlineServices
           errors.merge!(message.errors) if message.errors.present?
         end
 
-        if online_service.recurring_charge_required?
+        if bundled_services.present?
+          bundled_services.each do |bundled_service|
+            online_service.bundled_services.create(
+              online_service_id: bundled_service[:id],
+              end_at: bundled_service.dig(:end_time, :end_time_date_part),
+              end_on_days: bundled_service.dig(:end_time, :end_on_days),
+              end_on_months: bundled_service.dig(:end_time, :end_on_months)
+            )
+          end
+        end
+
+        # bundler service 
+        if online_service.recurring_charge_required? && !online_service.bundler?
           stripe_product = compose(OnlineServices::CreateStripeProduct, online_service: online_service)
           online_service.update!(stripe_product_id: stripe_product.id)
         end
@@ -70,19 +92,19 @@ module OnlineServices
     private
 
     def validate_content_url
-      if content_url.blank? && not_membership_or_course
+      if content_url.blank? && not_membership_or_course_or_bundler
         errors.add(:content_url, :invalid)
       end
     end
 
     def validate_solution
-      if selected_solution.blank? && not_membership_or_course
+      if selected_solution.blank? && not_membership_or_course_or_bundler
         errors.add(:selected_solution, :invalid)
       end
     end
 
-    def not_membership_or_course
-      [OnlineService.goal_types[:membership], OnlineService.goal_types[:course]].exclude?(selected_goal)
+    def not_membership_or_course_or_bundler
+      [OnlineService.goal_types[:membership], OnlineService.goal_types[:course], OnlineService.goal_types[:bundler]].exclude?(selected_goal)
     end
   end
 end
