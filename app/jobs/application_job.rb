@@ -14,6 +14,8 @@
 # DummyJob.perform_now # won't use any debounce or throttle rules
 # DummyJob.perform_later # won't use any debounce or throttle rules
 #
+require "key_value_storage"
+
 class ApplicationJob < ActiveJob::Base
   discard_on ActiveJob::DeserializationError
 
@@ -58,7 +60,7 @@ class ApplicationJob < ActiveJob::Base
     def perform_debounce(*params)
       # Refresh the timestamp in redis with debounce delay added.
       delay = debounce_settings[:duration] || DEFAULT_DELAY
-      Redis.current.set(key(params), now + delay)
+      KeyValueStorage.set(key(params), now + delay)
 
       # Schedule the job with not only debounce delay added, but also BUFFER.
       # BUFFER helps prevent race condition between this line and the one above.
@@ -83,7 +85,7 @@ class ApplicationJob < ActiveJob::Base
 
   def perform?(*params)
     # Only the last job should come after the timestamp.
-    timestamp = Redis.current.get(self.class.key(params))
+    timestamp = KeyValueStorage.get(self.class.key(params))
     # But because of BUFFER, there could be mulitple last jobs enqueued within
     # the span of BUFFER. The first one will clear the timestamp, and the rest
     # will skip when they see that the timestamp is gone.
@@ -91,6 +93,6 @@ class ApplicationJob < ActiveJob::Base
     return false if Time.now.to_i < timestamp.to_i
 
     # Avoid race condition, only the first one del return 1, others are 0
-    Redis.current.del(self.class.key(params)) == 1
+    KeyValueStorage.del(self.class.key(params)) == 1
   end
 end
