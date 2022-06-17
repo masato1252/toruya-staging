@@ -37,6 +37,13 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
         case event["message"]["text"].strip
         when USER_SIGN_OUT
           SocialUsers::Disconnect.run(social_user: social_user)
+        else
+          SocialUserMessages::Create.perform_debounce(
+            social_user: social_user,
+            content: I18n.t("toruya_line.bot.auto_reply_for_user_message"),
+            readed: true,
+            message_type: SocialUserMessage.message_types[:bot],
+          )
         end
       else
         Rollbar.warning("Line chat room don't support message type", event: event)

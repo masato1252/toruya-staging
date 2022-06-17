@@ -5,16 +5,16 @@ module ActiveInteractionDelayer
     ActiveInteractionJob.perform_later(self.to_s, args)
   end
 
-  def perform_at(args = {})
-    schedule_at = args.delete(:schedule_at)
-
-    ActiveInteractionJob.set(wait_until: schedule_at).perform_later(self.to_s, args)
-  end
-
   def perform_later!(args={})
     args.merge!(bang: true)
 
     ActiveInteractionJob.perform_later(self.to_s, args)
+  end
+
+  def perform_at(args = {})
+    schedule_at = args.delete(:schedule_at)
+
+    ActiveInteractionJob.set(wait_until: schedule_at).perform_later(self.to_s, args)
   end
 
   def perform_at!(args = {})
@@ -22,5 +22,25 @@ module ActiveInteractionDelayer
     args.merge!(bang: true)
 
     ActiveInteractionJob.set(wait_until: schedule_at).perform_later(self.to_s, args)
+  end
+
+  def perform_debounce(args = {})
+    ActiveInteractionJob.perform_debounce(self.to_s, args)
+  end
+
+  def perform_debounce!(args = {})
+    args.merge!(bang: true)
+
+    ActiveInteractionJob.perform_debounce(self.to_s, args)
+  end
+
+  def perform_throttle(args = {})
+    ActiveInteractionJob.perform_throttle(self.to_s, args)
+  end
+
+  def perform_throttle!(args = {})
+    args.merge!(bang: true)
+
+    ActiveInteractionJob.perform_throttle(self.to_s, args)
   end
 end

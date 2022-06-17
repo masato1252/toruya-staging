@@ -1,0 +1,12 @@
+default: &default
+  server: "<%= ENV.fetch('REDIS_URL', 'redis://127.0.0.1:6379/1') %>"
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+
