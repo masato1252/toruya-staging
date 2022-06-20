@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardController
+  skip_before_action :authenticate_current_user!, only: [:receipt]
+  skip_before_action :where_user_are, only: [:receipt]
+  skip_before_action :authenticate_super_user, only: [:receipt]
+
   def index
     @subscription = current_user.subscription
     @charges = current_user.subscription_charges.finished.includes(:plan).where("created_at >= ?", 1.year.ago).order("created_at DESC")
@@ -69,7 +73,8 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def receipt
-    @charge = current_user.subscription_charges.find(params[:id])
+    user_id = MessageEncryptor.decrypt(params[:encrypted_user_id])
+    @charge = User.find(user_id).subscription_charges.find(params[:id])
 
     options = {
       template: "settings/payments/receipt",
