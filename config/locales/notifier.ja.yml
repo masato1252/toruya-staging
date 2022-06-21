@@ -34,6 +34,8 @@ ja:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「ダウンロード」ボタンからご利用ください。"
         external:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「利用する」ボタンからご利用ください。"
+        bundler:
+          message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「利用する」ボタンからご利用ください。"
         course:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「視聴する」ボタンからご利用ください。"
         membership:

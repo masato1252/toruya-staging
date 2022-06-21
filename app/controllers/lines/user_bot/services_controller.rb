@@ -16,7 +16,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       external_purchase_url: params[:external_purchase_url],
       selected_company: params[:selected_company].permit!.to_h,
       message_template: params[:message_template]&.permit!&.to_h,
-      bundled_services: params[:bundled_services].map { |s| s&.permit!&.to_h }
+      bundled_services: params[:bundled_services]&.map { |s| s&.permit!&.to_h }
     )
 
     return_json_response(outcome, { online_service_slug: outcome.result&.slug })

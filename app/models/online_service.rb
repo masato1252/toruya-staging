@@ -89,7 +89,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.description"),
       enabled: true,
       stripe_required: true,
-      one_time_charge_required: true,
+      one_time_charge: true,
       premium_member_required: false,
       solutions: [
         VIDEO_SOLUTION,
@@ -101,7 +101,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.course.description"),
       enabled: true,
       stripe_required: true,
-      one_time_charge_required: true,
+      one_time_charge: true,
       premium_member_required: true,
       solutions: [
         PDF_SOLUTION,
@@ -127,7 +127,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
       enabled: true,
       stripe_required: false,
-      one_time_charge_required: true,
+      one_time_charge: true,
       premium_member_required: false,
       solutions: [
         EXTERNAL_SOLUTION
@@ -139,7 +139,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.description"),
       enabled: true,
       stripe_required: true,
-      one_time_charge_required: true,
+      one_time_charge: true,
       recurring_charge: false,
       premium_member_required: true,
       solutions: [

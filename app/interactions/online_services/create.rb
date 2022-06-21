@@ -79,12 +79,6 @@ module OnlineServices
           end
         end
 
-        # bundler service 
-        if online_service.recurring_charge_required? && !online_service.bundler?
-          stripe_product = compose(OnlineServices::CreateStripeProduct, online_service: online_service)
-          online_service.update!(stripe_product_id: stripe_product.id)
-        end
-
         online_service
       end
     end

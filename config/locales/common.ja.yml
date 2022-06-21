@@ -52,6 +52,7 @@ ja:
       external: 今すぐ登録する
       course: 今すぐ登録する
       membership: 今すぐ登録する
+      bundler: 今すぐ登録する
     open_sale_page: 販売ページを開く
     add_as_friend: お友だち登録
     unsubscribe: 解約する
@@ -66,6 +67,7 @@ ja:
       video: 視聴する
       pdf: ダウンロード
       external: サービスを表示
+      bundler: サービスを表示
       membership: サービスを表示
       course: サービスを表示
       audio: 視聴する
