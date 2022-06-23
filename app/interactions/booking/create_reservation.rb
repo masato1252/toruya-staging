@@ -108,65 +108,58 @@ module Booking
             customer = user.customers.find(customer_info["id"])
           end
 
-          if !social_customer&.is_owner && (customer ||= social_customer&.customer)
-            if customer_phonetic_last_name && customer_phonetic_first_name
-              customer_outcome = Customers::Store.run(
-                user: user,
-                current_user: user,
-                params: {
-                  id: customer.id.to_s,
-                  last_name: customer_last_name,
-                  first_name: customer_first_name,
-                  phonetic_last_name: customer_phonetic_last_name,
-                  phonetic_first_name: customer_phonetic_first_name,
-                  phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
-                  emails_details: [{ type: "mobile", value: customer_email }],
-                }.compact
-              )
-
-              if customer_outcome.valid?
-                customer = customer_outcome.result
-              end
+          if social_customer&.is_owner?
+            if customer
+              # Trying to booking for themself and put the shop owner customer data
+            elsif customer_first_name && customer_last_name && customer_phone_number
+              # Booking for their customer, this is new customer, the name doesn't match
+              customer = create_new_customer
+            else
+              # Trying to booking for themself, no customer data
+              customer = social_customer&.customer
             end
           else
-            # new customer
-            customer_outcome = Customers::Create.run(
-              user: user,
-              customer_last_name: customer_last_name,
-              customer_first_name: customer_first_name,
-              customer_phonetic_last_name: customer_phonetic_last_name,
-              customer_phonetic_first_name: customer_phonetic_first_name,
-              customer_phone_number: customer_phone_number,
-              customer_email: customer_email,
-              customer_reminder_permission: customer_reminder_permission
-            )
+            # regular customer come
+            if customer ||= social_customer&.customer
+              if customer_phonetic_last_name && customer_phonetic_first_name
+                customer_outcome = Customers::Store.run(
+                  user: user,
+                  current_user: user,
+                  params: {
+                    id: customer.id.to_s,
+                    last_name: customer_last_name,
+                    first_name: customer_first_name,
+                    phonetic_last_name: customer_phonetic_last_name,
+                    phonetic_first_name: customer_phonetic_first_name,
+                    phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+                    emails_details: [{ type: "mobile", value: customer_email }],
+                  }.compact
+                )
 
-            # XXX: Don't have to find a available reservation, since customer is invalid
-            if customer_outcome.invalid?
-              errors.merge!(customer_outcome.errors)
-
-              raise ActiveRecord::Rollback
+                if customer_outcome.valid?
+                  customer = customer_outcome.result
+                end
+              end
+            else
+              # new customer
+              customer = create_new_customer
             end
-
-            customer = customer_outcome.result
           end
 
-          if customer
-            if social_customer && !social_customer.is_owner
-              social_customer.update!(customer_id: customer.id)
-            end
-
-            if !customer.had_address? && customer_info && customer_info[:address_details].present?
-              customer.address_details = customer_info[:address_details]
-            end
-
-            customer.assign_attributes(
-              reminder_permission: customer_reminder_permission,
-              updated_at: Time.current
-            )
-
-            customer.save
+          if social_customer && !social_customer.is_owner
+            social_customer.update!(customer_id: customer.id)
           end
+
+          if !customer.had_address? && customer_info && customer_info[:address_details].present?
+            customer.address_details = customer_info[:address_details]
+          end
+
+          customer.assign_attributes(
+            reminder_permission: customer_reminder_permission,
+            updated_at: Time.current
+          )
+
+          customer.save
 
           catch :booked_reservation do
             unless reservation
@@ -381,6 +374,31 @@ module Booking
 
     def social_customer
       SocialCustomer.find_by(social_user_id: social_user_id, user_id: booking_page.user_id) if social_user_id
+    end
+
+    def create_new_customer
+      customer_outcome = Customers::Create.run(
+        user: user,
+        customer_last_name: customer_last_name,
+        customer_first_name: customer_first_name,
+        customer_phonetic_last_name: customer_phonetic_last_name,
+        customer_phonetic_first_name: customer_phonetic_first_name,
+        customer_phone_number: customer_phone_number,
+        customer_email: customer_email,
+        customer_reminder_permission: customer_reminder_permission
+      )
+
+      # XXX: Don't have to find a available reservation, since customer is invalid
+      if customer_outcome.invalid?
+        errors.merge!(customer_outcome.errors)
+
+        raise ActiveRecord::Rollback
+      end
+
+      customer_outcome.result
+    end
+
+    def update_existing_customer
     end
   end
 end

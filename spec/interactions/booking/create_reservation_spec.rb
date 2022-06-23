@@ -212,7 +212,7 @@ RSpec.describe Booking::CreateReservation do
         end
 
         context 'when this social_customer is owner' do
-          let(:social_customer) { FactoryBot.create(:social_customer, :is_owner, customer: existing_customer) }
+          let(:social_customer) { FactoryBot.create(:social_customer, :is_owner, customer: existing_customer, user: user) }
 
           it 'creates a new customer' do
             customer_info_hash = {
@@ -251,6 +251,48 @@ RSpec.describe Booking::CreateReservation do
             }))
 
             expect(customer.social_customer).to be_nil
+          end
+
+          context 'when owner indeed try to booking for themselves' do
+            context 'when there is match customer' do
+              let(:existing_customer) { FactoryBot.create(:customer, user: user, last_name: "foo", first_name: "bar", phone_numbers_details: [{"type" => "mobile", "value" => "123456789"}]) }
+              let(:social_customer) { FactoryBot.create(:social_customer, :is_owner, customer: existing_customer, user: user) }
+
+              it "does not create new customer" do
+                customer_info_hash = {
+                  customer_last_name: existing_customer.last_name,
+                  customer_first_name: existing_customer.first_name,
+                  customer_phone_number: existing_customer.phone_number,
+                  customer_phonetic_last_name: existing_customer.phonetic_last_name,
+                  customer_phonetic_first_name: existing_customer.phonetic_first_name,
+                  customer_email: existing_customer.email
+                }
+                args.merge!(customer_info_hash)
+
+                expect {
+                  outcome
+                }.not_to change {
+                  user.customers.count
+                }
+                expect(outcome).to be_valid
+              end
+            end
+
+            context 'when there is present customer info' do
+              let(:social_customer) { FactoryBot.create(:social_customer, :is_owner, customer: customer, user: user) }
+
+              it "does not create new customer" do
+                args[:customer_info] = { "id": customer.id }
+                args[:present_customer_info] = { "id": customer.id }
+
+                expect {
+                  outcome
+                }.not_to change {
+                  user.customers.count
+                }
+                expect(outcome).to be_valid
+              end
+            end
           end
         end
       end
