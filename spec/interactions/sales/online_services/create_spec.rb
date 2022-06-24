@@ -21,7 +21,7 @@ RSpec.describe Sales::OnlineServices::Create do
       introduction_video_url: "url",
       monthly_price: monthly_price,
       content: {
-        picture: File.open(file_fixture("cat2.jpeg")),
+        picture: Tempfile.new,
         desc1: "desc1",
         desc2: "desc2"
       },

@@ -87,4 +87,13 @@ FactoryBot.define do
       end
     end
   end
+
+  trait :bundler_payment do
+    product_details {
+      OnlineServiceCustomerProductDetails.build(
+        sale_page: sale_page,
+        payment_type: SalePage::PAYMENTS[:bundler]
+      )
+    }
+  end
 end

@@ -29,5 +29,14 @@ FactoryBot.define do
       goal_type { "bundler" }
       solution_type { "bundler" }
     end
+
+    trait :with_stripe do
+      stripe_product_id do
+        Stripe::Product.create(
+          { name: name },
+          stripe_account: user.stripe_provider.uid
+        ).id
+      end
+    end
   end
 end

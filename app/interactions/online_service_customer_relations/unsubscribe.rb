@@ -23,6 +23,14 @@ class OnlineServiceCustomerRelations::Unsubscribe < ActiveInteraction::Base
         relation.payment_state = :failed
         relation.pending!
         relation
+
+        if relation.online_service.bundler?
+          relation.bundled_service_relations.each do |bundled_service_relation|
+            # TODO: or all
+            # only stop forever(subscription)
+            bundled_service_relation.pending! if bundled_service_relation.expire_at.nil?
+          end
+        end
       rescue => e
         errors.add(:relation, :something_wrong)
       end

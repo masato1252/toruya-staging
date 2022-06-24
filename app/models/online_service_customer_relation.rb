@@ -143,6 +143,14 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     ).take
   end
 
+  def bundled_service_relations
+    @bundled_service_relations ||= OnlineServiceCustomerRelation.where(
+      online_service: sale_page.product.bundled_online_services,
+      sale_page: sale_page,
+      customer: customer
+    )
+  end
+
   def purchased_from_bundler?
     sale_page.product.bundler?
   end

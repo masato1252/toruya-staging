@@ -49,7 +49,7 @@ module Sales
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
 
             # credit card charge is synchronous request, it would return final status immediately
-            compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation)
+            compose(CustomerPayments::SubscribeBundlerOnlineService, online_service_customer_relation: relation)
           end
         end
 

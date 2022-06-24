@@ -14,6 +14,7 @@ module Sales
 
         # paid_at => bought at, when customer bought this product, it should equals first time pay.
         relation.paid_at = Time.current
+        relation.expire_at = nil
         # bundler_relation expire_at is always nil
         relation.save
 
