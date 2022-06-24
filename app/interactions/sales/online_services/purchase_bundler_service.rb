@@ -34,15 +34,6 @@ module Sales
             )
           end
 
-# Bundler service:  service item 1  end time    => sale page one time, recurring pay  => one time      => item2 is real forever
-#                   service item 2  forever                                           => recurring pay => item2 would be ended if charged failed
-#                   service item 3(membership) only end_on_months
-#
-# Bundler service:  service item 1  end time    => sale page one time
-#                   service item 2  end time
-#
-# Bundler service:  service item 1  forever     => sale page one time, recurring pay  => one time      => item1, item2 is real forever
-#                   service item 2  forever                                           => recurring pay => item1, item2 would be ended if bundler charged failed
           case payment_type
           when SalePage::PAYMENTS[:one_time], SalePage::PAYMENTS[:multiple_times]
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)

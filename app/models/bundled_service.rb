@@ -13,6 +13,15 @@ class BundledService < ApplicationRecord
   belongs_to :bundler_service, class_name: "OnlineService", foreign_key: :bundler_online_service_id
   belongs_to :online_service
 
+  def current_expire_time
+    if end_at
+      end_at
+    elsif end_on_months
+      Time.current.advance(months: end_on_months)
+    elsif end_on_days
+      Time.current.advance(days: end_on_days)
+    end
+  end
   # def end_time
   #   if end_on_days
   #     {

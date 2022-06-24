@@ -15,7 +15,6 @@ module Sales
       validates :payment_type, inclusion: { in: SalePage::PAYMENTS.values }
 
       def execute
-        compose(Sales::OnlineServices::PurchaseNormalService, input)
         relation = compose(
           ::Sales::OnlineServices::Apply,
           sale_page: sale_page,

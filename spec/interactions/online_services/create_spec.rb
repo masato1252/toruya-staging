@@ -69,21 +69,6 @@ RSpec.describe OnlineServices::Create do
       end
     end
 
-    context "when service is recurring(membership)" do
-      it "creates a stripe product" do
-        online_service = outcome.result
-
-        expect(
-          Stripe::Product.retrieve(
-            online_service.stripe_product_id,
-            {
-              stripe_account: online_service.user.stripe_provider.uid
-            }
-          )
-        ).to be_present
-      end
-    end
-
     context "when service is bundler" do
       let(:selected_goal) { OnlineService.goal_types[:bundler] }
       let(:online_service1) { FactoryBot.create(:online_service) }

@@ -124,11 +124,27 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def price_details
-    product_details["prices"].map do |_attributes|
-      ::OnlineServiceCustomerPrice.new(_attributes.merge(
-        charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil
-      ))
+    if product_details.dig("prices").present?
+      product_details["prices"].map do |_attributes|
+        ::OnlineServiceCustomerPrice.new(_attributes.merge(
+          charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil
+        ))
+      end
+    elsif purchased_from_bundler?
+      bundler_relation.price_details
     end
+  end
+
+  def bundler_relation
+    @bundler_relation ||= OnlineServiceCustomerRelation.where(
+      online_service: sale_page.product,
+      sale_page: sale_page,
+      customer: customer
+    ).take
+  end
+
+  def purchased_from_bundler?
+    sale_page.product.bundler?
   end
 
   def total_completed_payments_amount

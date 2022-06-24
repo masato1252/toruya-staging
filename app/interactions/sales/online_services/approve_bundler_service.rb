@@ -14,12 +14,12 @@ module Sales
 
         # paid_at => bought at, when customer bought this product, it should equals first time pay.
         relation.paid_at = Time.current
+        # bundler_relation expire_at is always nil
         relation.save
 
-        # TODO: approve bundle services
-
-        ::OnlineServices::Attend.run(customer: relation.customer, online_service: relation.online_service, sale_page: relation.sale_page)
-        ::Sales::OnlineServices::SendLineCard.run(relation: relation)
+        relation.online_service.bundled_services.each do |bundled_service|
+          compose(Sales::OnlineServices::ApproveBundledService, bundled_service: bundled_service, bundler_relation: relation)
+        end
 
         relation
       end
