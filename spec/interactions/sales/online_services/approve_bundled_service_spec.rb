@@ -39,11 +39,11 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
       end
 
       context 'when bundled_service got end time' do
-        let(:now) { Time.current }
+        let(:now) { Time.current.round }
         let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: now.advance(days: 1)) }
 
         it "creates a bundled relation" do
-          Timecop.freeze do
+          Timecop.freeze(Time.current.round) do
             expect {
               outcome
             }.to change {
@@ -62,7 +62,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
 
     context "when bundled online service was existing purchased online service" do
       context "when existing_relation had end time" do
-        let(:existing_relation_expire_at) { Time.current.advance(days: 2) }
+        let(:existing_relation_expire_at) { Time.current.advance(days: 2).round }
         let!(:existing_relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, online_service: bundled_service.online_service, customer: customer, expire_at: existing_relation_expire_at) }
 
         # Customer existing service had end time => bundler service end time => pick better one
@@ -70,7 +70,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: existing_relation_expire_at.advance(days: 1)) }
 
           it "use bundler service expire time" do
-            Timecop.freeze do
+            Timecop.freeze(Time.current.round) do
               expect {
                 outcome
               }.not_to change {
@@ -90,7 +90,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: existing_relation_expire_at.advance(days: -1)) }
 
           it "use existing online_service expire time" do
-            Timecop.freeze do
+            Timecop.freeze(Time.current.round) do
               expect {
                 outcome
               }.not_to change {
@@ -110,7 +110,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: nil) }
 
           it "use bundler service forever expire_at" do
-            Timecop.freeze do
+            Timecop.freeze(Time.current.round) do
               expect {
                 outcome
               }.not_to change {
@@ -140,7 +140,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.advance(days: 3)) }
 
           it "use existing online_service forever expire time and give bonus" do
-            Timecop.freeze do
+            Timecop.freeze(Time.current.round) do
               expect {
                 outcome
               }.not_to change {
@@ -167,7 +167,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
             expect(Stripe::Coupon).to receive(:create).and_call_original
             expect(StripeSubscriptions::ApplySubscriptionCoupon).to receive(:run).and_call_original
 
-            Timecop.freeze do
+            Timecop.freeze(Time.current.round) do
               expect {
                 outcome
               }.not_to change {
@@ -193,7 +193,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           it "use existing online_service forever expire time and cancel the original service subscription" do
             old_stripe_subscription_id = existing_relation.stripe_subscription_id
 
-            Timecop.freeze do
+            Timecop.freeze(Time.current.round) do
               expect {
                 outcome
               }.not_to change {

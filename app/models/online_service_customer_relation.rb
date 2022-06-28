@@ -28,6 +28,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   include SayHi
   hi_track_event "online_service_purchased"
+  has_paper_trail on: [:update], only: [:payment_state, :permission_state, :product_details, :sale_page_id]
 
   alias_attribute :watched_episode_ids, :watched_lesson_ids
 

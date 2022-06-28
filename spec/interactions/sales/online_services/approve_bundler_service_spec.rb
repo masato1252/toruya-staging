@@ -28,7 +28,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
     context 'when approve for a bundler service' do
       context 'when bundler service had both services had end time' do
         it 'both online_service_customer_relation had expire_at' do
-          Timecop.freeze do
+          Timecop.freeze(Time.current.round) do
             bundled_service_with_end_at = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.tomorrow)
             bundled_service_with_end_of_days = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_on_days: 3)
 
@@ -56,7 +56,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
 
       context 'when bundler service had both services is forever' do
         it 'both online_service_customer_relation had no expire_at(forever available)' do
-          Timecop.freeze do
+          Timecop.freeze(Time.current.round) do
             bundled_service_with_end_at = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.tomorrow)
             bundled_service_with_forever = FactoryBot.create(:bundled_service, bundler_service: bundler_service)
 
@@ -83,7 +83,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
 
       context 'when bundler service had one service had end time, another is forever' do
         it 'one online_service_customer_relation expire_at, another do NOT(forever available)' do
-          Timecop.freeze do
+          Timecop.freeze(Time.current.round) do
             bundled_service_with_forever1= FactoryBot.create(:bundled_service, bundler_service: bundler_service)
             bundled_service_with_forever2 = FactoryBot.create(:bundled_service, bundler_service: bundler_service)
 
