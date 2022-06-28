@@ -53,7 +53,11 @@ class OnlineServiceCustomerProductDetails
           ).attributes
         ]
       when SalePage::PAYMENTS[:bundler]
-        []
+        [
+          OnlineServiceCustomerPrice.new(
+            bundler_price: true
+          ).attributes
+        ]
       end
 
     {

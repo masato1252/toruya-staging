@@ -26,7 +26,6 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
 
   describe "#execute" do
     context 'when approve for a bundler service' do
-
       context 'when bundler service had both services had end time' do
         it 'both online_service_customer_relation had expire_at' do
           Timecop.freeze do
@@ -43,13 +42,13 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
             relation_with_end_at_service = OnlineServiceCustomerRelation.where(online_service: bundled_service_with_end_at.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(relation_with_end_at_service.expire_at).to eq(Time.current.tomorrow)
             expect(relation_with_end_at_service).to be_purchased_from_bundler
-            expect(relation_with_end_at_service.product_details).to eq("prices" => [])
+            expect(relation_with_end_at_service.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(relation_with_end_at_service.price_details).to eq(bundler_relation.price_details)
 
             relation_with_end_of_days_service = OnlineServiceCustomerRelation.where(online_service: bundled_service_with_end_of_days.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(relation_with_end_of_days_service.expire_at).to eq(Time.current.advance(days: 3))
             expect(relation_with_end_of_days_service).to be_purchased_from_bundler
-            expect(relation_with_end_of_days_service.product_details).to eq("prices" => [])
+            expect(relation_with_end_of_days_service.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(relation_with_end_of_days_service.price_details).to eq(bundler_relation.price_details)
           end
         end
@@ -70,13 +69,13 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
             relation_with_end_at_service = OnlineServiceCustomerRelation.where(online_service: bundled_service_with_end_at.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(relation_with_end_at_service.expire_at).to eq(Time.current.tomorrow)
             expect(relation_with_end_at_service).to be_purchased_from_bundler
-            expect(relation_with_end_at_service.product_details).to eq("prices" => [])
+            expect(relation_with_end_at_service.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(relation_with_end_at_service.price_details).to eq(bundler_relation.price_details)
 
             relation_with_forever_service = OnlineServiceCustomerRelation.where(online_service: bundled_service_with_forever.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(relation_with_forever_service.expire_at).to be_nil
             expect(relation_with_forever_service).to be_purchased_from_bundler
-            expect(relation_with_forever_service.product_details).to eq("prices" => [])
+            expect(relation_with_forever_service.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(relation_with_forever_service.price_details).to eq(bundler_relation.price_details)
           end
         end
@@ -97,13 +96,13 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
             relation_with_forever_service1 = OnlineServiceCustomerRelation.where(online_service: bundled_service_with_forever1.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(relation_with_forever_service1.expire_at).to be_nil
             expect(relation_with_forever_service1).to be_purchased_from_bundler
-            expect(relation_with_forever_service1.product_details).to eq("prices" => [])
+            expect(relation_with_forever_service1.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(relation_with_forever_service1.price_details).to eq(bundler_relation.price_details)
 
             relation_with_forever_service2 = OnlineServiceCustomerRelation.where(online_service: bundled_service_with_forever2.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(relation_with_forever_service2.expire_at).to be_nil
             expect(relation_with_forever_service2).to be_purchased_from_bundler
-            expect(relation_with_forever_service2.product_details).to eq("prices" => [])
+            expect(relation_with_forever_service2.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(relation_with_forever_service2.price_details).to eq(bundler_relation.price_details)
           end
         end

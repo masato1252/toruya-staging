@@ -124,14 +124,14 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def price_details
-    if product_details.dig("prices").present?
-      product_details["prices"].map do |_attributes|
+    product_details["prices"].map do |_attributes|
+      if _attributes["bundler_price"]
+        bundler_relation.price_details.first
+      else
         ::OnlineServiceCustomerPrice.new(_attributes.merge(
           charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil
         ))
       end
-    elsif purchased_from_bundler?
-      bundler_relation.price_details
     end
   end
 
@@ -139,8 +139,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     @bundler_relation ||= OnlineServiceCustomerRelation.where(
       online_service: sale_page.product,
       sale_page: sale_page,
-      customer: customer
-    ).take
+      customer: customer,
+    ).where.not(id: id).take
   end
 
   def bundled_service_relations
@@ -152,7 +152,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def purchased_from_bundler?
-    sale_page.product.bundler?
+    product_details["prices"].first["bundler_price"]
   end
 
   def total_completed_payments_amount
@@ -176,20 +176,24 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def selling_prices_text
-    if free_payment_state?
-      I18n.t("common.free_price")
-    elsif online_service.recurring_charge_required?
-      # month_pay, year_pay
-      "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
-    elsif online_service.external?
-      I18n.t("common.contact_owner_directly")
-    elsif price_details.size == 1
-      "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+    if purchased_from_bundler?
+      bundler_relation.selling_prices_text
     else
-      times = price_details.size
-      amount_with_currency = price_details.first.amount_with_currency
+      if free_payment_state?
+        I18n.t("common.free_price")
+      elsif price_details.first.interval
+        # month_pay, year_pay
+        "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+      elsif online_service.external?
+        I18n.t("common.contact_owner_directly")
+      elsif price_details.size == 1
+        "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+      else
+        times = price_details.size
+        amount_with_currency = price_details.first.amount_with_currency
 
-      "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+        "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+      end
     end
   end
 end
