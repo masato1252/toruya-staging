@@ -30,6 +30,7 @@ module OnlineServices
           integer :end_on_days, default: nil
           integer :end_on_months, default: nil
           string :end_time_date_part, default: nil
+          string :end_type, default: nil
         end
       end
     end
@@ -74,7 +75,8 @@ module OnlineServices
               online_service_id: bundled_service[:id],
               end_at: bundled_service.dig(:end_time, :end_time_date_part),
               end_on_days: bundled_service.dig(:end_time, :end_on_days),
-              end_on_months: bundled_service.dig(:end_time, :end_on_months)
+              end_on_months: bundled_service.dig(:end_time, :end_on_months),
+              subscription: bundled_service.dig(:end_time, :end_type) == "subscription"
             )
           end
         end

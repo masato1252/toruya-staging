@@ -20,7 +20,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
 
   describe "#execute" do
     context 'when approve for a bundled service' do
-      context 'when bundled_service is recurring, forever' do
+      context 'when bundled_service is forever' do
         let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: nil) }
 
         it "creates a bundled relation" do
@@ -35,6 +35,26 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           expect(bundled_relation).to be_purchased_from_bundler
           expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
           expect(bundled_relation.price_details).to eq(bundler_relation.price_details)
+          expect(bundled_relation.bundled_service).to eq(bundled_service)
+        end
+      end
+
+      context 'when bundled_service is subscription' do
+        let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, subscription: true) }
+
+        it "creates a bundled relation" do
+          expect {
+            outcome
+          }.to change {
+            OnlineServiceCustomerRelation.count
+          }.by(1)
+
+          bundled_relation = OnlineServiceCustomerRelation.where(online_service: bundled_service.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
+          expect(bundled_relation.expire_at).to be_nil
+          expect(bundled_relation).to be_purchased_from_bundler
+          expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
+          expect(bundled_relation.price_details).to eq(bundler_relation.price_details)
+          expect(bundled_relation.bundled_service).to eq(bundled_service)
         end
       end
 
@@ -55,6 +75,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
             expect(bundled_relation).to be_purchased_from_bundler
             expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(bundled_relation.price_details).to eq(bundler_relation.price_details)
+            expect(bundled_relation.bundled_service).to eq(bundled_service)
           end
         end
       end
@@ -188,7 +209,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           let(:subscription) { FactoryBot.create(:subscription, :with_stripe) }
           let(:customer) { FactoryBot.create(:customer, user: subscription.user, with_stripe: true) }
           let!(:existing_relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, online_service: bundled_service.online_service, customer: customer, expire_at: nil) }
-          let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: nil) }
+          let(:bundled_service) { FactoryBot.create(:bundled_service, bundler_service: bundler_service, subscription: nil) }
 
           it "use existing online_service forever expire time and cancel the original service subscription" do
             old_stripe_subscription_id = existing_relation.stripe_subscription_id

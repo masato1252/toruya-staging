@@ -12,6 +12,7 @@
 #  watched_lesson_ids     :string           default([]), is an Array
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  bundled_service_id     :integer
 #  customer_id            :integer          not null
 #  online_service_id      :integer          not null
 #  sale_page_id           :integer          not null
@@ -37,6 +38,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   belongs_to :online_service
   belongs_to :sale_page
   belongs_to :customer
+  belongs_to :bundled_service, optional: true
 
   # Don't add this scope, where("online_services.start_at is NULL or online_services.start_at < :now", now: Time.current)
   # because we need to a scope to filter the relations is legal to send them messages or do something even before service started
@@ -145,6 +147,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def bundled_service_relations
+    # TODO: might need bundled_service_id
     @bundled_service_relations ||= OnlineServiceCustomerRelation.where(
       online_service: sale_page.product.bundled_online_services,
       sale_page: sale_page,

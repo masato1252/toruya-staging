@@ -26,9 +26,8 @@ class OnlineServiceCustomerRelations::Unsubscribe < ActiveInteraction::Base
 
         if relation.online_service.bundler?
           relation.bundled_service_relations.each do |bundled_service_relation|
-            # TODO: or all
-            # only stop forever(subscription)
-            bundled_service_relation.pending! if bundled_service_relation.expire_at.nil?
+            # only stop subscription, forever still forever
+            bundled_service_relation.pending! if bundled_service_relation.bundled_service&.subscription
           end
         end
       rescue => e

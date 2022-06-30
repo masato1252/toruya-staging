@@ -700,7 +700,8 @@ CREATE TABLE public.bundled_services (
     online_service_id integer NOT NULL,
     end_at timestamp without time zone,
     end_on_days integer,
-    end_on_months integer
+    end_on_months integer,
+    subscription boolean DEFAULT false
 );
 
 
@@ -1404,7 +1405,8 @@ CREATE TABLE public.online_service_customer_relations (
     updated_at timestamp without time zone NOT NULL,
     current boolean DEFAULT true,
     watched_lesson_ids character varying[] DEFAULT '{}'::character varying[],
-    stripe_subscription_id character varying
+    stripe_subscription_id character varying,
+    bundled_service_id integer
 );
 
 
@@ -5192,6 +5194,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220525090941'),
 ('20220525134226'),
 ('20220530105733'),
-('20220620130630');
+('20220620130630'),
+('20220630135202');
 
 

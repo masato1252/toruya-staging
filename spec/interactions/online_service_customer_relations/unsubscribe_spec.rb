@@ -77,14 +77,17 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
           it 'stops the subscribed bundled service as well' do
             bundled_service_with_end_at = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.tomorrow)
             bundled_service_with_forever = FactoryBot.create(:bundled_service, bundler_service: bundler_service)
-            relation_with_end_at_service = FactoryBot.create(:online_service_customer_relation, :bundler_payment, online_service: bundled_service_with_end_at.online_service, customer: customer, sale_page: sale_page, permission_state: :active, expire_at: Time.current.tomorrow)
-            relation_with_forever_service = FactoryBot.create(:online_service_customer_relation, :bundler_payment, online_service: bundled_service_with_forever.online_service, customer: customer, sale_page: sale_page, permission_state: :active)
+            bundled_service_with_subscription = FactoryBot.create(:bundled_service, bundler_service: bundler_service, subscription: true)
+            relation_with_end_at_service = FactoryBot.create(:online_service_customer_relation, :bundler_payment, online_service: bundled_service_with_end_at.online_service, customer: customer, sale_page: sale_page, permission_state: :active, expire_at: Time.current.tomorrow, bundled_service: bundled_service_with_end_at)
+            relation_with_forever_service = FactoryBot.create(:online_service_customer_relation, :bundler_payment, online_service: bundled_service_with_forever.online_service, customer: customer, sale_page: sale_page, permission_state: :active, bundled_service: bundled_service_with_forever)
+            relation_with_subscription_service = FactoryBot.create(:online_service_customer_relation, :bundler_payment, online_service: bundled_service_with_subscription.online_service, customer: customer, sale_page: sale_page, permission_state: :active, bundled_service: bundled_service_with_subscription)
 
             outcome
 
             expect(outcome.result).to be_pending
             expect(relation_with_end_at_service.reload).to be_active
-            expect(relation_with_forever_service.reload).to be_pending
+            expect(relation_with_forever_service.reload).to be_active
+            expect(relation_with_subscription_service.reload).to be_pending
           end
         end
       end

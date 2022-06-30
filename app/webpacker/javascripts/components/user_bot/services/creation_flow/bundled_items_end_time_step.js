@@ -5,7 +5,7 @@ import _ from "lodash";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
-import { EndOnMonthRadio, EndOnDaysRadio, EndAtRadio, NeverEndRadio } from "shared/components";
+import { EndOnMonthRadio, EndOnDaysRadio, EndAtRadio, NeverEndRadio, SubscriptionRadio } from "shared/components";
 
 const BundledItemsEndTimeStep = ({next, step, step_key}) => {
   const { props, dispatch, bundled_services } = useGlobalContext()
@@ -111,6 +111,16 @@ const BundledItemsEndTimeStep = ({next, step, step_key}) => {
                 end_time={bundled_service.end_time}
                 set_end_time_type={() => {
                   set_end_time_type({bundled_service, end_time_type: 'never'})
+                }}
+              />
+            )}
+
+            {bundled_service_end_time_options(bundled_service).includes('subscription') && (
+              <SubscriptionRadio
+                prefix={bundled_service.id}
+                end_time={bundled_service.end_time}
+                set_end_time_type={() => {
+                  set_end_time_type({bundled_service, end_time_type: 'subscription'})
                 }}
               />
             )}

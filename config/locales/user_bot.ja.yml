@@ -610,6 +610,7 @@ ja:
         expire_after_n_months: 購入後X月後から
         expire_at: 決まった日時まで
         never_expire: ずっと利用可能
+        subscription: Subscription
         after_bought: 購入後
         after_n_days: 日後から
         after_n_months: 月後から

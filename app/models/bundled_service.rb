@@ -6,6 +6,7 @@
 #  end_at                    :datetime
 #  end_on_days               :integer
 #  end_on_months             :integer
+#  subscription              :boolean          default(FALSE)
 #  bundler_online_service_id :integer          not null
 #  online_service_id         :integer          not null
 #
@@ -13,6 +14,7 @@ class BundledService < ApplicationRecord
   belongs_to :bundler_service, class_name: "OnlineService", foreign_key: :bundler_online_service_id
   belongs_to :online_service
 
+  # forever and subscription no expire time
   def current_expire_time
     if end_at
       end_at

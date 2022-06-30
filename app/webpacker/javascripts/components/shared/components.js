@@ -391,6 +391,18 @@ const NeverEndRadio = ({prefix, end_time, set_end_time_type }) => (
   </div>
 )
 
+const SubscriptionRadio = ({prefix, end_time, set_end_time_type }) => (
+  <div className="margin-around">
+    <label className="">
+      <input name={`${prefix}_end_type`} type="radio" value="subscription"
+        checked={end_time.end_type === "subscription"}
+        onChange={set_end_time_type}
+      />
+      {I18n.t("user_bot.dashboards.online_service_creation.subscription")}
+    </label>
+  </div>
+)
+
 export {
   Input,
   InputRow,
@@ -417,5 +429,6 @@ export {
   EndOnDaysRadio,
   EndOnMonthRadio,
   EndAtRadio,
-  NeverEndRadio
+  NeverEndRadio,
+  SubscriptionRadio
 };

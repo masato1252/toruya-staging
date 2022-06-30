@@ -27,9 +27,10 @@ module Sales
 
         relation.permission_state = :active
         new_expire_at = bundled_service.current_expire_time
-        # Overwrite original plan
+        # Overwrite original plan?
         relation.sale_page = sale_page
         relation.product_details = OnlineServiceCustomerProductDetails.build(sale_page: sale_page, payment_type: SalePage::PAYMENTS[:bundler])
+        relation.bundled_service_id = bundled_service.id
 
         unless existing_relation
           relation.expire_at = new_expire_at
@@ -45,7 +46,7 @@ module Sales
           end
         end
 
-        # existing_relation forever
+        # existing_relation forever/subscription
         if existing_relation && existing_relation.expire_at.nil?
           # subscription/membership existing relation
           if bundled_service.end_on_months && online_service.recurring_charge_required? && existing_relation.stripe_subscription_id
@@ -63,6 +64,7 @@ module Sales
             )
           end
 
+          # existing_relation is subscription contract
           if new_expire_at.nil? && existing_relation.stripe_subscription_id # only existing relation got stripe_subscription_id
             compose(
               StripeSubscriptions::Delete,
@@ -70,6 +72,15 @@ module Sales
               stripe_account: user.stripe_provider.uid
             )
             existing_relation.update(stripe_subscription_id: nil)
+          end
+
+          # If existing_relation use real forever contract, don't use new bundled contract
+          is_existing_relation_forever = existing_relation.bundled_service_id.nil? || !existing_relation.bundled_service.subscription
+          if bundled_service.subscription && is_existing_relation_forever
+            relation.bundled_service_id = existing_relation.bundled_service_id
+            # TODO: new or old contract?
+            # relation.sale_page = existing_relation.sale_page
+            # relation.product_details = existing_relation.product_details
           end
         end
 
