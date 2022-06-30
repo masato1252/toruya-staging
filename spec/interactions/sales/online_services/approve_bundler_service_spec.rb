@@ -14,15 +14,6 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
     }
   end
   let(:outcome) { described_class.run(args) }
-  # Bundler service:  service item 1  end time    => sale page one time, recurring pay  => one time      => item1 had end time, item2 is real forever
-  #                   service item 2  forever                                           => recurring pay => item1 had end time item2 would be ended if charged failed
-  #                   service item 3 (membership) only end_on_months
-  #
-  # Bundler service:  service item 1  end time    => sale page one time
-  #                   service item 2  end time
-  #
-  # Bundler service:  service item 1  forever     => sale page one time, recurring pay  => one time      => item1, item2 is real forever
-  #                   service item 2  forever                                           => recurring pay => item1, item2 would be ended if bundler charged failed
 
   describe "#execute" do
     context 'when approve for a bundler service' do
@@ -108,23 +99,5 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
         end
       end
     end
-
-    # context 'when recurring pay for a bundler service' do
-    #   let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, online_service: bundler_service, customer: customer) }
-    #
-    #   context 'when bundler service had both services had end time' do
-    #     it 'is invalid'
-    #   end
-    #
-    #   context 'when bundler service had both services is forever' do
-    #     it 'both online_service_customer_relation had no expire_at(forever available)' do
-    #     end
-    #   end
-    #
-    #   context 'when bundler service had one service had end time, another is forever' do
-    #     it 'both online_service_customer_relation had no expire_at(forever available)' do
-    #     end
-    #   end
-    # end
   end
 end
