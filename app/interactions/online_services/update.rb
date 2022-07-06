@@ -69,14 +69,23 @@ module OnlineServices
           errors.merge!(message.errors) if message.errors.present?
         when "bundled_services"
           if attrs[:bundled_services].present?
-            online_service.bundled_services.destroy_all
-            attrs[:bundled_services].each do |bundled_service|
-              online_service.bundled_services.create(
-                online_service_id: bundled_service[:id],
-                end_at: bundled_service.dig(:end_time, :end_time_date_part),
-                end_on_days: bundled_service.dig(:end_time, :end_on_days),
-                end_on_months: bundled_service.dig(:end_time, :end_on_months)
+            # TODO: Should not able to delete it?
+            # TODO: Existing able to change end time? subscription to others, others to subscription
+            attrs[:bundled_services].each do |bundled_service_attrs|
+              bundled_service = online_service.bundled_services.find_or_initialize_by(online_service_id: bundled_service_attrs[:id])
+              is_new_bundled_service = bundled_service.new_record?
+
+              bundled_service.assign_attributes(
+                end_at: bundled_service_attrs.dig(:end_time, :end_time_date_part),
+                end_on_days: bundled_service_attrs.dig(:end_time, :end_on_days),
+                end_on_months: bundled_service_attrs.dig(:end_time, :end_on_months)
               )
+
+              if bundled_service.save && is_new_bundled_service
+                online_service.online_service_customer_relations.available.each do |bundler_relation|
+                  Sales::OnlineServices::ApproveBundledService.perform_later(bundled_service: bundled_service, bundler_relation: bundler_relation)
+                end
+              end
             end
           end
         end

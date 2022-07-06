@@ -59,6 +59,8 @@ RSpec.configure do |config|
     Seeders::Plan.seed!
     Seeders::SocialRichMenu.seed!
   end
+
+  config.include ActiveJob::TestHelper
 end
 
 # ref: https://stackoverflow.com/a/36724913/609365
