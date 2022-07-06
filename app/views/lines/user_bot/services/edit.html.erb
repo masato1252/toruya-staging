@@ -15,7 +15,15 @@
       }
     end.compact,
     solutions: @service.solution_options,
-    message_template: @service.message_template ? CustomMessageSerializer.new(@service.message_template).attributes_hash : nil
+    message_template: @service.message_template ? CustomMessageSerializer.new(@service.message_template).attributes_hash : nil,
+    bundled_service_candidates: current_user.online_services.bundleable.map do |online_service|
+      hash = BundleableServiceSerializer.new(online_service).attributes_hash
+
+      {
+        label: hash[:label],
+        value: hash
+      }
+    end
   }
 },
 { camelize_props: false }

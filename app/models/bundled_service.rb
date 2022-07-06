@@ -24,38 +24,39 @@ class BundledService < ApplicationRecord
       Time.current.advance(days: end_on_days)
     end
   end
-  # def end_time
-  #   if end_on_days
-  #     {
-  #       end_type: "end_on_days",
-  #       end_on_days: end_on_days
-  #     }
-  #   elsif end_on_months
-  #     {
-  #       end_type: "end_on_months",
-  #       end_on_months: end_on_months
-  #     }
-  #   elsif end_at
-  #     {
-  #       end_type: "end_at",
-  #       end_time_date_part: end_at.to_s(:date)
-  #     }
-  #   else
-  #     {
-  #       end_type: "never"
-  #     }
-  #   end
-  # end
-  #
-  # def end_time_text
-  #   if end_on_days
-  #     I18n.t("sales.expire_after_n_days", days: end_on_days)
-  #   elsif end_on_months
-  #     I18n.t("sales.expire_after_n_months", months: end_on_months)
-  #   elsif end_at
-  #     I18n.l(end_at, format: :date_with_wday)
-  #   else
-  #     I18n.t("sales.never_expire")
-  #   end
-  # end
+
+  def end_time
+    if end_on_days
+      {
+        end_type: "end_on_days",
+        end_on_days: end_on_days
+      }
+    elsif end_on_months
+      {
+        end_type: "end_on_months",
+        end_on_months: end_on_months
+      }
+    elsif end_at
+      {
+        end_type: "end_at",
+        end_time_date_part: end_at.to_s(:date)
+      }
+    else
+      {
+        end_type: "never"
+      }
+    end
+  end
+
+  def end_time_text
+    if end_on_days
+      I18n.t("sales.expire_after_n_days", days: end_on_days)
+    elsif end_on_months
+      I18n.t("sales.expire_after_n_months", months: end_on_months)
+    elsif end_at
+      I18n.l(end_at, format: :date_with_wday)
+    else
+      I18n.t("sales.never_expire")
+    end
+  end
 end

@@ -185,12 +185,11 @@ class OnlineService < ApplicationRecord
   end
 
   def one_time_charge_required?
-    GOALS.find { |goal| goal_type == goal[:key] }[:one_time_charge]
+    GOALS.find { |goal| goal_type == goal[:key] }[:one_time_charge] && !recurring_charge_required?
   end
 
   def recurring_charge_required?
-    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge] ||
-      (bundler? && bundled_services.includes(:online_service).any? { |service| service.online_service.membership? && service.end_at.nil? && service.end_on_days.nil? && service.end_on_months.nil? })
+    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge] || (bundler? && bundled_services.where(subscription: true).exists?)
   end
 
   def start_at_for_customer(customer)

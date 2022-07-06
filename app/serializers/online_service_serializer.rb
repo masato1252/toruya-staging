@@ -32,4 +32,10 @@ class OnlineServiceSerializer
   attribute :recurring_charge_required do |service|
     service.recurring_charge_required?
   end
+
+  attribute :bundled_services do |service|
+    service.bundled_services.map do |bundled_service|
+      BundledServiceSerializer.new(bundled_service).attributes_hash
+    end
+  end
 end

@@ -19,6 +19,7 @@ const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
   const [end_time, setEndTime] = useState(props.service.end_time)
   const [start_time, setStartTime] = useState(props.service.start_time)
+  const [bundled_services, setBundledServices] = useState(props.service.bundled_services)
   const [message_template, setMessageTemplate] = useState(props.message_template)
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
@@ -59,7 +60,6 @@ const OnlineServiceEdit =({props}) => {
             </div>
           </>
         );
-        break
       case "note":
         return (
           <EditTextarea register={register} errors={errors} watch={watch} name={props.attribute} placeholder={props.placeholder} />
@@ -80,6 +80,46 @@ const OnlineServiceEdit =({props}) => {
             watch={watch}
             setValue={setValue}
           />
+        )
+      case "bundled_services":
+        return (
+          <>
+            <div className="margin-around">
+              <label className="text-align-left">
+                <ReactSelect
+                  placeholder={I18n.t("user_bot.dashboards.online_service_creation.select_bundler_product")}
+                  value={ _.isEmpty(bundled_services) ? "" : { label: bundled_services[bundled_services.length - 1].label }}
+                  options={props.bundled_service_candidates}
+                  onChange={
+                    (service) => {
+                      setBundledServices(
+                        _.uniqBy([...bundled_services, { id: service.value.id, label: service.label, end_time: {} }], 'id')
+                      )
+                    }
+                  }
+                />
+              </label>
+            </div>
+
+            {bundled_services.length !== 0 && <div className="field-header">{I18n.t("user_bot.dashboards.online_service_creation.bundled_services")}</div>}
+
+            <div className="margin-around">
+              {bundled_services.length !== 0 && <p className="desc">{I18n.t("user_bot.dashboards.online_service_creation.bundled_service_usage_desc")}</p>}
+
+              {bundled_services.map(bundled_service => (
+                <button
+                  key={bundled_service.id}
+                  className="btn btn-gray mx-2 my-2"
+                  onClick={() => {
+                    setBundledServices(
+                      bundled_services.filter(item => item.id !== bundled_service.id)
+                    )
+                  }}>
+                  {bundled_service.label}
+                </button>
+              ))}
+            </div>
+          </>
         )
       case "company":
         return (

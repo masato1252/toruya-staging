@@ -13,11 +13,11 @@ const BundledItemsStep = ({next, step, step_key}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} step_key={step_key} />
-      <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.online_service_creation.what_want_to_upsell")}</h3>
+      <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.online_service_creation.what_want_to_sell_as_bundler")}</h3>
       <div className="margin-around">
         <label className="text-align-left">
           <ReactSelect
-            placeholder={I18n.t("user_bot.dashboards.online_service_creation.select_upsell_product")}
+            placeholder={I18n.t("user_bot.dashboards.online_service_creation.select_bundler_product")}
             value={ _.isEmpty(bundled_services) ? "" : { label: bundled_services[bundled_services.length - 1].label }}
             options={props.bundled_service_candidates}
             onChange={
@@ -34,7 +34,10 @@ const BundledItemsStep = ({next, step, step_key}) => {
           />
         </label>
       </div>
+      {bundled_services.length !== 0 && <div className="field-header">{I18n.t("user_bot.dashboards.online_service_creation.bundled_services")}</div>}
       <div className="margin-around">
+        {bundled_services.length !== 0 && <p className="desc">{I18n.t("user_bot.dashboards.online_service_creation.bundled_service_usage_desc")}</p>}
+
         {bundled_services.map(bundled_service => (
           <button
             key={bundled_service.id}

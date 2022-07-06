@@ -58,13 +58,11 @@ const BundledItemsEndTimeStep = ({next, step, step_key}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} step_key={step_key} />
-      <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.online_service_creation.what_want_to_upsell")}</h3>
+      <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.online_service_creation.when_bundled_service_expire")}</h3>
       <div className="margin-around">
-        {bundled_services.map(bundled_service => (
-          <div key={bundled_service.id} >
-            <div key={bundled_service.id} className="btn btn-gray mx-2 my-2">
-              {bundled_service.label}
-            </div>
+        {bundled_services.map((bundled_service, index) => (
+          <div key={bundled_service.id}>
+            <h3 key={bundled_service.id}> {bundled_service.label}</h3>
 
             {bundled_service_end_time_options(bundled_service).includes('end_at') && (
               <EndAtRadio
@@ -124,6 +122,7 @@ const BundledItemsEndTimeStep = ({next, step, step_key}) => {
                 }}
               />
             )}
+            {bundled_services.length !== index + 1 && <hr className="extend my-4" />}
           </div>
         ))}
       </div>

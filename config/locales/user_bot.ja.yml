@@ -625,6 +625,11 @@ ja:
         content_picture_requirement_tip: "画像を設定\n 幅1024px、高さ1024px以下"
         message_description: サービス説明(60文字以内)
         fake_action_button: アクションボタン
+        what_want_to_sell_as_bundler: どのサービスをセット販売しますか？
+        select_bundler_product: サービスを追加
+        bundled_services: セット販売するサービス
+        bundled_service_usage_desc: 選択を解除するには、設定されたサービス名をタップしてください。
+        when_bundled_service_expire: 各サービスに利用期限はありますか？
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ
