@@ -9,27 +9,27 @@ module Sales
       def execute
         existing_relation = online_service.online_service_customer_relations.find_by(online_service: online_service, customer: customer)
 
-        relation = compose(
-          ::Sales::OnlineServices::Apply,
-          sale_page: sale_page,
-          online_service: online_service,
-          customer: customer,
-          payment_type: SalePage::PAYMENTS[:bundler]
-        )
-
-        if relation.inactive?
-          relation = compose(
-            ::Sales::OnlineServices::Reapply,
-            online_service_customer_relation: relation,
-            payment_type: SalePage::PAYMENTS[:bundler]
-          )
-        end
+        # Cancel(pending) the original relation then create a new one
+        relation =
+          if existing_relation
+            compose(
+              ::Sales::OnlineServices::ReplaceByBundlerService,
+              existing_online_service_customer_relation: existing_relation,
+              bundler_relation: bundler_relation,
+              payment_type: SalePage::PAYMENTS[:bundler]
+            )
+          else
+            compose(
+              ::Sales::OnlineServices::Apply,
+              sale_page: sale_page,
+              online_service: online_service,
+              customer: customer,
+              payment_type: SalePage::PAYMENTS[:bundler]
+            )
+          end
 
         relation.permission_state = :active
         new_expire_at = bundled_service.current_expire_time
-        # Overwrite original plan?
-        relation.sale_page = sale_page
-        relation.product_details = OnlineServiceCustomerProductDetails.build(sale_page: sale_page, payment_type: SalePage::PAYMENTS[:bundler])
         relation.bundled_service_id = bundled_service.id
 
         unless existing_relation
@@ -39,6 +39,8 @@ module Sales
         if existing_relation && existing_relation.expire_at
           if new_expire_at && new_expire_at > existing_relation.expire_at
             relation.expire_at = new_expire_at
+          else
+            relation.expire_at = existing_relation.expire_at
           end
 
           if new_expire_at.nil?
@@ -75,12 +77,8 @@ module Sales
           end
 
           # If existing_relation use real forever contract, don't use new bundled contract
-          is_existing_relation_forever = existing_relation.bundled_service_id.nil? || !existing_relation.bundled_service.subscription
-          if bundled_service.subscription && is_existing_relation_forever
+          if bundled_service.subscription && existing_relation.forever?
             relation.bundled_service_id = existing_relation.bundled_service_id
-            # TODO: new or old contract?
-            # relation.sale_page = existing_relation.sale_page
-            # relation.product_details = existing_relation.product_details
           end
         end
 

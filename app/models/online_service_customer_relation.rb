@@ -147,8 +147,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def bundled_service_relations
-    # TODO: might need bundled_service_id
     @bundled_service_relations ||= OnlineServiceCustomerRelation.where(
+      current: true,
       online_service: sale_page.product.bundled_online_services,
       sale_page: sale_page,
       customer: customer
@@ -177,6 +177,14 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
       h[payment.order_id] = payment.completed?
     end
+  end
+
+  def subscription?
+    expire_at.nil? && (stripe_subscription_id.present? || price_details.first.interval.present? || bundled_service&.subscription)
+  end
+
+  def forever?
+    expire_at.nil? && !subscription?
   end
 
   def selling_prices_text
