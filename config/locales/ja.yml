@@ -616,6 +616,11 @@ ja:
   active_interaction:
     errors:
       models:
+        online_services/update:
+          attributes:
+            attrs:
+              bundle_services_subscription_required: "^Sale page was recurring payment, one of subscription bundled service is required"
+              bundle_services_all_end_time_required: "^Sale page was one time payment, all of bundled services had end time were required"
         chapters/delete:
           attributes:
             chapter:

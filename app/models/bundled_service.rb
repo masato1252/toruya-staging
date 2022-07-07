@@ -41,6 +41,10 @@ class BundledService < ApplicationRecord
         end_type: "end_at",
         end_time_date_part: end_at.to_s(:date)
       }
+    elsif subscription
+      {
+        end_type: "subscription"
+      }
     else
       {
         end_type: "never"
@@ -55,6 +59,8 @@ class BundledService < ApplicationRecord
       I18n.t("sales.expire_after_n_months", months: end_on_months)
     elsif end_at
       I18n.l(end_at, format: :date_with_wday)
+    elsif subscription
+      "Subscription"
     else
       I18n.t("sales.never_expire")
     end
