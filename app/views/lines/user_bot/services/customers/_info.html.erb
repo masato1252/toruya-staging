@@ -19,8 +19,20 @@
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
 <%= render "lines/user_bot/field_row" do %>
-  <span><%= @relation.selling_prices_text %></span>
-  <% if @able_to_change_credit_card %>
+  <span>
+    <% if @relation.bundler_relation %>
+      <% if @is_owner %>
+        <%= @relation.bundler_relation.online_service.name %>
+        <%= link_to "購入情報を見る", lines_user_bot_service_customer_path(service_id: @relation.bundler_relation.online_service.id, id: @relation.bundler_relation.id), class: "btn btn-yellow" %>
+      <% else %>
+        <%= @relation.bundler_relation.online_service.name %>
+        <%= link_to "購入情報を見る", customer_status_online_service_path(slug: @relation.bundler_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(@customer.social_customer.social_user_id)), class: "btn btn-yellow" %>
+      <% end %>
+    <% else %>
+      <%= @relation.selling_prices_text %>
+    <% end %>
+  </span>
+  <% if @able_to_change_credit_card && !@relation.bundler_relation %>
     <%= link_to t("action.change_credit_card"), "#", data: { toggle: "modal", target: "#change-card-modal" }, class: "btn btn-yellow" %>
   <% end %>
 <% end %>

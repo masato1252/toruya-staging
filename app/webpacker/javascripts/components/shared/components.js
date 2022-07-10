@@ -300,6 +300,109 @@ const SwitchButton = ({checked, onChange, name, offWord, onWord, nosize}) => {
   )
 }
 
+const EndOnDaysRadio = ({prefix, end_time, set_end_time_type, set_end_time_value }) => (
+  <div className="margin-around">
+    <label className="">
+      <div>
+        <input
+          name={`${prefix}_end_type`} type="radio" value="end_on_days"
+          checked={end_time.end_type === "end_on_days"}
+          onChange={set_end_time_type}
+        />
+        {I18n.t("user_bot.dashboards.online_service_creation.expire_after_n_days")}
+      </div>
+      {end_time.end_type === "end_on_days" && (
+        <>
+          {I18n.t("user_bot.dashboards.online_service_creation.after_bought")}
+          <input
+            type="tel"
+            value={end_time.end_on_days || ""}
+            onChange={(event) => {
+              set_end_time_value(event.target.value)
+            }} />
+          {I18n.t("user_bot.dashboards.online_service_creation.after_n_days")}
+        </>
+      )}
+    </label>
+  </div>
+)
+
+const EndOnMonthRadio = ({prefix, end_time, set_end_time_type, set_end_time_value }) => (
+  <div className="margin-around">
+    <label className="">
+      <div>
+        <input
+          name={`${prefix}_end_type`} type="radio" value="end_on_months"
+          checked={end_time.end_type === "end_on_months"}
+          onChange={set_end_time_type}
+        />
+        {I18n.t("user_bot.dashboards.online_service_creation.expire_after_n_months")}
+      </div>
+      {end_time.end_type === "end_on_months" && (
+        <>
+          {I18n.t("user_bot.dashboards.online_service_creation.after_bought")}
+          <input
+            type="tel"
+            value={end_time.end_on_months|| ""}
+            onChange={(event) => {
+              set_end_time_value(event.target.value)
+            }}
+          />
+          {I18n.t("user_bot.dashboards.online_service_creation.after_n_months")}
+        </>
+      )}
+    </label>
+  </div>
+)
+
+const EndAtRadio = ({prefix, end_time, set_end_time_type, set_end_time_value }) => (
+  <div className="margin-around">
+    <label className="">
+      <div>
+        <input name={`${prefix}_end_type`} type="radio" value="end_at"
+          checked={end_time.end_type === "end_at"}
+          onChange={set_end_time_type}
+        />
+        {I18n.t("user_bot.dashboards.online_service_creation.expire_at")}
+      </div>
+      {end_time.end_type === "end_at" && (
+        <input
+          name="end_time_date_part"
+          type="date"
+          value={end_time.end_time_date_part || ""}
+          onChange={(event) => {
+            set_end_time_value(event.target.value)
+          }}
+        />
+      )}
+    </label>
+  </div>
+)
+
+const NeverEndRadio = ({prefix, end_time, set_end_time_type }) => (
+  <div className="margin-around">
+    <label className="">
+      <input name={`${prefix}_end_type`} type="radio" value="never"
+        checked={end_time.end_type === "never"}
+        onChange={set_end_time_type}
+      />
+      {I18n.t("user_bot.dashboards.online_service_creation.never_expire")}
+    </label>
+  </div>
+)
+
+const SubscriptionRadio = ({prefix, end_time, set_end_time_type }) => (
+  <div className="margin-around">
+    <label className="">
+      <input name={`${prefix}_end_type`} type="radio" value="subscription"
+        checked={end_time.end_type === "subscription"}
+        onChange={set_end_time_type}
+      />
+      {I18n.t("user_bot.dashboards.online_service_creation.expire_by_subscription")}
+    </label>
+  </div>
+)
+
 export {
   Input,
   InputRow,
@@ -322,5 +425,10 @@ export {
   BookingPageButtonCopyBtn,
   SubmitButton,
   DemoEditButton,
-  SwitchButton
+  SwitchButton,
+  EndOnDaysRadio,
+  EndOnMonthRadio,
+  EndAtRadio,
+  NeverEndRadio,
+  SubscriptionRadio
 };

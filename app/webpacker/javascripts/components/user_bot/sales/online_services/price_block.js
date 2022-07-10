@@ -164,61 +164,62 @@ const PriceBlock = ({
       </div>
     )
   }
-  else if (price?.price_amounts?.month?.amount && price?.price_amounts?.year?.amount) {
-    return (
-      <div className="product-price-block">
-        <NormalPriceBlock amount={normal_price} />
-
-        <div className="multiple-prices">
-          <div className="price">
-            <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>
-            <div className="special-price">
-              <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} />
-            </div>
-          </div>
-
-          {renderActions('month')}
-        </div>
-
-        <div className="multiple-prices">
-          <div className="price">
-            <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>
-            <div className="special-price">
-              <PriceOntTimePaymentText amount={price?.price_amounts?.year?.amount} />
-            </div>
-          </div>
-
-          {renderActions('year')}
-        </div>
-      </div>
-    )
-  }
   else {
     return (
       <div className="product-price-block">
         <NormalPriceBlock amount={normal_price} />
 
-        <div className="multiple-prices">
-          <div className="price">
-            <h3 className="payment-type-title">{I18n.t("common.one_time_pay")}</h3>
-            <div className="special-price">
-              <PriceOntTimePaymentText amount={price?.price_amounts?.one_time?.amount} />
+        {price?.price_amounts?.one_time?.amount && (
+          <div className="multiple-prices">
+            <div className="price">
+              <h3 className="payment-type-title">{I18n.t("common.one_time_pay")}</h3>
+              <div className="special-price">
+                <PriceOntTimePaymentText amount={price.price_amounts.one_time.amount} />
+              </div>
             </div>
+
+            {renderActions('one_time')}
           </div>
+        )}
 
-          {renderActions('one_time')}
-        </div>
-
-        <div className="multiple-prices">
-          <div className="price">
-            <h3 className="payment-type-title">{I18n.t("common.multiple_times_pay")}</h3>
-            <div className="special-price">
-              <PriceMultipleTimesPaymnetText amount={price?.price_amounts?.multiple_times?.amount} times={price?.price_amounts?.multiple_times?.times} />
+        {price?.price_amounts?.multiple_times?.amount && price?.price_amounts?.multiple_times?.times && (
+          <div className="multiple-prices">
+            <div className="price">
+              <h3 className="payment-type-title">{I18n.t("common.multiple_times_pay")}</h3>
+              <div className="special-price">
+                <PriceMultipleTimesPaymnetText amount={price.price_amounts.multiple_times.amount} times={price.price_amounts.multiple_times.times} />
+              </div>
             </div>
-          </div>
 
-          {renderActions('multiple_times')}
-        </div>
+            {renderActions('multiple_times')}
+          </div>
+        )}
+
+        {price?.price_amounts?.month?.amount && (
+          <div className="multiple-prices">
+            <div className="price">
+              <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>
+              <div className="special-price">
+                <PriceOntTimePaymentText amount={price.price_amounts.month.amount} />
+              </div>
+            </div>
+
+            {renderActions('month')}
+          </div>
+        )}
+
+        {price?.price_amounts?.year?.amount && (
+          <div className="multiple-prices">
+            <div className="price">
+              <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>
+              <div className="special-price">
+                <PriceOntTimePaymentText amount={price.price_amounts.year.amount} />
+              </div>
+            </div>
+
+            {renderActions('year')}
+          </div>
+        )}
       </div>
     )
   }

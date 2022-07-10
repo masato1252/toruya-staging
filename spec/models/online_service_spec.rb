@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe OnlineService do
+  before { StripeMock.start }
+  after { StripeMock.stop }
   let!(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, online_service: online_service) }
   let(:online_service) { FactoryBot.create(:online_service) }
   let(:customer) { online_service_customer_relation.customer }
@@ -33,6 +35,30 @@ RSpec.describe OnlineService do
 
         it "returns relation created time" do
           expect(online_service.start_at_for_customer(customer).round).to eq(online_service_customer_relation.created_at.round)
+        end
+      end
+    end
+  end
+
+  describe "#recurring_charge_required?" do
+    context 'when service is bundler' do
+      let(:bundler_service) { FactoryBot.create(:online_service, :bundler) }
+
+      context 'when all services got end time' do
+        it 'is false' do
+          bundled_service_with_end_at = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.tomorrow)
+          bundled_service_with_end_of_days = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_on_days: 3)
+
+          expect(bundler_service.recurring_charge_required?).to eq(false)
+        end
+      end
+
+      context 'when the one of bundled service is subscription' do
+        it 'is true' do
+          bundled_service_with_forever = FactoryBot.create(:bundled_service, bundler_service: bundler_service)
+          bundled_service_with_subscription = FactoryBot.create(:bundled_service, bundler_service: bundler_service, subscription: true)
+
+          expect(bundler_service.recurring_charge_required?).to eq(true)
         end
       end
     end

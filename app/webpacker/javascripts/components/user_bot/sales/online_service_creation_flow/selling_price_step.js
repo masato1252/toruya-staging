@@ -38,8 +38,8 @@ const SellingPriceStep = ({step, next, prev}) => {
       <SalesFlowStepIndicator step={step} />
       <h3 className="header centerize line-break-content">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_price")}</h3>
 
-      {selected_online_service.recurring_charge_required ? (
-        <SellingRecurringPriceEdit
+      {selected_online_service.one_time_charge_required && (
+        <SellingPriceEdit
           price={price}
           handlePriceChange={(price_value) => {
             dispatch({
@@ -51,8 +51,10 @@ const SellingPriceStep = ({step, next, prev}) => {
             })
           }}
         />
-      ) : (
-        <SellingPriceEdit
+      )}
+
+      {selected_online_service.recurring_charge_required && (
+        <SellingRecurringPriceEdit
           price={price}
           handlePriceChange={(price_value) => {
             dispatch({

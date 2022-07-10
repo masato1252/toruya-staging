@@ -691,6 +691,40 @@ ALTER SEQUENCE public.broadcasts_id_seq OWNED BY public.broadcasts.id;
 
 
 --
+-- Name: bundled_services; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bundled_services (
+    id bigint NOT NULL,
+    bundler_online_service_id integer NOT NULL,
+    online_service_id integer NOT NULL,
+    end_at timestamp without time zone,
+    end_on_days integer,
+    end_on_months integer,
+    subscription boolean DEFAULT false
+);
+
+
+--
+-- Name: bundled_services_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bundled_services_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bundled_services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bundled_services_id_seq OWNED BY public.bundled_services.id;
+
+
+--
 -- Name: business_applications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1371,7 +1405,8 @@ CREATE TABLE public.online_service_customer_relations (
     updated_at timestamp without time zone NOT NULL,
     current boolean DEFAULT true,
     watched_lesson_ids character varying[] DEFAULT '{}'::character varying[],
-    stripe_subscription_id character varying
+    stripe_subscription_id character varying,
+    bundled_service_id integer
 );
 
 
@@ -2937,6 +2972,13 @@ ALTER TABLE ONLY public.broadcasts ALTER COLUMN id SET DEFAULT nextval('public.b
 
 
 --
+-- Name: bundled_services id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bundled_services ALTER COLUMN id SET DEFAULT nextval('public.bundled_services_id_seq'::regclass);
+
+
+--
 -- Name: business_applications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3470,6 +3512,14 @@ ALTER TABLE ONLY public.booking_pages
 
 ALTER TABLE ONLY public.broadcasts
     ADD CONSTRAINT broadcasts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bundled_services bundled_services_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bundled_services
+    ADD CONSTRAINT bundled_services_pkey PRIMARY KEY (id);
 
 
 --
@@ -5143,6 +5193,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220518152005'),
 ('20220525090941'),
 ('20220525134226'),
-('20220530105733');
+('20220530105733'),
+('20220620130630'),
+('20220630135202');
 
 

@@ -8,14 +8,15 @@ class OnlineServiceCustomerPrice
   attribute :stripe_price_id, type: String
   attribute :charge_at, type: DateTime
   attribute :order_id, type: String
+  attribute :bundler_price, type: Boolean
 
-  validates_presence_of :amount
+  validates_presence_of :amount, allow_nil: true # bundler price is nil
   validates :interval, inclusion: { in: %w[month year] }, allow_nil: true
 
   validate :validate_price
 
   def amount_with_currency
-    Money.new(amount)
+    Money.new(amount) if amount
   end
 
   def price_type
@@ -27,6 +28,11 @@ class OnlineServiceCustomerPrice
     if free_price_required_conditions
       # free
       return "free"
+    end
+
+    if bundler_price_required_conditions
+      # one time or multiple time
+      return "bundler_price"
     end
 
     if non_recurring_price_required_conditions
@@ -48,6 +54,10 @@ class OnlineServiceCustomerPrice
       unless free_price_required_conditions
         errors.add(:base, :invalid_free_price)
       end
+    elsif amount.nil?
+      unless bundler_price_required_conditions
+        errors.add(:base, :invalid_bundler_price)
+      end
     else
       # one time or multiple time
       unless non_recurring_price_required_conditions
@@ -66,6 +76,10 @@ class OnlineServiceCustomerPrice
 
   def non_recurring_price_required_conditions
     interval.blank? && amount.positive? && stripe_price_id.blank? && charge_at.present? && order_id.present?
+  end
+
+  def bundler_price_required_conditions
+    interval.blank? && amount.nil? && stripe_price_id.blank? && charge_at.present? && order_id.blank?
   end
 end
 

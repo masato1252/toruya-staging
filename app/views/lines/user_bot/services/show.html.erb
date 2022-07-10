@@ -18,7 +18,7 @@
     <% end %>
   <% end %>
 
-  <% if !@service.course? && !@service.membership? %>
+  <% if !@service.course? && !@service.membership? && !@service.bundler? %>
     <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
     <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
     <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
@@ -42,7 +42,13 @@
     <% end %>
   <% end %>
 
-  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+  <% if @service.bundler? %>
+    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :bundled_services) do %>
+      <span class="dotdotdot"><%= @service.bundled_services.count %><%= I18n.t("user_bot.dashboards.services.service_item") %></span>
+    <% end %>
+  <% end %>
 
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.start_time") %></div>

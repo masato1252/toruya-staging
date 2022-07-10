@@ -6,7 +6,8 @@ import GoalSelectionStep from "./goal_selection_step"
 import SolutionStep from "./solution_step"
 import ExternalPurchaseUrlStep from "./external_purchase_url_step"
 import NameStep from "./name_step"
-import LineMessageStep from "./line_message_step"
+import BundledItemsStep from "./bundled_items_step"
+import BundledItemsEndTimeStep from "./bundled_items_end_time_step"
 import CompanyInfoStep from "./company_info_step"
 import EndtimeStep from "./endtime_step"
 import UpsellStep from "./upsell_step"
@@ -37,6 +38,16 @@ const GoalFlowDispatcher = ({}) => {
           <NameStep key="name_step" />
           <CompanyInfoStep key="company_step" />
           <EndtimeStep key="endtime_step" />
+          <FinalStep key="final_step" />
+        </FlowController>
+      )
+    case 'bundler':
+      return (
+        <FlowController new_version={true}>
+          <NameStep key="name_step" />
+          <BundledItemsStep key="bundled_items_step" />
+          <BundledItemsEndTimeStep key="bundled_items_end_time_step" />
+          <CompanyInfoStep key="company_step" />
           <FinalStep key="final_step" />
         </FlowController>
       )

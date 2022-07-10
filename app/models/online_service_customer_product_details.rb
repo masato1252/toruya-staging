@@ -52,6 +52,12 @@ class OnlineServiceCustomerProductDetails
             charge_at: Time.current
           ).attributes
         ]
+      when SalePage::PAYMENTS[:bundler]
+        [
+          OnlineServiceCustomerPrice.new(
+            bundler_price: true
+          ).attributes
+        ]
       end
 
     {

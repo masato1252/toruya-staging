@@ -19,7 +19,15 @@
         label: hash[:label],
         value: hash
       }
-    end.compact
+    end.compact,
+    bundled_service_candidates: super_user.online_services.bundleable.map do |online_service|
+      hash = BundleableServiceSerializer.new(online_service).attributes_hash
+
+      {
+        label: hash[:label],
+        value: hash
+      }
+    end
   }
 },
 { camelize_props: false }

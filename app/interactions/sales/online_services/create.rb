@@ -53,8 +53,7 @@ module Sales
 
           if sale_page.errors.present?
             errors.merge!(sale_page.errors)
-          elsif recurring_prices.present?
-            sale_page.update(recurring_prices: recurring_prices)
+            return
           end
 
           if staff[:picture]
@@ -63,6 +62,16 @@ module Sales
           end
           responsible_staff.introduction = staff[:introduction]
           responsible_staff.save!
+
+          # Because some online_service like bundler only know is recurring charge until sale page creation
+          if online_service.stripe_product_id.blank? && (monthly_price || yearly_price)
+            stripe_product = compose(::OnlineServices::CreateStripeProduct, online_service: online_service)
+            online_service.update!(stripe_product_id: stripe_product.id)
+          end
+
+          if recurring_prices.present?
+            sale_page.update(recurring_prices: recurring_prices)
+          end
 
           sale_page
         end

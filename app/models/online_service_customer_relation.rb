@@ -12,6 +12,7 @@
 #  watched_lesson_ids     :string           default([]), is an Array
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  bundled_service_id     :integer
 #  customer_id            :integer          not null
 #  online_service_id      :integer          not null
 #  sale_page_id           :integer          not null
@@ -28,6 +29,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   include SayHi
   hi_track_event "online_service_purchased"
+  has_paper_trail on: [:update], only: [:payment_state, :permission_state, :product_details, :sale_page_id]
 
   alias_attribute :watched_episode_ids, :watched_lesson_ids
 
@@ -36,6 +38,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   belongs_to :online_service
   belongs_to :sale_page
   belongs_to :customer
+  belongs_to :bundled_service, optional: true
 
   # Don't add this scope, where("online_services.start_at is NULL or online_services.start_at < :now", now: Time.current)
   # because we need to a scope to filter the relations is legal to send them messages or do something even before service started
@@ -125,10 +128,35 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   def price_details
     product_details["prices"].map do |_attributes|
-      ::OnlineServiceCustomerPrice.new(_attributes.merge(
-        charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil
-      ))
+      if _attributes["bundler_price"]
+        bundler_relation.price_details.first
+      else
+        ::OnlineServiceCustomerPrice.new(_attributes.merge(
+          charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil
+        ))
+      end
     end
+  end
+
+  def bundler_relation
+    @bundler_relation ||= OnlineServiceCustomerRelation.where(
+      online_service: sale_page.product,
+      sale_page: sale_page,
+      customer: customer,
+    ).where.not(id: id).take
+  end
+
+  def bundled_service_relations
+    @bundled_service_relations ||= OnlineServiceCustomerRelation.where(
+      current: true,
+      online_service: sale_page.product.bundled_online_services,
+      sale_page: sale_page,
+      customer: customer
+    )
+  end
+
+  def purchased_from_bundler?
+    product_details["prices"].first["bundler_price"]
   end
 
   def total_completed_payments_amount
@@ -151,21 +179,33 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     end
   end
 
-  def selling_prices_text
-    if free_payment_state?
-      I18n.t("common.free_price")
-    elsif online_service.recurring_charge_required?
-      # month_pay, year_pay
-      "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
-    elsif online_service.external?
-      I18n.t("common.contact_owner_directly")
-    elsif price_details.size == 1
-      "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
-    else
-      times = price_details.size
-      amount_with_currency = price_details.first.amount_with_currency
+  def subscription?
+    expire_at.nil? && (stripe_subscription_id.present? || price_details.first.interval.present? || bundled_service&.subscription)
+  end
 
-      "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+  def forever?
+    expire_at.nil? && !subscription?
+  end
+
+  def selling_prices_text
+    if purchased_from_bundler?
+      bundler_relation.selling_prices_text
+    else
+      if free_payment_state?
+        I18n.t("common.free_price")
+      elsif price_details.first.interval
+        # month_pay, year_pay
+        "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+      elsif online_service.external?
+        I18n.t("common.contact_owner_directly")
+      elsif price_details.size == 1
+        "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+      else
+        times = price_details.size
+        amount_with_currency = price_details.first.amount_with_currency
+
+        "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+      end
     end
   end
 end

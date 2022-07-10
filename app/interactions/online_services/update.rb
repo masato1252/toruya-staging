@@ -25,7 +25,20 @@ module OnlineServices
         file :picture, default: nil
         string :content, default: nil
       end
+      array :bundled_services, default: nil do
+        hash do
+          integer :id
+          hash :end_time, default: nil do
+            integer :end_on_days, default: nil
+            integer :end_on_months, default: nil
+            string :end_time_date_part, default: nil
+            string :end_type, default: nil
+          end
+        end
+      end
     end
+
+    validate :validate_bundled_services, if: -> { update_attribute == "bundled_services" }
 
     def execute
       online_service.with_lock do
@@ -57,6 +70,43 @@ module OnlineServices
           message.save
 
           errors.merge!(message.errors) if message.errors.present?
+        when "bundled_services"
+          if attrs[:bundled_services].present?
+            # Should able to delete it(YES) => clean the relations
+            # Existing able to change end time, but it need to follow the rule
+            # when sale page is
+            #   one time payment: all bundled services need to have end time
+            #   recurring payment: at least one service need to be subscription
+            ApplicationRecord.transaction do
+              new_bundled_online_service_ids = attrs[:bundled_services].pluck(:id)
+              existing_bundled_online_service_ids = online_service.bundled_services.pluck(:online_service_id)
+              online_service_ids_delete_required = existing_bundled_online_service_ids - new_bundled_online_service_ids
+              bundled_services_delete_required = online_service.bundled_services.where(online_service_id: online_service_ids_delete_required)
+              # Cancel the relation for the deleted online_service from bundler
+              OnlineServiceCustomerRelation.where(bundled_service_id: bundled_services_delete_required).each do |online_service_customer_relation|
+                online_service_customer_relation.pending!
+              end
+              bundled_services_delete_required.delete_all
+
+              attrs[:bundled_services].each do |bundled_service_attrs|
+                bundled_service = online_service.bundled_services.find_or_initialize_by(online_service_id: bundled_service_attrs[:id])
+                is_new_bundled_service = bundled_service.new_record?
+
+                bundled_service.assign_attributes(
+                  end_at: bundled_service_attrs.dig(:end_time, :end_time_date_part),
+                  end_on_days: bundled_service_attrs.dig(:end_time, :end_on_days),
+                  end_on_months: bundled_service_attrs.dig(:end_time, :end_on_months),
+                  subscription: bundled_service_attrs.dig(:end_time, :end_type) == "subscription"
+                )
+
+                if bundled_service.save && is_new_bundled_service
+                  online_service.online_service_customer_relations.available.each do |bundler_relation|
+                    Sales::OnlineServices::ApproveBundledService.perform_later(bundled_service: bundled_service, bundler_relation: bundler_relation)
+                  end
+                end
+              end
+            end
+          end
         end
 
         if online_service.errors.present?
@@ -64,6 +114,24 @@ module OnlineServices
         end
 
         online_service
+      end
+    end
+
+    private
+
+    def validate_bundled_services
+      SalePage.where(product: online_service).each do |sale_page|
+        if sale_page.recurring_prices.present?
+          # At least one of service is a subscription
+          if attrs[:bundled_services].none? { |bundled_service_attrs| bundled_service_attrs.dig(:end_time, :end_type) == "subscription" }
+            errors.add(:attrs, :bundle_services_subscription_required)
+          end
+        else
+          # None of services should be a subscription
+          if attrs[:bundled_services].any? { |bundled_service_attrs| bundled_service_attrs.dig(:end_time, :end_type) == "subscription" }
+            errors.add(:attrs, :bundle_services_all_end_time_required)
+          end
+        end
       end
     end
   end

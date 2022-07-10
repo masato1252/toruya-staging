@@ -89,6 +89,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.description"),
       enabled: true,
       stripe_required: true,
+      one_time_charge: true,
       premium_member_required: false,
       solutions: [
         VIDEO_SOLUTION,
@@ -100,6 +101,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.course.description"),
       enabled: true,
       stripe_required: true,
+      one_time_charge: true,
       premium_member_required: true,
       solutions: [
         PDF_SOLUTION,
@@ -125,9 +127,24 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
       enabled: true,
       stripe_required: false,
+      one_time_charge: true,
       premium_member_required: false,
       solutions: [
         EXTERNAL_SOLUTION
+      ]
+    },
+    {
+      key: "bundler",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.description"),
+      enabled: true,
+      stripe_required: true,
+      one_time_charge: true,
+      recurring_charge: false,
+      premium_member_required: true,
+      solutions: [
+        PDF_SOLUTION,
+        VIDEO_SOLUTION
       ]
     }
   ]
@@ -147,9 +164,13 @@ class OnlineService < ApplicationRecord
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
   has_one :message_template, -> { where(scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
   has_many :episodes
-
+  has_many :bundled_services, foreign_key: :bundler_online_service_id
+  has_many :bundled_online_services, through: :bundled_services, source: :online_service
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
   # solution_type pdf, video, external, membership, course
+
+
+  scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'course', 'membership']) }
 
   def external_url
     external_purchase_url.presence || content_url
@@ -160,11 +181,15 @@ class OnlineService < ApplicationRecord
   end
 
   def charge_required?
-    GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
+    GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || external?
+  end
+
+  def one_time_charge_required?
+    GOALS.find { |goal| goal_type == goal[:key] }[:one_time_charge] && !recurring_charge_required?
   end
 
   def recurring_charge_required?
-    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge]
+    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge] || (bundler? && bundled_services.where(subscription: true).exists?)
   end
 
   def start_at_for_customer(customer)
@@ -268,6 +293,8 @@ class OnlineService < ApplicationRecord
       Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
     elsif course? && lessons.exists?
       lessons.first.thumbnail_url || default_picture_url
+    elsif bundler?
+      ContentHelper::BUNDLER_THUMBNAIL_URL
     else
       thumbnail_url || default_picture_url
     end

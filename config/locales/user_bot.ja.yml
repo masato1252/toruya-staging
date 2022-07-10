@@ -201,7 +201,7 @@ ja:
               when_lesson_start: このレッスンは、いつから提供しますか？
               right_after_service_start: サービス開始後すぐ
               after_start_x_days: サービス開始後X日後から
-              after_x_days: 日後から
+              after_x_days: ヶ月後まで
               start_on_specific_day: 決まった日時から
             show:
               title: 提供コンテンツ
@@ -290,6 +290,7 @@ ja:
         online_service: オンラインサービス
         service_page: サービスページ
         service_about: サービス概要
+        service_item: サービス
         name: サービス名
         shop: 提供店舗
         content: サービス内容
@@ -324,6 +325,9 @@ ja:
           demo_button: アクションボタン
           message_template_title: サービス概要
           message_template_subtitle: サムネイル
+          bundled_services_title: 提供コンテンツ
+          bundled_services_subtitle: 提供コンテンツ
+          bundled_services_expiration: 各サービスの利用期限
       booking_pages:
         index:
           title: オンライン予約ページ
@@ -451,6 +455,7 @@ ja:
             external: このサービスで出来ること
             course: このサービスで出来ること
             membership: このサービスで出来ること
+            bundler: このサービスで出来ること
           add_benefit: 項目を追加
           staff_title: 販売ページコンテンツ
           staff_subtitle: 担当スタッフ
@@ -553,6 +558,9 @@ ja:
           external:
             title: 外部サービス
             description: 外部サービスの利用者向けLINEマーケティングのためのサービスを作成
+          bundler:
+            title: サービスセット
+            description: 複数のサービスをセットにして販売するためのサービスを作成
         solutions:
           video:
             title: 動画セミナー
@@ -580,6 +588,9 @@ ja:
           membership:
             title: メンバーシップ
             description: 複数の動画やPDFを、登録メンバー限定で提供するサービスを作成
+          bundler:
+            title: サービスセット
+            description: 複数のサービスをセットにして販売するためのサービスを作成
         what_is_your_goal: このサービスの目的は何ですか？
         what_is_your_solution: このサービスで提供する内容は何ですか？
         what_is_this_video_provide: どの動画をサービス提供しますか？
@@ -599,11 +610,14 @@ ja:
         edit_company_in_setting_page: 企業情報は管理画面から編集してください。
         what_company_info: どの店舗として提供しますか？
         what_is_end_time: このサービスは、利用期限がありますか？
-        expire_after_n_days: 購入後X日後から
+        expire_after_n_days: 購入後X日後まで
+        expire_after_n_months: 購入後Xヶ月後まで
+        expire_by_subscription: 月額・年額の支払い期限まで
         expire_at: 決まった日時まで
         never_expire: ずっと利用可能
         after_bought: 購入後
-        after_n_days: 日後から
+        after_n_days: 日後まで
+        after_n_months: ヶ月後まで
         what_want_to_upsell: このサービス利用後に購入をお勧めしたい アップセル販売ページはありますか？
         select_upsell_product: セールスページを選択
         below_is_what_you_want: 以下のサービスを作成してよろしいですか？
@@ -615,6 +629,11 @@ ja:
         content_picture_requirement_tip: "画像を設定\n 幅1024px、高さ1024px以下"
         message_description: サービス説明(60文字以内)
         fake_action_button: アクションボタン
+        what_want_to_sell_as_bundler: どのサービスをセット販売しますか？
+        select_bundler_product: サービスを追加
+        bundled_services: セット販売するサービス
+        bundled_service_usage_desc: 選択を解除するには、設定されたサービス名をタップしてください。
+        when_bundled_service_expire: 各サービスに利用期限はありますか？
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

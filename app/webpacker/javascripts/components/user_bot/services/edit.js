@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
 import _ from "lodash";
 
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord, EndOnMonthRadio, EndOnDaysRadio, EndAtRadio, NeverEndRadio, SubscriptionRadio } from "shared/components"
 import { OnlineServices } from "user_bot/api"
 import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
@@ -19,6 +19,7 @@ const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
   const [end_time, setEndTime] = useState(props.service.end_time)
   const [start_time, setStartTime] = useState(props.service.start_time)
+  const [bundled_services, setBundledServices] = useState(props.service.bundled_services)
   const [message_template, setMessageTemplate] = useState(props.message_template)
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
@@ -30,23 +31,64 @@ const OnlineServiceEdit =({props}) => {
   const requestData = (data) => {
     let request_data;
 
-    request_data  = _.assign(data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time })
+    request_data  = _.assign(data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, bundled_services })
     if (props.attribute == "message_template") request_data = { ...request_data, message_template }
 
     return request_data
   }
 
   const onSubmit = async (data) => {
-    let response;
+    let error, response;
 
     if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
 
-    [_, response] = await OnlineServices.update({
+    [error, response] = await OnlineServices.update({
       online_service_id: props.service.id,
       data: requestData(data)
     })
 
-    window.location = response.data.redirect_to
+    if (error) {
+      toastr.error(error.response.data.error_message)
+    }
+    else {
+      window.location = response.data.redirect_to;
+    }
+  }
+
+  const bundled_service_end_time_options = (bundled_service) => {
+    return props.bundled_service_candidates.find(candidate_service => candidate_service.value.id == bundled_service.id).value.end_time_options;
+  }
+
+  const set_end_time_type = ({bundled_service, end_time_type}) => {
+    setBundledServices(
+      bundled_services.map(bundled_service_item => (
+        bundled_service_item.id == bundled_service.id ? (
+          {
+            id: bundled_service_item.id, label: bundled_service_item.label, end_time: {
+              end_type: end_time_type
+            }
+          }
+        ) :
+        {...bundled_service_item}
+      )
+      )
+    )
+  }
+
+  const set_end_time_value = ({bundled_service, end_time_type, end_time_value_key, end_time_value}) => {
+    setBundledServices(
+      bundled_services.map(bundled_service_item => (
+        bundled_service_item.id == bundled_service.id ? (
+          {
+            id: bundled_service_item.id, label: bundled_service_item.label, end_time: {
+              end_type: end_time_type,
+              [end_time_value_key || end_time_type]: end_time_value
+            }
+          }
+        ) :
+        {...bundled_service_item}
+      ))
+    )
   }
 
   const renderCorrespondField = () => {
@@ -59,7 +101,6 @@ const OnlineServiceEdit =({props}) => {
             </div>
           </>
         );
-        break
       case "note":
         return (
           <EditTextarea register={register} errors={errors} watch={watch} name={props.attribute} placeholder={props.placeholder} />
@@ -80,6 +121,115 @@ const OnlineServiceEdit =({props}) => {
             watch={watch}
             setValue={setValue}
           />
+        )
+      case "bundled_services":
+        return (
+          <div className="centerize">
+            <div className="margin-around">
+              <label className="text-align-left">
+                <ReactSelect
+                  placeholder={I18n.t("user_bot.dashboards.online_service_creation.select_bundler_product")}
+                  value={ _.isEmpty(bundled_services) ? "" : { label: bundled_services[bundled_services.length - 1].label }}
+                  options={props.bundled_service_candidates}
+                  onChange={
+                    (service) => {
+                      setBundledServices(
+                        _.uniqBy([...bundled_services, { id: service.value.id, label: service.label, end_time: {} }], 'id')
+                      )
+                    }
+                  }
+                />
+              </label>
+            </div>
+
+            {bundled_services.length !== 0 && <div className="field-header">{I18n.t("user_bot.dashboards.online_service_creation.bundled_services")}</div>}
+
+            <div className="margin-around">
+              {bundled_services.length !== 0 && <p className="desc">{I18n.t("user_bot.dashboards.online_service_creation.bundled_service_usage_desc")}</p>}
+
+              {bundled_services.map(bundled_service => (
+                <button
+                  key={bundled_service.id}
+                  className="btn btn-gray mx-2 my-2"
+                  onClick={() => {
+                    setBundledServices(
+                      bundled_services.filter(item => item.id !== bundled_service.id)
+                    )
+                  }}>
+                  {bundled_service.label}
+                </button>
+              ))}
+            </div>
+
+            {bundled_services.length !== 0 && <div className="field-header">{I18n.t("user_bot.dashboards.services.form.bundled_services_expiration")}</div>}
+            <div className="margin-around">
+              {bundled_services.map((bundled_service, index) => (
+                <div key={bundled_service.id}>
+                  <h3 key={bundled_service.id}> {bundled_service.label}</h3>
+
+                  {bundled_service_end_time_options(bundled_service).includes('end_at') && (
+                    <EndAtRadio
+                      prefix={bundled_service.id}
+                      end_time={bundled_service.end_time}
+                      set_end_time_type={() => {
+                        set_end_time_type({bundled_service, end_time_type: 'end_at'})
+                      }}
+                      set_end_time_value={(end_time_value) => {
+                        set_end_time_value({bundled_service, end_time_type: 'end_at', end_time_value_key: 'end_time_date_part', end_time_value})
+                      }}
+                    />
+                  )}
+
+                  {bundled_service_end_time_options(bundled_service).includes('end_on_days') && (
+                    <EndOnDaysRadio
+                      prefix={bundled_service.id}
+                      end_time={bundled_service.end_time}
+                      set_end_time_type={() => {
+                        set_end_time_type({bundled_service, end_time_type: 'end_on_days'})
+                      }}
+                      set_end_time_value={(end_time_value) => {
+                        set_end_time_value({bundled_service, end_time_type: 'end_on_days', end_time_value})
+                      }}
+                    />
+                  )}
+
+                  {bundled_service_end_time_options(bundled_service).includes('end_on_months') && (
+                    <EndOnMonthRadio
+                      prefix={bundled_service.id}
+                      end_time={bundled_service.end_time}
+                      set_end_time_type={() => {
+                        set_end_time_type({bundled_service, end_time_type: 'end_on_months'})
+                      }}
+                      set_end_time_value={(end_time_value) => {
+                        set_end_time_value({bundled_service, end_time_type: 'end_on_months', end_time_value})
+                      }}
+                    />
+                  )}
+
+                  {bundled_service_end_time_options(bundled_service).includes('never') && (
+                    <NeverEndRadio
+                      prefix={bundled_service.id}
+                      end_time={bundled_service.end_time}
+                      set_end_time_type={() => {
+                        set_end_time_type({bundled_service, end_time_type: 'never'})
+                      }}
+                    />
+                  )}
+
+                  {bundled_service_end_time_options(bundled_service).includes('subscription') && (
+                    <SubscriptionRadio
+                      prefix={bundled_service.id}
+                      end_time={bundled_service.end_time}
+                      set_end_time_type={() => {
+                        set_end_time_type({bundled_service, end_time_type: 'subscription'})
+                      }}
+                    />
+                  )}
+                  {bundled_services.length !== index + 1 && <hr className="extend my-4" />}
+                </div>
+              ))}
+            </div>
+          </div>
         )
       case "company":
         return (

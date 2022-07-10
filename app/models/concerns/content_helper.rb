@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require "thumbnail_of_video"
 
 module ContentHelper
   PDF_THUMBNAIL_URL = "https://toruya.s3.ap-southeast-1.amazonaws.com/public/linethumb_pdf.png"
   VIDEO_THUMBNAIL_URL = "https://toruya.s3.ap-southeast-1.amazonaws.com/public/linethumb_video.png"
+  BUNDLER_THUMBNAIL_URL = "https://toruya.s3.ap-southeast-1.amazonaws.com/public/linethumb_bundle.png"
 
   def thumbnail_url
     @thumbnail_url ||=
