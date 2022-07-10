@@ -60,7 +60,7 @@ class BundledService < ApplicationRecord
     elsif end_at
       I18n.l(end_at, format: :date_with_wday)
     elsif subscription
-      "Subscription"
+      I18n.t("sales.expire_by_subscription")
     else
       I18n.t("sales.never_expire")
     end

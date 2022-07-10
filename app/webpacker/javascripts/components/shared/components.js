@@ -398,7 +398,7 @@ const SubscriptionRadio = ({prefix, end_time, set_end_time_type }) => (
         checked={end_time.end_type === "subscription"}
         onChange={set_end_time_type}
       />
-      {I18n.t("user_bot.dashboards.online_service_creation.subscription")}
+      {I18n.t("user_bot.dashboards.online_service_creation.expire_by_subscription")}
     </label>
   </div>
 )

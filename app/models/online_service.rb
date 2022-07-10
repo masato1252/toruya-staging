@@ -293,6 +293,8 @@ class OnlineService < ApplicationRecord
       Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
     elsif course? && lessons.exists?
       lessons.first.thumbnail_url || default_picture_url
+    elsif bundler?
+      ContentHelper::BUNDLER_THUMBNAIL_URL
     else
       thumbnail_url || default_picture_url
     end

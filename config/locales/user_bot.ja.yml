@@ -612,9 +612,9 @@ ja:
         what_is_end_time: このサービスは、利用期限がありますか？
         expire_after_n_days: 購入後X日後まで
         expire_after_n_months: 購入後Xヶ月後まで
+        expire_by_subscription: 月額・年額の支払い期限まで
         expire_at: 決まった日時まで
         never_expire: ずっと利用可能
-        subscription: Subscription
         after_bought: 購入後
         after_n_days: 日後まで
         after_n_months: ヶ月後まで

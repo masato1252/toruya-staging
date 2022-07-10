@@ -22,20 +22,14 @@
   <span>
     <% if @relation.bundler_relation %>
       <% if @is_owner %>
-        <%= link_to @relation.selling_prices_text, lines_user_bot_service_customer_path(service_id: @relation.bundler_relation.online_service.id, id: @relation.bundler_relation.id) %>
+        <%= @relation.bundler_relation.online_service.name %>
+        <%= link_to "購入情報を見る", lines_user_bot_service_customer_path(service_id: @relation.bundler_relation.online_service.id, id: @relation.bundler_relation.id), class: "btn btn-yellow" %>
       <% else %>
-        <%= link_to @relation.selling_prices_text, customer_status_online_service_path(slug: @relation.bundler_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(@customer.social_customer.social_user_id)) %>
+        <%= @relation.bundler_relation.online_service.name %>
+        <%= link_to "購入情報を見る", customer_status_online_service_path(slug: @relation.bundler_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(@customer.social_customer.social_user_id)), class: "btn btn-yellow" %>
       <% end %>
     <% else %>
       <%= @relation.selling_prices_text %>
-
-      <% @relation.bundled_service_relations.each do |bundled_service_relation| %>
-        <% if @is_owner %>
-          <%= link_to bundled_service_relation.online_service.name, lines_user_bot_service_customer_path(service_id: bundled_service_relation.online_service.id, id: bundled_service_relation.id) %>
-        <% else %>
-          <%= link_to bundled_service_relation.online_service.name, customer_status_online_service_path(slug: bundled_service_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(@customer.social_customer.social_user_id)) %>
-        <% end %>
-      <% end %>
     <% end %>
   </span>
   <% if @able_to_change_credit_card && !@relation.bundler_relation %>
