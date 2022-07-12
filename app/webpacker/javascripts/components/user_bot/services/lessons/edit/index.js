@@ -86,7 +86,7 @@ const LessonEdit =({props}) => {
                           start_after_days: event.target.value
                         })
                       }} />
-                    {I18n.t("user_bot.dashboards.online_service_creation.after_n_days")}
+                    {I18n.t("user_bot.dashboards.settings.course.lessons.new.after_x_days")}
                   </>
                 )}
               </label>
