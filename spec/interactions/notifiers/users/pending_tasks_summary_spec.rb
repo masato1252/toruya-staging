@@ -52,6 +52,22 @@ RSpec.describe Notifiers::Users::PendingTasksSummary, :with_line do
           ).count
         }
       end
+
+      context 'when online_service_customer_relation payment was pending but permission was active(from bundler)' do
+        it "doesn't send line" do
+          FactoryBot.create_list(:online_service_customer_relation, 3, online_service: FactoryBot.create(:online_service, user: receiver), permission_state: :active, payment_state: :pending)
+
+          expect(LineClient).not_to receive(:send)
+
+          expect {
+            outcome
+          }.not_to change {
+            SocialUserMessage.where(
+              social_user: receiver.social_user,
+            ).count
+          }
+        end
+      end
     end
   end
 end

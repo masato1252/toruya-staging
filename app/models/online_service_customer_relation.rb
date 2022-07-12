@@ -24,6 +24,7 @@
 #  online_service_relation_unique_index  (online_service_id,customer_id,current) UNIQUE
 #
 
+# payment_state pending, and permission_state active might be purchased from bundler
 class OnlineServiceCustomerRelation < ApplicationRecord
   ACTIVE_STATES = %w[pending free paid partial_paid].freeze
 

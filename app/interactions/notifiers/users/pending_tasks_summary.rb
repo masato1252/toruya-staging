@@ -21,6 +21,7 @@ module Notifiers
           joins(:online_service).
           where("online_services.user_id": receiver.id).
           where("online_service_customer_relations.created_at": period).
+          pending.
           pending_payment_state.count
 
         if pending_reservations_count.positive? || pending_messages_count.positive? || pending_online_service_count.positive?
