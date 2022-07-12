@@ -44,7 +44,7 @@ const SellingStartTimeEdit = ({start_time, handleStartTimeChange}) => (
             })
           }}
         />
-        {I18n.t("sales.sale_today")}
+        {I18n.t("sales.sale_now")}
       </label>
     </div>
   </>
