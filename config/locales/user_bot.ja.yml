@@ -201,7 +201,7 @@ ja:
               when_lesson_start: このレッスンは、いつから提供しますか？
               right_after_service_start: サービス開始後すぐ
               after_start_x_days: サービス開始後X日後から
-              after_x_days: ヶ月後まで
+              after_x_days: 日後から
               start_on_specific_day: 決まった日時から
             show:
               title: 提供コンテンツ
