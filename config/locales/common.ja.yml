@@ -206,5 +206,6 @@ ja:
     term: 期限
     cancel_request: (解約申請フォーム)
     copy: コピー
+    right_away_after_purchased: 購入後すぐ
   errors:
     invalid_url: 無効なURL

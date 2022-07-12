@@ -213,7 +213,7 @@ class OnlineService < ApplicationRecord
     if start_at
       I18n.l(start_at, format: :date_with_wday)
     else
-      I18n.t("sales.sale_now")
+      I18n.t("common.right_away_after_purchased")
     end
   end
 

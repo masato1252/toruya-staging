@@ -359,7 +359,7 @@ const OnlineServiceEdit =({props}) => {
                     })
                   }}
                 />
-                {I18n.t("sales.sale_now")}
+                {I18n.t("common.right_away_after_purchased")}
               </label>
             </div>
 

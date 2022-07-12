@@ -5,5 +5,5 @@ ja:
     expire_after_n_months: "購入後%{months}月後まで"
     expire_by_subscription: "月額・年額の支払い期限まで"
     never_expire: ずっと利用可能
-    sale_now: 購入後すぐ
+    sale_now: 今すぐ
     start_at: 決まった日時から
