@@ -43,7 +43,11 @@
     <span class="state <%= payment.state %>"></span>
     <%= render "lines/user_bot/field_row" do  %>
       <span>
-        <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %>
+        <% if payment.bonus_text.present? %>
+          <%= payment.bonus_text %>
+        <% else %>
+          <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %>
+        <% end %>
         <%= I18n.l(payment.charge_at) %>
       </span>
       <% if @relation.online_service.recurring_charge_required? %>

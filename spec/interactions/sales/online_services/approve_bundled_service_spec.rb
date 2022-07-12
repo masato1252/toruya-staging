@@ -306,7 +306,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           let!(:social_customer) { FactoryBot.create(:social_customer, customer: customer) }
           let(:subscription) { FactoryBot.create(:subscription, :with_stripe) }
           let(:customer) { FactoryBot.create(:customer, user: subscription.user, with_stripe: true) }
-          let!(:existing_relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, customer: customer, expire_at: nil) }
+          let!(:existing_relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, :paid, customer: customer, expire_at: nil) }
 
           context 'when bundled_service service got end time(end_on_months)' do
             let!(:bundler_relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, sale_page: sale_page, online_service: bundler_service, customer: customer) }
@@ -320,14 +320,17 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
                 expect {
                   outcome
                 }.to change {
-                  OnlineServiceCustomerRelation.where(online_service: bundled_service.online_service, customer: customer, sale_page: bundler_relation.sale_page).count
-                }
+                  CustomerPayment.where(
+                    product: existing_relation,
+                    amount_cents: 0,
+                    order_id: { sale_page_id: sale_page.id, bonus_month: bundled_service.end_on_months }.to_json
+                  ).count
+                }.by(1)
 
-                bundled_relation = OnlineServiceCustomerRelation.where(current: true, online_service: bundled_service.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
+                expect(OnlineServiceCustomerRelation.where(online_service: bundled_service.online_service, customer: customer, sale_page: bundler_relation.sale_page)).not_to be_exists
+
                 expect(outcome.result.expire_at).to be_nil
-                expect(bundled_relation).to be_purchased_from_bundler
-                expect(bundled_relation.price_details).to eq(bundler_relation.price_details)
-                expect(bundled_relation.bundled_service).to eq(bundled_service)
+                expect(outcome.result).to eq(existing_relation)
               end
             end
           end
