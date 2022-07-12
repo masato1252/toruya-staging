@@ -1,6 +1,7 @@
 ja:
   sales:
     expire_after_n_days: "購入後%{days}日後まで"
+    start_from_after_n_days: "購入後%{days}日後から"
     expire_after_n_months: "購入後%{months}月後まで"
     expire_by_subscription: "月額・年額の支払い期限まで"
     never_expire: ずっと利用可能

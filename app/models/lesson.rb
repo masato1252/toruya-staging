@@ -42,7 +42,7 @@ class Lesson < ApplicationRecord
 
   def start_time_text
     if start_after_days
-      I18n.t("sales.expire_after_n_days", days: start_after_days)
+      I18n.t("sales.start_from_after_n_days", days: start_after_days)
     elsif start_at
       I18n.l(start_at, format: :date_with_wday)
     else
