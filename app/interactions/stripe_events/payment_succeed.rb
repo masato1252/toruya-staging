@@ -77,14 +77,6 @@ module StripeEvents
           )
         end
 
-        # TODO: No this scenario?
-        # if relation.online_service.bundler?
-        #   relation.bundled_service_relations.each do |bundled_service_relation|
-        #     # only activate subscription
-        #     bundled_service_relation.active! if bundled_service_relation.bundled_service&.subscription
-        #   end
-        # end
-
         if Rails.configuration.x.env.production?
           HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Membership: Sale Page #{relation.sale_page.slug} customer_id: #{relation.customer.id} Stripe charge💰")
         end
