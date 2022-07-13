@@ -74,6 +74,7 @@ ja:
       questionnaire: アンケートに答える
       diagnosis: 登録する
     verify_line: 動作テスト
+    purchase_info: 購入情報を見る
   common:
     processing: 送信中
     preparing: 準備中です

@@ -21,6 +21,7 @@ class OnlineServiceCustomerRelations::Unsubscribe < ActiveInteraction::Base
         )
 
         relation.payment_state = :failed
+        relation.stripe_subscription_id = nil
         relation.pending!
         relation
 

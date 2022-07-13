@@ -31,6 +31,7 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
             expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
             expect(outcome.result).to be_failed_payment_state
             expect(outcome.result).to be_pending
+            expect(outcome.result.stripe_subscription_id).to be_nil
           end
         end
       end
@@ -66,6 +67,7 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
             expect(outcome.result.expire_at).to be_nil
             expect(outcome.result).to be_failed_payment_state
             expect(outcome.result).to be_pending
+            expect(outcome.result.stripe_subscription_id).to be_nil
           end
         end
 
@@ -85,6 +87,7 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
             outcome
 
             expect(outcome.result).to be_pending
+            expect(outcome.result.stripe_subscription_id).to be_nil
             expect(relation_with_end_at_service.reload).to be_active
             expect(relation_with_forever_service.reload).to be_active
             expect(relation_with_subscription_service.reload).to be_pending
@@ -111,6 +114,7 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
             expect(outcome.result.expire_at).to be_nil
             expect(outcome.result).to be_failed_payment_state
             expect(outcome.result).to be_pending
+            expect(outcome.result.stripe_subscription_id).to be_nil
           end
         end
       end

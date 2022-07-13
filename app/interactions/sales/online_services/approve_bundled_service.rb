@@ -9,85 +9,21 @@ module Sales
       def execute
         existing_relation = online_service.online_service_customer_relations.find_by(online_service: online_service, customer: customer)
 
-        # Cancel(pending) the original relation then create a new one
-        relation =
-          if existing_relation
-            compose(
-              ::Sales::OnlineServices::ReplaceByBundlerService,
-              existing_online_service_customer_relation: existing_relation,
-              bundler_relation: bundler_relation,
-              payment_type: SalePage::PAYMENTS[:bundler]
-            )
+        if existing_relation
+          if bundled_service.end_on_months && existing_relation.stripe_subscription_id && existing_relation.active?
+            # existing_relation was end by subscription(Customer purchased this directly)
+            compose(Sales::OnlineServices::ApproveBundledEndTimeWithExistingSubscriptionService, bundled_service: bundled_service, bundler_relation: bundler_relation, existing_relation: existing_relation)
+            # if existing_relation.stripe_subscription_id
+            # elsif existing_relation.bundled_service.subscription
+              # existing_relation was end by subscription(Customer purchased bundler service contains this, and it was end by subscription)
+              # should not give free bonus for this one, because subscription is on bundler not each sub-service
+            # end
           else
-            compose(
-              ::Sales::OnlineServices::Apply,
-              sale_page: sale_page,
-              online_service: online_service,
-              customer: customer,
-              payment_type: SalePage::PAYMENTS[:bundler]
-            )
+            compose(Sales::OnlineServices::ApproveBundledWithExistingService, bundled_service: bundled_service, bundler_relation: bundler_relation, existing_relation: existing_relation)
           end
-
-        relation.permission_state = :active
-        new_expire_at = bundled_service.current_expire_time
-        relation.bundled_service_id = bundled_service.id
-
-        unless existing_relation
-          relation.expire_at = new_expire_at
+        else
+          compose(Sales::OnlineServices::ApprovePureBundledService, inputs)
         end
-
-        if existing_relation && existing_relation.expire_at
-          if new_expire_at && new_expire_at > existing_relation.expire_at
-            relation.expire_at = new_expire_at
-          else
-            relation.expire_at = existing_relation.expire_at
-          end
-
-          if new_expire_at.nil?
-            relation.expire_at = nil
-          end
-        end
-
-        # existing_relation forever/subscription
-        if existing_relation && existing_relation.expire_at.nil?
-          # subscription/membership existing relation
-          if bundled_service.end_on_months && online_service.recurring_charge_required? && existing_relation.stripe_subscription_id
-            # Give bonus when existing_relation is recurring
-            coupon_id = "free-period-service-#{online_service.id}-customer-#{customer.id}-sale_page-#{sale_page.id}"
-            Stripe::Coupon.create(
-              { id: coupon_id, percent_off: 100, duration: 'repeating', duration_in_months: bundled_service.end_on_months },
-              { stripe_account: user.stripe_provider.uid }
-            )
-            compose(
-              StripeSubscriptions::ApplySubscriptionCoupon,
-              stripe_subscription_id: existing_relation.stripe_subscription_id,
-              coupon_id: coupon_id,
-              stripe_account: user.stripe_provider.uid
-            )
-          end
-
-          # existing_relation is subscription contract
-          if new_expire_at.nil? && existing_relation.stripe_subscription_id # only existing relation got stripe_subscription_id
-            compose(
-              StripeSubscriptions::Delete,
-              stripe_subscription_id: existing_relation.stripe_subscription_id,
-              stripe_account: user.stripe_provider.uid
-            )
-            existing_relation.update(stripe_subscription_id: nil)
-          end
-
-          # If existing_relation use real forever contract, don't use new bundled contract
-          if bundled_service.subscription && existing_relation.forever?
-            relation.bundled_service_id = existing_relation.bundled_service_id
-          end
-        end
-
-        relation.save
-
-        ::OnlineServices::Attend.run(customer: customer, online_service: online_service)
-        ::Sales::OnlineServices::SendLineCard.run(relation: relation)
-
-        relation
       end
 
       private
