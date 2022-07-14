@@ -46,12 +46,8 @@ class CustomerPayment < ApplicationRecord
     bonus_info_json = JSON.parse(order_id)
     payment_bonus = CustomerPaymentBonus.new(bonus_info_json)
     sale_page = SalePage.find_by(id: payment_bonus.sale_page_id)
-    text = "Free #{payment_bonus.bonus_month} months bonus"
-    if sale_page.product_name
-      text = "#{text} from sale page #{sale_page.product_name}"
-    end
 
-    text
+    I18n.t("user_bot.dashboards.settings.service_customer_relation.free_bonus", service_name: sale_page.product_name, free_bonus_month: payment_bonus.bonus_month)
   rescue JSON::ParserError
     nil
   end
