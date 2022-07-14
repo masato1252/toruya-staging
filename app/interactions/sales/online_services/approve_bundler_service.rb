@@ -18,12 +18,12 @@ module Sales
         # bundler_relation expire_at is always nil
         relation.save
 
+        ::OnlineServices::Attend.run(customer: relation.customer, online_service: relation.online_service)
+        ::Notifiers::Customers::OnlineServices::Purchased.run(receiver: relation.customer, online_service: relation.online_service)
+
         relation.online_service.bundled_services.each do |bundled_service|
           compose(Sales::OnlineServices::ApproveBundledService, bundled_service: bundled_service, bundler_relation: relation)
         end
-        ::OnlineServices::Attend.run(customer: relation.customer, online_service: relation.online_service)
-        ::Notifiers::Customers::OnlineServices::Purchased.run(receiver: relation.customer, online_service: relation.online_service)
-        ::Sales::OnlineServices::SendLineCard.run(relation: relation)
 
         relation
       end
