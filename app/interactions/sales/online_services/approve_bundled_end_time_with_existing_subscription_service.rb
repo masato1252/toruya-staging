@@ -38,6 +38,9 @@ module Sales
           )
           payment.completed!
 
+          ::OnlineServices::Attend.run(customer: customer, online_service: online_service)
+          ::Sales::OnlineServices::SendLineCard.run(relation: existing_relation)
+
           existing_relation
         end
       end

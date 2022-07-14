@@ -20,6 +20,11 @@ module Sales
         relation.expire_at = new_expire_at
         relation.bundled_service_id = bundled_service.id
         relation.save
+
+        ::OnlineServices::Attend.run(customer: customer, online_service: online_service)
+        ::Sales::OnlineServices::SendLineCard.run(relation: relation)
+
+        relation
       end
 
       private

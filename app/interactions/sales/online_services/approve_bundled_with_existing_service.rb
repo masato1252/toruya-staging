@@ -53,6 +53,10 @@ module Sales
         end
 
         relation.save
+
+        ::OnlineServices::Attend.run(customer: customer, online_service: online_service)
+        ::Sales::OnlineServices::SendLineCard.run(relation: relation)
+
         relation
       end
 
