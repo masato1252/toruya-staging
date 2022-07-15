@@ -49,7 +49,7 @@ module OnlineServices
           online_service.update(content_url: attrs[:content_url], solution_type: attrs[:solution_type])
         when "upsell_sale_page"
           # empty upsell_sale_page_id is invalid input, so pass 0 as delete behavior
-          online_service.update(upsell_sale_page_id: attrs[:upsell_sale_page_id].zero? ? nil : attrs[:upsell_sale_page_id])
+          online_service.update(upsell_sale_page_id: attrs[:upsell_sale_page_id]&.zero? ? nil : attrs[:upsell_sale_page_id])
         when "company"
           online_service.update(company_type: attrs[:company_type], company_id: attrs[:company_id])
         when "end_time"

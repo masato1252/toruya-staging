@@ -13,7 +13,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
     if event.present?
       case event["message"]["type"]
       when "image"
-        Rollbar.warning("Line image message", event: event)
+        Rollbar.info("Line image message", event: event)
 
         compose(
           SocialMessages::Create,
@@ -28,7 +28,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
           message_type: SocialMessage.message_types[:customer]
         )
       when "text"
-        Rollbar.warning("Line text message", event: event)
+        Rollbar.info("Line text message", event: event)
 
         case event["message"]["text"].strip
         when I18n.t("line.bot.keywords.booking_pages")
