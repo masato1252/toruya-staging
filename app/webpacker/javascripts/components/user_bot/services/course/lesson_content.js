@@ -20,7 +20,7 @@ import Solution from "../online_service_page/solution";
 // demo: true/false
 // jump: $function
 // light: true/false
-const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLesson, prevLesson, setWatchLessons}) => {
+const LessonContent = ({course, lesson, encrypted_social_service_user_id, preview, demo, jump, light, done, nextLesson, prevLesson, setWatchLessons}) => {
   if (!lesson) return <></>
 
   return (
@@ -52,7 +52,7 @@ const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLe
             onClick={async () => {
               const [error, response] = await CommonServices.update({
                 url: Routes.watch_lesson_online_service_path({slug: course.slug, lesson_id: lesson.id}),
-                data: {}
+                data: { encrypted_social_service_user_id }
               })
 
               setWatchLessons(response.data.watched_lesson_ids)

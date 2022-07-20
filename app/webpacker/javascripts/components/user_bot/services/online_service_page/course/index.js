@@ -55,7 +55,7 @@ const Chapter = ({chapter, setLessonId, lessonId, selected_chaper_id, watched_le
   )
 }
 
-const CoursePage = ({course, lesson_id, lesson_ids, preview}) => {
+const CoursePage = ({course, lesson_id, lesson_ids, preview, encrypted_social_service_user_id}) => {
   const [lessonId, setLessonId] = useState(parseInt(lesson_id))
   const [watched_lesson_ids, setWatchLessons] = useState(lesson_ids)
   const [lessonIndex, setLessonIndex] = useState()
@@ -100,6 +100,7 @@ const CoursePage = ({course, lesson_id, lesson_ids, preview}) => {
         setWatchLessons={setWatchLessons}
         nextLesson={nextLessonId() ? () => setLessonId(nextLessonId()) : null}
         prevLesson={prevLessonId() ? () => setLessonId(prevLessonId()) : null}
+        encrypted_social_service_user_id={encrypted_social_service_user_id}
       />
 
       {course.chapters.map(
