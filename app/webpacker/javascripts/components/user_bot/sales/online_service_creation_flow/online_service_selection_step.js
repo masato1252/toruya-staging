@@ -15,8 +15,8 @@ const OnlineServiceSelectionStep = ({next, step}) => {
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_service")}</h3>
       <div className="margin-around">
         <ReactSelect
-          Value={selected_online_service ? { label: selected_online_service.name } : ""}
-          defaultValue={selected_online_service ? { label: selected_online_service.name } : ""}
+          Value={selected_online_service ? { label: selected_online_service.internal_name } : ""}
+          defaultValue={selected_online_service ? { label: selected_online_service.internal_name } : ""}
           placeholder={I18n.t("common.select_a_service")}
           options={props.online_services}
           onChange={

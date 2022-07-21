@@ -75,8 +75,8 @@ const FroductSelectionStep = ({next, step, prev}) => {
             <div className="margin-around">
               <ReactSelect
                 className="text-left"
-                Value={selected_online_service ? { label: selected_online_service.name } : ""}
-                defaultValue={selected_online_service ? { label: selected_online_service.name } : ""}
+                Value={selected_online_service ? { label: selected_online_service.internal_name } : ""}
+                defaultValue={selected_online_service ? { label: selected_online_service.internal_name } : ""}
                 placeholder={I18n.t("common.select_a_service")}
                 options={props.online_services}
                 onChange={

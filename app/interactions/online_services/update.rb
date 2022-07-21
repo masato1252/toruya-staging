@@ -7,6 +7,7 @@ module OnlineServices
 
     hash :attrs, default: nil do
       string :name, default: nil
+      string :internal_name, default: nil
       string :note, default: nil
       string :content_url, default: nil
       string :external_purchase_url, default: nil
@@ -43,7 +44,7 @@ module OnlineServices
     def execute
       online_service.with_lock do
         case update_attribute
-        when "name", "note", "external_purchase_url"
+        when "name", "note", "external_purchase_url", "internal_name"
           online_service.update(attrs.slice(update_attribute))
         when "content_url"
           online_service.update(content_url: attrs[:content_url], solution_type: attrs[:solution_type])

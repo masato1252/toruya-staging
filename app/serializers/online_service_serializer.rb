@@ -5,6 +5,10 @@ class OnlineServiceSerializer
   attribute :id, :name, :note, :content, :solution_type, :upsell_sale_page_id, :end_time, :end_time_text, :start_time, :start_time_text, :content_url, :external_purchase_url
   attribute :product_name, &:name
 
+  attribute :internal_name do |service|
+    service.internal_name.presence || service.name
+  end
+
   attribute :company_info do |service|
     CompanyInfoSerializer.new(service.company).attributes_hash
   end
