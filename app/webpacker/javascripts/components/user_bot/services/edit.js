@@ -93,6 +93,15 @@ const OnlineServiceEdit =({props}) => {
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
+      case "internal_name":
+        return (
+          <>
+            <div className="field-row">
+              <input autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
+            </div>
+            <p className="centerize desc margin-around" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.services.form.internal_name_desc_html") }} />
+          </>
+        )
       case "name":
         return (
           <>

@@ -11,6 +11,7 @@
 #  end_on_days           :integer
 #  external_purchase_url :string
 #  goal_type             :string           not null
+#  internal_name         :string
 #  name                  :string           not null
 #  note                  :text
 #  slug                  :string

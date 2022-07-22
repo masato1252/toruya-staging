@@ -1453,7 +1453,8 @@ CREATE TABLE public.online_services (
     tags character varying[] DEFAULT '{}'::character varying[],
     stripe_product_id character varying,
     note text,
-    external_purchase_url character varying
+    external_purchase_url character varying,
+    internal_name character varying
 );
 
 
@@ -5195,6 +5196,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220525134226'),
 ('20220530105733'),
 ('20220620130630'),
-('20220630135202');
+('20220630135202'),
+('20220721135216');
 
 

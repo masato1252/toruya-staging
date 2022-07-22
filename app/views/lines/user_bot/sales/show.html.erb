@@ -3,7 +3,7 @@
 
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.sales_about") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.internal_name") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :internal_name), title: @sale_page.internal_name.presence || @sale_page.product_name %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :internal_name), title: @sale_page.internal_name %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_product") %></div>
   <div class="field-row with-format">

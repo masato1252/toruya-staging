@@ -5,6 +5,9 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.name") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :name), title: @service.name %>
 
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.internal_name") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :internal_name), title: @service.internal_name %>
+
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
 

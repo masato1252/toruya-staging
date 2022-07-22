@@ -3,9 +3,9 @@
 <%= react_component("user_bot/sales/online_service_creation_flow", {
   props: {
     selected_online_service: @selected_online_service,
-    online_services: super_user.online_services.includes(:company, sale_page: [:product, :sale_template]).map { |service|
+    online_services: super_user.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
       {
-        label: service.name,
+        label: service.internal_name.presence || service.name,
         value: OnlineServiceSerializer.new(service).attributes_hash
       }
     },
