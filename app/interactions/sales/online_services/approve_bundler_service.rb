@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'line_client'
+
 module Sales
   module OnlineServices
     class ApproveBundlerService < ActiveInteraction::Base
@@ -25,6 +27,9 @@ module Sales
           compose(Sales::OnlineServices::ApproveBundledService, bundled_service: bundled_service, bundler_relation: relation)
         end
 
+        LineClient.send(social_customer, I18n.t("line.approve_bundler_service.note"))
+        Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer, bundler_service_id: relation.online_service_id)
+
         relation
       end
 
@@ -40,6 +45,10 @@ module Sales
         unless relation.online_service.bundler?
           errors.add(:relation, :invalid_product)
         end
+      end
+
+      def social_customer
+        @social_customer ||= relation.customer.social_customer
       end
     end
   end

@@ -4,6 +4,8 @@ require "line_client"
 require "message_encryptor"
 
 class Lines::MessageEvent < ActiveInteraction::Base
+  BUNDLER_SERVICE_SEPARATOR = "~"
+
   hash :event, strip: false, default: nil
   object :social_customer
 
@@ -48,7 +50,8 @@ class Lines::MessageEvent < ActiveInteraction::Base
 
           if social_customer.customer
             last_relation_id = event["message"]["text"].strip.match(/\d+$/).try(:[], 0)
-            Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer, last_relation_id: last_relation_id)
+            bundler_service_id = event["message"]["text"].strip.match(/#{BUNDLER_SERVICE_SEPARATOR}(\d+)#{BUNDLER_SERVICE_SEPARATOR}/).try(:[], 1)
+            Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer, bundler_service_id: bundler_service_id, last_relation_id: last_relation_id)
           else
             compose(Lines::Menus::Guest, social_customer: social_customer)
           end
