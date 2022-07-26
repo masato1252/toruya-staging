@@ -1999,7 +1999,8 @@ CREATE TABLE public.reservations (
     deleted_at timestamp without time zone,
     prepare_time timestamp without time zone,
     user_id integer,
-    online boolean DEFAULT false
+    online boolean DEFAULT false,
+    meeting_url character varying
 );
 
 
@@ -5197,6 +5198,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220530105733'),
 ('20220620130630'),
 ('20220630135202'),
-('20220721135216');
+('20220721135216'),
+('20220726135009');
 
 

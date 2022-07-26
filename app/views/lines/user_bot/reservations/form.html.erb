@@ -18,7 +18,7 @@
         accepted_state: ReservationStaff::ACCEPTED_STATE
       },
     },
-    reservation_form: @reservation.attributes.slice("id", "memo").merge!({
+    reservation_form: @reservation.attributes.slice("id", "memo", 'meeting_url').merge!({
       shop: @reservation.shop.attributes,
       reservation_id: @reservation.id,
       start_time_date_part: @reservation.start_time_date || @reservation.start_time_date_part,
@@ -34,7 +34,7 @@
     }.merge!([
       t("reservation"),
       t("user_bot.dashboards.reservation"),
-      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar),
+      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar, :meeting_url),
       t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
     ].inject(:merge!))
   }

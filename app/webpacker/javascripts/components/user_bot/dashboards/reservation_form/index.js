@@ -233,6 +233,9 @@ const Form = () => {
             })
           }}
         />
+        <div className="field-header">{i18n.meeting_url}</div>
+        <input ref={register} name="meeting_url" type="text" placeholder={i18n.meeting_url} />
+
         <ReservationCustomersList />
         <div className="field-header">{i18n.memo}</div>
         <textarea

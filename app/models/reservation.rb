@@ -4,22 +4,23 @@
 # Table name: reservations
 #
 #  id                 :integer          not null, primary key
-#  shop_id            :integer          not null
-#  menu_id            :integer
-#  start_time         :datetime         not null
-#  end_time           :datetime         not null
-#  ready_time         :datetime         not null
 #  aasm_state         :string           not null
+#  count_of_customers :integer          default(0)
+#  deleted_at         :datetime
+#  end_time           :datetime         not null
+#  meeting_url        :string
 #  memo               :text
+#  online             :boolean          default(FALSE)
+#  prepare_time       :datetime
+#  ready_time         :datetime         not null
+#  start_time         :datetime         not null
+#  with_warnings      :boolean          default(FALSE), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  count_of_customers :integer          default(0)
-#  with_warnings      :boolean          default(FALSE), not null
 #  by_staff_id        :integer
-#  deleted_at         :datetime
-#  prepare_time       :datetime
+#  menu_id            :integer
+#  shop_id            :integer          not null
 #  user_id            :integer
-#  online             :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -133,7 +134,8 @@ class Reservation < ApplicationRecord
       receiver: customer,
       shop: shop,
       start_time: start_time,
-      end_time: end_time
+      end_time: end_time,
+      meeting_url: meeting_url
     )
   end
 
