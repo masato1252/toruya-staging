@@ -27,7 +27,6 @@ module Sales
           compose(Sales::OnlineServices::ApproveBundledService, bundled_service: bundled_service, bundler_relation: relation)
         end
 
-        LineClient.send(social_customer, I18n.t("line.approve_bundler_service.note"))
         Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer, bundler_service_id: relation.online_service_id)
 
         relation

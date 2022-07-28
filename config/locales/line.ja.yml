@@ -42,8 +42,6 @@ ja:
           location: 住所
           save_btn: Save Shop info
   line:
-    approve_bundler_service:
-      note: "この度は、bundle-service-titleをご利用ありがとうございました。\n\n緑色のボタンから利用ください。"
     customer_identifications:
       successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。
       title_html: 顧客情報を連携して<br />LINEでオンライン予約をスタート

@@ -32,7 +32,7 @@ RSpec.describe Lines::MessageEvent, :with_line do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    context "when event text match keyowrd" do
+    context "when event text match keyword" do
       it "creates a social messages" do
         expect {
           outcome
@@ -47,8 +47,19 @@ RSpec.describe Lines::MessageEvent, :with_line do
       let(:text) { "#{I18n.t("common.more")} - #{I18n.t("line.bot.keywords.services")} #{last_relation_id}" }
 
       it "extracts out the last_relation_id" do
-        expect(Lines::Actions::ActiveOnlineServices).to receive(:run).with(social_customer: social_customer, last_relation_id: last_relation_id)
+        expect(Lines::Actions::ActiveOnlineServices).to receive(:run).with(social_customer: social_customer, last_relation_id: last_relation_id, bundler_service_id: nil)
         outcome
+      end
+
+      context 'when match bundler service pattern' do
+        let(:last_relation_id) { "123" }
+        let(:bundler_service_id) { "456" }
+        let(:text) { "#{I18n.t("common.more")} - #{I18n.t("line.bot.keywords.services")} ~456~ 123" }
+
+        it "extracts out the bundler_service_id" do
+          expect(Lines::Actions::ActiveOnlineServices).to receive(:run).with(social_customer: social_customer, last_relation_id: last_relation_id, bundler_service_id: bundler_service_id)
+          outcome
+        end
       end
     end
   end
