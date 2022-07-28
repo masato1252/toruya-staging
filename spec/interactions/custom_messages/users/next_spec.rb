@@ -8,6 +8,7 @@ RSpec.describe CustomMessages::Users::Next do
   let(:prev_after_days) { nil }
   let(:service) { nil }
   let(:receiver) { FactoryBot.create(:user) }
+  # CustomMessages::Users::Template::USER_SIGN_UP scenario
   let(:scenario_start_at) { receiver.created_at }
   let(:args) do
     {
@@ -33,12 +34,14 @@ RSpec.describe CustomMessages::Users::Next do
 
         expect(Notifiers::Users::CustomMessages::Send).to receive(:perform_at).with({
           schedule_at: scenario_start_at.advance(days: next_custom_message1.after_days).change(hour: 9),
+          scenario_start_at: scenario_start_at,
           custom_message: next_custom_message1,
           receiver: receiver
         })
 
         expect(Notifiers::Users::CustomMessages::Send).to receive(:perform_at).with({
           schedule_at: scenario_start_at.advance(days: next_custom_message2.after_days).change(hour: 9),
+          scenario_start_at: scenario_start_at,
           custom_message: next_custom_message2,
           receiver: receiver
         })
@@ -62,12 +65,14 @@ RSpec.describe CustomMessages::Users::Next do
 
         expect(Notifiers::Users::CustomMessages::Send).to receive(:perform_at).with({
           schedule_at: scenario_start_at.advance(days: next_custom_message1.after_days).change(hour: 9),
+          scenario_start_at: scenario_start_at,
           custom_message: next_custom_message1,
           receiver: receiver
         })
 
         expect(Notifiers::Users::CustomMessages::Send).to receive(:perform_at).with({
           schedule_at: scenario_start_at.advance(days: next_custom_message2.after_days).change(hour: 9),
+          scenario_start_at: scenario_start_at,
           custom_message: next_custom_message2,
           receiver: receiver
         })
@@ -107,6 +112,7 @@ RSpec.describe CustomMessages::Users::Next do
       it "schedules the next custom message" do
         expect(Notifiers::Users::CustomMessages::Send).to receive(:perform_at).with({
           schedule_at: scenario_start_at.advance(days: current_custom_message.after_days).change(hour: 9),
+          scenario_start_at: scenario_start_at,
           custom_message: current_custom_message,
           receiver: receiver
         })
@@ -141,12 +147,14 @@ RSpec.describe CustomMessages::Users::Next do
 
           expect(Notifiers::Users::CustomMessages::Send).to receive(:perform_at).with({
             schedule_at: scenario_start_at.advance(days: next_custom_message1.after_days).change(hour: 9),
+            scenario_start_at: scenario_start_at,
             custom_message: next_custom_message1,
             receiver: receiver
           })
 
           expect(Notifiers::Users::CustomMessages::Send).to receive(:perform_at).with({
             schedule_at: scenario_start_at.advance(days: next_custom_message2.after_days).change(hour: 9),
+            scenario_start_at: scenario_start_at,
             custom_message: next_custom_message2,
             receiver: receiver
           })

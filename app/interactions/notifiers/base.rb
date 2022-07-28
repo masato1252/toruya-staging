@@ -46,6 +46,7 @@ module Notifiers
     object :receiver, class: ApplicationRecord
     object :user, default: nil # used for sending SMS
     object :customer, default: nil # used for sending SMS
+    time :schedule_at, default: nil
 
     def execute
       return unless deliverable
