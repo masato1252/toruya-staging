@@ -941,7 +941,8 @@ CREATE TABLE public.custom_messages (
     after_days integer,
     receiver_ids character varying[] DEFAULT '{}'::character varying[],
     flex_template character varying,
-    content_type character varying DEFAULT 'text'::character varying
+    content_type character varying DEFAULT 'text'::character varying,
+    before_minutes integer
 );
 
 
@@ -5199,6 +5200,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220620130630'),
 ('20220630135202'),
 ('20220721135216'),
-('20220726135009');
+('20220726135009'),
+('20220728231237');
 
 

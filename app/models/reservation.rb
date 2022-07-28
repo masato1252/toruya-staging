@@ -139,6 +139,10 @@ class Reservation < ApplicationRecord
     )
   end
 
+  def notifiable?
+    !canceled? && deleted_at.nil? && start_time > Time.current
+  end
+
   private
 
   def end_time_larger_than_start_time

@@ -2,50 +2,41 @@
 
 module CustomMessages
   module Customers
-    class Update < ActiveInteraction::Base
+    class Update < CustomMessages::Customers::Base
       object :message, class: CustomMessage
       string :content
       integer :after_days, default: nil
+      integer :before_minutes, default: nil
 
       validate :validate_purchased_message
-      validate :validate_after_days
 
       def execute
         message.content = content
         message.after_days = after_days
+        message.before_minutes = before_minutes
 
-        if message.valid? && message.service.is_a?(OnlineService) && message.after_days_changed?
-          message.save
+        if message.save
+          if message.service.is_a?(OnlineService) && message.saved_change_to_after_days?
+            notify_service_customers(message)
+          end
 
-          case message.after_days
-          when nil, 0
-            # For customers purchased/booked, so do nothing when this custom message was created
-          else
-            message.service.available_customers.find_each do |customer|
-              ::CustomMessages::Customers::Next.perform_later(
-                custom_message: message,
-                receiver: customer,
-                schedule_right_away: true
-              )
-            end
+          if message.service.is_a?(BookingPage) && message.saved_change_to_before_minutes?
+            notify_reservation_customers(message)
           end
         end
 
-        message.save
         message
       end
 
       private
 
-      def validate_purchased_message
-        if after_days.nil? && CustomMessage.scenario_of(message.service, message.scenario).right_away.where.not(id: message.id).exists?
-          errors.add(:after_days, :only_allow_one_purchased_message)
-        end
+      def service
+        @service ||= message.service
       end
 
-      def validate_after_days
-        if !after_days.nil? && after_days < 0
-          errors.add(:after_days, :need_to_be_positive)
+      def validate_purchased_message
+        if after_days.nil? && service.is_a?(OnlineService) && CustomMessage.scenario_of(message.service, message.scenario).right_away.where.not(id: message.id).exists?
+          errors.add(:after_days, :only_allow_one_purchased_message)
         end
       end
     end

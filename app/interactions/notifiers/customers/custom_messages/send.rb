@@ -11,6 +11,7 @@ module Notifiers
         object :custom_message
 
         validate :receiver_should_be_customer
+        validate :service_should_be_online_service
 
         def message
           compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver)
@@ -44,6 +45,12 @@ module Notifiers
           end
 
           true # real time
+        end
+
+        def service_should_be_online_service
+          unless custom_message.service.is_a?(OnlineService)
+            errors.add(:custom_message, :is_invalid_service)
+          end
         end
       end
     end

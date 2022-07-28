@@ -2,17 +2,18 @@
 #
 # Table name: custom_messages
 #
-#  id            :bigint           not null, primary key
-#  after_days    :integer
-#  content       :text             not null
-#  content_type  :string           default("text")
-#  flex_template :string
-#  receiver_ids  :string           default([]), is an Array
-#  scenario      :string           not null
-#  service_type  :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  service_id    :bigint
+#  id             :bigint           not null, primary key
+#  after_days     :integer
+#  before_minutes :integer
+#  content        :text             not null
+#  content_type   :string           default("text")
+#  flex_template  :string
+#  receiver_ids   :string           default([]), is an Array
+#  scenario       :string           not null
+#  service_type   :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  service_id     :bigint
 #
 # Indexes
 #

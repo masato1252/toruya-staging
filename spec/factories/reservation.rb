@@ -6,7 +6,7 @@ FactoryBot.define do
   factory :reservation do
     association :shop
     user { shop.user }
-    start_time { Time.zone.now }
+    start_time { Time.current.advance(minutes: 10)}
     end_time { start_time.advance(hours: 1) }
     prepare_time { start_time - menus.first.interval.minutes }
     ready_time { end_time + menus.last.interval.minutes }
