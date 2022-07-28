@@ -6,6 +6,7 @@ module Notifiers
       class ActiveRelations < Base
         deliver_by :line
 
+        integer :bundler_service_id, default: nil
         integer :last_relation_id, default: nil
 
         validate :receiver_should_be_customer
@@ -28,13 +29,25 @@ module Notifiers
             begin
               scope = receiver.online_service_customer_relations.includes(:online_service).order("online_service_customer_relations.id DESC")
               scope = scope.where("online_service_customer_relations.id < ?", last_relation_id) if last_relation_id
+              if bundler_service_id.present? && bundler_service = OnlineService.find_by(id: bundler_service_id)
+                scope = scope.where(online_service_id: bundler_service.bundled_services.pluck(:online_service_id))
+              end
+
               relations = scope.limit(LineClient::COLUMNS_NUMBER_LIMIT + 1)
 
               if relations.size > LineClient::COLUMNS_NUMBER_LIMIT
                 limited_relations = relations.first(LineClient::COLUMNS_NUMBER_LIMIT - 1)
+
+                line_keyword =
+                  if bundler_service
+                    "#{I18n.t("line.bot.keywords.services")} #{Lines::MessageEvent::BUNDLER_SERVICE_SEPARATOR}#{bundler_service_id}#{Lines::MessageEvent::BUNDLER_SERVICE_SEPARATOR} #{limited_relations.last.id}"
+                  else
+                    "#{I18n.t("line.bot.keywords.services")} #{limited_relations.last.id}"
+                  end
+
                 limited_relations.map do |relation|
                   compose(Templates::OnlineService, online_service_customer_relation: relation)
-                end.push(LineMessages::FlexTemplateContent.next_card(line_keyword: "#{I18n.t("line.bot.keywords.services")} #{limited_relations.last.id}"))
+                end.push(LineMessages::FlexTemplateContent.next_card(line_keyword: line_keyword))
               else
                 relations.map do |relation|
                   compose(Templates::OnlineService, online_service_customer_relation: relation)
