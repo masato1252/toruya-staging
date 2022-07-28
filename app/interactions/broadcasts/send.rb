@@ -3,9 +3,11 @@
 module Broadcasts
   class Send < ActiveInteraction::Base
     object :broadcast
+    time :schedule_at, default: nil
 
     def execute
       broadcast.with_lock do
+        return if schedule_at && schedule_at.to_s(:iso8601) != broadcast.schedule_at.to_s(:iso8601)
         return unless broadcast.active?
 
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
