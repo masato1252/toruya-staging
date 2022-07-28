@@ -45,7 +45,7 @@ module Notifiers
         private
 
         def expected_schedule_time
-          if schedule_at
+          if schedule_at && custom_message.after_days && scenario_start_at
             expected_schedule_at = scenario_start_at.advance(days: custom_message.after_days).change(hour: 9)
             return expected_schedule_at.to_s(:iso8601) == schedule_at.to_s(:iso8601)
           end

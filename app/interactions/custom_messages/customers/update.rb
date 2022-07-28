@@ -19,7 +19,7 @@ module CustomMessages
 
           case message.after_days
           when nil, 0
-            # For customers purchaed/booked, so do nothing when this custom message was created
+            # For customers purchased/booked, so do nothing when this custom message was created
           else
             message.service.available_customers.find_each do |customer|
               ::CustomMessages::Customers::Next.perform_later(
