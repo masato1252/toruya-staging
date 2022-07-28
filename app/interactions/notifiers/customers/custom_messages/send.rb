@@ -26,7 +26,7 @@ module Notifiers
           super
 
           custom_message.with_lock do
-            custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).map(&:to_s).uniq)
+            custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).map(&:to_s).uniq) if deliverable
           end
 
           ::CustomMessages::Customers::Next.run(
@@ -35,7 +35,9 @@ module Notifiers
           )
         end
 
-        def expected_scheduled_time
+        private
+
+        def expected_schedule_time
           if schedule_at
             expected_schedule_at = custom_message.service.start_at_for_customer(receiver).advance(days: custom_message.after_days).change(hour: 9)
             return expected_schedule_at.to_s(:iso8601) == schedule_at.to_s(:iso8601)

@@ -26,10 +26,10 @@ module CustomMessages
       def send_schedule_message(message)
         schedule_at = scenario_start_at.advance(days: message.after_days).change(hour: 9)
 
-        # TODO: think about change case
         if schedule_at > Time.current || message.after_days == 0
           Notifiers::Users::CustomMessages::Send.perform_at(
             schedule_at: schedule_at,
+            scenario_start_at: scenario_start_at,
             custom_message: message,
             receiver: receiver
           )

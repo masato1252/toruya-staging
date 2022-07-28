@@ -89,5 +89,25 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
         }.by(1)
       end
     end
+
+    context 'when custom_message changed after_days' do
+      it 'only send the latest scheduled message' do
+        # CustomMessages::Users::Template::USER_SIGN_UP scenario
+        scenario_start_at = receiver.created_at
+        legacy_schedule_at = scenario_start_at.advance(days: custom_message.after_days).change(hour: 9)
+        described_class.perform_at(schedule_at: legacy_schedule_at, scenario_start_at: scenario_start_at, receiver: receiver, custom_message: custom_message)
+
+        custom_message.update(after_days: 999)
+
+        new_schedule_at = scenario_start_at.advance(days: custom_message.after_days).change(hour: 9)
+        described_class.perform_at(schedule_at: new_schedule_at, scenario_start_at: scenario_start_at, receiver: receiver, custom_message: custom_message)
+
+        expect(CustomMessages::ReceiverContent).to receive(:run) do |args|
+          expect(args[:custom_message].after_days).to eq(999)
+        end.once.and_call_original
+
+        perform_enqueued_jobs
+      end
+    end
   end
 end
