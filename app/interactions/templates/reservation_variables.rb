@@ -16,8 +16,25 @@ module Templates
         shop_name: shop.display_name,
         shop_phone_number: shop.phone_number,
         booking_time: booking_time,
-        meeting_url: meeting_url
+        meeting_url: formatted_meeting_url
       }
+    end
+
+    private
+
+    def formatted_meeting_url
+      uri = URI.parse(meeting_url)
+      query = if uri.query
+                CGI.parse(uri.query)
+              else
+                {}
+              end
+
+      query['openExternalBrowser'] = %w(1)
+      uri.query = URI.encode_www_form(query)
+      uri.to_s
+    rescue URI::InvalidURIError
+      meeting_url
     end
   end
 end
