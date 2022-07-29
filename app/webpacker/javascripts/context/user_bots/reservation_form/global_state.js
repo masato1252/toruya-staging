@@ -35,7 +35,8 @@ export const GlobalProvider = ({ props, children }) => {
       start_time_time_part: props.reservation_form.start_time_time_part,
       end_time_date_part: props.reservation_form.end_time_date_part,
       end_time_time_part: props.reservation_form.end_time_time_part,
-      memo: props.reservation_form.memo
+      memo: props.reservation_form.memo,
+      meeting_url: props.reservation_form.meeting_url
     }
   });
 

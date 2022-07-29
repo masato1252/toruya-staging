@@ -11,14 +11,14 @@
       current_staff_name: current_user.current_staff(super_user).name,
       is_editable: ability(@reservation.shop.user, @reservation.shop).can?(:edit, @reservation),
       existing_staff_states: @staff_states,
-      menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
+      menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number, :online),
       staff_options: custom_options(@staff_options),
       reservation_staff_states: {
         pending_state: ReservationStaff::PENDING_STATE,
         accepted_state: ReservationStaff::ACCEPTED_STATE
       },
     },
-    reservation_form: @reservation.attributes.slice("id", "memo").merge!({
+    reservation_form: @reservation.attributes.slice("id", "memo", 'meeting_url').merge!({
       shop: @reservation.shop.attributes,
       reservation_id: @reservation.id,
       start_time_date_part: @reservation.start_time_date || @reservation.start_time_date_part,
@@ -34,7 +34,7 @@
     }.merge!([
       t("reservation"),
       t("user_bot.dashboards.reservation"),
-      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar),
+      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar, :meeting_url),
       t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
     ].inject(:merge!))
   }

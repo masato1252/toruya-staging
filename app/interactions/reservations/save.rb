@@ -43,6 +43,7 @@ module Reservations
           string :state
         end
       end
+      string :meeting_url, default: nil
       string :memo, default: nil
       boolean :with_warnings, default: false
       boolean :online, default: false

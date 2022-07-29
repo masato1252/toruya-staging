@@ -95,7 +95,8 @@ class BookingPage < ApplicationRecord
       receiver: user,
       shop: shop,
       start_time: Time.current,
-      end_time: Time.current.advance(hours: 1)
+      end_time: Time.current.advance(hours: 1),
+      meeting_url: 'https://toruya.com/'
     )
   end
 end
