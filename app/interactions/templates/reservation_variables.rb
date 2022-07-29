@@ -23,6 +23,8 @@ module Templates
     private
 
     def formatted_meeting_url
+      return meeting_url unless meeting_url =~ URI::regexp
+
       uri = URI.parse(meeting_url)
       query = if uri.query
                 CGI.parse(uri.query)

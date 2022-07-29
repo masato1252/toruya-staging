@@ -28,7 +28,7 @@ module OptionsHelper
 
   def menu_option(menu, attrs = [])
     return unless menu
-    { label: menu.name, value: menu.id, availableSeat: menu.available_seat, required_time: menu.minutes }.reverse_merge!(menu.attributes.with_indifferent_access.slice(*attrs))
+    { label: menu.name, value: menu.id, availableSeat: menu.available_seat, required_time: menu.minutes, online: menu.online }.reverse_merge!(menu.attributes.with_indifferent_access.slice(*attrs))
   end
 
   def rank_options

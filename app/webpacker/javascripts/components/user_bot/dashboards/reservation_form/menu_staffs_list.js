@@ -47,6 +47,7 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
             data[menu_index]["menu_id"] = option.value
             data[menu_index]["menu_required_time"] = option.minutes
             data[menu_index]["menu_interval_time"] = option.interval
+            data[menu_index]["menu_online"] = option.online
             data[menu_index]["staff_ids"] = arrayWithLength(Math.max(option.min_staffs_number, 1), { staff_id: "" })
 
             dispatch({

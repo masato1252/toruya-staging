@@ -19,7 +19,7 @@ RSpec.describe Templates::ReservationVariables do
 
   describe "#execute" do
     context "when meeting_url could not parsed" do
-      let(:meeting_url) { nil }
+      let(:meeting_url) { '' }
 
       it 'returns original meeting_url' do
         expect(outcome.result[:meeting_url]).to eq('')

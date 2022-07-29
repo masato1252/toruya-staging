@@ -233,8 +233,15 @@ const Form = () => {
             })
           }}
         />
-        <div className="field-header">{i18n.meeting_url}</div>
-        <input ref={register} name="meeting_url" type="text" placeholder={i18n.meeting_url} />
+        {/* Only any menu is online, show the meeting url */}
+        {_.some(menu_staffs_list, ['menu_online', true]) && (
+          <>
+            <div className="field-header">{i18n.meeting_url}</div>
+            <div className="py-2">
+              <input ref={register} name="meeting_url" type="text" placeholder={i18n.meeting_url} className="extend" />
+            </div>
+          </>
+        )}
 
         <ReservationCustomersList />
         <div className="field-header">{i18n.memo}</div>

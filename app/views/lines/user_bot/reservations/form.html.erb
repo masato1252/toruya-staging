@@ -11,7 +11,7 @@
       current_staff_name: current_user.current_staff(super_user).name,
       is_editable: ability(@reservation.shop.user, @reservation.shop).can?(:edit, @reservation),
       existing_staff_states: @staff_states,
-      menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
+      menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number, :online),
       staff_options: custom_options(@staff_options),
       reservation_staff_states: {
         pending_state: ReservationStaff::PENDING_STATE,
