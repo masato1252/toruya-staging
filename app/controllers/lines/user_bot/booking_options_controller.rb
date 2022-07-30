@@ -8,7 +8,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   def show
     @booking_option = super_user.booking_options.find(params[:id])
     all_menu_options = super_user.menus.map do |menu|
-      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
+      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval, online: menu.online)
     end
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: all_menu_options)
   end

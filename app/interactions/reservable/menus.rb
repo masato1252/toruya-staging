@@ -34,7 +34,7 @@ module Reservable
       END")
 
       no_reservation_except_menu0_menus = no_reservation_except_menu0_menus.map do |menu|
-        Options::MenuOption.new(id: menu.id, name: menu.display_name, min_staffs_number: menu.min_staffs_number, available_seat: menu.max_seat_number)
+        Options::MenuOption.new(id: menu.id, name: menu.display_name, min_staffs_number: menu.min_staffs_number, available_seat: menu.max_seat_number, online: menu.online)
       end
 
       # XXX: this intersection was used now, so below reservation.menus.first is a temporary fix.
