@@ -21,7 +21,7 @@ class Reservations::AvailableOptionsController < DashboardController
                               []
                             end
 
-    @menu = ::Options::MenuOption.new(id: menu.id, name: menu.name, min_staffs_number: menu.min_staffs_number)
+    @menu = ::Options::MenuOption.new(id: menu.id, name: menu.name, min_staffs_number: menu.min_staffs_number, online: menu.online)
     @staffs = Reservable::Staffs.run!(shop: shop, menu: menu,
                                       business_time_range: reservation_time,
                                       number_of_customer: params[:customer_ids].size,

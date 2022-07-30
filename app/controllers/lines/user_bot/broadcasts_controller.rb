@@ -12,7 +12,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def new
     menus_options =
       current_user.menus.map do |menu|
-        ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
+        ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)
       end
     @menus = ::Menus::CategoryGroup.run!(menu_options: menus_options)
   end
@@ -21,7 +21,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
     @broadcast = current_user.broadcasts.find(params[:id])
     menus_options =
       current_user.menus.map do |menu|
-        ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
+        ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)
       end
     @menus = ::Menus::CategoryGroup.run!(menu_options: menus_options)
   end

@@ -62,7 +62,7 @@ class Settings::BookingOptionsController < SettingsController
 
   def menu_options
     super_user.menus.map do |menu|
-      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
+      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval, online: menu.online)
     end
   end
 end

@@ -5,7 +5,7 @@ class Reservations::FilterController < DashboardController
     authorize! :read, :filter
     @body_class = "filter"
     menu_options = super_user.menus.map do |menu|
-      ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
+      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 

@@ -48,7 +48,8 @@ class Lines::UserBotDashboardController < ActionController::Base
           min_staffs_number: shop_menu.menu.min_staffs_number,
           available_seat: shop_menu.max_seat_number,
           minutes: shop_menu.menu.minutes,
-          interval: shop_menu.menu.interval
+          interval: shop_menu.menu.interval,
+          online: shop_menu.menu.online
         )
       end
   end
