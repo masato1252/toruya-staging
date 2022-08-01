@@ -13,7 +13,7 @@ module Notifiers
 
         def message
           if contents.blank?
-            "No services"
+            I18n.t("line.bot.messages.online_services.no_services")
           else
             LineMessages::FlexTemplateContainer.carousel_template(
               altText: I18n.t("line.bot.keywords.services"),

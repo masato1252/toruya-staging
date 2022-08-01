@@ -84,6 +84,7 @@ ja:
           available_pages: ご利用いただける予約ページをお送りします。
         online_services:
           available_episodes: ご利用いただけるコンテンツをお送りします。
+          no_services: 表示できるサービスは見つかりませんでした。
         contact:
           contact_us: お問い合わせ
           contact_us_with_text_or_phone: メッセージ送信、またはお電話にてお問い合わせください。
