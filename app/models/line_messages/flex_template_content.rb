@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'line_client'
+
 # https://www.notion.so/gardencities/LINE-feature-362b327e785242668716e365f26ae640#836483afcd7a46e5bde2ff1e9e80f35a
 module LineMessages
   class FlexTemplateContent
@@ -123,7 +125,7 @@ module LineMessages
           "aspectMode": "cover",
           "action": {
             "type": "uri",
-            "label": title,
+            "label": title.first(LineClient::BUTTON_TITLE_LIMIT),
             "uri": content_url
           }
         },
