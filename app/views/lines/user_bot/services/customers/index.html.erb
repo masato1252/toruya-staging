@@ -8,7 +8,6 @@
 
 
   <% @relations.each do |relation| %>
-    <% next unless relation.customer %>
     <%= render "lines/user_bot/field_state", state: relation.state do %>
       <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customer_path(service_id: @online_service.id, id: relation.id) do %>
         <span class="dotdotdot">
