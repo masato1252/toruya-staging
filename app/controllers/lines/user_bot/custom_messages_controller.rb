@@ -6,14 +6,16 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
       outcome = CustomMessages::Customers::Update.run(
         message: CustomMessage.find_by!(id: params[:id], service: service),
         content: params[:content],
-        after_days: params[:after_days].presence
+        after_days: params[:after_days].presence,
+        before_minutes: params[:before_minutes].presence
       )
     else
       outcome = CustomMessages::Customers::Create.run(
         service: service,
         scenario: params[:scenario],
         content: params[:content],
-        after_days: params[:after_days].presence
+        after_days: params[:after_days].presence,
+        before_minutes: params[:before_minutes].presence
       )
     end
 

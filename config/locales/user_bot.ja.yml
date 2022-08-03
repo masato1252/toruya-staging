@@ -141,6 +141,10 @@ ja:
             reservation_confirmed: 予約確定時
             booking_page_one_day_reminder: 24時間前リマインダ
             reservation_one_day_reminder: 24時間前リマインダ
+            before_minutes_title: このメッセージをいつ送信しますか？
+            before_reservation: 予約の
+            before_minutes_word: 分前
+            before_minutes_reminder: "%{before_minutes} 分前リマインダ"
           online_service:
             section_title: オンラインサービス
             service_page_title: サービスページ
