@@ -19,7 +19,9 @@ module Notifiers
         end
 
         def deliverable
-          expected_schedule_time && reservation.notifiable?
+          expected_schedule_time &&
+            reservation.notifiable? &&
+            receiver.reservation_customers.where(reservation: reservation).exists?
         end
 
         private
