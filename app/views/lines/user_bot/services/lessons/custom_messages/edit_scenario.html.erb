@@ -1,0 +1,18 @@
+<%= react_component("user_bot/services/lessons/custom_messages/edit", {
+  props: {
+    scenario: params[:scenario],
+    lesson_name: @lesson.name,
+    message: {
+      id: @message&.id,
+      service_id: @lesson.id,
+      service_type: @lesson.class.name,
+      online_service_id: @online_service.id,
+      chapter_id: @chapter.id,
+      lesson_id: @lesson.id,
+      template: @template
+    }.merge!(@lesson.message_template_variables(current_user))
+  }
+},
+{ camelize_props: false }
+) %>
+

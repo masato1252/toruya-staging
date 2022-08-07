@@ -13,7 +13,7 @@ class Lines::UserBot::Services::Lessons::CustomMessagesController < Lines::UserB
     @online_service = current_user.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = @chapter.lessons.find(params[:lesson_id])
-    @message = CustomMessage.find_by!(service: @lesson, id: params[:id])
-    @template = @message.content
+    @message = CustomMessage.find_by(service: @lesson, id: params[:id])
+    @template = @message&.content || ""
   end
 end

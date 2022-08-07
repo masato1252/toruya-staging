@@ -1,6 +1,6 @@
 class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardController
   def update
-    service = params[:service_type].constantize.find_by(user: current_user, id: params[:service_id])
+    service = params[:service_type].constantize.find_by(id: params[:service_id])
 
     if params[:id]
       outcome = CustomMessages::Customers::Update.run(
@@ -27,13 +27,15 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         lines_user_bot_booking_page_custom_messages_path(params[:service_id])
       when Shop
         lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
+      when Lesson
+        lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id)
       end
 
     return_json_response(outcome, { redirect_to: redirect_path })
   end
 
   def demo
-    service = params[:service_type].constantize.find_by(user: current_user, id: params[:service_id])
+    service = params[:service_type].constantize.find_by(id: params[:service_id])
 
     message = CustomMessage.new(
       service: service,
@@ -47,10 +49,9 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
   end
 
   def destroy
-    service = params[:service_type].constantize.find_by(user: current_user, id: params[:service_id])
+    service = params[:service_type].constantize.find_by(id: params[:service_id])
     message = CustomMessage.find_by!(id: params[:id], service: service)
 
-    message.destroy
     redirect_path =
       case service
       when OnlineService
@@ -59,7 +60,11 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         lines_user_bot_booking_page_custom_messages_path(params[:service_id])
       when Shop
         lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
+      when Lesson
+        lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id)
       end
+
+    message.destroy
 
     redirect_to redirect_path
   end

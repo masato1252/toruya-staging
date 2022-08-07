@@ -22,6 +22,9 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.start_time_title") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :start_time), title: @lesson.start_time_text %>
 
+  <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
+  <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapter_lesson_custom_messages_path(@online_service, @chapter, @lesson), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
     <%= link_to lines_user_bot_service_lesson_path(@lesson, service_id: @online_service.id),
       method: :delete,
