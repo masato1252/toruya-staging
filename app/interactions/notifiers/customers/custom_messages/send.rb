@@ -11,6 +11,7 @@ module Notifiers
         object :custom_message
 
         validate :receiver_should_be_customer
+        validate :service_should_be_online_service
 
         def message
           compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver)
@@ -18,8 +19,8 @@ module Notifiers
 
         def deliverable
           expected_schedule_time &&
-          custom_message.receiver_ids.exclude?(receiver.id.to_s) &&
-            custom_message.service.is_a?(OnlineService) && receiver.online_service_customer_relations.where(online_service: custom_message.service).exists?
+            custom_message.receiver_ids.exclude?(receiver.id.to_s) &&
+            receiver.online_service_customer_relations.where(online_service: custom_message.service).exists?
         end
 
         def execute
@@ -44,6 +45,12 @@ module Notifiers
           end
 
           true # real time
+        end
+
+        def service_should_be_online_service
+          unless custom_message.service.is_a?(OnlineService)
+            errors.add(:custom_message, :is_invalid_service)
+          end
         end
       end
     end

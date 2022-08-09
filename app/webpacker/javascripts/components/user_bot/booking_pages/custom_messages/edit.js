@@ -11,7 +11,7 @@ import { ErrorMessage, BottomNavigationBar, TopNavigationBar, CiricleButtonWithW
 let personalizeKeyword = "";
 
 const CustomMessageEdit =({props}) => {
-  const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
+  const { handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.message
     }
@@ -19,15 +19,14 @@ const CustomMessageEdit =({props}) => {
   const textareaRef = useRef();
   const [template, setTemplate] = useState(props.message.template)
   const [cursorPosition, setCursorPosition] = useState(0)
+  const [before_minutes, setBeforeMinutes] = useState(props.message.before_minutes)
 
   useEffect(() => {
     textareaRef.current.focus()
   }, [template.length])
 
   const onDemo = async (data) => {
-    let error, response;
-
-    [error, response] = await CustomMessageServices.demo({
+    await CustomMessageServices.demo({
       data: _.assign( data, {
         id: props.message.id,
         scenario: props.scenario,
@@ -47,7 +46,8 @@ const CustomMessageEdit =({props}) => {
         scenario: props.scenario,
         content: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        before_minutes: before_minutes
       })
     })
 
@@ -66,9 +66,30 @@ const CustomMessageEdit =({props}) => {
       case "reservation_confirmed":
       case "booking_page_one_day_reminder":
       case "reservation_one_day_reminder":
+      case "booking_page_custom_reminder":
         return (
           <>
-            <div className="field-row">{I18n.t(`user_bot.dashboards.settings.custom_message.booking_page.${props.scenario}`)}</div>
+            {
+              props.scenario == 'booking_page_custom_reminder' ? (
+                <div className="field-row">
+                  <span>
+                    {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_title")}<br />
+                    {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_reservation")}
+                    <input
+                      type='tel'
+                      value={before_minutes || ''}
+                      onChange={(event) => {
+                        setBeforeMinutes(event.target.value)
+                      }}
+                    />
+                    {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_word")}
+                  </span>
+                </div>
+              ) : (
+                <div className="field-row">{I18n.t(`user_bot.dashboards.settings.custom_message.booking_page.${props.scenario}`)}</div>
+              )
+            }
+
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.content")}</div>
             <div className="field-row">
               <textarea
@@ -107,7 +128,6 @@ const CustomMessageEdit =({props}) => {
             </div>
           </>
         );
-        break
     }
   }
 
