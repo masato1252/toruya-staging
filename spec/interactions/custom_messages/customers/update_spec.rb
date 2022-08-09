@@ -70,7 +70,7 @@ RSpec.describe CustomMessages::Customers::Update do
         context 'when before_minutes changed' do
           it 'schedules reminder for future reservations' do
             expect(Notifiers::Customers::CustomMessages::ReservationReminder).to receive(:perform_at) do |args|
-              expect(args[:schedule_at]).to eq(reservation.start_time.advance(minutes: -before_minutes))
+              expect(args[:schedule_at].round).to eq(reservation.start_time.advance(minutes: -before_minutes).round)
             end
 
             outcome
