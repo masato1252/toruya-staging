@@ -89,4 +89,12 @@ class Episode < ApplicationRecord
     return "available" if available?
     "inactive"
   end
+
+  def message_template_variables(customer_or_user)
+    {
+      customer_name: customer_or_user.display_last_name,
+      episode_name: name,
+      episode_end_date: end_time_text
+    }
+  end
 end

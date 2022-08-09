@@ -21,5 +21,17 @@ RSpec.describe Episodes::Watch do
 
       expect(online_service_customer_relation.reload.watched_episode_ids).to eq([episode.id.to_s])
     end
+
+    context "when there is custom message for episode watched" do
+      let!(:custom_message) { FactoryBot.create(:custom_message, service: episode, scenario: CustomMessages::Customers::Template::EPISODE_WATCHED) }
+
+      it "sends custom message" do
+        expect(Notifiers::Customers::CustomMessages::EpisodeWatched).to receive(:perform_later).with(
+          custom_message: custom_message, receiver: customer
+        )
+
+        outcome
+      end
+    end
   end
 end
