@@ -134,7 +134,9 @@ ja:
             send_me_mock_message: 自分にテスト送信
             service_start_date: サービス開始日
             service_end_date: サービス終了日
+            episode_end_date: サービス終了日
             lesson_name: Lesson Name
+            episode_name: Episode Name
           booking_page:
             online_booking: オンライン予約
             page_label: 予約ページ
@@ -154,6 +156,8 @@ ja:
             after_days_title: サービス開催、何日後に送信しますか？
           lesson:
             lesson_watched: "%{lesson_name}が「完了」になったら"
+          episode:
+            episode_watched: "%{episode_name}が「完了」になったら"
         membership:
           episodes:
             title: 提供コンテンツ

@@ -211,7 +211,13 @@ Rails.application.routes.draw do
 
         resources :lessons, module: :services, only: [:update, :destroy]
 
-        resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show, :update, :destroy]
+        resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show, :update, :destroy] do
+          resources :custom_messages, only: [:index], module: "episodes" do
+            collection do
+              get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
+            end
+          end
+        end
       end
 
       resources :custom_messages, only: [:destroy] do

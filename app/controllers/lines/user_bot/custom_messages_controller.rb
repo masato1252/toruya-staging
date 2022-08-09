@@ -29,6 +29,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
       when Lesson
         lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id)
+      when Episode
+        lines_user_bot_service_episode_custom_messages_path(service_id: service.online_service_id, episode_id: service.id)
       end
 
     return_json_response(outcome, { redirect_to: redirect_path })
@@ -62,6 +64,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
       when Lesson
         lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id)
+      when Episode
+        lines_user_bot_service_episode_custom_messages_path(service_id: service.online_service_id, episode_id: service.id)
       end
 
     message.destroy
