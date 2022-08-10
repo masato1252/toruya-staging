@@ -4,6 +4,8 @@ module Reservations
   module Notifications
     class Reminder < Notify
       def execute
+        return unless reservation.remind_customer?(customer)
+
         if customer.email.present?
           CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email).reservation_reminder.deliver_now
         end

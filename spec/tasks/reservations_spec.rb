@@ -84,14 +84,16 @@ RSpec.describe "rake reservations:reminder" do
   context "remind paid users' customers before reservations' start time 24 hours" do
     let(:paid_user) { FactoryBot.create(:subscription, :basic).user }
     let(:paid_shop) { FactoryBot.create(:shop, user: paid_user) }
-    let!(:paid_reservation_in_time) { FactoryBot.create(:reservation, shop: paid_shop, start_time: current_time.advance(hours: 24)) }
-    let!(:paid_reservation_off_time) { FactoryBot.create(:reservation, shop: paid_shop, start_time: current_time.advance(hours: 25)) }
+    let!(:paid_reservation_in_time) { FactoryBot.create(:reservation, :reserved, shop: paid_shop, start_time: current_time.advance(hours: 24)) }
+    let!(:paid_pending_reservation_in_time) { FactoryBot.create(:reservation, :pending, shop: paid_shop, start_time: current_time.advance(hours: 24)) }
+    let!(:paid_reservation_off_time) { FactoryBot.create(:reservation, :reserved, shop: paid_shop, start_time: current_time.advance(hours: 25)) }
     let(:free_user) { FactoryBot.create(:subscription, :free).user }
     let(:free_shop) { FactoryBot.create(:shop, user: free_user) }
-    let!(:free_reservation_in_time) { FactoryBot.create(:reservation, shop: free_shop, start_time: current_time.advance(hours: 24)) }
+    let!(:free_reservation_in_time) { FactoryBot.create(:reservation, :reserved, shop: free_shop, start_time: current_time.advance(hours: 24)) }
 
     it "reminds expected reservations" do
       expect(ReservationReminderJob).to receive(:perform_later).with(paid_reservation_in_time).once
+      expect(ReservationReminderJob).not_to receive(:perform_later).with(paid_pending_reservation_in_time)
       expect(ReservationReminderJob).not_to receive(:perform_later).with(paid_reservation_off_time)
       expect(ReservationReminderJob).not_to receive(:perform_later).with(free_reservation_in_time)
 

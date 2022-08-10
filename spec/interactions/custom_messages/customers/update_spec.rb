@@ -62,10 +62,16 @@ RSpec.describe CustomMessages::Customers::Update do
         expect(custom_message.before_minutes).to eq(before_minutes)
       end
 
-      context "when there are existing future reservations and " do
+      context "when there are existing future reservations" do
         let!(:reservation_customer) { FactoryBot.create(:reservation_customer, booking_page: service) }
         let(:reservation) { reservation_customer.reservation }
         let(:customer) { reservation_customer.customer }
+        before do
+          # Make reservation and customer able to remind
+          reservation.accept!
+          reservation_customer.accepted!
+          customer.update(reminder_permission: true)
+        end
 
         context 'when before_minutes changed' do
           it 'schedules reminder for future reservations' do

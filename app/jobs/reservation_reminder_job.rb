@@ -5,7 +5,9 @@ class ReservationReminderJob < ApplicationJob
 
   def perform(reservation)
     reservation.customers.where(reminder_permission: true).each do |customer|
-      Reservations::Notifications::Reminder.run!(customer: customer, reservation: reservation)
+      if reservation.remind_customer?(customer)
+        Reservations::Notifications::Reminder.run!(customer: customer, reservation: reservation)
+      end
     end
   end
 end

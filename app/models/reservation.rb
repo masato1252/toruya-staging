@@ -140,7 +140,11 @@ class Reservation < ApplicationRecord
   end
 
   def notifiable?
-    !canceled? && deleted_at.nil? && start_time > Time.current
+    reserved? && deleted_at.nil? && start_time > Time.current
+  end
+
+  def remind_customer?(customer)
+    notifiable? && reservation_customers.where(customer: customer, state: :accepted).exists? && customer.reminder_permission
   end
 
   private

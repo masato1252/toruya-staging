@@ -8,6 +8,12 @@ RSpec.describe Notifiers::Customers::CustomMessages::ReservationReminder, :with_
   let(:relation) { FactoryBot.create(:reservation_customer, booking_page: booking_page) }
   let(:reservation) { relation.reservation }
   let(:booking_page) { FactoryBot.create(:booking_page) }
+  before do
+    # Make reservation and customer able to remind
+    reservation.accept!
+    relation.accepted!
+    receiver.update(reminder_permission: true)
+  end
   let(:args) do
     {
       receiver: receiver,

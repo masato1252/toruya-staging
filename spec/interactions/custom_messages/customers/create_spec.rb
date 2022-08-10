@@ -81,6 +81,12 @@ RSpec.describe CustomMessages::Customers::Create do
         let!(:reservation_customer) { FactoryBot.create(:reservation_customer, booking_page: service) }
         let(:reservation) { reservation_customer.reservation }
         let(:customer) { reservation_customer.customer }
+        before do
+          # Make reservation and customer able to remind
+          reservation.accept!
+          reservation_customer.accepted!
+          customer.update(reminder_permission: true)
+        end
 
         it 'schedules reminder for future reservations' do
           expect(Notifiers::Customers::CustomMessages::ReservationReminder).to receive(:perform_at) do |args|

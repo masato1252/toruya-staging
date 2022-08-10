@@ -20,7 +20,7 @@ namespace :reservations do
   task :reminder => :environment do
     date_before_reservation = Time.zone.now.advance(hours: 24)
 
-    Reservation.where(user_id: Subscription.charge_required.pluck(:user_id)).where("start_time >= ? AND start_time <= ?", date_before_reservation.beginning_of_hour, date_before_reservation.end_of_hour).find_each do |reservation|
+    Reservation.reserved.where(user_id: Subscription.charge_required.pluck(:user_id)).where("start_time >= ? AND start_time <= ?", date_before_reservation.beginning_of_hour, date_before_reservation.end_of_hour).find_each do |reservation|
       ReservationReminderJob.perform_later(reservation)
     end
   end
