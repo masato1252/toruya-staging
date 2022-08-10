@@ -85,6 +85,8 @@ const CustomMessageEdit =({props}) => {
               <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
               <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{episode_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.episode_name")} </button>
               <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{episode_end_date}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.episode_end_date")} </button>
+              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_title}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_title")} </button>
+              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_end_date}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_end_date")} </button>
             </div>
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.preview")}</div>
             <div className="field-row hint no-border">
