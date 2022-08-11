@@ -61,7 +61,16 @@ class Lesson < ApplicationRecord
   def started_for_customer?(customer)
     start_time = start_time_for_customer(customer)
 
-    return true unless start_time # start right away servce
+    return true unless start_time # start right away service
     return Time.current >= start_time
+  end
+
+  def message_template_variables(customer_or_user)
+    chapter.online_service.message_template_variables(customer_or_user).merge!(
+      {
+        customer_name: customer_or_user.display_last_name,
+        lesson_name: name
+      }
+    )
   end
 end
