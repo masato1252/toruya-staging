@@ -24,7 +24,11 @@ module CustomMessages
       private
 
       def send_schedule_message(message)
-        schedule_at = message_product.start_at_for_customer(receiver).advance(days: message.after_days).change(hour: 9)
+        # When there are two 1 day after and two 7 day after custom messages
+        # each 1 day after message looking for next custom messages, then that causes total four 7 days after messages in the queues
+        # That might causes duplicate message be sent to the same customer
+        # Add rand number to make then don't send at the same time to avoid this.
+        schedule_at = message_product.start_at_for_customer(receiver).advance(days: message.after_days).change(hour: 9, min: rand(5), sec: rand(59))
 
         if schedule_at > Time.current || message.after_days == 0
           Notifiers::Customers::CustomMessages::Send.perform_at(
