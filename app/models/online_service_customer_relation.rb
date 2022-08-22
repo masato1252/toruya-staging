@@ -77,7 +77,9 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   def end_date_text
     if expire_at
-      I18n.l(expire_at, format: :long_date)
+      I18n.l(expire_at, format: :long_date_with_wday)
+    elsif canceled_payment_state?
+      "#{I18n.l(updated_at, format: :long_date_with_wday)} #{I18n.t("action.stop_usage")}"
     else
       I18n.t("sales.never_expire")
     end
