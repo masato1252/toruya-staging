@@ -15,7 +15,7 @@
 <%= render "lines/user_bot/field_row", title: I18n.l(@relation.created_at, format: :long_date_with_wday) %>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
-<%= render "lines/user_bot/field_row", title: @relation.expire_at ? I18n.l(@relation.expire_at, format: :long_date_with_wday) : I18n.t("sales.never_expire") %>
+<%= render "lines/user_bot/field_row", title: @relation.end_date_text %>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
 <%= render "lines/user_bot/field_row" do %>

@@ -263,7 +263,7 @@ ja:
           signup_date: サービス登録日
           expire_date: サービス利用期限
           cancel_confirmation: この顧客の登録をキャンセルしてよろしいですか？
-          stop_usage_confirmation: この顧客のサービス利用を中止しますか？
+          stop_usage_confirmation: 支払い状況に関わらず、今すぐサービス提供を停止します。
           free_bonus: "%{service_name}購入により%{free_bonus_month}ヶ月間無料"
           permission_states:
             accessible: 利用可能

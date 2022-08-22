@@ -7,31 +7,26 @@
   <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></div>
   <%= render "lines/user_bot/services/customers/info" %>
 
-  <% if @online_service.external? && @relation.payment_legal_to_access? && @relation.current %>
+  <% if @relation.current %>
     <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-      <%= link_to stop_lines_user_bot_service_customer_path(@online_service, @relation),
-        method: :delete,
-        data: { confirm: t("user_bot.dashboards.settings.service_customer_relation.stop_usage_confirmation") },
-        class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
-        <i class="fas fa-ban fa-2x"></i>
-        <div class="word"><%= I18n.t("action.stop_usage") %></div>
+      <% if !@relation.canceled_payment_state? %>
+        <%= link_to cancel_lines_user_bot_service_customer_path(@online_service, @relation),
+          method: :delete,
+          data: { confirm: t("user_bot.dashboards.settings.service_customer_relation.stop_usage_confirmation") },
+          class: "btn btn-orange btn-circle btn-save btn-tweak btn-with-word btn-bottom-left" do %>
+          <i class="fas fa-ban fa-2x"></i>
+          <div class="word"><%= I18n.t("action.stop_usage") %></div>
+        <% end %>
+      <% end %>
+
+      <% if @online_service.external? %>
+        <span></span>
+        <%= link_to approve_lines_user_bot_service_customer_path(@online_service, @relation), method: :post, class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+          <i class="fas fa-user-check fa-2x"></i>
+          <div class="word"><%= I18n.t("action.approve") %></div>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
 
-  <% if @online_service.external? && @relation.pending_payment_state? && @relation.current %>
-    <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-      <%= link_to cancel_lines_user_bot_service_customer_path(@online_service, @relation),
-        method: :delete,
-        data: { confirm: t("user_bot.dashboards.settings.service_customer_relation.cancel_confirmation") },
-        class: "btn btn-orange btn-circle btn-tweak btn-bottom-left" do %>
-        <i class="fas fa-trash fa-2x"></i>
-      <% end %>
-      <span></span>
-      <%= link_to approve_lines_user_bot_service_customer_path(@online_service, @relation), method: :post, class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
-        <i class="fas fa-user-check fa-2x"></i>
-        <div class="word"><%= I18n.t("action.approve") %></div>
-      <% end %>
-    <% end %>
-  <% end %>
 </div>
