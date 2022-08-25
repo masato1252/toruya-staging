@@ -99,6 +99,10 @@ $line-margin: 20px;
   align-items: flex-end;
 }
 
+.h-full {
+  height: 100%;
+}
+
 .w-full {
   width: 100%;
 }
@@ -254,4 +258,8 @@ $line-margin: 20px;
 
 .font-bold {
   font-weight: 700;
+}
+
+.object-contain {
+  object-fit: contain;
 }
