@@ -50,10 +50,6 @@ module CustomMessages
         if before_minutes.present? && before_minutes <= 0
           errors.add(:before_minutes, :need_to_be_positive)
         end
-
-        if service.is_a?(BookingPage) && before_minutes.nil?
-          errors.add(:before_minutes, :is_required_to_booking_page)
-        end
       end
     end
   end
