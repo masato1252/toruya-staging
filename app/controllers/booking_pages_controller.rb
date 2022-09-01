@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "mixpanel_tracker"
+require "flow_backtracer"
 
 class BookingPagesController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
@@ -191,6 +192,8 @@ class BookingPagesController < ActionController::Base
   end
 
   def booking_times
+    FlowBacktracer.enable(:debug_booking_page)
+
     booking_dates = if booking_page.booking_page_special_dates.exists?
       booking_page.booking_page_special_dates.where(start_at: date.all_day).map do |matched_special_date|
         {
@@ -232,7 +235,7 @@ class BookingPagesController < ActionController::Base
     available_booking_times = outcome.result.each_with_object({}) { |(time, option_ids), h| h[I18n.l(time, format: :hour_minute)] = option_ids  }
 
     if outcome.valid?
-      render json: { booking_times: available_booking_times }
+      render json: { booking_times: available_booking_times, debug: FlowBacktracer.backtrace(:debug_booking_page) }
     else
       render json: { booking_times: {} }
     end

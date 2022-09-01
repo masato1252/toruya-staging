@@ -699,6 +699,7 @@ DEPENDENCIES
   rails (~> 6.0)
   react-rails
   redis
+  request_store
   rollbar (~> 2.27.0)
   rspec-rails
   rspec_junit_formatter

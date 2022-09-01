@@ -82,6 +82,7 @@ gem 'acts-as-taggable-on', '~> 7.0'
 gem "blazer"
 gem 'deep_cloneable', '~> 3.2.0'
 gem 'redis'
+gem 'request_store'
 
 group :development, :test do
   gem "byebug", platform: :mri

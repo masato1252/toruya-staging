@@ -46,6 +46,8 @@ module Booking
 
               # XXX: not enough required staffs
               if all_possiable_active_staff_ids_groups.blank?
+                FlowBacktracer.track(:debug_booking_page) { { "not enough required staffs": [all_possiable_active_staff_ids_groups, active_staff_ids.combination(required_staffs_number).to_a]  } }
+
                 throw :next_working_date
               end
 
@@ -128,6 +130,7 @@ module Booking
                           if (reservation_setting.days_of_week.present? && reservation_setting.days_of_week.exclude?(date.wday.to_s)) ||
                               (reservation_setting.nth_of_week.present? && reservation_setting.nth_of_week != date.week_of_month) ||
                               (reservation_setting.day.present? && reservation_setting.day != date.day)
+                            FlowBacktracer.track(:debug_booking_page) { { "unschedule_menu": "#{reservation_setting.inspect}" } }
                             throw :next_working_date
                           end
                         end
@@ -136,6 +139,9 @@ module Booking
                   end
 
                   Rails.logger.debug("==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}")
+
+                  FlowBacktracer.track(:debug_booking_page) { { 'final_error': "==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}" } }
+
 
                   if all_possiable_active_staff_ids_groups.length - 1 == candidate_staff_index
                     # XXX: prior menu no staff could handle, no need to test the behind menus
