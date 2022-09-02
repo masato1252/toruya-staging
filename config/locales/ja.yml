@@ -350,6 +350,10 @@ ja:
           has_one: "%{record}が存在しているので削除できません"
           has_many: "%{record}が存在しているので削除できません"
       models:
+        booking_option_menu:
+          attributes:
+            required_time:
+              short_than_menu_minutes: "^Required time is shorter than menu required time"
         staff_account:
           attributes:
             user_id:

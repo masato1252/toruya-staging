@@ -56,10 +56,12 @@ module BookingOptions
           )
         when "menus_priority"
           attrs["sorted_menus_ids"].each.with_index do |menu_id, index|
-            booking_option.booking_option_menus.find_by(menu_id: menu_id).update_columns(priority: index)
+            booking_option.booking_option_menus.find_by(menu_id: menu_id).update(priority: index)
           end
         when "menu_required_time"
-          booking_option.booking_option_menus.find_by(menu_id: attrs["menu_id"]).update_columns(required_time: attrs["menu_required_time"])
+          booking_option_menu = booking_option.booking_option_menus.find_by(menu_id: attrs["menu_id"])
+          booking_option_menu.update(required_time: attrs["menu_required_time"])
+          errors.merge!(booking_option_menu.errors)
           booking_option.update(minutes: booking_option.booking_option_menus.sum(:required_time))
         end
 

@@ -21,4 +21,12 @@ class BookingOptionMenu < ApplicationRecord
 
   belongs_to :menu
   belongs_to :booking_option
+
+  validate :validate_menu_required_time
+
+  def validate_menu_required_time
+    if required_time < menu.minutes
+      errors.add(:required_time, :short_than_menu_minutes)
+    end
+  end
 end

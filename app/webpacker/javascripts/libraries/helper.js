@@ -156,6 +156,15 @@ const isValidHttpUrl = (string) => {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
+const responseHandler = (error, response) => {
+  if (error) {
+    toastr.error(error.response.data.error_message)
+  }
+  else {
+    window.location = response.data.redirect_to
+  }
+}
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -174,5 +183,6 @@ export {
   displayErrors,
   Translator,
   zeroPad,
-  isValidHttpUrl
+  isValidHttpUrl,
+  responseHandler
 };

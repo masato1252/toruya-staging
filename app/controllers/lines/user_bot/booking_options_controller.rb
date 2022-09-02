@@ -30,10 +30,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
 
     outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    render json: {
-      status: "successful",
-      redirect_to: lines_user_bot_booking_option_path(@booking_option.id, anchor: params[:attribute])
-    }
+    return_json_response(outcome, { redirect_to: lines_user_bot_booking_option_path(@booking_option.id, anchor: params[:attribute]) })
   end
 
   def reorder_menu_priority

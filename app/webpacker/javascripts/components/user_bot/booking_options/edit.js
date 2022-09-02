@@ -10,6 +10,7 @@ import BookingStartAtField from "components/user_bot/booking_pages/booking_start
 import BookingEndAtField from "components/user_bot/booking_pages/booking_end_at_field";
 import BookingPriceField from "./booking_price_field";
 import NewMenuField from "./new_menu_field";
+import { responseHandler } from "libraries/helper";
 
 const BookingOptionEdit =({props}) => {
   const i18n = props.i18n;
@@ -32,7 +33,7 @@ const BookingOptionEdit =({props}) => {
       data: _.assign( data, { attribute: props.attribute })
     })
 
-    window.location = response.data.redirect_to
+    responseHandler(error, response)
   }
 
   const renderCorrespondField = () => {
