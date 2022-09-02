@@ -29,7 +29,7 @@ module CustomMessages
           references(:reservation).each do |reservation_customer|
             reservation = reservation_customer.reservation
 
-            if reservation.notifiable?
+            if reservation.notifiable? && message.before_minutes
               Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
                 schedule_at: reservation.start_time.advance(minutes: -message.before_minutes),
                 custom_message: message,
