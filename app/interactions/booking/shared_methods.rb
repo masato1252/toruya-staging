@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "flow_backtracer"
+
 module Booking
   module SharedMethods
     # date: Date object
