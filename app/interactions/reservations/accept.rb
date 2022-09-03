@@ -18,8 +18,6 @@ module Reservations
             customer_id: reservation_customer.customer_id,
             current_staff: current_staff
           )
-
-          ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer)
         end
         reservation.try_accept
         reservation.save!

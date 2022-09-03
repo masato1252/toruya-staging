@@ -8,6 +8,7 @@ module ReservationCustomers
 
     def execute
       reservation_customer.accepted!
+      ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer)
 
       if reservation.customers.count == 1
         compose(Reservations::Accept, reservation: reservation, current_staff: current_staff)
