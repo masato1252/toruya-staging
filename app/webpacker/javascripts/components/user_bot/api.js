@@ -252,18 +252,20 @@ const CustomerServices = {
       responseType: "json"
     })
   },
-  reply_message: ({customer_id, message, schedule_at}) => {
+  reply_message: ({customer_id, message, schedule_at, image}) => {
     return request({
       method: "POST",
       headers: {
-        "X-CSRF-Token": Rails.csrfToken()
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
       },
       url: Routes.reply_message_lines_user_bot_customers_path({format: "json"}),
-      data: {
+      data: serialize({
         customer_id,
         message,
-        schedule_at
-      },
+        schedule_at,
+        image
+      }),
       responseType: "json"
     })
   },

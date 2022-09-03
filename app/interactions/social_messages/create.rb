@@ -13,6 +13,7 @@ module SocialMessages
 
     object :social_customer
     object :staff, default: nil
+    file :image, default: nil
     string :content
     string :content_type, default: TEXT_TYPE
     boolean :readed
@@ -39,7 +40,20 @@ module SocialMessages
 
       if message.errors.present?
         errors.merge!(message.errors)
-      elsif is_message_from_customer
+        return message
+      end
+
+      if image.present?
+        message.image.attach(io: image, filename: image.original_filename) 
+        message.update(
+          raw_content: {
+            originalContentUrl: Rails.application.routes.url_helpers.url_for(message.image.variant(combine_options: { resize: "750", flatten: true })),
+            previewImageUrl: Rails.application.routes.url_helpers.url_for(message.image.variant(combine_options: { resize: "750", flatten: true })),
+          }.to_json
+        )
+      end
+
+      if is_message_from_customer
         # Switch user rich menu to tell users there are new messages
         ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
 

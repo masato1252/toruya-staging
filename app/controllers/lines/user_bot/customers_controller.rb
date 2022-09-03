@@ -128,14 +128,32 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def reply_message
     customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
 
-    outcome = SocialMessages::Create.run(
-      social_customer: customer.social_customer,
-      staff: current_user_staff,
-      content: params[:message],
-      readed: true,
-      message_type: SocialMessage.message_types[:staff],
-      schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
-    )
+    if params[:message].present?
+      outcome = SocialMessages::Create.run(
+        social_customer: customer.social_customer,
+        staff: current_user_staff,
+        content: params[:message],
+        readed: true,
+        message_type: SocialMessage.message_types[:staff],
+        schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
+      )
+    end
+
+    if params[:image].present?
+      outcome = SocialMessages::Create.run(
+        social_customer: customer.social_customer,
+        staff: current_user_staff,
+        content: {
+          originalContentUrl: "tmp_original_content_url",
+          previewImageUrl: "tmp_preview_image_url"
+        }.to_json,
+        image: params[:image],
+        readed: true,
+        message_type: SocialMessage.message_types[:staff],
+        content_type: SocialMessages::Create::IMAGE_TYPE,
+        schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
+      )
+    end
 
     render json: json_response(outcome, { redirect_to: params[:schedule_at] ? SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:messages]) : nil})
   end
