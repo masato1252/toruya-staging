@@ -61,8 +61,9 @@ class CallbacksController < Devise::OmniauthCallbacksController
         user = outcome.result.user
         remember_me(user)
         sign_in(user)
+        write_user_bot_cookies(:current_user_id, user.id)
 
-        redirect_to admin_chats_path
+        redirect_to param.delete("oauth_redirect_to_url")
       else
         redirect_to root_path
       end

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get :identify_code
     get :ask_identification_code
     put :update_customer_address
+    get :user_sign_in
 
     scope module: :verification, path: :verification, as: :verification do
       get "/:encrypted_social_service_user_id", action: "show"
