@@ -26,6 +26,12 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
             items: [
               { price: price_details.stripe_price_id },
             ],
+            metadata: {
+              relation: relation.id,
+              customer_id: customer.id,
+              customer_name: customer.name,
+              service_id: relation.online_service_id
+            }
           },
           stripe_account: customer.user.stripe_provider.uid
         )

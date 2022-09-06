@@ -40,8 +40,10 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
           description: sale_page.product_name.first(STRIPE_DESCRIPTION_LIMIT),
           metadata: {
             relation: online_service_customer_relation.id,
-            sale_page: sale_page.id,
-            customer_id: online_service_customer_relation.customer_id
+            sale_page: sale_page.slug,
+            customer_id: customer.id,
+            customer_name: customer.name,
+            service_id: online_service.id
           }
         },
         stripe_account: customer.user.stripe_provider.uid

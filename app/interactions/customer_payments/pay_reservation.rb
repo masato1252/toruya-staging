@@ -26,7 +26,9 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
           description: "#{reservation_customer.booking_option.name}".first(STRIPE_DESCRIPTION_LIMIT),
           metadata: {
             reservation_customer_id: reservation_customer.id,
-            customer_id: reservation_customer.customer_id
+            customer_id: customer.id,
+            customer_name: customer.name,
+            reservation_id: reservation.id
           }
         },
         stripe_account: customer.user.stripe_provider.uid
