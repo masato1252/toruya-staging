@@ -1,0 +1,10 @@
+<div id="login">
+  <h2>ログイン</h2>
+  <main id="socialLogin">
+    <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
+
+    <%= button_to toruya_line_login_url(lines_user_bot_services_path), class: "btn line-button with-wording only-word" do %>
+      <%= I18n.t("common.line_login_btn_word") %>
+    <% end %>
+  </main>
+</div>

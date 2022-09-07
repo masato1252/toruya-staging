@@ -124,7 +124,7 @@ class LinesController < ActionController::Base
     head :ok
   end
 
-  def user_sign_in
+  def user_login
   end
 
   private

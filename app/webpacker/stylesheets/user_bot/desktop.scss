@@ -1,0 +1,17 @@
+.desktop-navigator {
+  width: 300px;
+  border-right: 1px solid $gray4;
+
+  li {
+    list-style-type: none;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  a.active + .nav {
+    display: block;
+    margin-left: 3px;
+  }
+}
