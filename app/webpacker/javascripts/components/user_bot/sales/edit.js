@@ -22,6 +22,7 @@ import SellingPriceEdit from "components/user_bot/sales/selling_price_edit";
 import SellingRecurringPriceEdit from "components/user_bot/sales/selling_recurring_price_edit";
 import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
 import TextInput from "shared/edit/text_input";
+import EditUrlInput from "shared/edit/url_input";
 import I18n from 'i18n-js/index.js.erb';
 
 const SalePageEdit =({props}) => {
@@ -42,7 +43,7 @@ const SalePageEdit =({props}) => {
   const [selling_price, setSellingPrice] = useState(props.sale_page.price)
   const [quantity, setQuantity] = useState(props.sale_page.quantity_option)
 
-  const { register, watch, handleSubmit, formState } = useForm({
+  const { register, watch, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.sale_page,
     }
@@ -344,9 +345,7 @@ const SalePageEdit =({props}) => {
       case "introduction_video_url":
         return (
           <>
-            <div className="field-row">
-              <input autoFocus={true} ref={register} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
-            </div>
+            <EditUrlInput register={register} errors={errors} name={props.attribute} placeholder={props.placeholder} />
             <div className='video-player-wrapper'>
               <ReactPlayer
                 className='react-player'
