@@ -26,7 +26,7 @@ class BookingOptionMenu < ApplicationRecord
 
   def validate_menu_required_time
     if required_time && menu && required_time < menu.minutes
-      errors.add(:required_time, :short_than_menu_minutes)
+      errors.add(:required_time, :short_than_menu_minutes, required_minutes: menu.minutes)
     end
   end
 end
