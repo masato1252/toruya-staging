@@ -85,6 +85,9 @@ $red: #b0450d;
   }
 }
 
+
+$desktop-sidebar-width: 250px;
+
 @mixin border-radius($radius) {
   border-radius: $radius;
   -webkit-border-radius: $radius;

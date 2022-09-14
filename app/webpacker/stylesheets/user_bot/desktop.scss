@@ -1,5 +1,6 @@
 .desktop-navigator {
-  width: 300px;
+  min-width: $desktop-sidebar-width;
+  width: $desktop-sidebar-width;
   border-right: 1px solid $gray4;
 
   li {
