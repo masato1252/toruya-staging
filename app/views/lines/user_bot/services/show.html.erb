@@ -1,110 +1,116 @@
-<div class="service-show form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_services_path, title: I18n.t("user_bot.dashboards.services.service_page") %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0">
+      <div class="service-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_services_path, title: I18n.t("user_bot.dashboards.services.service_page") %>
 
-  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.service_about") %></div>
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.name") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :name), title: @service.name %>
+        <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.service_about") %></div>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.name") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :name), title: @service.name %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.internal_name") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :internal_name), title: @service.internal_name %>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.internal_name") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :internal_name), title: @service.internal_name %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.card_image") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :message_template) do %>
-    <% if @service.message_template&.picture&.attached? %>
-      <%= image_tag(@service.message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }), class: "preview-image") %>
-    <% else %>
-      <div><%= t("user_bot.dashboards.services.default_card_image") %></div>
-      <%= image_tag(@service.default_picture_url, class: "preview-image") %>
-    <% end %>
-  <% end %>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.card_image") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :message_template) do %>
+          <% if @service.message_template&.picture&.attached? %>
+            <%= image_tag(@service.message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }), class: "preview-image") %>
+          <% else %>
+            <div><%= t("user_bot.dashboards.services.default_card_image") %></div>
+            <%= image_tag(@service.default_picture_url, class: "preview-image") %>
+          <% end %>
+        <% end %>
 
-  <% if !@service.course? && !@service.membership? && !@service.bundler? %>
-    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
-    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
-    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
-      <span class="dotdotdot"><%= @service.content_url %></span>
-      <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
-    <% end %>
+        <% if !@service.course? && !@service.membership? && !@service.bundler? %>
+          <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+          <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
+          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
+            <span class="dotdotdot"><%= @service.content_url %></span>
+            <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
+          <% end %>
 
-    <% if @service.external? %>
-      <div class="field-header"><%= I18n.t("user_bot.dashboards.services.form.external_purchase_url_title") %></div>
-      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :external_purchase_url) do %>
-        <span class="dotdotdot"><%= @service.external_purchase_url %></span>
-      <% end %>
-    <% end %>
+          <% if @service.external? %>
+            <div class="field-header"><%= I18n.t("user_bot.dashboards.services.form.external_purchase_url_title") %></div>
+            <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :external_purchase_url) do %>
+              <span class="dotdotdot"><%= @service.external_purchase_url %></span>
+            <% end %>
+          <% end %>
 
-    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.form.note_title") %></div>
-    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :note), title: @service.note %>
+          <div class="field-header"><%= I18n.t("user_bot.dashboards.services.form.note_title") %></div>
+          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :note), title: @service.note %>
 
-    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
-    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
-      <span><%= @service.sale_page&.product&.name %></span>
-    <% end %>
-  <% end %>
+          <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
+          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
+            <span><%= @service.sale_page&.product&.name %></span>
+          <% end %>
+        <% end %>
 
-  <% if @service.bundler? %>
-    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
-    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
-    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :bundled_services) do %>
-      <span class="dotdotdot"><%= @service.bundled_services.count %><%= I18n.t("user_bot.dashboards.services.service_item") %></span>
-    <% end %>
-  <% end %>
+        <% if @service.bundler? %>
+          <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+          <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
+          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :bundled_services) do %>
+            <span class="dotdotdot"><%= @service.bundled_services.count %><%= I18n.t("user_bot.dashboards.services.service_item") %></span>
+          <% end %>
+        <% end %>
 
-  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.start_time") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :start_time), title: @service.start_time_text %>
+        <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.start_time") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :start_time), title: @service.start_time_text %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.end_time") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :end_time), title: @service.end_time_text %>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.end_time") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :end_time), title: @service.end_time_text %>
 
-  <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
-  <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
-  <% if @service.membership? %>
-    <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
-    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_episodes_path(@service) do %>
-      <% if @episodes_count.zero? %>
-        <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
-      <% else %>
-        <span class="flex items-center"><%= @episodes_count %></span>
-      <% end %>
-    <% end %>
-  <% end %>
+        <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
+        <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+        <% if @service.membership? %>
+          <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
+          <%= render "lines/user_bot/field_row", path: lines_user_bot_service_episodes_path(@service) do %>
+            <% if @episodes_count.zero? %>
+              <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
+            <% else %>
+              <span class="flex items-center"><%= @episodes_count %></span>
+            <% end %>
+          <% end %>
+        <% end %>
 
-  <% if @service.course? %>
-    <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
-    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service) do %>
-      <% if @lessons_count.zero? && @chapters_count.zero? %>
-        <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
-      <% elsif @lessons_count.zero? %>
-        <div class="flex"><span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= @lessons_count %> <%= t("common.lesson") %></span>&nbsp;/&nbsp;<%= @chapters_count %> <%= t("common.chapter") %></div>
-      <% else %>
-        <span class="flex items-center"><%= @lessons_count %> <%= t("common.lesson") %> / <%= @chapters_count %> <%= t("common.chapter") %></span>
-      <% end %>
-    <% end %>
-  <% end %>
+        <% if @service.course? %>
+          <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
+          <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service) do %>
+            <% if @lessons_count.zero? && @chapters_count.zero? %>
+              <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
+            <% elsif @lessons_count.zero? %>
+              <div class="flex"><span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= @lessons_count %> <%= t("common.lesson") %></span>&nbsp;/&nbsp;<%= @chapters_count %> <%= t("common.chapter") %></div>
+            <% else %>
+              <span class="flex items-center"><%= @lessons_count %> <%= t("common.lesson") %> / <%= @chapters_count %> <%= t("common.chapter") %></span>
+            <% end %>
+          <% end %>
+        <% end %>
 
-  <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.service_customer_relation.service_register") %></div>
-  <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customers_path(@service) do %>
-    <div class="flex justify-between">
-      <span><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></span>
-      <span><%= t("common.total") %><%= @registers_count %><%= t("common.person_unit") %></span>
+        <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.service_customer_relation.service_register") %></div>
+        <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customers_path(@service) do %>
+          <div class="flex justify-between">
+            <span><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></span>
+            <span><%= t("common.total") %><%= @registers_count %><%= t("common.person_unit") %></span>
+          </div>
+        <% end %>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+          <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
+
+          <% if !@service.membership? %>
+            <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+              <i class="fa fa-share-square fa-2x"></i>
+              <div class="word"><%= I18n.t("action.preview") %></div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="col-sm-6 px-0"></div>
     </div>
-  <% end %>
-
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
-    <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
-
-    <% if !@service.membership? %>
-      <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
-        <i class="fa fa-share-square fa-2x"></i>
-        <div class="word"><%= I18n.t("action.preview") %></div>
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
+  </div>
 
 <%= render "lines/user_bot/services/preview_modal", service: @service if !@service.membership? %>
 
