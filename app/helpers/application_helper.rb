@@ -142,4 +142,22 @@ module ApplicationHelper
   def embed_tour_video(key)
     %Q|<iframe width='100%' height='auto' src='https://www.youtube.com/embed/#{TOURS_VIDEOS[key]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>|.html_safe
   end
+
+  def mobile_only
+    if mobile_types.include?(device_detector.device_type)
+      yield
+    end
+  end
+
+  def non_mobile
+    if mobile_types.exclude?(device_detector.device_type)
+      yield
+    end
+  end
+
+  private
+
+  def mobile_types
+    ["smartphone", "feature phone"]
+  end
 end
