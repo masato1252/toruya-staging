@@ -239,7 +239,11 @@ a {
   }
 
   background-color: $gray4;
-  width: calc(100% - #{$desktop-sidebar-width});
+  width: 100%;
+
+  @include media-breakpoint-up(tablet) {
+    width: calc(100% - #{$desktop-sidebar-width});
+  }
   height: $bar-height;
   top: 0;
   padding: 0 12px;
@@ -254,7 +258,12 @@ a {
   background: $gray4;
   position: fixed;
   bottom: 0;
-  width: calc(100% - #{$desktop-sidebar-width});
+  width: 100%;
+
+  @include media-breakpoint-up(tablet) {
+    width: calc(100% - #{$desktop-sidebar-width});
+  }
+
   height: $bar-height;
   line-height: $bar-height;
   z-index: 998;
