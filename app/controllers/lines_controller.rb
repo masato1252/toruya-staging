@@ -124,6 +124,9 @@ class LinesController < ActionController::Base
     head :ok
   end
 
+  def user_login
+  end
+
   private
 
   def social_customer

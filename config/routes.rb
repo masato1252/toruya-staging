@@ -2,6 +2,7 @@
 
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
+  get :userlogin, to: "lines#user_login", as: :user_login
   scope module: :lines, path: :lines, as: :lines do
     # customer sesson new
     get "/identify_shop_customer/(:social_service_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
