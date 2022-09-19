@@ -40,7 +40,7 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   def update
     lesson = Lesson.find(params[:id])
 
-    outcome = Lessons::Update.run(lesson: lesson, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+    outcome = ::Lessons::Update.run(lesson: lesson, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_chapter_lesson_path(params[:service_id], params[:chapter_id], params[:id], anchor: params[:attribute]) })
   end

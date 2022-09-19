@@ -101,7 +101,7 @@
           <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
             <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
 
-            <% if !@service.membership? %>
+            <% if @service.has_preview? %>
               <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
                 <i class="fa fa-share-square fa-2x"></i>
                 <div class="word"><%= I18n.t("action.preview") %></div>
@@ -114,28 +114,20 @@
 
     <% non_mobile do %>
       <div class="col-sm-6 px-0 hidden-xs">
-        <div class="fake-mobile-layout">
-          <% if @service.course? %>
+        <% if @service.course? %>
+          <div class="fake-mobile-layout">
             <%= react_component("user_bot/services/online_service_page/course", { course: @course_hash, lesson_ids: [], preview: true }, { camelize_props: false }) %>
-          <% elsif @service.membership? %>
-            <%= react_component(
-              "user_bot/services/online_service_page/membership",
-              {
-                membership: @membership_hash,
-                no_available_episodes: false,
-                preview: true
-              },
-              { camelize_props: false }
-            ) %>
-        <% else %>
-          <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
+          </div>
+        <% elsif @service.has_preview? %>
+          <div class="fake-mobile-layout">
+            <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
+          </div>
         <% end %>
-        </div>
       </div>
     <% end %>
   </div>
 
   <% mobile_only do %>
-    <%= render "lines/user_bot/services/preview_modal", service: @service if !@service.membership? %>
+    <%= render "lines/user_bot/services/preview_modal", service: @service if @service.has_preview? %>
   <% end %>
 

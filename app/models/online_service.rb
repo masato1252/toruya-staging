@@ -300,4 +300,8 @@ class OnlineService < ApplicationRecord
       thumbnail_url || default_picture_url
     end
   end
+
+  def has_preview?
+    !membership? && !bundler?
+  end
 end

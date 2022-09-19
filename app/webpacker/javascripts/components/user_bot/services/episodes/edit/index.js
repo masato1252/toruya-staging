@@ -11,6 +11,7 @@ import EditTextInput from "shared/edit/text_input";
 import EditTextarea from "shared/edit/textarea_input";
 import EditSolutionInput from "shared/edit/solution_input";
 import EditTagsInput from "user_bot/services/episodes/shared/edit_tags_input";
+import EpisodeContent from "user_bot/services/episodes/content";
 
 const components = {
   name: EditTextInput,
@@ -57,7 +58,7 @@ const EpisodeEdit =({props}) => {
                     })
                   }}
                 />
-                {I18n.t("user_bot.dashboards.settings.episodes.new.right_after_service_start")}
+                {I18n.t("user_bot.dashboards.settings.course.lessons.new.right_after_service_start")}
               </label>
             </div>
 
@@ -72,7 +73,7 @@ const EpisodeEdit =({props}) => {
                       })
                     }}
                   />
-                  {I18n.t("user_bot.dashboards.settings.episodes.new.start_on_specific_day")}
+                  {I18n.t("user_bot.dashboards.settings.course.lessons.new.start_on_specific_day")}
                 </div>
                 {start_time.start_type === "start_at" && (
                   <input
@@ -164,32 +165,53 @@ const EpisodeEdit =({props}) => {
           </div>
         )
       default:
+        {/*name,  note */}
         return <EditComponent register={register} watch={watch} name={props.attribute} placeholder={props.placeholder} />;
     }
   }
 
   return (
-    <div className="form with-top-bar">
-      <TopNavigationBar
-        leading={
-          <a href={Routes.lines_user_bot_service_episode_path(props.episode.online_service_id, props.episode.id)}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={I18n.t(`user_bot.dashboards.settings.membership.episodes.title`)}
-      />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.settings.episodes.form.${props.attribute}_subtitle`)}</div>
-      {renderCorrespondField()}
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <TopNavigationBar
+              leading={
+                <a href={Routes.lines_user_bot_service_episode_path(props.episode.online_service_id, props.episode.id)}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={I18n.t(`user_bot.dashboards.settings.membership.episodes.title`)}
+            />
+            <div className="field-header">{I18n.t(`user_bot.dashboards.settings.episodes.form.${props.attribute}_subtitle`)}</div>
+            {renderCorrespondField()}
 
-      <BottomNavigationBar klassName="centerize">
-        <span></span>
-        <CiricleButtonWithWord
-          disabled={formState.isSubmitting}
-          onHandle={handleSubmit(onSubmit)}
-          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-          word={I18n.t("action.save")}
-        />
-      </BottomNavigationBar>
+            <BottomNavigationBar klassName="centerize">
+              <span></span>
+              <CiricleButtonWithWord
+                disabled={formState.isSubmitting}
+                onHandle={handleSubmit(onSubmit)}
+                icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                word={I18n.t("action.save")}
+              />
+            </BottomNavigationBar>
+          </div>
+        </div>
+
+        <div className="col-sm-6 px-0 hidden-xs">
+          {
+            ['name', 'content_url', 'note'].includes(props.attribute) && (
+              <div className="fake-mobile-layout">
+                <EpisodeContent
+                  demo={false}
+                  preview={true}
+                  episode={_.merge(props.episode, { [props.attribute]: watch(props.attribute) })}
+                />
+              </div>
+            )
+          }
+        </div>
+      </div>
     </div>
   )
 }
