@@ -1,37 +1,45 @@
-<div class="booking-page-show form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0">
+      <div class="booking-page-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
 
-  <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.custom_message.online_service.section_title") %></div>
-  <div class="field-header"><%= t("user_bot.dashboards.settings.custom_message.online_service.service_page_title") %></div>
-  <%= render "lines/user_bot/field_row", title: @online_service.name %>
+        <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.custom_message.online_service.section_title") %></div>
+        <div class="field-header"><%= t("user_bot.dashboards.settings.custom_message.online_service.service_page_title") %></div>
+        <%= render "lines/user_bot/field_row", title: @online_service.name %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
-  <%= render "lines/user_bot/field_row",
-    title: t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased"),
-    path: edit_scenario_lines_user_bot_service_custom_messages_path(
-      @online_service,
-      scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED,
-      right_away: true,
-      id: @purchased_message&.id
-    )
-  %>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
+        <%= render "lines/user_bot/field_row",
+          title: t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased"),
+          path: edit_scenario_lines_user_bot_service_custom_messages_path(
+            @online_service,
+            scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED,
+            right_away: true,
+            id: @purchased_message&.id
+          )
+        %>
 
-  <% @sequence_messages.each.with_index do |message, index| %>
-    <%= render "lines/user_bot/field_row",
-      path: edit_scenario_lines_user_bot_service_custom_messages_path(
-        @online_service,
-        scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED,
-        id: message.id,
-        right_away: !message.after_days),
-        title: message.after_days ? t("user_bot.dashboards.settings.custom_message.online_service.after_days", { after_days: message.after_days }) : t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")
-    %>
-  <% end %>
+      <% @sequence_messages.each.with_index do |message, index| %>
+        <%= render "lines/user_bot/field_row",
+          path: edit_scenario_lines_user_bot_service_custom_messages_path(
+            @online_service,
+            scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED,
+            id: message.id,
+            right_away: !message.after_days),
+            title: message.after_days ? t("user_bot.dashboards.settings.custom_message.online_service.after_days", { after_days: message.after_days }) : t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")
+          %>
+      <% end %>
 
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-    <span></span>
-    <%= link_to edit_scenario_lines_user_bot_service_custom_messages_path(@online_service, scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
-      <i class="fas fa-plus fa-2x"></i>
-      <div class="word"><%= I18n.t("action.add_more") %></div>
-    <% end %>
-  <% end %>
+      <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+        <span></span>
+        <%= link_to edit_scenario_lines_user_bot_service_custom_messages_path(@online_service, scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+          <i class="fas fa-plus fa-2x"></i>
+          <div class="word"><%= I18n.t("action.add_more") %></div>
+        <% end %>
+      <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs"></div>
+  </div>
 </div>

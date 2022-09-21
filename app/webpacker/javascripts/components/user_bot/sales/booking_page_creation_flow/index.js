@@ -15,19 +15,27 @@ import FinalStep from "./final_step";
 
 const SalesBookingPageCreationFlow = ({props}) => {
   return (
-    <GlobalProvider props={props}>
-      <FlowController>
-        { ({next, step}) => <BookingPageSelectionStep step={step} next={next} /> }
-        { ({next, prev, step}) => <HeaderTemplateSelectionStep step={step} next={next} prev={prev} /> }
-        { ({next, prev, step}) => <HeaderSetupStep step={step} next={next} prev={prev} /> }
-        { ({next, prev, step, jump}) => <HeaderColorEditStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <ContentSetupStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <StaffSetupStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step}) => <FlowSetupStep step={step} next={next} prev={prev} /> }
-        { ({jump, next, step}) => <ConfirmationStep step={step} next={next} jump={jump} /> }
-        { ({step}) => <FinalStep step={step} /> }
-      </FlowController>
-    </GlobalProvider>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <GlobalProvider props={props}>
+            <FlowController>
+              { ({next, step}) => <BookingPageSelectionStep step={step} next={next} /> }
+              { ({next, prev, step}) => <HeaderTemplateSelectionStep step={step} next={next} prev={prev} /> }
+              { ({next, prev, step}) => <HeaderSetupStep step={step} next={next} prev={prev} /> }
+              { ({next, prev, step, jump}) => <HeaderColorEditStep step={step} next={next} prev={prev} jump={jump} /> }
+              { ({next, prev, step, jump}) => <ContentSetupStep step={step} next={next} prev={prev} jump={jump} /> }
+              { ({next, prev, step, jump}) => <StaffSetupStep step={step} next={next} prev={prev} jump={jump} /> }
+              { ({next, prev, step}) => <FlowSetupStep step={step} next={next} prev={prev} /> }
+              { ({jump, next, step}) => <ConfirmationStep step={step} next={next} jump={jump} /> }
+              { ({step}) => <FinalStep step={step} /> }
+            </FlowController>
+          </GlobalProvider>
+        </div>
+
+        <div className="col-sm-6 px-0 hidden-xs"></div>
+      </div>
+    </div>
   )
 }
 

@@ -14,6 +14,8 @@ import EditSolutionInput from "shared/edit/solution_input";
 import EditMessageTemplate from "user_bot/services/edit_message_template";
 import EditTextarea from "shared/edit/textarea_input";
 import EditUrlInput from "shared/edit/url_input";
+import OnlineServicePage from "user_bot/services/online_service_page";
+import LineCardPreview from "shared/line_card_preview";
 
 const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
@@ -486,28 +488,63 @@ const OnlineServiceEdit =({props}) => {
   }
 
   return (
-    <div className="form with-top-bar">
-      <TopNavigationBar
-        leading={
-          <a href={Routes.lines_user_bot_service_path(props.service.id)}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={I18n.t(`user_bot.dashboards.services.form.${props.attribute}_title`)}
-      />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.services.form.${props.attribute}_subtitle`)}</div>
-      {renderCorrespondField()}
-      {props.attribute !== 'company' && (
-        <BottomNavigationBar klassName="centerize">
-          <span></span>
-          <CiricleButtonWithWord
-            disabled={formState.isSubmitting}
-            onHandle={handleSubmit(onSubmit)}
-            icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-            word={I18n.t("action.save")}
-          />
-        </BottomNavigationBar>
-      )}
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <TopNavigationBar
+              leading={
+                <a href={Routes.lines_user_bot_service_path(props.service.id)}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={I18n.t(`user_bot.dashboards.services.form.${props.attribute}_title`)}
+            />
+            <div className="field-header">{I18n.t(`user_bot.dashboards.services.form.${props.attribute}_subtitle`)}</div>
+            {renderCorrespondField()}
+            {props.attribute !== 'company' && (
+              <BottomNavigationBar klassName="centerize">
+                <span></span>
+                <CiricleButtonWithWord
+                  disabled={formState.isSubmitting}
+                  onHandle={handleSubmit(onSubmit)}
+                  icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                  word={I18n.t("action.save")}
+                />
+              </BottomNavigationBar>
+            )}
+          </div>
+        </div>
+        <div className="col-sm-6 px-0 hidden-xs">
+            {
+              ['name', 'content_url', 'note', 'upsell_sale_page'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  <OnlineServicePage
+                    company_info={props.service.company_info}
+                    name={watch('name') || props.service.name}
+                    solution_type={props.service.solution_type}
+                    note={watch('note') || props.service.note}
+                    content_url={watch('content_url') || props.service.content_url}
+                    upsell_sale_page={sale_page || props.service.upsell_sale_page}
+                    light={false}
+                  />
+                </div>
+              )
+            }
+          {
+            ['message_template'].includes(props.attribute) && (
+              <div className="fake-mobile-layout">
+                <LineCardPreview
+                  title={props.service.name}
+                  desc="Dummy data"
+                  btn_text="Dummy button"
+                  picture_url={message_template?.picture_url?.length ? message_template.picture_url : props.default_picture_url}
+                />
+              </div>
+            )
+          }
+        </div>
+      </div>
     </div>
   )
 }

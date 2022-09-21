@@ -11,6 +11,7 @@ import EditTextInput from "shared/edit/text_input";
 import EditTextarea from "shared/edit/textarea_input";
 import EditSelectInput from "shared/edit/select_input";
 import EditSolutionInput from "shared/edit/solution_input";
+import CoursePage from "user_bot/services/online_service_page/course";
 
 const components = {
   name: EditTextInput,
@@ -140,28 +141,57 @@ const LessonEdit =({props}) => {
     }
   }
 
-  return (
-    <div className="form with-top-bar">
-      <TopNavigationBar
-        leading={
-          <a href={Routes.lines_user_bot_service_chapter_lesson_path(props.lesson.online_service_id, props.lesson.chapter_id, props.lesson.id)}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={I18n.t(`user_bot.dashboards.settings.course.lessons.form.title`)}
-      />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.settings.course.lessons.form.${props.attribute}_title`)}</div>
-      {renderCorrespondField()}
+  const course = () => {
+    props.course.lessons
+    const lessonIndex = props.course.lessons.findIndex((lesson) => lesson.id === props.lesson.id)
+    props.course.lessons[lessonIndex][props.attribute] = watch(props.attribute)
 
-      <BottomNavigationBar klassName="centerize">
-        <span></span>
-        <CiricleButtonWithWord
-          disabled={formState.isSubmitting}
-          onHandle={handleSubmit(onSubmit)}
-          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-          word={I18n.t("action.save")}
-        />
-      </BottomNavigationBar>
+    return _.merge(props.course, { lessons: props.course.lessons })
+  }
+
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <TopNavigationBar
+              leading={
+                <a href={Routes.lines_user_bot_service_chapter_lesson_path(props.lesson.online_service_id, props.lesson.chapter_id, props.lesson.id)}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={I18n.t(`user_bot.dashboards.settings.course.lessons.form.title`)}
+            />
+            <div className="field-header">{I18n.t(`user_bot.dashboards.settings.course.lessons.form.${props.attribute}_title`)}</div>
+            {renderCorrespondField()}
+
+            <BottomNavigationBar klassName="centerize">
+              <span></span>
+              <CiricleButtonWithWord
+                disabled={formState.isSubmitting}
+                onHandle={handleSubmit(onSubmit)}
+                icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                word={I18n.t("action.save")}
+              />
+            </BottomNavigationBar>
+          </div>
+        </div>
+
+        <div className="col-sm-6 px-0 hidden-xs">
+          {
+            ['name', 'content_url', 'note'].includes(props.attribute) && (
+              <div className="fake-mobile-layout">
+                <CoursePage
+                  course={course()}
+                  lesson_id={props.lesson.id}
+                  preview={true}
+                  lesson_ids={[]}
+                />
+              </div>
+            )
+          }
+        </div>
+      </div>
     </div>
   )
 }

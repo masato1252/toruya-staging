@@ -39,6 +39,11 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
   helper_method :site_routing_helper
 
+  def device_detector
+    @device_detector ||= DeviceDetector.new(request.user_agent)
+  end
+  helper_method :device_detector
+
   def shop_menus_options
     @shop_menus_options ||=
       ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|

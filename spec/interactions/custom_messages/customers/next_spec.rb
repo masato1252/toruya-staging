@@ -29,17 +29,17 @@ RSpec.describe CustomMessages::Customers::Next do
           after_days: new_custom_message_after_days
         )
 
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-          schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message1.after_days).change(hour: 9),
-          custom_message: next_custom_message1,
-          receiver: receiver
-        })
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+          expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: next_custom_message1.after_days).change(hour: 9))
+          expect(args[:custom_message]).to eq(next_custom_message1)
+          expect(args[:receiver]).to eq(receiver)
+        end
 
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-          schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message2.after_days).change(hour: 9),
-          custom_message: next_custom_message2,
-          receiver: receiver
-        })
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+          expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: next_custom_message2.after_days).change(hour: 9))
+          expect(args[:custom_message]).to eq(next_custom_message2)
+          expect(args[:receiver]).to eq(receiver)
+        end
 
         outcome
       end
@@ -58,17 +58,17 @@ RSpec.describe CustomMessages::Customers::Next do
           after_days: new_custom_message_after_days
         )
 
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-          schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message1.after_days).change(hour: 9),
-          custom_message: next_custom_message1,
-          receiver: receiver
-        })
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+          expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: next_custom_message1.after_days).change(hour: 9))
+          expect(args[:custom_message]).to eq(next_custom_message1)
+          expect(args[:receiver]).to eq(receiver)
+        end
 
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-          schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message2.after_days).change(hour: 9),
-          custom_message: next_custom_message2,
-          receiver: receiver
-        })
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+          expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: next_custom_message2.after_days).change(hour: 9))
+          expect(args[:custom_message]).to eq(next_custom_message2)
+          expect(args[:receiver]).to eq(receiver)
+        end
 
         outcome
       end
@@ -121,11 +121,11 @@ RSpec.describe CustomMessages::Customers::Next do
       end
 
       it "schedules the next custom message" do
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-          schedule_at: service.start_at_for_customer(receiver).advance(days: current_custom_message.after_days).change(hour: 9),
-          custom_message: current_custom_message,
-          receiver: receiver
-        })
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+          expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: current_custom_message.after_days).change(hour: 9))
+          expect(args[:custom_message]).to eq(current_custom_message)
+          expect(args[:receiver]).to eq(receiver)
+        end
 
         outcome
       end
@@ -146,11 +146,11 @@ RSpec.describe CustomMessages::Customers::Next do
         let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free, created_at: 2.days.ago) }
 
         it "schedules the next custom message" do
-          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-            schedule_at: service.start_at_for_customer(receiver).advance(days: current_custom_message.after_days).change(hour: 9),
-            custom_message: current_custom_message,
-            receiver: receiver
-          })
+          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+            expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: current_custom_message.after_days).change(hour: 9))
+            expect(args[:custom_message]).to eq(current_custom_message)
+            expect(args[:receiver]).to eq(receiver)
+          end
 
           outcome
         end
@@ -181,17 +181,17 @@ RSpec.describe CustomMessages::Customers::Next do
             after_days: new_custom_message_after_days
           )
 
-          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-            schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message1.after_days).change(hour: 9),
-            custom_message: next_custom_message1,
-            receiver: receiver
-          })
+          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+            expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: next_custom_message1.after_days).change(hour: 9))
+            expect(args[:custom_message]).to eq(next_custom_message1)
+            expect(args[:receiver]).to eq(receiver)
+          end
 
-          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).with({
-            schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message2.after_days).change(hour: 9),
-            custom_message: next_custom_message2,
-            receiver: receiver
-          })
+          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+            expect(args[:schedule_at]).to be_within(10.minutes).of(service.start_at_for_customer(receiver).advance(days: next_custom_message2.after_days).change(hour: 9))
+            expect(args[:custom_message]).to eq(next_custom_message2)
+            expect(args[:receiver]).to eq(receiver)
+          end
 
           outcome
         end

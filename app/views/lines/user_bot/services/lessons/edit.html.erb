@@ -2,6 +2,7 @@
   props: {
     attribute: @attribute,
     lesson: LessonSerializer.new(@lesson, { params: { is_owner: true } }).attributes_hash,
+    course: CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash,
     chapter_options: custom_options(@online_service.chapters),
     solutions: @online_service.solution_options
   }

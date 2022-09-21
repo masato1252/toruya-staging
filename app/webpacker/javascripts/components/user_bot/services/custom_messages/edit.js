@@ -135,35 +135,43 @@ const CustomMessageEdit =({props}) => {
   }
 
   return (
-    <div className="form with-top-bar">
-      <TopNavigationBar
-        leading={
-          <a href={Routes.lines_user_bot_service_custom_messages_path(props.message.service_id)}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={I18n.t("user_bot.dashboards.settings.custom_message.auto_message_label")}
-      />
-      <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
-      {renderCorrespondField()}
-      <BottomNavigationBar klassName="centerize transparent">
-        {!isSendRightAway() && props.message.id && (
-          <a className="btn btn-orange btn-circle btn-delete"
-            data-confirm={I18n.t("common.message_delete_confirmation_message")}
-            rel="nofollow"
-            data-method="delete"
-            href={Routes.lines_user_bot_custom_message_path(props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
-            <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
-          </a>
-        )}
-        <span></span>
-        <CiricleButtonWithWord
-          disabled={formState.isSubmitting || (!isSendRightAway() && after_days === '')}
-          onHandle={handleSubmit(onSubmit)}
-          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-          word={I18n.t("action.save")}
-        />
-      </BottomNavigationBar>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <TopNavigationBar
+              leading={
+                <a href={Routes.lines_user_bot_service_custom_messages_path(props.message.service_id)}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={I18n.t("user_bot.dashboards.settings.custom_message.auto_message_label")}
+            />
+            <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
+            {renderCorrespondField()}
+            <BottomNavigationBar klassName="centerize transparent">
+              {!isSendRightAway() && props.message.id && (
+                <a className="btn btn-orange btn-circle btn-delete"
+                  data-confirm={I18n.t("common.message_delete_confirmation_message")}
+                  rel="nofollow"
+                  data-method="delete"
+                  href={Routes.lines_user_bot_custom_message_path(props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
+                  <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
+                </a>
+            )}
+              <span></span>
+              <CiricleButtonWithWord
+                disabled={formState.isSubmitting || (!isSendRightAway() && after_days === '')}
+                onHandle={handleSubmit(onSubmit)}
+                icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                word={I18n.t("action.save")}
+              />
+            </BottomNavigationBar>
+          </div>
+        </div>
+
+        <div class="col-sm-6 px-0 hidden-xs"></div>
+      </div>
     </div>
   )
 }
