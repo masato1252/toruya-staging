@@ -32,4 +32,9 @@ class Lines::CustomersController < ActionController::Base
     @current_toruya_social_user ||= SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
   end
   helper_method :current_toruya_social_user
+
+  def device_detector
+    @device_detector ||= DeviceDetector.new(request.user_agent)
+  end
+  helper_method :device_detector
 end

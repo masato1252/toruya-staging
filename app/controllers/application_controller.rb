@@ -19,4 +19,9 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_in) { |u| u.permit(:name, :email, :password, :remember_me) }
     devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password) }
   end
+
+  def device_detector
+    @device_detector ||= DeviceDetector.new(request.user_agent)
+  end
+  helper_method :device_detector
 end
