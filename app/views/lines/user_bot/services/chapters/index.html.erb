@@ -4,16 +4,17 @@
       <div class="service-show form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: I18n.t("user_bot.dashboards.settings.course.lessons.show.title") %>
         <div class="field-group-header" id="content"><%= I18n.t("user_bot.dashboards.settings.course.lessons.show.content_label") %></div>
-        <% @online_service.chapters.includes(:lessons).each do |chapter| %>
-          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_path(@online_service, chapter), title: chapter.name, header_row: true %>
 
-          <% chapter.lessons.order("id").each do |lesson| %>
-            <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapter_lesson_path(@online_service, chapter, lesson), title: lesson.name %>
-          <% end %>
-          <div class="action-block">
-            <%= link_to I18n.t("user_bot.dashboards.settings.course.add_a_lesson"), new_lines_user_bot_service_chapter_lesson_path(@online_service, chapter), class: "btn btn-tarco btn-extend" %>
-          </div>
-        <% end %>
+        <%= react_component("user_bot/services/chapters/index", {
+          props: {
+            online_service_id: @online_service.id,
+            chapter_with_lessons: @online_service.chapters.includes(:lessons).map { |chapter| { chapter_id: "chapter_#{chapter.id}", id: chapter.id, lessons: chapter.lessons.pluck(:id) } },
+            chapters: @online_service.chapters.each_with_object({}) { |chapter, h| h[chapter.id] = { id: chapter.id, name: chapter.name } },
+            lessons: @online_service.lessons.each_with_object({}) { |lesson, h| h[lesson.id] = { id: lesson.id, name: lesson.name } }
+          },
+        },
+        { camelize_props: false }
+        ) %>
 
         <div class="action-block border-0 border-t border-solid border-gray-500">
           <%= link_to I18n.t("user_bot.dashboards.settings.course.add_a_chapter"), new_lines_user_bot_service_chapter_path(@online_service), class: "btn btn-yellow btn-extend my-2" %>
