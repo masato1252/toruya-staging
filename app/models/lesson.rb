@@ -6,6 +6,7 @@
 #  content_url      :string
 #  name             :string
 #  note             :text
+#  position         :integer          default(0)
 #  solution_type    :string
 #  start_after_days :integer
 #  start_at         :datetime

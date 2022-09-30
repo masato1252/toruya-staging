@@ -4,7 +4,7 @@ module Chapters
     string :name
 
     def execute
-      chapter = online_service.chapters.create(name: name)
+      chapter = online_service.chapters.create(name: name, position: online_service.chapters.count)
       chapter.save
       chapter
     end

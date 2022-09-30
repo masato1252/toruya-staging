@@ -11,7 +11,7 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
     online_service = current_user.online_services.find(params[:service_id])
     chapter = online_service.chapters.find(params[:chapter_id])
 
-    outcome = Lessons::Create.run(
+    outcome = ::Lessons::Create.run(
       chapter: chapter,
       name: params[:name],
       content_url: params[:content_url],

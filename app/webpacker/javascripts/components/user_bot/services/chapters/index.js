@@ -21,6 +21,7 @@ import { CSS } from '@dnd-kit/utilities';
 import Routes from 'js-routes.js'
 import { CommonServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
+import { debounce } from "lodash";
 
 const ChaptersIndex =({props}) => {
   const [items, setItems] = useState(props.chapter_with_lessons);
@@ -48,11 +49,23 @@ const ChaptersIndex =({props}) => {
     setActiveId(id);
   }
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = async (event) => {
     const { active, over } = event;
 
-    // console.log('handleDragEnd', items)
+    console.log('handleDragEnd', items)
+
+    const [error, response] = await CommonServices.update({
+      url: Routes.reorder_lines_user_bot_service_chapters_path(props.online_service_id),
+      data: { items }
+    })
+
+    window.location = response.data.redirect_to;
   }
+
+  const debounceHandleDragEnd = debounce(event => {
+    console.log('debounceHandleDragEnd', event)
+    handleDragEnd(event)
+  }, 3000)
 
   const handleDragOver = (event) => {
     // console.log('handleDragOver', event)
@@ -104,7 +117,7 @@ const ChaptersIndex =({props}) => {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      onDragEnd={debounceHandleDragEnd}
       onDragOver={handleDragOver}
     >
       <SortableContext

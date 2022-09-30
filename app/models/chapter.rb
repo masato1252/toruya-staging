@@ -4,6 +4,7 @@
 #
 #  id                :bigint           not null, primary key
 #  name              :string
+#  position          :integer          default(0)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  online_service_id :bigint
@@ -14,5 +15,5 @@
 #
 class Chapter < ApplicationRecord
   belongs_to :online_service
-  has_many :lessons
+  has_many :lessons, -> { order(position: :asc) }
 end
