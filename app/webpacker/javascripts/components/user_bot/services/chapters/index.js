@@ -49,23 +49,23 @@ const ChaptersIndex =({props}) => {
     setActiveId(id);
   }
 
-  const handleDragEnd = async (event) => {
-    const { active, over } = event;
+  const handleDragEnd = React.useRef(
+    debounce(async () => {
+      console.log('handleDragEnd', items)
 
-    console.log('handleDragEnd', items)
+      const [error, response] = await CommonServices.update({
+        url: Routes.reorder_lines_user_bot_service_chapters_path(props.online_service_id),
+        data: { items }
+      })
 
-    const [error, response] = await CommonServices.update({
-      url: Routes.reorder_lines_user_bot_service_chapters_path(props.online_service_id),
-      data: { items }
-    })
+      window.location = response.data.redirect_to;
+    }, 3000)
+  ).current
 
-    window.location = response.data.redirect_to;
-  }
-
-  const debounceHandleDragEnd = debounce(event => {
+  const debounceHandleDragEnd = event => {
     console.log('debounceHandleDragEnd', event)
-    handleDragEnd(event)
-  }, 3000)
+    handleDragEnd()
+  }
 
   const handleDragOver = (event) => {
     // console.log('handleDragOver', event)
