@@ -162,7 +162,7 @@ class OnlineService < ApplicationRecord
   has_many :available_online_service_customer_relations, -> { available }, class_name: "OnlineServiceCustomerRelation"
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters, -> { order(position: :asc, id: :asc) }
-  has_many :lessons, -> { order(chapter_id: :asc, position: :asc, id: :asc) }, through: :chapters
+  has_many :lessons, -> { order("chapters.position": :asc, position: :asc, id: :asc) }, through: :chapters
   has_one :message_template, -> { where(scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
   has_many :episodes
   has_many :bundled_services, foreign_key: :bundler_online_service_id

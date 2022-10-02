@@ -50,12 +50,13 @@ const ChaptersIndex =({props}) => {
   }
 
   const handleDragEnd = React.useRef(
-    debounce(async () => {
+    debounce(async (newItems) => {
       console.log('handleDragEnd', items)
+      console.log('handleDragEnd', newItems)
 
       const [error, response] = await CommonServices.update({
         url: Routes.reorder_lines_user_bot_service_chapters_path(props.online_service_id),
-        data: { items }
+        data: { items: newItems }
       })
 
       window.location = response.data.redirect_to;
@@ -63,8 +64,9 @@ const ChaptersIndex =({props}) => {
   ).current
 
   const debounceHandleDragEnd = event => {
-    console.log('debounceHandleDragEnd', event)
-    handleDragEnd()
+    // console.log('debounceHandleDragEnd', event)
+    console.log('debounceHandleDragEnd', items)
+    handleDragEnd(items)
   }
 
   const handleDragOver = (event) => {
@@ -79,7 +81,12 @@ const ChaptersIndex =({props}) => {
 
     if (containers.includes(active.id) && containers.includes(overId)) {
       // drag chapter
-      setItems(arrayMove(items, oldChapterIndex, newChapterIndex));
+      const newItems = [...arrayMove(items, oldChapterIndex, newChapterIndex)]
+      console.log('newItems', newItems)
+
+      setItems((prevItems) => {
+        return  newItems;
+      })
     }
     else if (!containers.includes(active.id)){
       // drag lesson
