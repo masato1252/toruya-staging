@@ -200,6 +200,9 @@ Rails.application.routes.draw do
         end
 
         resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create, :destroy] do
+          collection do
+            put :reorder
+          end
           resources :lessons, only: [:new, :create, :show, :edit] do
             resources :custom_messages, only: [:index], module: "lessons" do
               collection do

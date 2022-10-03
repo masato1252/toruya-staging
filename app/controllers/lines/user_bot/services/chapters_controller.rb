@@ -53,4 +53,27 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
 
     redirect_to lines_user_bot_service_chapters_path(params[:service_id])
   end
+
+  def reorder
+    # {
+    #   "items" => [
+    #     {
+    #       "chapter_id" => "chapter_15",
+    #       "id" => 15,
+    #       "lessons" => [
+    #         31,
+    #         30,
+    #         32
+    #       ]
+    #     },
+    #   ],
+    #   "service_id" => "148",
+    # }
+    outcome = Chapters::Reorder.run(
+      online_service: current_user.online_services.find(params[:service_id]),
+      items: params.permit!.to_h[:items]
+    )
+
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
+  end
 end

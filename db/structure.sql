@@ -834,7 +834,8 @@ CREATE TABLE public.chapters (
     online_service_id bigint,
     name character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    "position" integer DEFAULT 0
 );
 
 
@@ -1224,7 +1225,8 @@ CREATE TABLE public.lessons (
     content_url character varying,
     note text,
     start_after_days integer,
-    start_at timestamp without time zone
+    start_at timestamp without time zone,
+    "position" integer DEFAULT 0
 );
 
 
@@ -5201,6 +5203,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220630135202'),
 ('20220721135216'),
 ('20220726135009'),
-('20220728231237');
+('20220728231237'),
+('20220930062805');
 
 
