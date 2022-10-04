@@ -15,5 +15,5 @@
 #
 class Chapter < ApplicationRecord
   belongs_to :online_service
-  has_many :lessons, -> { order(position: :asc) }
+  has_many :lessons, -> { order(position: :asc, id: :asc) }
 end
