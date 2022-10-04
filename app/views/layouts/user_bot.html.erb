@@ -31,16 +31,31 @@
           <li class="p-1">
             <%= active_link_to lines_user_bot_services_path do %>
               <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.services.online_service") %>
-          <% end %>
+            <% end %>
 
-          <ul class='nav'>
-            <li>
-              <%= active_link_to '一覧表示', lines_user_bot_services_path %>
-            </li>
-            <li>
-              <%= active_link_to '新規作成', new_lines_user_bot_service_path %>
-            </li>
-          </ul>
+            <ul class='nav'>
+              <li>
+                <%= active_link_to '一覧表示', lines_user_bot_services_path %>
+              </li>
+              <li>
+                <%= active_link_to '新規作成', new_lines_user_bot_service_path %>
+              </li>
+            </ul>
+          </li>
+
+          <li class="p-1">
+            <%= active_link_to lines_user_bot_broadcasts_path do %>
+              <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.broadcasts.broadcast_title") %>
+            <% end %>
+
+            <ul class='nav'>
+              <li>
+                <%= active_link_to t("user_bot.dashboards.broadcasts.broadcast_conditions"), lines_user_bot_broadcasts_path %>
+              </li>
+              <li>
+                <%= active_link_to t("user_bot.dashboards.broadcasts.content"), new_lines_user_bot_broadcast_path %>
+              </li>
+            </ul>
           </li>
         </ul>
       <% end %>
