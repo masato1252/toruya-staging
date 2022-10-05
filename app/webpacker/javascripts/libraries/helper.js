@@ -165,6 +165,10 @@ const responseHandler = (error, response) => {
   }
 }
 
+const currencyFormat = (number) => {
+  return new Intl.NumberFormat().format(number)
+}
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -184,5 +188,6 @@ export {
   Translator,
   zeroPad,
   isValidHttpUrl,
-  responseHandler
+  responseHandler,
+  currencyFormat
 };
