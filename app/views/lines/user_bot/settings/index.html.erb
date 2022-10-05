@@ -1,100 +1,108 @@
-<div class="settings-dashboard form">
-  <h3><%= I18n.t("user_bot.dashboards.settings.dashboard.title") %></h3>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0">
+      <div class="settings-dashboard form">
+        <h3><%= I18n.t("user_bot.dashboards.settings.dashboard.title") %></h3>
 
-  <div class="dashboard">
-    <div class="cell">
-      <div>
-        <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
-      </div>
-      <div>
-        <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
-      </div>
-      <div class="desc">
-        <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
-      </div>
-    </div>
-    <div class="cell">
-      <div>
-        <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
-      </div>
-      <div>
-        <strong><span class="big"><%= @total_sale_page_count %></span><span> / <%= @total_sale_page_limit %></span></strong>
-      </div>
-      <div class="desc">
-        <%= I18n.t("user_bot.dashboards.settings.dashboard.sale_page_state") %>
-      </div>
-    </div>
-  </div>
+        <div class="dashboard">
+          <div class="cell">
+            <div>
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
+            </div>
+            <div>
+              <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
+            </div>
+            <div class="desc">
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
+            </div>
+          </div>
+          <div class="cell">
+            <div>
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
+            </div>
+            <div>
+              <strong><span class="big"><%= @total_sale_page_count %></span><span> / <%= @total_sale_page_limit %></span></strong>
+            </div>
+            <div class="desc">
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.sale_page_state") %>
+            </div>
+          </div>
+        </div>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.dashboard.info_label") %></div>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.dashboard.info_label") %></div>
 
-  <%= link_to lines_user_bot_settings_profile_path, class: "field-row" do %>
-    <span><%= t("settings.profile.user_info") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-  <%= link_to company_lines_user_bot_settings_profile_path, class: "field-row" do %>
-    <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <div class="field-header"><%= t("settings.plans.plan_info.caption") %></div>
-
-  <%= link_to lines_user_bot_settings_plans_path, class: "field-row" do %>
-    <div>
-      <%= t("settings.plans.plan_info.plan_member", plan_name: current_user.member_plan_name) %><br />
-      <div class="desc">
-        <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
-        <% if current_user.trial_member? %>
-          <%= l(current_user.trial_expired_date) %>
-        <% else %>
-          <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
-          <%= " (#{@subscription.next_plan.name}変更予定)" if @subscription.active? && @subscription.next_plan %>
+        <%= link_to lines_user_bot_settings_profile_path, class: "field-row" do %>
+          <span><%= t("settings.profile.user_info") %></span><i class="fa fa-angle-right"></i>
         <% end %>
+        <%= link_to company_lines_user_bot_settings_profile_path, class: "field-row" do %>
+          <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <div class="field-header"><%= t("settings.plans.plan_info.caption") %></div>
+
+        <%= link_to lines_user_bot_settings_plans_path, class: "field-row" do %>
+          <div>
+            <%= t("settings.plans.plan_info.plan_member", plan_name: current_user.member_plan_name) %><br />
+            <div class="desc">
+              <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
+              <% if current_user.trial_member? %>
+                <%= l(current_user.trial_expired_date) %>
+              <% else %>
+                <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
+                <%= " (#{@subscription.next_plan.name}変更予定)" if @subscription.active? && @subscription.next_plan %>
+              <% end %>
+            </div>
+          </div>
+          <i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <%= link_to lines_user_bot_settings_payments_path, class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.dashboard.payments_label") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.dashboard.line_label") %></div>
+        <%= link_to message_api_lines_user_bot_settings_social_account_path, class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.dashboard.line_message_api_label") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+        <%= link_to login_api_lines_user_bot_settings_social_account_path, class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.dashboard.line_login_api_label") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+        <% if @social_account %>
+          <%= link_to edit_lines_user_bot_settings_social_account_rich_menu_path, class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.dashboard.line_rich_menu") %></span>
+            <span>
+              <span>
+                <%= @social_account.using_line_official_account? ? t("user_bot.dashboards.settings.rich_menu.manual") : t("user_bot.dashboards.settings.rich_menu.auto") %>
+              </span>
+              <i class="fa fa-angle-right"></i>
+            </span>
+          <% end %>
+        <% end %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
+        <%= link_to lines_user_bot_settings_stripe_path, class: "field-row" do %>
+          <span><%= "Stripe" %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
+        <%= link_to lines_user_bot_settings_shops_path, class: "field-row" do %>
+          <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <%= link_to shops_lines_user_bot_settings_business_schedules_path, class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <%= link_to custom_messages_lines_user_bot_settings_shops_path, class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <div class="bottom-navigation-bar centerize">
+          <%= sprintf("%07d", current_user.id) %>
+        </div>
       </div>
     </div>
-    <i class="fa fa-angle-right"></i>
-  <% end %>
 
-  <%= link_to lines_user_bot_settings_payments_path, class: "field-row" do %>
-    <span><%= t("user_bot.dashboards.settings.dashboard.payments_label") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <div class="field-header"><%= t("user_bot.dashboards.settings.dashboard.line_label") %></div>
-  <%= link_to message_api_lines_user_bot_settings_social_account_path, class: "field-row" do %>
-    <span><%= t("user_bot.dashboards.settings.dashboard.line_message_api_label") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-  <%= link_to login_api_lines_user_bot_settings_social_account_path, class: "field-row" do %>
-    <span><%= t("user_bot.dashboards.settings.dashboard.line_login_api_label") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-  <% if @social_account %>
-    <%= link_to edit_lines_user_bot_settings_social_account_rich_menu_path, class: "field-row" do %>
-      <span><%= t("user_bot.dashboards.settings.dashboard.line_rich_menu") %></span>
-      <span>
-        <span>
-          <%= @social_account.using_line_official_account? ? t("user_bot.dashboards.settings.rich_menu.manual") : t("user_bot.dashboards.settings.rich_menu.auto") %>
-        </span>
-        <i class="fa fa-angle-right"></i>
-      </span>
-    <% end %>
-  <% end %>
-
-  <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
-  <%= link_to lines_user_bot_settings_stripe_path, class: "field-row" do %>
-    <span><%= "Stripe" %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
-  <%= link_to lines_user_bot_settings_shops_path, class: "field-row" do %>
-    <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <%= link_to shops_lines_user_bot_settings_business_schedules_path, class: "field-row" do %>
-    <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <%= link_to custom_messages_lines_user_bot_settings_shops_path, class: "field-row" do %>
-    <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <div class="bottom-navigation-bar centerize">
-    <%= sprintf("%07d", current_user.id) %>
+    <div class="col-sm-6 px-0"></div>
   </div>
 </div>
