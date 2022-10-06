@@ -109,6 +109,8 @@ ja:
           shop_open_introduction2: 予約カレンダーからは 休業時間外でも予約を作成できます。
           shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
+        company:
+          info_hint: 主に販売ページに表示されます。
         shop:
           shop_management: 店舗管理
           shop_info_label: 店舗情報

@@ -66,10 +66,11 @@ const UsersServices = {
     return request({
       method: "PUT",
       headers: {
-        "X-CSRF-Token": Rails.csrfToken()
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
       },
       url: Routes.lines_user_bot_settings_profile_path({format: "json"}),
-      data: data,
+      data: serialize(data),
       responseType: "json"
     })
   }

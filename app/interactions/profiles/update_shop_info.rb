@@ -18,6 +18,7 @@ module Profiles
 
     def execute
       ApplicationRecord.transaction do
+        logo_params = params.delete(:logo)
         user.profile.update!(
           params.merge!(
             address: address.pure_address,

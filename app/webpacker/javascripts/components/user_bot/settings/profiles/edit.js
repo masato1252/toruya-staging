@@ -7,6 +7,7 @@ import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, Cir
 import { UsersServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import useAddress from "libraries/use_address";
+import SaleDemoPage from "user_bot/sales/demo";
 
 const ProfileEdit =({props}) => {
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
@@ -27,10 +28,23 @@ const ProfileEdit =({props}) => {
     let error, response;
 
     [error, response] = await UsersServices.updateProfile({
-      data: _.assign( data, { attribute: props.attribute })
+      data: _.assign( data, { attribute: props.attribute, logo: data["logo"]?.[0] })
     })
 
     window.location = response.data.redirect_to
+  }
+
+  const _handleImageChange = (e) => {
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      setValue("logo_url", reader.result)
+    }
+
+    reader.readAsDataURL(file)
   }
 
   const renderCorrespondField = () => {
@@ -86,6 +100,20 @@ const ProfileEdit =({props}) => {
           </>
         );
         break
+      case "logo":
+        return (
+          <div className="field-row justify-center">
+            <div className="margin-around">
+              <input type="hidden" name="logo_url" ref={register} />
+              <img src={watch("logo_url")} className="logo" />
+            </div>
+            <input ref={register} onChange={_handleImageChange} type="file" name="logo" accept="image/png,image/gif" />
+            <p className="margin-around desc centerize">
+              {I18n.t("user_bot.dashboards.settings.shop.logo_limit_description")}
+            </p>
+          </div>
+        )
+        break;
       case "company_phone_number":
         return (
           <>
@@ -152,25 +180,56 @@ const ProfileEdit =({props}) => {
   }
 
   return (
-    <div className="form with-top-bar">
-      <TopNavigationBar
-        leading={
-          <a href={props.previous_path}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={props.title}
-      />
-      {renderCorrespondField()}
-      <BottomNavigationBar klassName="centerize transparent">
-        <span></span>
-        <CiricleButtonWithWord
-          disabled={formState.isSubmitting}
-          onHandle={handleSubmit(onSubmit)}
-          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-          word={I18n.t("action.save")}
-        />
-      </BottomNavigationBar>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <TopNavigationBar
+              leading={
+                <a href={props.previous_path}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={props.title}
+            />
+            {renderCorrespondField()}
+            <BottomNavigationBar klassName="centerize transparent">
+              <span></span>
+              <CiricleButtonWithWord
+                disabled={formState.isSubmitting}
+                onHandle={handleSubmit(onSubmit)}
+                icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                word={I18n.t("action.save")}
+              />
+            </BottomNavigationBar>
+          </div>
+        </div>
+
+        <div className="col-sm-6 px-0 hidden-xs">
+          {['company_name', 'company_phone_number'].includes(props.attribute) && (
+            <div class="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.profile, [props.attribute]: watch(props.attribute)}}
+              />
+            </div>
+          )}
+          {['logo'].includes(props.attribute) && (
+            <div class="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.profile, logo_url: watch("logo_url")}}
+              />
+            </div>
+          )}
+          {['company_address_details'].includes(props.attribute) && (
+            <div class="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.profile, address: `〒${watch('company_address_details[zip_code]')}${watch('company_address_details[region]')}${watch('company_address_details[city]')}${watch('company_address_details[street1]')}${watch('company_address_details[street2]')}`}}
+              />
+            </div>
+          )
+          }
+        </div>
+      </div>
     </div>
   )
 }

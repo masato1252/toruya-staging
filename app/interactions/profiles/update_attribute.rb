@@ -14,6 +14,7 @@ module Profiles
       string :company_phone_number, default: nil
       string :website, default: nil
       hash :company_address_details, default: nil, strip: false
+      file :logo, default: nil
     end
 
     def execute
@@ -47,6 +48,13 @@ module Profiles
               company_zip_code: address.zip_code,
               company_address_details: address.as_json
             )
+          end
+        when "logo"
+          logo_params = attrs[:logo]
+          if logo_params.content_type.in?(Shops::Update::CONTENT_TYPES) && logo_params.size.between?(0, 0.05.megabyte)
+            profile.logo.attach(logo_params)
+          else
+            errors.add(:profile, :logo_invalid)
           end
         end
 

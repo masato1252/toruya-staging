@@ -15,9 +15,28 @@
 
         <div class="field-header"><%= Profile.human_attribute_name(:website) %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_profile_path(attribute: :website), title: @profile.website %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.shop.logo_label") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_profile_path(attribute: :logo) do %>
+          <div>
+            <%= shop_logo(@profile, "390x135", image_class: "logo") %>
+          </div>
+        <% end %>
       </div>
+
+      <h3 class="margin-around centerize">
+        <%= t("user_bot.dashboards.settings.company.info_hint") %>
+      </h3>
     </div>
 
-    <div class="col-sm-6 px-0"></div>
+    <div class="col-sm-6 px-0">
+      <div class="fake-mobile-layout">
+        <%= react_component(
+          "user_bot/sales/demo",
+          { shop: CompanyInfoSerializer.new(@profile).attributes_hash },
+          { camelize_props: false }
+        ) %>
+      </div>
+    </div>
   </div>
 </div>

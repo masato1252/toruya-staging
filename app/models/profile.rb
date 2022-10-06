@@ -42,6 +42,8 @@ class Profile < ApplicationRecord
 
   belongs_to :user
 
+  has_one_attached :logo
+
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :phonetic_first_name, presence: true
@@ -64,5 +66,6 @@ class Profile < ApplicationRecord
   end
 
   def logo_url
+    ApplicationController.helpers.shop_logo_url(self, "260")
   end
 end
