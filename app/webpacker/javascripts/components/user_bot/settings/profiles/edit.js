@@ -226,8 +226,7 @@ const ProfileEdit =({props}) => {
                 shop={{...props.profile, address: `〒${watch('company_address_details[zip_code]')}${watch('company_address_details[region]')}${watch('company_address_details[city]')}${watch('company_address_details[street1]')}${watch('company_address_details[street2]')}`}}
               />
             </div>
-          )
-          }
+          )}
         </div>
       </div>
     </div>

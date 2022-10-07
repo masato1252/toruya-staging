@@ -1,19 +1,11 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-6 px-0">
-      <%= react_component("user_bot/settings/shops/edit", {
-        props: {
-          shop: ShopFormSerializer.new(@shop).attributes_hash,
-          attribute: params[:attribute],
-          previous_path: @previous_path,
-          title: @title,
-          header: @header
-        }
-      },
-      { camelize_props: false }
-                         ) %>
-    </div>
-
-    <div class="col-sm-6 px-0 hidden-xs"></div>
-  </div>
-</div>
+<%= react_component("user_bot/settings/shops/edit", {
+  props: {
+    shop: CompanyInfoSerializer.new(@shop).attributes_hash.merge!(@shop.slice(:name, :address_details)),
+    attribute: params[:attribute],
+    previous_path: @previous_path,
+    title: @title,
+    header: @header
+  }
+},
+{ camelize_props: false }
+) %>
