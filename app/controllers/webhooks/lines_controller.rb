@@ -35,7 +35,7 @@ class Webhooks::LinesController < WebhooksController
   # }]
   def create
     Array.wrap(params[:events]).each do |event|
-      Lines::HandleEvent.run(social_account: social_account, event: event.permit!.to_h)
+      Lines::HandleEvent.perform_later(social_account: social_account, event: event.permit!.to_h)
     end
 
     head :ok
