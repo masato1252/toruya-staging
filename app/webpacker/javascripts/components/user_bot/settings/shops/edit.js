@@ -8,6 +8,7 @@ import { ShopServices } from "user_bot/api"
 import useAddress from "libraries/use_address";
 import I18n from 'i18n-js/index.js.erb';
 import SaleDemoPage from "user_bot/sales/demo";
+import LineCardPreview from "shared/line_card_preview";
 
 const SocialAccountEdit =({props}) => {
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
@@ -52,7 +53,6 @@ const SocialAccountEdit =({props}) => {
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
-      case "phone_number":
       case "email":
       case "website":
         return (
@@ -61,6 +61,17 @@ const SocialAccountEdit =({props}) => {
           </div>
         );
       break;
+      case "phone_number":
+        return (
+          <>
+            <div className="field-row">
+              <input ref={register} name={props.attribute} type="text" className="extend" />
+            </div>
+            <h3 class="margin-around centerize">
+              <div dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.shop.phone_number_hint_html") }} />
+            </h3>
+          </>
+        );
       case "logo":
         return (
           <>
@@ -210,9 +221,23 @@ const SocialAccountEdit =({props}) => {
             </div>
           )}
           {['phone_number'].includes(props.attribute) && (
-            <div class="fake-mobile-layout">
-              <SaleDemoPage
-                shop={{...props.shop, [props.attribute]: watch(props.attribute)}}
+            <div className="fake-mobile-layout">
+              <LineCardPreview
+                title={I18n.t("line.bot.messages.contact.contact_us")}
+                desc={I18n.t("line.bot.messages.contact.contact_us_with_text_or_phone")}
+                actions={
+                  <>
+                    <div className="btn btn-gray btn-extend my-2">
+                      {I18n.t("action.send_message")}
+                    </div>
+                    {watch("phone_number")?.length ? (
+                      <div className="btn btn-gray btn-extend">
+                        {I18n.t("action.call")}
+                      </div>) :
+                        <></>
+                    }
+                  </>
+                }
               />
             </div>
           )}

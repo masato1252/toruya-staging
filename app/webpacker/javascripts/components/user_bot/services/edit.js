@@ -535,10 +535,14 @@ const OnlineServiceEdit =({props}) => {
             ['message_template'].includes(props.attribute) && (
               <div className="fake-mobile-layout">
                 <LineCardPreview
+                  picture_url={message_template?.picture_url?.length ? message_template.picture_url : props.default_picture_url}
                   title={props.service.name}
                   desc="Dummy data"
-                  btn_text="Dummy button"
-                  picture_url={message_template?.picture_url?.length ? message_template.picture_url : props.default_picture_url}
+                  actions={
+                    <div className="btn line-button btn-extend with-wording only-word">
+                      Dummy button
+                    </div>
+                  }
                 />
               </div>
             )

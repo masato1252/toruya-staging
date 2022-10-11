@@ -122,6 +122,7 @@ ja:
           logo_label: 店舗ロゴ
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
           info_hint: 販売ページや予約ページオンラインサービスで表示されます
+          phone_number_hint_html: "空欄にしておくと「お問合せ」メニューの<br>「電話する」ボタンが非表示になります。"
         custom_message:
           line_message_title: LINEメッセージ設定
           auto_message_label: 自動送信メッセージ
