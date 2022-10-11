@@ -222,23 +222,25 @@ const SocialAccountEdit =({props}) => {
           )}
           {['phone_number'].includes(props.attribute) && (
             <div className="fake-mobile-layout">
-              <LineCardPreview
-                title={I18n.t("line.bot.messages.contact.contact_us")}
-                desc={I18n.t("line.bot.messages.contact.contact_us_with_text_or_phone")}
-                actions={
-                  <>
-                    <div className="btn btn-gray btn-extend my-2">
-                      {I18n.t("action.send_message")}
-                    </div>
-                    {watch("phone_number")?.length ? (
-                      <div className="btn btn-gray btn-extend">
-                        {I18n.t("action.call")}
-                      </div>) :
-                        <></>
-                    }
-                  </>
-                }
-              />
+              <div className="line-chat-background">
+                <LineCardPreview
+                  title={I18n.t("line.bot.messages.contact.contact_us")}
+                  desc={I18n.t("line.bot.messages.contact.contact_us_with_text_or_phone")}
+                  actions={
+                    <>
+                      <div className="btn btn-gray btn-extend my-2">
+                        {I18n.t("action.send_message")}
+                      </div>
+                      {watch("phone_number")?.length ? (
+                        <div className="btn btn-gray btn-extend">
+                          {I18n.t("action.call")}
+                        </div>) :
+                          <></>
+                      }
+                    </>
+                  }
+                />
+              </div>
             </div>
           )}
           {['logo'].includes(props.attribute) && (

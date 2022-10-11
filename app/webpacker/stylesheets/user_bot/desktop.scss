@@ -25,10 +25,17 @@
   border: 1px solid $gray;
 }
 
+.line-chat-background {
+  background-color: #A3D1EB;
+  padding: 6px;
+  padding-right: 60px;
+}
+
 .dummy-line-card {
   border: 1px solid $gray;
   border-radius: 20px;
   margin: 10px;
+  background-color: #ffffff;
 
   .picture {
     img {
