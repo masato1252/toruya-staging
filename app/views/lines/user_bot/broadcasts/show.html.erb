@@ -1,43 +1,51 @@
-<div class="form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_broadcasts_path, title: t("user_bot.dashboards.broadcasts.broadcast_conditions") %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0">
+      <div class="form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_broadcasts_path, title: t("user_bot.dashboards.broadcasts.broadcast_conditions") %>
 
-  <div class="field-header"><%= t("user_bot.dashboards.broadcasts.content") %></div>
-  <%= render "lines/user_bot/field_row" do %>
-    <p class="p10 bg-gray rounded break-line-content w-full"><%= @broadcast.content %></p>
-  <% end %>
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.content") %></div>
+        <%= render "lines/user_bot/field_row" do %>
+          <p class="p10 bg-gray rounded break-line-content w-full"><%= @broadcast.content %></p>
+        <% end %>
 
-  <div class="field-header"><%= t("user_bot.dashboards.broadcasts.audiences") %></div>
-  <%= render "lines/user_bot/field_row", title: @broadcast.target %>
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.audiences") %></div>
+        <%= render "lines/user_bot/field_row", title: @broadcast.target %>
 
-  <div class="field-header"><%= t("user_bot.dashboards.broadcasts.recipients_count") %></div>
-  <%= render "lines/user_bot/field_row", title: @broadcast.recipients_count %>
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.recipients_count") %></div>
+        <%= render "lines/user_bot/field_row", title: @broadcast.recipients_count %>
 
-  <div class="field-header"><%= t("user_bot.dashboards.broadcasts.state") %></div>
-  <%= render "lines/user_bot/field_row", title: t("broadcast.states.#{@broadcast.state}") %>
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.state") %></div>
+        <%= render "lines/user_bot/field_row", title: t("broadcast.states.#{@broadcast.state}") %>
 
-  <div class="field-header"><%= t("user_bot.dashboards.broadcasts.time") %></div>
-  <%= render "lines/user_bot/field_row", title: I18n.l(@broadcast.broadcast_at, format: :long_date_with_wday) %>
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.time") %></div>
+        <%= render "lines/user_bot/field_row", title: I18n.l(@broadcast.broadcast_at, format: :long_date_with_wday) %>
 
-  <p class="action-block break-line-content warning">
-    <% if @broadcast.active? %>
-      <%= t("user_bot.dashboards.broadcasts.stop_desc") %>
-    <% elsif @broadcast.draft? %>
-      <%= t("user_bot.dashboards.broadcasts.active_desc") %>
-    <% end %>
-  </p>
+        <p class="action-block break-line-content warning">
+        <% if @broadcast.active? %>
+          <%= t("user_bot.dashboards.broadcasts.stop_desc") %>
+        <% elsif @broadcast.draft? %>
+          <%= t("user_bot.dashboards.broadcasts.active_desc") %>
+        <% end %>
+        </p>
 
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
-    <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@broadcast.updated_at, format: :long_date) %></span>
-    <% if @broadcast.active? %>
-      <%= link_to  draft_lines_user_bot_broadcast_path(@broadcast), method: :put , data: { confirm: t("user_bot.dashboards.broadcasts.are_you_sure_to_stop") }, class: "btn btn-orange btn-circle btn-save btn-tweak btn-with-word" do %>
-        <i class="fa fa-ban fa-2x"></i>
-        <div class="word"><%= t("user_bot.dashboards.broadcasts.stop_send") %></div>
-      <% end %>
-    <% elsif @broadcast.draft? %>
-      <%= link_to  edit_lines_user_bot_broadcast_path(@broadcast), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
-        <i class="fa fa-pencil-alt fa-2x"></i>
-        <div class="word"><%= I18n.t("action.edit") %></div>
-      <% end %>
-    <% end %>
-  <% end %>
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+          <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@broadcast.updated_at, format: :long_date) %></span>
+          <% if @broadcast.active? %>
+            <%= link_to  draft_lines_user_bot_broadcast_path(@broadcast), method: :put , data: { confirm: t("user_bot.dashboards.broadcasts.are_you_sure_to_stop") }, class: "btn btn-orange btn-circle btn-save btn-tweak btn-with-word" do %>
+              <i class="fa fa-ban fa-2x"></i>
+              <div class="word"><%= t("user_bot.dashboards.broadcasts.stop_send") %></div>
+            <% end %>
+          <% elsif @broadcast.draft? %>
+            <%= link_to  edit_lines_user_bot_broadcast_path(@broadcast), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+              <i class="fa fa-pencil-alt fa-2x"></i>
+              <div class="word"><%= I18n.t("action.edit") %></div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs"></div>
+  </div>
 </div>

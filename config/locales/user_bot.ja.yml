@@ -109,6 +109,8 @@ ja:
           shop_open_introduction2: 予約カレンダーからは 休業時間外でも予約を作成できます。
           shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
+        company:
+          info_hint: 主に販売ページに表示されます。
         shop:
           shop_management: 店舗管理
           shop_info_label: 店舗情報
@@ -119,6 +121,7 @@ ja:
           website_label: Webサイト
           logo_label: 店舗ロゴ
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
+          info_hint: 販売ページや予約ページオンラインサービスで表示されます
         custom_message:
           line_message_title: LINEメッセージ設定
           auto_message_label: 自動送信メッセージ

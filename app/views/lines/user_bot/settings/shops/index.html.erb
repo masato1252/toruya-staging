@@ -1,9 +1,17 @@
-<div class="settings-dashboard form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.shop.shop_management") %>
-  <div class="field-header"><%= t("common.shop_label") %></div>
-  <% @shops.each do |shop| %>
-    <%= link_to lines_user_bot_settings_shop_path(shop.id), class: "field-row" do %>
-      <span><%= shop.name %></span><i class="fa fa-angle-right"></i>
-    <% end %>
-  <% end %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0">
+      <div class="settings-dashboard form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.shop.shop_management") %>
+        <div class="field-header"><%= t("common.shop_label") %></div>
+        <% @shops.each do |shop| %>
+          <%= link_to lines_user_bot_settings_shop_path(shop.id), class: "field-row" do %>
+            <span><%= shop.name %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs"></div>
+  </div>
 </div>

@@ -209,5 +209,8 @@ ja:
     copy: コピー
     right_away_after_purchased: 購入後すぐ
     meeting_url: ミーティングURL
+    item:
+      list: 一覧表示
+      new: 新規作成
   errors:
     invalid_url: 無効なURL

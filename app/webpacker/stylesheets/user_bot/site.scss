@@ -236,6 +236,10 @@ a {
 
   &.react-sticky {
     position: static;
+
+    @include media-breakpoint-up(tablet) {
+      width: 100%;
+    }
   }
 
   background-color: $gray4;

@@ -10,14 +10,22 @@ import ScheduleSetupStep from "./schedule_setup_step"
 
 const CreationFlow = ({props}) => {
   return (
-    <GlobalProvider props={props}>
-      <FlowController new_version={true}>
-        <FiltersSelectionStep />
-        <FroductSelectionStep />
-        <ContentSetupStep />
-        <ScheduleSetupStep />
-      </FlowController>
-    </GlobalProvider>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <GlobalProvider props={props}>
+            <FlowController new_version={true}>
+              <FiltersSelectionStep />
+              <FroductSelectionStep />
+              <ContentSetupStep />
+              <ScheduleSetupStep />
+            </FlowController>
+          </GlobalProvider>
+        </div>
+
+        <div className="col-sm-6 px-0 hidden-xs"></div>
+      </div>
+    </div>
   )
 }
 

@@ -1,23 +1,31 @@
-<%= react_component("user_bot/settings/social_accounts/edit", {
-  props: {
-    social_account: @social_account.attributes.merge!(
-      channel_secret: @social_account.raw_channel_secret,
-      channel_token: @social_account.raw_channel_token,
-      login_channel_secret: @social_account.raw_login_channel_secret
-    ),
-    attribute: @attribute,
-    image_path: image_rescue { asset_pack_path("media/assets/management/line_#{@attribute}.png") },
-    previous_path: @previous_path,
-    i18n: {
-    }.merge!([
-      t("settings.social_account.form"),
-      t("action").slice(:save),
-      {
-        title: t("settings.social_account.form.#{@attribute}_title"),
-        hint: translation_resuce { I18n.t("settings.social_account.form.#{@attribute}_hint", raise: true) },
-      }
-    ].inject(:merge!))
-  }
-},
-{ camelize_props: false }
-) %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0">
+      <%= react_component("user_bot/settings/social_accounts/edit", {
+        props: {
+          social_account: @social_account.attributes.merge!(
+            channel_secret: @social_account.raw_channel_secret,
+            channel_token: @social_account.raw_channel_token,
+            login_channel_secret: @social_account.raw_login_channel_secret
+          ),
+          attribute: @attribute,
+          image_path: image_rescue { asset_pack_path("media/assets/management/line_#{@attribute}.png") },
+          previous_path: @previous_path,
+          i18n: {
+          }.merge!([
+            t("settings.social_account.form"),
+            t("action").slice(:save),
+            {
+              title: t("settings.social_account.form.#{@attribute}_title"),
+              hint: translation_resuce { I18n.t("settings.social_account.form.#{@attribute}_hint", raise: true) },
+            }
+          ].inject(:merge!))
+        }
+      },
+      { camelize_props: false }
+                         ) %>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs"></div>
+  </div>
+</div>

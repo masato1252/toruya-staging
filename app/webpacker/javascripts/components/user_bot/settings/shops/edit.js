@@ -7,6 +7,7 @@ import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, Cir
 import { ShopServices } from "user_bot/api"
 import useAddress from "libraries/use_address";
 import I18n from 'i18n-js/index.js.erb';
+import SaleDemoPage from "user_bot/sales/demo";
 
 const SocialAccountEdit =({props}) => {
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
@@ -62,16 +63,21 @@ const SocialAccountEdit =({props}) => {
       break;
       case "logo":
         return (
-          <div className="field-row justify-center">
-            <div className="margin-around">
-              <input type="hidden" name="logo_url" ref={register} />
-              <img src={logo_url} className="logo" />
+          <>
+            <div className="field-row justify-center">
+              <div className="margin-around">
+                <input type="hidden" name="logo_url" ref={register} />
+                <img src={logo_url} className="logo" />
+              </div>
+              <input ref={register} onChange={_handleImageChange} type="file" name="logo" accept="image/png,image/gif" />
+              <p className="margin-around desc centerize">
+                {I18n.t("user_bot.dashboards.settings.shop.logo_limit_description")}
+              </p>
             </div>
-            <input ref={register} onChange={_handleImageChange} type="file" name="logo" accept="image/png,image/gif" />
-            <p className="margin-around desc centerize">
-              {I18n.t("user_bot.dashboards.settings.shop.logo_limit_description")}
-            </p>
-          </div>
+            <h3 class="margin-around centerize">
+              {I18n.t("user_bot.dashboards.settings.company.info_hint")}
+            </h3>
+          </>
         )
         break;
       case "name":
@@ -85,6 +91,9 @@ const SocialAccountEdit =({props}) => {
               {I18n.t("common.short_shop_name")}
               <input ref={register({ required: true })} name="short_name" type="text" />
             </div>
+            <h3 class="margin-around centerize">
+              {I18n.t("user_bot.dashboards.settings.company.info_hint")}
+            </h3>
           </>
         );
         break;
@@ -132,6 +141,9 @@ const SocialAccountEdit =({props}) => {
                 type="text"
               />
             </div>
+            <h3 class="margin-around centerize">
+              {I18n.t("user_bot.dashboards.settings.company.info_hint")}
+            </h3>
           </>
         )
         break
@@ -162,27 +174,64 @@ const SocialAccountEdit =({props}) => {
   }
 
   return (
-    <div className="form with-top-bar">
-      <input type="hidden" name="id" ref={register({ required: true })} />
-      <TopNavigationBar
-        leading={
-          <a href={props.previous_path}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={props.title}
-      />
-      <div className="field-header">{props.header}</div>
-      {renderCorrespondField()}
-      <BottomNavigationBar klassName="centerize transparent">
-        <span></span>
-        <CiricleButtonWithWord
-          disabled={formState.isSubmitting}
-          onHandle={handleSubmit(onSubmit)}
-          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-          word={I18n.t("action.save")}
-        />
-      </BottomNavigationBar>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <input type="hidden" name="id" ref={register({ required: true })} />
+            <TopNavigationBar
+              leading={
+                <a href={props.previous_path}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={props.title}
+            />
+            <div className="field-header">{props.header}</div>
+            {renderCorrespondField()}
+            <BottomNavigationBar klassName="centerize transparent">
+              <span></span>
+              <CiricleButtonWithWord
+                disabled={formState.isSubmitting}
+                onHandle={handleSubmit(onSubmit)}
+                icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                word={I18n.t("action.save")}
+              />
+            </BottomNavigationBar>
+          </div>
+        </div>
+
+        <div className="col-sm-6 px-0 hidden-xs">
+          {['name'].includes(props.attribute) && (
+            <div class="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.shop, name: watch("short_name") || watch("name")}}
+              />
+            </div>
+          )}
+          {['phone_number'].includes(props.attribute) && (
+            <div class="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.shop, [props.attribute]: watch(props.attribute)}}
+              />
+            </div>
+          )}
+          {['logo'].includes(props.attribute) && (
+            <div class="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.shop, logo_url: watch("logo_url")}}
+              />
+            </div>
+          )}
+          {['address'].includes(props.attribute) && (
+            <div class="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.shop, address: `〒${watch('address_details[zip_code]')}${watch('address_details[region]')}${watch('address_details[city]')}${watch('address_details[street1]')}${watch('address_details[street2]')}`}}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
