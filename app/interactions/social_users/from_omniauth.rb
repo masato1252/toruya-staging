@@ -7,7 +7,7 @@ module SocialUsers
     object :auth, class: OmniAuth::AuthHash
 
     def execute
-      SocialUser.find_by(social_service_user_id: auth.uid)
+      compose(SocialUsers::Initialize, social_service_user_id: auth.uid)
     end
   end
 end
