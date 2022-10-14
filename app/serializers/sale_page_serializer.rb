@@ -76,4 +76,8 @@ class SalePageSerializer
       end
     end
   end
+
+  attribute :is_booking_page do |object|
+    object.is_booking_page?
+  end
 end

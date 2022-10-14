@@ -12,7 +12,7 @@ import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews, is_external}) => {
+  price, normal_price, quantity, introduction_video_url, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews, is_external}) => {
 
   if (preview) {
     return (
@@ -23,7 +23,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
           demo={demo}
           template={template}
           template_variables={template_variables}
-          introduction_video={introduction_video}
+          introduction_video_url={introduction_video_url}
           social_account_add_friend_url={social_account_add_friend_url}
           jump={jump}
           price={price}
@@ -36,6 +36,13 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
           payable={payable}
           is_external={is_external}
         />
+
+        <WhyContentView content={content} demo={demo} jumpTo={() => jump(9)} />
+        <BenefitsView benefits={sections_context?.benefits} solution_type={solution_type} />
+        <StaffView staff={staff} demo={demo} jumpTo={() => jump(10)} />
+        <ReviewsView reviews={reviews} />
+        <FaqView faq={sections_context?.faq} />
+        <FlowView flow={flow} jump={jump} demo={demo} />
       </div>
     )
   }
@@ -47,7 +54,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
         demo={demo}
         template={template}
         template_variables={template_variables}
-        introduction_video={introduction_video}
+        introduction_video_url={introduction_video_url}
         social_account_add_friend_url={social_account_add_friend_url}
         jump={jump}
         price={price}
