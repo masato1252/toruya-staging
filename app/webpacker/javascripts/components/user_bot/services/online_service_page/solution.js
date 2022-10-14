@@ -28,6 +28,7 @@ const OnlineServiceSolution = ({solution_type, content_url, ...rest}) => {
             {I18n.t("online_service_page.please_download_pdf_here")}
           </p>
           <a
+            download
             className="btn btn-tarco btn-icon"
             href={content_url}>
             <i className="fas fa-file-pdf"></i> {I18n.t("online_service_page.download")}
