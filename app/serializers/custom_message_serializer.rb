@@ -6,7 +6,7 @@ class CustomMessageSerializer
 
   attribute :picture_url do |custom_message|
     if custom_message.picture.attached?
-      Rails.application.routes.url_helpers.url_for(custom_message.picture.variant(combine_options: { resize: "640x416", flatten: true }))
+      Images::Process.run!(image: custom_message.picture, resize: "640x416")
     end
   end
 

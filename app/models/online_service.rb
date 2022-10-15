@@ -291,7 +291,7 @@ class OnlineService < ApplicationRecord
   def picture_url
     if message_template&.picture&.attached?
       # use video_description_card ratio for the resize
-      Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
+      Images::Process.run!(image: message_template.picture, resize: "640x416") || default_picture_url
     elsif course? && lessons.exists?
       lessons.first.thumbnail_url || default_picture_url
     elsif bundler?

@@ -47,8 +47,8 @@ module SocialMessages
         message.image.attach(io: image, filename: image.original_filename) 
         message.update(
           raw_content: {
-            originalContentUrl: Rails.application.routes.url_helpers.url_for(message.image.variant(combine_options: { resize: "750", flatten: true })),
-            previewImageUrl: Rails.application.routes.url_helpers.url_for(message.image.variant(combine_options: { resize: "750", flatten: true })),
+            originalContentUrl: Images::Process.run!(image: message.image, resize: "750"),
+            previewImageUrl: Images::Process.run!(image: message.image, resize: "750")
           }.to_json
         )
       end

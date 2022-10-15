@@ -23,39 +23,15 @@ module ShopHelper
 
     if shop.logo.attached?
       if latest
-        Rails.application.routes.url_helpers.url_for(shop.logo.variant(
-          combine_options: {
-            resize: "#{size}",
-            flatten: true
-          }
-        ))
+        Images::Process.run!(image: shop.logo, resize: "#{size}")
       else
-        @shop_logo_urls[shop.id] ||=
-          Rails.application.routes.url_helpers.url_for(shop.logo.variant(
-            combine_options: {
-              resize: "#{size}",
-              flatten: true
-            }
-        ))
+        @shop_logo_urls[shop.id] ||= Images::Process.run!(image: shop.logo, resize: "#{size}")
       end
     end
   end
 
   def staff_picture_url(staff, size)
-    if staff.picture.attached?
-      variant = staff.picture.variant(
-        combine_options: {
-          resize: "#{size}",
-          flatten: true
-        }
-      )
-
-      if staff.picture.service.exist?(variant.key)
-        Rails.application.routes.url_helpers.url_for(variant)
-      else
-        Rails.application.routes.url_helpers.url_for(staff.picture)
-      end
-    end
+    Images::Process.run!(image: staff.picture, resize: "#{size}")
   end
 
   def shop_logo(shop, size, extent: true, image_class: "")

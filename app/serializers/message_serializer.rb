@@ -29,7 +29,7 @@ class MessageSerializer
     begin
       content = JSON.parse(message.raw_content)
       if message.image.attached?
-        content["previewImageUrl"] = Rails.application.routes.url_helpers.url_for(message.image.variant(combine_options: { resize: "750", flatten: true }))
+        content["previewImageUrl"] = Images::Process.run!(image: message.image, resize: "750")
       end
 
       case message.content_type

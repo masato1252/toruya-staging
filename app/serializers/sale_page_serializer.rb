@@ -5,23 +5,7 @@ class SalePageSerializer
   attribute :id, :introduction_video_url, :flow, :end_time, :start_time, :sections_context, :solution_type, :normal_price
 
   attribute :content do |sale_page|
-    picture_url =
-      if sale_page.picture.attached?
-        begin
-          picture_variant = sale_page.picture.variant(combine_options: { resize: "750", flatten: true })
-          filename = picture_variant.blob.filename.to_s
-
-          if sale_page.picture.service.exist?(picture_variant.key)
-            Rails.application.routes.url_helpers.url_for(picture_variant)
-          else
-            Rails.application.routes.url_helpers.url_for(sale_page.picture)
-          end
-        rescue ActiveStorage::InvariableError
-          Rails.application.routes.url_helpers.url_for(sale_page.picture)
-        end
-      else
-        nil
-      end
+    picture_url = Images::Process.run!(image: sale_page.picture, resize: "750")
 
     sale_page.content.merge(picture_url: picture_url)
   end
@@ -74,16 +58,7 @@ class SalePageSerializer
     else
       picture_url_mapping =
         object.customer_pictures.each_with_object({}) do |customer_picture, h|
-          picture_variant = customer_picture.variant( combine_options: { resize: "360", flatten: true })
-          filename = picture_variant.blob.filename.to_s
-
-          picture_url =
-            if customer_picture.service.exist?(picture_variant.key)
-              Rails.application.routes.url_helpers.url_for(picture_variant)
-            else
-              Rails.application.routes.url_helpers.url_for(customer_picture)
-            end
-
+          picture_url = Images::Process.run!(image: customer_picture, resize: "360")
           h[filename] = picture_url
         end
 

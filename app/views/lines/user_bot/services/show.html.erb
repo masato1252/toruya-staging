@@ -17,7 +17,7 @@
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.card_image") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :message_template) do %>
           <% if @service.message_template&.picture&.attached? %>
-            <%= image_tag(@service.message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }), class: "preview-image") %>
+            <%= image_tag(Images::Process.run!(image: @service.message_template.picture, resize: "640x416"), class: "preview-image") %>
           <% else %>
             <div><%= t("user_bot.dashboards.services.default_card_image") %></div>
             <%= image_tag(@service.default_picture_url, class: "preview-image") %>
