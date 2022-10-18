@@ -6,12 +6,6 @@ import UserShopInfo from "./user_shop_info";
 import FlowController from "shared/flow_controller";
 
 const SignUpSuccessfulView = ({props}) => {
-  useEffect(() => {
-    setTimeout(() => {
-      window.location = Routes.lines_user_bot_schedules_path()
-    }, 3000)
-  }, [])
-
   return (
     <div>
       <h2 className="centerize">
@@ -19,11 +13,6 @@ const SignUpSuccessfulView = ({props}) => {
       </h2>
       <div className="whole-page-center final">
         <div dangerouslySetInnerHTML={{ __html: props.i18n.user_sign_up.message.successful_message_html }} />
-        <br />
-        <i className="fa fa-spinner fa-spin fa-fw fa-2x"></i>
-        <div className="centerize">
-          {props.i18n.user_sign_up.message.redirect_to_schedule_page}
-        </div>
       </div>
     </div>
   )

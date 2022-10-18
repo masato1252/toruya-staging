@@ -28,7 +28,7 @@ class Lines::UserBotController < ActionController::Base
     # the guest feature(sign in or sign up)
     @current_user ||= User.find_by(id: user_bot_cookies(:current_user_id))
 
-    if @current_user && @social_user.user && @current_user.id != @social_user.user_id
+    if @current_user && @social_user&.user && @current_user.id != @social_user.user_id
       Rollbar.warning(
         "Unmatch user id from user bot",
         params: {

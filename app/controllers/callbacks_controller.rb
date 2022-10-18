@@ -4,6 +4,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   BUSINESS_LOGIN = "business_login"
   TORUYA_USER = "toruya_user"
   SHOP_OWNER_CUSTOMER_SELF = "shop_owner_customer_self"
+  TORUYA_USER_LINE_SIGN_UP = "toruya_user_line_sign_up"
 
   include Devise::Controllers::Rememberable
   include UserBotCookies
@@ -58,12 +59,16 @@ class CallbacksController < Devise::OmniauthCallbacksController
       )
 
       if outcome.valid? && outcome.result&.user
+        # line sign in
         user = outcome.result.user
         remember_me(user)
         sign_in(user)
         write_user_bot_cookies(:current_user_id, user.id)
 
         redirect_to param.delete("oauth_redirect_to_url")
+      elsif outcome.valid? && outcome.result.user.nil?
+        # line sign up
+        redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id)
       else
         redirect_to root_path
       end

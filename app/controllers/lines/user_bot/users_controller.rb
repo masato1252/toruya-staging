@@ -2,10 +2,22 @@
 
 class Lines::UserBot::UsersController < Lines::UserBotController
   protect_from_forgery with: :exception, prepend: true
+  skip_before_action :authenticate_social_user!, only: [:line_sign_up]
 
-  def connect; end
+  # social user sign up
+  def line_sign_up
+    render layout: 'booking'
+  end
 
-  def sign_up; end
+  # user login
+  def connect
+    render layout: 'booking'
+  end
+
+  # user sign up
+  def sign_up
+    render layout: 'booking'
+  end
 
   def generate_code
     identification_code = IdentificationCodes::Create.run!(
