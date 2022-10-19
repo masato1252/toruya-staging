@@ -12,13 +12,13 @@ module ActiveInteractionDelayer
   end
 
   def perform_at(args = {})
-    schedule_at = args[:schedule_at]
+    schedule_at = args[:schedule_at] || Time.current
 
     ActiveInteractionJob.set(wait_until: schedule_at).perform_later(self.to_s, args)
   end
 
   def perform_at!(args = {})
-    schedule_at = args[:schedule_at]
+    schedule_at = args[:schedule_at] || Time.current
     args.merge!(bang: true)
 
     ActiveInteractionJob.set(wait_until: schedule_at).perform_later(self.to_s, args)
