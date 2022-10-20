@@ -1,0 +1,30 @@
+<div class="booking-page-preview">
+  <div class="header">
+    <div class="header-title-part">
+      <h1>
+        <%= shop_logo(booking_page.shop, 130, image_class: "logo") || booking_page.shop.name %>
+        <span class="preview-mark">
+          <%= I18n.t("common.preview") %>
+        </span>
+      </h1>
+      <h2 class="page-title"><%= booking_page.title %></h2>
+    </div>
+    <div class="greeting"><%= booking_page.greeting %></div>
+  </div>
+
+  <div class="booking-option-field">
+    <div class="booking-option-info">
+      <div class="booking-option-name">
+        <b><%= booking_option.name %></b>
+      </div>
+      <div><%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %></div>
+    </div>
+    <div class="booking-option-row"><span><%= booking_option.amount.format(:ja_default_format) %> (<%= t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}") %>)</span></div>
+  </div>
+
+  <% if (booking_options_count = booking_page.booking_options.count) != 1 %>
+    <div class="others-options">
+      <%= I18n.t("settings.booking_page.others_options", others_number: booking_options_count - 1) %>
+    </div>
+  <% end %>
+</div>

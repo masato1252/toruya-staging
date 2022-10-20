@@ -72,7 +72,7 @@ RSpec.describe Notifiers::Customers::CustomMessages::Send, :with_line do
 
         custom_message.update(after_days: 999)
 
-        new_schedule_at = custom_message.service.start_at_for_customer(receiver).advance(days: custom_message.after_days).change(hour: 9)
+        new_schedule_at = custom_message.service.start_at_for_customer(receiver).advance(days: custom_message.after_days).change(hour: 9, min: rand(5), sec: rand(59))
         described_class.perform_at(schedule_at: new_schedule_at, receiver: receiver, custom_message: custom_message)
 
         expect(CustomMessages::ReceiverContent).to receive(:run) do |args|

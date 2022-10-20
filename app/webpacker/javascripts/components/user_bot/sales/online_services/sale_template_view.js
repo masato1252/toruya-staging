@@ -21,7 +21,7 @@ const SaleTemplateView = ({
   price,
   normal_price,
   quantity,
-  introduction_video,
+  introduction_video_url,
   is_started,
   start_at,
   is_ended,
@@ -41,12 +41,12 @@ const SaleTemplateView = ({
       product_name={product.product_name}
     />
 
-    {introduction_video?.url && (
+    {introduction_video_url && (
       <div>
         <DemoEditButton demo={demo} jump={() => jump(8)} />
         <OnlineServiceSolution
           solution_type="video"
-          content_url={introduction_video.url}
+          content_url={introduction_video_url}
           light={false}
         />
       </div>

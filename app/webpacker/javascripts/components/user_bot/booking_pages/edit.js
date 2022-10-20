@@ -136,26 +136,33 @@ const BookingPageEdit =({props}) => {
   }
 
   return (
-    <div className="form with-top-bar">
-      <TopNavigationBar
-        leading={
-          <a href={Routes.lines_user_bot_booking_page_path(props.booking_page.id)}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={i18n.top_bar_header || i18n.page_title}
-      />
-      <div className="field-header">{i18n.page_title}</div>
-      {renderCorrespondField()}
-      <BottomNavigationBar klassName="centerize transparent">
-        <span></span>
-        <CiricleButtonWithWord
-          disabled={formState.isSubmitting}
-          onHandle={handleSubmit(onSubmit)}
-          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-          word={i18n.save}
-        />
-      </BottomNavigationBar>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <TopNavigationBar
+              leading={
+                <a href={Routes.lines_user_bot_booking_page_path(props.booking_page.id)}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={i18n.top_bar_header || i18n.page_title}
+            />
+            <div className="field-header">{i18n.page_title}</div>
+            {renderCorrespondField()}
+            <BottomNavigationBar klassName="centerize transparent">
+              <span></span>
+              <CiricleButtonWithWord
+                disabled={formState.isSubmitting}
+                onHandle={handleSubmit(onSubmit)}
+                icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                word={i18n.save}
+              />
+            </BottomNavigationBar>
+          </div>
+        </div>
+        <div className="col-sm-6 px-0 hidden-xs"></div>
+      </div>
     </div>
   )
 }

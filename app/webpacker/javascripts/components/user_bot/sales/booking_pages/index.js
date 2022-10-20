@@ -13,7 +13,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 const SaleBookingPage = (
   {product, normal_price, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-    shop, flow, preview, introduction_video, sections_context, solution_type, reviews}) => {
+    shop, flow, preview, introduction_video_url, sections_context, solution_type, reviews}) => {
 
   if (preview) {
     return (
@@ -24,11 +24,18 @@ const SaleBookingPage = (
           demo={demo}
           template={template}
           template_variables={template_variables}
-          introduction_video={introduction_video}
+          introduction_video_url={introduction_video_url}
           social_account_add_friend_url={social_account_add_friend_url}
           normal_price={normal_price}
           jump={jump}
         />
+
+        <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />
+        <BenefitsView benefits={sections_context?.benefits} solution_type={solution_type} />
+        <StaffView staff={staff} demo={demo} jumpTo={() => jump(5)} />
+        <ReviewsView reviews={reviews} />
+        <FaqView faq={sections_context?.faq} />
+        <FlowView flow={flow} jump={jump} demo={demo} />
       </div>
     )
   }
@@ -41,7 +48,7 @@ const SaleBookingPage = (
         demo={demo}
         template={template}
         template_variables={template_variables}
-        introduction_video={introduction_video}
+        introduction_video_url={introduction_video_url}
         social_account_add_friend_url={social_account_add_friend_url}
         normal_price={normal_price}
         jump={jump}

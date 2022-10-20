@@ -1,6 +1,6 @@
 <%= react_component("user_bot/sales/edit", {
   props: {
-    sale_page: @sale_page.serializer.attributes_hash,
+    sale_page: @sale_page.serializer.attributes_hash.merge(demo: false, preview: true),
     attribute: params[:attribute],
     flow_tips: I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_tips"),
     staffs: current_user.staffs.includes(picture_attachment: :blob).map { |staff|

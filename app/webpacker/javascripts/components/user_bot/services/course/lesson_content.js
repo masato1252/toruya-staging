@@ -25,7 +25,7 @@ const LessonContent = ({course, lesson, encrypted_social_service_user_id, previe
 
   return (
     <div className="online-service-body centerize">
-      <h2 className="name">
+      <h2 className="name p-2">
         {lesson.name}
         <DemoEditButton demo={demo} jump={() => jump(0)} />
       </h2>
@@ -44,7 +44,7 @@ const LessonContent = ({course, lesson, encrypted_social_service_user_id, previe
         )}
       </div>
       {!demo && (
-        <div className="flex justify-between">
+        <div className="flex justify-between p-2">
           {prevLesson && <div onClick={prevLesson}><i className="fas fa-2x fa-arrow-left text-tarco"></i></div>}
           <button
             disabled={done || !lesson.started_for_customer || preview}
@@ -61,7 +61,7 @@ const LessonContent = ({course, lesson, encrypted_social_service_user_id, previe
         </div>
       )}
       {(demo || lesson.started_for_customer || preview) && (
-        <div className="text-left break-line-content rounded mt-1">
+        <div className="text-left break-line-content rounded mt-1 p-2">
           <DemoEditButton demo={demo} jump={() => jump(2)} />
           <div dangerouslySetInnerHTML={{ __html: Autolinker.link(lesson.note) }} />
         </div>

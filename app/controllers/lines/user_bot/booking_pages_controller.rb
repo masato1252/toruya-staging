@@ -9,6 +9,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
   def show
     @booking_page = super_user.booking_pages.find(params[:id])
+    @booking_option = @booking_page.booking_options.first
   end
 
   def edit

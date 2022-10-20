@@ -23,6 +23,10 @@ import SellingRecurringPriceEdit from "components/user_bot/sales/selling_recurri
 import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
 import TextInput from "shared/edit/text_input";
 import EditUrlInput from "shared/edit/url_input";
+
+import SaleOnlineService from "user_bot/sales/online_services";
+import SaleBookingPage from "user_bot/sales/booking_pages";
+
 import I18n from 'i18n-js/index.js.erb';
 
 const SalePageEdit =({props}) => {
@@ -98,7 +102,7 @@ const SalePageEdit =({props}) => {
       case "end_time":
         submittedData = { selling_end_at: end_time && end_time["end_time_date_part"] }
         break
-          case "start_time":
+      case "start_time":
         submittedData = { selling_start_at: start_time && start_time["start_time_date_part"] }
         break
       case "why_content":
@@ -382,30 +386,187 @@ const SalePageEdit =({props}) => {
   }
 
   return (
-    <div className="form with-top-bar">
-      <TopNavigationBar
-        leading={
-          <a href={Routes.lines_user_bot_sale_path(props.sale_page.id)}>
-            <i className="fa fa-angle-left fa-2x"></i>
-          </a>
-        }
-        title={I18n.t(`user_bot.dashboards.sales.form.${props.attribute}_title`)}
-      />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.sales.form.${props.attribute}_subtitle`)}</div>
-      <div className="centerize">
-        {renderCorrespondField()}
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0">
+          <div className="form with-top-bar">
+            <TopNavigationBar
+              leading={
+                <a href={Routes.lines_user_bot_sale_path(props.sale_page.id)}>
+                  <i className="fa fa-angle-left fa-2x"></i>
+                </a>
+              }
+              title={I18n.t(`user_bot.dashboards.sales.form.${props.attribute}_title`)}
+            />
+            <div className="field-header">{I18n.t(`user_bot.dashboards.sales.form.${props.attribute}_subtitle`)}</div>
+            <div className="centerize">
+              {renderCorrespondField()}
+            </div>
+            {props.attribute !== 'company' && (
+              <BottomNavigationBar klassName="centerize">
+                <span></span>
+                <CiricleButtonWithWord
+                  disabled={formState.isSubmitting}
+                  onHandle={handleSubmit(onSubmit)}
+                  icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                  word={I18n.t("action.save")}
+                />
+              </BottomNavigationBar>
+            )}
+          </div>
+        </div>
+
+        <div className="col-sm-6 px-0 hidden-xs">
+            {
+              ['normal_price'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, normal_price }}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, normal_price }}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['selling_price'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <></>
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, price: selling_price}}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['sale_template_variables'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, template_variables }}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, template_variables }}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['introduction_video_url'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, [props.attribute]: watch(props.attribute)}}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, [props.attribute]: watch(props.attribute)}}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['why_content'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, content: why_content}}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, content: why_content}}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['benefits'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, sections_context: { benefits }}}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, sections_context: { benefits }}}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['staff'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, staff }}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, staff }}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['reviews'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, reviews }}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, reviews }}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['faq'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, sections_context: { faq }}}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, sections_context: { faq }}}
+                    />
+                  )}
+                </div>
+              )
+            }
+            {
+              ['flow'].includes(props.attribute) && (
+                <div className="fake-mobile-layout">
+                  {props.sale_page.is_booking_page ? (
+                    <SaleBookingPage
+                      {...{...props.sale_page, flow }}
+                    />
+                  ) : (
+                    <SaleOnlineService
+                      {...{...props.sale_page, flow }}
+                    />
+                  )}
+                </div>
+              )
+            }
+        </div>
       </div>
-      {props.attribute !== 'company' && (
-        <BottomNavigationBar klassName="centerize">
-          <span></span>
-          <CiricleButtonWithWord
-            disabled={formState.isSubmitting}
-            onHandle={handleSubmit(onSubmit)}
-            icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-            word={I18n.t("action.save")}
-          />
-        </BottomNavigationBar>
-      )}
     </div>
   )
 }

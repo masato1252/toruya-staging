@@ -321,7 +321,7 @@ const OnlineServiceEdit =({props}) => {
                           product={sale_page.product}
                           template={sale_page.template}
                           template_variables={sale_page.template_variables}
-                          introduction_video={sale_page.introduction_video}
+                          introduction_video_url={sale_page.introduction_video_url}
                           price={sale_page.price}
                           normal_price={sale_page.normal_price}
                           no_action={true}
