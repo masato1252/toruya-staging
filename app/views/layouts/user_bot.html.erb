@@ -75,12 +75,12 @@
 
           <li class="p-1">
             <%= active_link_to lines_user_bot_booking_pages_path do %>
-              <i class="fa fa-calendar fa-2x"></i> <%= t("user_bot.dashboards.booking_pages.index.title") %>
+              <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
             <% end %>
 
             <ul class='nav'>
               <li>
-                <%= active_link_to t("user_bot.dashboards.booking_pages.index.title"), lines_user_bot_booking_pages_path %>
+                <%= active_link_to t("common.item.list"), lines_user_bot_booking_pages_path %>
               </li>
               <li>
                 <%= active_link_to t("common.item.new"), new_lines_user_bot_booking_path %>
