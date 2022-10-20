@@ -120,7 +120,18 @@
 
     <div class="col-sm-6 px-0 hidden-xs">
       <% if @sale_page.product %>
-        <%= render 'lines/user_bot/sales/copy_buttons', sale_page: @sale_page %>
+        <%= text_field_tag :sale_page_url, sale_page_url(slug: @sale_page.slug), read_only: true, class: 'extend',
+          data: {
+            controller: "clipboard",
+            action: "click->clipboard#copy",
+            clipboard_text: sale_page_url(slug: @sale_page.slug),
+            clipboard_popup_text: t("common.copied")
+          }
+        %>
+
+        <div class="centerize margin-around">
+          <%= render 'lines/user_bot/sales/copy_buttons', sale_page: @sale_page %>
+        </div>
 
         <div class="fake-mobile-layout">
           <%= react_component(
@@ -162,6 +173,13 @@
           <div>
             <input type="text" value=<%= sale_page_url(slug: @sale_page.slug) %> readOnly class="extend"/>
           </div>
+          <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: sale_page_url(slug: @sale_page.slug),
+              clipboard_popup_text: t("common.copied")
+            } %>
           <%= render 'lines/user_bot/sales/copy_buttons', sale_page: @sale_page %>
         </div>
       </div>

@@ -1,39 +1,47 @@
-<div class="booking-options form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.sales.edit.sale_pages") %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0">
+      <div class="booking-options form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.sales.edit.sale_pages") %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
-  <div class="booking-pages-list">
-    <% @sale_pages.each do |sale_page| %>
-      <% next unless sale_page.product %>
-      <%= link_to lines_user_bot_sale_path(sale_page), class: "field-row with-next-arrow" do %>
-        <div>
-          <h3>
-            <% if sale_page.is_booking_page? %>
-              <i class="fa fa-calendar"></i>
-            <% else %>
-              <i class="fa fa-mobile-alt"></i>
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
+        <div class="booking-pages-list">
+          <% @sale_pages.each do |sale_page| %>
+            <% next unless sale_page.product %>
+            <%= link_to lines_user_bot_sale_path(sale_page), class: "field-row with-next-arrow" do %>
+              <div>
+                <h3>
+                  <% if sale_page.is_booking_page? %>
+                    <i class="fa fa-calendar"></i>
+                  <% else %>
+                    <i class="fa fa-mobile-alt"></i>
+                  <% end %>
+                  <%= sale_page.internal_name.presence || sale_page.product_name %>
+                </h3>
+                <div class="desc">
+                  <% if sale_page.is_booking_page? %>
+                    <%= sale_page.product&.product_name %>
+                  <% else %>
+                    <%= sale_page.product.start_time_text %> ~ <%= sale_page.product.end_time_text %>
+                  <% end %>
+                </div>
+                <div class="desc">
+                  <% if sale_page.is_booking_page? %>
+                    <% if sale_page.product && sale_page.product.primary_product %>
+                      <%= sale_page.product.primary_product.minutes %><%= I18n.t("common.minute")%><%= sale_page.product.product_price.format(:ja_default_format) %>(<%= I18n.t("settings.booking_option.form.#{sale_page.product.primary_product.tax_include ? "tax_include" : "tax_excluded"}") %>)
+                    <% end %>
+                  <% else %>
+                    <%= sale_page.selling_prices_text %>
+                  <% end %>
+                </div>
+              </div>
+              <i class="fa fa-angle-right"></i>
             <% end %>
-            <%= sale_page.internal_name.presence || sale_page.product_name %>
-          </h3>
-          <div class="desc">
-            <% if sale_page.is_booking_page? %>
-              <%= sale_page.product&.product_name %>
-            <% else %>
-              <%= sale_page.product.start_time_text %> ~ <%= sale_page.product.end_time_text %>
-            <% end %>
-          </div>
-          <div class="desc">
-            <% if sale_page.is_booking_page? %>
-              <% if sale_page.product && sale_page.product.primary_product %>
-                <%= sale_page.product.primary_product.minutes %><%= I18n.t("common.minute")%><%= sale_page.product.product_price.format(:ja_default_format) %>(<%= I18n.t("settings.booking_option.form.#{sale_page.product.primary_product.tax_include ? "tax_include" : "tax_excluded"}") %>)
-              <% end %>
-            <% else %>
-              <%= sale_page.selling_prices_text %>
-            <% end %>
-          </div>
+          <% end %>
         </div>
-      <i class="fa fa-angle-right"></i>
-      <% end %>
-    <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs"></div>
   </div>
 </div>
