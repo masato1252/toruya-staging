@@ -41,7 +41,11 @@ module Notifiers
         def expected_schedule_time
           if schedule_at && custom_message.after_days
             expected_schedule_at = custom_message.service.start_at_for_customer(receiver).advance(days: custom_message.after_days).change(hour: 9)
-            return expected_schedule_at.to_s(:iso8601) == schedule_at.to_s(:iso8601)
+            # app/interactions/custom_messages/customers/next.rb
+            # schedule_at = message_product.start_at_for_customer(receiver).advance(days: message.after_days).change(hour: 9, min: rand(5), sec: rand(59))
+            # We used rand number to tweak schedule time in above file to avoid duplicate message,
+            # but that might also cause our schedule time validation was incorrect so change it back here - change(hour: 9)
+            return expected_schedule_at.to_s(:iso8601) == schedule_at.change(hour: 9).to_s(:iso8601)
           end
 
           true # real time
