@@ -17,7 +17,8 @@ namespace :analytic do
         VisitAnalyticReportJob.perform_later(visit.owner_id)
       end
 
-      SlackClient.send(channel: 'sayhi', text: "Charging user_id: #{Subscription.charge_required.pluck(:user_id).join(", ")}")
+      user_ids = Subscription.charge_required.pluck(:user_id)
+      SlackClient.send(channel: 'sayhi', text: "Charging #{user_ids.size} user_id: #{user_ids.join(", ")}")
     end
   end
 end
