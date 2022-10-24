@@ -6,7 +6,7 @@ class BundleableServiceSerializer
   attribute :id
 
   attribute :label do |online_service|
-    online_service.name
+    online_service.internal_name.presence || online_service.name
   end
 
   attribute :end_time_options do |online_service|

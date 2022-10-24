@@ -9,7 +9,7 @@ class SalePageOptionSerializer
   attribute :id, :slug, :product_type
 
   attribute :label do |sale_page|
-    sale_page.product.name
+    sale_page.internal_product_name
   end
 
   attribute :product do |sale_page, params|
