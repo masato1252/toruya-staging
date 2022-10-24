@@ -39,7 +39,7 @@ const OnlineServicePage = ({company_info, name, note, solution_type, content_url
         upsell_sale_page && (
           <div className="centerize">
             <h3 className="margin-around">
-              {upsell_sale_page.label}
+              {upsell_sale_page.product_name}
               <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("upsell_step")} />
             </h3>
             {upsell_sale_page.end_at && (

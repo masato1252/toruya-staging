@@ -6,7 +6,7 @@ class SalePageOptionSerializer
   include JSONAPI::Serializer
   include SalePages::OnlineServiceProductPart
 
-  attribute :id, :slug, :product_type
+  attribute :id, :slug, :product_type, :product_name
 
   attribute :label do |sale_page|
     sale_page.internal_name.presence || sale_page.internal_product_name
