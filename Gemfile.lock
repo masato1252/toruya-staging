@@ -152,6 +152,9 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    barnes (0.0.9)
+      multi_json (~> 1)
+      statsd-ruby (~> 1.1)
     bcrypt (3.1.16)
     benchmark-ips (2.7.2)
     benchmark-memory (0.1.2)
@@ -567,6 +570,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     stackprof (0.2.15)
+    statsd-ruby (1.5.0)
     strings (0.1.5)
       strings-ansi (~> 0.1)
       unicode-display_width (~> 1.5)
@@ -638,6 +642,7 @@ DEPENDENCIES
   annotate (~> 3.1.1)
   awesome_rails_console
   aws-sdk-s3
+  barnes
   benchmark-memory
   better_errors
   binding_of_caller

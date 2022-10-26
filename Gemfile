@@ -83,6 +83,7 @@ gem "blazer"
 gem 'deep_cloneable', '~> 3.2.0'
 gem 'redis'
 gem 'request_store'
+gem "barnes"
 
 group :development, :test do
   gem "byebug", platform: :mri
