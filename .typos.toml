@@ -1,0 +1,13 @@
+# https://github.com/crate-ci/typos/blob/master/docs/reference.md
+
+[files]
+extend-exclude = ["bin", "fixtures", "log", "tmp", "vendor"] 
+ignore-hidden = true
+
+[default.extend-identifiers]
+
+[default.extend-words]
+
+[type.typos]
+extend-glob = [".typos.toml"]
+check-file = false
