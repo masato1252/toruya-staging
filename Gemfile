@@ -84,6 +84,8 @@ gem 'deep_cloneable', '~> 3.2.0'
 gem 'redis'
 gem 'request_store'
 gem "barnes"
+gem "rails-autoscale-web"
+gem "rails-autoscale-delayed_job"
 
 group :development, :test do
   gem "byebug", platform: :mri
