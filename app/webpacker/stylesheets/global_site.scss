@@ -221,6 +221,8 @@ input[type="file"],
     width: 100%;
     border: 0;
     border-radius: 0;
+    width: -webkit-fill-available;
+    margin: 10px 10px 0 10px;
   }
 
   &.with-border {
