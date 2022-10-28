@@ -173,7 +173,7 @@ const EpisodeEdit =({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -198,7 +198,7 @@ const EpisodeEdit =({props}) => {
           </div>
         </div>
 
-        <div className="col-sm-6 px-0 hidden-xs">
+        <div className="col-sm-6 px-0 hidden-xs preview-view">
           {
             ['name', 'content_url', 'note'].includes(props.attribute) && (
               <div className="fake-mobile-layout">

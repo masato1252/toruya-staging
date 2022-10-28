@@ -187,7 +187,7 @@ const SocialAccountEdit =({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <input type="hidden" name="id" ref={register({ required: true })} />
             <TopNavigationBar
@@ -212,7 +212,7 @@ const SocialAccountEdit =({props}) => {
           </div>
         </div>
 
-        <div className="col-sm-6 px-0 hidden-xs">
+        <div className="col-sm-6 px-0 hidden-xs preview-view">
           {['name'].includes(props.attribute) && (
             <div class="fake-mobile-layout">
               <SaleDemoPage

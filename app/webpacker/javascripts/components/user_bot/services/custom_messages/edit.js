@@ -137,7 +137,7 @@ const CustomMessageEdit =({props}) => {
   return (
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-6 px-0">
+        <div class="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -170,7 +170,7 @@ const CustomMessageEdit =({props}) => {
           </div>
         </div>
 
-        <div class="col-sm-6 px-0 hidden-xs"></div>
+        <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
       </div>
     </div>
   )

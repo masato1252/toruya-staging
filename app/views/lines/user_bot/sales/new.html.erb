@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-6 px-0">
+    <div class="col-sm-6 px-0 settings-view">
       <div class="form">
         <h3 class="centerize header"><%= I18n.t("user_bot.dashboards.sales.new.what_to_sale") %></h3>
         <% if !current_user.social_account&.line_settings_verified? %>
@@ -36,6 +36,6 @@
       </div>
     </div>
 
-    <div class="col-sm-6 px-0 hidden-xs"></div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
 </div>

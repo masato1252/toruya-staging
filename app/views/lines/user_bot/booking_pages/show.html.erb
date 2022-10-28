@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-6 px-0">
+    <div class="col-sm-6 px-0 settings-view">
       <div class="booking-page-show form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_pages_path, title: @booking_page.name %>
 
@@ -123,7 +123,7 @@
 
     </div>
 
-    <div class="col-sm-6 px-0 hidden-xs">
+    <div class="col-sm-6 px-0 hidden-xs preview-view">
       <%= text_field_tag :booking_url, booking_url(@booking_page), read_only: true, class: 'extend',
         data: {
           controller: "clipboard",

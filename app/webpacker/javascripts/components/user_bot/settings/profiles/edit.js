@@ -182,7 +182,7 @@ const ProfileEdit =({props}) => {
   return (
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-6 px-0">
+        <div class="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -205,7 +205,7 @@ const ProfileEdit =({props}) => {
           </div>
         </div>
 
-        <div className="col-sm-6 px-0 hidden-xs">
+        <div className="col-sm-6 px-0 hidden-xs preview-view">
           {['company_name', 'company_phone_number'].includes(props.attribute) && (
             <div class="fake-mobile-layout">
               <SaleDemoPage
