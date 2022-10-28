@@ -28,6 +28,9 @@
     <div class="responsive-content flex-row">
       <% non_mobile do %>
         <ul class="mobile-content desktop-navigator hidden-xs">
+          <li>
+            <img class="logo" src='<%= asset_pack_path("media/assets/user_bot/logo.png") %>' />
+          </li>
           <li class="p-1">
             <%= active_link_to lines_user_bot_services_path do %>
               <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.services.online_service") %>
