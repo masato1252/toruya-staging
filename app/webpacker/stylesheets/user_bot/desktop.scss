@@ -123,7 +123,11 @@
     overflow: scroll;
     height: 100%;
     border-right: 1px solid #efefef;
-    background-color: #eeeeee;
+    background-color: #ffffff;
+
+    &:has(.form) {
+      background-color: #eeeeee;
+    }
   }
 
   .preview-view {
