@@ -67,9 +67,9 @@ const SocialAccountEdit =({props}) => {
             <div className="field-row">
               <input ref={register} name={props.attribute} type="text" className="extend" />
             </div>
-            <h3 class="margin-around centerize">
+            <p class="desc margin-around centerize">
               <div dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.shop.phone_number_hint_html") }} />
-            </h3>
+            </p>
           </>
         );
       case "logo":
@@ -85,9 +85,9 @@ const SocialAccountEdit =({props}) => {
                 {I18n.t("user_bot.dashboards.settings.shop.logo_limit_description")}
               </p>
             </div>
-            <h3 class="margin-around centerize">
+            <p class="desc margin-around centerize">
               {I18n.t("user_bot.dashboards.settings.company.info_hint")}
-            </h3>
+            </p>
           </>
         )
         break;
@@ -102,9 +102,9 @@ const SocialAccountEdit =({props}) => {
               {I18n.t("common.short_shop_name")}
               <input ref={register({ required: true })} name="short_name" type="text" />
             </div>
-            <h3 class="margin-around centerize">
+            <p class="desc margin-around centerize">
               {I18n.t("user_bot.dashboards.settings.company.info_hint")}
-            </h3>
+            </p>
           </>
         );
         break;
@@ -152,9 +152,9 @@ const SocialAccountEdit =({props}) => {
                 type="text"
               />
             </div>
-            <h3 class="margin-around centerize">
+            <p class="desc margin-around centerize">
               {I18n.t("user_bot.dashboards.settings.company.info_hint")}
-            </h3>
+            </p>
           </>
         )
         break
