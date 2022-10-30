@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import ReactPlayer from 'react-player';
 import _ from "lodash";
 
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 import { SaleServices } from "user_bot/api"
 import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
 import { Template, HintTitle } from "shared/builders"
@@ -388,7 +388,7 @@ const SalePageEdit =({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -405,7 +405,7 @@ const SalePageEdit =({props}) => {
             {props.attribute !== 'company' && (
               <BottomNavigationBar klassName="centerize">
                 <span></span>
-                <CiricleButtonWithWord
+                <CircleButtonWithWord
                   disabled={formState.isSubmitting}
                   onHandle={handleSubmit(onSubmit)}
                   icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
@@ -416,7 +416,7 @@ const SalePageEdit =({props}) => {
           </div>
         </div>
 
-        <div className="col-sm-6 px-0 hidden-xs">
+        <div className="col-sm-6 px-0 hidden-xs preview-view">
             {
               ['normal_price'].includes(props.attribute) && (
                 <div className="fake-mobile-layout">

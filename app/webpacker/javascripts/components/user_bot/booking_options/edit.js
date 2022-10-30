@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 import { BookingOptionServices } from "user_bot/api"
 import MenuRestrictOrderField from "./menu_restrict_order_field";
 import BookingStartAtField from "components/user_bot/booking_pages/booking_start_at_field";
@@ -103,7 +103,7 @@ const BookingOptionEdit =({props}) => {
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize">
         <span></span>
-        <CiricleButtonWithWord
+        <CircleButtonWithWord
           disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}

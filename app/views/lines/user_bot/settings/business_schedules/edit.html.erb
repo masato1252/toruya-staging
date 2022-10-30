@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-6 px-0">
+    <div class="col-sm-6 px-0 settings-view">
       <%= react_component("user_bot/settings/business_schedules/edit", {
         props: {
           business_schedule: BusinessScheduleSerializer.new(@business_schedule).attributes_hash,
@@ -10,6 +10,6 @@
                          ) %>
     </div>
 
-    <div class="col-sm-6 px-0 hidden-xs"></div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
 </div>

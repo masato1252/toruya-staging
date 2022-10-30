@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CiricleButtonWithWord } from "shared/components"
+import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
 import { SocialAccountServices } from "user_bot/api"
 
 const SocialAccountEdit =({props}) => {
@@ -65,7 +65,7 @@ const SocialAccountEdit =({props}) => {
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
         <span></span>
-        <CiricleButtonWithWord
+        <CircleButtonWithWord
           disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}

@@ -7,7 +7,7 @@ import _ from "lodash";
 import { CustomMessageServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import { Translator } from "libraries/helper";
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 
 let personalizeKeyword = "";
 
@@ -137,7 +137,7 @@ const CustomMessageEdit =({props}) => {
   return (
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-6 px-0">
+        <div class="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -160,7 +160,7 @@ const CustomMessageEdit =({props}) => {
                 </a>
             )}
               <span></span>
-              <CiricleButtonWithWord
+              <CircleButtonWithWord
                 disabled={formState.isSubmitting || (!isSendRightAway() && after_days === '')}
                 onHandle={handleSubmit(onSubmit)}
                 icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
@@ -170,7 +170,7 @@ const CustomMessageEdit =({props}) => {
           </div>
         </div>
 
-        <div class="col-sm-6 px-0 hidden-xs"></div>
+        <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
       </div>
     </div>
   )

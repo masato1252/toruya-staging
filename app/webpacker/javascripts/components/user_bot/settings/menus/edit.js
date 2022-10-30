@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord, SwitchButton } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton } from "shared/components"
 import { MenuServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 
@@ -153,7 +153,7 @@ const MenuEdit =({props}) => {
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
         <span></span>
-        <CiricleButtonWithWord
+        <CircleButtonWithWord
           disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}

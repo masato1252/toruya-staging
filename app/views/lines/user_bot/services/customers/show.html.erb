@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-6 px-0">
+    <div class="col-sm-6 px-0 settings-view">
       <div class="service-show form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar",
           previous_path: params[:from] == "customer_dashboard" ? lines_user_bot_customers_path(customer_id: @customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations]) : lines_user_bot_service_customers_path(service_id: @online_service.id),
@@ -35,6 +35,6 @@
       </div>
     </div>
 
-    <div class="col-sm-6 px-0 hidden-xs"></div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
 </div>

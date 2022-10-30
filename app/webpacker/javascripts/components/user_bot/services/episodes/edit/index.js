@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 import { CommonServices } from "user_bot/api"
 
 import EditTextInput from "shared/edit/text_input";
@@ -173,7 +173,7 @@ const EpisodeEdit =({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -188,7 +188,7 @@ const EpisodeEdit =({props}) => {
 
             <BottomNavigationBar klassName="centerize">
               <span></span>
-              <CiricleButtonWithWord
+              <CircleButtonWithWord
                 disabled={formState.isSubmitting}
                 onHandle={handleSubmit(onSubmit)}
                 icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
@@ -198,7 +198,7 @@ const EpisodeEdit =({props}) => {
           </div>
         </div>
 
-        <div className="col-sm-6 px-0 hidden-xs">
+        <div className="col-sm-6 px-0 hidden-xs preview-view">
           {
             ['name', 'content_url', 'note'].includes(props.attribute) && (
               <div className="fake-mobile-layout">

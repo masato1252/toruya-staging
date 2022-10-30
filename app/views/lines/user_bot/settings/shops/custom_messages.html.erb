@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-6 px-0">
+    <div class="col-sm-6 px-0 settings-view">
       <div class="settings-dashboard form">
         <h3><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></h3>
         <% current_user.shops.each do |shop| %>
@@ -11,6 +11,6 @@
       </div>
     </div>
 
-    <div class="col-sm-6 px-0 hidden-xs"></div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
 </div>

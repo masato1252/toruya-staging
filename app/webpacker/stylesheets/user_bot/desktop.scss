@@ -2,9 +2,13 @@
   min-width: $desktop-sidebar-width;
   width: $desktop-sidebar-width;
   border-right: 1px solid $gray4;
+  background-color: #9e9e9e;
+  margin-top: 0;
+  border: 0;
 
   li {
     list-style-type: none;
+    padding: 5px 0;
   }
 
   .nav {
@@ -13,7 +17,32 @@
 
   a.active + .nav {
     display: block;
-    margin-left: 3px;
+    margin-left: 30px;
+  }
+
+  ul li a:hover,
+  .p-1 a:hover {
+    background-color: #787878;
+  }
+
+  .p-1 > a.active {
+    background-color: #787878;
+  }
+
+  a:link,
+  a:visited {
+    color: #ffffff;
+    display: block;
+    height: 35px;
+    line-height: 35px;
+    vertical-align: middle;
+    padding: 0 9px;
+    border-radius: 7px;
+  }
+
+  i {
+    font-size: unset;
+    width: 19px;
   }
 }
 
@@ -23,16 +52,36 @@
   margin-right: auto;
   max-width: 500px;
   border: 1px solid $gray;
+
+  @include media-breakpoint-up(tablet) {
+    width: 380px;
+    height: 700px;
+    border: 15px solid #000000;
+    border-radius: 3em;
+    background-color: #ffffff;
+    transform: scale(.9);
+    margin-top: 0;
+    margin-bottom: 20px;
+    overflow: scroll;
+  }
 }
 
 .line-chat-background {
-  background-color: #A3D1EB;
+  background-color: #a3d1eb;
   padding: 6px;
   padding-right: 60px;
+
+  @include media-breakpoint-up(tablet) {
+    background-image: url(https://toruya.com/user-bot/linecard_footer.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    height: 100%;
+    height: -webkit-fill-available;
+  }
 }
 
 .dummy-line-card {
-  border: 1px solid $gray;
   border-radius: 20px;
   margin: 10px;
   background-color: #ffffff;
@@ -47,7 +96,46 @@
     margin-bottom: 10px;
   }
 
-  .content, .actions {
+  .actions {
     padding: 10px;
   }
+
+  @include media-breakpoint-up(tablet) {
+    .content {
+      padding: 0 10px;
+
+      h3 {
+        font-size: 13pt;
+        margin-bottom: 10px;
+      }
+
+      .desc {
+        font-size: 10pt;
+        color: #888888;
+      }
+    }
+  }
 }
+
+
+@include media-breakpoint-up(tablet) {
+  .settings-view {
+    overflow: scroll;
+    height: 100%;
+    border-right: 1px solid #efefef;
+    background-color: #eeeeee;
+  }
+
+  .preview-view {
+    background-color: #f7f7f7;
+  }
+
+  .product-content-deails {
+    background-color: #ffffff;
+  }
+
+  .purchase-buttons {
+    margin: 10px 10px 0 10px;
+  }
+}
+

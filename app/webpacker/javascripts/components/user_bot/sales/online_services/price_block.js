@@ -106,13 +106,14 @@ const PriceBlock = ({
   }
 
   const isFree = () => {
-    return parseInt(
+    return (parseInt(
       price?.price_amounts?.one_time?.amount ||
       price?.price_amounts?.multiple_times?.amount ||
       price?.price_amounts?.month?.amount ||
       price?.price_amounts?.year?.amount ||
       0
-    ) === 0
+    ) === 0) ||
+      paymentType() == 'free'
   }
 
   // one time or multiple times
@@ -122,6 +123,10 @@ const PriceBlock = ({
 
   const paymentType = () => {
     return price.price_types[0] || 'free'
+  }
+
+  const hasPaymentType = (paymentType) => {
+    return price?.price_types?.includes(paymentType);
   }
 
   if (!demo && is_ended) {
@@ -150,12 +155,18 @@ const PriceBlock = ({
         <div className="price">
           <div className="special-price">
             <div className="label">{I18n.t("common.today_price_label")}</div>
-            {price?.price_amounts?.month?.amount && <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>}
-            {price?.price_amounts?.year?.amount && <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>}
-            <PriceOntTimePaymentText amount={price?.price_amounts?.one_time?.amount} />
-            <PriceMultipleTimesPaymnetText amount={price?.price_amounts?.multiple_times?.amount} times={price?.price_amounts?.multiple_times?.times} />
-            <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} />
-            <PriceOntTimePaymentText amount={price?.price_amounts?.year?.amount} />
+            {
+              !isFree() && (
+                <>
+                  {hasPaymentType("month") && price?.price_amounts?.month?.amount && <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>}
+                  {hasPaymentType("year") && price?.price_amounts?.year?.amount && <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>}
+                  {hasPaymentType("one_time") && <PriceOntTimePaymentText amount={price?.price_amounts?.one_time?.amount} />}
+                  {hasPaymentType("multiple_times") && <PriceMultipleTimesPaymnetText amount={price?.price_amounts?.multiple_times?.amount} times={price?.price_amounts?.multiple_times?.times} />}
+                  {hasPaymentType("month") && <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} />}
+                  {hasPaymentType("year") && <PriceOntTimePaymentText amount={price?.price_amounts?.year?.amount} />}
+                </>
+              )
+            }
             {isFree() && <div>{I18n.t("common.free_price")}</div>}
           </div>
         </div>
@@ -169,7 +180,7 @@ const PriceBlock = ({
       <div className="product-price-block">
         <NormalPriceBlock amount={normal_price} />
 
-        {price?.price_amounts?.one_time?.amount && (
+        {hasPaymentType("one_time") && price?.price_amounts?.one_time?.amount && (
           <div className="multiple-prices">
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.one_time_pay")}</h3>
@@ -182,7 +193,7 @@ const PriceBlock = ({
           </div>
         )}
 
-        {price?.price_amounts?.multiple_times?.amount && price?.price_amounts?.multiple_times?.times && (
+        {hasPaymentType("multiple_times") && price?.price_amounts?.multiple_times?.amount && price?.price_amounts?.multiple_times?.times && (
           <div className="multiple-prices">
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.multiple_times_pay")}</h3>
@@ -195,7 +206,7 @@ const PriceBlock = ({
           </div>
         )}
 
-        {price?.price_amounts?.month?.amount && (
+        {hasPaymentType("month") && price?.price_amounts?.month?.amount && (
           <div className="multiple-prices">
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>
@@ -208,7 +219,7 @@ const PriceBlock = ({
           </div>
         )}
 
-        {price?.price_amounts?.year?.amount && (
+        {hasPaymentType("year") && price?.price_amounts?.year?.amount && (
           <div className="multiple-prices">
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>

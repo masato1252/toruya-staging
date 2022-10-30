@@ -25,7 +25,7 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service
 
   return (
     <div className="online-service-body centerize pb-6">
-      <h2 className="name">
+      <h2 className="name p-2">
         {episode.name}
         <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("name_step")} />
       </h2>
@@ -57,7 +57,7 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service
         </div>
       )}
       {(demo || preview || episode.note) && (
-        <div className="text-left break-line-content rounded mt-1">
+        <div className="text-left break-line-content rounded mt-1 p-2">
           <DemoEditButton demo={demo} jump={() => jumpByKey("note_step")} />
           <div dangerouslySetInnerHTML={{ __html: Autolinker.link(episode.note) }} />
         </div>

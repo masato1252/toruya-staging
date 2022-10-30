@@ -7,7 +7,7 @@ import _ from "lodash";
 
 import { CommonServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
-import { BottomNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, CircleButtonWithWord } from "shared/components"
 
 const CustomMessageEdit =({props}) => {
   const { handleSubmit, formState, register, watch } = useForm({
@@ -141,7 +141,7 @@ const CustomMessageEdit =({props}) => {
     <div className="form with-top-bar">
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
-        <CiricleButtonWithWord
+        <CircleButtonWithWord
           disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}

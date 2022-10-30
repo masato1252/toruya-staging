@@ -17,7 +17,7 @@ const OnlineServicePage = ({company_info, name, note, solution_type, content_url
         { company_info?.logo_url ?  <img className="logo" src={company_info.logo_url} /> : <h2>{company_info?.name}</h2> }
       </div>
       <div className="online-service-body centerize">
-        <h2 className="name">
+        <h2 className="name p-2">
           {name}
           <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("name_step")} />
         </h2>
@@ -30,7 +30,7 @@ const OnlineServicePage = ({company_info, name, note, solution_type, content_url
           />
         </div>
         {note && (
-          <div className="text-left break-line-content rounded mt-1">
+          <div className="text-left break-line-content rounded mt-1 p-2">
             <div dangerouslySetInnerHTML={{ __html: Autolinker.link(note) }} />
           </div>
         )}

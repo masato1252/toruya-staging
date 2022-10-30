@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
 import _ from "lodash";
 
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord, EndOnMonthRadio, EndOnDaysRadio, EndAtRadio, NeverEndRadio, SubscriptionRadio } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, EndOnMonthRadio, EndOnDaysRadio, EndAtRadio, NeverEndRadio, SubscriptionRadio } from "shared/components"
 import { OnlineServices } from "user_bot/api"
 import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
@@ -490,7 +490,7 @@ const OnlineServiceEdit =({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -505,7 +505,7 @@ const OnlineServiceEdit =({props}) => {
             {props.attribute !== 'company' && (
               <BottomNavigationBar klassName="centerize">
                 <span></span>
-                <CiricleButtonWithWord
+                <CircleButtonWithWord
                   disabled={formState.isSubmitting}
                   onHandle={handleSubmit(onSubmit)}
                   icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
@@ -515,7 +515,7 @@ const OnlineServiceEdit =({props}) => {
             )}
           </div>
         </div>
-        <div className="col-sm-6 px-0 hidden-xs">
+        <div className="col-sm-6 px-0 hidden-xs preview-view">
             {
               ['name', 'content_url', 'note', 'upsell_sale_page'].includes(props.attribute) && (
                 <div className="fake-mobile-layout">
