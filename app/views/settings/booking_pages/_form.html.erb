@@ -20,7 +20,7 @@
       end_at_time_part: @booking_page.end_at_time,
       available_booking_options: [],
       options: custom_options(page_booking_options),
-      had_special_date: @booking_page.only_specail_dates_booking?,
+      had_special_date: @booking_page.only_special_dates_booking?,
       special_dates: @booking_page.booking_page_special_dates.map do |special_date|
         {
           start_at_date_part: special_date.start_at_date,

@@ -7,7 +7,7 @@ import CustomerNav from "./customer_nav";
 
 import useCustomerMessages from "libraries/use_customer_messages"
 import Message from "components/management/chats/message";
-import { BottomNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, CircleButtonWithWord } from "shared/components"
 import { CustomerServices } from "components/user_bot/api"
 
 import CustomerMessageForm from "./customer_message_form"

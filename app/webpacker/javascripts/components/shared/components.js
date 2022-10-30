@@ -196,7 +196,7 @@ const SelectOptions = ({ options }) => {
   </>
 }
 
-const CiricleButtonWithWord = ({onHandle, icon, word, disabled}) => (
+const CircleButtonWithWord = ({onHandle, icon, word, disabled}) => (
   <button
     disabled={disabled}
     className="btn btn-yellow btn-circle btn-save btn-tweak btn-with-word"
@@ -419,7 +419,7 @@ export {
   InputWithEnter,
   NotificationMessages,
   SelectOptions,
-  CiricleButtonWithWord,
+  CircleButtonWithWord,
   BookingOptionElement,
   UrlCopyBtn,
   BookingPageButtonCopyBtn,

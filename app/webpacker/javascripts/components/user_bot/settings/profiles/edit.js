@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CiricleButtonWithWord } from "shared/components"
+import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
 import { UsersServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import useAddress from "libraries/use_address";
@@ -195,7 +195,7 @@ const ProfileEdit =({props}) => {
             {renderCorrespondField()}
             <BottomNavigationBar klassName="centerize transparent">
               <span></span>
-              <CiricleButtonWithWord
+              <CircleButtonWithWord
                 disabled={formState.isSubmitting}
                 onHandle={handleSubmit(onSubmit)}
                 icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}

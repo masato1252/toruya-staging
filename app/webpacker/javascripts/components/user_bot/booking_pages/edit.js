@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import _ from "lodash";
 
-import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CiricleButtonWithWord } from "shared/components"
+import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
 import DateTimeFieldsRow from "shared/datetime_fields_row";
 import { BookingPageServices } from "user_bot/api"
 
@@ -152,7 +152,7 @@ const BookingPageEdit =({props}) => {
             {renderCorrespondField()}
             <BottomNavigationBar klassName="centerize transparent">
               <span></span>
-              <CiricleButtonWithWord
+              <CircleButtonWithWord
                 disabled={formState.isSubmitting}
                 onHandle={handleSubmit(onSubmit)}
                 icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}

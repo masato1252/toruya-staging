@@ -85,7 +85,7 @@ class BookingPage < ApplicationRecord
     (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at) || deleted_at.present?
   end
 
-  def only_specail_dates_booking?
+  def only_special_dates_booking?
     booking_page_special_dates.exists?
   end
 

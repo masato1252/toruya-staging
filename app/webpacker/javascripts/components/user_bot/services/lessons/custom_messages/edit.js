@@ -7,7 +7,7 @@ import _ from "lodash";
 import { CustomMessageServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import { Translator } from "libraries/helper";
-import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 
 let personalizeKeyword = "";
 
@@ -126,7 +126,7 @@ const CustomMessageEdit =({props}) => {
           </a>
         )}
         <span></span>
-        <CiricleButtonWithWord
+        <CircleButtonWithWord
           disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
