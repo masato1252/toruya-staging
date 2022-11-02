@@ -86,6 +86,7 @@ gem 'request_store'
 gem "barnes"
 gem "rails-autoscale-web"
 gem "rails-autoscale-delayed_job"
+gem 'rack-cors'
 
 group :development, :test do
   gem "byebug", platform: :mri
