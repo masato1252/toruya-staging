@@ -43,7 +43,7 @@ const options = {
   },
 };
 
-const SalePagesMetric = ({}) => {
+const SalePagesMetric = ({demo}) => {
   const [data, setData] = useState({
     labels: [],
     datasets: []
@@ -51,7 +51,8 @@ const SalePagesMetric = ({}) => {
 
   const fetchData = async () => {
     const [_error, response] = await CommonServices.get({
-      url: Routes.sale_pages_lines_user_bot_metrics_path({format: "json"})
+      url: Routes.sale_pages_lines_user_bot_metrics_path({ format: "json" }),
+      data: { demo }
     })
 
     setData(response.data)

@@ -14,8 +14,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
 
         start_time = end_time.next_day.beginning_of_day
 
-        count
-        # rand(100)
+        params[:demo] ? rand(100) : count
       end
     end
     # metrics = {
@@ -84,13 +83,13 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     metrics = uniq_product_ids.map do |product_id|
       sale_page = sale_pages.find { |page| page.id == product_id }
       visit_count = visit_scope.where(product_id: product_id, product_type: "SalePage").where(started_at: metric_period).count
-      # visit_count = rand(6..10)
+      visit_count = params[:demo] ? rand(6..10) : count
       purchased_count =
         if sale_page&.is_booking_page?
           nil
         else
           OnlineServiceCustomerRelation.where(paid_at: metric_period, sale_page_id: product_id).count
-          # rand(1..3)
+          params[:demo] ? rand(1..3) : count
         end
 
       {
@@ -112,13 +111,11 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def visit_scope
-    Ahoy::Visit.where(owner_id: current_user.id, product_type: "SalePage")
-    # Ahoy::Visit.where(product_type: "SalePage")
+    params[:demo] ? Ahoy::Visit.where(product_type: "SalePage") : Ahoy::Visit.where(owner_id: current_user.id, product_type: "SalePage")
   end
 
   def uniq_product_ids
-    visit_scope.where(started_at: metric_period).select(:product_id).distinct(:product_id).pluck(:product_id)
-    # visit_scope.select(:product_id).distinct(:product_id).pluck(:product_id).sample(3)
+    params[:demo] ? visit_scope.select(:product_id).distinct(:product_id).pluck(:product_id).sample(3) : visit_scope.where(started_at: metric_period).select(:product_id).distinct(:product_id).pluck(:product_id)
   end
 
   def metric_start_time

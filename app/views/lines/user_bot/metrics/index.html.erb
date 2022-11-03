@@ -1,4 +1,4 @@
-<%= react_component( "user_bot/metrics/sale_pages", {}, { camelize_props: false }) %>
+<%= react_component( "user_bot/metrics/sale_pages", { demo: params[:demo] }, { camelize_props: false }) %>
 <div class="margin-around">
-  <%= react_component( "user_bot/metrics/sale_pages_conversions", {}, { camelize_props: false }) %>
+  <%= react_component( "user_bot/metrics/sale_pages_conversions", { demo: params[:demo] }, { camelize_props: false }) %>
 </div>
