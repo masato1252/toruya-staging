@@ -43,6 +43,13 @@ Rails.application.routes.draw do
         get :check_shop_profile
       end
 
+      resources :metrics, only: [:index] do
+        collection do
+          get :sale_pages
+          get :sale_pages_conversions
+        end
+      end
+
       resources :schedules, only: [:index] do
         collection do
           get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
