@@ -125,7 +125,7 @@
     border-right: 1px solid #efefef;
     background-color: #ffffff;
 
-    &:has(.form) {
+    &:has(form.form) {
       background-color: #eeeeee;
     }
   }
