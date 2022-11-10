@@ -119,6 +119,43 @@
 
 
 @include media-breakpoint-up(tablet) {
+  .metrics.mobile-content {
+    margin-top: 36px;
+    overflow: scroll;
+  }
+
+  .container {
+    width: 100%;
+    width: -webkit-fill-available;
+    padding: 0;
+
+    &.margin-around.table {
+      .row {
+        margin-right: 0;
+        margin-left: 0;
+        background-color: #ffffff
+
+        &:first-child {
+          background-color: #d3d3d3;
+        }
+
+        &:nth-child(odd) {
+          background-color: #f1f1f1;
+        }
+
+        & > div:first-child {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        & > div {
+          padding: 10px;
+        }
+      }
+    }
+  }
+
   .settings-view {
     overflow: scroll;
     height: 100%;

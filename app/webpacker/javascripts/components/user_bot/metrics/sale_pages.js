@@ -35,7 +35,6 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
     },
   },
   interaction: {
@@ -63,7 +62,16 @@ const SalePagesMetric = ({demo}) => {
   }, [])
 
   return (
-    <Line options={options} data={data} />
+    <div className="container margin-around">
+      <h2>Weekly Sale page visit count</h2>
+      {
+        data.datasets.length === 0 ? (
+          <p className="margin-around centerize desc border border-solid border-gray-500 p-6">
+            No Data yet
+          </p>
+        ) : <Line options={options} data={data} />
+      }
+    </div>
   )
 }
 
