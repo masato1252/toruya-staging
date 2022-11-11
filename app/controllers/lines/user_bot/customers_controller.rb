@@ -207,6 +207,11 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     render json: json_response(outcome)
   end
 
+  def csv
+    result = ::Customers::Csv.run!(user: super_user)
+    send_data result, filename: "customers.csv"
+  end
+
   private
 
   def render_customers_json(customers)
