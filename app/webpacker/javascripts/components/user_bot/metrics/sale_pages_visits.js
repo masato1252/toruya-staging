@@ -42,7 +42,7 @@ const options = {
   },
 };
 
-const SalePagesMetric = ({demo}) => {
+const SalePagesVisitsMetric = ({demo, metric_path}) => {
   const [data, setData] = useState({
     labels: [],
     datasets: []
@@ -50,7 +50,7 @@ const SalePagesMetric = ({demo}) => {
 
   const fetchData = async () => {
     const [_error, response] = await CommonServices.get({
-      url: Routes.sale_pages_lines_user_bot_metrics_path({ format: "json" }),
+      url: metric_path,
       data: { demo }
     })
 
@@ -63,7 +63,7 @@ const SalePagesMetric = ({demo}) => {
 
   return (
     <div className="container margin-around">
-      <h2>Weekly Sale page visit count</h2>
+      <h2>{I18n.t("user_bot.dashboards.metrics.weekly_salge_page_visit_count")}</h2>
       {
         data.datasets.length === 0 ? (
           <p className="margin-around centerize desc border border-solid border-gray-500 p-6">
@@ -75,4 +75,4 @@ const SalePagesMetric = ({demo}) => {
   )
 }
 
-export default SalePagesMetric;
+export default SalePagesVisitsMetric;

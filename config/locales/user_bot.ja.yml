@@ -381,6 +381,7 @@ ja:
         visit_count: 表示数
         purchased_count: 登録数
         conversion_rate: 成約率
+        weekly_salge_page_visit_count: 解析情報：販売ページ
       booking_page_creation:
         default_label: "%{menu_name}予約ページ"
         default_greeting: "%{menu_name}の予約を受付ます。"

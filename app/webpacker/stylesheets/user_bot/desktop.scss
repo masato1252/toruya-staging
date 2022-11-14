@@ -129,18 +129,14 @@
     width: -webkit-fill-available;
     padding: 0;
 
-    &.margin-around.table {
+    &.table {
       .row {
         margin-right: 0;
         margin-left: 0;
         background-color: #ffffff
 
-        &:first-child {
+        &:first-of-type {
           background-color: #d3d3d3;
-        }
-
-        &:nth-child(odd) {
-          background-color: #f1f1f1;
         }
 
         & > div:first-child {
@@ -152,6 +148,10 @@
         & > div {
           padding: 10px;
         }
+      }
+
+      .row:nth-child(even) {
+        background-color: #f1f1f1;
       }
     }
   }

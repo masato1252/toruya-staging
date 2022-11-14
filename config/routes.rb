@@ -46,7 +46,12 @@ Rails.application.routes.draw do
       resources :metrics, only: [:index] do
         collection do
           get :sale_pages
+          get :sale_pages_visits
           get :sale_pages_conversions
+          get :online_services
+          get "/online_services/:id", action: "online_service", as: :online_service
+          get :online_service_sale_pages_visits
+          get :online_service_sale_pages_conversions
         end
       end
 

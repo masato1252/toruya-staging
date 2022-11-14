@@ -1,0 +1,24 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-options form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.metrics.title") %>
+
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
+        <div class="booking-pages-list">
+          <% @online_services.each do |service| %>
+            <%= link_to online_service_lines_user_bot_metrics_path(service), class: "field-row with-next-arrow" do %>
+              <div>
+                <h3><%= service.internal_name.presence || service.name %></h3>
+                <div class="desc"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
+              </div>
+              <i class="fa fa-angle-right"></i>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

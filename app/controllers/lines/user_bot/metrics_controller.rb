@@ -4,8 +4,54 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   def index
   end
 
-  def sale_pages
-    metrics = uniq_product_ids.each_with_object({}) do |product_id, h|
+  def sale_pages; end
+
+  def sale_pages_visits
+    render json: sale_pages_visits_metric_data(uniq_sale_page_ids)
+  end
+
+  def sale_pages_conversions
+    render json: sale_pages_conversions_metric_data(uniq_sale_page_ids)
+  end
+
+  def online_services
+    @online_services = current_user.online_services.order("updated_at DESC")
+  end
+
+  def online_service; end
+
+  def online_service_sale_pages_visits
+    sale_page_ids = SalePage.where(id: uniq_sale_page_ids, product_id: params[:id], product_type: 'OnlineService').pluck(:id)
+
+    render json: sale_pages_visits_metric_data(params[:demo] ? uniq_sale_page_ids : sale_page_ids)
+  end
+
+  def online_service_sale_pages_conversions
+    sale_page_ids = SalePage.where(id: uniq_sale_page_ids, product_id: params[:id], product_type: 'OnlineService').pluck(:id)
+
+    render json: sale_pages_conversions_metric_data(params[:demo] ? uniq_sale_page_ids : sale_page_ids)
+  end
+
+  private
+
+  def metric_period
+    metric_start_time..Time.current
+  end
+
+  def visit_scope
+    params[:demo] ? Ahoy::Visit.where(product_type: "SalePage") : Ahoy::Visit.where(owner_id: current_user.id, product_type: "SalePage")
+  end
+
+  def uniq_sale_page_ids
+    params[:demo] ? visit_scope.select(:product_id).distinct(:product_id).pluck(:product_id).sample(3) : visit_scope.where(started_at: metric_period).select(:product_id).distinct(:product_id).pluck(:product_id)
+  end
+
+  def metric_start_time
+    31.days.ago.beginning_of_day
+  end
+
+  def sale_pages_visits_metric_data(sale_page_ids)
+    metrics = sale_page_ids.each_with_object({}) do |product_id, h|
       start_time = metric_start_time
 
       h[product_id] = 4.times.map do |i|
@@ -38,7 +84,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     #  "2022/12/01(木) ~ 2022/12/08(木)"
     # ]
 
-    sale_pages = SalePage.where(id: uniq_product_ids).includes(:product).to_a
+    sale_pages = SalePage.where(id: sale_page_ids).includes(:product).to_a
     datasets = metrics.map do |product_id, visit_counts|
       product = sale_pages.find { |page| page.id == product_id }
 
@@ -52,13 +98,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
       }
     end
 
-    data = {
-      labels: labels,
-      datasets: datasets
-    }
-
-    render json: data
-    # const data = {
+    # {
     #   labels,
     #   datasets: [
     #     {
@@ -73,14 +113,18 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     #       borderColor: 'rgb(53, 162, 235)',
     #       backgroundColor: 'rgba(53, 162, 235, 0.5)',
     #     },
-    #   ],
-    # };
+    #   ]
+    # }
+    {
+      labels: labels,
+      datasets: datasets
+    }
   end
 
-  def sale_pages_conversions
-    sale_pages = SalePage.where(id: uniq_product_ids).includes(:product).to_a
+  def sale_pages_conversions_metric_data(sale_page_ids)
+    sale_pages = SalePage.where(id: sale_page_ids).includes(:product).to_a
 
-    metrics = uniq_product_ids.map do |product_id|
+    metrics = sale_page_ids.map do |product_id|
       sale_page = sale_pages.find { |page| page.id == product_id }
       visit_count = visit_scope.where(product_id: product_id, product_type: "SalePage").where(started_at: metric_period).count
       visit_count = params[:demo] ? rand(6..10) : count
@@ -101,24 +145,6 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
       }
     end
 
-    render json: metrics.sort_by { |m| m[:rate] ? -m[:rate] : -1_000 }.sort_by { |m| -m[:visit_count] }
-  end
-
-  private
-
-  def metric_period
-    metric_start_time..Time.current
-  end
-
-  def visit_scope
-    params[:demo] ? Ahoy::Visit.where(product_type: "SalePage") : Ahoy::Visit.where(owner_id: current_user.id, product_type: "SalePage")
-  end
-
-  def uniq_product_ids
-    params[:demo] ? visit_scope.select(:product_id).distinct(:product_id).pluck(:product_id).sample(3) : visit_scope.where(started_at: metric_period).select(:product_id).distinct(:product_id).pluck(:product_id)
-  end
-
-  def metric_start_time
-    31.days.ago.beginning_of_day
+    metrics.sort_by { |m| m[:rate] ? -m[:rate] : -1_000 }.sort_by { |m| -m[:visit_count] }
   end
 end
