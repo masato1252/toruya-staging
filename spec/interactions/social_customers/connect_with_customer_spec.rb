@@ -24,10 +24,15 @@ RSpec.describe SocialCustomers::ConnectWithCustomer do
     end
 
     context "when customer was connected with other social_customer" do
-      let!(:other_social_cusomter) { FactoryBot.create(:social_customer, customer: customer, user_id: social_customer.user_id) }
+      let!(:other_social_customer) { FactoryBot.create(:social_customer, customer: customer, user_id: social_customer.user_id) }
 
-      it "was invalid" do
-        expect(outcome).to be_invalid
+      it "connects latest social_customer with customer" do
+        allow(LineClient).to receive(:send)
+
+        outcome
+
+        expect(customer.social_customer).to eq(social_customer)
+        expect(other_social_customer.reload.customer).to be_nil
       end
     end
   end

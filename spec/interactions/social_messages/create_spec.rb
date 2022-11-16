@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe SocialMessages::Create, :with_line do
   let!(:social_customer) { FactoryBot.create(:social_customer) }
   let(:user) { social_customer.user }
-  let(:readed) { false }
+  let(:) { false }
   let(:message_type) { SocialMessage.message_types[:customer] }
   let(:staff) {}
   let(:schedule_at) {}
@@ -14,7 +14,7 @@ RSpec.describe SocialMessages::Create, :with_line do
     {
       social_customer: social_customer,
       content: "foo",
-      readed: readed,
+      : read,
       message_type: message_type,
       schedule_at: schedule_at,
       staff: staff,
@@ -35,7 +35,7 @@ RSpec.describe SocialMessages::Create, :with_line do
         social_message = social_customer.social_messages.last
 
         expect(user.reload.customer_latest_activity_at).to be_present
-        expect(social_message.readed_at).to be_nil
+        expect(social_message.ed_at).to be_nil
         expect(social_message.sent_at).to be_present
         expect(social_message.schedule_at).to be_nil
         expect(social_message.message_type).to eq("customer")
@@ -43,7 +43,7 @@ RSpec.describe SocialMessages::Create, :with_line do
     end
 
     context "when message is from staff" do
-      let(:readed) { true }
+      let(:ed) { true }
       let(:message_type) { SocialMessage.message_types[:staff] }
       let(:staff) { FactoryBot.create(:staff) }
 
@@ -53,7 +53,7 @@ RSpec.describe SocialMessages::Create, :with_line do
 
         social_message = social_customer.social_messages.last
 
-        expect(social_message.readed_at).not_to be_nil
+        expect(social_message.ed_at).not_to be_nil
         expect(social_message.message_type).to eq("staff")
         expect(social_message.staff_id).to eq(staff.id)
         expect(social_message.schedule_at).to be_nil
