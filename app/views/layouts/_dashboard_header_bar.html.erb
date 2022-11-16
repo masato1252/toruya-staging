@@ -17,7 +17,7 @@
       <% end %>
     </dd>
 
-    <% if can?(:swith_staffs_selector, User) && @staffs_selector_displaying %>
+    <% if can?(:switch_staffs_selector, User) && @staffs_selector_displaying %>
       <dd id="NAVshopSelect">
         <%= staffs_select_component %>
       </dd>

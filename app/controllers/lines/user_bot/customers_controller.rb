@@ -118,7 +118,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     head :ok
   end
 
-  def toggle_reminder_premission
+  def toggle_reminder_permission
     customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
     customer.update(reminder_permission: !customer.reminder_permission)
 

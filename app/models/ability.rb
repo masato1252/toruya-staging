@@ -115,7 +115,7 @@ class Ability
     can :manage, Settings
     can :edit, Customer
     can :edit, :customer_contact_info
-    can :swith_staffs_selector, User
+    can :switch_staffs_selector, User
     can :manage, :management_stuffs
 
     case super_user.permission_level

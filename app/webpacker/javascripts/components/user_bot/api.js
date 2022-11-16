@@ -227,13 +227,13 @@ const CustomerServices = {
       responseType: "json"
     })
   },
-  toggle_reminder_premission: (user_id, customer_id) => {
+  toggle_reminder_permission: (user_id, customer_id) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.toggle_reminder_premission_lines_user_bot_customers_path({format: "json"}),
+      url: Routes.toggle_reminder_permission_lines_user_bot_customers_path({format: "json"}),
       data: {
         user_id,
         id: customer_id,

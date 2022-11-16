@@ -90,7 +90,7 @@ Rails.application.routes.draw do
           get :filter
           post :save
           delete :delete
-          post :toggle_reminder_premission
+          post :toggle_reminder_permission
           post :reply_message
           delete :delete_message
           put :unread_message
@@ -352,7 +352,7 @@ Rails.application.routes.draw do
         get :detail
         delete :delete
         post :save
-        post :toggle_reminder_premission
+        post :toggle_reminder_permission
         get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
         patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
       end

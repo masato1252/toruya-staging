@@ -133,10 +133,14 @@
       .row {
         margin-right: 0;
         margin-left: 0;
-        background-color: #ffffff
+        background-color: #ffffff;
 
         &:first-of-type {
           background-color: #d3d3d3;
+        }
+
+        &:nth-child(even) {
+          background-color: #f1f1f1;
         }
 
         & > div:first-child {
@@ -150,9 +154,6 @@
         }
       }
 
-      .row:nth-child(even) {
-        background-color: #f1f1f1;
-      }
     }
   }
 
