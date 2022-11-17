@@ -126,14 +126,15 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
 
     metrics = sale_page_ids.map do |product_id|
       sale_page = sale_pages.find { |page| page.id == product_id }
-      visit_count = visit_scope.where(product_id: product_id, product_type: "SalePage").where(started_at: metric_period).count
-      visit_count = params[:demo] ? rand(6..10) : count
+      _visit_count = visit_scope.where(product_id: product_id, product_type: "SalePage").where(started_at: metric_period).count
+      visit_count = params[:demo] ? rand(6..10) : _visit_count
+
       purchased_count =
         if sale_page&.is_booking_page?
           nil
         else
-          OnlineServiceCustomerRelation.where(paid_at: metric_period, sale_page_id: product_id).count
-          params[:demo] ? rand(1..3) : count
+          _purchase_count = OnlineServiceCustomerRelation.where(paid_at: metric_period, sale_page_id: product_id).count
+          params[:demo] ? rand(1..3) : _purchase_count
         end
 
       {
