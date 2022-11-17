@@ -181,3 +181,24 @@
   }
 }
 
+.metric-cell {
+  border: 3px solid #EFEFEF;
+  border-radius: 10px;
+
+  div[data-test-id="CircularProgressbarWithChildren"] {
+    & > div {
+      width: initial !important;
+      height: initial !important;
+    }
+  }
+
+  .number-difference {
+    &.up {
+      color: $palette-color10
+    }
+
+    &.down {
+      color: $danger
+    }
+  }
+}

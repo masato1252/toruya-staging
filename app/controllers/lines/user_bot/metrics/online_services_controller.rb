@@ -24,6 +24,6 @@ class Lines::UserBot::Metrics::OnlineServicesController < Lines::UserBotDashboar
   private
 
   def sale_page_ids
-    SalePage.where(id: uniq_sale_page_ids, product_id: params[:id], product_type: 'OnlineService').pluck(:id)
+    SalePage.where(product_id: params[:id], product_type: 'OnlineService').pluck(:id)
   end
 end

@@ -1,3 +1,61 @@
-<div class="margin-around centerize">
-  <i class="fa fa-wrench fa-4x"></i>
+<div class="container margin-around">
+  <div class="row">
+    <%= react_component("user_bot/metrics/progress_cell", { number: @active_customers_rate }, { camelize_props: false }) %>
+
+    <div class="col-sm-3 centerize">
+      <div class="p-6 metric-cell">
+        <h4>新規顧客</h4>
+        <div class="metric-content">
+          <p>過去30日間</p>
+          <span class="text-6xl"><%= @customers_count %></span>
+          <%= number_up_or_down(@comparison_customers_count) %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3 centerize">
+      <div class="p-6 metric-cell">
+        <h4>新規予約</h4>
+        <div class="metric-content">
+          <p>過去30日間</p>
+          <span class="text-6xl"><%= @reservations_count %></span>
+          <%= number_up_or_down(@comparison_reservations_count) %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3 centerize">
+      <div class="p-6 metric-cell">
+        <h4>売上合計</h4>
+        <div class="metric-content">
+          <p>過去30日間</p>
+          <span class="text-6xl"><%= @customers_payment %></span>
+          <%= number_up_or_down(@comparison_customers_payment) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container table margin-around border border-solid border-gray-500">
+  <h3 class="p-6">人気サービス</h3>
+  <div class="row">
+    <div class="col-sm-9">Name</div>
+    <div class="col-sm-3">Total Amount</div>
+  </div>
+  <% @services_mapping_total_amount.slice(0, Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER).each do |h| %>
+    <div class="row">
+      <div class="col-sm-9">
+        <%= link_to h[:service].internal_product_name, lines_user_bot_metrics_online_service_path(h[:service]) %>
+      </div>
+      <div class="col-sm-3">
+        <%= h[:total_revenue] %>
+      </div>
+    </div>
+  <% end %>
+  <% if @services_mapping_total_amount.length > Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER %>
+    <div class="row p-6 text-right">
+      <%= link_to "その他のサービス", lines_user_bot_metrics_online_services_path %>
+    </div>
+  <% end %>
 </div>

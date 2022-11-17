@@ -173,6 +173,10 @@ class OnlineService < ApplicationRecord
 
   scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'course', 'membership']) }
 
+  def internal_product_name
+    internal_name.presence || name
+  end
+
   def external_url
     external_purchase_url.presence || content_url
   end
