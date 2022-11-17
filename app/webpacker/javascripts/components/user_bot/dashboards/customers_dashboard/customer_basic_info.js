@@ -88,7 +88,7 @@ const CustomerBasicInfo = () => {
             <a
               data-id="customer-reminder-toggler"
               onClick={() => {
-                CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)
+                CustomerServices.toggle_reminder_permission(props.super_user_id, selected_customer.id)
 
                 const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
                   trigger: "manual",

@@ -81,6 +81,7 @@ class Ability
     can :refund, Reservation
     can :create_course, OnlineService
     can :create_membership, OnlineService
+    can :read, :metrics
 
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL
@@ -91,6 +92,7 @@ class Ability
       cannot :create, Staff
       cannot :create_course, OnlineService
       cannot :create_membership, OnlineService
+      cannot :read, :metrics
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
       cannot :create, Staff
       cannot :create, Shop if super_user.shops.exists?
@@ -98,6 +100,7 @@ class Ability
       cannot :create, SalePage if super_user.sale_pages.count >= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
       cannot :create_course, OnlineService
       cannot :create_membership, OnlineService
+      cannot :read, :metrics
     end
 
     if super_user.business_member?
@@ -112,7 +115,7 @@ class Ability
     can :manage, Settings
     can :edit, Customer
     can :edit, :customer_contact_info
-    can :swith_staffs_selector, User
+    can :switch_staffs_selector, User
     can :manage, :management_stuffs
 
     case super_user.permission_level

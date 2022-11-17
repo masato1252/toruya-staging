@@ -8,6 +8,8 @@ ignore-hidden = true
 
 [default.extend-words]
 referer = 'referer'
+readed_at = 'readed_at'
+readed = 'readed'
 
 [type.typos]
 extend-glob = [".typos.toml"]

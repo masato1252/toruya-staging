@@ -43,6 +43,18 @@ Rails.application.routes.draw do
         get :check_shop_profile
       end
 
+      resources :metrics, only: [:index] do
+        collection do
+          get :sale_pages
+          get :sale_pages_visits
+          get :sale_pages_conversions
+          get :online_services
+          get "/online_services/:id", action: "online_service", as: :online_service
+          get :online_service_sale_pages_visits
+          get :online_service_sale_pages_conversions
+        end
+      end
+
       resources :schedules, only: [:index] do
         collection do
           get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
@@ -78,7 +90,7 @@ Rails.application.routes.draw do
           get :filter
           post :save
           delete :delete
-          post :toggle_reminder_premission
+          post :toggle_reminder_permission
           post :reply_message
           delete :delete_message
           put :unread_message
@@ -340,7 +352,7 @@ Rails.application.routes.draw do
         get :detail
         delete :delete
         post :save
-        post :toggle_reminder_premission
+        post :toggle_reminder_permission
         get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
         patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
       end

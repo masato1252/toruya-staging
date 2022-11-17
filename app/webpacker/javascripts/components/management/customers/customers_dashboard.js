@@ -433,7 +433,7 @@ class CustomersDashboard extends React.Component {
         headers: {
           "X-CSRF-Token": Rails.csrfToken()
         },
-        url: this.props.toggleReminderPremissionUserCustomersPath,
+        url: this.props.toggleReminderPermissionUserCustomersPath,
         data: { id: this.state.customer.id },
         responseType: "json"
       }).then((response) => {
