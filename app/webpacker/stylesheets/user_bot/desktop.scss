@@ -135,12 +135,12 @@
         margin-left: 0;
         background-color: #ffffff;
 
-        &:first-of-type {
-          background-color: #d3d3d3;
+        &:nth-child(odd) {
+          background-color: #f1f1f1;
         }
 
-        &:nth-child(even) {
-          background-color: #f1f1f1;
+        &:first-of-type {
+          background-color: #d3d3d3;
         }
 
         & > div:first-child {

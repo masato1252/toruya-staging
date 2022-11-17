@@ -31,7 +31,7 @@ const SalePagesConversionsMetric = ({demo, metric_path}) => {
       {
         data.length === 0 ? (
           <p className="margin-around centerize desc border border-solid border-gray-500 p-6">
-            No Data yet
+            {I18n.t("user_bot.dashboards.metrics.no_data")}
           </p>
         ) : (
           <>
