@@ -7,8 +7,6 @@ module SocialCustomers
     object :social_customer
     object :customer
 
-    # validate :validate_customer_connection
-
     def execute
       other_social_customers = SocialCustomer.where.not(id: social_customer).where(user_id: social_customer.user_id, customer_id: customer.id)
 
