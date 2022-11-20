@@ -81,10 +81,6 @@ class Lines::MessageEvent < ActiveInteraction::Base
           readed: !is_toruya_customer_message,
           message_type: is_toruya_customer_message ? SocialMessage.message_types[:customer] : SocialMessage.message_types[:customer_reply_bot]
         )
-
-        if is_toruya_customer_message
-          LineClient.send(social_customer, I18n.t("contact_page.message_sent.line_content"))
-        end
       else
         Rollbar.warning("Line chat room don't support message type", event: event)
 
