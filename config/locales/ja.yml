@@ -721,3 +721,9 @@ ja:
           attributes:
             attrs:
               unavailable_booking_option_exists: "^この店舗では利用できない予約価格が設定されています。"
+        profiles/update_attribute:
+          attributes:
+            profile:
+              logo_invalid: "^無効な画像"
+            attrs:
+              address_invalid: "^無效地址"

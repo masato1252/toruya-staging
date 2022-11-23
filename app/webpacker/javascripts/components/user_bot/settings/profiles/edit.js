@@ -31,7 +31,12 @@ const ProfileEdit =({props}) => {
       data: _.assign( data, { attribute: props.attribute, logo: data["logo"]?.[0] })
     })
 
-    window.location = response.data.redirect_to
+    if (error) {
+      toastr.error(error.response.data.error_message)
+    }
+    else {
+      window.location = response.data.redirect_to
+    }
   }
 
   const _handleImageChange = (e) => {
