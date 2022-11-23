@@ -20,7 +20,13 @@ module SocialUserMessages
       if response.code == "200"
         social_user_message.update(sent_at: Time.current)
       else
-        errors.add(:social_user_message, :sent_failed)
+        error_message = begin
+          JSON.parse(response.body)["message"]
+        rescue TypeError, JSON::ParserError
+          "Toruya User message sent failed"
+        end
+
+        errors.add(:social_user_message, :sent_failed, message: "^#{error_message}")
       end
     end
 

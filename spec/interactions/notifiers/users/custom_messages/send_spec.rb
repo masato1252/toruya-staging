@@ -35,7 +35,9 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
     end
 
     context "when send line failed" do
-      before { allow(LineClient).to receive(:send).and_return(Net::HTTPResponse.new(1.0, "400", "BAD_REQUEST")) }
+      let(:response_body) { { "message": "Send message failed" }.to_json }
+      let(:response){ instance_double(Net::HTTPResponse, code: "400", body: response_body)}
+      before { allow(LineClient).to receive(:send).and_return(response) }
 
       it "doesn't change receiver_ids list" do
         expect {
