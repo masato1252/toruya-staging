@@ -133,7 +133,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
         if sale_page&.is_booking_page?
           nil
         else
-          _purchase_count = OnlineServiceCustomerRelation.where(paid_at: metric_period, sale_page_id: product_id).count
+          _purchase_count = OnlineServiceCustomerRelation.where(created_at: metric_period, sale_page_id: product_id).count
           params[:demo] ? rand(1..3) : _purchase_count
         end
 
