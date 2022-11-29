@@ -47,7 +47,7 @@ module Metrics
           if sale_page&.is_booking_page?
             nil
           else
-            OnlineServiceCustomerRelation.where(paid_at: metric_period, sale_page_id: product_id).count
+            OnlineServiceCustomerRelation.where(created_at: metric_period, sale_page_id: product_id).count
           end
 
         {
