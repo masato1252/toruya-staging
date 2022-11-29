@@ -17,6 +17,16 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     @customers_payment = CustomerPayment.completed.where(customer_id: current_user.customers.select(:id)).where("created_at > ?", metric_start_time).sum(:amount_cents).to_i
     @comparison_customers_payment = @customers_payment - CustomerPayment.completed.where(customer_id: current_user.customers.select(:id)).where(created_at: comparison_period).sum(:amount_cents).to_i
     @services_mapping_total_amount = ::Metrics::OnlineServicesRevenues.run!(user: current_user, metric_period: metric_period)
+
+    if params[:demo]
+      @active_customers_rate = rand(100)/100.0
+      @customers_count = rand(100)
+      @comparison_customers_count = rand(100)
+      @reservations_count = rand(100)
+      @comparison_reservations_count= -rand(100)
+      @customers_payment = rand(100)
+      @comparison_customers_payment= rand(100)
+    end
   end
 
   def sale_pages
