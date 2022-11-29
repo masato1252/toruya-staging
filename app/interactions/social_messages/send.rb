@@ -20,9 +20,10 @@ module SocialMessages
       if response.code == "200"
         social_message.update(sent_at: Time.current)
       else
-        # TODO: Let toruya user know, they need to upgrade their line account
         if response.code == "429"
+          Notifiers::Users::Notifications::LineReachedMonthlyLimit.run(receiver: social_customer.user.social_user)
         end
+
         errors.add(:social_message, :sent_failed)
       end
     end

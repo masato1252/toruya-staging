@@ -26,6 +26,10 @@ module SocialUserMessages
           "Toruya User message sent failed"
         end
 
+        if response.code == "429"
+          SlackClient.send(channel: 'sayhi', text: "💣 LINEのメッセージ通数が上限に達したため、顧客にメッセージ送信できませんでした")
+        end
+
         errors.add(:social_user_message, :sent_failed, message: "^#{error_message}")
       end
     end
