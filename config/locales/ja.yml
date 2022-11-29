@@ -724,6 +724,6 @@ ja:
         profiles/update_attribute:
           attributes:
             profile:
-              logo_invalid: "^無効な画像"
+              logo_invalid: "^店舗ロゴの画像 30KB未満のPNGまたはGIF形式"
             attrs:
               address_invalid: "^無效地址"

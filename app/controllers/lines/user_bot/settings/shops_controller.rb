@@ -42,9 +42,9 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
 
     case params[:attribute]
     when "holiday_working"
-      render json: json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: params[:id]) })
+      return_json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: params[:id]) })
     else
-      render json: json_response(outcome, { redirect_to: lines_user_bot_settings_shop_path(shop_id: params[:id]) })
+      return_json_response(outcome, { redirect_to: lines_user_bot_settings_shop_path(shop_id: params[:id]) })
     end
   end
 
