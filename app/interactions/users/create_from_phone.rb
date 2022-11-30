@@ -46,8 +46,10 @@ module Users
         })
         user
       end
-
-      Notifiers::Users::UserSignedUp.run(receiver: user) if user.persisted? && new_user
+      if user.persisted? && new_user
+        Notifiers::Users::UserSignedUp.run(receiver: user)
+        Notifiers::Users::Notifications::LineSettings.perform_at(schedule_at: 2.weeks.from_now, receiver: user)
+      end
 
       user
     end
