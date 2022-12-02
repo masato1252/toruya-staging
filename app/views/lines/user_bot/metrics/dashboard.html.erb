@@ -4,9 +4,9 @@
 
     <div class="col-sm-3 centerize">
       <div class="p-6 metric-cell">
-        <h4>新規顧客</h4>
+        <h4><%= t("user_bot.dashboards.metrics.new_customers") %></h4>
         <div class="metric-content">
-          <p>過去30日間</p>
+          <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
           <span class="text-6xl"><%= @customers_count %></span>
           <%= number_up_or_down(@comparison_customers_count) %>
         </div>
@@ -15,9 +15,9 @@
 
     <div class="col-sm-3 centerize">
       <div class="p-6 metric-cell">
-        <h4>新規予約</h4>
+        <h4><%= t("user_bot.dashboards.metrics.new_reservations") %></h4>
         <div class="metric-content">
-          <p>過去30日間</p>
+          <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
           <span class="text-6xl"><%= @reservations_count %></span>
           <%= number_up_or_down(@comparison_reservations_count) %>
         </div>
@@ -26,9 +26,9 @@
 
     <div class="col-sm-3 centerize">
       <div class="p-6 metric-cell">
-        <h4>売上合計</h4>
+        <h4><%= t("user_bot.dashboards.metrics.total_revenue") %></h4>
         <div class="metric-content">
-          <p>過去30日間</p>
+          <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
           <span class="text-6xl"><%= @customers_payment %></span>
           <%= number_up_or_down(@comparison_customers_payment) %>
         </div>
@@ -38,10 +38,10 @@
 </div>
 
 <div class="container table margin-around border border-solid border-gray-500">
-  <h3 class="p-6">人気サービス</h3>
+  <h3 class="p-6"><%= t("user_bot.dashboards.metrics.sale_page_ranking") %></h3>
   <div class="row">
-    <div class="col-sm-9">Name</div>
-    <div class="col-sm-3">Total Amount</div>
+    <div class="col-sm-9"><%= t("user_bot.dashboards.metrics.product_name") %></div>
+    <div class="col-sm-3"><%= t("user_bot.dashboards.metrics.total_revenue") %></div>
   </div>
   <% @services_mapping_total_amount.slice(0, Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER).each do |h| %>
     <div class="row">
@@ -55,7 +55,7 @@
   <% end %>
   <% if @services_mapping_total_amount.length > Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER %>
     <div class="row p-6 text-right">
-      <%= link_to "その他のサービス", lines_user_bot_metrics_online_services_path %>
+      <%= link_to t("user_bot.dashboards.metrics.other_services"), lines_user_bot_metrics_online_services_path %>
     </div>
   <% end %>
 </div>

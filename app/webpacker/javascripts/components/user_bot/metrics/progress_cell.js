@@ -11,9 +11,9 @@ const ProgressCell = ({number}) => {
   return (
     <div class="col-sm-3 centerize">
       <div class="p-6 metric-cell">
-        <h4>アクティブ顧客率</h4>
+        <h4>{I18n.t("user_bot.dashboards.metrics.active_customers_rate")}</h4>
         <div>
-          <p>過去1年間</p>
+          <p>{I18n.t("user_bot.dashboards.metrics.last_year")}</p>
           <CircularProgressbarWithChildren className="progressbar" value={number * 100}>
             <div>
               <span className="text-6xl">{number * 100}</span>%
