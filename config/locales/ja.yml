@@ -727,3 +727,7 @@ ja:
               logo_invalid: "^店舗ロゴの画像 30KB未満のPNGまたはGIF形式"
             attrs:
               address_invalid: "^無效地址"
+        social_accounts/update:
+          attributes:
+            attrs:
+              has_full_width_characters: "^半角文字で入力してください"

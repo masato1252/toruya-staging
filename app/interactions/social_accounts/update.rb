@@ -17,11 +17,12 @@ module SocialAccounts
       string :login_channel_secret, default: nil
     end
 
+    validate :validate_full_width_characters
+
     def execute
       begin
         SocialAccount.transaction do
           account = user.social_accounts.first || user.social_accounts.new
-
           case update_attribute
           when "channel_id", "label", "basic_id", "login_channel_id"
             account.update(attrs.slice(update_attribute))
@@ -48,6 +49,17 @@ module SocialAccounts
       rescue ActiveRecord::RecordNotUnique
         retry
       end
+    end
+
+    private
+
+    def validate_full_width_characters
+      errors.add(:attrs, :has_full_width_characters) if attrs[:channel_id].present? && attrs[:channel_id].multibyte?
+      errors.add(:attrs, :has_full_width_characters) if attrs[:channel_token].present? && attrs[:channel_token].multibyte?
+      errors.add(:attrs, :has_full_width_characters) if attrs[:channel_secret].present? && attrs[:channel_secret].multibyte?
+      errors.add(:attrs, :has_full_width_characters) if attrs[:basic_id].present? && attrs[:basic_id].multibyte?
+      errors.add(:attrs, :has_full_width_characters) if attrs[:login_channel_id].present? && attrs[:login_channel_id].multibyte?
+      errors.add(:attrs, :has_full_width_characters) if attrs[:login_channel_secret].present? && attrs[:login_channel_secret].multibyte?
     end
   end
 end
