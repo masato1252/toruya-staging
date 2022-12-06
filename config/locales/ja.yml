@@ -245,7 +245,7 @@ ja:
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
     google_contact_missing_message_html: "Toruyaサーバー上の顧客データのみ表示しています。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
-    customer_info_changed_messsage: 顧客データ要変更
+    customer_info_changed_message: 顧客データ要変更
     reminder_confirmation_message: 本当にリマインダをOFFにしますか？
     reminder_changed_message: リマインダ
     filter:
@@ -727,3 +727,7 @@ ja:
               logo_invalid: "^店舗ロゴの画像 30KB未満のPNGまたはGIF形式"
             attrs:
               address_invalid: "^無效地址"
+        social_accounts/update:
+          attributes:
+            attrs:
+              has_full_width_characters: "^半角文字で入力してください"

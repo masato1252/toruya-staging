@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
 import { SocialAccountServices } from "user_bot/api"
+import { responseHandler } from "libraries/helper"
 
 const SocialAccountEdit =({props}) => {
   const i18n = props.i18n;
@@ -18,7 +19,7 @@ const SocialAccountEdit =({props}) => {
       data: _.assign( data, { attribute: props.attribute })
     })
 
-    window.location = response.data.redirect_to
+    responseHandler(error, response)
   }
 
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
