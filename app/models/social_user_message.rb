@@ -37,8 +37,23 @@ class SocialUserMessage < ApplicationRecord
   }
 
   def hi_message
+    message_content =
+      begin
+        content = JSON.parse(raw_content)
+
+        if image.attached?
+          Images::Process.run!(image: image, resize: "750")
+        elsif content_type == SocialUserMessages::Create::FLEX_TYPE
+          content["altText"]
+        else
+          content
+        end
+      rescue TypeError, JSON::ParserError
+        raw_content
+      end
+
     if user?
-      "💭 New toruya user message, user_id: #{social_user.user_id}, user: #{social_user.social_user_name}, content: #{raw_content}, #{Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_service_user_id)}"
+      "💭 New toruya user message, user_id: #{social_user.user_id}, user: #{social_user.social_user_name}, content: #{message_content}, #{Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_service_user_id)}"
     end
   end
 end
