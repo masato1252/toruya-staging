@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { CircularProgressbar, CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 
 import { CommonServices } from "components/user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
