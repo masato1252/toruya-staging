@@ -42,7 +42,7 @@ class SocialUserMessage < ApplicationRecord
         content = JSON.parse(raw_content)
 
         if image.attached?
-          Images::Process.run!(image: image, resize: "750")
+          "<#{Images::Process.run!(image: image, resize: "750")}|content>"
         elsif content_type == SocialUserMessages::Create::FLEX_TYPE
           content["altText"]
         else
@@ -53,7 +53,8 @@ class SocialUserMessage < ApplicationRecord
       end
 
     if user?
-      "💭 New toruya user message, user_id: #{social_user.user_id}, user: #{social_user.social_user_name}, content: #{message_content}, #{Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_service_user_id)}"
+      "💭 `user_id: #{social_user.user_id}, #{social_user.social_user_name}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_service_user_id)}|chat link>"}
+      #{message_content}"
     end
   end
 end
