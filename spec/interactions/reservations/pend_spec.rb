@@ -16,14 +16,6 @@ RSpec.describe Reservations::Pend do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    context "when reservation could not become pending" do
-      let(:reservation) { FactoryBot.create(:reservation, :pending) }
-
-      it "add errors" do
-        expect(outcome).to be_invalid
-      end
-    end
-
     it "resets reservation and staff's states to pending" do
       result = outcome.result
 

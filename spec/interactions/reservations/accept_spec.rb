@@ -15,14 +15,6 @@ RSpec.describe Reservations::Accept do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    context "when reservation is not acceptable" do
-      let(:reservation) { FactoryBot.create(:reservation, :reserved) }
-
-      it "add errors" do
-        expect(outcome.errors.details[:reservation]).to include(error: :not_acceptable)
-      end
-    end
-
     context "when current_staff is not reservation'staff" do
       let(:current_staff) { FactoryBot.create(:staff, shop: shop, user: shop.user) }
 

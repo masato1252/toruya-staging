@@ -5,7 +5,6 @@ module Reservations
     object :current_staff, class: Staff
     object :reservation
 
-    validate :validate_reservation
     validate :validate_staff
 
     def execute
@@ -37,10 +36,6 @@ module Reservations
     end
 
     private
-
-    def validate_reservation
-      errors.add(:reservation, :not_acceptable) unless reservation.may_accept?
-    end
 
     def validate_staff
       errors.add(:current_staff, :who_r_u) unless reservation_for_staff
