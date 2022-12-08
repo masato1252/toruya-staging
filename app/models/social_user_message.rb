@@ -3,17 +3,18 @@
 #
 # Table name: social_user_messages
 #
-#  id             :bigint           not null, primary key
-#  content_type   :string
-#  message_type   :integer
-#  raw_content    :text
-#  readed_at      :datetime
-#  schedule_at    :datetime
-#  sent_at        :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  admin_user_id  :integer
-#  social_user_id :integer          not null
+#  id               :bigint           not null, primary key
+#  content_type     :string
+#  message_type     :integer
+#  raw_content      :text
+#  readed_at        :datetime
+#  schedule_at      :datetime
+#  sent_at          :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  admin_user_id    :integer
+#  slack_message_id :string
+#  social_user_id   :integer          not null
 #
 # Indexes
 #

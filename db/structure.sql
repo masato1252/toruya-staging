@@ -2425,7 +2425,8 @@ CREATE TABLE public.social_user_messages (
     updated_at timestamp without time zone NOT NULL,
     schedule_at timestamp without time zone,
     sent_at timestamp without time zone,
-    content_type character varying
+    content_type character varying,
+    slack_message_id character varying
 );
 
 
@@ -5204,6 +5205,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220721135216'),
 ('20220726135009'),
 ('20220728231237'),
-('20220930062805');
+('20220930062805'),
+('20221208151219');
 
 
