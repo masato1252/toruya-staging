@@ -281,7 +281,7 @@ RSpec.describe Reservations::Save do
           expect(reservation_staff).to be_accepted
 
           first_reservation_customer = result.reservation_customers.reload.first
-          expect(first_reservation_customer).to be_pending
+          expect(first_reservation_customer).to be_accepted
 
           last_reservation_customer = result.reservation_customers.reload.last
           expect(last_reservation_customer).to be_canceled

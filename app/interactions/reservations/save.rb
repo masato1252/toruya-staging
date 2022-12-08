@@ -129,9 +129,17 @@ module Reservations
             reservation.customers.reload - previous_reservation_customers
           end
 
-        reservation.try_accept
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
+
+        # All staffs accepted and only one pending/accepted customers
+        if reservation.reservation_staffs.map(&:state).all?("accepted")
+          compose(
+            Reservations::Accept,
+            current_staff: reservation.staffs.first,
+            reservation: reservation
+          )
+        end
 
         compose(Users::UpdateCustomerLatestActivityAt, user: user)
 
