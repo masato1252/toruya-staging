@@ -30,9 +30,8 @@ ja:
         page_title: ユーザーログイン
         message:
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
-          successful_message_html: <p>LINEからToruyaを使う準備ができました！</p><p>LINEのユーザーメニューから<br>onLINEセミナー集客を始めましょう。</p>
         line:
-          successful_message: "LINEからToruyaを使う準備ができました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
+          successful_message: ログインしました
       shop_info:
         postcode: 郵便番号
         region: 都道府県
