@@ -21,6 +21,7 @@ module Notifications
         .where("reservation_staffs.staff_id": staff_ids)
         .where("customers.deleted_at": nil)
         .where("reservations.deleted_at": nil)
+        .where("reservations.aasm_state": "accepted")
         .where("reservations.start_time > ?", 1.day.ago)
         .order("reservation_customers.created_at ASC")
     end
