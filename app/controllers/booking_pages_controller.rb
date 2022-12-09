@@ -10,6 +10,11 @@ class BookingPagesController < ActionController::Base
   layout "booking"
 
   def show
+    if !booking_page.user.subscription.active?
+      head :not_found
+      return
+    end
+
     if booking_page.draft
       if !current_user || !current_user.current_staff_account(booking_page.user)
         redirect_to root_path, alert: I18n.t("common.no_permission")

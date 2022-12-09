@@ -5,6 +5,12 @@ class SalePagesController < ActionController::Base
 
   def show
     @sale_page ||= SalePage.active.find_by(slug: params[:slug]) || SalePage.active.find(params[:slug])
+
+    if !@sale_page.user.subscription.active?
+      head :not_found
+      return
+    end
+
     @main_product = @sale_page.product
 
     case @main_product
