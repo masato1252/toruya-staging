@@ -1,35 +1,39 @@
 <div class="container margin-around">
-  <div class="row">
-    <%= react_component("user_bot/metrics/progress_cell", { number: @active_customers_rate }, { camelize_props: false }) %>
+  <div class="row flex">
+    <div class="w-full flex justify-center centerize">
+      <div class="p-6 w-11-12 metric-cell">
+        <%= react_component("user_bot/metrics/progress_cell", { number: @active_customers_rate }, { camelize_props: false }) %>
+      </div>
+    </div>
 
-    <div class="col-sm-3 centerize">
-      <div class="p-6 metric-cell">
+    <div class="w-full flex justify-center centerize">
+      <div class="p-6 w-11-12 metric-cell">
         <h4><%= t("user_bot.dashboards.metrics.new_customers") %></h4>
-        <div class="metric-content">
+        <div class="mx-auto">
           <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
-          <span class="text-6xl"><%= @customers_count %></span>
+          <span class="text-4xl"><%= @customers_count %></span>
           <%= number_up_or_down(@comparison_customers_count) %>
         </div>
       </div>
     </div>
 
-    <div class="col-sm-3 centerize">
-      <div class="p-6 metric-cell">
+    <div class="w-full flex justify-center centerize">
+      <div class="p-6 w-11-12 metric-cell">
         <h4><%= t("user_bot.dashboards.metrics.new_reservations") %></h4>
-        <div class="metric-content">
+        <div class="mx-auto">
           <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
-          <span class="text-6xl"><%= @reservations_count %></span>
+          <span class="text-4xl"><%= @reservations_count %></span>
           <%= number_up_or_down(@comparison_reservations_count) %>
         </div>
       </div>
     </div>
 
-    <div class="col-sm-3 centerize">
-      <div class="p-6 metric-cell">
+    <div class="w-full flex justify-center centerize">
+      <div class="p-6 w-11-12 metric-cell">
         <h4><%= t("user_bot.dashboards.metrics.total_revenue") %></h4>
-        <div class="metric-content">
+        <div class="mx-auto">
           <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
-          <span class="text-6xl"><%= @customers_payment %></span>
+          <span class="text-4xl"><%= @customers_payment %></span>
           <%= number_up_or_down(@comparison_customers_payment) %>
         </div>
       </div>
