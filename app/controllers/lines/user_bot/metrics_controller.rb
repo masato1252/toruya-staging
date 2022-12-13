@@ -19,7 +19,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     @services_mapping_total_amount = ::Metrics::OnlineServicesRevenues.run!(user: current_user, metric_period: metric_period)
 
     if params[:demo]
-      @active_customers_rate = rand(100)/100.0
+      @active_customers_rate = (rand(100)/100.0).round(3)
       @customers_count = rand(100)
       @comparison_customers_count = rand(100)
       @reservations_count = rand(100)
