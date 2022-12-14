@@ -58,13 +58,13 @@ module Metrics
           label: sale_page&.internal_name&.presence || sale_page&.internal_product_name || product_id,
           visit_count: visit_count,
           purchased_count: purchased_count,
-          rate: purchased_count ? purchased_count / visit_count.to_f : nil,
+          rate: purchased_count ? purchased_count / [visit_count, 1].max.to_f : nil,
           total_revenue: purchased_count ? helpers.number_with_delimiter(CustomerPayment.where(product_type: "OnlineServiceCustomerRelation", product_id: relations.select(:id)).completed.sum(:amount_cents).to_i) : nil,
-          format_rate: purchased_count ? helpers.number_to_percentage(purchased_count * 100 / visit_count.to_f, precision: 1) : nil
+          format_rate: purchased_count ? helpers.number_to_percentage(purchased_count * 100 / [visit_count, 1].max.to_f, precision: 1) : nil
         }
       end
 
-      metrics.sort_by { |m| m[:rate] ? -m[:rate] : -1_000 }.sort_by { |m| -m[:visit_count] || 0 }
+      metrics.sort_by { |m| -m[:rate] }.sort_by { |m| -m[:visit_count] }
     end
 
     private
