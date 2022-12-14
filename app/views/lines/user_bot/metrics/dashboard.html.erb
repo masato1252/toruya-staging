@@ -9,7 +9,7 @@
     <div class="w-full flex justify-center centerize">
       <div class="p-6 w-11-12 metric-cell">
         <h4><%= t("user_bot.dashboards.metrics.new_customers") %></h4>
-        <div class="w-6-12 mx-auto">
+        <div class="mx-auto">
           <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
           <span class="text-4xl"><%= @customers_count %></span>
           <%= number_up_or_down(@comparison_customers_count) %>
@@ -20,7 +20,7 @@
     <div class="w-full flex justify-center centerize">
       <div class="p-6 w-11-12 metric-cell">
         <h4><%= t("user_bot.dashboards.metrics.new_reservations") %></h4>
-        <div class="w-6-12 mx-auto">
+        <div class="mx-auto">
           <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
           <span class="text-4xl"><%= @reservations_count %></span>
           <%= number_up_or_down(@comparison_reservations_count) %>
@@ -31,7 +31,7 @@
     <div class="w-full flex justify-center centerize">
       <div class="p-6 w-11-12 metric-cell">
         <h4><%= t("user_bot.dashboards.metrics.total_revenue") %></h4>
-        <div class="w-6-12 mx-auto">
+        <div class="mx-auto">
           <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
           <span class="text-4xl"><%= @customers_payment %></span>
           <%= number_up_or_down(@comparison_customers_payment) %>
