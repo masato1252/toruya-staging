@@ -21,4 +21,18 @@ namespace :analytic do
       SlackClient.send(channel: 'sayhi', text: "Charging #{user_ids.size} user_id: #{user_ids.join(", ")}")
     end
   end
+
+  task :service_usage => :environment do
+    today = Date.today
+
+    metric = (0..11).to_a.map do |month|
+      date = today.advance(months: -month)
+
+      {
+        "before #{date.to_s}" => OnlineService.where("created_at < ?", date).pluck(:user_id).uniq.count
+      }
+    end
+
+    SlackClient.send(channel: 'sayhi', text: "User count ever had service, \n #{metric.join("\r\n")}")
+  end
 end
