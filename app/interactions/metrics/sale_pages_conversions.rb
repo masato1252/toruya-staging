@@ -64,7 +64,7 @@ module Metrics
         }
       end
 
-      metrics.sort_by { |m| m[:rate] ? -m[:rate] : -1_000 }.sort_by { |m| -m[:visit_count] }
+      metrics.sort_by { |m| m[:rate] ? -m[:rate] : -1_000 }.sort_by { |m| -m[:visit_count] || 0 }
     end
 
     private
