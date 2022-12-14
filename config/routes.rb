@@ -43,15 +43,20 @@ Rails.application.routes.draw do
         get :check_shop_profile
       end
 
-      resources :metrics, only: [:index] do
-        collection do
-          get :sale_pages
-          get :sale_pages_visits
-          get :sale_pages_conversions
-          get :online_services
-          get "/online_services/:id", action: "online_service", as: :online_service
-          get :online_service_sale_pages_visits
-          get :online_service_sale_pages_conversions
+      namespace :metrics do
+        get :dashboard, path: '/'
+        get :sale_pages
+        get :online_services
+        get "/online_services/:id", action: "online_service", as: :online_service, constraints: { id: /\d+/ }
+
+        namespace :sale_pages do
+          get :visits
+          get :conversions
+        end
+
+        namespace :online_services do
+          get "/:id/sale_pages_visits", action: :sale_pages_visits, as: :sale_pages_visits
+          get "/:id/sale_pages_conversions", action: :sale_pages_conversions, as: :sale_pages_conversions
         end
       end
 

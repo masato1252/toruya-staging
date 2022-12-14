@@ -27,6 +27,7 @@ const SalePagesConversionsMetric = ({demo, metric_path}) => {
         <div className="col-sm-1">{I18n.t("user_bot.dashboards.metrics.visit_count")}</div>
         <div className="col-sm-1">{I18n.t("user_bot.dashboards.metrics.purchased_count")}</div>
         <div className="col-sm-1">{I18n.t("user_bot.dashboards.metrics.conversion_rate")}</div>
+        <div className="col-sm-1">{I18n.t("user_bot.dashboards.metrics.total_revenue")}</div>
       </div>
       {
         data.length === 0 ? (
@@ -41,6 +42,7 @@ const SalePagesConversionsMetric = ({demo, metric_path}) => {
                 <div className="col-sm-1">{sale_page_data.visit_count}</div>
                 <div className="col-sm-1">{sale_page_data.purchased_count}</div>
                 <div className="col-sm-1">{sale_page_data.format_rate}</div>
+                <div className="col-sm-1">{sale_page_data.total_revenue}</div>
               </div>
             ))}
           </>

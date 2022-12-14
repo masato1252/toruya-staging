@@ -92,19 +92,19 @@
           </li>
 
           <li class="p-1">
-            <%= active_link_to lines_user_bot_metrics_path do %>
+            <%= active_link_to lines_user_bot_metrics_dashboard_path do %>
               <i class="fa fa-chart-line fa-2x"></i> <%= t("user_bot.dashboards.metrics.title") %>
             <% end %>
 
             <ul class='nav'>
               <li>
-                <%= active_link_to t("sidebar.metrics.dashboard_title"), lines_user_bot_metrics_path %>
+                <%= active_link_to t("sidebar.metrics.dashboard_title"), lines_user_bot_metrics_dashboard_path %>
               </li>
               <li>
-                <%= active_link_to t("sidebar.metrics.sale_page_title"), sale_pages_lines_user_bot_metrics_path %>
+                <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path %>
               </li>
               <li>
-                <%= active_link_to t("sidebar.metrics.service_title"), online_services_lines_user_bot_metrics_path %>
+                <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path %>
               </li>
             </ul>
           </li>

@@ -3,11 +3,11 @@
 
   <%= react_component("user_bot/metrics/sale_pages_visits", {
     demo: params[:demo],
-    metric_path: sale_pages_visits_lines_user_bot_metrics_path({ format: "json" }),
+    metric_path: lines_user_bot_metrics_sale_pages_visits_path({ format: "json" }),
   }, { camelize_props: false }) %>
   <%= react_component("user_bot/metrics/sale_pages_conversions", {
     demo: params[:demo],
-    metric_path: sale_pages_conversions_lines_user_bot_metrics_path({ format: "json" }),
+    metric_path: lines_user_bot_metrics_sale_pages_conversions_path({ format: "json" }),
   },
   { camelize_props: false }) %>
 </div>

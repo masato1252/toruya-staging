@@ -7,9 +7,9 @@
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
         <div class="booking-pages-list">
           <% @online_services.each do |service| %>
-            <%= link_to online_service_lines_user_bot_metrics_path(service), class: "field-row with-next-arrow" do %>
+            <%= link_to lines_user_bot_metrics_online_service_path(service), class: "field-row with-next-arrow" do %>
               <div>
-                <h3><%= service.internal_name.presence || service.name %></h3>
+                <h3><%= service.internal_product_name %></h3>
                 <div class="desc"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
               </div>
               <i class="fa fa-angle-right"></i>
