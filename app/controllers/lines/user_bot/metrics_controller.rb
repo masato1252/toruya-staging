@@ -6,7 +6,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
 
   def dashboard
     comparison_period = metric_start_time.advance(days: -30)..metric_start_time
-    @active_customers_rate = (current_user.customers.active_in(1.year.ago).count / current_user.customers_count.to_f).round(3)
+    @active_customers_rate = ((current_user.customers.active_in(1.year.ago).count / current_user.customers_count.to_f) * 100).to_i
 
     @customers_count = current_user.customers.where("created_at > ?", metric_start_time).count
     @comparison_customers_count = @customers_count - current_user.customers.where(created_at: comparison_period).count
@@ -19,7 +19,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     @services_mapping_total_amount = ::Metrics::OnlineServicesRevenues.run!(user: current_user, metric_period: metric_period)
 
     if params[:demo]
-      @active_customers_rate = (rand(100)/100.0).round(3)
+      @active_customers_rate = ((rand(100)/100.0) * 100).to_i
       @customers_count = rand(100)
       @comparison_customers_count = rand(100)
       @reservations_count = rand(100)
@@ -37,5 +37,6 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def online_service
+    @online_service = current_user.online_services.find(params[:id])
   end
 end

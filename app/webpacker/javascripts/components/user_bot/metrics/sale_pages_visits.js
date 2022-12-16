@@ -42,7 +42,7 @@ const options = {
   },
 };
 
-const SalePagesVisitsMetric = ({demo, metric_path}) => {
+const SalePagesVisitsMetric = ({demo, metric_path, header}) => {
   const [data, setData] = useState({
     labels: [],
     datasets: []
@@ -63,7 +63,7 @@ const SalePagesVisitsMetric = ({demo, metric_path}) => {
 
   return (
     <div className="container margin-around">
-      <h2>{I18n.t("user_bot.dashboards.metrics.weekly_salge_page_visit_count")}</h2>
+      <h2>{header || I18n.t("user_bot.dashboards.metrics.weekly_sale_page_visit_count")}</h2>
       {
         data.datasets.length === 0 ? (
           <p className="margin-around centerize desc border border-solid border-gray-500 p-6">

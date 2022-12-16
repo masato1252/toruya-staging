@@ -12,9 +12,9 @@ const ProgressCell = ({number}) => {
       <h4>{I18n.t("user_bot.dashboards.metrics.active_customers_rate")}</h4>
       <div className="w-6-12 mx-auto">
         <p>{I18n.t("user_bot.dashboards.metrics.last_year")}</p>
-        <CircularProgressbarWithChildren className="progressbar" value={number * 100} strokeWidth="13">
+        <CircularProgressbarWithChildren className="progressbar" value={number} strokeWidth="13">
           <div>
-            <span className="text-4xl">{number * 100}</span>%
+            <span className="text-4xl">{number}</span>%
           </div>
         </CircularProgressbarWithChildren>
       </div>

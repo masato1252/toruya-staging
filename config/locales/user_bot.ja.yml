@@ -381,7 +381,8 @@ ja:
         purchased_count: 登録数
         conversion_rate: 成約率
         total_revenue: 売上合計
-        weekly_salge_page_visit_count: 解析情報：販売ページ
+        weekly_sale_page_visit_count: 解析情報：販売ページ
+        weekly_service_sale_page_visit_count: "解析情報：%{service_name}"
         no_data: 表示できるデータがありません
         active_customers_rate: アクティブ顧客率
         new_customers: 新規顧客
