@@ -12,10 +12,10 @@ namespace :analytic do
     # Only reports on Monday
     if Time.now.in_time_zone('Tokyo').wday == 1
       # Send report of previous week
-      uniq_visits = Ahoy::Visit.where(started_at: period).where.not(owner_id: nil).select(:owner_id).distinct(:owner_id)
-      uniq_visits.each do |visit|
-        VisitAnalyticReportJob.perform_later(visit.owner_id)
-      end
+      # uniq_visits = Ahoy::Visit.where(started_at: period).where.not(owner_id: nil).select(:owner_id).distinct(:owner_id)
+      # uniq_visits.each do |visit|
+      #   VisitAnalyticReportJob.perform_later(visit.owner_id)
+      # end
 
       user_ids = Subscription.charge_required.pluck(:user_id)
       SlackClient.send(channel: 'sayhi', text: "Charging #{user_ids.size} user_id: #{user_ids.join(", ")}")
