@@ -14,7 +14,7 @@ class HiJob < ApplicationJob
 
     if hiable_object_or_hi_message.is_a?(SocialUserMessage)
       ActiveRecord::Base.with_advisory_lock("new_social_user_message_#{hiable_object_or_hi_message.social_user_id}") do
-        today_user_last_message = SocialUserMessage.where(social_user: hiable_object_or_hi_message.social_user, message_type: "user").where("created_at > ?", Time.current.beginning_of_day).where.not(id: hiable_object_or_hi_message.id).last
+        today_user_last_message = SocialUserMessage.where(social_user: hiable_object_or_hi_message.social_user, message_type: "user").where("created_at > ?", Time.current.beginning_of_day).where.not(id: hiable_object_or_hi_message.id, slack_message_id: nil).last
         # message is not under a thread
         ##<Slack::Messages::Message channel="C0201K35WMC" message=#<Slack::Messages::Message bot_id="BEUSDMU3Z" subtype="bot_message" text=":thought_balloon: `user_id: 1, iamilake` <https://manager.toruya.com/admin/chats?social_service_user_id=Ud5a6c48f7716e81f8086d1a9467fea42|chat link>\n      Reply me" ts="1670519197.432129" type="message"> ok=true ts="1670519197.432129">
         # message already under a thread
