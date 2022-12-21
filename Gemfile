@@ -2,12 +2,12 @@
 
 source "http://rubygems.org"
 
-ruby "2.6.6"
+ruby "3.1.3"
 
-gem "rails", "~> 6.0"
+gem "rails", "~> 6.0.6"
 gem "pg", "~> 1.1.4"
 gem "pghero", "~> 2.8.1"
-gem "pg_query", "~> 1.1.0"
+gem "pg_query"
 gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem "therubyracer", platforms: :ruby
@@ -27,7 +27,7 @@ gem "react-rails"
 gem "webpacker", "~> 4.2"
 gem "active_link_to"
 gem "aasm", "~> 4.11.0"
-gem "active_interaction"
+gem "active_interaction", "~> 3"
 gem "holidays", "~> 8.4.1"
 gem "default_value_for", "~> 3.4"
 gem "week_of_month"
@@ -36,12 +36,11 @@ gem "google_contacts_api", git: "https://github.com/ilake/google_contacts_api.gi
 gem "delayed_job_active_record", "~> 4.1.6"
 gem "jp_prefecture", git: "https://github.com/ilake/jp_prefecture.git"
 gem "hashie", "~> 3.4.4"
-gem "rollbar", "~> 2.27.0"
+gem "rollbar"
 gem "sendgrid-actionmailer"
 gem "delayed-web"
 gem "puma", "~> 4.3.3"
 gem "kaminari"
-gem "custom_error_message", "~> 1.2.1", git: "https://github.com/thethanghn/custom-err-msg.git"
 gem "cancancan", "~> 1.15.0"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
@@ -52,7 +51,7 @@ gem "image_processing", "~> 1.2"
 gem "bitly", "~> 1.0.0"
 gem "lograge"
 gem "stripe"
-gem "money-rails", "~> 1.11.0"
+gem "money-rails"
 gem "paper_trail"
 gem "sentry-raven"
 gem "slack-ruby-client"
@@ -63,7 +62,6 @@ gem "twilio-ruby", "~> 5.25.1"
 gem "phonelib"
 gem "line-bot-api"
 gem "oj"
-gem "redis"
 gem "jsonapi-serializer"
 gem "serviceworker-rails"
 gem "webpush", require: false
@@ -87,11 +85,12 @@ gem "barnes"
 gem "rails-autoscale-web"
 gem "rails-autoscale-delayed_job"
 gem 'rack-cors'
+gem 'psych', '< 4' # https://stackoverflow.com/questions/71191685/visit-psych-nodes-alias-unknown-alias-default-psychbadalias
 
 group :development, :test do
   gem "byebug", platform: :mri
   gem "rspec-rails"
-  gem "timecop", "~> 0.8.0"
+  gem "timecop"
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem 'pry-byebug'
@@ -117,8 +116,8 @@ group :development do
 end
 
 group :test do
-  gem "stripe-ruby-mock", "~> 3.1.0.rc3", github: "stripe-ruby-mock/stripe-ruby-mock", require: "stripe_mock"
-  gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
+  gem "stripe-ruby-mock", github: "stripe-ruby-mock/stripe-ruby-mock", require: "stripe_mock"
+  gem "faker", git: "https://github.com/stympy/faker.git", branch: "main"
   gem "rspec_junit_formatter"
 end
 
