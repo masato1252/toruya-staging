@@ -34,7 +34,14 @@ class ApplicationJob < ActiveJob::Base
     if throttle_settings && throttle_enabled
       cache_key = self.class.key(*job.arguments)
       expires_in = (throttle_settings[:duration] || DEFAULT_DELAY).seconds
-      Rails.cache.fetch(cache_key, expires_in: expires_in) { block.call }
+      throttle_job_performed = false
+      # Cache will be written after the block returns
+      # So don't put job in the cache generation block
+      Rails.cache.fetch(cache_key, expires_in: expires_in) { throttle_job_performed = true }
+      # Don't release lock even after we completed the job
+      # This will ensure the `throttle` behavior
+      block.call if throttle_job_performed
+
     elsif debounce_settings && debounce_enabled
       block.call if perform?(*job.arguments)
     else
@@ -54,13 +61,13 @@ class ApplicationJob < ActiveJob::Base
     def perform_throttle(*params)
       params.push({ throttle: true })
 
-      perform_now(*params)
+      perform_later(*params)
     end
 
     def perform_debounce(*params)
       # Refresh the timestamp in redis with debounce delay added.
       delay = debounce_settings[:duration] || DEFAULT_DELAY
-      KeyValueStorage.set(key(params), now + delay)
+      KeyValueStorage.set(key(*params), now + delay)
 
       # Schedule the job with not only debounce delay added, but also BUFFER.
       # BUFFER helps prevent race condition between this line and the one above.
@@ -70,12 +77,8 @@ class ApplicationJob < ActiveJob::Base
 
     # e.g.
     # "ElasticsearchIndexJob:gid://umami/Reservation/24242, update"
-    def key(params)
-      params_key = Array.wrap(params).map do |param|
-        param.try(:to_global_id) || param
-      end.join(", ")
-
-      "#{self}:#{params_key}"
+    def key(*params)
+      "#{self}:#{ActiveJob::Arguments.serialize(params)}"
     end
 
     def now
@@ -85,7 +88,7 @@ class ApplicationJob < ActiveJob::Base
 
   def perform?(*params)
     # Only the last job should come after the timestamp.
-    timestamp = KeyValueStorage.get(self.class.key(params))
+    timestamp = KeyValueStorage.get(self.class.key(*params))
     # But because of BUFFER, there could be mulitple last jobs enqueued within
     # the span of BUFFER. The first one will clear the timestamp, and the rest
     # will skip when they see that the timestamp is gone.
@@ -93,6 +96,6 @@ class ApplicationJob < ActiveJob::Base
     return false if Time.now.to_i < timestamp.to_i
 
     # Avoid race condition, only the first one del return 1, others are 0
-    KeyValueStorage.del(self.class.key(params)) == 1
+    KeyValueStorage.del(self.class.key(*params)) == 1
   end
 end
