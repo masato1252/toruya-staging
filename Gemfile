@@ -78,7 +78,7 @@ gem "with_advisory_lock"
 gem 'acts-as-taggable-on', '~> 7.0'
 gem "blazer"
 gem 'deep_cloneable', '~> 3.2.0'
-gem 'redis'
+gem 'redis', '4.1.3'
 gem 'request_store'
 gem "barnes"
 gem "rails-autoscale-web"
