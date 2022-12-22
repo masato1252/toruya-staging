@@ -20,8 +20,10 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
 
       it "switch to expected rich_menu" do
         expect(RichMenus::Connect).to receive(:run).with(
-          social_target: social_user,
-          social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+          {
+            social_target: social_user,
+            social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+          }
         ).and_return(double(invalid?: false, result: double))
 
         outcome
@@ -36,8 +38,10 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
 
         it "switch to expected rich_menu" do
           expect(RichMenus::Connect).to receive(:run).with(
-            social_target: social_user,
-            social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
+            {
+              social_target: social_user,
+              social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
+            }
           ).and_return(double(invalid?: false, result: double))
 
           outcome
@@ -47,8 +51,10 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
       context "when there is no unread message" do
         it "switch to expected rich_menu" do
           expect(RichMenus::Connect).to receive(:run).with(
-            social_target: social_user,
-            social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+            {
+              social_target: social_user,
+              social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+            }
           ).and_return(double(invalid?: false, result: double))
 
           outcome

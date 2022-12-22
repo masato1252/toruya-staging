@@ -14,7 +14,7 @@ RSpec.describe Lines::Features do
   describe "#execute" do
     context "when social_customer connected with customer" do
       it "calls Lines::Menus::AllFeatures" do
-        expect(Lines::Menus::OnlineBookingFeatures).to receive(:run).with(social_customer: social_customer).and_return(spy(invalid?: false))
+        expect(Lines::Menus::OnlineBookingFeatures).to receive(:run).with({ social_customer: social_customer }).and_return(spy(invalid?: false))
 
         outcome
       end
@@ -24,7 +24,7 @@ RSpec.describe Lines::Features do
       let(:social_customer) { FactoryBot.create(:social_customer, customer: nil) }
 
       it "calls Lines::Menus::Guest" do
-        expect(Lines::Menus::Guest).to receive(:run).with(social_customer: social_customer).and_return(spy(invalid?: false))
+        expect(Lines::Menus::Guest).to receive(:run).with({ social_customer: social_customer }).and_return(spy(invalid?: false))
 
         outcome
       end

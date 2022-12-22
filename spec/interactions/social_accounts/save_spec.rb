@@ -43,7 +43,7 @@ RSpec.describe SocialAccounts::Save do
       let(:user) { social_account.user }
 
       it "updates existing social_account" do
-        expect(SocialAccounts::RichMenus::CustomerReservations).to receive(:run).with(social_account: social_account).and_return(double(invalid?: false, result: double))
+        expect(SocialAccounts::RichMenus::CustomerReservations).to receive(:run).with({ social_account: social_account }).and_return(double(invalid?: false, result: double))
 
         expect {
           outcome
