@@ -89,7 +89,7 @@ class ApplicationJob < ActiveJob::Base
   def perform?(*params)
     # Only the last job should come after the timestamp.
     timestamp = KeyValueStorage.get(self.class.key(*params))
-    # But because of BUFFER, there could be mulitple last jobs enqueued within
+    # But because of BUFFER, there could be multiple last jobs enqueued within
     # the span of BUFFER. The first one will clear the timestamp, and the rest
     # will skip when they see that the timestamp is gone.
     return false if timestamp.nil?

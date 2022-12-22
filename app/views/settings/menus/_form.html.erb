@@ -34,7 +34,7 @@
   end
 
   categories = menu.categories.to_a
-  cateogries_options = super_user.categories.order("created_at").map do |category|
+  categories_options = super_user.categories.order("created_at").map do |category|
     Option.new(id: category.id, name: category.name, checked: categories.any? { |c| c.id == category.id })
   end
 %>
@@ -51,7 +51,7 @@
     selected_reservation_setting_rule: menu_reservation_setting_rule,
     menu_shops_options: react_attributes(menu_shops_options),
     menu_staffs_options: react_attributes(menu_staffs_options),
-    categories_options: react_attributes(cateogries_options),
+    categories_options: react_attributes(categories_options),
     form_authenticity_token: form_authenticity_token,
     info_label: I18n.t("settings.menu.info_label"),
     interval_label: Menu.human_attribute_name(:interval),
