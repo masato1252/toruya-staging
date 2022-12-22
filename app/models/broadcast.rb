@@ -22,7 +22,7 @@
 class Broadcast < ApplicationRecord
   belongs_to :user
 
-  scope :ordered, -> { order("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC")  }
+  scope :ordered, -> { order(Arel.sql("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC"))  }
 
   enum state: {
     active: 0,
