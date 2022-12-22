@@ -48,7 +48,7 @@
       t("settings.booking_page.form"),
       t("common").slice(:required_label, :select_a_booking_option, :minute, :time),
       t("action").slice(:cancel, :add_more, :save_as_draft, :save_and_publish)
-    ].inject(:merge!)
+    ].inject(:merge)
     ),
   },
   { camelize_props: false }

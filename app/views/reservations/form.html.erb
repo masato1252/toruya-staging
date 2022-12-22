@@ -42,7 +42,7 @@
     t("reservation"),
     t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo),
     t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
-  ].inject(:merge!))
+  ].inject(:merge))
 },
 { camelize_props: false }
 ) %>

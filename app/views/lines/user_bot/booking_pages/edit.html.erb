@@ -39,7 +39,7 @@
           top_bar_header: translation_resuce { I18n.t("settings.booking_page.form.#{@attribute}_top_bar_header", raise: true) },
           hint: translation_resuce { I18n.t("settings.booking_page.form.#{@attribute}_hint", raise: true) },
         }
-      ].inject(:merge!))
+      ].inject(:merge))
     }
   },
   { camelize_props: false }

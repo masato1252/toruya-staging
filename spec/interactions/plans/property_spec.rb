@@ -32,7 +32,7 @@ RSpec.describe Plans::Property do
         key: "free",
         selectable: true,
         name: I18n.t("plan.level.free"),
-        details: I18n.t("plans")[:free].merge!(
+        details: I18n.t("plans")[:free].dup.merge!(
           customer_number: I18n.t("plans.free.customer_number", customer_limit:  Plan.max_customers_limit(Plan::FREE_LEVEL, 0)),
           sale_page_number: I18n.t("plans.free.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0))
         )

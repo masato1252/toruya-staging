@@ -19,7 +19,7 @@
               title: t("settings.social_account.form.#{@attribute}_title"),
               hint: translation_resuce { I18n.t("settings.social_account.form.#{@attribute}_hint", raise: true) },
             }
-          ].inject(:merge!))
+          ].inject(:merge))
         }
       },
       { camelize_props: false }
