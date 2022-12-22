@@ -13,7 +13,7 @@ class KeyValueStorage
     end
 
     def store
-      Redis.current
+      $redis
     end
   end
 end
