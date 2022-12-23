@@ -104,7 +104,7 @@ Rails.application.configure do
     exceptions = %w(format utf8 authenticity_token)
     {
       time: event.time,
-      params: event.payload[:params].except(*exceptions)
+      params: event.payload[:params]&.except(*exceptions)
     }
   end
   config.lograge.custom_payload do |controller|
