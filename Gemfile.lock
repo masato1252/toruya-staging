@@ -387,7 +387,6 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
-    newrelic_rpm (8.14.0)
     nio4r (2.5.8)
     nokogiri (1.13.10-x86_64-darwin)
       racc (~> 1.4)
@@ -676,7 +675,6 @@ DEPENDENCIES
   memory_profiler
   mixpanel-ruby
   money-rails
-  newrelic_rpm
   nokogiri
   oj
   omniauth-google-oauth2 (~> 0.7.0)

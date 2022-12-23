@@ -68,7 +68,6 @@ gem "webpush", require: false
 gem "js-routes", "~> 1.4.9"
 gem "i18n-js", "~> 3.8.0"
 gem "platform-api"
-gem "newrelic_rpm"
 gem "mixpanel-ruby"
 gem "video_thumb"
 gem "strong_migrations"
