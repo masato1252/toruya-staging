@@ -24,5 +24,7 @@ module Kasaike
     config.active_job.queue_adapter = :delayed_job
 
     config.active_record.schema_format = :sql
+
+    config.autoload_once_paths << Rails.root.join('app/job_serializers')
   end
 end

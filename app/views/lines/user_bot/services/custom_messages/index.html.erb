@@ -26,7 +26,7 @@
             scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED,
             id: message.id,
             right_away: !message.after_days),
-            title: message.after_days ? t("user_bot.dashboards.settings.custom_message.online_service.after_days", { after_days: message.after_days }) : t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")
+            title: message.after_days ? t("user_bot.dashboards.settings.custom_message.online_service.after_days", after_days: message.after_days) : t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")
           %>
       <% end %>
 

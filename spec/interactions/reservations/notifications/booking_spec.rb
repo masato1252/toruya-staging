@@ -56,7 +56,7 @@ RSpec.describe Reservations::Notifications::Booking do
         expected_message = Translator.perform(I18n.t("customer.notifications.sms.booking"), reservation.message_template_variables(customer))
 
         expect(Reservations::Notifications::SocialMessage).to receive(:run).with(
-            social_customer: social_customer, message: expected_message
+            { social_customer: social_customer, message: expected_message }
           ).and_return(double(invalid?: false, result: double))
 
         outcome
@@ -68,7 +68,7 @@ RSpec.describe Reservations::Notifications::Booking do
 
         it "uses shop custom message template" do
           expect(Reservations::Notifications::SocialMessage).to receive(:run).with(
-            social_customer: social_customer, message: custom_message.content
+            { social_customer: social_customer, message: custom_message.content }
           ).and_return(double(invalid?: false, result: double))
 
           outcome

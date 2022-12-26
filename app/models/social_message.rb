@@ -35,7 +35,7 @@ class SocialMessage < ApplicationRecord
   # In that case, sent at is null and schedule_at is null as well
   scope :legal, -> { where("sent_at is NOT NULL or schedule_at is NOT NULL") }
   scope :handleable, -> { includes(social_customer: :customer).where.not(social_customers: { customer_id: nil }) }
-  scope :ordered, -> { order("(CASE WHEN social_messages.sent_at IS NULL THEN social_messages.created_at ELSE social_messages.sent_at END) DESC, social_messages.id DESC")  }
+  scope :ordered, -> { order(Arel.sql("(CASE WHEN social_messages.sent_at IS NULL THEN social_messages.created_at ELSE social_messages.sent_at END) DESC, social_messages.id DESC"))  }
 
   enum message_type: {
     bot: 0,

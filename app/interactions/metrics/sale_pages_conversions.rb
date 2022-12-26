@@ -6,6 +6,7 @@ module Metrics
     array :sale_page_ids do
       integer
     end
+    integer :online_service_id, default: nil
     object :metric_period, class: Range
     boolean :demo, default: false
 
@@ -45,7 +46,8 @@ module Metrics
       metrics = sale_page_ids.map do |product_id|
         sale_page = sale_pages.find { |page| page.id == product_id }
         visit_count = visit_scope.where(product_id: product_id, product_type: "SalePage").where(started_at: metric_period).count
-        relations = OnlineServiceCustomerRelation.where(created_at: metric_period, sale_page_id: product_id)
+        relations = OnlineServiceCustomerRelation.where(created_at: metric_period, sale_page_id: product_id).current
+        relations = relations.where(online_service_id: online_service_id) if online_service_id
 
         purchased_count =
           if sale_page&.is_booking_page?
@@ -64,7 +66,7 @@ module Metrics
         }
       end
 
-      metrics.sort_by { |m| -m[:rate] }.sort_by { |m| -m[:visit_count] }
+      metrics.sort_by { |m| m[:rate] ? -m[:rate] : 0 }.sort_by { |m| -m[:visit_count] }
     end
 
     private

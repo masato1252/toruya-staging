@@ -13,7 +13,7 @@
     errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),
   }.merge!([
     t("action").slice(:save),
-    ].inject(:merge!)
+    ].inject(:merge)
  ),
 },
 { camelize_props: false }

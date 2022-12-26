@@ -13,8 +13,7 @@ class Money
       else
         if currency.iso_code == "JPY" && I18n.locale == :ja
           rules[:symbol] = "¥" unless rules[:symbol] == false
-          rules[:symbol_position] = :before
-          rules[:symbol_before_without_space] = true
+          rules[:format] = "%u%n"
         end
         rules
       end
@@ -24,3 +23,7 @@ class Money
     alias_method :localize_formatting_rules, :custom_localize_formatting_rules
   end
 end
+
+Money.locale_backend = :i18n
+Money.rounding_mode = BigDecimal::ROUND_HALF_UP
+

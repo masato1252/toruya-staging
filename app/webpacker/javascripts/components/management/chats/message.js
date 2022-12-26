@@ -9,7 +9,7 @@ const Message = ({message}) => {
   return (
     <div className="row message">
       <div className={`${message.message_type} ${message.id}`} >
-        <div className={`col-sm-10 message-content ${message.sent ? "" : "unsend"}`}>
+        <div className={`col-sm-10 break-line-content message-content ${message.sent ? "" : "unsend"}`}>
           {message.is_image ? <img className="w-full" src={message.text.previewImageUrl || ""} /> : message.text}
         </div>
         <div

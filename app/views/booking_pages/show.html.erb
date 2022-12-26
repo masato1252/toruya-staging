@@ -78,7 +78,7 @@
     t("action").slice(:save, :confirm),
     t("customer").slice(:select_region),
     t("booking_page.done").merge!(add_friend_messages_html: I18n.t("booking_page.done.add_friend_messages_html", shop_name: @booking_page.shop.name))
-    ].inject(:merge!)
+    ].inject(:merge)
  ),
 },
 { camelize_props: false }

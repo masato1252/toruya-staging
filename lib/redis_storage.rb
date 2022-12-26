@@ -1,7 +1,7 @@
 class RedisStorage
   class << self
     def connect_to_redis!
-      Redis.current = create_client
+      $redis = create_client
     end
 
     private

@@ -47,7 +47,7 @@ ja:
       shop_can_set: 無制限
       staff_in_charge: 無制限
       reservation_restriction: 無制限
-      customer_number: 無制限
+      customer_number: "%{customer_limit}人まで"
       booking_page_number: 無制限
       get_more_friends:  ⃝
       free_lesson:  ⃝
