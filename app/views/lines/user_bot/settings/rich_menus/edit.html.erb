@@ -23,9 +23,9 @@
         <div class="action-block">
           <% if @social_account.using_line_official_account? %>
             <%= button_to t("user_bot.dashboards.settings.rich_menu.auto_switch_btn"),
-              lines_user_bot_settings_social_account_rich_menu_path, method: :post, class: "btn btn-orange" %>
+              lines_user_bot_settings_social_account_rich_menu_path, method: :post, class: "btn btn-orange", data: { disable_with: t("common.processing") } %>
           <% else %>
-            <%= button_to t("user_bot.dashboards.settings.rich_menu.manual_switch_btn"), lines_user_bot_settings_social_account_rich_menu_path, method: :delete, class: "btn btn-orange" %>
+            <%= button_to t("user_bot.dashboards.settings.rich_menu.manual_switch_btn"), lines_user_bot_settings_social_account_rich_menu_path, method: :delete, class: "btn btn-orange", data: { disable_with: t("common.processing") } %>
           <% end %>
         </div>
         <div class="action-block">
