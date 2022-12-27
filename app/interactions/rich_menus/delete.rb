@@ -5,8 +5,8 @@ module RichMenus
     object :social_rich_menu
 
     def execute
-      LineClient.delete_rich_menu(social_rich_menu)
-      social_rich_menu.destroy
+      response = LineClient.delete_rich_menu(social_rich_menu)
+      social_rich_menu.destroy if response.is_a?(Net::HTTPOK)
     end
   end
 end

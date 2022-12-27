@@ -8,8 +8,8 @@ module RichMenus
     object :social_rich_menu
 
     def execute
-      LineClient.link_rich_menu(social_customer: social_target, social_rich_menu: social_rich_menu)
-      social_target.update(social_rich_menu_key: social_rich_menu.social_name)
+      response = LineClient.link_rich_menu(social_customer: social_target, social_rich_menu: social_rich_menu)
+      social_target.update(social_rich_menu_key: social_rich_menu.social_name) if response.is_a?(Net::HTTPOK)
     end
   end
 end

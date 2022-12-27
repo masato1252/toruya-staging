@@ -125,22 +125,32 @@ class LineClient
   end
 
   def self.set_default_rich_menu(social_rich_menu)
-    social_rich_menu.account.client.set_default_rich_menu(social_rich_menu.social_rich_menu_id)
+    error_handler(__method__, social_rich_menu.id) do
+      social_rich_menu.account.client.set_default_rich_menu(social_rich_menu.social_rich_menu_id)
+    end
   end
 
   def self.delete_rich_menu(social_rich_menu)
-    social_rich_menu.account.client.delete_rich_menu(social_rich_menu.social_rich_menu_id)
+    error_handler(__method__, social_rich_menu.id) do
+      social_rich_menu.account.client.delete_rich_menu(social_rich_menu.social_rich_menu_id)
+    end
   end
 
   def self.link_rich_menu(social_customer:, social_rich_menu:)
-    social_customer.client.link_user_rich_menu(social_customer.social_user_id, social_rich_menu.social_rich_menu_id)
+    error_handler(__method__, social_customer.id, social_rich_menu.id) do
+      social_customer.client.link_user_rich_menu(social_customer.social_user_id, social_rich_menu.social_rich_menu_id)
+    end
   end
 
   def self.unlink_rich_menu(social_customer:)
-    social_customer.client.unlink_user_rich_menu(social_customer.social_user_id)
+    error_handler(__method__, social_customer.id) do
+      social_customer.client.unlink_user_rich_menu(social_customer.social_user_id)
+    end
   end
 
   def self.message_content(social_customer:, message_id:)
-    social_customer.client.get_message_content(message_id)
+    error_handler(__method__, social_customer.id, message_id) do
+      social_customer.client.get_message_content(message_id)
+    end
   end
 end
