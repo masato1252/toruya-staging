@@ -84,6 +84,7 @@ class Ability
     can :read, :metrics
 
     case super_user.permission_level
+    when Plan::ENTERPRISE_LEVEL
     when Plan::PREMIUM_LEVEL
       cannot :create, Shop if super_user.shops.exists?
       cannot :create, Staff

@@ -9,7 +9,7 @@ module Staffs
     def execute
       staff.transaction do
         if staff.staff_account
-          staff.staff_account.update(state: :disabled, active_uniqueness: nil)
+          staff.staff_account.update_columns(user_id: nil, state: :disabled, active_uniqueness: nil, phone_number: nil)
         end
 
         staff.update_columns(deleted_at: Time.current)

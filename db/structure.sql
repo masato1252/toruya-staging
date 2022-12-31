@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -5206,6 +5213,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220726135009'),
 ('20220728231237'),
 ('20220930062805'),
-('20221208151219');
+('20221208151219'),
+('20230116045137');
 
 

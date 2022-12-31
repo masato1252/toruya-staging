@@ -121,6 +121,11 @@ Rails.application.routes.draw do
       end
 
       namespace :settings do
+        resources :staffs, except: [:show] do
+          collection do
+            get :resend_activation_sms
+          end
+        end
         resource :stripe, only: %i[show]
         resource :profile, only: %i[show edit update] do
           collection do

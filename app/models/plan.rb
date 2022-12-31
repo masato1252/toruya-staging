@@ -15,6 +15,7 @@ class Plan < ApplicationRecord
   TRIAL_PLAN = TRIAL_LEVEL = "trial".freeze
   BASIC_PLAN =  BASIC_LEVEL = "basic".freeze
   PREMIUM_PLAN = PREMIUM_LEVEL = "premium".freeze
+  ENTERPRISE_PLAN = ENTERPRISE_LEVEL = "enterprise".freeze
 
   BUSINESS_PLAN = "business".freeze
   CHILD_BASIC_PLAN = "child_basic".freeze
@@ -32,6 +33,7 @@ class Plan < ApplicationRecord
     business: 3,
     child_basic: 4,
     child_premium: 5,
+    enterprise: 6
   }, _suffix: true
 
   DETAILS = {
@@ -132,6 +134,48 @@ class Plan < ApplicationRecord
         max_customers_limit: Float::INFINITY,
         cost: 13_970
       }
+    ],
+    Plan::ENTERPRISE_LEVEL => [
+      {
+        rank: 0,
+        max_customers_limit: 200,
+        cost: 5_500,
+      },
+      {
+        rank: 1,
+        max_customers_limit: 300,
+        cost: 6_270,
+      },
+      {
+        rank: 2,
+        max_customers_limit: 500,
+        cost: 7_040
+      },
+      {
+        rank: 3,
+        max_customers_limit: 800,
+        cost: 8_580
+      },
+      {
+        rank: 4,
+        max_customers_limit: 1000,
+        cost: 9_350
+      },
+      {
+        rank: 5,
+        max_customers_limit: 1500,
+        cost: 11_660
+      },
+      {
+        rank: 6,
+        max_customers_limit: 2000,
+        cost: 13_970
+      },
+      {
+        rank: 7,
+        max_customers_limit: Float::INFINITY,
+        cost: 13_970
+      }
     ]
   }.freeze
 
@@ -187,6 +231,8 @@ class Plan < ApplicationRecord
 
   def self.permission_level(level)
     case level
+    when ENTERPRISE_PLAN
+      ENTERPRISE_LEVEL
     when FREE_PLAN
       FREE_LEVEL
     when BASIC_PLAN, CHILD_BASIC_PLAN

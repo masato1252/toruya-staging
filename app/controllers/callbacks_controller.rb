@@ -65,10 +65,16 @@ class CallbacksController < Devise::OmniauthCallbacksController
         sign_in(user)
         write_user_bot_cookies(:current_user_id, user.id)
 
-        redirect_to param.delete("oauth_redirect_to_url")
+        if param["staff_token"]
+          staff_connect_outcome = StaffAccounts::ConnectUser.run(token: param["staff_token"], user: user)
+
+          redirect_to lines_user_bot_schedules_path(staff_connect_result: staff_connect_outcome.valid?)
+        else
+          redirect_to Addressable::URI.new(path: param.delete("oauth_redirect_to_url")).to_s
+        end
       elsif outcome.valid? && outcome.result.user.nil?
         # line sign up
-        redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id)
+        redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"])
       else
         redirect_to root_path
       end
