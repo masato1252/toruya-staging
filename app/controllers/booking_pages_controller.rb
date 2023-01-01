@@ -6,6 +6,7 @@ require "flow_backtracer"
 class BookingPagesController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
   protect_from_forgery with: :exception, prepend: true
+  skip_before_action :verify_authenticity_token, only: [:booking_reservation]
 
   layout "booking"
 
