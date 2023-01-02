@@ -4,6 +4,7 @@ class OnlineServicesController < Lines::CustomersController
   layout "booking"
 
   before_action :online_service
+  skip_before_action :verify_authenticity_token, only: [:watch_lesson, :watch_episode]
 
   def show
     @service_member = online_service.online_service_customer_relations.where(customer: current_customer).first
