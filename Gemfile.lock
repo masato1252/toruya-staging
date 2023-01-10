@@ -353,6 +353,9 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
+    marginalia (1.11.1)
+      actionpack (>= 5.2)
+      activerecord (>= 5.2)
     memoist (0.16.2)
     memory_profiler (1.0.1)
     method_source (1.0.0)
@@ -672,6 +675,7 @@ DEPENDENCIES
   listen
   lograge
   magic_frozen_string_literal
+  marginalia
   memory_profiler
   mixpanel-ruby
   money-rails

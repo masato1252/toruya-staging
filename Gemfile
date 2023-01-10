@@ -83,6 +83,7 @@ gem "rails-autoscale-web"
 gem "rails-autoscale-delayed_job"
 gem 'rack-cors'
 gem 'psych', '< 4' # https://stackoverflow.com/questions/71191685/visit-psych-nodes-alias-unknown-alias-default-psychbadalias
+gem 'marginalia'
 
 group :development, :test do
   gem "byebug", platform: :mri
