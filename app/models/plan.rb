@@ -48,10 +48,6 @@ class Plan < ApplicationRecord
         max_sale_pages_limit: 3,
         cost: 0
       },
-      {
-        rank: 2,
-        max_customers_limit: Float::INFINITY,
-      }
     ],
     Plan::BASIC_LEVEL => [
       {
