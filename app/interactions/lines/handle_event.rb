@@ -58,31 +58,31 @@ class Lines::HandleEvent < ActiveInteraction::Base
   object :social_account
 
   def execute
-    social_customer =
-      begin
-        SocialCustomer.transaction do
-          SocialCustomer
-            .create_with(social_rich_menu_key: SocialAccounts::RichMenus::CustomerReservations::KEY)
-            .find_or_create_by(
-              user_id: social_account.user_id,
-              social_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],
-              social_account_id: social_account.id)
-        end
-      rescue ActiveRecord::RecordNotUnique
-        retry
-      end
-
-    if social_customer.social_user_name.blank?
-      response = LineClient.profile(social_customer)
-
-      if response.is_a?(Net::HTTPOK)
-        body = JSON.parse(response.body)
-        social_customer.update(social_user_name: body[SOCIAL_USER_NAME_KEY], social_user_picture_url: body[SOCIAL_USER_PICTURE_KEY])
-      end
-    end
-
     case event[EVENT_TYPE_KEY]
     when *SUPPORT_TYPES
+      social_customer =
+        begin
+          SocialCustomer.transaction do
+            SocialCustomer
+              .create_with(social_rich_menu_key: SocialAccounts::RichMenus::CustomerReservations::KEY)
+              .find_or_create_by(
+                user_id: social_account.user_id,
+                social_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],
+                social_account_id: social_account.id)
+          end
+        rescue ActiveRecord::RecordNotUnique
+          retry
+        end
+
+      if social_customer.social_user_name.blank?
+        response = LineClient.profile(social_customer)
+
+        if response.is_a?(Net::HTTPOK)
+          body = JSON.parse(response.body)
+          social_customer.update(social_user_name: body[SOCIAL_USER_NAME_KEY], social_user_picture_url: body[SOCIAL_USER_PICTURE_KEY])
+        end
+      end
+
       # Lines::MessageEvent
       # Lines::FollowEvent
       # Lines::PostbackEvent

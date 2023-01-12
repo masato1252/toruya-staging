@@ -55,10 +55,10 @@ class UserBotLines::HandleEvent < ActiveInteraction::Base
   hash :event, strip: false
 
   def execute
-    social_user = compose(SocialUsers::Initialize, social_service_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY])
-
     case event[EVENT_TYPE_KEY]
     when *SUPPORT_TYPES
+      social_user = compose(SocialUsers::Initialize, social_service_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY])
+
       # UserBotLines::FollowEvent
       # UserBotLines::MessageEvent
       # UserBotLines::PostbackEvent
