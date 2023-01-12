@@ -15,7 +15,7 @@ module Notifiers
         validate :validate_schedule_conditions
 
         def message
-          compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver)
+          compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver, variable_source: custom_message.service)
         end
 
         def content_type

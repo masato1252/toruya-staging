@@ -11,6 +11,7 @@ RSpec.describe Notifiers::Customers::CustomMessages::ReservationReminder, :with_
   before do
     # Make reservation and customer able to remind
     reservation.accept!
+    reservation.update(meeting_url: "https://foo.com")
     relation.accepted!
     receiver.update(reminder_permission: true)
   end
@@ -25,7 +26,8 @@ RSpec.describe Notifiers::Customers::CustomMessages::ReservationReminder, :with_
 
   describe "#execute" do
     it "sends line" do
-      content = Translator.perform(custom_message.content, custom_message.service.message_template_variables(receiver))
+      content = Translator.perform(custom_message.content, reservation.message_template_variables(receiver))
+      # content: "送る in shop f2 has 123456789 at 2023年01月13日(金) 00:33 ~ 01:33 has https://foo.com?openExternalBrowser=1"
 
       expect {
         outcome

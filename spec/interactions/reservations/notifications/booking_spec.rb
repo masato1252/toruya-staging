@@ -67,8 +67,10 @@ RSpec.describe Reservations::Notifications::Booking do
         let!(:custom_message) { FactoryBot.create(:custom_message, service: booking_page.shop, scenario: scenario) }
 
         it "uses shop custom message template" do
+          message = Translator.perform(custom_message.content, reservation.message_template_variables(customer))
+
           expect(Reservations::Notifications::SocialMessage).to receive(:run).with(
-            { social_customer: social_customer, message: custom_message.content }
+            { social_customer: social_customer, message: message }
           ).and_return(double(invalid?: false, result: double))
 
           outcome

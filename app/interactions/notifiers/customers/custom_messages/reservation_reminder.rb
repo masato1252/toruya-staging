@@ -15,7 +15,7 @@ module Notifiers
         validate :service_should_be_booking_page
 
         def message
-          compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver)
+          compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver, variable_source: reservation)
         end
 
         def deliverable

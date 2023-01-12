@@ -6,6 +6,7 @@ module CustomMessages
   class ReceiverContent < ActiveInteraction::Base
     object :custom_message
     object :receiver, class: ApplicationRecord # user or customer
+    object :variable_source, class: ApplicationRecord, default: nil # reservation
 
     def execute
       case custom_message.content_type
@@ -39,8 +40,8 @@ module CustomMessages
     private
 
     def variables
-      if custom_message.service
-        custom_message.service.message_template_variables(receiver)
+      if variable_source
+        variable_source.message_template_variables(receiver)
       else
         receiver.message_template_variables
       end

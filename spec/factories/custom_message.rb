@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :custom_message do
     service { FactoryBot.create(:online_service) }
-    content { "foo" }
+    content { "%{customer_name} %{shop_name} %{shop_phone_number} %{booking_time} %{meeting_url} %{episode_name} %{episode_end_date} %{lesson_name} %{service_title} %{service_start_date} %{service_end_date}" }
     scenario { ::CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED }
     receiver_ids { [] }
 
