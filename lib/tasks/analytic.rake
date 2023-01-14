@@ -38,4 +38,46 @@ namespace :analytic do
       SlackClient.send(channel: 'sayhi', text: "User count ever had service, \n #{metric.join("\r\n")}")
     end
   end
+
+  task :line_settings => :environment do
+    # Only reports on Monday
+    if Time.now.in_time_zone('Tokyo').wday == 1
+      accounts = SocialAccount.where.not(channel_id: nil, channel_token: nil, channel_secret: nil, basic_id: nil, label: nil, login_channel_id: nil, login_channel_secret: nil)
+      total_line_user_count = SocialUser.count.to_f
+      total_toruya_user_count = User.count.to_f
+      total_line_settings = SocialAccount.count.to_f
+
+      line_settings_done_count = accounts.all.find_all {|s| s.line_settings_finished? }.size
+      login_api_verified_count = accounts.all.find_all {|s| s.login_api_verified? }.size
+      message_api_verified_count = accounts.find_all {|s| s.message_api_verified? }.size
+
+      helper = ApplicationController.helpers
+
+      # Line setting done percentage
+      setting_done_line_user_percent = helper.number_to_percentage(line_settings_done_count * 100 / total_line_user_count, precision: 1)
+      setting_done_toruya_user_percent = helper.number_to_percentage(line_settings_done_count * 100 / total_toruya_user_count, precision: 1)
+      setting_done_total_settings_percent = helper.number_to_percentage(line_settings_done_count * 100 / total_line_settings, precision: 1)
+
+      # line login api verified percentage
+      login_verified_line_user_percent = helper.number_to_percentage(login_api_verified_count * 100 / total_line_user_count, precision: 1)
+      login_verified_toruya_user_percent = helper.number_to_percentage(login_api_verified_count * 100 / total_toruya_user_count, precision: 1)
+      login_verified_total_settings_percent = helper.number_to_percentage(login_api_verified_count * 100 / total_line_settings, precision: 1)
+
+      # message api verifid percentage
+      message_verified_line_user_percent = helper.number_to_percentage(message_api_verified_count * 100 / total_line_user_count, precision: 1)
+      message_verified_toruya_user_percent = helper.number_to_percentage(message_api_verified_count * 100 / total_toruya_user_count, precision: 1)
+      message_verified_total_settings_percent = helper.number_to_percentage(message_api_verified_count * 100 / total_line_settings, precision: 1)
+
+      metric = [
+        { "Line User count" => total_line_user_count.to_i },
+        { "Toruya User count" => "#{total_toruya_user_count.to_i} ( #{helper.number_to_percentage(total_toruya_user_count * 100 / total_line_user_count, precision: 1)} )" },
+        { "Toruya User try to set up line count" => "#{total_line_settings.to_i} ( #{helper.number_to_percentage(total_line_settings * 100 / total_line_user_count, precision: 1)} / #{helper.number_to_percentage(total_line_settings * 100 / total_toruya_user_count, precision: 1)} )" },
+        { "line_settings_done_count" => "#{line_settings_done_count} ( #{setting_done_line_user_percent} / #{setting_done_toruya_user_percent} / #{setting_done_total_settings_percent} )" },
+        { :login_api_verified_count => "#{login_api_verified_count} ( #{login_verified_line_user_percent} / #{login_verified_toruya_user_percent} / #{login_verified_total_settings_percent} )" },
+        { message_api_verified_count: "#{message_api_verified_count} ( #{message_verified_line_user_percent} / #{message_verified_toruya_user_percent} / #{message_verified_total_settings_percent} )" }
+      ]
+
+      SlackClient.send(channel: 'sayhi', text: "Line settings number: \n#{metric.join("\r\n")}")
+    end
+  end
 end
