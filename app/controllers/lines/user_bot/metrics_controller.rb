@@ -6,7 +6,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
 
   def dashboard
     comparison_period = metric_start_time.advance(days: -30)..metric_start_time
-    @active_customers_rate = ((current_user.customers.active_in(1.year.ago).count / current_user.customers_count.to_f) * 100).to_i
+    @active_customers_rate = current_user.customers_count.positive? ? ((current_user.customers.active_in(1.year.ago).count / current_user.customers_count.to_f) * 100).to_i : 0
 
     @customers_count = current_user.customers.where("created_at > ?", metric_start_time).count
     @comparison_customers_count = @customers_count - current_user.customers.where(created_at: comparison_period).count
