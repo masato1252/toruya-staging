@@ -1,7 +1,7 @@
 <div class="events">
   <% schedules.each do |schedule| %>
     <% if schedule[:type] == :reservation %>
-      <%= modal_link_to lines_user_bot_shop_reservation_path(schedule[:shop], schedule[:id], reservations_approvement_flow: reservations_approvement_flow), class: "modal-link event" do %>
+      <%= modal_link_to lines_user_bot_shop_reservation_path(schedule[:shop], schedule[:id], reservations_approval_flow: reservations_approval_flow), class: "modal-link event" do %>
         <div class="state <%= schedule[:state] %>"></div>
         <div class="time">
           <div class="start-time">

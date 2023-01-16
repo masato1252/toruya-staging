@@ -52,7 +52,7 @@ class MembersController < DashboardController
 
     notification_presenter = NotificationsPresenter.new(view_context, current_user, params)
     @notification_messages = notification_presenter.data
-    @reservations_approvement_flow = notification_presenter.reservations_approvement_flow
+    @reservations_approval_flow = notification_presenter.reservations_approval_flow
   end
 
   private

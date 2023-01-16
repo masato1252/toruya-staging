@@ -8,7 +8,7 @@
             t("reservation.check_out"),
             check_reservation_content_lines_user_bot_warnings_path,
             class: "btn enhanced BTNyellow",
-            modal_taget: "#dummyModal2"
+            modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:edit, reservation) %>
           <%= link_to t("reservation.check_out"), SiteRouting.new(self).check_out_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNyellow" %>
@@ -26,7 +26,7 @@
             t("reservation.check_in"),
             check_reservation_content_lines_user_bot_warnings_path,
             class: "btn enhanced BTNyellow",
-            modal_taget: "#dummyModal2"
+            modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:edit, reservation) &&  %>
           <%= link_to t("reservation.check_in"), SiteRouting.new(self).check_in_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNyellow" %>
@@ -43,7 +43,7 @@
             t("reservation.recheck_in"),
             check_reservation_content_lines_user_bot_warnings_path,
             class: "btn enhanced BTNyellow",
-            modal_taget: "#dummyModal2"
+            modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:edit, reservation) %>
           <%= link_to t("reservation.recheck_in"), SiteRouting.new(self).check_in_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNyellow" %>
@@ -60,10 +60,10 @@
             t("reservation.accept_in_canceled"),
             check_reservation_content_lines_user_bot_warnings_path,
             class: "btn enhanced BTNyellow",
-            modal_taget: "#dummyModal2"
+            modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:edit, reservation) %>
-          <% if params[:reservations_approvement_flow].present? %>
+          <% if params[:reservations_approval_flow].present? %>
             <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), SiteRouting.new(self).accept_in_group_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNtarco" %>
           <% else %>
             <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), SiteRouting.new(self).accept_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNtarco" %>
@@ -81,7 +81,7 @@
             t("reservation.pend"),
             check_reservation_content_lines_user_bot_warnings_path,
             class: "btn enhanced BTNyellow",
-            modal_taget: "#dummyModal2"
+            modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:edit, reservation) %>
           <%= link_to t("reservation.pend"), SiteRouting.new(self).pend_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNgray" %>
@@ -98,7 +98,7 @@
             t("reservation.cancel"),
             check_reservation_content_lines_user_bot_warnings_path,
             class: "btn enhanced BTNyellow",
-            modal_taget: "#dummyModal2"
+            modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:edit, reservation) %>
           <% if reservation.reservation_customers.payment_paid.exists? %>
@@ -106,7 +106,7 @@
               t("reservation.customer_cancel"),
               cancel_paid_customers_lines_user_bot_warnings_path(reservation),
               class: "btn enhanced BTNorange",
-              modal_taget: "#dummyModal2"
+              modal_target: "#dummyModal2"
             ) %>
           <% else %>
             <%= link_to t("reservation.cancel"), SiteRouting.new(self).cancel_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
@@ -123,7 +123,7 @@
             t("reservation.details"),
             check_reservation_content_lines_user_bot_warnings_path,
             class: "btn enhanced BTNyellow",
-            modal_taget: "#dummyModal2"
+            modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:manage_shop_reservations, reservation.shop) && user_ability.can?(:edit, reservation) && user_ability.can?(:check_content, reservation) %>
           <%= link_to t("action.details"), SiteRouting.new(self).reservation_form_path(reservation, from_customer_id: params[:from_customer_id]), class: "btn enhanced BTNtarco" %>

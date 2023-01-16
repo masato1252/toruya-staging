@@ -15,7 +15,7 @@ module IdentificationCodes
         compose(SocialUsers::Connect, social_user: social_user, user: user, change_rich_menu: user.profile.address.present?)
         # TODO: StaffAccount::Connect with user
 
-        # XXX: When user already filled in the company infomration, but verified code, again.
+        # XXX: When user already filled in the company information, but verified code, again.
         # This means it is a sign-in behavior
         if user.profile.address.present?
           Notifiers::Users::LineUserSignedIn.run(receiver: social_user)

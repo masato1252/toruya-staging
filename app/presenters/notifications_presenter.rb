@@ -3,7 +3,7 @@
 require "site_routing"
 
 class NotificationsPresenter
-  attr_reader :current_user, :h, :reservations_approvement_flow
+  attr_reader :current_user, :h, :reservations_approval_flow
   delegate :link_to, to: :h
 
   def initialize(h, current_user, params = {})
@@ -82,7 +82,7 @@ class NotificationsPresenter
       if path
         "#{message} #{link_to(text.html_safe, path)}"
       else
-        @reservations_approvement_flow = true
+        @reservations_approval_flow = true
 
         "#{message} #{link_to('<i class="fa fa-caret-square-left fa-2x" aria-hidden="true"></i>'.html_safe, previous_path) if previous_path}
         #{text}

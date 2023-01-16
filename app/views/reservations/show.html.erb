@@ -16,7 +16,7 @@
                 customer.name,
                 check_reservation_content_lines_user_bot_warnings_path,
                 class: "customer-link",
-                modal_taget: "#dummyModal2"
+                modal_target: "#dummyModal2"
               ) %>
             <% else %>
               <%= link_to customer.name, SiteRouting.new(self).customer_show_path(user_id: @shop_user.id, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
