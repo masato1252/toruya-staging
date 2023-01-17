@@ -8,13 +8,15 @@ module Reservations
       string :phone_number, default: nil
 
       def execute
-        if customer.social_customer
+        return unless customer.user.subscription.active?
+
+        if customer.social_customer && customer.user.social_account.line_settings_finished?
           compose(
             Reservations::Notifications::SocialMessage,
             social_customer: customer.social_customer,
             message: message
           )
-        elsif phone.present? && customer.user.subscription.charge_required
+        elsif phone.present?
           Reservations::Notifications::Sms.run!(
             phone_number: phone,
             customer: customer,
