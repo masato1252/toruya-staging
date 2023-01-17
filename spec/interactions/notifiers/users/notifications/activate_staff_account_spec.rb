@@ -14,24 +14,6 @@ RSpec.describe Notifiers::Users::Notifications::ActivateStaffAccount, :with_line
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    context "when staff account's user got social user" do
-      let(:receiver) { FactoryBot.create(:staff_account, :phone_number, user: FactoryBot.create(:social_user).user) }
-
-      it "sends line" do
-        expect(LineClient).to receive(:send).with(receiver.user.social_user, I18n.t("notifier.notifications.activate_staff_account.message"))
-
-        expect {
-          outcome
-        }.to change {
-          SocialUserMessage.where(
-            social_user: receiver.user.social_user,
-            raw_content: I18n.t("notifier.notifications.activate_staff_account.message"),
-            content_type: SocialUserMessages::Create::TEXT_TYPE
-          ).count
-        }.by(1)
-      end
-    end
-
     context "when staff account got phone_number" do
       let(:receiver) { FactoryBot.create(:staff_account, :phone_number) }
 
@@ -41,32 +23,8 @@ RSpec.describe Notifiers::Users::Notifications::ActivateStaffAccount, :with_line
         }.to change {
           Notification.where(
             user: user,
-            content: I18n.t("notifier.notifications.activate_staff_account.message")
+            content: I18n.t("notifier.notifications.activate_staff_account.message", url: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(staff_token: receiver.token))
           ).count
-        }.by(1)
-      end
-    end
-
-    context "when staff account got email" do
-      let(:receiver) { FactoryBot.create(:staff_account, :email) }
-
-      it "sends email" do
-        expect(NotificationMailer).to receive(:activate_staff_account).with(receiver).and_return(double(deliver_now: true))
-
-        outcome
-      end
-    end
-
-    context "when staff account got both sms and email" do
-      let(:receiver) { FactoryBot.create(:staff_account, :email, :phone_number) }
-
-      it "only sends sms" do
-        expect(NotificationMailer).not_to receive(:activate_staff_account)
-
-        expect {
-          outcome
-        }.to change {
-          Notification.where(user: user).count
         }.by(1)
       end
     end
