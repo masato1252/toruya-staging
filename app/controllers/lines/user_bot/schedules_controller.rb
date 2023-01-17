@@ -30,7 +30,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @reservations_approval_flow = notification_presenter.reservations_approval_flow
 
     if params[:staff_connect_result].present?
-      params[:staff_connect_result] == 'true' ? flash.now[:success] = "Successful" : flash.now[:alert] = "Connected failed"
+      params[:staff_connect_result] == 'true' ? flash.now[:success] = I18n.t("settings.staff_account.staff_connected_successfully") : flash.now[:alert] = I18n.t("settings.staff_account.staff_connected_failed")
     end
   end
 end

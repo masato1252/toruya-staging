@@ -174,10 +174,12 @@ ja:
       manager_capability: 管理者
       gmail_hint: Ｇメールでスタッフアカウントを設定することで、あなたの店舗とスタッフ自身のスケジュールをスタッフ本人が管理できるようになります。
       resend_email: 認証メールを再送する
-      sent_message: 設定されたスタッフのGメールに、スタッフアカウント認証手続きのお願いをお送りしました。スタッフ自身に届いたメールから認証をしてもらってください。
+      sent_message: 設定されたスタッフの携帯電話に、スタッフ登録用URLをお送りしました。スタッフ自身に届いたメールから登録をしてもらってください。
       new_staff_active: 新たに承認されたスタッフアカウントがあります。スタッフの詳しい権限を設定できます。
       staff_setting: スタッフ設定
       connected_your_account: スタッフアカウントの設定が完了しました。
+      staff_connected_successfully: スタッフ登録完了
+      staff_connected_failed: このLINEアカウントは既にスタッフ登録されています。店舗管理者にご確認ください。
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
