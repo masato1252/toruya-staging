@@ -17,7 +17,7 @@
         <i class="fa fa-money-bill-wave" aria-hidden="true"></i><%= @relation.sale_page.normal_price_text %>
       </div>
       <div class="reservation-info-row">
-        <i class="fas fa-cart-arrow-down" aria-hidden="true"></i><%= link_to t("common.sale_page"), sale_page_url(@relation.sale_page.slug) %>
+        <i class="fas fa-cart-arrow-down" aria-hidden="true"></i><%= link_to @relation.sale_page.internal_name, sale_page_url(@relation.sale_page.slug) %>
       </div>
     </div>
 
