@@ -11,6 +11,13 @@ referer = 'referer'
 readed_at = 'readed_at'
 readed = 'readed'
 Rememberable = 'Rememberable'
+Feild = 'Feild'
+Serivce = 'Serivce'
+Reseration = 'Reseration'
+placholder = 'placholder'
+informations = 'informations'
+acccount = 'acccount'
+payed = 'payed'
 
 [type.typos]
 extend-glob = [".typos.toml"]
