@@ -7,7 +7,7 @@ class SalePagesController < ActionController::Base
     @sale_page ||= SalePage.active.find_by(slug: params[:slug]) || SalePage.active.find(params[:slug])
 
     if !@sale_page.user.subscription.active?
-      head :not_found
+      render inline: t("common.no_service_warning_html")
       return
     end
 

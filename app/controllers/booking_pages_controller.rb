@@ -12,7 +12,7 @@ class BookingPagesController < ActionController::Base
 
   def show
     if !booking_page.user.subscription.active?
-      head :not_found
+      render inline: t("common.no_service_warning_html")
       return
     end
 
