@@ -68,7 +68,7 @@ class Subscription < ApplicationRecord
   end
 
   def active?
-    plan_id == FREE_PLAN_ID || expired_date >= self.class.today
+    (plan_id == FREE_PLAN_ID && trial_expired_date >= self.class.today) || !!(expired_date && expired_date >= self.class.today)
   end
 
   def chargeable?
