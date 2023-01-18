@@ -104,7 +104,7 @@ export const CustomerPurchases = ({props}) => {
       <div className="sale-page">
         <CompanyHeader shop={props.sale_page.company_info || props.sale_page.shop}>
           <h3 className="centerize">
-            {I18n.t("common.customer_address_view_titile")}
+            {I18n.t("common.customer_address_view_title")}
           </h3>
           <AddressView handleSubmitCallback={handleCustomerAddressSubmit} />
         </CompanyHeader>

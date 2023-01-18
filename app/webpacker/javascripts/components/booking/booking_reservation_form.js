@@ -992,7 +992,7 @@ class BookingReservationForm extends React.Component {
     return (
       <>
         <h3 className="centerize title">
-          {I18n.t("common.customer_address_view_titile")}
+          {I18n.t("common.customer_address_view_title")}
         </h3>
         <AddressView handleSubmitCallback={(address) => {
           this.booking_reservation_form.change("booking_reservation_form[customer_info][address_details]", address)

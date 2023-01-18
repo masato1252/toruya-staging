@@ -11,7 +11,6 @@ referer = 'referer'
 readed_at = 'readed_at'
 readed = 'readed'
 Rememberable = 'Rememberable'
-approvement = 'approvement'
 
 [type.typos]
 extend-glob = [".typos.toml"]

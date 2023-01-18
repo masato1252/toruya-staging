@@ -70,8 +70,6 @@ class Lines::UserBot::UsersController < Lines::UserBotController
     if identification_code
       if social_user.user
         write_user_bot_cookies(:current_user_id, social_user.user_id)
-
-        StaffAccounts::ConnectUser.run!(token: params[:staff_token], user: social_user.user) if params[:staff_token]
       end
 
       render json: { identification_successful: true }
