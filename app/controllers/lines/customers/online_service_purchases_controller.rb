@@ -6,6 +6,11 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
   skip_before_action :verify_authenticity_token, only: [:create]
 
   def new
+    if @sale_page.ended?
+      redirect_to sale_page_path(slug: @sale_page.slug)
+      return
+    end
+
     @relation =
       if current_customer
         product = sale_page.product
