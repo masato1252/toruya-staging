@@ -130,6 +130,13 @@
         %>
 
         <div class="centerize margin-around purchase-buttons">
+          <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: sale_page_url(slug: @sale_page.slug),
+              clipboard_popup_text: t("common.copied")
+            } %>
           <%= render 'lines/user_bot/sales/copy_buttons', sale_page: @sale_page %>
         </div>
 
