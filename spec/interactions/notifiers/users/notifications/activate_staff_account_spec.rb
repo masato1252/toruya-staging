@@ -23,7 +23,11 @@ RSpec.describe Notifiers::Users::Notifications::ActivateStaffAccount, :with_line
         }.to change {
           Notification.where(
             user: user,
-            content: I18n.t("notifier.notifications.activate_staff_account.message", url: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(staff_token: receiver.token))
+            content: I18n.t(
+              "notifier.notifications.activate_staff_account.message",
+              user_name: receiver.owner.name,
+              url: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(staff_token: receiver.token)
+            )
           ).count
         }.by(1)
       end

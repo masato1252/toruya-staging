@@ -17,7 +17,8 @@ module Reservations
             message: message
           )
         elsif phone.present?
-          Reservations::Notifications::Sms.run!(
+          compose(
+            Reservations::Notifications::Sms,
             phone_number: phone,
             customer: customer,
             reservation: reservation,
