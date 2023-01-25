@@ -140,7 +140,7 @@ class Reservation < ApplicationRecord
   end
 
   def notifiable?
-    reserved? && deleted_at.nil? && start_time > Time.current
+    reserved? && deleted_at.nil? && start_time > 15.minutes.ago
   end
 
   def remind_customer?(customer)
