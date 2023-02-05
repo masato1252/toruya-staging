@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe Reservations::Notifications::Booking do
   let(:subscription) { FactoryBot.create(:subscription, :premium) }
   let(:phone_number) { Faker::PhoneNumber.phone_number }
+  let!(:social_account) { FactoryBot.create(:social_account, user: user) }
   let(:user) { subscription.user }
   let(:customer) { FactoryBot.create(:customer, user: user) }
   let(:reservation) { FactoryBot.create(:reservation, shop: FactoryBot.create(:shop, user: user)) }
@@ -32,8 +33,8 @@ RSpec.describe Reservations::Notifications::Booking do
     context "when subscription plan is not charge_required" do
       let(:subscription) { FactoryBot.create(:subscription, :free) }
 
-      it "don't calls Sms::Create" do
-        expect(Sms::Create).not_to receive(:run)
+      it "still calls Sms::Create" do
+        expect(Sms::Create).to receive(:run).and_return(spy(invalid?: false))
 
         outcome
       end
