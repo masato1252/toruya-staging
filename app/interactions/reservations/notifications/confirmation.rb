@@ -4,6 +4,8 @@ module Reservations
   module Notifications
     class Confirmation < Notify
       def execute
+        return if reservation.start_time < Time.current
+
         if customer.email.present?
           CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email).reservation_confirmation.deliver_now
         end
