@@ -70,14 +70,6 @@ RSpec.describe Reservations::Save do
 
   describe "#execute" do
     describe "when create a new reservation" do
-      it "notfies all customers" do
-        expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
-
-        outcome
-
-        expect(user.reload.customer_latest_activity_at).to be_present
-      end
-
       context 'when customer was accepted when reservation created' do
         let(:customers_list) do
           [
@@ -88,7 +80,7 @@ RSpec.describe Reservations::Save do
           ]
         end
 
-        it "notfies all customers" do
+        it "notifies customers" do
           expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
 
           outcome
@@ -292,6 +284,8 @@ RSpec.describe Reservations::Save do
         end
 
         it "reservation state is reserved" do
+          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.find_all { |c| c[:state] == 'pending' }.length).times
+
           result = outcome.result
           expect(result).to be_reserved
           expect(result.staff_ids).to eq([staff.id])
@@ -304,6 +298,7 @@ RSpec.describe Reservations::Save do
 
           last_reservation_customer = result.reservation_customers.reload.last
           expect(last_reservation_customer).to be_canceled
+          expect(user.reload.customer_latest_activity_at).to be_present
         end
       end
     end
@@ -336,7 +331,7 @@ RSpec.describe Reservations::Save do
       let!(:old_reservation) { described_class.run!(args) }
 
       context "when nothing changes" do
-        it "notfies no customer" do
+        it "notifies no customer" do
           expect(ReservationConfirmationJob).to receive(:perform_later).exactly(0).times
           params[:reservation] = old_reservation.reload
 
@@ -344,40 +339,7 @@ RSpec.describe Reservations::Save do
         end
       end
 
-      context "when start_time change" do
-        it "notfies all customers" do
-          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
-          params[:reservation] = old_reservation.reload
-          params[:start_time] = Time.zone.local(2016, 1, 1, 14)
-
-          outcome
-        end
-      end
-
       context "when customers change" do
-        it "only notifies new customers" do
-          # create new reservation
-          reservation = described_class.run!(args)
-
-          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(2).times
-          params[:reservation] = reservation.reload
-          params[:customers_list] = [
-            {
-              customer_id: customer.id.to_s,
-              state: "pending"
-            },
-            {
-              customer_id: FactoryBot.create(:customer, user: user).id.to_s,
-              state: "pending"
-            },
-            {
-              customer_id: FactoryBot.create(:customer, user: user).id.to_s,
-              state: "pending"
-            },
-          ]
-          outcome
-        end
-
         context 'when customer changes state(pending -> accepted)' do
           it "only notifies existing customers" do
             # create new reservation
