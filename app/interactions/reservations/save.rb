@@ -108,7 +108,13 @@ module Reservations
 
           customers_list.each do |customer_data|
             if reservation_customer = reservation_customers.find { |reservation_customer| reservation_customer.customer_id == customer_data[:customer_id] }
-              reservation_customer.update(customer_data)
+              if reservation_customer.update(customer_data)
+
+                previous_state, current_state = reservation_customer.previous_changes[:state]
+                if current_state == 'accepted'
+                  ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer)
+                end
+              end
             else
               ReservationCustomers::Create.run(reservation: reservation, customer_data: customer_data)
             end
@@ -121,13 +127,6 @@ module Reservations
             end
           end
         end
-
-        customers_require_notify =
-          if reservation.saved_change_to_start_time?
-            reservation.customers.reload
-          else
-            reservation.customers.reload - previous_reservation_customers
-          end
 
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
@@ -142,13 +141,6 @@ module Reservations
         end
 
         compose(Users::UpdateCustomerLatestActivityAt, user: user)
-
-        # XXX: Mean this reservation created by a staff, not customer(from booking page)
-        if params[:by_staff_id].present? && reservation.start_time >= Time.zone.now
-          customers_require_notify.each do |customer|
-            ReservationConfirmationJob.perform_later(reservation, customer)
-          end
-        end
 
         reservation
       end

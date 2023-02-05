@@ -7,7 +7,9 @@ module ReservationCustomers
 
     def execute
       reservation.transaction do
-        reservation.reservation_customers.create(customer_data)
+        if reservation_customer = reservation.reservation_customers.create(customer_data)
+          ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer) if customer_data[:state] == 'accepted'
+        end
       end
     end
   end

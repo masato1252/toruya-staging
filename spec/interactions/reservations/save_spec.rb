@@ -78,6 +78,25 @@ RSpec.describe Reservations::Save do
         expect(user.reload.customer_latest_activity_at).to be_present
       end
 
+      context 'when customer was accepted when reservation created' do
+        let(:customers_list) do
+          [
+            {
+              customer_id: customer.id.to_s,
+              state: "accepted"
+            }
+          ]
+        end
+
+        it "notfies all customers" do
+          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
+
+          outcome
+
+          expect(user.reload.customer_latest_activity_at).to be_present
+        end
+      end
+
       context "when there is only one menu" do
         it "staff's prepare time, work times and ready_time would be equal to reservation" do
           result = outcome.result
@@ -336,7 +355,7 @@ RSpec.describe Reservations::Save do
       end
 
       context "when customers change" do
-        it "only notfies new customers" do
+        it "only notifies new customers" do
           # create new reservation
           reservation = described_class.run!(args)
 
@@ -357,6 +376,23 @@ RSpec.describe Reservations::Save do
             },
           ]
           outcome
+        end
+
+        context 'when customer changes state(pending -> accepted)' do
+          it "only notifies existing customers" do
+            # create new reservation
+            reservation = described_class.run!(args)
+
+            expect(ReservationConfirmationJob).to receive(:perform_later).exactly(1).times
+            params[:reservation] = reservation.reload
+            params[:customers_list] = [
+              {
+                customer_id: customer.id.to_s,
+                state: "accepted"
+              },
+            ]
+            outcome
+          end
         end
       end
     end
