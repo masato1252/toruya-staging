@@ -209,6 +209,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       redirect_to: SiteRouting.new(view_context).customers_path(
         super_user.id,
         reservation_id: reservation_params_hash[:reservation_id],
+        shop_id: params[:shop_id],
         from: "reservation"
       )
     }
