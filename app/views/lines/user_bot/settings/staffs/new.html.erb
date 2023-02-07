@@ -1,0 +1,4 @@
+<%= form_with(url: lines_user_bot_settings_staffs_path) do |f| %>
+  <%= f.text_field :phone_number, placeholder: Profile.human_attribute_name(:phone_number) %>
+  <%= f.submit t("common.send") %>
+<% end %>

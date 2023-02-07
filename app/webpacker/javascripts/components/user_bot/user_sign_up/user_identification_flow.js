@@ -46,7 +46,15 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   const identifyCode = async (data) => {
     clearErrors(["code"])
 
-    const [error, response] = await IdentificationCodesServices.identify(_.pick(data, ['phone_number', 'uuid', 'code']));
+    const [error, response] = await IdentificationCodesServices.identify(
+      _.merge(
+        {
+          staff_token: props.staff_token
+        },
+        _.pick(data, ['phone_number', 'uuid', 'code']
+      )
+      )
+    );
     const {
       identification_successful,
     } = response.data;
@@ -61,7 +69,15 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   }
 
   const createUser = async (data) => {
-    const [error, response] = await UsersServices.create(data);
+    const [error, response] = await UsersServices.create(
+      _.merge(
+        {
+          staff_token: props.staff_token
+        },
+        data
+      )
+    );
+
     const {
       user_id
     } = response.data;

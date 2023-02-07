@@ -30,13 +30,25 @@ RSpec.describe Reservations::Notifications::Booking do
       outcome
     end
 
-    context "when subscription plan is not charge_required" do
+    context "when subscription plan is not charge_required(free)" do
       let(:subscription) { FactoryBot.create(:subscription, :free) }
 
-      it "still calls Sms::Create" do
-        expect(Sms::Create).to receive(:run).and_return(spy(invalid?: false))
+      context 'when subscription is active' do
+        it "calls Sms::Create" do
+          expect(Sms::Create).to receive(:run).and_return(spy(invalid?: false))
 
-        outcome
+          outcome
+        end
+      end
+
+      context 'when subscription is inactive' do
+        let(:subscription) { FactoryBot.create(:subscription, :free_after_trial) }
+
+        it "don't calls Sms::Create" do
+          expect(Sms::Create).not_to receive(:run)
+
+          outcome
+        end
       end
     end
 
@@ -52,6 +64,7 @@ RSpec.describe Reservations::Notifications::Booking do
 
     context "when customer connected with social_customer" do
       let!(:social_customer) { FactoryBot.create(:social_customer, customer: customer, user: user) }
+      let!(:social_account) { FactoryBot.create(:social_account, user: user) }
 
       it "calls Reservations::Notifications::SocialMessage" do
         expected_message = Translator.perform(I18n.t("customer.notifications.sms.booking"), reservation.message_template_variables(customer))

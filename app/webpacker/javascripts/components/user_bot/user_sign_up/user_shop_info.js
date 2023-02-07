@@ -16,7 +16,7 @@ export const UserShopInfo = ({props, finalView}) => {
 
   useEffect(() => {
     const checkShop = async () => {
-      const [error, response] = await UsersServices.checkShop()
+      const [error, response] = await UsersServices.checkShop({social_service_user_id: props.social_user})
 
       setShopProfile(response.data.is_shop_profile_created)
       setCheckShopProfile(true)

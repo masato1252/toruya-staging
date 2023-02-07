@@ -27,6 +27,10 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
 
     notification_presenter = NotificationsPresenter.new(view_context, current_user, params)
     @notification_messages = notification_presenter.data
-    @reservations_approvement_flow = notification_presenter.reservations_approvement_flow
+    @reservations_approval_flow = notification_presenter.reservations_approval_flow
+
+    if params[:staff_connect_result].present?
+      params[:staff_connect_result] == 'true' ? flash.now[:success] = I18n.t("settings.staff_account.staff_connected_successfully") : flash.now[:alert] = I18n.t("settings.staff_account.staff_connected_failed")
+    end
   end
 end

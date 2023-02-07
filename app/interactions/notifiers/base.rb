@@ -178,5 +178,11 @@ module Notifiers
         errors.add(:receiver, :should_be_user)
       end
     end
+
+    def receiver_should_be_staff_account
+      unless receiver.is_a?(StaffAccount)
+        errors.add(:receiver, :should_be_staff_account)
+      end
+    end
   end
 end

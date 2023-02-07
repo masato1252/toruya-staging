@@ -48,10 +48,10 @@ const UsersServices = {
       responseType: "json"
     })
   },
-  checkShop: () => {
+  checkShop: ({social_service_user_id}) => {
     return request({
       method: "GET",
-      url: Routes.lines_user_bot_check_shop_profile_path({format: "json"}),
+      url: Routes.lines_user_bot_check_shop_profile_path(social_service_user_id, { format: "json" }),
       responseType: "json"
     })
   },

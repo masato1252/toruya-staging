@@ -18,6 +18,7 @@ module StaffAccounts
 
         user = User.create(
           email: staff_account.email,
+          phone_number: staff_account.phone_number,
           password: password,
           password_confirmation: password,
           confirmed_at: Time.now,

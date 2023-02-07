@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :staff_account do
-    email { Faker::Internet.email }
+    phone_number { Faker::PhoneNumber.phone_number }
     user { FactoryBot.create(:user) }
     owner { FactoryBot.create(:user) }
     staff { FactoryBot.create(:staff) }

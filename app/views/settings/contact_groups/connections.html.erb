@@ -11,7 +11,7 @@
   <div id="settingForm">
     <div class="caution"><strong>顧客台帳: <%= @contact_group.name %></strong><span>を同期設定します。</span></div>
     <% unless @group_exist %>
-      <h3><%= t("settings.contact.import_all_titile") %></h3>
+      <h3><%= t("settings.contact.import_all_title") %></h3>
       <div id="syncContactsNew">
         <%= link_to t("settings.contact.bind_all_btn"),
           bind_settings_user_contact_group_path(super_user, @contact_group, bind_all: true),

@@ -22,7 +22,7 @@ ja:
       new_referrer:
         message: "%{user_name} 様\n\nあなたの代理店アカウントに、子アカウントが追加されました。\n\n設定画面からご確認ください。\n\nToruya"
       activate_staff_account:
-        message: "スタッフアカウント認証手続きのお願い"
+        message: "%{user_name}さんの店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
       line_reached_monthly_limit:
         message: "LINEのメッセージ通数が上限に達したため、顧客にメッセージ送信できませんでした"
     booking:

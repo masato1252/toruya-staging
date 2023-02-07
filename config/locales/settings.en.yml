@@ -149,7 +149,7 @@ en:
       google_account_synchronization_instructions: Please sync your google account and the google group you want here
       connection_binding_desc: Choose the google group you want to bind.
       google_group_name: Google Name
-      import_all_titile: Import all contacts from Google
+      import_all_title: Import all contacts from Google
       bind_all_btn: Import all data
       import_all_warning_message: "* You can import all contacts only for the very first customer group to avoid duplication on Toruya."
       bind_btn: Bind

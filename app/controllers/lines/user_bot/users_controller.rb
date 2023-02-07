@@ -48,6 +48,8 @@ class Lines::UserBot::UsersController < Lines::UserBotController
     ApplicationRecord.transaction do
       booking_code = BookingCode.find_by!(uuid: params[:uuid])
       booking_code.update!(user_id: user.id)
+
+      StaffAccounts::ConnectUser.run!(token: params[:staff_token], user: user) if params[:staff_token]
     end
 
     write_user_bot_cookies(:current_user_id, user.id)
@@ -61,7 +63,8 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       social_user: social_user,
       phone_number: params[:phone_number],
       uuid: params[:uuid],
-      code: params[:code]
+      code: params[:code],
+      staff_token: params[:staff_token]
     )
 
     if identification_code
