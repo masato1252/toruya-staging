@@ -2,7 +2,7 @@
 
 class SalePageSerializer
   include JSONAPI::Serializer
-  attribute :id, :introduction_video_url, :flow, :end_time, :start_time, :sections_context, :solution_type, :normal_price
+  attribute :id, :introduction_video_url, :flow, :end_time, :start_time, :sections_context, :solution_type, :normal_price, :published
 
   attribute :content do |sale_page|
     picture_url = Images::Process.run!(image: sale_page.picture, resize: "750")

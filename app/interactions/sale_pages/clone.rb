@@ -30,6 +30,7 @@ module SalePages
 
 
       new_sale_page.internal_name = "#{sale_page.internal_name || sale_page.product_name} (#{I18n.t("common.copy")})"
+      new_sale_page.published = false
 
       new_sale_page.save
 

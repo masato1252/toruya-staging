@@ -50,6 +50,7 @@ const SalePageEdit =({props}) => {
   const { register, watch, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.sale_page,
+      published: String(props.sale_page.published),
     }
   });
 
@@ -381,7 +382,19 @@ const SalePageEdit =({props}) => {
             </SaleTemplateContainer>
           </>
         );
-        break
+      case "published":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input name="published" type="radio" value="true" ref={register({ required: true })} />
+              {I18n.t('user_bot.dashboards.sales.edit.publish_status.published')}
+            </label>
+            <label className="field-row flex-start">
+              <input name="published" type="radio" value="false" ref={register({ required: true })} />
+              {I18n.t('user_bot.dashboards.sales.edit.publish_status.private')}
+            </label>
+          </>
+        )
     }
   }
 

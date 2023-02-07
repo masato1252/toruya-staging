@@ -11,6 +11,7 @@
 #  introduction_video_url       :string
 #  normal_price_amount_cents    :decimal(, )
 #  product_type                 :string           not null
+#  published                    :boolean          default(TRUE)
 #  quantity                     :integer
 #  recurring_prices             :jsonb
 #  sale_template_variables      :json
@@ -61,7 +62,7 @@ class SalePage < ApplicationRecord
     free: "free",
     month: "month",
     year: "year",
-    bundler: "bunder"
+    bundler: "bundler"
   }.freeze
 
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
