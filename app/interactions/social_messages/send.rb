@@ -19,13 +19,17 @@ module SocialMessages
 
       if response.code == "200"
         social_message.update(sent_at: Time.current)
-      else
-        if response.code == "429"
-          Notifiers::Users::Notifications::LineReachedMonthlyLimit.run(receiver: social_customer.user.social_user)
-        end
+      elsif response.code == "401"
+        errors.add(:social_message, :sent_failed_line_settings_wrong)
+      elsif response.code == "429"
+        Notifiers::Users::Notifications::LineReachedMonthlyLimit.run(receiver: social_customer.user.social_user)
 
+        errors.add(:social_message, :sent_failed_line_limit)
+      else
         errors.add(:social_message, :sent_failed)
       end
+    rescue ArgumentError
+      errors.add(:social_message, :sent_failed_line_settings_wrong)
     end
 
     private

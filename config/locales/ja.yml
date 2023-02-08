@@ -620,6 +620,12 @@ ja:
   active_interaction:
     errors:
       models:
+        social_messages/send:
+          attributes:
+            social_message:
+              sent_failed: "^未配信！LINEの問題でメッセージの送信に失敗しました。しばらく経ってからお試しください。"
+              sent_failed_line_settings_wrong: "^Messaging APIの問題でメッセージ送信に失敗しました。APIの動作テストを完了してください。"
+              sent_failed_line_limit: "^LINEのメッセージ通数が上限に達したため、顧客にメッセージ送信できませんでした。"
         online_services/update:
           attributes:
             attrs:
