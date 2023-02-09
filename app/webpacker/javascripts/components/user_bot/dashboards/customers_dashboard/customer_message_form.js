@@ -67,7 +67,7 @@ const CustomerMessageForm = () => {
   }
 
   return (
-    <div className="centerize messsage-form">
+    <div className="centerize message-form">
       <h4>{I18n.t("user_bot.dashboards.customer.customer_message_reply_title")}</h4>
       <textarea ref={ref} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}/>
       <div>
