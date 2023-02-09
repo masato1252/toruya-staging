@@ -460,6 +460,10 @@ ja:
           question_items: "%{question_number}問"
           review_items: "%{review_number}名の声"
           purchase_link_btn: 登録リンクをコピー
+          publish: 公開状況
+          publish_status:
+            published: 公開
+            private: 限定公開
         form:
           start_time_title: ページ概要
           start_time_subtitle: "販売開始"
@@ -481,6 +485,8 @@ ja:
           introduction_video_url_subtitle: ヘッダー動画
           why_content_title: 販売ページコンテンツ
           why_content_subtitle: 購入理由
+          published_title: 公開状況
+          published_subtitle: 公開状況
           benefits_title: 販売ページコンテンツ
           benefits_subtitle: 利益
           benefits_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。

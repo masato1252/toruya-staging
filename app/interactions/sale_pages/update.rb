@@ -15,6 +15,7 @@ module SalePages
       integer :selling_price, default: nil
       integer :monthly_price, default: nil
       integer :yearly_price, default: nil
+      boolean :published, default: true
       hash :selling_multiple_times_price, default: nil do
         integer :times, default: nil
         integer :amount, default: nil
@@ -55,7 +56,7 @@ module SalePages
     def execute
       sale_page.with_lock do
         case update_attribute
-        when "sale_template_variables", "flow", "quantity", "internal_name"
+        when "sale_template_variables", "flow", "quantity", "internal_name", "published"
           sale_page.update(attrs.slice(update_attribute))
         when "introduction_video_url"
           sale_page.update(introduction_video_url: attrs[:introduction_video_url].presence)

@@ -2060,7 +2060,8 @@ CREATE TABLE public.sale_pages (
     sections_context jsonb,
     selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[],
     internal_name character varying,
-    recurring_prices jsonb DEFAULT '{"default": {}}'::jsonb
+    recurring_prices jsonb DEFAULT '{"default": {}}'::jsonb,
+    published boolean DEFAULT true
 );
 
 
@@ -5214,6 +5215,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220728231237'),
 ('20220930062805'),
 ('20221208151219'),
-('20230116045137');
+('20230116045137'),
+('20230207141752');
 
 
