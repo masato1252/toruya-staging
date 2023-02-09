@@ -26,7 +26,7 @@ const CustomerContactForm = ({props}) => {
 
   if (messageSent) {
     return (
-      <div className="messsage-form">
+      <div className="message-form">
         <div className="centerize">
           <h3>{I18n.t("contact_page.message_sent.title")}</h3>
           <div dangerouslySetInnerHTML={{ __html: I18n.t("contact_page.message_sent.content_html") }} />
@@ -36,7 +36,7 @@ const CustomerContactForm = ({props}) => {
   }
 
   return (
-    <div className="messsage-form">
+    <div className="message-form">
       <h3>{I18n.t("contact_page.message_form.title")}</h3>
       {!props.social_customer.customer_id && (
         <div>

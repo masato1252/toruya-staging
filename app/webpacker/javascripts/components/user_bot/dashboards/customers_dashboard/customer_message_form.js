@@ -18,9 +18,9 @@ const CustomerMessageForm = () => {
     if (submitting || (!ref.current?.value && !images[0])) return;
     setSubmitting(true)
     let response = null;
-    let _error = null;
+    let error = null;
 
-    [_error, response] = await CustomerServices.reply_message({
+    [error, response] = await CustomerServices.reply_message({
       customer_id: selected_customer.id,
       schedule_at: schedule_at,
       message: ref.current.value,
@@ -49,6 +49,9 @@ const CustomerMessageForm = () => {
         ref.current.value = null;
       }
     }
+    else {
+      toastr.error(error.response.data.error_message)
+    }
   }
 
   useEffect(() => {
@@ -64,7 +67,7 @@ const CustomerMessageForm = () => {
   }
 
   return (
-    <div className="centerize messsage-form">
+    <div className="centerize message-form">
       <h4>{I18n.t("user_bot.dashboards.customer.customer_message_reply_title")}</h4>
       <textarea ref={ref} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}/>
       <div>
