@@ -6,6 +6,7 @@
 #  id               :bigint           not null, primary key
 #  content          :text             not null
 #  query            :jsonb
+#  query_type       :string
 #  recipients_count :integer          default(0)
 #  schedule_at      :datetime
 #  sent_at          :datetime

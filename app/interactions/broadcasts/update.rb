@@ -6,6 +6,7 @@ module Broadcasts
     hash :params do
       string :content
       hash :query, strip: false
+      string :query_type
       time :schedule_at, default: nil
     end
 

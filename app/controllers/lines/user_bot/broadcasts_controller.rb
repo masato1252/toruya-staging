@@ -46,7 +46,13 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def customers_count
-    outcome = Broadcasts::QueryCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+    outcome =
+      case params[:query_type]
+      when "online_service_for_active_customers"
+        Broadcasts::QueryActiveServiceCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+      else
+        Broadcasts::QueryCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+      end
 
     return_json_response(outcome, { customers_count: outcome.result.count })
   end

@@ -53,6 +53,25 @@ const FiltersSelectionStep = ({next, step}) => {
           {I18n.t("user_bot.dashboards.broadcast_creation.specific_service_customers_desc")}
         </p>
       </button>
+      <button
+        onClick={() => {
+          dispatch({
+            type: "SET_ATTRIBUTE",
+            payload: {
+              attribute: "query_type",
+              value: "online_service_for_active_customers"
+            }
+          })
+
+          next()
+        }}
+        className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
+        >
+        <h4>{I18n.t("user_bot.dashboards.broadcast_creation.specific_available_service_customers")}</h4>
+        <p className="break-line-content">
+          {I18n.t("user_bot.dashboards.broadcast_creation.specific_available_service_customers_desc")}
+        </p>
+      </button>
     </div>
   )
 }

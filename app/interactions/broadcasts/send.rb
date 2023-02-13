@@ -12,7 +12,7 @@ module Broadcasts
 
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
 
-        customers.find_each do |customer|
+        customers.each do |customer|
           Notifiers::Customers::Broadcast.perform_later(receiver: customer, broadcast: broadcast)
         end
 
