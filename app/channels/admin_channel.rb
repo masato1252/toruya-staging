@@ -64,6 +64,8 @@ class AdminChannel < ApplicationCable::Channel
   end
 
   def disconnect_customer(data)
+    social_user = SocialUser.find_by!(social_service_user_id: data["customer_id"])
+    social_user.update!(user_id: nil)
   end
 
   def staff
