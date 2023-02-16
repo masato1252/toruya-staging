@@ -43,7 +43,7 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
     online_service = current_user.online_services.find(params[:service_id])
     episode = online_service.episodes.find(params[:id])
 
-    outcome = Episodes::Update.run(episode: episode, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+    outcome = ::Episodes::Update.run(episode: episode, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_episode_path(params[:service_id], params[:id], anchor: params[:attribute]) })
   end
