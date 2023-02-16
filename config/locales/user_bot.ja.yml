@@ -300,6 +300,13 @@ ja:
         active_desc: 予定通り配信するには【編集】してください。
         stop_send: 配信中止
         are_you_sure_to_stop: 本当に配信を中止しますか？
+        form: 
+          query_title: 配信相手
+          query_subtitle: 配信相手
+          content_title: メッセージ内容
+          content_subtitle: メッセージ内容
+          schedule_at_title: 配信時間
+          schedule_at_subtitle: 配信時間
       services:
         online_service: オンラインサービス
         service_page: サービスページ
