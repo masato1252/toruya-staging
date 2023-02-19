@@ -6,7 +6,7 @@ module SocialAccounts
 
     def execute
       account = user.social_accounts.first
-      account.update(
+      account&.update(
         channel_secret: nil,
         channel_token: nil,
         label: nil,
