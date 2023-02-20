@@ -22,8 +22,10 @@
 
 class Broadcast < ApplicationRecord
   belongs_to :user
+  TYPES = ["menu", "online_service", "online_service_for_active_customers"]
 
   scope :ordered, -> { order(Arel.sql("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC"))  }
+  validates :query_type, inclusion: { in: TYPES }
 
   enum state: {
     active: 0,

@@ -12,10 +12,12 @@ RSpec.describe Broadcasts::Update do
       schedule_at: nil
     }
   end
+  let(:update_attribute) { "content" }
   let(:args) do
     {
       broadcast: broadcast,
-      params: params
+      params: params,
+      update_attribute: update_attribute
     }
   end
   let(:outcome) { described_class.run(args) }

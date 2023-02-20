@@ -28,7 +28,7 @@ RSpec.describe Sales::OnlineServices::Approve, :with_line do
         expect(relation).to be_free_payment_state
         expect(relation.expire_at).to eq(online_service.current_expire_time)
         expect(relation.paid_at).to be_blank
-        expect(customer.reload.online_service_ids).to eq([online_service.id])
+        expect(customer.reload.online_service_ids).to eq([online_service.id.to_s])
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Sales::OnlineServices::Approve, :with_line do
         expect(relation).to be_active
         expect(relation.expire_at).to eq(online_service.current_expire_time)
         expect(relation.paid_at).to be_present
-        expect(customer.reload.online_service_ids).to eq([online_service.id])
+        expect(customer.reload.online_service_ids).to eq([online_service.id.to_s])
       end
 
       context "when service is external" do

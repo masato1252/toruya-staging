@@ -4,6 +4,8 @@ FactoryBot.define do
   factory :broadcast do
     association :user
     content { Faker::Lorem.word }
+    query { {} }
+    query_type { "online_service" }
 
     trait :draft do
       state { :draft }

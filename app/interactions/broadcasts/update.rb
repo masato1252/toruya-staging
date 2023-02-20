@@ -19,6 +19,7 @@ module Broadcasts
           attributes = broadcast.slice(:content, :query, :query_type, :schedule_at)
           attributes[update_attribute] = params[update_attribute]
 
+          broadcast.destroy!
           compose(Broadcasts::Create, user: broadcast.user, params: attributes)
         end
       end
