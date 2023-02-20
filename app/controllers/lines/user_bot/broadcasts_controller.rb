@@ -24,6 +24,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
         ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)
       end
     @menus = ::Menus::CategoryGroup.run!(menu_options: menus_options)
+    @attribute = params[:attribute]
   end
 
   def create
@@ -33,7 +34,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def update
-    outcome = Broadcasts::Update.run(broadcast: current_user.broadcasts.find(params[:id]), params: params[:broadcast].permit!.to_h)
+    outcome = Broadcasts::Update.run(broadcast: current_user.broadcasts.find(params[:id]), params: params[:broadcast].permit!.to_h, update_attribute: params[:attribute])
 
     return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path })
   end
@@ -46,7 +47,13 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def customers_count
-    outcome = Broadcasts::QueryCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+    outcome =
+      case params[:query_type]
+      when "online_service_for_active_customers"
+        Broadcasts::QueryActiveServiceCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+      else
+        Broadcasts::QueryCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+      end
 
     return_json_response(outcome, { customers_count: outcome.result.count })
   end

@@ -674,7 +674,8 @@ CREATE TABLE public.broadcasts (
     state integer DEFAULT 0,
     recipients_count integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    query_type character varying
 );
 
 
@@ -5216,6 +5217,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220930062805'),
 ('20221208151219'),
 ('20230116045137'),
-('20230207141752');
+('20230207141752'),
+('20230213153853');
 
 

@@ -4,9 +4,8 @@ import ReactSelect from "react-select";
 import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
-import { CommonServices } from "user_bot/api";
 
-const FroductSelectionStep = ({next, step, prev}) => {
+const ProductSelectionStep = ({next, step, prev}) => {
   const { props, dispatch, query, query_type, selected_menu, selected_online_service, customers_count, fetchCustomersCount } = useGlobalContext()
 
   useEffect(() => {
@@ -68,8 +67,8 @@ const FroductSelectionStep = ({next, step, prev}) => {
             )}
           </>
         )
-        break
       case "online_service":
+      case "online_service_for_active_customers":
         return (
           <>
             <div className="margin-around">
@@ -89,19 +88,21 @@ const FroductSelectionStep = ({next, step, prev}) => {
                       }
                     })
 
+
                     dispatch({
                       type: "SET_ATTRIBUTE",
                       payload: {
                         attribute: "query",
                         value:  {
                           operator: "or",
-                          filters: [
+                          filters: _.uniqBy([
+                            ...(query?.filters || []),
                             {
                               field: "online_service_ids",
                               condition: "contains",
                               value: online_service_option.value.id
-                            },
-                          ]
+                            }
+                          ], 'value')
                         }
                       }
                     })
@@ -109,29 +110,44 @@ const FroductSelectionStep = ({next, step, prev}) => {
                 }
               />
             </div>
-            {selected_online_service && (
-              <div className="item-container">
-                <div className="item-element">
-                  <span>{I18n.t("common.content")}</span>
-                  <span className="item-data">{selected_online_service?.solution}</span>
-                </div>
-                <div className="item-element">
-                  <span>{I18n.t("user_bot.dashboards.sales.online_service_creation.service_start")}</span>
-                  <span className="item-data">{selected_online_service?.start_time_text}</span>
-                </div>
-                <div className="item-element">
-                  <span>{I18n.t("user_bot.dashboards.sales.online_service_creation.service_end")}</span>
-                  <span className="item-data">{selected_online_service?.end_time_text}</span>
-                </div>
-                <div className="item-element">
+            <div className="field-header">{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_services")}</div>
+            {query?.filters && <p className="margin-around desc">{I18n.t("user_bot.dashboards.online_service_creation.bundled_service_usage_desc")}</p>}
+            {query?.filters?.map(condition => (
+              <button
+                key={condition.value}
+                className="btn btn-gray mx-2 my-2"
+                onClick={() => 
+                  {
+                    dispatch({
+                      type: "SET_ATTRIBUTE",
+                      payload: {
+                        attribute: "query",
+                        value:  {
+                          operator: "or",
+                          filters: query.filters.filter(item => item.value !== condition.value)
+                        }
+                      }
+                    })
+                  }
+                }>
+                {props.online_services.find(service => service.value.id == condition.value).label }
+              </button>
+            ))}
+            <hr />
+
+            {query?.filters && query.filters.length !== 0 && (
+              <div className="centerize">
+                <div className="flex justify-evenly my-4">
                   <span>{I18n.t("user_bot.dashboards.broadcast_creation.approximate_customers_count")}</span>
                   <span className="item-data">{customers_count}</span>
                 </div>
               </div>
             )}
+            <a href='https://toruya.com/faq/broadcast_count-zero'>
+              <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
+            </a>
           </>
         )
-        break
     }
   }
 
@@ -154,4 +170,4 @@ const FroductSelectionStep = ({next, step, prev}) => {
   )
 }
 
-export default FroductSelectionStep;
+export default ProductSelectionStep;

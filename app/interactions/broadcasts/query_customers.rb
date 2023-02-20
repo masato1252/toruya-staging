@@ -2,6 +2,16 @@ module Broadcasts
   class QueryCustomers < ActiveInteraction::Base
     object :user
     hash :query, strip: false, default: nil
+    # {
+    #   "filters" => [
+    #     {
+    #       "field" => "online_service_ids",
+    #       "value" => 189,
+    #       "condition" => "contains"
+    #     }
+    #   ],
+    #   "operator" => "or"
+    # }
 
     def execute
       scoped = user.customers

@@ -30,17 +30,19 @@ export const GlobalProvider = ({ props, children }) => {
   const [state, dispatch] = useReducer(reducers, initialValue)
 
   const broadcastData = () => {
-    return _.pick(state.broadcast_creation_states, ["query", "content", "schedule_at"])
+    return _.pick(state.broadcast_creation_states, ["query", "content", "schedule_at", "query_type"])
   }
 
   const fetchCustomersCount = async () => {
     if (state.broadcast_creation_states.query === null) return;
+    if (state.broadcast_creation_states.query.filters.length === 0) return;
 
     const [error, response] = await CommonServices.update(
       {
         url: Routes.customers_count_lines_user_bot_broadcasts_path({format: "json"}),
         data: {
-          query: state.broadcast_creation_states.query
+          query: state.broadcast_creation_states.query,
+          query_type: state.broadcast_creation_states.query_type
         }
       }
     )

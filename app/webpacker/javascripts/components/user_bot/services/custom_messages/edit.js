@@ -58,6 +58,14 @@ const CustomMessageEdit =({props}) => {
     })
 
     window.location = response.data.redirect_to
+
+    [error, response] = await SaleServices.update({
+      sale_page_id: props.sale_page.id,
+      data: _.assign( data, {
+        attribute: props.attribute,
+        ...submittedData
+      })
+    })
   }
 
   const insertKeyword = (keyword) => {

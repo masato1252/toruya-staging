@@ -300,6 +300,13 @@ ja:
         active_desc: 予定通り配信するには【編集】してください。
         stop_send: 配信中止
         are_you_sure_to_stop: 本当に配信を中止しますか？
+        form: 
+          query_title: 配信相手
+          query_subtitle: 配信相手
+          content_title: メッセージ内容
+          content_subtitle: メッセージ内容
+          schedule_at_title: 配信時間
+          schedule_at_subtitle: 配信時間
       services:
         online_service: オンラインサービス
         service_page: サービスページ
@@ -359,15 +366,19 @@ ja:
         all_customers: 全ての顧客
         all_customers_desc: 顧客情報が連携されている全てのLINEフレンド
         specific_menu_customers: 特定メニューの利用客
-        specific_menu_customers_desc: 特定のメニューで利用履歴(チェックアウト済み)があるアクティブ顧客にアフターフォローする
+        specific_menu_customers_desc: 特定のメニューで利用履歴(チェックアウト済み)があるアクティブ顧客に一斉配信する
         specific_service_customers: 特定サービスの利用客
-        specific_service_customers_desc: 特定のオンラインサービスの利用履歴があるアクティブ顧客にアフターフォローする
+        specific_service_customers_desc: 特定のオンラインサービスの利用履歴があるアクティブ顧客に一斉配信する
+        specific_available_service_customers: 特定サービスを利用中の顧客
+        specific_available_service_customers_desc: 特定のオンラインサービスをご利用中の顧客に一斉配信する
         approximate_customers_count: 配信予定数
         what_menu_do_you_want: どのメニューの利用客に配信しますか？
         what_service_do_you_want: どのサービスの利用客に配信しますか？
         what_content_do_you_want: どんな内容を配信しますか？
         preview: プレビュー
         when_do_you_want_to_send: いつ配信しますか？
+        broadcast_services: 一斉配信するサービス
+        broadcast_help_tips: 思ったより多い/少ないですか？
       service_creation:
         goal_step: 目的
         content_step: コンテンツ

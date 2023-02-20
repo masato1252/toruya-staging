@@ -7,7 +7,7 @@ module Episodes
     boolean :available, default: true
 
     def execute
-      scope = online_service.episodes
+      scope = online_service.episodes.order("id DESC")
 
       scope = scope.available if available
       scope = scope.where("name ilike :keyword", keyword: "%#{keyword}%") if keyword.present?
