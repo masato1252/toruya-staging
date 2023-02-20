@@ -76,6 +76,8 @@ ja:
           now_state: あなたは現在
           customer_info_state: 顧客情報があります
           sale_page_state: 販売ページがあります
+          last_thirty_customers_payment: 過去30日間の売上
+          web_details_page: 詳細はWEB版管理画面で
         custom_messages:
           auto_message: 自動送信メッセージ(デフォルト)
         plans:

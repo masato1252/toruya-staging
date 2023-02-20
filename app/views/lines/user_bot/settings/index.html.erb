@@ -5,27 +5,35 @@
         <h3><%= I18n.t("user_bot.dashboards.settings.dashboard.title") %></h3>
 
         <div class="dashboard">
-          <div class="cell">
-            <div>
-              <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
+          <div class="flex mb-6px">
+            <div class="cell">
+              <div>
+                <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
+              </div>
+              <div>
+                <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
+              </div>
+              <div class="desc">
+                <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
+              </div>
             </div>
-            <div>
-              <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
-            </div>
-            <div class="desc">
-              <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
+            <div class="cell">
+              <div>
+                <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
+              </div>
+              <div>
+                <strong><span class="big"><%= @total_sale_page_count %></span><span> / <%= @total_sale_page_limit %></span></strong>
+              </div>
+              <div class="desc">
+                <%= I18n.t("user_bot.dashboards.settings.dashboard.sale_page_state") %>
+              </div>
             </div>
           </div>
-          <div class="cell">
-            <div>
-              <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
-            </div>
-            <div>
-              <strong><span class="big"><%= @total_sale_page_count %></span><span> / <%= @total_sale_page_limit %></span></strong>
-            </div>
-            <div class="desc">
-              <%= I18n.t("user_bot.dashboards.settings.dashboard.sale_page_state") %>
-            </div>
+          <div class="flex justify-center items-center flex-col p-6 border-0 border-t border-solid border-gray-500">
+            <div><%= t("user_bot.dashboards.settings.dashboard.last_thirty_customers_payment") %></div>
+            <strong><span class="big"><%= @customers_payment %></span></strong>
+            <div><%= t("user_bot.dashboards.settings.dashboard.web_details_page") %></div>
+            <div><%= user_login_url %></div>
           </div>
         </div>
 
