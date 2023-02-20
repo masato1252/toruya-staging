@@ -8,7 +8,7 @@ import { ErrorMessage, RequiredLabel } from "shared/components";
 
 export const UserIdentificationFlow = ({props, finalView, next}) => {
   const {
-    page_title, name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message,
+    page_title, trial_info_html, name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message,
     phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info, referral_code_title, referral_code_placeholder, sms_faq
   } = props.i18n.user_sign_up;
   const { confirm, required_label } = props.i18n;
@@ -226,6 +226,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
       <h2 className="centerize">
         {page_title}
       </h2>
+      <p className="centerize desc margin-around" dangerouslySetInnerHTML={{ __html: trial_info_html }} />
       {render()}
     </form>
   )

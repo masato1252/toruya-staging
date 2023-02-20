@@ -4,6 +4,7 @@ ja:
       rich_menu_bar: ユーザーメニュー
       user_sign_up:
         page_title: ユーザー登録
+        trial_info_html: ユーザー登録から30日間<br />無料でご利用いただけます
         name: お名前
         last_name: 姓
         first_name: 名
