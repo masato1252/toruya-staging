@@ -77,4 +77,12 @@ class SocialUserSerializer
   attribute :in_paid_plan do |social_user|
     social_user.user&.subscription&.in_paid_plan
   end
+
+  attribute :sign_up_date do |social_user|
+    social_user.user&.subscription&.created_at&.to_date
+  end
+
+  attribute :trial_end_date do |social_user|
+    social_user.user&.subscription&.trial_expired_date&.to_date
+  end
 end

@@ -111,6 +111,12 @@ export default () => {
           {selected_customer.member_plan_name}
         </li>
         <li>
+          {I18n.t("admin.chat.sign_up_date", { date: selected_customer.sign_up_date })}
+        </li>
+        <li>
+          {I18n.t("admin.chat.trial_end_date", { date: selected_customer.trial_end_date })}
+        </li>
+        <li>
           {I18n.t("admin.chat.booking_pages", { count: selected_customer.booking_pages_count } )}
         </li>
         <li>
