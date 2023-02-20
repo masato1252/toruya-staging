@@ -26,6 +26,18 @@
                 </td>
               </tr>
             <% end %>
+            <tr>
+              <td><%= l(current_user.subscription.trial_expired_date.to_date) %></td>
+              <td>¥0</td>
+              <td><%= t("settings.plans.payment.trial_end") %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><%= l(current_user.subscription.created_at.to_date) %></td>
+              <td>¥0</td>
+              <td><%= t("settings.plans.payment.sign_up") %></td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
 

@@ -306,6 +306,8 @@ ja:
         status: ステータス
         next_billing_date: 次のお支払い期限
       payment:
+        sign_up: ユーザー登録
+        trial_end: 試用期間終了
         date: ご清算日
         amount: 合計金額
         plan: プラン
