@@ -63,8 +63,6 @@ class Broadcast < ApplicationRecord
         when "online_service_ids"
           user.online_services.find(filter["value"]).name
         end
-
-      "#{I18n.t("broadcast.targets.fields.#{filter["field"]}")} #{I18n.t("broadcast.targets.conditions.#{filter["condition"]}")} #{product_name}"
-    end.join(", ")
+    end
   end
 end
