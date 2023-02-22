@@ -65,6 +65,9 @@ const ProductSelectionStep = ({next, step, prev}) => {
                 </div>
               </div>
             )}
+            <a href='https://toruya.com/faq/broadcast_count-zero'>
+              <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
+            </a>
           </>
         )
       case "online_service":
