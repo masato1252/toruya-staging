@@ -6,6 +6,7 @@ module SocialAccounts
 
     def execute
       account = user.social_accounts.first
+      SocialAccounts::RichMenus::SwitchToOfficial.run(social_account: account)
       account&.update(
         channel_secret: nil,
         channel_token: nil,

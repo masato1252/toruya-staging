@@ -7,13 +7,21 @@
   }
 
   .dashboard {
-    display: flex;
     background-color: #ffffff;
     padding: 6px;
     border-radius: 10px;
     border: 1px solid $gray;
     margin: 0 12px 12px 12px;
     font-size: 14px;
+
+    .big {
+      font-size: 28px;
+    }
+
+    strong {
+      display: flex;
+      align-items: baseline;
+    }
 
     .cell {
       justify-content: center;
@@ -25,15 +33,6 @@
 
       > div {
         margin: 6px 0;
-      }
-
-      .big {
-        font-size: 28px;
-      }
-
-      strong {
-        display: flex;
-        align-items: baseline;
       }
 
       &:first-child {

@@ -4,6 +4,7 @@ ja:
       rich_menu_bar: ユーザーメニュー
       user_sign_up:
         page_title: ユーザー登録
+        trial_info_html: ユーザー登録から30日間<br />無料でご利用いただけます
         name: お名前
         last_name: 姓
         first_name: 名
@@ -75,6 +76,8 @@ ja:
           now_state: あなたは現在
           customer_info_state: 顧客情報があります
           sale_page_state: 販売ページがあります
+          last_thirty_customers_payment: 過去30日間の売上
+          web_details_page: 詳細はWEB版管理画面で
         custom_messages:
           auto_message: 自動送信メッセージ(デフォルト)
         plans:
@@ -366,10 +369,13 @@ ja:
         all_customers: 全ての顧客
         all_customers_desc: 顧客情報が連携されている全てのLINEフレンド
         specific_menu_customers: 特定メニューの利用客
+        menu: 特定メニューの利用客
         specific_menu_customers_desc: 特定のメニューで利用履歴(チェックアウト済み)があるアクティブ顧客に一斉配信する
         specific_service_customers: 特定サービスの利用客
+        online_service: 特定サービスの利用客
         specific_service_customers_desc: 特定のオンラインサービスの利用履歴があるアクティブ顧客に一斉配信する
         specific_available_service_customers: 特定サービスを利用中の顧客
+        online_service_for_active_customers: 特定サービスを利用中の顧客
         specific_available_service_customers_desc: 特定のオンラインサービスをご利用中の顧客に一斉配信する
         approximate_customers_count: 配信予定数
         what_menu_do_you_want: どのメニューの利用客に配信しますか？

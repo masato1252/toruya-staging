@@ -1,7 +1,7 @@
 ja:
   notifier:
     created_shop:
-      message: "店舗設定が完了しました！\n\n次に管理画面から、LINE公式アカウントの連携設定をしてください。\n\n📝LINE連携マニュアル\n\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1"
+      message: "ユーザー登録と店舗設定が完了しました！\n\n今日から%{trial_end_date}まで無料でお試しいただけます。\n\n次に管理画面から、LINE公式アカウントの連携設定をしてください。\n\n📝LINE連携マニュアル\n\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1"
     line_api_settings_finished:
       message: "LINE連携の設定が完了しました！\n\n次に、今お送りした「設定確認を始める」ボタンをクリックして、LINE連携が正しくできているか確認してください。"
       card_button: "設定確認を始める"

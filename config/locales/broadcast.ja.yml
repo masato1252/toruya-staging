@@ -8,8 +8,5 @@ ja:
       specific_product: "%{product_name} 利用のあるアクティブ客"
     targets:
       all_customers: "全ての顧客"
-      fields:
-        online_service_ids: サービス
-        menu_ids: メニュー
       conditions:
         contains: 是

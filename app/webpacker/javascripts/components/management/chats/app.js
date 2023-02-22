@@ -125,13 +125,13 @@ export default ({ props }) => {
         <NotificationPermission />
         <CusomterList />
       </div>
-      <div className="col-sm-7">
+      <div className="col-sm-5">
         <div id="chat-box">
           <ChatBody />
         </div>
         <MessageForm />
       </div>
-      <div className="col-sm-2">
+      <div className="col-sm-4">
         <CusomterInfo />
       </div>
     </>
