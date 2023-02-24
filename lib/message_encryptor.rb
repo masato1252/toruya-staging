@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module MessageEncryptor
-  def self.encrypt(message)
-    crypt.encrypt_and_sign(message)
+  def self.encrypt(message, expires_at: nil)
+    crypt.encrypt_and_sign(message, expires_at: expires_at)
   end
 
   def self.decrypt(encrypted_content)

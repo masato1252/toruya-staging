@@ -21,6 +21,12 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   def current_user
     @current_user ||= User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
+    if !@current_user && params[:encrypted_user_id]
+      @current_user = User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
+      write_user_bot_cookies(:current_user_id, @current_user.id) if @current_user
+    end
+
+    @current_user
   end
   helper_method :current_user
 
