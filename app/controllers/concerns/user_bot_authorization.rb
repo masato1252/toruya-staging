@@ -12,7 +12,7 @@ module UserBotAuthorization
 
   def authenticate_current_user!
     unless current_user
-      redirect_to LiffRouting.liff_url(:users_connect)
+      redirect_to user_login_path
     end
   end
 
