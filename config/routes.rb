@@ -583,7 +583,7 @@ Rails.application.routes.draw do
       get "/", to: "dashboards#index"
 
       resource :subscription, only: [:destroy]
-      resource :social_account, only: [:destroy]
+      resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id
       resources :chats, only: [:index, :create, :destroy]
       resource :memo, only: [:create]
       resources :business_applications, only: [:index] do

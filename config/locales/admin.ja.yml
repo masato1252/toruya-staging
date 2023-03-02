@@ -10,6 +10,7 @@ ja:
       title: 紹介料振込予定者
     chat:
       clean_line_settings: 設定リセット
+      set_line_settings: 設定確認
       line_settings_finished: LINE連携設定
       line_login_verified: LINE login 設定確認
       message_api_verified: Messaging API設定確認
