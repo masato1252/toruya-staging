@@ -67,6 +67,7 @@ class OnlineService < ApplicationRecord
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.description"),
       enabled: true,
+      single_content: true,
       stripe_required: false,
       premium_member_required: false,
       solutions: [
@@ -78,6 +79,7 @@ class OnlineService < ApplicationRecord
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.description"),
       enabled: true,
+      single_content: true,
       stripe_required: false,
       premium_member_required: false,
       solutions: [
@@ -89,6 +91,7 @@ class OnlineService < ApplicationRecord
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.description"),
       enabled: true,
+      single_content: true,
       stripe_required: true,
       one_time_charge: true,
       premium_member_required: false,
@@ -97,10 +100,24 @@ class OnlineService < ApplicationRecord
       ]
     },
     {
+      key: "free_course",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.free_course.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.free_course.description"),
+      enabled: true,
+      single_content: false,
+      stripe_required: false,
+      premium_member_required: true,
+      solutions: [
+        PDF_SOLUTION,
+        VIDEO_SOLUTION,
+      ]
+    },
+    {
       key: "course",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.course.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.course.description"),
       enabled: true,
+      single_content: false,
       stripe_required: true,
       one_time_charge: true,
       premium_member_required: true,
@@ -114,6 +131,7 @@ class OnlineService < ApplicationRecord
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.description"),
       enabled: true,
+      single_content: false,
       stripe_required: true,
       recurring_charge: true,
       premium_member_required: true,
@@ -127,6 +145,7 @@ class OnlineService < ApplicationRecord
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.external.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
       enabled: true,
+      single_content: true,
       stripe_required: false,
       one_time_charge: true,
       premium_member_required: false,
@@ -139,6 +158,7 @@ class OnlineService < ApplicationRecord
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.description"),
       enabled: true,
+      single_content: false,
       stripe_required: true,
       one_time_charge: true,
       recurring_charge: false,
@@ -171,7 +191,15 @@ class OnlineService < ApplicationRecord
   # solution_type pdf, video, external, membership, course
 
 
-  scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'course', 'membership']) }
+  scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'free_course', 'course', 'membership']) }
+
+  def self.goals
+    if Current.user.super_admin?
+      GOALS
+    else
+      GOALS.select { |goal| goal[:key] != 'free_course' }
+    end
+  end
 
   def internal_product_name
     internal_name.presence || name
@@ -183,6 +211,14 @@ class OnlineService < ApplicationRecord
 
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
+  end
+
+  def course_like?
+    course? || free_course?
+  end
+
+  def single_content? # had content_url
+    GOALS.find { |goal| goal_type == goal[:key] }[:single_content]
   end
 
   def charge_required?
@@ -296,7 +332,7 @@ class OnlineService < ApplicationRecord
     if message_template&.picture&.attached?
       # use video_description_card ratio for the resize
       Images::Process.run!(image: message_template.picture, resize: "640x416") || default_picture_url
-    elsif course? && lessons.exists?
+    elsif course_like? && lessons.exists?
       lessons.first.thumbnail_url || default_picture_url
     elsif bundler?
       ContentHelper::BUNDLER_THUMBNAIL_URL

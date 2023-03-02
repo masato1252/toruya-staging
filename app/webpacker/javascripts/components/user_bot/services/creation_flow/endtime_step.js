@@ -67,7 +67,7 @@ const EndtimeStep = ({next, prev, step, lastStep, step_key}) => {
       />
 
       <div className="action-block">
-        {selected_goal === 'course' ? (
+        {selected_goal === 'course' || selected_goal === 'free_course' ? (
           <SubmitButton
             disabled={
               !end_time.end_type ||

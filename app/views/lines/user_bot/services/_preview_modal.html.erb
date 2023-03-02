@@ -13,7 +13,7 @@
             <%= I18n.t("common.preview") %>
           </span>
         </div>
-        <% if service.course? %>
+        <% if service.course_like? %>
           <%= react_component("user_bot/services/online_service_page/course", { course: @course_hash, lesson_ids: [], preview: true, lesson_id: local_assigns[:lesson]&.id }, { camelize_props: false }) %>
         <% elsif service.membership? %>
           <%= react_component(

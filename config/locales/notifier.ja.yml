@@ -40,6 +40,8 @@ ja:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n緑色のボタンから利用ください。"
         course:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「視聴する」ボタンからご利用ください。"
+        free_course:
+          message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「視聴する」ボタンからご利用ください。"
         membership:
           message: "この度は、%{service_title}にご登録ありがとうございました。\n\nまずはこちらのコンテンツからご覧ください。"
       charge_reminder:

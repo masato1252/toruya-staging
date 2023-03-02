@@ -11,7 +11,9 @@ module UserBotAuthorization
   end
 
   def authenticate_current_user!
-    unless current_user
+    if current_user
+      Current.user = current_user
+    else
       redirect_to user_login_path
     end
   end
@@ -19,6 +21,8 @@ module UserBotAuthorization
   def authenticate_super_user
     if current_user != super_user && current_user.current_staff(super_user).nil?
       redirect_to SiteRouting.new(view_context).member_path, alert: I18n.t("common.no_permission")
+    elsif super_user
+      Current.business_owner = super_user
     end
   end
 

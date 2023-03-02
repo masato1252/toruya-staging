@@ -10,7 +10,7 @@ class OnlineServicesController < Lines::CustomersController
     @service_member = online_service.online_service_customer_relations.where(customer: current_customer).first
 
     @online_service_hash =
-      if @online_service.course?
+      if @online_service.course_like?
         CourseSerializer.new(@online_service, { params: { service_member: @service_member }}).attributes_hash
       elsif @online_service.membership?
         MembershipSerializer.new(@online_service).attributes_hash
