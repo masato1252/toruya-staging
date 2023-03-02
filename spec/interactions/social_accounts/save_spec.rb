@@ -10,6 +10,8 @@ RSpec.describe SocialAccounts::Save do
   let(:channel_secret) { "channel_secret".freeze }
   let(:label) { "Label".freeze }
   let(:basic_id) { "Basic id".freeze }
+  let(:login_channel_id) { "login_channel_id".freeze }
+  let(:login_channel_secret) { "login_channel_secret".freeze }
   let(:social_account) {}
 
   let(:args) do
@@ -20,7 +22,9 @@ RSpec.describe SocialAccounts::Save do
       channel_token: channel_token,
       channel_secret: channel_secret,
       label: label,
-      basic_id: basic_id
+      basic_id: basic_id,
+      login_channel_id: login_channel_id,
+      login_channel_secret: login_channel_secret
     }
   end
   let(:outcome) { described_class.run(args) }

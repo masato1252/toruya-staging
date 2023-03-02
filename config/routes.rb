@@ -614,7 +614,7 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "members#show"
+  root to: "lines/user_bot/metrics#dashboard"
 
   resources :booking_pages, only: [:show] do
     member do
