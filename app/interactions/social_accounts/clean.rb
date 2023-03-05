@@ -6,6 +6,7 @@ module SocialAccounts
 
     def execute
       account = user.social_accounts.first
+      user.social_customers.where(is_owner: true).update_all(is_owner: false, customer_id: nil)
       SocialAccounts::RichMenus::SwitchToOfficial.run(social_account: account)
       account&.update(
         channel_secret: nil,
