@@ -100,7 +100,7 @@ module OnlineServices
     end
 
     def not_membership_or_course_or_bundler
-      [OnlineService.goal_types[:membership], OnlineService.goal_types[:course], OnlineService.goal_types[:bundler]].exclude?(selected_goal)
+      [OnlineService.goal_types[:membership], OnlineService.goal_types[:free_course], OnlineService.goal_types[:course], OnlineService.goal_types[:bundler]].exclude?(selected_goal)
     end
   end
 end

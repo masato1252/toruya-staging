@@ -36,7 +36,7 @@ ja:
       resend: Resend code
     message:
       unfound_customer_html: No customer data was found that matches both name and mobile number. <br>Please contact shop staff.
-      booking_failed_messsage_html: Time and menu you chose is full.<br>Please try another option.
+      booking_failed_message_html: Time and menu you chose is full.<br>Please try another option.
       booking_unexpected_failed_message: Booking failed with some reason. Please try again.
       booking_code_message: We already sent the confimation code to you, please fill in to confirm your identity
       booking_code_failed_message: Your confimation code is incorrect

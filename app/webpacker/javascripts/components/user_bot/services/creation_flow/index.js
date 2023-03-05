@@ -32,6 +32,15 @@ const GoalFlowDispatcher = ({}) => {
           <FinalStep key="final_step" />
         </FlowController>
       )
+    case 'free_course':
+      return (
+        <FlowController new_version={true}>
+          <NameStep key="name_step" />
+          <CompanyInfoStep key="company_step" />
+          <EndtimeStep key="endtime_step" />
+          <FinalStep key="final_step" />
+        </FlowController>
+      )
     case 'course':
       return (
         <FlowController new_version={true}>

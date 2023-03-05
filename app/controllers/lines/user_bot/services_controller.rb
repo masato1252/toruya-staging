@@ -31,7 +31,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
     @upsell_sale_page = @service.sale_page.serializer.attributes_hash if @service.sale_page
     @registers_count = @service.online_service_customer_relations.uncanceled.count
 
-    if @service.course?
+    if @service.course_like?
       @lessons_count = @service.lessons.count
       @chapters_count = @service.chapters.count
       @course_hash = CourseSerializer.new(@service, { params: { is_owner: true }}).attributes_hash

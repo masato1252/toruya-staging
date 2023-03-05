@@ -50,6 +50,7 @@ ja:
       questionnaire: アンケートに答える
       diagnosis: 今すぐ登録する
       external: 今すぐ登録する
+      free_course: 今すぐ登録する
       course: 今すぐ登録する
       membership: 今すぐ登録する
       bundler: 今すぐ登録する
@@ -69,6 +70,7 @@ ja:
       external: サービスを表示
       bundler: サービスを表示
       membership: サービスを表示
+      free_course: サービスを表示
       course: サービスを表示
       audio: 視聴する
       questionnaire: アンケートに答える

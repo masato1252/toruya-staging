@@ -1,4 +1,4 @@
-<% if online_service.course? %>
+<% if online_service.course_like? %>
   <%= react_component("user_bot/services/online_service_page/course", { course: online_service_hash, lesson_id: params[:lesson_id], lesson_ids: service_member.watched_lesson_ids || [], encrypted_social_service_user_id: params[:encrypted_social_service_user_id] }, { camelize_props: false }) %>
 <% elsif online_service.membership? %>
   <%= react_component(
