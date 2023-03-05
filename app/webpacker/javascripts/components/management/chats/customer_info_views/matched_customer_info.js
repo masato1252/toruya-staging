@@ -54,20 +54,6 @@ export default () => {
     }
   }
 
-  const handleCleanLineSettings = async () => {
-    if (confirm("Are you sure to clean Line settings?")) {
-      const [error, response] = await CommonServices.delete({
-        url: Routes.admin_social_account_path({format: "json"}),
-        data: {
-          customer_id: selected_customer.id
-        }
-      })
-
-      alert("Done")
-      window.location.replace(response.data.redirect_to)
-    }
-  }
-
   useEffect(() => {
     setMemo(selected_customer.memo)
   }, [selected_customer.id])
@@ -96,10 +82,7 @@ export default () => {
       <ul>
         <li>
           {selected_customer.line_settings_finished ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_settings_finished")}
-          <SubmitButton
-            handleSubmit={handleCleanLineSettings}
-            btnWord={I18n.t("admin.chat.clean_line_settings")}
-          />
+          <a href={Routes.edit_admin_social_account_path({ social_service_user_id: selected_customer.id })} target="_blank" className="btn btn-yellow">{I18n.t("admin.chat.set_line_settings")}</a>
         </li>
         <li>
           {selected_customer.login_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_login_verified")}
@@ -107,15 +90,20 @@ export default () => {
         <li>
           {selected_customer.message_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.message_api_verified")}
         </li>
-        <li>
-          {selected_customer.member_plan_name}
-        </li>
+        <hr />
         <li>
           {I18n.t("admin.chat.sign_up_date", { date: selected_customer.sign_up_date })}
         </li>
         <li>
           {I18n.t("admin.chat.trial_end_date", { date: selected_customer.trial_end_date })}
         </li>
+        <li>
+          {selected_customer.member_plan_name}
+        </li>
+        <li>
+          {I18n.t("admin.chat.next_charge_date", { date: selected_customer.next_charge_date || "" } )}
+        </li>
+        <hr />
         <li>
           {I18n.t("admin.chat.booking_pages", { count: selected_customer.booking_pages_count } )}
         </li>
@@ -130,9 +118,6 @@ export default () => {
         </li>
         <li>
           {I18n.t("admin.chat.reservations", { count: selected_customer.reservations_count } )}
-        </li>
-        <li>
-          {I18n.t("admin.chat.next_charge_date", { date: selected_customer.next_charge_date || "" } )}
         </li>
         <li>
           <SubmitButton

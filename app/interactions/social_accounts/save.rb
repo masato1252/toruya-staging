@@ -11,6 +11,8 @@ module SocialAccounts
     string :channel_secret
     string :label
     string :basic_id
+    string :login_channel_id
+    string :login_channel_secret
 
     def execute
       begin
@@ -22,7 +24,9 @@ module SocialAccounts
             channel_secret: MessageEncryptor.encrypt(channel_secret),
             channel_id: channel_id,
             label: label,
-            basic_id: basic_id
+            basic_id: basic_id,
+            login_channel_id: login_channel_id,
+            login_channel_secret: MessageEncryptor.encrypt(login_channel_secret)
           )
 
           if account.invalid?
