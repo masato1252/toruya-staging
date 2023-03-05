@@ -144,7 +144,7 @@ en:
     reservation_day: Date
     level_label: Customer Level
     tip_before_new_customer: Search existing data before adding a new customer.
-    customer_info_changed_messsage: Customer data change needed
+    customer_info_changed_message: Customer data change needed
     reminder_confirmation_message: Are you sure to turn off reminder?
     reminder_changed_message: Reminder
     filter:
