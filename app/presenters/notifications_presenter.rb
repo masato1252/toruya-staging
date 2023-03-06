@@ -32,11 +32,13 @@ class NotificationsPresenter
   end
 
   def recent_pending_reservations
-    @recent_pending_reservations ||= ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).order("reservations.start_time ASC, reservations.id ASC")
-  end
-
-  def recent_pending_customer_reservations
-    ReservationCustomer.pending.includes(reservation: [:shop, :reservation_staffs]).where("reservation_staffs.staff_id": staff_ids).order("reservation_customers.created_at ASC")
+    @recent_pending_reservations ||= ReservationStaff
+      .pending
+      .where(staff_id: staff_ids)
+      .includes(reservation: :shop)
+      .where("reservations.start_time > ?", 1.day.ago)
+      .where("reservations.aasm_state": :pending, "reservations.deleted_at": nil)
+      .order("reservations.start_time ASC, reservations.id ASC")
   end
 
   private
