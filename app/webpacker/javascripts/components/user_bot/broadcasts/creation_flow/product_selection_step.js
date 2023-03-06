@@ -133,7 +133,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
                     })
                   }
                 }>
-                {props.online_services.find(service => service.value.id == condition.value).label }
+                {props.online_services.find(service => service.value.id == condition.value)?.label }
               </button>
             ))}
             <hr />
