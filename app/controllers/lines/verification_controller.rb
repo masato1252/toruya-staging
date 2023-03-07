@@ -30,9 +30,18 @@ class Lines::VerificationController < ActionController::Base
     if !@message_api_ready
       Notifiers::Users::LineSettings::LineLoginVerificationMessage.run(receiver: current_user.social_user)
       Notifiers::Users::LineSettings::LineLoginVerificationVideo.run(receiver: current_user.social_user)
-      outcome = Notifiers::Customers::LineSettings::LineLoginVerificationFlex.run(receiver: current_user.owner_social_customer)
 
-      if outcome.invalid?
+      all_requests_result = []
+      # IMPORTANT: Somehow even customer use the same line account, they have different id from line login and join in by chat.
+      # So if which one we could send the message successfully, that one is the real owner customer
+      current_user.social_customers.where(social_user_name: current_user.owner_social_customer.social_user_name).each do |social_customer|
+        outcome = Notifiers::Customers::LineSettings::LineLoginVerificationFlex.run(receiver: social_customer)
+
+        all_requests_result << outcome.valid?
+        social_customer.update_columns(is_owner: outcome.valid?)
+      end
+
+      if all_requests_result.all?(false)
         Notifiers::Users::LineSettings::VerifyFailedMessage.run(receiver: current_user.social_user)
         Notifiers::Users::LineSettings::VerifyFailedVideo.run(receiver: current_user.social_user)
       end
