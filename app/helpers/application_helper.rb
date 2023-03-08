@@ -115,6 +115,7 @@ module ApplicationHelper
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
     cookies[:oauth_social_account_id] = { value: encrypted_id, expires: 1.year }
+    cookies[:who] = { value: nil }
 
     if social_account&.is_login_available?
       options.merge!(
