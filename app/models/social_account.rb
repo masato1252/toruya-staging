@@ -52,7 +52,7 @@ class SocialAccount < ApplicationRecord
     bot_data_finished? && social_messages.where(
       social_customer: user.owner_social_customer,
       raw_content: user.social_user.social_service_user_id
-    ).customer.exists?
+    ).from_customer.exists?
   end
 
   def is_login_available?
