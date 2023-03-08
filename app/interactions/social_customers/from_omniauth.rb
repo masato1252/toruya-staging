@@ -26,24 +26,8 @@ module SocialCustomers
         is_owner: customer_is_owner?
       )
 
-      # TODO: test this
-      if customer_is_owner? && social_customer.customer.blank?
-        user = social_customer.user
-        outcome = Customers::Create.run(
-          user: social_customer.user,
-          customer_last_name: user.profile.last_name,
-          customer_first_name: user.profile.first_name,
-          customer_phonetic_last_name: user.profile.phonetic_last_name,
-          customer_phonetic_first_name: user.profile.phonetic_first_name,
-          customer_phone_number: user.profile.phone_number
-        )
-
-        if outcome.valid?
-          SocialCustomers::ConnectWithCustomer.run(
-            social_customer: social_customer,
-            customer: outcome.result
-          )
-        end
+      if customer_is_owner?
+        SocialCustomers::CreateOwnerCustomer.run(social_customer: social_customer)
       end
 
       if param["customer_id"]

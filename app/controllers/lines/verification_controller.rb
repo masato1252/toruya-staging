@@ -36,9 +36,14 @@ class Lines::VerificationController < ActionController::Base
       # So if which one we could send the message successfully, that one is the real owner customer
       current_user.social_customers.where(social_user_name: current_user.owner_social_customer.social_user_name).each do |social_customer|
         outcome = Notifiers::Customers::LineSettings::LineLoginVerificationFlex.run(receiver: social_customer)
-
         all_requests_result << outcome.valid?
-        social_customer.update_columns(is_owner: outcome.valid?)
+
+        if outcome.valid?
+          social_customer.update_columns(is_owner: true)
+          SocialCustomers::CreateOwnerCustomer.run(social_customer: social_customer)
+        else
+          social_customer.update_columns(is_owner: false)
+        end
       end
 
       if all_requests_result.all?(false)

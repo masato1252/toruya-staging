@@ -8,7 +8,7 @@ module SocialCustomers
     object :customer
 
     def execute
-      other_social_customers = SocialCustomer.where.not(id: social_customer).where(user_id: social_customer.user_id, customer_id: customer.id)
+      other_social_customers = SocialCustomer.where.not(id: social_customer.id).where(user_id: social_customer.user_id, customer_id: customer.id)
 
       if other_social_customers.exists?
         other_social_customers.update_all(customer_id: nil)
