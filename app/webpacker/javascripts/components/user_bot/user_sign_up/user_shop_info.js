@@ -48,6 +48,9 @@ export const UserShopInfo = ({props, finalView}) => {
         {page_title}
       </h2>
       <div className="address-form">
+        <div className="reminder-mark centerize">
+          {I18n.t("user_bot.guest.user_sign_up.reminder_message")}
+        </div>
         <h4>
           <RequiredLabel label={I18n.t("common.shop_name")} required_label={I18n.t("common.required_label")} />
         </h4>
