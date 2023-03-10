@@ -1,5 +1,7 @@
 ja:
   notifier:
+    user_sign_up:
+      message: "ユーザー登録ありがとうございます。\n\n本日から%{trial_end_date}まで無料でご利用いただけます。"
     created_shop:
       message: "ユーザー登録と店舗設定が完了しました！\n\n今日から%{trial_end_date}まで無料でお試しいただけます。\n\n次に管理画面から、LINE公式アカウントの連携設定をしてください。\n\n📝LINE連携マニュアル\n\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1"
     line_api_settings_finished:
@@ -9,6 +11,8 @@ ja:
       message: "LINE連携の設定が完了しました！\n\nユーザーメニューからLINEマーケティングを始めましょう。\n\n💡オフィシャルYouTube\nToruyaの使い方や活用法、onLINE集客の方法などを解説しています。\nhttps://www.youtube.com/channel/UCXgU7ZUCDSEQMUp85WeyR0g?openExternalBrowser=1"
     line_verification_failed:
       message: "メッセージのテスト送信に失敗しました。\n\nLINEデベロッパーズ上の設定が間違っている可能性があります。\n\n以下の点をLINEデベロッパーズで確認してください。\n\n✅LINEログインが、Messaging APIと同じプロバイダ上にありますか？\n✅LINEログインの「リンクされたボット」に表示されている「＠」から始まる文字は、Toruyaと連携したMessaging APIのベーシックIDと同じですか？\n\nLINEデベロッパーズで設定し直せたら、Toruyaの設定画面から「動作テスト」ボタンをクリックして、もう一度テストし直してください。"
+    shop_settings_reminder:
+      message: "⚠️Toruya登録時の設定が完了していないようです！\n\n試用期間が終わる%{trial_end_date}までに設定を完了してください。\n%{setting_url}"
     pending_tasks_summary:
       base_message: "%{user_name} 様\n\n確認が必要なデータがございますので、ユーザーメニューよりご確認ください。\n\n"
       pending_customer_message:       "□未対応メッセージ　  %{number}件\n"
