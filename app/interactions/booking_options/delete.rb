@@ -7,7 +7,7 @@ module BookingOptions
     validate :validate_booking_page_usage
 
     def execute
-      booking_option.destroy
+      booking_option.update_columns(delete_at: Time.current)
     end
 
     private

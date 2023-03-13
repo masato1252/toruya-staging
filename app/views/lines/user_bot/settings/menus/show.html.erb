@@ -37,4 +37,11 @@
   <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.method") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :online), title: t("user_bot.dashboards.settings.menu.methods.#{@menu.online ? "online" : "local"}") %>
+
+  <div class="action-block">
+    <%= link_to lines_user_bot_settings_menu_path(@menu),
+      method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
+      <i class="fa fa-minus"></i> <span><%= I18n.t("action.delete") %></span>
+    <% end %>
+  </div>
 </div>

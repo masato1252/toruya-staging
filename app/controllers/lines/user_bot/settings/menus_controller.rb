@@ -33,4 +33,15 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
 
     return_json_response(outcome, { redirect_to: lines_user_bot_settings_menu_path(params[:id], anchor: params[:attribute]) })
   end
+
+  def destroy
+    menu = current_user.menus.find(params[:id])
+    outcome = ::Menus::Delete.run(menu: menu)
+
+    if outcome.valid?
+      redirect_to lines_user_bot_settings_menus_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    else
+      redirect_to lines_user_bot_settings_menu_path(menu), flash: { alert: I18n.t("active_interaction.errors.models.menus/delete.attributes.menu.be_used_by_booking_page") }
+    end
+  end
 end
