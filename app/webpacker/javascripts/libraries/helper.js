@@ -147,6 +147,8 @@ const zeroPad = (num, places) => String(num).padStart(places, '0')
 const isValidHttpUrl = (string) => {
   let url;
 
+  if (string === '') return true;
+
   try {
     url = new URL(string);
   } catch (_) {

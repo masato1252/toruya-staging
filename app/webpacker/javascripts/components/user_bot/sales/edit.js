@@ -350,7 +350,7 @@ const SalePageEdit =({props}) => {
       case "introduction_video_url":
         return (
           <>
-            <EditUrlInput register={register} errors={errors} name={props.attribute} placeholder={props.placeholder} />
+            <EditUrlInput register={register} errors={errors} name={props.attribute} placeholder={props.placeholder} required={false} />
             <div className='video-player-wrapper'>
               <ReactPlayer
                 className='react-player'
