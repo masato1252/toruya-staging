@@ -83,7 +83,7 @@ class User < ApplicationRecord
     end
   end
   has_many :custom_schedules, dependent: :destroy
-  has_many :booking_options
+  has_many :booking_options, -> { undeleted }
   has_many :booking_pages, -> { active }
   has_many :referrals, foreign_key: :referee_id
   has_one :reference, foreign_key: :referrer_id, class_name: "Referral"

@@ -7,6 +7,7 @@
 #  id                  :bigint           not null, primary key
 #  amount_cents        :decimal(, )      not null
 #  amount_currency     :string           not null
+#  delete_at           :datetime
 #  display_name        :string
 #  end_at              :datetime
 #  memo                :text
@@ -42,6 +43,7 @@ class BookingOption < ApplicationRecord
   scope :started, -> { where(start_at: nil).or(where("booking_options.start_at < ?", Time.current)) }
   scope :end_yet, -> { where(end_at: nil).or(where("booking_options.end_at >= ?", Time.current)) }
   scope :active, -> { started.end_yet }
+  scope :undeleted, -> { where(delete_at: nil) }
 
   def start_time
     start_at || created_at

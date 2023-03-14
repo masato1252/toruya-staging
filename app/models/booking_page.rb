@@ -38,7 +38,7 @@ class BookingPage < ApplicationRecord
   date_time_accessor :start_at, :end_at, accessor_only: true
 
   has_many :booking_page_options
-  has_many :booking_options, through: :booking_page_options
+  has_many :booking_options, -> { undeleted }, through: :booking_page_options
   has_many :booking_codes
   has_many :booking_page_special_dates, -> { order(:start_at) }
 

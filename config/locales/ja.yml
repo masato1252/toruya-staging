@@ -639,6 +639,10 @@ ja:
           attributes:
             booking_option:
               be_used_by_booking_page: "^この予約価格は、予約ページに掲載されている為、削除することができません。"
+        menus/delete:
+          attributes:
+            menu:
+              be_used_by_booking_page: "このメニューは、予約ページに掲載された予約価格で使用されている為、削除することができません。"
         menus/update_attribute:
           attributes:
             menu:
