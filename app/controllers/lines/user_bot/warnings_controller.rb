@@ -52,6 +52,12 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
     render template: "warnings/cancel_paid_customers"
   end
 
+  def line_settings_verified
+    write_user_bot_cookies(:redirect_to, request.referrer)
+
+    render template: "warnings/line_settings_verified"
+  end
+
   private
 
   def from_line_bot

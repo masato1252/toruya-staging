@@ -12,3 +12,6 @@ ja:
     create_course:
       upgrade_title: プレミアム向けです
       upgrade_content_html: この機能はプレミアム会員向けです。<br>ご利用プランをアップグレードしていただくことで、ご利用いただけます。
+    line_settings_verified:
+      verify_title: LINE連携の動作確認が必要です
+      verify_content_html: Toruyaを存分に活かしていただくためにも、LINE連携の動作確認をしてください。
