@@ -83,6 +83,7 @@ Rails.application.routes.draw do
 
         member do
           put :draft
+          post :clone
         end
       end
 
