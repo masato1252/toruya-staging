@@ -2,15 +2,15 @@
 <%= jump_out_modal(lines_user_bot_tours_line_settings_required_for_booking_page_path, static: true) unless Current.business_owner.social_account&.line_settings_finished? %>
 <%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !Current.business_owner.social_account.line_settings_verified? %>
 
-<% if ability(super_user).can?(:create, BookingPage) && Current.business_owner.social_account&.line_settings_finished? %>
+<% if ability(Current.business_owner).can?(:create, BookingPage) && Current.business_owner.social_account&.line_settings_finished? %>
   <%= react_component("user_bot/bookings/creation_flow", {
     props: {
       line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
       line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id)),
-      super_user_id: super_user.id,
+      Current.business_owner_id: Current.business_owner.id,
       selected_shop: @shop ? CompanyInfoSerializer.new(@shop).attributes_hash : {},
       note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),
-      shops: @shop ? [] : super_user.shops.includes(logo_attachment: :blob).map { |s| CompanyInfoSerializer.new(s).attributes_hash },
+      shops: @shop ? [] : Current.business_owner.shops.includes(logo_attachment: :blob).map { |s| CompanyInfoSerializer.new(s).attributes_hash },
       i18n: {
       }.merge!([
         t("activerecord.attributes.menu"),

@@ -105,7 +105,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     Rails.cache.delete(reservation_params_hash_cache_key)
 
     if params[:customer_id]
-      customer = super_user.customers.find(params[:customer_id])
+      customer = Current.business_owner.customers.find(params[:customer_id])
 
       if @customers_list.map { |c| c["customer_id"].to_i }.exclude?(params[:customer_id].to_i)
         @customers_list << {
@@ -207,7 +207,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
 
     render json: {
       redirect_to: SiteRouting.new(view_context).customers_path(
-        super_user.id,
+        Current.business_owner.id,
         reservation_id: reservation_params_hash[:reservation_id],
         shop_id: params[:shop_id],
         from: "reservation"

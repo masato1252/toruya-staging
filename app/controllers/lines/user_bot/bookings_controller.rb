@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   def new
-    @shop = super_user.shops.count == 1 ? super_user.shops.first : nil
+    @shop = Current.business_owner.shops.count == 1 ? Current.business_owner.shops.first : nil
   end
 
   def page
@@ -32,6 +32,6 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   private
 
   def shop
-    @shop ||= super_user.shops.find(params[:shop_id])
+    @shop ||= Current.business_owner.shops.find(params[:shop_id])
   end
 end

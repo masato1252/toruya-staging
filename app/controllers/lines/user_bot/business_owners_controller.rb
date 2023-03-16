@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BusinessOwnersController < Lines::UserBotDashboardController
   def index
-    @owners = Current.business_owner.staff_accounts.active.includes(:owner).map(&:owner)
+    @owners = current_user.staff_accounts.active.includes(:owner).map(&:owner)
   end
 
   def update

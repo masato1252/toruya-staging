@@ -32,7 +32,7 @@ module OptionsHelper
   end
 
   def rank_options
-    super_user.ranks.order("id DESC").map { |r| { label: r.name, value: r.id, key: r.key } }
+    Current.business_owner.ranks.order("id DESC").map { |r| { label: r.name, value: r.id, key: r.key } }
   end
 
   def menu_group_options(category_menus, *attrs)
@@ -78,7 +78,7 @@ module OptionsHelper
         label: setting.name, value: setting.id, id: setting.id
       }
 
-      h.merge!(editPath: edit_settings_user_reservation_setting_path(super_user, setting, from_menu: true, menu_id: menu.id))
+      h.merge!(editPath: edit_settings_user_reservation_setting_path(Current.business_owner, setting, from_menu: true, menu_id: menu.id))
     end
     h
   end

@@ -32,9 +32,9 @@ module ViewHelpers
 
   def shops
     @shops ||= if admin?
-                 super_user.shops.order("id")
+                 Current.business_owner.shops.order("id")
                else
-                 Current.business_owner.current_staff(super_user).shops.order("id")
+                 current_user.current_staff.shops.order("id")
                end
   end
 
@@ -44,14 +44,14 @@ module ViewHelpers
 
   def staffs
     @staffs = if admin?
-                super_user.staffs.active.order(:id)
+                Current.business_owner.staffs.active.order(:id)
               else
-                super_user.staffs.active.joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
+                Current.business_owner.staffs.active.joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
               end
   end
 
   def staff
-    @staff ||= Staff.find_by(id: params[:staff_id]) || Current.business_owner.current_staff(super_user) || super_user.staffs.active.first
+    @staff ||= Staff.find_by(id: params[:staff_id]) || current_user.current_staff || Current.business_owner.staffs.active.first
   end
 
   def shop_staff
@@ -73,7 +73,7 @@ module ViewHelpers
   end
 
   def current_ability
-    @current_ability ||= Ability.new(current_user, super_user, shop)
+    @current_ability ||= Ability.new(current_user, Current.business_owner, shop)
   end
 
   def ability(user, at_shop = nil)
@@ -87,15 +87,15 @@ module ViewHelpers
 
   def is_owner
     return @is_owner if defined?(@is_owner)
-    @is_owner = (super_user == current_user)
+    @is_owner = (Current.business_owner == current_user)
   end
 
   def current_user_staff_account
-    @current_user_staff_account ||= Current.business_owner.current_staff_account(super_user)
+    @current_user_staff_account ||= current_user.current_staff_account
   end
 
   def current_user_staff
-    @current_user_staff ||= Current.business_owner.current_staff(super_user)
+    @current_user_staff ||= current_user.current_staff
   end
 
   def working_shop_owners(include_user_own: false)
@@ -118,7 +118,7 @@ module ViewHelpers
 
     return @working_shop_options[cache_key] if @working_shop_options[cache_key]
 
-    @working_shop_options[cache_key] = Current.business_owner.staff_accounts.active.includes(:staff).map do |staff_account|
+    @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
       staff = staff_account.staff
 
       staff.shop_relations.includes(shop: :user).map do |shop_relation|

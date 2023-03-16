@@ -29,7 +29,7 @@
         end
       ),
       attribute: @attribute,
-      shop_options: shop_options(super_user.shops.order("id")),
+      shop_options: shop_options(Current.business_owner.shops.order("id")),
       i18n: {
       }.merge!([
         t("settings.booking_page.form"),

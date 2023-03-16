@@ -4,23 +4,23 @@ class Customers::FilterController < DashboardController
   def index
     authorize! :read, :filter
     @body_class = "filter"
-    menu_options = super_user.menus.map do |menu|
+    menu_options = Current.business_owner.menus.map do |menu|
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
-    @staff_options = super_user.staffs.active.map do |staff|
+    @staff_options = Current.business_owner.staffs.active.map do |staff|
       ::Options::StaffOption.new(id: staff.id, name: staff.name)
     end
 
-    @filters = super_user.customer_query_filters
-    @filtered_outcomes = super_user.filtered_outcomes.customers.active.order("created_at DESC")
+    @filters = Current.business_owner.customer_query_filters
+    @filtered_outcomes = Current.business_owner.filtered_outcomes.customers.active.order("created_at DESC")
   end
 
   def create
     authorize! :read, :filter
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
-    outcome = Customers::Filter.run(query.merge(super_user: super_user, current_user_staff: current_user_staff))
+    outcome = Customers::Filter.run(query.merge(super_user: Current.business_owner, current_user_staff: current_user_staff))
 
     if outcome.valid?
       @customers = outcome.result

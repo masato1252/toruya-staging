@@ -4,16 +4,16 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   before_action :authorize_booking_page
 
   def index
-    @booking_pages = super_user.booking_pages.includes(:booking_options, :shop).order("updated_at DESC")
+    @booking_pages = Current.business_owner.booking_pages.includes(:booking_options, :shop).order("updated_at DESC")
   end
 
   def show
-    @booking_page = super_user.booking_pages.find(params[:id])
+    @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @booking_option = @booking_page.booking_options.first
   end
 
   def edit
-    @booking_page = super_user.booking_pages.find(params[:id])
+    @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @attribute = params[:attribute]
 
     if @attribute == "new_option"
@@ -22,7 +22,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def update
-    @booking_page = super_user.booking_pages.find(params[:id])
+    @booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     outcome = ::BookingPages::Update.run(booking_page: @booking_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
@@ -30,7 +30,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def delete_option
-    @booking_page = super_user.booking_pages.find(params[:id])
+    @booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     if @booking_page.booking_page_options.count > 1
       @booking_page.booking_page_options.find_by(booking_option_id: params[:booking_option_id]).destroy
@@ -42,7 +42,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def destroy
-    booking_page = super_user.booking_pages.find(params[:id])
+    booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     if booking_page.update(deleted_at: Time.current)
       redirect_to lines_user_bot_booking_pages_path, notice: I18n.t("common.delete_successfully_message")
@@ -52,7 +52,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def preview_modal
-    @booking_page = super_user.booking_pages.find(params[:id])
+    @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @booking_option = @booking_page.booking_options.first
 
     if @booking_option

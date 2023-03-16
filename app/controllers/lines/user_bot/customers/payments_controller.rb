@@ -18,6 +18,6 @@ class Lines::UserBot::Customers::PaymentsController < Lines::UserBotDashboardCon
   private
 
   def set_customer
-    @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    @customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
   end
 end

@@ -2,15 +2,15 @@
 
 <%= react_component("user_bot/sales/booking_page_creation_flow", {
   props: {
-    social_account_add_friend_url: super_user.social_accounts.first&.add_friend_url,
+    social_account_add_friend_url: Current.business_owner.social_accounts.first&.add_friend_url,
     selected_booking_page: @selected_booking_page,
-    booking_pages: super_user.booking_pages.select {|page| page.primary_product }.map { |b|
+    booking_pages: Current.business_owner.booking_pages.select {|page| page.primary_product }.map { |b|
       {
         label: b.name,
         value: BookingPageSerializer.new(b).attributes_hash
       }
     },
-    staffs: super_user.staffs.includes(picture_attachment: :blob).map { |staff|
+    staffs: Current.business_owner.staffs.includes(picture_attachment: :blob).map { |staff|
       {
         label: staff.name,
         value: StaffSerializer.new(staff).attributes_hash
@@ -18,7 +18,7 @@
     },
     sale_templates: @sale_templates.map { |template| SaleTemplateSerializer.new(template).attributes_hash },
     flow_tips: I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_tips"),
-    shops: super_user.shops.includes({ logo_attachment: :blob }).inject({}) { |h, s| h[s.id] = CompanyInfoSerializer.new(s).attributes_hash; h }
+    shops: Current.business_owner.shops.includes({ logo_attachment: :blob }).inject({}) { |h, s| h[s.id] = CompanyInfoSerializer.new(s).attributes_hash; h }
   }
 },
 { camelize_props: false }
