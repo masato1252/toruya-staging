@@ -121,6 +121,9 @@
       <% end %>
 
       <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">
+        <% if current_user.staff_accounts.count > 1 %>
+          <div class="business-owner-bar"><%= link_to Current.business_owner.name, lines_user_bot_business_owners_path %></div>
+        <% end %>
         <%= yield %>
       </div>
     </div>
