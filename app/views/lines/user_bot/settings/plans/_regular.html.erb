@@ -5,22 +5,22 @@
       paymentPath: lines_user_bot_settings_payments_path,
       stripe_key: Rails.application.secrets.stripe_publishable_key,
       locale: I18n.default_locale,
-      email: current_user.email,
-      current_plan_level: Plan.permission_level(current_user.subscription.current_plan.level),
-      current_rank: current_user.subscription.rank,
+      email: Current.business_owner.email,
+      current_plan_level: Plan.permission_level(Current.business_owner.subscription.current_plan.level),
+      current_rank: Current.business_owner.subscription.rank,
       plan_labels: @plan_labels,
       plans: @plans_properties,
       default_upgrade_plan: @default_upgrade_plan,
       default_upgrade_rank: @default_upgrade_rank,
-      in_paid_plan: current_user.subscription.in_paid_plan,
+      in_paid_plan: Current.business_owner.subscription.in_paid_plan,
       i18n: {
       }.merge!([
         t("settings.plans"),
         t("user_bot.dashboards.settings.plans"),
         t("action").slice(:pay, :unsubscribe),
         {
-          downgrade_desc1: t("settings.plans.downgrade.desc1", expired_date: l(current_user.subscription&.expired_date || Date.current)),
-          downgrade_desc2: t("settings.plans.downgrade.desc2", after_expired_date: l(current_user.subscription&.expired_date&.tomorrow || Date.current)),
+          downgrade_desc1: t("settings.plans.downgrade.desc1", expired_date: l(Current.business_owner.subscription&.expired_date || Date.current)),
+          downgrade_desc2: t("settings.plans.downgrade.desc2", after_expired_date: l(Current.business_owner.subscription&.expired_date&.tomorrow || Date.current)),
         }
       ].inject(:merge))
     }

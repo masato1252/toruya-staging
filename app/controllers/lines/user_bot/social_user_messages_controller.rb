@@ -6,7 +6,7 @@ class Lines::UserBot::SocialUserMessagesController < Lines::UserBotDashboardCont
 
   def create
     outcome = SocialUserMessages::Create.perform_later(
-      social_user: current_user.social_user,
+      social_user: Current.business_owner.social_user,
       content: params["content"],
       readed: false,
       message_type: SocialUserMessage.message_types[:user]

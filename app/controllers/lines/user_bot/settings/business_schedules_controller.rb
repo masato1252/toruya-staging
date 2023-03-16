@@ -2,7 +2,7 @@
 
 class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDashboardController
   def shops
-    @shops = current_user.shops
+    @shops = Current.business_owner.shops
   end
 
   def index
@@ -22,6 +22,6 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
   private
 
   def shop
-    @shop ||= current_user.shops.find(params[:shop_id])
+    @shop ||= Current.business_owner.shops.find(params[:shop_id])
   end
 end

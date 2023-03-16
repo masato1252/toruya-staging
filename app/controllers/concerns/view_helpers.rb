@@ -34,7 +34,7 @@ module ViewHelpers
     @shops ||= if admin?
                  super_user.shops.order("id")
                else
-                 current_user.current_staff(super_user).shops.order("id")
+                 Current.business_owner.current_staff(super_user).shops.order("id")
                end
   end
 
@@ -51,7 +51,7 @@ module ViewHelpers
   end
 
   def staff
-    @staff ||= Staff.find_by(id: params[:staff_id]) || current_user.current_staff(super_user) || super_user.staffs.active.first
+    @staff ||= Staff.find_by(id: params[:staff_id]) || Current.business_owner.current_staff(super_user) || super_user.staffs.active.first
   end
 
   def shop_staff
@@ -91,11 +91,11 @@ module ViewHelpers
   end
 
   def current_user_staff_account
-    @current_user_staff_account ||= current_user.current_staff_account(super_user)
+    @current_user_staff_account ||= Current.business_owner.current_staff_account(super_user)
   end
 
   def current_user_staff
-    @current_user_staff ||= current_user.current_staff(super_user)
+    @current_user_staff ||= Current.business_owner.current_staff(super_user)
   end
 
   def working_shop_owners(include_user_own: false)
@@ -103,12 +103,12 @@ module ViewHelpers
 
     return @working_shop_owners[include_user_own] if @working_shop_owners[include_user_own]
 
-    staff_account_scope = current_user.staff_accounts.active
+    staff_account_scope = Current.business_owner.staff_accounts.active
 
     if include_user_own
       @working_shop_owners[include_user_own] = staff_account_scope.includes(:owner).map(&:owner)
     else
-      @working_shop_owners[include_user_own] = staff_account_scope.where.not(owner_id: current_user.id).includes(:owner).map(&:owner)
+      @working_shop_owners[include_user_own] = staff_account_scope.where.not(owner_id: Current.business_owner.id).includes(:owner).map(&:owner)
     end
   end
 
@@ -118,7 +118,7 @@ module ViewHelpers
 
     return @working_shop_options[cache_key] if @working_shop_options[cache_key]
 
-    @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
+    @working_shop_options[cache_key] = Current.business_owner.staff_accounts.active.includes(:staff).map do |staff_account|
       staff = staff_account.staff
 
       staff.shop_relations.includes(shop: :user).map do |shop_relation|
@@ -141,7 +141,7 @@ module ViewHelpers
   end
 
   def owning_shop_options
-    @owning_shop_options ||= current_user.shops.order("id").map do |shop|
+    @owning_shop_options ||= Current.business_owner.shops.order("id").map do |shop|
       ::Option.new(shop: shop, owner: shop.user)
     end
   end

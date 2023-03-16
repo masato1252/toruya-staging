@@ -159,13 +159,13 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def delete_message
-    message = current_user.social_account.social_messages.find(params[:message_id])
+    message = Current.business_owner.social_account.social_messages.find(params[:message_id])
 
     unless message.sent_at
       message.destroy
     end
 
-    customer = current_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
 
     render json: {
       status: "successful",
@@ -174,8 +174,8 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def unread_message
-    customer = current_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
-    message = current_user.social_account.social_messages.customer.where(social_customer_id: customer.social_customer.id).order("id").last
+    customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    message = Current.business_owner.social_account.social_messages.customer.where(social_customer_id: customer.social_customer.id).order("id").last
 
     outcome = SocialMessages::Unread.run(
       social_customer: customer.social_customer,

@@ -2,15 +2,15 @@
 
 class Lines::UserBot::Settings::ProfilesController < Lines::UserBotDashboardController
   def show
-    @profile = current_user.profile
+    @profile = Current.business_owner.profile
   end
 
   def company
-    @profile = current_user.profile
+    @profile = Current.business_owner.profile
   end
 
   def edit
-    @profile = current_user.profile
+    @profile = Current.business_owner.profile
     @previous_path =
       case params[:attribute]
       when "name"
@@ -28,7 +28,7 @@ class Lines::UserBot::Settings::ProfilesController < Lines::UserBotDashboardCont
   end
 
   def update
-    outcome = Profiles::UpdateAttribute.run(profile: current_user.profile, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+    outcome = Profiles::UpdateAttribute.run(profile: Current.business_owner.profile, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
     redirect_path =
       case params[:attribute]

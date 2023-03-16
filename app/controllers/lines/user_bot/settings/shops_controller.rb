@@ -2,15 +2,15 @@
 
 class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardController
   def index
-    @shops = current_user.shops
+    @shops = Current.business_owner.shops
   end
 
   def show
-    @shop = current_user.shops.find(params[:id])
+    @shop = Current.business_owner.shops.find(params[:id])
   end
 
   def edit
-    @shop = current_user.shops.find(params[:id])
+    @shop = Current.business_owner.shops.find(params[:id])
     @title =
       case params[:attribute]
       when "holiday_working"
@@ -37,7 +37,7 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
   end
 
   def update
-    shop = current_user.shops.find(params[:id])
+    shop = Current.business_owner.shops.find(params[:id])
     outcome = Shops::Update.run(shop: shop, params: shop_params.to_h)
 
     case params[:attribute]

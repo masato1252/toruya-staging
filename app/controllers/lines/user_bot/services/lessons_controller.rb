@@ -2,13 +2,13 @@
 
 class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardController
   def new
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = chapter.lessons.new
   end
 
   def create
-    online_service = current_user.online_services.find(params[:service_id])
+    online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = online_service.chapters.find(params[:chapter_id])
 
     outcome = ::Lessons::Create.run(
@@ -24,14 +24,14 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   end
 
   def show
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = @chapter.lessons.find(params[:id])
     @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
   end
 
   def edit
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = chapter.lessons.find(params[:id])
     @attribute = params[:attribute]

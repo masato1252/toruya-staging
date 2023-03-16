@@ -50,11 +50,11 @@
 
         <%= link_to lines_user_bot_settings_plans_path, class: "field-row" do %>
           <div>
-            <%= t("settings.plans.plan_info.plan_member", plan_name: current_user.member_plan_name) %><br />
+            <%= t("settings.plans.plan_info.plan_member", plan_name: Current.business_owner.member_plan_name) %><br />
             <div class="desc">
               <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
-              <% if current_user.trial_member? %>
-                <%= l(current_user.trial_expired_date) %>
+              <% if Current.business_owner.trial_member? %>
+                <%= l(Current.business_owner.trial_expired_date) %>
               <% else %>
                 <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
                 <%= " (#{@subscription.next_plan.name}変更予定)" if @subscription.active? && @subscription.next_plan %>
@@ -106,7 +106,7 @@
         <% end %>
 
         <div class="bottom-navigation-bar centerize">
-          <%= sprintf("%07d", current_user.id) %>
+          <%= sprintf("%07d", Current.business_owner.id) %>
         </div>
       </div>
     </div>

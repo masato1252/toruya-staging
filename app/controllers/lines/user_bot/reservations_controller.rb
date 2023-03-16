@@ -290,6 +290,6 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def reservation_params_hash_cache_key
-    "user-bot-user_id-#{current_user.id}-reservation_params_hash"
+    "user-bot-user_id-#{Current.business_owner.id}-reservation_params_hash"
   end
 end

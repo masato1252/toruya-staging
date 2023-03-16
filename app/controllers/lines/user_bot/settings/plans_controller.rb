@@ -5,8 +5,8 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
     @plans_properties = Plans::Properties.run!(user: current_user)
     @plan_labels = I18n.t("plans")[:labels]
 
-    @charge_directly = current_user.subscription.current_plan.free_level?
+    @charge_directly = Current.business_owner.subscription.current_plan.free_level?
     @default_upgrade_plan = params[:upgrade]
-    @default_upgrade_rank = Plan.rank(@default_upgrade_plan, current_user.customers.size) if @default_upgrade_plan
+    @default_upgrade_rank = Plan.rank(@default_upgrade_plan, Current.business_owner.customers.size) if @default_upgrade_plan
   end
 end

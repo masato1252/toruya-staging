@@ -4,15 +4,15 @@ require "message_encryptor"
 
 class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboardController
   def message_api
-    @social_account = current_user.social_account || current_user.social_accounts.new
+    @social_account = Current.business_owner.social_account || Current.business_owner.social_accounts.new
   end
 
   def login_api
-    @social_account = current_user.social_account || current_user.social_accounts.new
+    @social_account = Current.business_owner.social_account || Current.business_owner.social_accounts.new
   end
 
   def edit
-    @social_account = current_user.social_account || current_user.social_accounts.new
+    @social_account = Current.business_owner.social_account || Current.business_owner.social_accounts.new
     @attribute = params[:attribute]
     @previous_path =
       case params[:attribute]
@@ -26,7 +26,7 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   def update
     outcome = SocialAccounts::Update.run(user: current_user, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    social_account  = current_user.social_account
+    social_account  = Current.business_owner.social_account
 
     case params[:attribute]
     when "login_channel_id", "login_channel_secret"
@@ -37,7 +37,7 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   end
 
   def webhook_modal
-    @social_account = current_user.social_account
+    @social_account = Current.business_owner.social_account
 
     if @social_account
       render layout: false
@@ -47,7 +47,7 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   end
 
   def callback_modal
-    @social_account = current_user.social_account
+    @social_account = Current.business_owner.social_account
 
     if @social_account
       render layout: false

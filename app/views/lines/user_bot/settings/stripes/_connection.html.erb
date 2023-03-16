@@ -4,7 +4,7 @@
 <div class="centerize">
   <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: local_assigns[:oauth_redirect_to_url] || lines_user_bot_settings_path),
     class: "btn-stripe-connect btn btn-yellow" do %>
-    <%= current_user.stripe_provider ? t("action.stripe_connected") : t("action.stripe_connect") %>
+    <%= Current.business_owner.stripe_provider ? t("action.stripe_connected") : t("action.stripe_connect") %>
   <% end %>
 </div>
 

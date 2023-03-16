@@ -3,7 +3,7 @@
     <div class="col-sm-6 px-0 settings-view">
       <div class="settings-dashboard form">
         <h3><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></h3>
-        <% current_user.shops.each do |shop| %>
+        <% Current.business_owner.shops.each do |shop| %>
           <%= link_to lines_user_bot_settings_shop_custom_messages_path(shop_id: shop.id), class: "field-row" do %>
             <span><%= shop.name %></span><i class="fa fa-angle-right"></i>
           <% end %>
