@@ -24,7 +24,7 @@ class Ability
   end
 
   def admin_level
-    @shop_owner_level = current_user == super_user
+    @shop_owner_level = current_user == super_user || current_user.current_staff_account(super_user).admin?
   end
   alias_method :admin?, :admin_level
 

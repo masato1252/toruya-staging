@@ -141,6 +141,7 @@ class User < ApplicationRecord
 
   def current_staff_account(super_user = nil)
     super_user ||= Current.business_owner
+    super_user ||= Current.user
     @current_staff_accounts ||= {}
 
     return @current_staff_accounts[super_user] if @current_staff_accounts[super_user]

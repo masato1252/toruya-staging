@@ -36,7 +36,8 @@ class StaffAccount < ApplicationRecord
 
   enum level: {
     employee: 0,
-    owner: 1
+    owner: 1,
+    admin: 2
   }
 
   belongs_to :staff

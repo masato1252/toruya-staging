@@ -39,7 +39,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
   def filter
     customers = ::Customers::CharFilter.run(
-      Current.business_owner: Current.business_owner,
+      super_user: Current.business_owner,
       current_user_staff: current_user_staff,
       pattern_number: params[:pattern_number],
       page: params[:page].presence || 1
@@ -67,7 +67,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
   def search
     customers = ::Customers::Search.run(
-      Current.business_owner: Current.business_owner,
+      super_user: Current.business_owner,
       current_user_staff: current_user_staff,
       keyword: params[:keyword],
       page: params[:page].presence || 1
