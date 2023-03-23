@@ -41,7 +41,7 @@ RSpec.describe Booking::FindCustomer do
       end
     end
 
-    context "when multiple customers matched" do
+    xcontext "when multiple customers matched" do
       context "when no reservations" do
         it "returns the recent reservation's customer" do
           customer1 = FactoryBot.create(

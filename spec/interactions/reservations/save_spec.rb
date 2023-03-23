@@ -253,7 +253,7 @@ RSpec.describe Reservations::Save do
 
       context "when reservation's staffs are not only current user staff(by_staff_id)" do
         let(:by_staff) { FactoryBot.create(:staff, shop: shop, user: user) }
-        let(:new_reseravtion) { FactoryBot.create(:reservation, :pending) }
+        let(:new_reservation) { FactoryBot.create(:reservation, :pending) }
 
         it "state is pending" do
           expect(outcome.result).to be_pending
