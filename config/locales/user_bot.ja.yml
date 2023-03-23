@@ -304,6 +304,7 @@ ja:
         active_desc: 予定通り配信するには【編集】してください。
         stop_send: 配信中止
         are_you_sure_to_stop: 本当に配信を中止しますか？
+        clone_successfully: 複製されました
         form: 
           query_title: 配信相手
           query_subtitle: 配信相手

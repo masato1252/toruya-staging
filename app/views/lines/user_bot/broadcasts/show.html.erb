@@ -35,6 +35,14 @@
         </p>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+          <%= link_to clone_lines_user_bot_broadcast_path(@broadcast),
+            method: :post,
+            data: { disable_with: t("common.processing") },
+            class: "btn btn-yellow btn-circle btn-tweak btn-with-word btn-bottom-left" do %>
+            <i class="fa fa-copy fa-2x"></i>
+            <div class="word"><%= I18n.t("action.duplicate") %></div>
+          <% end %>
+
           <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@broadcast.updated_at, format: :long_date) %></span>
           <% if @broadcast.active? %>
             <%= link_to  draft_lines_user_bot_broadcast_path(@broadcast), method: :put , data: { confirm: t("user_bot.dashboards.broadcasts.are_you_sure_to_stop") }, class: "btn btn-orange btn-circle btn-save btn-tweak btn-with-word" do %>

@@ -46,6 +46,13 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
     redirect_to lines_user_bot_broadcast_path(broadcast)
   end
 
+  def clone
+    broadcast = current_user.broadcasts.find(params[:id])
+    new_broadcast = Broadcasts::Clone.run!(broadcast: broadcast)
+
+    redirect_to lines_user_bot_broadcasts_path, notice: I18n.t("user_bot.dashboards.broadcasts.clone_successfully")
+  end
+
   def customers_count
     outcome =
       case params[:query_type]
