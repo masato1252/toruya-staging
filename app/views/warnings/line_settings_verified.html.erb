@@ -1,0 +1,19 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("warnings.line_settings_verified.verify_title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <%= t("warnings.line_settings_verified.verify_content_html") %>
+    </div>
+    <div class="modal-footer centerize">
+      <%= button_to t("action.verify_line"),
+        lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)),
+        class: "btn btn-yellow",
+        method: :get
+      %>
+    </div>
+  </div>
+</div>

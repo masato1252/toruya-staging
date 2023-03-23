@@ -1,5 +1,6 @@
 <%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) unless ability(super_user).can?(:create, BookingPage) %>
 <%= jump_out_modal(lines_user_bot_tours_line_settings_required_for_booking_page_path, static: true) unless current_user.social_account&.line_settings_finished? %>
+<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !current_user.social_account.line_settings_verified? %>
 
 <% if ability(super_user).can?(:create, BookingPage) && current_user.social_account&.line_settings_finished? %>
   <%= react_component("user_bot/bookings/creation_flow", {
