@@ -32,9 +32,9 @@ module ViewHelpers
 
   def shops
     @shops ||= if admin?
-                 super_user.shops.order("id")
+                 Current.business_owner.shops.order("id")
                else
-                 current_user.current_staff(super_user).shops.order("id")
+                 current_user.current_staff.shops.order("id")
                end
   end
 
@@ -44,14 +44,14 @@ module ViewHelpers
 
   def staffs
     @staffs = if admin?
-                super_user.staffs.active.order(:id)
+                Current.business_owner.staffs.active.order(:id)
               else
-                super_user.staffs.active.joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
+                Current.business_owner.staffs.active.joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
               end
   end
 
   def staff
-    @staff ||= Staff.find_by(id: params[:staff_id]) || current_user.current_staff(super_user) || super_user.staffs.active.first
+    @staff ||= Staff.find_by(id: params[:staff_id]) || current_user.current_staff || Current.business_owner.staffs.active.first
   end
 
   def shop_staff
@@ -59,11 +59,21 @@ module ViewHelpers
   end
 
   def super_user
-    @super_user ||= User.find_by(id: from_line_bot ? (ENV["DEV_USER_ID"] || user_bot_cookies(:current_super_user_id)) : session[:current_super_user_id])
+    super_user_id =
+      if from_line_bot
+        if ENV["DISABLE_SUPER_USER_DEV_ID"]
+          user_bot_cookies(:current_super_user_id) || ENV["DEV_USER_ID"]
+        else
+          ENV["DEV_USER_ID"]
+        end
+      else
+        session[:current_super_user_id]
+      end
+    @super_user ||= User.find_by(id: super_user_id)
   end
 
   def current_ability
-    @current_ability ||= Ability.new(current_user, super_user, shop)
+    @current_ability ||= Ability.new(current_user, Current.business_owner, shop)
   end
 
   def ability(user, at_shop = nil)
@@ -77,15 +87,15 @@ module ViewHelpers
 
   def is_owner
     return @is_owner if defined?(@is_owner)
-    @is_owner = (super_user == current_user)
+    @is_owner = (Current.business_owner == current_user)
   end
 
   def current_user_staff_account
-    @current_user_staff_account ||= current_user.current_staff_account(super_user)
+    @current_user_staff_account ||= current_user.current_staff_account
   end
 
   def current_user_staff
-    @current_user_staff ||= current_user.current_staff(super_user)
+    @current_user_staff ||= current_user.current_staff
   end
 
   def working_shop_owners(include_user_own: false)
@@ -93,12 +103,12 @@ module ViewHelpers
 
     return @working_shop_owners[include_user_own] if @working_shop_owners[include_user_own]
 
-    staff_account_scope = current_user.staff_accounts.active
+    staff_account_scope = Current.business_owner.staff_accounts.active
 
     if include_user_own
       @working_shop_owners[include_user_own] = staff_account_scope.includes(:owner).map(&:owner)
     else
-      @working_shop_owners[include_user_own] = staff_account_scope.where.not(owner_id: current_user.id).includes(:owner).map(&:owner)
+      @working_shop_owners[include_user_own] = staff_account_scope.where.not(owner_id: Current.business_owner.id).includes(:owner).map(&:owner)
     end
   end
 
@@ -131,7 +141,7 @@ module ViewHelpers
   end
 
   def owning_shop_options
-    @owning_shop_options ||= current_user.shops.order("id").map do |shop|
+    @owning_shop_options ||= Current.business_owner.shops.order("id").map do |shop|
       ::Option.new(shop: shop, owner: shop.user)
     end
   end

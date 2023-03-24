@@ -2,29 +2,29 @@
 
 class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardController
   def index
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episodes = ::Episodes::Search.run!(online_service: @online_service, keyword: params[:keyword], available: false)
   end
 
   def show
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episode = @online_service.episodes.find(params[:id])
     @membership_hash = MembershipSerializer.new(@online_service).attributes_hash
   end
 
   def new
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episode = @online_service.episodes.new
   end
 
   def edit
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episode = @online_service.episodes.find(params[:id])
     @attribute = params[:attribute]
   end
 
   def create
-    online_service = current_user.online_services.find(params[:service_id])
+    online_service = Current.business_owner.online_services.find(params[:service_id])
 
     outcome = Episodes::Create.run(
       online_service: online_service,
@@ -40,7 +40,7 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   end
 
   def update
-    online_service = current_user.online_services.find(params[:service_id])
+    online_service = Current.business_owner.online_services.find(params[:service_id])
     episode = online_service.episodes.find(params[:id])
 
     outcome = ::Episodes::Update.run(episode: episode, attrs: params.permit!.to_h, update_attribute: params[:attribute])
@@ -49,7 +49,7 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   end
 
   def destroy
-    online_service = current_user.online_services.find(params[:service_id])
+    online_service = Current.business_owner.online_services.find(params[:service_id])
     episode = online_service.episodes.find(params[:id])
 
     episode.destroy!

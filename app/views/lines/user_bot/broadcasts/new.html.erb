@@ -3,16 +3,16 @@
 <%= react_component("user_bot/broadcasts/creation_flow", {
   props: {
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
-    line_settings_verified: current_user.social_account&.line_settings_verified?,
-    line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)),
-    online_services: current_user.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
+    line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
+    line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id)),
+    online_services: Current.business_owner.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
       {
         label: service.internal_name.presence || service.name,
         value: OnlineServiceSerializer.new(service).attributes_hash
       }
     },
     message: {
-      customer_name: current_user.display_last_name,
+      customer_name: Current.business_owner.display_last_name,
     }
   }
 },

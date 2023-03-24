@@ -46,7 +46,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
       )
     end
 
-    redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
+    redirect_back fallback_location: SiteRouting.new(view_context).customers_path(Current.business_owner.id, customer_id: params[:customer_id])
   end
 
   def pend
@@ -59,7 +59,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
       )
     end
 
-    redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
+    redirect_back fallback_location: SiteRouting.new(view_context).customers_path(Current.business_owner.id, customer_id: params[:customer_id])
   end
 
   def cancel
@@ -72,7 +72,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
       )
     end
 
-    redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
+    redirect_back fallback_location: SiteRouting.new(view_context).customers_path(Current.business_owner.id, customer_id: params[:customer_id])
   end
 
   def refund_modal
@@ -93,12 +93,12 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
       )
     end
 
-    redirect_to lines_user_bot_customers_path(customer_id: params[:customer_id], reservation_id: params[:reservation_id], user_id: super_user.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations])
+    redirect_to lines_user_bot_customers_path(customer_id: params[:customer_id], reservation_id: params[:reservation_id], user_id: Current.business_owner.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations])
   end
 
   private
 
   def set_customer
-    @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    @customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
   end
 end

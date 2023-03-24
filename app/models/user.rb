@@ -139,7 +139,9 @@ class User < ApplicationRecord
     I18n.t("plan.level.#{member_plan_key}")
   end
 
-  def current_staff_account(super_user)
+  def current_staff_account(super_user = nil)
+    super_user ||= Current.business_owner
+    super_user ||= Current.user
     @current_staff_accounts ||= {}
 
     return @current_staff_accounts[super_user] if @current_staff_accounts[super_user]
@@ -147,7 +149,8 @@ class User < ApplicationRecord
     @current_staff_accounts[super_user] = super_user.owner_staff_accounts.active.find_by(user_id: self.id)
   end
 
-  def current_staff(super_user)
+  def current_staff(super_user = nil)
+    super_user ||= Current.business_owner
     @current_staffs ||= {}
 
     return @current_staffs[super_user] if @current_staffs[super_user]

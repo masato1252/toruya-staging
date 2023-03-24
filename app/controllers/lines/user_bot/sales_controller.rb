@@ -5,19 +5,19 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def index
-    @sale_pages = current_user.sale_pages.includes(:product).order("updated_at DESC")
+    @sale_pages = Current.business_owner.sale_pages.includes(:product).order("updated_at DESC")
   end
 
   def show
-    @sale_page = current_user.sale_pages.find(params[:id])
+    @sale_page = Current.business_owner.sale_pages.find(params[:id])
   end
 
   def edit
-    @sale_page = current_user.sale_pages.find(params[:id])
+    @sale_page = Current.business_owner.sale_pages.find(params[:id])
   end
 
   def update
-    sale_page = current_user.sale_pages.find(params[:id])
+    sale_page = Current.business_owner.sale_pages.find(params[:id])
 
     outcome = SalePages::Update.run(sale_page: sale_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
@@ -25,7 +25,7 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def destroy
-    sale_page = current_user.sale_pages.find(params[:id])
+    sale_page = Current.business_owner.sale_pages.find(params[:id])
 
     if sale_page.update(deleted_at: Time.current)
       redirect_to lines_user_bot_sales_path, notice: I18n.t("common.delete_successfully_message")
@@ -35,7 +35,7 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def clone
-    sale_page = current_user.sale_pages.find(params[:id])
+    sale_page = Current.business_owner.sale_pages.find(params[:id])
 
     outcome = SalePages::Clone.run(sale_page: sale_page)
 

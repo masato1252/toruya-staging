@@ -60,6 +60,7 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :business_owners, only: [:index, :update]
       resources :schedules, only: [:index] do
         collection do
           get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date

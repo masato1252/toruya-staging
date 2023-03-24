@@ -1,0 +1,3 @@
+<% @owners.each do |owner| %>
+  <%= button_to owner.name, lines_user_bot_business_owner_path(owner), class: "btn btn-gray", method: :put %>
+<% end %>

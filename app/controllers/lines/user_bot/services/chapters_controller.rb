@@ -2,24 +2,24 @@
 
 class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardController
   def index
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
   end
 
   def new
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.new
 
     render action: :edit
   end
 
   def edit
-    @online_service = current_user.online_services.find(params[:service_id])
+    @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:id])
   end
 
   def create
-    online_service = current_user.online_services.find(params[:service_id])
+    online_service = Current.business_owner.online_services.find(params[:service_id])
 
     outcome = Chapters::Create.run(
       online_service: online_service,
@@ -30,7 +30,7 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
   end
 
   def update
-    online_service = current_user.online_services.find(params[:service_id])
+    online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = online_service.chapters.find(params[:id])
 
     outcome = Chapters::Update.run(
@@ -42,7 +42,7 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
   end
 
   def destroy
-    online_service = current_user.online_services.find(params[:service_id])
+    online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = online_service.chapters.find(params[:id])
 
     outcome = Chapters::Delete.run(chapter: chapter)
@@ -70,7 +70,7 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
     #   "service_id" => "148",
     # }
     outcome = Chapters::Reorder.run(
-      online_service: current_user.online_services.find(params[:service_id]),
+      online_service: Current.business_owner.online_services.find(params[:service_id]),
       items: params.permit!.to_h[:items]
     )
 

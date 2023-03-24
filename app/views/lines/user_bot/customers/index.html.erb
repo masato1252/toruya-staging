@@ -2,7 +2,7 @@
 
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
-    super_user_id: super_user.id,
+    super_user_id: Current.business_owner.id,
     from: params[:from],
     from_options: FROM,
     referrer: request.referrer,
@@ -10,7 +10,7 @@
     shop: shop,
     target_view: params[:target_view],
     previous_path: params[:previous_path],
-    customer: CustomerOptionSerializer.new(@customer || super_user.customers.new).attributes_hash,
+    customer: CustomerOptionSerializer.new(@customer || Current.business_owner.customers.new).attributes_hash,
     notification_messages: @notification_messages,
     contact_groups: default_options(current_user_staff.readable_contact_groups),
     ranks: rank_options,

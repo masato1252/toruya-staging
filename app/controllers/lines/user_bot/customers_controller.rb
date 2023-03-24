@@ -5,14 +5,14 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     authorize! :read, :customers_dashboard
 
     @customers =
-      super_user
+      Current.business_owner
       .customers
       .contact_groups_scope(current_user_staff)
       .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
       .order("updated_at DESC")
       .limit(::Customers::Search::PER_PAGE)
     @customer =
-      super_user
+      Current.business_owner
       .customers
       .contact_groups_scope(current_user_staff)
       .includes(:rank, :contact_group, :social_customer).find_by(id: params[:customer_id])
@@ -23,7 +23,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       @add_reservation_path = form_shop_reservations_path(shop, params[:reservation_id])
     end
 
-    @total_customers_number = super_user.customers.count
+    @total_customers_number = Current.business_owner.customers.count
 
     # Notifications START
     @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, current_user).data.compact + Notifications::NonGroupCustomersPresenter.new(view_context, current_user).data.compact
@@ -31,7 +31,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def details
-    @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    @customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
     authorize! :read, @customer
 
     render template: "customers/show"
@@ -39,7 +39,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
   def filter
     customers = ::Customers::CharFilter.run(
-      super_user: super_user,
+      super_user: Current.business_owner,
       current_user_staff: current_user_staff,
       pattern_number: params[:pattern_number],
       page: params[:page].presence || 1
@@ -50,7 +50,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
   def recent
     customers =
-      super_user
+      Current.business_owner
       .customers
       .contact_groups_scope(current_user_staff)
       .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
@@ -67,7 +67,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
   def search
     customers = ::Customers::Search.run(
-      super_user: super_user,
+      super_user: Current.business_owner,
       current_user_staff: current_user_staff,
       keyword: params[:keyword],
       page: params[:page].presence || 1
@@ -77,7 +77,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def save
-    outcome = ::Customers::Store.run(user: super_user, current_user: current_user, params: convert_params(params.permit!.to_h))
+    outcome = ::Customers::Store.run(user: Current.business_owner, current_user: current_user, params: convert_params(params.permit!.to_h))
 
     if outcome.valid?
       customer = outcome.result
@@ -119,14 +119,14 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def toggle_reminder_permission
-    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
+    customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:id])
     customer.update(reminder_permission: !customer.reminder_permission)
 
     render json: { reminder_permission: customer.reminder_permission }
   end
 
   def reply_message
-    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
 
     if params[:message].present?
       outcome = SocialMessages::Create.run(
@@ -159,13 +159,13 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def delete_message
-    message = current_user.social_account.social_messages.find(params[:message_id])
+    message = Current.business_owner.social_account.social_messages.find(params[:message_id])
 
     unless message.sent_at
       message.destroy
     end
 
-    customer = current_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
 
     render json: {
       status: "successful",
@@ -174,8 +174,8 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def unread_message
-    customer = current_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
-    message = current_user.social_account.social_messages.customer.where(social_customer_id: customer.social_customer.id).order("id").last
+    customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    message = Current.business_owner.social_account.social_messages.customer.where(social_customer_id: customer.social_customer.id).order("id").last
 
     outcome = SocialMessages::Unread.run(
       social_customer: customer.social_customer,
@@ -186,7 +186,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def find_duplicate_customers
-    customers = super_user
+    customers = Current.business_owner
       .customers
       .contact_groups_scope(current_user_staff)
       .where("
@@ -201,14 +201,14 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def delete
     authorize! :edit, Customer
 
-    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
+    customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:id])
     outcome = Customers::Delete.run(customer: customer)
 
     render json: json_response(outcome)
   end
 
   def csv
-    result = ::Customers::Csv.run!(user: super_user)
+    result = ::Customers::Csv.run!(user: Current.business_owner)
     send_data result, filename: "customers.csv"
   end
 

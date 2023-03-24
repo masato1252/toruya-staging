@@ -1,17 +1,17 @@
-<%= jump_out_modal(lines_user_bot_tours_line_settings_required_for_online_service_path, static: true) unless current_user.social_account&.line_settings_finished? %>
-<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !current_user.social_account.line_settings_verified? %>
+<%= jump_out_modal(lines_user_bot_tours_line_settings_required_for_online_service_path, static: true) unless Current.business_owner.social_account&.line_settings_finished? %>
+<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !Current.business_owner.social_account.line_settings_verified? %>
 
 <%= react_component("user_bot/services/creation_flow", {
   props: {
-    is_premium_member: current_user.premium_member?,
-    line_settings_verified: current_user.social_account&.line_settings_verified?,
-    line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)),
+    is_premium_member: Current.business_owner.premium_member?,
+    line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
+    line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id)),
     service_goals: ::OnlineService.goals,
-    user_payable: current_user.payable?,
-    companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
-      CompanyInfoSerializer.new(super_user.profile).attributes_hash
+    user_payable: Current.business_owner.payable?,
+    companies: Current.business_owner.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
+      CompanyInfoSerializer.new(Current.business_owner.profile).attributes_hash
     ),
-    upsell_sales: super_user.sale_pages.includes(:product, :sale_template).map do |sale_page|
+    upsell_sales: Current.business_owner.sale_pages.includes(:product, :sale_template).map do |sale_page|
       next unless sale_page.product
 
       hash = SalePageOptionSerializer.new(sale_page).attributes_hash
@@ -21,7 +21,7 @@
         value: hash
       }
     end.compact,
-    bundled_service_candidates: super_user.online_services.bundleable.map do |online_service|
+    bundled_service_candidates: Current.business_owner.online_services.bundleable.map do |online_service|
       hash = BundleableServiceSerializer.new(online_service).attributes_hash
 
       {
@@ -32,4 +32,4 @@
   }
 },
 { camelize_props: false }
-) if current_user.social_account&.line_settings_finished? %>
+) if Current.business_owner.social_account&.line_settings_finished? %>

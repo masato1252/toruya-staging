@@ -2,25 +2,25 @@
 
 class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def index
-    @broadcasts = current_user.broadcasts.ordered
+    @broadcasts = Current.business_owner.broadcasts.ordered
   end
 
   def show
-    @broadcast = current_user.broadcasts.find(params[:id])
+    @broadcast = Current.business_owner.broadcasts.find(params[:id])
   end
 
   def new
     menus_options =
-      current_user.menus.map do |menu|
+      Current.business_owner.menus.map do |menu|
         ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)
       end
     @menus = ::Menus::CategoryGroup.run!(menu_options: menus_options)
   end
 
   def edit
-    @broadcast = current_user.broadcasts.find(params[:id])
+    @broadcast = Current.business_owner.broadcasts.find(params[:id])
     menus_options =
-      current_user.menus.map do |menu|
+      Current.business_owner.menus.map do |menu|
         ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)
       end
     @menus = ::Menus::CategoryGroup.run!(menu_options: menus_options)
@@ -34,13 +34,13 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def update
-    outcome = Broadcasts::Update.run(broadcast: current_user.broadcasts.find(params[:id]), params: params[:broadcast].permit!.to_h, update_attribute: params[:attribute])
+    outcome = Broadcasts::Update.run(broadcast: Current.business_owner.broadcasts.find(params[:id]), params: params[:broadcast].permit!.to_h, update_attribute: params[:attribute])
 
     return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path })
   end
 
   def draft
-    broadcast = current_user.broadcasts.find(params[:id])
+    broadcast = Current.business_owner.broadcasts.find(params[:id])
     Broadcasts::Draft.run(broadcast: broadcast)
 
     redirect_to lines_user_bot_broadcast_path(broadcast)

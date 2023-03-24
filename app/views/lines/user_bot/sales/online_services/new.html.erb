@@ -3,13 +3,13 @@
 <%= react_component("user_bot/sales/online_service_creation_flow", {
   props: {
     selected_online_service: @selected_online_service,
-    online_services: super_user.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
+    online_services: Current.business_owner.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
       {
         label: service.internal_name.presence || service.name,
         value: OnlineServiceSerializer.new(service).attributes_hash
       }
     },
-    staffs: super_user.staffs.includes(picture_attachment: :blob).map { |staff|
+    staffs: Current.business_owner.staffs.includes(picture_attachment: :blob).map { |staff|
         {
         label: staff.name,
         value: StaffSerializer.new(staff).attributes_hash
@@ -17,8 +17,8 @@
     },
     sale_templates: @sale_templates.map { |template| SaleTemplateSerializer.new(template).attributes_hash },
     flow_tips: I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_tips"),
-    companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
-      CompanyInfoSerializer.new(super_user.profile).attributes_hash
+    companies: Current.business_owner.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
+      CompanyInfoSerializer.new(Current.business_owner.profile).attributes_hash
     ),
   }
 },

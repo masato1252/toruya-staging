@@ -4,7 +4,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   before_action :set_staff, only: [:show, :edit, :update, :destroy, :resend_activation_sms]
 
   def index
-    @staffs = Staff.where(user: super_user).undeleted.includes(:staff_account).order(:id)
+    @staffs = Staff.where(user: Current.business_owner).undeleted.includes(:staff_account).order(:id)
   end
 
   def new
@@ -17,7 +17,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   def create
     authorize! :create, Staff
 
-    outcome = Staffs::Invite.run(user: super_user, phone_number: params[:phone_number])
+    outcome = Staffs::Invite.run(user: Current.business_owner, phone_number: params[:phone_number])
 
     if outcome.valid?
       redirect_to lines_user_bot_settings_staffs_path, notice: I18n.t("settings.staff_account.sent_message")
@@ -34,9 +34,9 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
     outcome = Staffs::Delete.run(staff: @staff)
 
     if outcome.valid?
-      redirect_to lines_user_bot_settings_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message")
+      redirect_to lines_user_bot_settings_staffs_path(Current.business_owner), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_settings_staffs_path(super_user)
+      redirect_to lines_user_bot_settings_staffs_path(Current.business_owner)
     end
   end
 
@@ -46,8 +46,8 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   private
 
   def set_staff
-    @staff = Staff.find_by(id: params[:id], user_id: super_user.id)
-    redirect_to settings_user_staffs_path(super_user, shop) unless @staff
+    @staff = Staff.find_by(id: params[:id], user_id: Current.business_owner.id)
+    redirect_to settings_user_staffs_path(Current.business_owner, shop) unless @staff
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

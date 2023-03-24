@@ -17,6 +17,6 @@ class Lines::UserBot::Settings::CustomMessagesController < Lines::UserBotDashboa
   private
 
   def load_shop
-    @shop = current_user.shops.find(params[:shop_id])
+    @shop = Current.business_owner.shops.find(params[:shop_id])
   end
 end

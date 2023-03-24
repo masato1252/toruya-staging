@@ -6,8 +6,8 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   skip_before_action :authenticate_super_user, only: [:receipt]
 
   def index
-    @subscription = current_user.subscription
-    @charges = current_user.subscription_charges.finished.includes(:plan).where("created_at >= ?", 1.year.ago).order("created_at DESC")
+    @subscription = Current.business_owner.subscription
+    @charges = Current.business_owner.subscription_charges.finished.includes(:plan).where("created_at >= ?", 1.year.ago).order("created_at DESC")
     @refundable = @subscription.refundable?
   end
 

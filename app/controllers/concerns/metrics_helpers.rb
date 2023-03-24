@@ -14,7 +14,7 @@ module MetricsHelpers
   end
 
   def visit_scope
-    Ahoy::Visit.where(owner_id: current_user.id, product_type: "SalePage")
+    Ahoy::Visit.where(owner_id: Current.business_owner.id, product_type: "SalePage")
   end
 
   def uniq_sale_page_ids
