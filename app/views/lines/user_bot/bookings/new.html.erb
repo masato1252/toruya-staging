@@ -7,7 +7,7 @@
     props: {
       line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
       line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id)),
-      Current.business_owner_id: Current.business_owner.id,
+      super_user_id: Current.business_owner.id,
       selected_shop: @shop ? CompanyInfoSerializer.new(@shop).attributes_hash : {},
       note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),
       shops: @shop ? [] : Current.business_owner.shops.includes(logo_attachment: :blob).map { |s| CompanyInfoSerializer.new(s).attributes_hash },
