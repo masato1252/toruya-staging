@@ -28,7 +28,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def create
-    outcome = Broadcasts::Create.run(user: current_user, params: params[:broadcast].permit!.to_h)
+    outcome = Broadcasts::Create.run(user: Current.business_owner, params: params[:broadcast].permit!.to_h)
 
     return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path })
   end
@@ -47,7 +47,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def clone
-    broadcast = current_user.broadcasts.find(params[:id])
+    broadcast = Current.business_owner.broadcasts.find(params[:id])
     new_broadcast = Broadcasts::Clone.run!(broadcast: broadcast)
 
     redirect_to lines_user_bot_broadcasts_path, notice: I18n.t("user_bot.dashboards.broadcasts.clone_successfully")
@@ -57,9 +57,9 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
     outcome =
       case params[:query_type]
       when "online_service_for_active_customers"
-        Broadcasts::QueryActiveServiceCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+        Broadcasts::QueryActiveServiceCustomers.run(user: Current.business_owner, query: params[:query].permit!.to_h)
       else
-        Broadcasts::QueryCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+        Broadcasts::QueryCustomers.run(user: Current.business_owner, query: params[:query].permit!.to_h)
       end
 
     return_json_response(outcome, { customers_count: outcome.result.count })

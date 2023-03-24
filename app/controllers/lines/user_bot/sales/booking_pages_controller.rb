@@ -10,7 +10,7 @@ class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardCon
 
   def create
     outcome = ::Sales::BookingPages::Create.run(
-      user: current_user,
+      user: Current.business_owner,
       selected_booking_page: params[:selected_booking_page],
       selected_template: params[:selected_template],
       template_variables: params[:template_variables].permit!.to_h,

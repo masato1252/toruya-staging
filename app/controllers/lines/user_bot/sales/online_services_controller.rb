@@ -11,7 +11,7 @@ class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardC
 
   def create
     args = {
-      user: current_user,
+      user: Current.business_owner,
       selected_online_service_id: params[:selected_online_service_id],
       selected_template_id: params[:selected_template_id],
       template_variables: params[:template_variables].permit!.to_h,

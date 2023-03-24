@@ -24,7 +24,7 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   end
 
   def update
-    outcome = SocialAccounts::Update.run(user: current_user, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+    outcome = SocialAccounts::Update.run(user: Current.business_owner, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
     social_account  = Current.business_owner.social_account
 

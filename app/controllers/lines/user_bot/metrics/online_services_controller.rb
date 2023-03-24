@@ -5,7 +5,7 @@ class Lines::UserBot::Metrics::OnlineServicesController < Lines::UserBotDashboar
 
   def sale_pages_visits
     render json: ::Metrics::SalePagesVisits.run!(
-      user: current_user,
+      user: Current.business_owner,
       sale_page_ids: sale_page_ids,
       metric_start_time: metric_start_time,
       demo: params[:demo] == "true"
@@ -14,7 +14,7 @@ class Lines::UserBot::Metrics::OnlineServicesController < Lines::UserBotDashboar
 
   def sale_pages_conversions
     render json: ::Metrics::SalePagesConversions.run!(
-      user: current_user,
+      user: Current.business_owner,
       sale_page_ids: sale_page_ids,
       online_service_id: params[:id],
       metric_period: metric_period,

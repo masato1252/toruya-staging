@@ -19,7 +19,7 @@ class Reservations::FilterController < DashboardController
 
   def create
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
-    outcome = Reservations::Filter.run(query.merge(Current.business_owner: Current.business_owner))
+    outcome = Reservations::Filter.run(query.merge(super_user: Current.business_owner))
 
     if outcome.valid?
       @reservations = outcome.result

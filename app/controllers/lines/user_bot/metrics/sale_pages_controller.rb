@@ -5,7 +5,7 @@ class Lines::UserBot::Metrics::SalePagesController < Lines::UserBotDashboardCont
 
   def visits
     render json: ::Metrics::SalePagesVisits.run!(
-      user: current_user,
+      user: Current.business_owner,
       sale_page_ids: uniq_sale_page_ids,
       metric_start_time: metric_start_time,
       demo: params[:demo] == "true"
@@ -14,7 +14,7 @@ class Lines::UserBot::Metrics::SalePagesController < Lines::UserBotDashboardCont
 
   def conversions
     render json: ::Metrics::SalePagesConversions.run!(
-      user: current_user,
+      user: Current.business_owner,
       sale_page_ids: uniq_sale_page_ids,
       metric_period: metric_period,
       demo: params[:demo] == "true"
