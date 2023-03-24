@@ -46,6 +46,13 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
     redirect_to lines_user_bot_broadcast_path(broadcast)
   end
 
+  def activate
+    broadcast = Current.business_owner.broadcasts.find(params[:id])
+    Broadcasts::Activate.run(broadcast: broadcast)
+
+    redirect_to lines_user_bot_broadcast_path(broadcast)
+  end
+
   def clone
     broadcast = Current.business_owner.broadcasts.find(params[:id])
     new_broadcast = Broadcasts::Clone.run!(broadcast: broadcast)

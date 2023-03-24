@@ -23,21 +23,29 @@ RSpec.describe Broadcasts::Update do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    it "destroy original broadcast and create a new one" do
-      expect {
-        outcome
-      }.not_to change {
-        user.broadcasts.count
-      }
-
-      expect { broadcast.reload }.to raise_error ActiveRecord::RecordNotFound
-    end
-
     context "when state is not draft" do
       let(:broadcast) { FactoryBot.create(:broadcast, :active) }
 
       it "is invalid" do
         expect(outcome).to be_invalid
+      end
+    end
+
+    context "when broadcast schedule_at changed" do
+      let(:new_schedule_time) { Time.current.tomorrow }
+      let(:update_attribute) { "schedule_at" }
+      let(:params) do
+        {
+          content: "foo",
+          query: {},
+          schedule_at: new_schedule_time
+        }
+      end
+
+      it "schedules a new job" do
+        expect(Broadcasts::Send).to receive(:perform_at).with(schedule_at: new_schedule_time, broadcast: broadcast)
+
+        outcome
       end
     end
   end

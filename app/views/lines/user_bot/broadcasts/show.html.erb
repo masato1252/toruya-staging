@@ -49,6 +49,11 @@
               <i class="fa fa-ban fa-2x"></i>
               <div class="word"><%= t("user_bot.dashboards.broadcasts.stop_send") %></div>
             <% end %>
+          <% elsif @broadcast.draft? %>
+            <%= link_to activate_lines_user_bot_broadcast_path(@broadcast), method: :put, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+              <i class="fa fa-envelope fa-2x"></i>
+              <div class="word"><%= t("action.activate") %></div>
+            <% end %>
           <% end %>
         <% end %>
       </div>
