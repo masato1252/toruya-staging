@@ -64,7 +64,7 @@ module ViewHelpers
         if ENV["DISABLE_SUPER_USER_DEV_ID"]
           user_bot_cookies(:current_super_user_id) || ENV["DEV_USER_ID"]
         else
-          ENV["DEV_USER_ID"]
+          ENV["DEV_USER_ID"] || user_bot_cookies(:current_super_user_id)
         end
       else
         session[:current_super_user_id]
