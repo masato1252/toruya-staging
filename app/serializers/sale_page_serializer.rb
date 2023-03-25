@@ -11,7 +11,7 @@ class SalePageSerializer
   end
 
   attribute :internal_name do |sale_page|
-    sale_page.internal_name.presence || sale_page.product_name
+    sale_page.internal_sale_name
   end
 
   attribute :staff do |sale_page|

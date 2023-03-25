@@ -57,7 +57,7 @@ module Metrics
           end
 
         {
-          label: sale_page&.internal_name&.presence || sale_page&.internal_product_name || product_id,
+          label: sale_page&.internal_sale_name,
           visit_count: visit_count,
           purchased_count: purchased_count,
           rate: purchased_count ? purchased_count / [visit_count, 1].max.to_f : nil,

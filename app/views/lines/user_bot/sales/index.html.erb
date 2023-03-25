@@ -16,7 +16,7 @@
                   <% else %>
                     <i class="fa fa-mobile-alt"></i>
                   <% end %>
-                  <%= sale_page.internal_name.presence || sale_page.product_name %>
+                  <%= sale_page.internal_sale_name %>
                 </h3>
                 <div class="desc">
                   <% if sale_page.is_booking_page? %>

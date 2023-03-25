@@ -84,7 +84,7 @@ module Metrics
 
         rgb_color = "#{rand(255)}, #{rand(255)}, #{rand(255)}"
         {
-          label: product&.internal_name&.presence || product&.internal_product_name || product_id,
+          label: product&.internal_sale_name,
           data: visit_counts,
           borderColor: "rgb(#{rgb_color})",
           cubicInterpolationMode: 'monotone',

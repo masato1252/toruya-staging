@@ -95,6 +95,10 @@ class SalePage < ApplicationRecord
     product_type == "BookingPage"
   end
 
+  def internal_sale_name
+    internal_name || internal_product_name
+  end
+
   def internal_product_name
     product.try(:internal_name)&.presence || product.try(:display_name)&.presence || product&.name
   end
