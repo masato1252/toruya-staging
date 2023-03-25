@@ -36,7 +36,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def update
     outcome = Broadcasts::Update.run(broadcast: Current.business_owner.broadcasts.find(params[:id]), params: params[:broadcast].permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path })
+    return_json_response(outcome, { redirect_to: lines_user_bot_broadcast_path(outcome.result) })
   end
 
   def draft
