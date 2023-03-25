@@ -84,6 +84,7 @@ Rails.application.routes.draw do
 
         member do
           put :draft
+          put :activate
           post :clone
         end
       end

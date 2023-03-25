@@ -14,15 +14,15 @@ module Broadcasts
     validate :validate_broadcast
 
     def execute
-      broadcast.with_lock do
-        if broadcast.draft?
-          attributes = broadcast.slice(:content, :query, :query_type, :schedule_at)
-          attributes[update_attribute] = params[update_attribute]
+      broadcast.update!(params.slice(update_attribute))
 
-          broadcast.destroy!
-          compose(Broadcasts::Create, user: broadcast.user, params: attributes)
-        end
+      if broadcast.saved_change_to_attribute?(:schedule_at)
+        Broadcasts::Send.perform_at(schedule_at: broadcast.schedule_at, broadcast: broadcast)
       end
+
+      customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
+      broadcast.update(recipients_count: customers.count)
+      broadcast
     end
 
     private

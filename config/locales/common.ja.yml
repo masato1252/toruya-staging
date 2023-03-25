@@ -1,5 +1,6 @@
 ja:
   action:
+    activate: 有効化
     delete: 削除
     delete2: "削　除"
     delete_reservation: 予約を削除
