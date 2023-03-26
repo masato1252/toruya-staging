@@ -69,6 +69,7 @@ const BroadcastEdit =({props}) => {
         break
       case "schedule_at":
         request_data = { schedule_at: scheduleAt }
+        break
       case "query":
         request_data = { query: query, query_type: props.broadcast.query_type }
         break
