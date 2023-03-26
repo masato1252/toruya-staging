@@ -52,7 +52,7 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   def shop_menus_options
     @shop_menus_options ||=
-      ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
+      ShopMenu.includes(:menu).where(shop: shop).where("menus.deleted_at": nil).references(:menus).map do |shop_menu|
         ::Options::MenuOption.new(
           id: shop_menu.menu_id,
           name: shop_menu.menu.display_name,

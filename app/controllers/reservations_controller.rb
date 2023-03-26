@@ -241,7 +241,7 @@ class ReservationsController < DashboardController
   # end
 
   def all_options
-    menu_options = ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
+    menu_options = ShopMenu.includes(:menu).where(shop: shop).where("menus.deleted_at": nil).references(:menus).map do |shop_menu|
       ::Options::MenuOption.new(
         id: shop_menu.menu_id,
         name: shop_menu.menu.display_name,
