@@ -136,6 +136,9 @@
       <div class="centerize margin-around">
       <%= button_tag t("action.copy_code"), class: "btn btn-tarco", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") } %>
       </div>
+      <div class="centerize margin-around">
+        <%= qrcode_img(booking_url(@booking_page)) %>
+      </div>
       <div class="fake-mobile-layout">
         <%= render "lines/user_bot/booking_pages/booking_page_preview", booking_page: @booking_page, booking_option: @booking_option %>
       </div>

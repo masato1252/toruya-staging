@@ -142,7 +142,9 @@
             } %>
           <%= render 'lines/user_bot/sales/copy_buttons', sale_page: @sale_page %>
         </div>
-
+        <div class="centerize margin-around">
+          <%= qrcode_img(sale_page_url(slug: @sale_page.slug)) %>
+        </div>
         <div class="fake-mobile-layout">
           <%= react_component(
             "user_bot/sales/#{@sale_page.product.class.table_name}",
