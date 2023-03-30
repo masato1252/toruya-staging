@@ -9,6 +9,10 @@ ja:
     trial_end:
       upgrade_title: 試用期間は終了しました
       upgrade_content_html: <p>試用期間が終了したため、予約や顧客情報の管理ができなくなりました。<br>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
+      upgrade_button: 利用プランをアップグレードする
+    disconnect:
+      content_html: 引き続きToruyaを利用されない場合、特に手続きをしなくても勝手に課金されることはございません。すでに設定したLINE連携を解除したい方は、ご自身で作業をお願いします。
+      how_to_disconnect_button: LINE連携を解除する方法
     create_course:
       upgrade_title: プレミアム向けです
       upgrade_content_html: この機能はプレミアム会員向けです。<br>ご利用プランをアップグレードしていただくことで、ご利用いただけます。

@@ -331,6 +331,7 @@ Rails.application.routes.draw do
           get :create_course
           get :check_reservation_content
           get :line_settings_verified
+          get :trial_end
           get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
         end
       end
