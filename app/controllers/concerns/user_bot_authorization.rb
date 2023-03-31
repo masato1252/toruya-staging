@@ -21,7 +21,7 @@ module UserBotAuthorization
   def authenticate_super_user
     if current_user != super_user && current_user.current_staff(super_user).nil?
       write_user_bot_cookies(:current_super_user_id, current_user.id)
-      Current.business_owner = super_user
+      Current.business_owner = current_user
       redirect_to root_path, alert: I18n.t("common.no_permission")
     elsif super_user
       Current.business_owner = super_user
