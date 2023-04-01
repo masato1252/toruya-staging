@@ -1,4 +1,4 @@
-<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !current_user.social_account.line_settings_verified? %>
+<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !Current.business_owner.social_account&.line_settings_verified? %>
 
 <div class="container-fluid">
   <div class="row">
