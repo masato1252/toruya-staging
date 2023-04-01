@@ -664,7 +664,7 @@ ja:
         what_is_your_solution: このサービスで提供する内容は何ですか？
         what_is_this_video_provide: どの動画をサービス提供しますか？
         what_is_video_url: YouTube等のURLを入力
-        video_hint: YouTubeご利用の場合は「限定公開」に設定すると、URLを知らない人には公開されなくなります。
+        video_hint: YouTubeまたはVimeoで「限定公開」に設定した動画URLを入力してください。
         what_is_pdf_url: どのPDFをサービス提供しますか？
         pdf_hint: PDFの提供にGoogleドライブを使う場合、シェアリンクを「リンクを知っている全員」に設定してください。
         what_is_external_url: サービス提供先はどこですか？
