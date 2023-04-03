@@ -30,12 +30,18 @@ module UserBotAuthorization
 
   def where_user_are
     if params[:user_id].present? && params[:shop_id].present?
+      Rollbar.error("Super user changed scenario1", request: request) if current_user&.id == 5 && params[:user_id].to_i == 2
+
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
       write_user_bot_cookies(:current_shop_id, params[:shop_id])
     elsif params[:shop_id].present?
+      Rollbar.error("Super user changed scenario2", request: request) if current_user&.id == 5 && Shop.find(params[:shop_id])&.user_id == 2
+
       write_user_bot_cookies(:current_shop_id, params[:shop_id])
       write_user_bot_cookies(:current_super_user_id, Shop.find(params[:shop_id]).user_id)
     elsif params[:user_id].present?
+      Rollbar.error("Super user changed scenario3", request: request) if current_user&.id == 5 && params[:user_id].to_i == 2
+
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
       write_user_bot_cookies(:current_shop_id, nil) if User.find(params[:user_id]).shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
     else

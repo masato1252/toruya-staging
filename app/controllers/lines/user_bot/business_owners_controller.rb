@@ -7,6 +7,7 @@ class Lines::UserBot::BusinessOwnersController < Lines::UserBotDashboardControll
 
   def update
     write_user_bot_cookies(:current_super_user_id, params[:id])
+    Rollbar.error("Super user changed scenario4", request: request) if current_user&.id == 5 && params[:id].to_i == 2
 
     redirect_to root_url
   end
