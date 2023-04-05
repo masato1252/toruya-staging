@@ -24,9 +24,7 @@ module UserBotAuthorization
       Current.business_owner = current_user
       redirect_to root_path, alert: I18n.t("common.no_permission")
     elsif super_user
-      # Current.business_owner = super_user
-      # Temporay changes before we handle all the multiple staffs scenario
-      Current.business_owner = current_user
+      Current.business_owner = super_user
     end
   end
 
@@ -46,6 +44,12 @@ module UserBotAuthorization
 
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
       write_user_bot_cookies(:current_shop_id, nil) if User.find(params[:user_id]).shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
+    elsif params[:social_service_user_id].present?
+      social_user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id])
+      if social_user.user_id
+        Rollbar.error("Super user changed scenario4", request: request) if current_user&.id == 5 && social_user.user_id == 2
+        write_user_bot_cookies(:current_super_user_id, social_user.user_id)
+      end
     else
       write_user_bot_cookies(:current_super_user_id, current_user.id) if user_bot_cookies(:current_super_user_id).nil?
       write_user_bot_cookies(:current_shop_id, nil) if current_user.shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)

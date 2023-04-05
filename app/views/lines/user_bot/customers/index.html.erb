@@ -3,7 +3,7 @@
 
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
-    super_user_id: Current.business_owner.id,
+    super_user_id: @customer ? @customer.user_id : Current.business_owner.id,
     from: params[:from],
     from_options: FROM,
     referrer: request.referrer,
