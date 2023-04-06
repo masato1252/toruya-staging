@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
+  before_action :back_to_current_user_business
+
   def index
     @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
@@ -31,6 +33,15 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
 
     if params[:staff_connect_result].present?
       params[:staff_connect_result] == 'true' ? flash.now[:success] = I18n.t("settings.staff_account.staff_connected_successfully") : flash.now[:alert] = I18n.t("settings.staff_account.staff_connected_failed")
+    end
+  end
+
+  private
+
+  def back_to_current_user_business
+    if current_user != super_user
+      write_user_bot_cookies(:current_super_user_id, current_user.id)
+      redirect_back(fallback_location: lines_user_bot_schedules_path)
     end
   end
 end
