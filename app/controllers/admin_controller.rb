@@ -13,7 +13,7 @@ class AdminController < ApplicationController
     sign_in(user)
     write_user_bot_cookies(:current_user_id, user.id)
 
-    redirect_to member_path
+    redirect_to root_path
   end
 
   private
