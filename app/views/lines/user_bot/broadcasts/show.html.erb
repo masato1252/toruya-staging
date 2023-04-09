@@ -24,7 +24,7 @@
         <%= render "lines/user_bot/field_row", title: t("broadcast.states.#{@broadcast.state}") %>
 
         <div class="field-header"><%= t("user_bot.dashboards.broadcasts.time") %></div>
-        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_broadcast_path(@broadcast, attribute: :schedule_at) : nil, title: I18n.l(@broadcast.broadcast_at, format: :long_date_with_wday) %>
+        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_broadcast_path(@broadcast, attribute: :schedule_at) : nil, title: broadcast_deliver_at(@broadcast) %>
 
         <p class="action-block break-line-content warning">
         <% if @broadcast.active? %>
