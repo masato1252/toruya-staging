@@ -617,8 +617,9 @@ h3.header {
   margin-top: $bar-height;
   position: fixed;
   background: $line-self-message;
-  right: 0;
-  top: 120px;
+  left: 0;
+  bottom: 0;
   padding: 3px;
+  z-index: 99999;
   border-radius: 0.375rem;
 }
