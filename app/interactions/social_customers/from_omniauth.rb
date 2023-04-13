@@ -20,11 +20,13 @@ module SocialCustomers
           social_user_id: auth.uid,
           social_account_id: social_account.id
       )
-      social_customer.update(
-        social_user_name: auth.info.name,
-        social_user_picture_url: auth.info.image,
-        is_owner: customer_is_owner?
-      )
+      social_customer.social_user_name = auth.info.name
+      social_customer.social_user_picture_url = auth.info.image
+
+      unless social_customer.is_owner
+        social_customer.is_owner = customer_is_owner?
+      end
+      social_customer.save
 
       if customer_is_owner?
         SocialCustomers::CreateOwnerCustomer.run(social_customer: social_customer)
