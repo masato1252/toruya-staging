@@ -122,6 +122,9 @@
             clipboard_popup_text: t("common.copied")
           }
         %>
+      <div class="centerize margin-around">
+        <%= qrcode_img(online_service_url(slug: @service.slug)) %>
+      </div>
 
         <% if @service.course_like? %>
           <div class="fake-mobile-layout">

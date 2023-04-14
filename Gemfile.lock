@@ -178,6 +178,7 @@ GEM
       mini_mime (>= 0.1.3)
       ssrf_filter (~> 1.0)
     chartkick (4.2.1)
+    chunky_png (1.4.0)
     coderay (1.1.3)
     concurrent-ruby (1.1.10)
     connection_pool (2.3.0)
@@ -511,6 +512,10 @@ GEM
       railties (>= 5.0)
     retriable (1.4.1)
     rollbar (3.3.3)
+    rqrcode (2.1.2)
+      chunky_png (~> 1.0)
+      rqrcode_core (~> 1.0)
+    rqrcode_core (1.2.0)
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.1)
@@ -648,6 +653,7 @@ DEPENDENCIES
   byebug
   cancancan (~> 1.15.0)
   carrierwave
+  chunky_png
   dalli
   database_cleaner
   deep_cloneable (~> 3.2.0)
@@ -704,6 +710,7 @@ DEPENDENCIES
   redis (= 4.1.3)
   request_store
   rollbar
+  rqrcode (~> 2.0)
   rspec-rails
   rspec_junit_formatter
   sass-rails (~> 6)
