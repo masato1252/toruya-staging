@@ -53,4 +53,12 @@ module SettingsHelper
       menu_ids: booking_option.menu_relations.pluck(:menu_id)
     )
   end
+
+  def broadcast_deliver_at(broadcast)
+    if broadcast.draft?
+      broadcast.schedule_at ? I18n.l(broadcast.broadcast_at, format: :long_date_with_wday) : I18n.t("common.send_now_label")
+    else
+      I18n.l(broadcast.broadcast_at, format: :long_date_with_wday)
+    end
+  end
 end

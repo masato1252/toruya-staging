@@ -301,7 +301,7 @@ ja:
         state: 配信ステータス
         time: 配信時間
         stop_desc: 配信内容を編集するには【配信中止】ボタンを押してください。
-        active_desc: 予定通り配信するには【編集】してください。
+        active_desc: 予定通り配信するには編集して【有効化】を押してください 
         stop_send: 配信中止
         are_you_sure_to_stop: 本当に配信を中止しますか？
         clone_successfully: 複製されました
