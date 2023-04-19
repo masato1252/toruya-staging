@@ -1,0 +1,70 @@
+.receipt .content .logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.receipt .content .logo img {
+  width: 200px;
+}
+.receipt .content .receipt-type {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+.receipt .content .charge-date, .receipt .content .transaction-id {
+  text-align: right;
+  padding: 3px;
+  font-size: 14px;
+}
+.receipt .content .center {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+.receipt .content .center .plan-amount {
+  margin: 24px;
+  padding: 24px;
+  font-size: 32px;
+  font-weight: bold;
+  background-color: #ddd;
+  border: 1px solid #333;
+  text-align: center;
+}
+.receipt .content .center .plan-amount .refund-amount-tip {
+  font-size: 12px;
+}
+.receipt .content .company-info {
+  float: right;
+  margin: 48px 0;
+  font-size: 14px;
+}
+.receipt .content table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+}
+.receipt .content table thead {
+  background-color: #ddd;
+}
+.receipt .content table thead th {
+  padding: 10px 0;
+}
+.receipt .content table thead .price {
+  width: 60px;
+}
+.receipt .content table tbody tr td:first-child {
+  width: 150px;
+}
+.receipt .content table tbody tr td:last-child {
+  text-align: right;
+}
+.receipt .content table td {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+.receipt .contact {
+  margin-top: 32px;
+  text-align: center;
+}
+ 
