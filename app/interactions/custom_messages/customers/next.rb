@@ -47,7 +47,7 @@ module CustomMessages
         return @next_custom_messages if defined?(@next_custom_messages)
 
         @next_custom_messages = CustomMessage.scenario_of(message_product, scenario || custom_message.scenario)
-        after_days = @next_custom_messages.where("after_days > ?", custom_message&.after_days || -100).first&.after_days
+        after_days = @next_custom_messages.where("after_days > ?", custom_message&.after_days || -100).order(:after_days).first&.after_days
 
         @next_custom_messages =
           if after_days

@@ -48,8 +48,17 @@ RSpec.describe CustomMessages::Customers::Next do
     context "when there is next custom message" do
       let(:prev_after_days ) { 0 }
       let(:new_custom_message_after_days ) { prev_after_days + 1 }
+      let(:second_new_custom_message_after_days ) { prev_after_days + 2 }
 
       it "schedules the next custom message" do
+        second_next_custom_message1, second_next_custom_message2 = FactoryBot.create_list(
+          :custom_message,
+          2,
+          service: service,
+          scenario: prev_custom_message.scenario,
+          after_days: second_new_custom_message_after_days
+        )
+
         next_custom_message1, next_custom_message2 = FactoryBot.create_list(
           :custom_message,
           2,
