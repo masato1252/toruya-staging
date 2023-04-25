@@ -30,8 +30,8 @@ const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleF
     const result = await stripe.createToken(card);
 
     if (result.error) {
-      handleFailure(result.error)
       setProcessing(false)
+      if (handleFailure) handleFailure(result.error);
     } else {
       handleToken(result.token.id)
     }

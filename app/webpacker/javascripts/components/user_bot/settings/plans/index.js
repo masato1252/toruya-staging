@@ -48,6 +48,9 @@ const Plans = ({props}) => {
   const subscriptionPlanIndex = (planLevel) => Plans.planOrder.indexOf(planLevel)
   const currentPlanIndex = () => Plans.planOrder.indexOf(props.current_plan_level)
   const isUpgrade = (planLevel) => subscriptionPlanIndex(planLevel) > currentPlanIndex()
+  const handleFailure = (error) => {
+    toastr.error(error.message)
+  }
 
   const renderSaveOrPayButton = (planLevel) => {
     if (planLevel == "free") {
@@ -291,6 +294,7 @@ const Plans = ({props}) => {
         pay_btn={props.i18n.pay}
         payment_path={Routes.lines_user_bot_settings_payments_path()}
         props={props}
+        handleFailure={handleFailure}
       />
       <StripeChangeCardModal
         change_card_path={Routes.change_card_lines_user_bot_settings_payments_path({format: "json"})}
