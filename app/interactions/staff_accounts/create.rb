@@ -14,9 +14,13 @@ module StaffAccounts
     validate :validate_unique_user
 
     def execute
+      # TODO: We don't have staff international phone input yet
+      # https://www.notion.so/Internal-phone-for-staffs-73e10f8234044651b9b2360de02fdd0e?pvs=4
+      formatted_phone = Phonelib.parse(params[:phone_number], :jp).international(false)
+
       staff_account = owner.owner_staff_accounts.find_or_initialize_by(staff: staff)
       staff_account.email = params[:email]
-      staff_account.phone_number = params[:phone_number]
+      staff_account.phone_number = formatted_phone
       staff_account.level = params[:level]
 
       if staff_account.persisted?

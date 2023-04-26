@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import PhoneInput from 'react-phone-input-2'
+
 import { IdentificationCodesServices, UsersServices } from "user_bot/api";
 
 import { ErrorMessage, RequiredLabel } from "shared/components";
 
 export const UserIdentificationFlow = ({props, finalView, next}) => {
   const {
-    page_title, trial_info_html, name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message,
+    page_title, trial_info_html, name, last_name, first_name, confirm_customer_info, booking_code, message,
     phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info, referral_code_title, referral_code_placeholder, sms_faq
   } = props.i18n.user_sign_up;
   const { confirm, required_label } = props.i18n;
@@ -18,6 +20,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   const [is_phone_identified, setPhoneIdentified] = useState(!!props.is_user_logged_in)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
+  const phone_number = watch("phone_number")
 
   useEffect(() => {
     if (props.is_user_logged_in) {
@@ -106,13 +109,13 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           />
         </div>
         <h4>
-          <RequiredLabel label={phone_number} required_label={required_label} />
+          <RequiredLabel label={props.i18n.user_sign_up.phone_number} required_label={required_label} />
         </h4>
-        <input
-          ref={register({ required: true })}
-          name="phone_number"
-          placeholder="0123456789"
-          type="tel"
+        <PhoneInput
+          country={'jp'}
+          value={phone_number}
+          onChange={ (phone) => setValue("phone_number", phone) }
+          placeholder='0123456789'
         />
         {!watchIsIdentificationCodeExists && (
           <div className="centerize">
@@ -223,6 +226,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     <form>
       {<input ref={register} name="user_id" type="hidden" />}
       {<input ref={register} name="uuid" type="hidden" />}
+      {<input ref={register} name="phone_number" type="hidden" />}
       <h2 className="centerize">
         {page_title}
       </h2>

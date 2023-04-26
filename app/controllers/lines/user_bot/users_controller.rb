@@ -26,7 +26,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
 
     render json: {
       uuid: identification_code.uuid,
-      user_id: User.find_by(phone_number: params[:phone_number])&.id,
+      user_id: User.find_by(phone_number: Phonelib.parse(params[:phone_number]).international(false))&.id,
       errors: {
         message: I18n.t("user_bot.guest.user_connect.message.unmatch_phone_number")
       }

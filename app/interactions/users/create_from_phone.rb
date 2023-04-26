@@ -12,8 +12,9 @@ module Users
     string :email, default: nil
 
     def execute
-      user = User.find_by(phone_number: phone_number) ||
-        User.where(phone_number: phone_number).build(password: Devise.friendly_token[0, 20])
+      formatted_phone = Phonelib.parse(phone_number).international(false)
+      user = User.find_by(phone_number: formatted_phone) ||
+        User.where(phone_number: formatted_phone).build(password: Devise.friendly_token[0, 20])
 
       user.skip_confirmation!
       user.skip_confirmation_notification!

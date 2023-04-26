@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IdentificationCodesServices, UsersServices } from "user_bot/api";
+import PhoneInput from 'react-phone-input-2'
 
 import { ErrorMessage, RequiredLabel } from "shared/components";
 
 export const UserConnect = ({props, next}) => {
   const {
-    phone_number, confirm_customer_info, booking_code, message
+    confirm_customer_info, booking_code, message
   } = props.i18n.user_sign_up;
   const {
     page_title
@@ -20,6 +21,7 @@ export const UserConnect = ({props, next}) => {
   const [is_phone_identified, setPhoneIdentified] = useState(false)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
+  const phone_number = watch("phone_number")
 
   useEffect(() => {
     if (props.is_user_logged_in) {
@@ -73,13 +75,13 @@ export const UserConnect = ({props, next}) => {
     return (
       <div className="customer-type-options">
         <h4>
-          <RequiredLabel label={phone_number} required_label={required_label} />
+          <RequiredLabel label={props.i18n.user_sign_up.phone_number} required_label={required_label} />
         </h4>
-        <input
-          ref={register({ required: true })}
-          name="phone_number"
-          placeholder="0123456789"
-          type="tel"
+        <PhoneInput
+          country={'jp'}
+          value={phone_number}
+          onChange={ (phone) => setValue("phone_number", phone) }
+          placeholder='0123456789'
         />
         <ErrorMessage error={errors.phone_number?.message} />
         {!watchIsUserMatched && (
@@ -132,6 +134,7 @@ export const UserConnect = ({props, next}) => {
     <form>
       {<input ref={register} name="user_id" type="hidden" />}
       {<input ref={register} name="uuid" type="hidden" />}
+      {<input ref={register} name="phone_number" type="hidden" />}
       <h2 className="centerize">
         {page_title}
       </h2>
