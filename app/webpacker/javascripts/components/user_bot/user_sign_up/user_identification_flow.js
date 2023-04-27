@@ -113,6 +113,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
         </h4>
         <PhoneInput
           country={'jp'}
+          onlyCountries={['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']}
           value={phone_number}
           onChange={ (phone) => setValue("phone_number", phone) }
           placeholder='0123456789'
