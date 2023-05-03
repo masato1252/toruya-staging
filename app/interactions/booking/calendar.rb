@@ -94,6 +94,10 @@ module Booking
       @booking_options_updated_at ||= @booking_options.map(&:updated_at)
     end
 
+    def booking_option_menus_updated_at
+      @booking_option_menus_updated_at ||= @booking_options.map(&:menus).flatten.uniq.map(&:updated_at)
+    end
+
     def cache_key(date)
       [
         booking_page,
@@ -102,7 +106,8 @@ module Booking
         shop.reservations.in_date(date).order("updated_at").last,
         CustomSchedule.in_date(date).closed.where(user_id: staff_user_ids).order("updated_at").last,
         BusinessSchedule.where(shop: shop).order("updated_at").last,
-        booking_options_updated_at
+        booking_options_updated_at,
+        booking_option_menus_updated_at
       ]
     end
 
