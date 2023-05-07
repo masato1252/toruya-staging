@@ -12,7 +12,13 @@
         <div class="field-row with-format">
           <div>
             <div>
-              <span class="dotdotdot"><%= @sale_page.internal_product_name %></span>
+              <span class="dotdotdot">
+                <% if @sale_page.is_booking_page? %>
+                  <%= link_to @sale_page.internal_product_name, lines_user_bot_booking_page_path(@sale_page.product) %>
+                <% else %>
+                  <%= link_to @sale_page.internal_product_name, lines_user_bot_service_path(@sale_page.product) %>
+                <% end %>
+              </span>
             </div>
             <div class="desc">
               <%= t("user_bot.dashboards.online_service_creation.solutions.#{@sale_page.solution_type}.title") unless @sale_page.is_booking_page? %>
