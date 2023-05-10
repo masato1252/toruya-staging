@@ -16,8 +16,9 @@ module Sales
 
         # paid_at => bought at, when customer bought this product, it should equals first time pay.
         relation.paid_at = Time.current
-        relation.expire_at = nil
-        # bundler_relation expire_at is always nil
+        # bundler service's expire_at's purpose was used for sequence messages and default value of bundled servcies,
+        # each bundled services expire time might still be different
+        relation.expire_at = relation.online_service.current_expire_time
         relation.save
 
         ::OnlineServices::Attend.run(customer: relation.customer, online_service: relation.online_service)

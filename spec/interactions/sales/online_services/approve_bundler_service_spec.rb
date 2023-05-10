@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
   let(:sale_page) { FactoryBot.create(:sale_page, :one_time_payment, product: bundler_service) }
-  let(:bundler_service) { FactoryBot.create(:online_service, :bundler, user: user) }
+  let(:bundler_service) { FactoryBot.create(:online_service, :bundler, user: user, end_on_days: 365) }
   let(:customer) { FactoryBot.create(:social_customer).customer }
   let!(:bundler_relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, sale_page: sale_page, online_service: bundler_service, customer: customer) }
   let(:user) { customer.user }
@@ -29,7 +29,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundlerService, :with_line do
               OnlineServiceCustomerRelation.count
             }.by(2)
 
-            expect(bundler_relation.expire_at).to be_nil
+            expect(bundler_relation.expire_at).to eq(bundler_service.current_expire_time)
             relation_with_end_at_service = OnlineServiceCustomerRelation.where(online_service: bundled_service_with_end_at.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(relation_with_end_at_service.expire_at).to eq(Time.current.tomorrow)
             expect(relation_with_end_at_service).to be_purchased_from_bundler
