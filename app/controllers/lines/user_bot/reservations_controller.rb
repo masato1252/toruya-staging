@@ -47,8 +47,10 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
         end_time_time_part: Time.zone.now.advance(hours: 2).to_s(:time),
       )
       @menu_staffs_list = @reservation.reservation_menus.includes(:menu).map.with_index do |rm, position|
+        menu_option = @menu_result[:menu_options].find { |option| option.id == rm.menu_id }
+
         {
-          menu: view_context.custom_option(@menu_result[:menu_options].find { |option| option.id == rm.menu_id }),
+          menu: menu_option ? view_context.custom_option(menu_option) : nil,
           position: rm.position || position,
           menu_id: rm.menu_id,
           menu_required_time: rm.required_time,
