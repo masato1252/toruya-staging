@@ -58,14 +58,6 @@ const CustomMessageEdit =({props}) => {
     })
 
     window.location = response.data.redirect_to
-
-    [error, response] = await SaleServices.update({
-      sale_page_id: props.sale_page.id,
-      data: _.assign( data, {
-        attribute: props.attribute,
-        ...submittedData
-      })
-    })
   }
 
   const insertKeyword = (keyword) => {
@@ -143,9 +135,9 @@ const CustomMessageEdit =({props}) => {
   }
 
   return (
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-6 px-0 settings-view">
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -178,7 +170,7 @@ const CustomMessageEdit =({props}) => {
           </div>
         </div>
 
-        <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+        <div className="col-sm-6 px-0 hidden-xs preview-view"></div>
       </div>
     </div>
   )
