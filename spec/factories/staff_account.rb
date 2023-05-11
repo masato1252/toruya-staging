@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :staff_account do
-    phone_number { Faker::PhoneNumber.phone_number }
+    phone_number { Phonelib.parse(Faker::PhoneNumber.phone_number, :jp).international(false) }
     user { FactoryBot.create(:user) }
     owner { FactoryBot.create(:user) }
     staff { FactoryBot.create(:staff) }
@@ -21,7 +21,7 @@ FactoryBot.define do
     end
 
     trait :phone_number do
-      phone_number { Faker::PhoneNumber.phone_number }
+      phone_number { Phonelib.parse(Faker::PhoneNumber.phone_number, :jp).international(false) }
     end
 
     trait :email do

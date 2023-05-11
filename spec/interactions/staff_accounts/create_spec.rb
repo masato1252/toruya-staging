@@ -79,7 +79,7 @@ RSpec.describe StaffAccounts::Create do
       end
 
       context "when there is a existing user's phone_number is the same as the new phone_number" do
-        let!(:existing_user) { FactoryBot.create(:user, phone_number: phone_number) }
+        let!(:existing_user) { FactoryBot.create(:user, phone_number: Phonelib.parse(phone_number, :jp).international(false)) }
 
         it "bind the existing user to staff" do
           allow(Sms::Create).to receive(:run).and_return(spy)
