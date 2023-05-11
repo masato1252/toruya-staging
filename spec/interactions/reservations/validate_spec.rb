@@ -652,7 +652,7 @@ RSpec.describe Reservations::Validate do
 
     context "when some staffs already had overlap reservation in the same shop" do
       let!(:existing_reservation) do
-        FactoryBot.create(:reservation, menus: [ menu2 ], shop: shop, staffs: [staff3], start_time: start_time, force_end_time: end_time)
+        FactoryBot.create(:reservation, menus: [ menu1 ], shop: shop, staffs: [staff3], start_time: start_time, force_end_time: end_time)
       end
 
       it "returns expected error" do

@@ -271,12 +271,13 @@ module Reservable
     end
 
     def validate_same_shop_overlap_reservations(staff)
-      overlap_reservations_exist = ReservationStaff.
+      overlap_reservations = ReservationStaff.
         overlap_reservations_scope(staff_ids: staff.id, reservation_id: reservation_id).
         where("reservations.shop_id = ?", shop.id).
-        where("reservation_staffs.work_start_at < ? and reservation_staffs.work_end_at > ?", end_time, start_time).exists?
+        where("reservation_staffs.work_start_at < ? and reservation_staffs.work_end_at > ?", end_time, start_time)
 
-      if overlap_reservations_exist
+      # overlap reservation with different menu, it is fine for the same reservation with the same menu
+      if ReservationMenu.where(reservation_id: overlap_reservations.pluck(:reservation_id)).where.not(menu_id: menu_id).exists?
         errors.add(:staff_ids, :overlap_reservations, staff_id: staff.id, menu_id: menu_id)
       end
     end

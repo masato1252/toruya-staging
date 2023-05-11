@@ -787,19 +787,39 @@ RSpec.describe Reservable::Reservation do
           FactoryBot.create(:reservation, menus: [ menu1 ], shop: shop, staffs: [staff2], start_time: time_range.first, force_end_time: time_range.last)
         end
 
-        it "is invalid" do
-          outcome = Reservable::Reservation.run(
-            shop: shop, date: date,
-            menu_id: menu2.id,
-            menu_required_time: menu1.minutes,
-            start_time: start_time,
-            end_time: end_time,
-            staff_ids: [staff1.id, staff2.id]
-          )
+        context "when booking the same menu" do
+          it "is not overlap" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu1.id,
+              menu_required_time: menu1.minutes,
+              start_time: start_time,
+              end_time: end_time,
+              staff_ids: [staff2.id]
+            )
 
-          expect(outcome).to be_invalid
-          other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :overlap_reservations }
-          expect(other_shop_error).to eq(error: :overlap_reservations, staff_id: staff2.id, menu_id: menu2.id)
+            overlap_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :overlap_reservations }
+            expect(overlap_error).to be_nil
+          end
+        end
+
+
+        # existing reservation is menu1, booking menu2
+        context "when booking a different menu" do
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu2.id,
+              menu_required_time: menu2.minutes,
+              start_time: start_time,
+              end_time: end_time,
+              staff_ids: [staff1.id, staff2.id]
+            )
+
+            expect(outcome).to be_invalid
+            overlap_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :overlap_reservations }
+            expect(overlap_error).to eq(error: :overlap_reservations, staff_id: staff2.id, menu_id: menu2.id)
+          end
         end
 
         context "when the existing reservation's menu min_staffs_number is 0" do
