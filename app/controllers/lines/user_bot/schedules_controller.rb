@@ -41,7 +41,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   def back_to_current_user_business
     if current_user != super_user
       write_user_bot_cookies(:current_super_user_id, current_user.id)
-      redirect_back(fallback_location: lines_user_bot_schedules_path)
+      redirect_to lines_user_bot_schedules_path(params.permit!.to_h.select { |key, value| key != "controller" && key != "action" })
     end
   end
 end
