@@ -25,6 +25,8 @@ module Broadcasts
           contains_scoped(filter)
         when "not_contains"
           not_contains_scoped(filter)
+        when "eq"
+          eq_scoped(filter)
         end
 
       query["filters"][1..-1].each do |filter|
@@ -34,6 +36,8 @@ module Broadcasts
             contains_scoped(filter)
           when "not_contains"
             not_contains_scoped(filter)
+          when "eq"
+            eq_scoped(filter)
           end
 
         if query["operator"] == "or"
@@ -54,6 +58,10 @@ module Broadcasts
 
     def contains_scoped(filter)
       user.customers.where("#{filter["field"]} && ?", "{#{filter["value"]}}")
+    end
+
+    def eq_scoped(filter)
+      user.customers.joins(:rank).where("#{filter["field"]} = ?", filter["value"])
     end
   end
 end
