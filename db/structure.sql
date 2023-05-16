@@ -2777,7 +2777,8 @@ CREATE TABLE public.users (
     referral_token character varying,
     phone_number character varying,
     customers_count integer DEFAULT 0,
-    customer_latest_activity_at timestamp without time zone
+    customer_latest_activity_at timestamp without time zone,
+    public_id uuid NOT NULL
 );
 
 
@@ -4711,6 +4712,13 @@ CREATE UNIQUE INDEX index_users_on_phone_number ON public.users USING btree (pho
 
 
 --
+-- Name: index_users_on_public_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_public_id ON public.users USING btree (public_id);
+
+
+--
 -- Name: index_users_on_referral_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5220,6 +5228,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230116045137'),
 ('20230207141752'),
 ('20230213153853'),
-('20230314135331');
+('20230314135331'),
+('20230516222442');
 
 
