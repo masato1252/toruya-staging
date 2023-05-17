@@ -26,5 +26,6 @@ module Kasaike
     config.active_record.schema_format = :sql
 
     config.autoload_once_paths << Rails.root.join('app/job_serializers')
+    config.autoload_paths << Rails.root.join('app/instruments')
   end
 end

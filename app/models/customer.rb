@@ -3,33 +3,34 @@
 #
 # Table name: customers
 #
-#  id                       :integer          not null, primary key
-#  user_id                  :integer          not null
-#  contact_group_id         :integer
-#  rank_id                  :integer
-#  last_name                :string
-#  first_name               :string
-#  phonetic_last_name       :string
-#  phonetic_first_name      :string
-#  custom_id                :string
-#  memo                     :text
-#  address                  :string
-#  google_uid               :string
-#  google_contact_id        :string
-#  google_contact_group_ids :string           default([]), is an Array
-#  birthday                 :date
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  updated_by_user_id       :integer
-#  email_types              :string
-#  deleted_at               :datetime
-#  reminder_permission      :boolean          default(FALSE)
-#  phone_numbers_details    :jsonb
-#  emails_details           :jsonb
-#  address_details          :jsonb
-#  stripe_customer_id       :string
-#  menu_ids                 :string           default([]), is an Array
-#  online_service_ids       :string           default([]), is an Array
+#  id                           :integer          not null, primary key
+#  address                      :string
+#  address_details              :jsonb
+#  birthday                     :date
+#  deleted_at                   :datetime
+#  email_types                  :string
+#  emails_details               :jsonb
+#  first_name                   :string
+#  google_contact_group_ids     :string           default([]), is an Array
+#  google_uid                   :string
+#  last_name                    :string
+#  memo                         :text
+#  menu_ids                     :string           default([]), is an Array
+#  mixpanel_profile_last_set_at :datetime
+#  online_service_ids           :string           default([]), is an Array
+#  phone_numbers_details        :jsonb
+#  phonetic_first_name          :string
+#  phonetic_last_name           :string
+#  reminder_permission          :boolean          default(FALSE)
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  contact_group_id             :integer
+#  custom_id                    :string
+#  google_contact_id            :string
+#  rank_id                      :integer
+#  stripe_customer_id           :string
+#  updated_by_user_id           :integer
+#  user_id                      :integer          not null
 #
 # Indexes
 #

@@ -1084,7 +1084,8 @@ CREATE TABLE public.customers (
     address_details jsonb DEFAULT '{}'::jsonb,
     stripe_customer_id character varying,
     menu_ids character varying[] DEFAULT '{}'::character varying[],
-    online_service_ids character varying[] DEFAULT '{}'::character varying[]
+    online_service_ids character varying[] DEFAULT '{}'::character varying[],
+    mixpanel_profile_last_set_at timestamp without time zone
 );
 
 
@@ -2778,7 +2779,8 @@ CREATE TABLE public.users (
     phone_number character varying,
     customers_count integer DEFAULT 0,
     customer_latest_activity_at timestamp without time zone,
-    public_id uuid NOT NULL
+    public_id uuid NOT NULL,
+    mixpanel_profile_last_set_at timestamp without time zone
 );
 
 
@@ -5229,6 +5231,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230207141752'),
 ('20230213153853'),
 ('20230314135331'),
-('20230516222442');
+('20230516222442'),
+('20230517142813');
 
 
