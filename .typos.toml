@@ -18,6 +18,7 @@ placholder = 'placholder'
 informations = 'informations'
 acccount = 'acccount'
 payed = 'payed'
+mixpanel = 'mixpanel'
 
 [type.typos]
 extend-glob = [".typos.toml"]

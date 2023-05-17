@@ -40,13 +40,16 @@ class BookingPagesController < ActionController::Base
     end
 
     if @customer
+      Current.customer = @customer
+
       if params[:social_user_id]
-        MixpanelTracker.track @customer.id, "view_booking_page", { from: "customer_bot" }
+        Current.mixpanel_extra_properties = { from: "customer_bot" }
       else
-        MixpanelTracker.track @customer.id, "view_booking_page", { from: "directly" }
+        Current.mixpanel_extra_properties = { from: "directly" }
       end
     else
-      MixpanelTracker.track params[:social_user_id] || SecureRandom.uuid, "view_booking_page", { from: params[:from], from_id: params[:from_id] }
+      Current.customer = params[:social_user_id] || SecureRandom.uuid
+      Current.mixpanel_extra_properties = { from: params[:from], from_id: params[:from_id] }
     end
 
     active_booking_options_number = @booking_page.booking_options.active.count
