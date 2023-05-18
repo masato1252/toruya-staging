@@ -5,6 +5,9 @@ module Users
     object :user
 
     def execute
+      user.referral_token ||= Devise.friendly_token[0,5]
+      user.public_id ||= SecureRandom.uuid
+
       unless user.ranks.exists?
         user.ranks.build(name: "VIP", key: Rank::VIP_KEY)
         user.ranks.build(name: I18n.t("constants.rank.regular"), key: Rank::REGULAR_KEY)

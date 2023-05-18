@@ -14,22 +14,26 @@ RSpec.describe Users::BuildDefaultData do
     context "when user is a new user" do
       let(:user) { FactoryBot.build(:user) }
 
-      it "had ranks and subscription" do
+      it "had ranks, subscription, referral_token and public_id" do
         outcome
 
         expect(user.ranks).to be_present
         expect(user.subscription).to be_present
+        expect(user.referral_token).to be_present
+        expect(user.public_id).to be_present
       end
     end
 
     context "when user is a existing user" do
       let(:user) { FactoryBot.create(:user) }
 
-      it "had ranks and subscription" do
+      it "had ranks, subscription, referral_token and public_id" do
         outcome
 
         expect(user.ranks).to be_present
         expect(user.subscription).to be_present
+        expect(user.referral_token).to be_present
+        expect(user.public_id).to be_present
       end
     end
   end
