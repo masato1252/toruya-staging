@@ -4,7 +4,7 @@ class ProcessActionInstrument
     return if payload[:path].starts_with?('/rails')
     return if Current.user.nil? && Current.customer.nil?
 
-    if Rails.configuration.x.env.production?
+    if Rails.configuration.x.env.production? && supported_arguments(payload)
       ::TrackProcessedActionJob.perform_later(Current.user, event_name(payload), event_properties(payload)) if Current.user
       ::TrackProcessedActionJob.perform_later(Current.customer, event_name(payload), event_properties(payload)) if Current.customer
     end
@@ -22,5 +22,11 @@ class ProcessActionInstrument
     params.tap do |props|
       props.update Current.mixpanel_extra_properties if Current.mixpanel_extra_properties
     end
+  end
+
+  def supported_arguments(payload)
+    params = payload[:params]
+    return false if params.any? { |_, v| v.is_a?(ActionDispatch::Http::UploadedFile) }
+    return true
   end
 end
