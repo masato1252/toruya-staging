@@ -8,6 +8,8 @@ class ProcessActionInstrument
       ::TrackProcessedActionJob.perform_later(Current.user, event_name(payload), event_properties(payload)) if Current.user
       ::TrackProcessedActionJob.perform_later(Current.customer, event_name(payload), event_properties(payload)) if Current.customer
     end
+  rescue ActiveJob::SerializationError => e
+    Rollbar.error(e)
   end
 
   private
