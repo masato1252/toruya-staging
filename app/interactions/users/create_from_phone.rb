@@ -19,6 +19,7 @@ module Users
       user.skip_confirmation!
       user.skip_confirmation_notification!
       user.referral_token ||= Devise.friendly_token[0,5]
+      user.public_id ||= SecureRandom.uuid
       new_user = user.new_record?
 
       loop do
