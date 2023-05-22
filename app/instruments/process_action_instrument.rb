@@ -26,7 +26,17 @@ class ProcessActionInstrument
 
   def supported_arguments(payload)
     params = payload[:params]
-    return false if params.any? { |_, v| v.is_a?(ActionDispatch::Http::UploadedFile) }
+    return false if invalid_params_check(params)
     return true
+  end
+
+  def invalid_params_check(params)
+    params.any? do |_, v|
+      if v.is_a?(ActionDispatch::Http::UploadedFile)
+        return true
+      elsif v.is_a?(Hash)
+        invalid_params_check(v)
+      end
+    end
   end
 end
