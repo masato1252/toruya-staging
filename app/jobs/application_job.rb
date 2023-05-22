@@ -17,6 +17,9 @@
 require "key_value_storage"
 
 class ApplicationJob < ActiveJob::Base
+  rescue_from ActiveJob::SerializationError do |exception|
+    Rollbar.error(e)
+  end
   discard_on ActiveJob::DeserializationError
 
   BUFFER = 1 # second.
