@@ -370,6 +370,8 @@ ja:
         what_is_your_audiences: このメッセージは誰に配信しますか？
         all_customers: 全ての顧客
         all_customers_desc: 顧客情報が連携されている全てのLINEフレンド
+        vip_customers: VIP顧客
+        vip_customers_desc: 全てのVIP顧客に一斉配信する
         specific_menu_customers: 特定メニューの利用客
         menu: 特定メニューの利用客
         specific_menu_customers_desc: 特定のメニューで利用履歴(チェックアウト済み)があるアクティブ顧客に一斉配信する
