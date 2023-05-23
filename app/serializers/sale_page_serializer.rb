@@ -58,7 +58,7 @@ class SalePageSerializer
     else
       picture_url_mapping =
         object.customer_pictures.each_with_object({}) do |customer_picture, h|
-          picture_variant = customer_picture.variant( combine_options: { resize: "360", flatten: true })
+          picture_variant = customer_picture.variant(resize: "360", flatten: true)
           filename = picture_variant.blob.filename.to_s
 
           picture_url =

@@ -7,7 +7,7 @@ module Images
 
     def execute
       begin
-        picture_variant = image.variant(combine_options: { resize: resize, flatten: true })
+        picture_variant = image.variant(resize: resize, flatten: true)
         filename = picture_variant.blob.filename.to_s
 
         if image.service.exist?(picture_variant.key)
