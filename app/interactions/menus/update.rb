@@ -2,7 +2,7 @@
 
 module Menus
   class Update < ActiveInteraction::Base
-    set_callback :type_check, :before do
+    set_callback :validate, :before do
       menu_reservation_setting_rule_attributes.merge!(start_date: nil)  if menu_reservation_setting_rule_attributes[:start_date].blank?
       menu_reservation_setting_rule_attributes.merge!(reservation_type: nil)  if menu_reservation_setting_rule_attributes[:reservation_type].blank?
     end

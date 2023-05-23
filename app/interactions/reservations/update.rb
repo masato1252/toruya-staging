@@ -2,7 +2,7 @@
 
 module Reservations
   class Update < ActiveInteraction::Base
-    set_callback :type_check, :before do
+    set_callback :validate, :before do
       params[:staff_ids] = params[:staff_ids].present? ? params[:staff_ids].split(",").uniq.map(&:to_i) : []
       params[:customer_ids] = params[:customer_ids].present? ? params[:customer_ids].split(",").uniq : []
       params[:by_staff_id] = params[:by_staff_id].to_i

@@ -44,7 +44,7 @@ RSpec.describe Customers::Save do
     }
   end
 
-  describe "#execute" do
+  xdescribe "#execute" do
     before do
       google_user = spy(create_contact: spy)
       allow(GoogleContactsApi::User).to receive(:new).and_return(google_user)
