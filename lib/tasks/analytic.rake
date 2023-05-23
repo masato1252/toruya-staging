@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "slack_client"
+require "google/drive"
 
 namespace :analytic do
   task :landing_page_visit => :environment do
@@ -78,6 +79,14 @@ namespace :analytic do
       ]
 
       SlackClient.send(channel: 'sayhi', text: "Line settings number: \n#{metric.join("\r\n")}")
+
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 0)
+      new_row_number = google_worksheet.num_rows + 1
+      new_row_data = [Date.today.to_fs, total_line_settings.to_i, line_settings_done_count, login_api_verified_count, message_api_verified_count]
+      new_row_data.each_with_index do |data, index|
+        google_worksheet[new_row_number, index + 1] = data
+      end
+      google_worksheet.save
     end
   end
 end
