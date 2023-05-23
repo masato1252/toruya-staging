@@ -2,7 +2,7 @@
 
 module Reservations
   class RetrieveAvailableMenus < ActiveInteraction::Base
-    set_callback :type_check, :before do
+    set_callback :validate, :before do
       params[:customer_ids] = if params[:customer_ids].present?
                                 params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
                               elsif reservation

@@ -4,7 +4,7 @@ module Reservable
   class Menus < ActiveInteraction::Base
     include SharedMethods
 
-    set_callback :type_check, :before do
+    set_callback :validate, :before do
       self.number_of_customer = (number_of_customer.zero? || number_of_customer.nil?) ? 1 : number_of_customer
     end
 
