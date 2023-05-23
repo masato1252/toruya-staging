@@ -41,8 +41,8 @@ namespace :analytic do
   end
 
   task :line_settings => :environment do
-    # Only reports on Monday
-    if Time.now.in_time_zone('Tokyo').wday == 1
+    # Only reports on 1st and 14th of each moth
+    if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
       accounts = SocialAccount.where.not(channel_id: nil, channel_token: nil, channel_secret: nil, basic_id: nil, label: nil, login_channel_id: nil, login_channel_secret: nil)
       total_line_user_count = SocialUser.count.to_f
       total_toruya_user_count = User.count.to_f
@@ -78,15 +78,64 @@ namespace :analytic do
         { message_api_verified_count: "#{message_api_verified_count} ( #{message_verified_line_user_percent} / #{message_verified_toruya_user_percent} / #{message_verified_total_settings_percent} )" }
       ]
 
-      SlackClient.send(channel: 'sayhi', text: "Line settings number: \n#{metric.join("\r\n")}")
-
       google_worksheet = Google::Drive.spreadsheet(worksheet: 0)
       new_row_number = google_worksheet.num_rows + 1
-      new_row_data = [Date.today.to_fs, total_line_settings.to_i, line_settings_done_count, login_api_verified_count, message_api_verified_count]
+      new_row_data = [Time.current.to_fs(:date), total_line_settings.to_i, line_settings_done_count, login_api_verified_count, message_api_verified_count]
       new_row_data.each_with_index do |data, index|
         google_worksheet[new_row_number, index + 1] = data
       end
       google_worksheet.save
+
+      SlackClient.send(channel: 'sayhi', text: "Line settings number: \n#{metric.join("\r\n")}\n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=0")
+    end
+  end
+
+  task :function_usage => :environment do
+    # Only reports on 1st and 14th of each moth
+    if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 1)
+      new_row_number = google_worksheet.num_rows + 1
+
+      new_row_data = [
+        Time.current.to_fs(:date),
+        BookingPage.select(:user_id).distinct.count,
+        OnlineService.select(:user_id).distinct.count,
+        SalePage.select(:user_id).distinct.count,
+        Broadcast.select(:user_id).distinct.count,
+        CustomerPayment.completed.count,
+        CustomerPayment.completed.sum(:amount_cents)
+      ]
+      new_row_data.each_with_index do |data, index|
+        google_worksheet[new_row_number, index + 1] = data
+      end
+
+      google_worksheet.save
+
+      SlackClient.send(channel: 'sayhi', text: "Function usage \n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=846072525")
+    end
+  end
+
+  task :paid_user_data => :environment do
+    # Only reports on 1st and 14th of each moth
+    if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 2)
+      new_row_number = google_worksheet.num_rows + 1
+
+      last_month_paid_user_ids = Subscription.charge_required.where(created_at: ..Time.current.beginning_of_month).pluck(:user_id)
+      current_month_paid_user_ids = Subscription.charge_required.pluck(:user_id)
+      new_row_data = [
+        Time.current.to_fs(:date),
+        Subscription.charge_required.count,
+        (current_month_paid_user_ids - last_month_paid_user_ids).length,
+        (last_month_paid_user_ids - current_month_paid_user_ids).length
+      ]
+      new_row_data.each_with_index do |data, index|
+        google_worksheet[new_row_number, index + 1] = data
+      end
+
+      google_worksheet.save
+
+      SlackClient.send(channel: 'sayhi', text: "Paid user usage \n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=476056491")
     end
   end
 end
