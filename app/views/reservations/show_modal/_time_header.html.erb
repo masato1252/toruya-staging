@@ -3,11 +3,11 @@
   <h4 class="modal-title" id="reservation-show-modal">
     <span class="reservation-state <%= reservation.aasm_state %>"><%= t("reservation.#{reservation.aasm_state}") %><%= "(#{reservation.reservation_staffs.accepted.pluck(:staff_id).uniq.count}/#{reservation.staffs.uniq.count})" if reservation.pending? %></span>
     <% if (params[:from_customer_id] || params[:from_filter]) && user_ability.can?(:read, :shop_dashboard) %>
-      <%= link_to I18n.l(reservation.start_time, format: :date), date_shop_reservations_path(reservation.shop, reservation_date: reservation.start_time.to_s(:date)) %>
+      <%= link_to I18n.l(reservation.start_time, format: :date), date_shop_reservations_path(reservation.shop, reservation_date: reservation.start_time.to_fs(:date)) %>
     <% else %>
       <span><%= I18n.l(reservation.start_time, format: :date) %></span>
     <% end %>
 
-    <span><%= reservation.start_time.to_s(:time)%>〜<%= reservation.end_time.to_s(:time) %></span>
+    <span><%= reservation.start_time.to_fs(:time)%>〜<%= reservation.end_time.to_fs(:time) %></span>
   </h4>
 </div>

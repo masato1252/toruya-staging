@@ -141,7 +141,7 @@ module OptionsHelper
       type: 'Reservation',
       id: r.id,
       year: r.start_time.year,
-      date: r.start_time.to_s(:date),
+      date: r.start_time.to_fs(:date),
       month_date: I18n.l(r.start_time, format: :month_day_wday),
       start_time: I18n.l(r.start_time, format: :hour_minute),
       end_time: I18n.l(r.end_time, format: :hour_minute),
@@ -186,8 +186,8 @@ module OptionsHelper
         file_url: outcome.file.url,
         state: outcome.aasm_state,
         type: I18n.t("customer.filter.printing_types.#{outcome.outcome_type}"),
-        created_date: outcome.created_at.to_s(:date),
-        expired_date: outcome.created_at.advance(days: FilteredOutcome::EXPIRED_DAYS).to_s(:date)
+        created_date: outcome.created_at.to_fs(:date),
+        expired_date: outcome.created_at.advance(days: FilteredOutcome::EXPIRED_DAYS).to_fs(:date)
       })
     }
   end

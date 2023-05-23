@@ -16,9 +16,9 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
         result = Reservations::RetrieveAvailableMenus.run!(
           shop: shop,
           params: {
-            start_time_date_part: time_range.first.to_s(:date),
-            start_time_time_part: time_range.first.to_s(:time),
-            end_time_time_part: time_range.last.to_s(:time),
+            start_time_date_part: time_range.first.to_fs(:date),
+            start_time_time_part: time_range.first.to_fs(:time),
+            end_time_time_part: time_range.last.to_fs(:time),
           }
         )
 
@@ -36,9 +36,9 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
         result = Reservations::RetrieveAvailableMenus.run!(
           shop: shop,
           params: {
-            start_time_date_part: time_range.first.to_s(:date),
-            start_time_time_part: time_range.first.to_s(:time),
-            end_time_time_part: time_range.last.to_s(:time),
+            start_time_date_part: time_range.first.to_fs(:date),
+            start_time_time_part: time_range.first.to_fs(:time),
+            end_time_time_part: time_range.last.to_fs(:time),
           }
         )
 
@@ -57,9 +57,9 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
         result = Reservations::RetrieveAvailableMenus.run!(
           shop: shop,
           params: {
-            start_time_date_part: time_range.first.to_s(:date),
-            start_time_time_part: time_range.first.to_s(:time),
-            end_time_time_part: time_range.last.to_s(:time),
+            start_time_date_part: time_range.first.to_fs(:date),
+            start_time_time_part: time_range.first.to_fs(:time),
+            end_time_time_part: time_range.last.to_fs(:time),
           }
         )
 

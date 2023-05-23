@@ -15,11 +15,11 @@
 
           <% if in_personal_dashboard? || from_line_bot %>
             , <%= link_to other_customers_text,
-              site_routing_helper.schedule_date_path(reservation_date: @reservation.start_time.to_s(:date), reservation_id: @reservation.id)
+              site_routing_helper.schedule_date_path(reservation_date: @reservation.start_time.to_fs(:date), reservation_id: @reservation.id)
             %>
           <% else %>
           , <%= link_to other_customers_text,
-            shop_reservations_path(@reservation.shop, reservation_date: @reservation.start_time.to_s(:date), reservation_id: @reservation.id)
+            shop_reservations_path(@reservation.shop, reservation_date: @reservation.start_time.to_fs(:date), reservation_id: @reservation.id)
           %>
           <% end %>
         <% end %>

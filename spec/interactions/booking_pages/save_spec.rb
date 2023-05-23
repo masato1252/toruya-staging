@@ -16,8 +16,8 @@ RSpec.describe BookingPages::Save do
         name: "foo",
         title: "bar",
         interval: 10,
-        start_at_date_part: DateTime.now.to_s(:date),
-        start_at_time_part: DateTime.now.to_s(:time),
+        start_at_date_part: DateTime.now.to_fs(:date),
+        start_at_time_part: DateTime.now.to_fs(:time),
         end_at: nil,
         options: {
           "0" => { "label" => booking_option.name, "value" => booking_option.id }

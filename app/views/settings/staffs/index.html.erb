@@ -36,7 +36,7 @@
             <span class="label label-warning"><%= t("common.pending") %></span>
           <% end %>
         </dt>
-        <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
+        <dd class="updateTime"><%= staff.updated_at.to_fs(:date) %></dd>
         <dd class="function">
           <% if can?(:edit, staff) %>
             <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>

@@ -173,7 +173,7 @@ class SalePage < ApplicationRecord
     if selling_start_at
       {
         start_type: "start_at",
-        start_time_date_part: selling_start_at.to_s(:date)
+        start_time_date_part: selling_start_at.to_fs(:date)
       }
     else
       {
@@ -194,7 +194,7 @@ class SalePage < ApplicationRecord
     if selling_end_at
       {
         end_type: "end_at",
-        end_time_date_part: selling_end_at.to_s(:date)
+        end_time_date_part: selling_end_at.to_fs(:date)
       }
     else
       {

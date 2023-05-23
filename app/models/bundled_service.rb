@@ -39,7 +39,7 @@ class BundledService < ApplicationRecord
     elsif end_at
       {
         end_type: "end_at",
-        end_time_date_part: end_at.to_s(:date)
+        end_time_date_part: end_at.to_fs(:date)
       }
     elsif subscription
       {

@@ -68,17 +68,17 @@ class NotificationsPresenter
         end
 
         if previous_reservation_id
-          previous_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index - 1].start_time.to_s(:date), previous_reservation_id, popup_disabled: true)
+          previous_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index - 1].start_time.to_fs(:date), previous_reservation_id, popup_disabled: true)
         end
 
         if next_reservation_id
-          next_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index + 1].start_time.to_s(:date), next_reservation_id, popup_disabled: true)
+          next_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index + 1].start_time.to_fs(:date), next_reservation_id, popup_disabled: true)
         end
       else
         oldest_res = recent_pending_reservations.first&.reservation
 
         text = I18n.t("notifications.pending_reservation_confirm")
-        path = SiteRouting.new(h).schedule_date_path(oldest_res.start_time.to_s(:date), oldest_res.id, popup_disabled: true)
+        path = SiteRouting.new(h).schedule_date_path(oldest_res.start_time.to_fs(:date), oldest_res.id, popup_disabled: true)
       end
 
       if path

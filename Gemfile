@@ -4,7 +4,7 @@ source "http://rubygems.org"
 
 ruby "3.1.3"
 
-gem "rails", "6.1.3.2"
+gem "rails", "~> 7.0.4"
 gem "next_rails"
 gem "pg", "~> 1.1.4"
 gem "pghero", "~> 2.8.1"
@@ -30,7 +30,7 @@ gem "active_link_to"
 gem "aasm", "~> 4.11.0"
 gem "active_interaction"
 gem "holidays", "~> 8.4.1"
-gem "default_value_for", "~> 3.4"
+gem "default_value_for", github: "FooBarWidget/default_value_for", branch: "master"
 gem "week_of_month"
 gem "nokogiri"
 gem "google_contacts_api", git: "https://github.com/ilake/google_contacts_api.git"
@@ -74,7 +74,7 @@ gem "video_thumb"
 gem "strong_migrations"
 gem "ahoy_matey"
 gem "with_advisory_lock"
-gem 'acts-as-taggable-on', '~> 7.0'
+gem 'acts-as-taggable-on'
 gem "blazer"
 gem 'deep_cloneable', '~> 3.2.0'
 gem 'redis', '4.1.3'
@@ -101,7 +101,7 @@ group :development do
   gem "listen"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
-  gem "annotate", "~> 3.1.1"
+  gem "annotate"
   gem "letter_opener", "~> 1.4.1"
   gem "better_errors"
   gem "binding_of_caller"

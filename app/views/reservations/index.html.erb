@@ -41,7 +41,7 @@
                <%= staff.name %>
              </div>
              <div class="time cell">
-               <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
+               <%= "#{working_schedule[:time].first.to_fs(:time)} ～ #{working_schedule[:time].last.to_fs(:time)}" %>
              </div>
            </div>
          <% end %>
@@ -83,9 +83,9 @@
     open: true,
     shop: react_attribute(shop.attributes),
     shops: react_attributes(staff.shops),
-    start_time_date_part: @date.to_s,
-    start_time_time_part: working_time_range.first.to_s(:time),
-    end_time_time_part: working_time_range.last.to_s(:time),
+    start_time_date_part: @date.to_fs,
+    start_time_time_part: working_time_range.first.to_fs(:time),
+    end_time_time_part: working_time_range.last.to_fs(:time),
     custom_schedules_path: custom_schedules_path
   },
   { camelize_props: false }

@@ -10,7 +10,7 @@ class MembersController < DashboardController
       cookies[:member_shops] = params[:member_shops]&.join(",") || ""
 
       if params[:reservation_date]
-        redirect_to date_member_path(reservation_date: @date.to_s(:date))
+        redirect_to date_member_path(reservation_date: @date.to_fs(:date))
         return
       end
     end

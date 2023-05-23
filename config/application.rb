@@ -12,7 +12,7 @@ module Kasaike
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
-    config.autoloader = :classic
+    config.autoloader = :zeitwerk
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -26,7 +26,7 @@ module Kasaike
 
     config.active_record.schema_format = :sql
 
-    config.autoload_once_paths << Rails.root.join('app/job_serializers')
-    config.autoload_paths << Rails.root.join('app/instruments')
+    config.autoload_once_paths << Rails.root.join('app/job_serializers').to_s
+    config.autoload_once_paths << Rails.root.join('app/instruments').to_s
   end
 end

@@ -291,4 +291,4 @@ Devise.setup do |config|
     stripe_landing: "login"
 end
 
-Devise::Mailer.layout "mailer"
+# Devise::Mailer.layout "mailer"

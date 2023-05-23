@@ -17,7 +17,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
         type: 'OnlineServiceCustomerRelation',
         id: relation.id,
         year: relation.created_at.year,
-        date: relation.created_at.to_s(:date),
+        date: relation.created_at.to_fs(:date),
         monthDate: I18n.l(relation.created_at, format: :month_day_wday),
         startTime: I18n.l(relation.created_at, format: :hour_minute),
         menu: relation.online_service.name,

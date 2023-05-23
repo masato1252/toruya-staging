@@ -13,7 +13,7 @@ module PaymentWithdrawals
       # XXX: Even the period is one month, but try to find all the valid previous pending payments,
       # just in case missing some legacy pending payments.
       payments = user.payments.pending.where("created_at <= ?", report_month.end_of_month.end_of_day)
-      total_amount = payments.sum(&:amount)
+      total_amount = payments.map(&:amount).sum(0)
 
       PaymentWithdrawal.transaction do
         withdrawal = PaymentWithdrawal.create(

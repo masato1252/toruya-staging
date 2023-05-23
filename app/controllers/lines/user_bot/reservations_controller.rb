@@ -41,10 +41,10 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     else
       @reservation = shop.reservations.find_by(id: params[:id] || params[:reservation_id])
       @reservation ||= shop.reservations.new(
-        start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
-        start_time_time_part: Time.zone.now.to_s(:time),
-        end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
-        end_time_time_part: Time.zone.now.advance(hours: 2).to_s(:time),
+        start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_fs(:date),
+        start_time_time_part: Time.zone.now.to_fs(:time),
+        end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_fs(:date),
+        end_time_time_part: Time.zone.now.advance(hours: 2).to_fs(:time),
       )
       @menu_staffs_list = @reservation.reservation_menus.includes(:menu).map.with_index do |rm, position|
         menu_option = @menu_result[:menu_options].find { |option| option.id == rm.menu_id }
@@ -129,7 +129,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     if outcome.valid?
       render json: {
         status: "successful",
-        redirect_to: SiteRouting.new(view_context).schedule_date_path(reservation_date: outcome.result.start_time.to_s(:date))
+        redirect_to: SiteRouting.new(view_context).schedule_date_path(reservation_date: outcome.result.start_time.to_fs(:date))
       }
     else
       Rollbar.warning("Create reservation failed",
@@ -155,7 +155,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       else
         render json: {
           status: "successful",
-          redirect_to: SiteRouting.new(view_context).schedule_date_path(reservation_date: outcome.result.start_time.to_s(:date))
+          redirect_to: SiteRouting.new(view_context).schedule_date_path(reservation_date: outcome.result.start_time.to_fs(:date))
         }
       end
     else

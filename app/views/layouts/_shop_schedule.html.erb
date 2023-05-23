@@ -1,7 +1,7 @@
 <% if working_time_range %>
   <div class="busHours table">
     <div class="tableCell shopname"><%= shop.display_name %></div>
-    <div class="tableCell"><%= working_time_range.first.to_s(:time) %>〜<%= working_time_range.last.to_s(:time) %></div>
+    <div class="tableCell"><%= working_time_range.first.to_fs(:time) %>〜<%= working_time_range.last.to_fs(:time) %></div>
   </div>
 <% else %>
   <div class="busHours shopClose table">

@@ -38,7 +38,7 @@ RSpec.describe PaymentWithdrawals::Create do
       withdrawal = user.payment_withdrawals.last
 
       expect(withdrawal.payment_ids).to include(payment.id)
-      expect(withdrawal.amount).to eq(user.payments.sum(&:amount))
+      expect(withdrawal.amount).to eq(user.payments.map(&:amount).sum(0))
       expect(withdrawal.details["payment_ids"]).to eq([payment.id])
       expect(withdrawal.details["transfer_date"]).to eq(I18n.l(Date.new(2019, 11, 8)))
       expect(Notifiers::Users::WithdrawalMonthlyReport).to have_received(:perform_later).with(receiver: withdrawal.receiver, user: withdrawal.receiver, withdrawal: withdrawal)
