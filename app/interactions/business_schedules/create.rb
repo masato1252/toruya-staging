@@ -2,7 +2,7 @@
 
 module BusinessSchedules
   class Create < ActiveInteraction::Base
-    set_callback :type_check, :before do
+    set_callback :validate, :before do
       attrs.merge!(staff_id: staff.id)  if staff
     end
 

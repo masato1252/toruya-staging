@@ -43,7 +43,7 @@ class Customers::Save < ActiveInteraction::Base
   #          "day"=>"1"},
   #          "memo"=>""}
 
-  set_callback :type_check, :before do
+  set_callback :validate, :before do
     # if params[:primary_address] && (params[:primary_address][:region].present? || params[:primary_address][:city].present?)
     params[:address] = [params[:primary_address][:region], params[:primary_address][:city]].reject(&:blank?).join(" ")
     params[:primary_address] = {
