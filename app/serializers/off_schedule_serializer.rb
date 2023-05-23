@@ -10,11 +10,11 @@ class OffScheduleSerializer
   end
 
   attribute :start_time do |schedule|
-    schedule.start_time.to_s(:time)
+    schedule.start_time.to_fs(:time)
   end
 
   attribute :end_time do |schedule|
-    schedule.end_time.to_s(:time)
+    schedule.end_time.to_fs(:time)
   end
 
   attribute :time do |schedule|

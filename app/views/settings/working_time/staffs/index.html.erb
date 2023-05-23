@@ -23,7 +23,7 @@
             <%= modal_link_to(staff_name, edit_staff_for_admin_warnings_path) %>
           <% end %>
         </dt>
-        <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
+        <dd class="updateTime"><%= staff.updated_at.to_fs(:date) %></dd>
         <dd class="function">
           <% if can?(:edit, staff) %>
             <%= link_to t("action.edit"), working_schedules_settings_user_working_time_staff_path(super_user, staff, working_time_menu_scope: params[:working_time_menu_scope]), class: "BTNtarco" %>

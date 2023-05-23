@@ -16,7 +16,7 @@
     <% if reservation %>
       <%= modal_link_to shop_reservation_path(reservation.shop, reservation, reservations_approval_flow: @reservations_approval_flow) do %>
         <dl>
-          <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
+          <dd class="time"><%= reservation.start_time.to_fs(:time) %><br /><%= reservation.end_time.to_fs(:time) %></dd>
           <dd><span class="reservation-state-item reservation-state <%= reservation.aasm_state %>"></span></dd>
           <dd class="menu"><%= reservation.menus.map(&:display_name).join(", ")%></dd>
           <dd class="customer"><%= customer_names_sentence %></dd>
@@ -37,7 +37,7 @@
     <% else %>
       <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule.source.id}" %>>
         <dl>
-          <dd class="time"><%= schedule.source.start_time.to_s(:time) %><br /><%= schedule.source.end_time.to_s(:time) %></dd>
+          <dd class="time"><%= schedule.source.start_time.to_fs(:time) %><br /><%= schedule.source.end_time.to_fs(:time) %></dd>
           <dd class="menu"><%= schedule.reason %></dd>
         </dl>
       </a>
@@ -45,8 +45,8 @@
         date: @date,
         modal_id: "off-date-modal-#{schedule.source.id}",
         custom_schedule_id: schedule.source.id,
-        start_time_time_part: schedule.source.start_time.to_s(:time),
-        end_time_time_part: schedule.source.end_time.to_s(:time),
+        start_time_time_part: schedule.source.start_time.to_fs(:time),
+        end_time_time_part: schedule.source.end_time.to_fs(:time),
         calendarfield_prefix: "temp_leaving_schedule_#{schedule.source.id}",
         reason: schedule.reason
       %>

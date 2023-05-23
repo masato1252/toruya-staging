@@ -14,11 +14,11 @@
 # end
 #
 # def start_at_date
-#   start_at.to_s(:date)
+#   start_at.to_fs(:date)
 # end
 #
 # def start_at_time
-#   start_at.to_s(:time)
+#   start_at.to_fs(:time)
 # end
 #
 # options:
@@ -48,11 +48,11 @@ module DateTimeAccessor
         end
 
         define_method("#{time_attribute}_date") do
-          public_send(time_attribute).to_s(:date) if public_send(time_attribute)
+          public_send(time_attribute).to_fs(:date) if public_send(time_attribute)
         end
 
         define_method("#{time_attribute}_time") do
-          public_send(time_attribute).to_s(:time) if public_send(time_attribute)
+          public_send(time_attribute).to_fs(:time) if public_send(time_attribute)
         end
       end
     end

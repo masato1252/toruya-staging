@@ -6,7 +6,7 @@
         <span class="state <%= @relation.state %>"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.state}") %></span>
         <span><%= I18n.l(@reservation.created_at, format: :date) %></span>
 
-        <span><%= @reservation.created_at.to_s(:time)%></span>
+        <span><%= @reservation.created_at.to_fs(:time)%></span>
       </h4>
     </div>
     <div class="modal-body">

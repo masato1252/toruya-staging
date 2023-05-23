@@ -8,13 +8,13 @@ FactoryBot.define do
 
     before(:create) do |special_date, evaluator|
       if special_date.start_at
-        special_date.start_at_date_part = special_date.start_at.to_s(:date)
-        special_date.start_at_time_part = special_date.start_at.to_s(:time)
+        special_date.start_at_date_part = special_date.start_at.to_fs(:date)
+        special_date.start_at_time_part = special_date.start_at.to_fs(:time)
       end
 
       if special_date.end_at
-        special_date.end_at_date_part = special_date.end_at.to_s(:date)
-        special_date.end_at_time_part = special_date.end_at.to_s(:time)
+        special_date.end_at_date_part = special_date.end_at.to_fs(:date)
+        special_date.end_at_time_part = special_date.end_at.to_fs(:time)
       end
     end
   end

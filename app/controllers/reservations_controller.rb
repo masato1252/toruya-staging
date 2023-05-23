@@ -63,10 +63,10 @@ class ReservationsController < DashboardController
     else
       @reservation = shop.reservations.find_by(id: params[:id])
       @reservation ||= shop.reservations.new(
-        start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
-        start_time_time_part: Time.zone.now.to_s(:time),
-        end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
-        end_time_time_part: Time.zone.now.advance(hours: 2).to_s(:time),
+        start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_fs(:date),
+        start_time_time_part: Time.zone.now.to_fs(:time),
+        end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_fs(:date),
+        end_time_time_part: Time.zone.now.advance(hours: 2).to_fs(:time),
       )
       @menu_staffs_list = @reservation.reservation_menus.includes(:menu).map.with_index do |rm, position|
         {
@@ -146,7 +146,7 @@ class ReservationsController < DashboardController
 
     if outcome.valid?
       if in_personal_dashboard?
-        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
+        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_fs(:date))
       else
         redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
       end
@@ -169,7 +169,7 @@ class ReservationsController < DashboardController
       if params[:from_customer_id].present?
         redirect_to user_customers_path(shop.user, customer_id: params[:from_customer_id])
       elsif in_personal_dashboard?
-        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
+        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_fs(:date))
       else
         redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
       end

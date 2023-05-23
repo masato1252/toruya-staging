@@ -241,7 +241,7 @@ class OnlineService < ApplicationRecord
     if start_at
       {
         start_type: "start_at",
-        start_time_date_part: start_at.to_s(:date)
+        start_time_date_part: start_at.to_fs(:date)
       }
     else
       {
@@ -267,7 +267,7 @@ class OnlineService < ApplicationRecord
     elsif end_at
       {
         end_type: "end_at",
-        end_time_date_part: end_at.to_s(:date)
+        end_time_date_part: end_at.to_fs(:date)
       }
     else
       {

@@ -144,7 +144,7 @@ module Reservable
           where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
           where("(business_schedules.start_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time <= ? and
                  (business_schedules.end_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time >= ?",
-                 start_time.to_s(:time), end_time.to_s(:time))
+                 start_time.to_fs(:time), end_time.to_fs(:time))
       ).
       or(
         @workable_menus_scoped.
@@ -166,7 +166,7 @@ module Reservable
         where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
                ((reservation_settings.start_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time <= ? and
                 (reservation_settings.end_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time >= ?)",
-                start_time.to_s(:time), end_time.to_s(:time))
+                start_time.to_fs(:time), end_time.to_fs(:time))
 
       @workable_menus_scoped = @workable_menus_scoped.where("reservation_settings.day_type = ?", "business_days").
       or(

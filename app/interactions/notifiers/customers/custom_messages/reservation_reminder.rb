@@ -27,7 +27,7 @@ module Notifiers
         def expected_schedule_time
           if schedule_at && custom_message.before_minutes
             expected_schedule_at = reservation.start_time.advance(minutes: -custom_message.before_minutes)
-            return expected_schedule_at.to_s(:iso8601) == schedule_at.to_s(:iso8601)
+            return expected_schedule_at.to_fs(:iso8601) == schedule_at.to_fs(:iso8601)
           end
 
           true # real time

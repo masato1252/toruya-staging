@@ -56,10 +56,10 @@ class CustomSchedule < ApplicationRecord
   end
 
   def start_time_date
-    start_time.to_s(:date)
+    start_time.to_fs(:date)
   end
 
   def start_time_time
-    start_time.to_s(:time)
+    start_time.to_fs(:time)
   end
 end

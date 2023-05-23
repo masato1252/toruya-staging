@@ -16,7 +16,7 @@
         <% end %>
       </div>
       <div class="col-sm-3">
-        <%= staff.updated_at.to_s(:date) %>
+        <%= staff.updated_at.to_fs(:date) %>
       </div>
       <div class="col-sm-3">
         <% if can?(:delete, staff) %>

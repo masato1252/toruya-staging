@@ -60,7 +60,7 @@ class BookingPagesController < ActionController::Base
       first_special_date = @booking_page.booking_page_special_dates.order("start_at").first
 
       if first_special_date && first_special_date.start_at > Time.current
-        @default_selected_date = first_special_date.start_at.to_s(:date)
+        @default_selected_date = first_special_date.start_at.to_fs(:date)
       end
     end
 
@@ -221,9 +221,9 @@ class BookingPagesController < ActionController::Base
 
         [
           {
-            start_at_date_part: shop_start_at.to_date.to_s,
+            start_at_date_part: shop_start_at.to_date.to_fs,
             start_at_time_part: I18n.l(shop_start_at, format: :hour_minute),
-            end_at_date_part:   shop_end_at.to_date.to_s,
+            end_at_date_part:   shop_end_at.to_date.to_fs,
             end_at_time_part:   I18n.l(shop_end_at, format: :hour_minute)
           }.to_json
         ]

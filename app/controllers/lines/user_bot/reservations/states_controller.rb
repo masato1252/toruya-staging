@@ -24,7 +24,7 @@ class Lines::UserBot::Reservations::StatesController < Lines::UserBotDashboardCo
       if recent_pending_reservations.exists?
         next_pending_reservation = recent_pending_reservations.first.reservation
 
-        redirect_to date_lines_user_bot_schedules_path(next_pending_reservation.start_time.to_s(:date), next_pending_reservation.id)
+        redirect_to date_lines_user_bot_schedules_path(next_pending_reservation.start_time.to_fs(:date), next_pending_reservation.id)
       else
         redirect_to lines_user_bot_schedules_path, notice: I18n.t("reservation.update_successfully_message")
       end

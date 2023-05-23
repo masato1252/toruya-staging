@@ -15,13 +15,13 @@ FactoryBot.define do
 
     before(:create) do |booking_page, evaluator|
       if booking_page.start_at
-        booking_page.start_at_date_part = booking_page.start_at.to_s(:date)
-        booking_page.start_at_time_part = booking_page.start_at.to_s(:time)
+        booking_page.start_at_date_part = booking_page.start_at.to_fs(:date)
+        booking_page.start_at_time_part = booking_page.start_at.to_fs(:time)
       end
 
       if booking_page.end_at
-        booking_page.end_at_date_part = booking_page.end_at.to_s(:date)
-        booking_page.end_at_time_part = booking_page.end_at.to_s(:time)
+        booking_page.end_at_date_part = booking_page.end_at.to_fs(:date)
+        booking_page.end_at_time_part = booking_page.end_at.to_fs(:time)
       end
     end
   end

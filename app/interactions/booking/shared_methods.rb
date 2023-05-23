@@ -73,7 +73,7 @@ module Booking
                   online_reservation: booking_option.online?
                 )
 
-                Rails.logger.debug("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ")
+                Rails.logger.debug("==date: #{date}, #{menu_book_start_at.to_fs(:time)}~#{menu_book_end_at.to_fs(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ")
 
                 if reserable_outcome.valid?
                   valid_menus << {
@@ -87,7 +87,7 @@ module Booking
 
                   # all menus got staffs to handle
                   if booking_option.menus.count == valid_menus.length
-                    Rails.logger.debug("[GOOD]==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ")
+                    Rails.logger.debug("[GOOD]==date: #{date}, #{menu_book_start_at.to_fs(:time)}~#{menu_book_end_at.to_fs(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ")
                     yield valid_menus, candidate_staff_ids.map { |staff_id| { staff_id: staff_id, state: "pending" } }, nil
                   end
 
@@ -142,7 +142,7 @@ module Booking
 
                   Rails.logger.debug("==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}")
 
-                  ::FlowBacktracer.track(:debug_booking_page) { { 'final_error': "==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}" } }
+                  ::FlowBacktracer.track(:debug_booking_page) { { 'final_error': "==date: #{date}, #{menu_book_start_at.to_fs(:time)}~#{menu_book_end_at.to_fs(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}" } }
 
 
                   if all_possiable_active_staff_ids_groups.length - 1 == candidate_staff_index

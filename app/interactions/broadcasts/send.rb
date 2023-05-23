@@ -8,7 +8,7 @@ module Broadcasts
     def execute
       broadcast.with_lock do
         return if schedule_at && broadcast.schedule_at.nil?
-        return if schedule_at && broadcast.schedule_at && schedule_at.to_s(:iso8601) != broadcast.schedule_at.to_s(:iso8601)
+        return if schedule_at && broadcast.schedule_at && schedule_at.to_fs(:iso8601) != broadcast.schedule_at.to_fs(:iso8601)
         return unless broadcast.active?
 
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)

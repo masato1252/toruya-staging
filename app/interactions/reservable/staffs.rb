@@ -35,7 +35,7 @@ module Reservable
         where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
         where("(business_schedules.start_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time <= ? and
                (business_schedules.end_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time >= ?",
-               start_time.to_s(:time), ready_time.to_s(:time))
+               start_time.to_fs(:time), ready_time.to_fs(:time))
       ).
       or(
         scoped.

@@ -12,12 +12,12 @@ query.each do |key, value|
 
     if value["start_date"]
       start_date = Time.parse(value["start_date"])
-      json.start_dob_date start_date.to_s(:date)
+      json.start_dob_date start_date.to_fs(:date)
     end
 
     if value["end_date"]
       end_date = Time.parse(value["end_date"])
-      json.end_dob_date end_date.to_s(:date)
+      json.end_dob_date end_date.to_fs(:date)
     end
 
     if value["month"]
@@ -28,11 +28,11 @@ query.each do |key, value|
     json.set! :hasReservation, ActiveModel::Type::Boolean.new.cast(value["has_reservation"])
 
     start_date = Time.parse(value["start_date"])
-    json.set! :start_reservation_date, start_date.to_s(:date)
+    json.set! :start_reservation_date, start_date.to_fs(:date)
 
     if value["end_date"]
       end_date = Time.parse(value["end_date"])
-      json.set! :end_reservation_date, end_date.to_s(:date)
+      json.set! :end_reservation_date, end_date.to_fs(:date)
     end
 
     if value["shop_ids"]

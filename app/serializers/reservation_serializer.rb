@@ -21,11 +21,11 @@ class ReservationSerializer
   end
 
   attribute :start_time do |reservation|
-    reservation.start_time.to_s(:time)
+    reservation.start_time.to_fs(:time)
   end
 
   attribute :end_time do |reservation|
-    reservation.end_time.to_s(:time)
+    reservation.end_time.to_fs(:time)
   end
 
   attribute :time do |reservation|
