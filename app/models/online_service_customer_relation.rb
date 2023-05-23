@@ -163,11 +163,11 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def total_completed_payments_amount
-    customer_payments.completed.sum(&:amount)
+    customer_payments.completed.map(&:amount).sum(0)
   end
 
   def product_amount
-    price_details.sum { |price| Money.new(price.amount) }
+    price_details.map { |price| Money.new(price.amount) }.sum(0)
   end
 
   def paid_completed?
