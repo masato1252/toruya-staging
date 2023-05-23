@@ -66,7 +66,7 @@ class Ability
 
   def admin_member_ability
     can :manage, :everything
-    can :manage, GoogleContact
+    # can :manage, GoogleContact
     can :create, Shop
     can :edit, Shop
     can :delete, Shop
