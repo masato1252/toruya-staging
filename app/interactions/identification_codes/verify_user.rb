@@ -11,7 +11,8 @@ module IdentificationCodes
     def execute
       identification_code = compose(IdentificationCodes::Verify, uuid: uuid, code: code)
 
-      if identification_code && (user = User.where(phone_number: phone_number).take)
+      formatted_phone = Phonelib.parse(phone_number).international(false)
+      if identification_code && (user = User.where(phone_number: formatted_phone).take)
         compose(SocialUsers::Connect, social_user: social_user, user: user, change_rich_menu: user.profile.address.present?)
         compose(StaffAccounts::ConnectUser, token: staff_token, user: social_user.user) if staff_token.present?
 
