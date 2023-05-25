@@ -158,6 +158,14 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     )
   end
 
+  def recalculate_expire_time
+    if end_at
+      end_at
+    elsif end_on_days
+      Time.current.advance(days: end_on_days)
+    end
+  end
+
   def purchased_from_bundler?
     product_details["prices"].first["bundler_price"]
   end

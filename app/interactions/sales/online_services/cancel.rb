@@ -8,7 +8,18 @@ module Sales
       validate :validate_relation_current
 
       def execute
-        relation.update(payment_state: :canceled, permission_state: :pending)
+        if relation.online_service.bundler?
+          relation.update(payment_state: :canceled, permission_state: :pending)
+          # relation.bundled_service_relations.each do |bundled_service_relation|
+          #   # only stop subscription, forever still forever
+          #   Sales::OnlineServices::Cancel.run(relation: bundled_service_relation)
+          # end
+        elsif relation.subscription?
+          OnlineServiceCustomerRelations::Cancel.run(relation: relation)
+        else
+          relation.update(payment_state: :canceled, permission_state: :pending)
+        end
+
         relation
       end
 
