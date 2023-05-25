@@ -72,7 +72,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
         write_user_bot_cookies(:current_user_id, social_user.user_id)
       end
 
-      render json: { identification_successful: true }
+      render json: { identification_successful: true, user_id: social_user.user_id }
     else
       render json: {
         identification_successful: false,
