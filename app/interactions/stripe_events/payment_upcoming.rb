@@ -9,7 +9,10 @@ module StripeEvents
       data_object = event.data.object
       return unless data_object.subscription
 
-      relation = OnlineServiceCustomerRelation.find_by(stripe_subscription_id: data_object.subscription)
+      relation = nil
+      with_retry do
+        relation = OnlineServiceCustomerRelation.find_by!(stripe_subscription_id: data_object.subscription)
+      end
       unless relation
         Rollbar.error("Unexpected subscription", {
           event: event.as_json
