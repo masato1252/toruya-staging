@@ -21,17 +21,19 @@ const WhyContentEdit = ({product_content, handleContentChange, handlePictureChan
           handleContentChange("desc1", event.target.value)
         }}
       />
-      <ImageUploader
-        defaultImages={product_content.picture_url?.length ? [product_content.picture_url] : []}
-        withIcon={false}
-        withPreview={true}
-        withLabel={false}
-        buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}
-        singleImage={true}
-        onChange={handlePictureChange}
-        imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
-        maxFileSize={5242880}
-      />
+      <div className="default-uploader-button-container">
+        <ImageUploader
+          defaultImages={product_content.picture_url?.length ? [product_content.picture_url] : []}
+          withIcon={false}
+          withPreview={true}
+          withLabel={false}
+          buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}
+          singleImage={true}
+          onChange={handlePictureChange}
+          imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
+          maxFileSize={5242880}
+        />
+      </div>
       {focus_field == "what_buyer_future_tip" && <p className="centerize">{I18n.t(`user_bot.dashboards.sales.booking_page_creation.what_buyer_future_tip`)}</p>}
       <TextareaAutosize
         className="extend with-border"

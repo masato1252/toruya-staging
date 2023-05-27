@@ -38,6 +38,8 @@ class ProcessActionInstrument
     params.any? do |_, v|
       if v.is_a?(ActionDispatch::Http::UploadedFile)
         return true
+      elsif v.is_a?(Array)
+        v.each {|vv| invalid_params_check(vv) }
       elsif v.is_a?(Hash)
         invalid_params_check(v)
       end

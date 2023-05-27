@@ -38,7 +38,7 @@ const ReviewsEdit = ({reviews, handleReviewChange}) => {
               />
               <div className={`flex flex-col w-full ${index % 2 == 0 ? "ml-2-5" : "mr-2-5"}`}>
                 <TextareaAutosize
-                  className="centerize extend with-border text-left my-4"
+                  className="centerize with-border text-left my-4"
                   placeholder={I18n.t('user_bot.dashboards.sales.form.review_content_placeholder')}
                   rows={1}
                   value={review?.content || ""}
