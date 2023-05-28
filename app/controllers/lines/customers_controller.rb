@@ -34,7 +34,10 @@ class Lines::CustomersController < ActionController::Base
   helper_method :current_toruya_social_user
 
   def device_detector
-    @device_detector ||= DeviceDetector.new(request.user_agent)
+    @device_detector ||=
+      begin
+        Current.device_detector = DeviceDetector.new(request.user_agent)
+      end
   end
   helper_method :device_detector
 end

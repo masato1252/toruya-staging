@@ -46,7 +46,10 @@ class Lines::UserBotDashboardController < ActionController::Base
   helper_method :site_routing_helper
 
   def device_detector
-    @device_detector ||= DeviceDetector.new(request.user_agent)
+    @device_detector ||=
+      begin
+        Current.device_detector = DeviceDetector.new(request.user_agent)
+      end
   end
   helper_method :device_detector
 

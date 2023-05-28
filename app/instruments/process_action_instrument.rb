@@ -21,7 +21,7 @@ class ProcessActionInstrument
   end
 
   def event_properties(payload)
-    params = payload[:params]
+    params = payload[:params].merge(device_type: Current.device_detector&.device_type)
 
     params.tap do |props|
       props.update Current.mixpanel_extra_properties if Current.mixpanel_extra_properties
