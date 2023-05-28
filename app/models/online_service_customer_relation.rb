@@ -153,17 +153,9 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     @bundled_service_relations ||= OnlineServiceCustomerRelation.where(
       current: true,
       online_service: sale_page.product.bundled_online_services,
-      sale_page: sale_page,
+      sale_page: sale_page, # NOTICE: ONLY the one from the same sale page
       customer: customer
     )
-  end
-
-  def recalculate_expire_time
-    if end_at
-      end_at
-    elsif end_on_days
-      Time.current.advance(days: end_on_days)
-    end
   end
 
   def purchased_from_bundler?

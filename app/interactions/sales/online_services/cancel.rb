@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# User cancel customers manually
 module Sales
   module OnlineServices
     class Cancel < ActiveInteraction::Base
@@ -8,16 +9,16 @@ module Sales
       validate :validate_relation_current
 
       def execute
-        if relation.online_service.bundler?
-          relation.update(payment_state: :canceled, permission_state: :pending)
-          # relation.bundled_service_relations.each do |bundled_service_relation|
-          #   # only stop subscription, forever still forever
-          #   Sales::OnlineServices::Cancel.run(relation: bundled_service_relation)
-          # end
-        elsif relation.subscription?
+        if relation.subscription? # subscription might bundler, as well
           OnlineServiceCustomerRelations::Cancel.run(relation: relation)
-        else
+        elsif relation.online_service.bundler?
+          relation.bundled_service_relations.each do |bundled_service_relation|
+            OnlineServiceCustomerRelations::ReconnectBestContract.run(relation: bundled_service_relation)
+          end
           relation.update(payment_state: :canceled, permission_state: :pending)
+        else
+          OnlineServiceCustomerRelations::ReconnectBestContract.run(relation: relation)
+          relation.canceled_payment_state!
         end
 
         relation

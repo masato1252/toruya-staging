@@ -88,8 +88,8 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
 
             expect(outcome.result).to be_pending
             expect(outcome.result.stripe_subscription_id).to be_nil
-            expect(relation_with_end_at_service.reload).to be_active
-            expect(relation_with_forever_service.reload).to be_active
+            expect(relation_with_end_at_service.reload).to be_pending
+            expect(relation_with_forever_service.reload).to be_pending
             expect(relation_with_subscription_service.reload).to be_pending
           end
         end
