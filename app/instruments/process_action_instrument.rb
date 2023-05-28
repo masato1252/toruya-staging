@@ -35,13 +35,19 @@ class ProcessActionInstrument
   end
 
   def invalid_params_check(params)
-    params.any? do |_, v|
-      if v.is_a?(ActionDispatch::Http::UploadedFile)
+    if params.is_a?(Hash)
+      params.any? do |_, v|
+        if v.is_a?(ActionDispatch::Http::UploadedFile)
+          return true
+        elsif v.is_a?(Array)
+          v.each { |vv| invalid_params_check(vv) }
+        elsif v.is_a?(Hash)
+          invalid_params_check(v)
+        end
+      end
+    elsif params.is_a?(Array)
+      if params.any? { |v| v.is_a?(ActionDispatch::Http::UploadedFile) }
         return true
-      elsif v.is_a?(Array)
-        v.each {|vv| invalid_params_check(vv) }
-      elsif v.is_a?(Hash)
-        invalid_params_check(v)
       end
     end
   end
