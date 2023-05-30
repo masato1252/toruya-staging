@@ -9,7 +9,12 @@ module Customers
 
     def execute
       user_customers = user.customers.order("id")
-      customers = user_customers.where(last_name: last_name, first_name: first_name).or(user_customers.where(phonetic_last_name: last_name, phonetic_first_name: first_name)).to_a
+      customers = nil
+
+      with_retry(max_reties: 1) do
+        customers = user_customers.where(last_name: last_name, first_name: first_name).or(user_customers.where(phonetic_last_name: last_name, phonetic_first_name: first_name)).to_a
+        raise "retry on purpose" # somehow, it is race condition, it doesn't find the data when data should be exist
+      end
 
       matched_customers = customers.find_all do |customer|
         customer.phone_numbers_details&.map { |phone| phone["value"].gsub(/[^0-9]/, '') }&.include?(phone_number.gsub(/[^0-9]/, ''))
