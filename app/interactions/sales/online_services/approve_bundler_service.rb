@@ -12,8 +12,6 @@ module Sales
 
       def execute
         relation.permission_state = :active
-        #relation.expire_at = relation.online_service.current_expire_time
-
         # paid_at => bought at, when customer bought this product, it should equals first time pay.
         relation.paid_at = Time.current
         # bundler service's expire_at's purpose was used for sequence messages and default value of bundled servcies,

@@ -5,6 +5,7 @@ FactoryBot.define do
     association :customer
     sale_page { FactoryBot.create(:sale_page, :online_service) }
     online_service { sale_page.product }
+    current { true }
 
     trait :free do
       payment_state { "free" }

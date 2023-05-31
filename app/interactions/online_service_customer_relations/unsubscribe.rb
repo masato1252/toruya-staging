@@ -23,14 +23,12 @@ class OnlineServiceCustomerRelations::Unsubscribe < ActiveInteraction::Base
         relation.payment_state = :failed
         relation.stripe_subscription_id = nil
         relation.pending!
-        relation
 
-        if relation.online_service.bundler?
-          relation.bundled_service_relations.each do |bundled_service_relation|
-            # only stop subscription, forever still forever
-            bundled_service_relation.pending! if bundled_service_relation.bundled_service&.subscription
-          end
+        relation.bundled_service_relations.each do |bundled_service_relation|
+          compose(OnlineServiceCustomerRelations::ReconnectBestContract, relation: bundled_service_relation)
         end
+
+        relation
       rescue => e
         errors.add(:relation, :something_wrong)
       end

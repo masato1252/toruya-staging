@@ -24,6 +24,11 @@ class OnlineServiceCustomerRelations::Cancel < ActiveInteraction::Base
         relation.stripe_subscription_id = nil
         relation.expire_at = Time.at(canceled_stripe_subscription.current_period_end)
         relation.canceled_payment_state!
+
+        # Only bundler had bundled_service_relations
+        relation.bundled_service_relations.each do |bundled_service_relation|
+          OnlineServiceCustomerRelations::ReconnectBestContract.run(relation: bundled_service_relation)
+        end
       rescue => e
         errors.add(:relation, :something_wrong)
       end
