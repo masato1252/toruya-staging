@@ -18,6 +18,7 @@ module Reservable
     boolean :skip_before_interval_time_validation, default: false
     boolean :skip_after_interval_time_validation, default: false
     boolean :online_reservation, default: false
+    object :booking_page, default: nil
 
     def execute
       time_outcome = Reservable::Time.run(shop: shop, date: date)
@@ -56,6 +57,7 @@ module Reservable
         errors.add(:menu_id, :time_not_enough, menu_id: menu_id)
       end
 
+      validate_booking_events
       validate_interval_time if validate_overlap?
       validate_menu_schedules
       validate_seats_for_customers if overbooking_restriction
@@ -159,6 +161,25 @@ module Reservable
             where("reservation_staffs.prepare_time < ? and reservation_staffs.work_end_at > ?",
                   next_reservation_validation_end_time, next_reservation_validation_start_time).exists?
           errors.add(:end_time, :interval_too_short)
+        end
+      end
+    end
+
+    # Same booking time
+    # IF there is other event booking page
+    #   If the current booking page is event booking page and the the same special date
+    #     valid, still allow to book
+    #   ELSE
+    #     invalid
+    # ELSE
+    #   valid
+    def validate_booking_events
+      if booking_page
+        event_booking_page_ids = BookingPage.active.started.where(shop: shop, event_booking: true).pluck(:id)
+        scope = BookingPageSpecialDate.where(booking_page_id: event_booking_page_ids)
+        overlap_special_date_booking_page_ids = scope.where("start_at < ? and end_at > ?", end_time, start_time).distinct.pluck(:booking_page_id)
+        if overlap_special_date_booking_page_ids.exclude?(booking_page.id) && overlap_special_date_booking_page_ids.present?
+          errors.add(:booking_page, :overlap_event_booking, overlap_special_date_booking_page_ids: overlap_special_date_booking_page_ids)
         end
       end
     end

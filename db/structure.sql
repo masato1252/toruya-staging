@@ -669,7 +669,8 @@ CREATE TABLE public.booking_pages (
     slug character varying,
     deleted_at timestamp without time zone,
     specific_booking_start_times character varying[],
-    online_payment_enabled boolean DEFAULT false
+    online_payment_enabled boolean DEFAULT false,
+    event_booking boolean DEFAULT false
 );
 
 
@@ -5295,6 +5296,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230516222442'),
 ('20230517142813'),
 ('20230523072534'),
-('20230523072535');
+('20230523072535'),
+('20230601140649');
 
 

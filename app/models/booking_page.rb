@@ -8,6 +8,7 @@
 #  deleted_at                   :datetime
 #  draft                        :boolean          default(TRUE), not null
 #  end_at                       :datetime
+#  event_booking                :boolean          default(FALSE)
 #  greeting                     :text
 #  interval                     :integer
 #  line_sharing                 :boolean          default(TRUE)
@@ -85,8 +86,15 @@ class BookingPage < ApplicationRecord
     (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at) || deleted_at.present?
   end
 
-  def only_special_dates_booking?
-    booking_page_special_dates.exists?
+  def booking_type
+    @booking_type ||=
+      if event_booking
+        "event_booking"
+      elsif booking_page_special_dates.exists?
+        "only_special_dates_booking"
+      else
+        "any"
+      end
   end
 
   # XXX: only used for demo

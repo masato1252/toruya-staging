@@ -47,14 +47,14 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
   return (
     <div>
       <label className="field-row flex-start">
-        <input name="had_special_date" type="radio" value="false" ref={register({ required: true })} />
-        {i18n.default_available_dates_label}
+        <input name="booking_type" type="radio" value="any" ref={register({ required: true })} />
+        {i18n.any_label}
       </label>
-      <label className="field-row flex-start no-border">
-        <input name="had_special_date" type="radio" value="true" ref={register({ required: true })} />
-        {i18n.special_date_label}
+      <label className="field-row flex-start">
+        <input name="booking_type" type="radio" value="only_special_dates_booking" ref={register({ required: true })} />
+        {i18n.only_special_dates_booking_label}
       </label>
-      {watch("had_special_date") == "true" &&
+      {_.includes(["only_special_dates_booking"], watch("booking_type")) &&
         <>
           <div className="field-row date-row flex-start">
             <button className="btn btn-yellow" onClick={() => {
@@ -65,6 +65,24 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
             </button>
           </div>
           <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} i18n={i18n} />
+        </>
+      }
+      <label className="field-row flex-start no-border">
+        <input name="booking_type" type="radio" value="event_booking" ref={register({ required: true })} />
+        {i18n.event_booking_label}
+      </label>
+      {_.includes(["event_booking"], watch("booking_type")) &&
+        <>
+          <div className="field-row date-row flex-start">
+            <button className="btn btn-yellow" onClick={() => {
+              special_dates_fields.append({})
+            }}>
+              <i className="fa fa-plus"></i>
+              <span>{I18n.t('settings.booking_page.form.add_special_dates_btn')}</span>
+            </button>
+          </div>
+          <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} i18n={i18n} />
+          <div>{I18n.t("settings.booking_page.form.event_booking_hint")}</div>
         </>
       }
     </div>

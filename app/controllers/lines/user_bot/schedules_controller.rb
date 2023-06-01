@@ -5,8 +5,8 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
 
   def index
     @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
-
-    reservations = Reservation.where(shop_id: working_shop_options(include_user_own: true).map(&:shop_id).uniq)
+    working_shop_ids = working_shop_options(include_user_own: true).map(&:shop_id).uniq
+    reservations = Reservation.where(shop_id: working_shop_ids)
       .uncanceled.in_date(@date)
       .includes(:menus, :customers, :staffs, shop: :user)
       .order("reservations.start_time ASC")
@@ -18,12 +18,16 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
 
     # Mix off custom schedules and reservations
     off_schedules = CustomSchedule.closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).where(user_id: current_user.id)
+    event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
+    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
 
-    @schedules = (reservations + off_schedules).each_with_object([]) do |reservation_and_off_schedule, schedules|
-      if reservation_and_off_schedule.is_a?(Reservation)
-        schedules << ReservationSerializer.new(reservation_and_off_schedule).attributes_hash
+    @schedules = (reservations + off_schedules + booking_page_holder_schedules).each_with_object([]) do |schedule, schedules|
+      if schedule.is_a?(Reservation)
+        schedules << ReservationSerializer.new(schedule).attributes_hash
+      elsif schedule.is_a?(BookingPageSpecialDate)
+        schedules << BookingPageSpecialDateSerializer.new(schedule).attributes_hash
       else
-        schedules << OffScheduleSerializer.new(reservation_and_off_schedule).attributes_hash
+        schedules << OffScheduleSerializer.new(schedule).attributes_hash
       end
     end.sort_by! { |option| option[:time] }
 

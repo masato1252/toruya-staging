@@ -76,6 +76,47 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
+      # validate_booking_events
+      context "when there other event booking pages had overlap times" do
+        before { FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1) }
+        let(:other_event_booking_page) { FactoryBot.create(:booking_page, event_booking: true, shop: shop) }
+        let!(:other_booking_page_special_date) { FactoryBot.create(:booking_page_special_date, start_at: start_time, end_at: end_time, booking_page: other_event_booking_page) }
+        let(:booking_page) { FactoryBot.create(:booking_page, event_booking: true, shop: shop) }
+
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(
+            shop: shop, date: date,
+            menu_id: menu1.id,
+            menu_required_time: menu1.minutes,
+            staff_ids: [staff1.id],
+            start_time: start_time,
+            end_time: end_time,
+            booking_page: booking_page
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:booking_page]).to include(error: :overlap_event_booking, overlap_special_date_booking_page_ids: [other_event_booking_page.id])
+        end
+
+        context 'when the booking was the event booking page had the same special dates' do
+          let!(:booking_page_special_date) { FactoryBot.create(:booking_page_special_date, start_at: start_time, end_at: end_time, booking_page: booking_page) }
+
+          it "is valid" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu1.id,
+              menu_required_time: menu1.minutes,
+              staff_ids: [staff1.id],
+              start_time: start_time,
+              end_time: end_time,
+              booking_page: other_event_booking_page
+            )
+
+            expect(outcome).to be_valid
+          end
+        end
+      end
+
       # validate_interval_time
       context "when there are reservations overlap in interval time" do
         context "when the overlap happened on previous reservation" do
