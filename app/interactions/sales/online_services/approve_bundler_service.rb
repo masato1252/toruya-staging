@@ -26,6 +26,12 @@ module Sales
           compose(Sales::OnlineServices::ApproveBundledService, bundled_service: bundled_service, bundler_relation: relation)
         end
 
+        bundled_online_service_ids = relation.online_service.bundled_services.pluck(:online_service_id)
+        active_bundled_relation_ids = OnlineServiceCustomerRelation.current.active.where(online_service_id: bundled_online_service_ids, customer_id: relation.customer_id).pluck(:id)
+        if active_bundled_relation_ids.length != relation.online_service.bundled_services.count
+          Rollbar.errors("Not all bundled services were active", active_bundled_relation_ids: active_bundled_relation_ids, bundled_online_service_ids: bundled_online_service_ids)
+        end
+
         Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer, bundler_service_id: relation.online_service_id)
 
         relation
