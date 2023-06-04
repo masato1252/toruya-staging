@@ -9,7 +9,9 @@ class CustomerPayments::SubscribeBundlerOnlineService < ActiveInteraction::Base
     outcome = OnlineServiceCustomerRelations::Subscribe.run(relation: online_service_customer_relation)
 
     if outcome.valid?
-      Sales::OnlineServices::ApproveBundlerService.run(relation: online_service_customer_relation)
+      bundler_outcome = Sales::OnlineServices::ApproveBundlerService.run(relation: online_service_customer_relation)
+
+      errors.merge!(bundler_outcome.errors)
     else
       errors.merge!(outcome.errors)
 
