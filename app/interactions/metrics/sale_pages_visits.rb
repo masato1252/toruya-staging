@@ -45,7 +45,7 @@ module Metrics
       end
 
       visit_scope = Ahoy::Visit.where(owner_id: user.id, product_type: "SalePage")
-      metrics = sale_page_ids.each_with_object({}) do |product_id, h|
+      metrics = sale_pages.map(&:id).each_with_object({}) do |product_id, h|
         start_time = metric_start_time
 
         h[product_id] = 4.times.map do |i|
@@ -78,7 +78,6 @@ module Metrics
       #  "2022/12/01(木) ~ 2022/12/08(木)"
       # ]
 
-      sale_pages = SalePage.where(id: sale_page_ids).includes(:product).to_a
       datasets = metrics.map do |product_id, visit_counts|
         product = sale_pages.find { |page| page.id == product_id }
 
@@ -113,6 +112,12 @@ module Metrics
         labels: labels,
         datasets: datasets
       }
+    end
+
+    private
+
+    def sale_pages
+      @sale_pages ||= SalePage.active.where(id: sale_page_ids).includes(:product).to_a
     end
   end
 end

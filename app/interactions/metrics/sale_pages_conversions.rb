@@ -41,12 +41,11 @@ module Metrics
       end
 
       visit_scope = Ahoy::Visit.where(owner_id: user.id, product_type: "SalePage")
-      sale_pages = SalePage.where(id: sale_page_ids).includes(:product).to_a
 
-      metrics = sale_page_ids.map do |product_id|
+      metrics = sale_pages.map(&:id).map do |product_id|
         sale_page = sale_pages.find { |page| page.id == product_id }
         visit_count = visit_scope.where(product_id: product_id, product_type: "SalePage").where(started_at: metric_period).count
-        relations = OnlineServiceCustomerRelation.where(created_at: metric_period, sale_page_id: product_id).current
+        relations = OnlineServiceCustomerRelation.where(created_at: metric_period, sale_page_id: product_id, bundled_service_id: nil).current
         relations = relations.where(online_service_id: online_service_id) if online_service_id
 
         purchased_count =
@@ -73,6 +72,10 @@ module Metrics
 
     def helpers
       ApplicationController.helpers
+    end
+
+    def sale_pages
+      @sale_pages ||= SalePage.active.where(id: sale_page_ids).includes(:product).to_a
     end
   end
 end
