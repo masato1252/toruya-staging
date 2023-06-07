@@ -28,7 +28,7 @@ module Customers
           last_reservation_customer = ReservationCustomer.where(Arel.sql(sql)).order("id").last
           last_reservation_customer = matched_customers.find { |matched_customer| matched_customer.id == last_reservation_customer&.customer_id }
 
-          last_reservation_customer || matched_customers.sort_by(&:id).last
+          last_reservation_customer || matched_customers.select { |customer| customer.social_customer.present? }&.sort_by(&:id)&.last || matched_customers.sort_by(&:id).last
         end
 
       {
