@@ -30,24 +30,37 @@ module UserBotAuthorization
 
   def where_user_are
     if params[:user_id].present? && params[:shop_id].present?
-      Rollbar.error("Super user changed scenario1", request: request) if current_user&.id == 5 && params[:user_id].to_i == 2
+      if current_user&.id == 5 && params[:user_id].to_i == 2
+        flash.now[:info] = "Business owner changing"
+        Rollbar.error("Super user changed scenario1", request: request)
+      end
 
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
       write_user_bot_cookies(:current_shop_id, params[:shop_id])
     elsif params[:shop_id].present?
-      Rollbar.error("Super user changed scenario2", request: request) if current_user&.id == 5 && Shop.find(params[:shop_id])&.user_id == 2
+      if current_user&.id == 5 && Shop.find(params[:shop_id])&.user_id == 2
+        flash.now[:info] = "Business owner changing"
+        Rollbar.error("Super user changed scenario2", request: request)
+      end
 
       write_user_bot_cookies(:current_shop_id, params[:shop_id])
       write_user_bot_cookies(:current_super_user_id, Shop.find(params[:shop_id]).user_id)
     elsif params[:user_id].present?
-      Rollbar.error("Super user changed scenario3", request: request) if current_user&.id == 5 && params[:user_id].to_i == 2
+      if current_user&.id == 5 && params[:user_id].to_i == 2
+        flash.now[:info] = "Business owner changing"
+        Rollbar.error("Super user changed scenario3", request: request)
+      end
 
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
       write_user_bot_cookies(:current_shop_id, nil) if User.find(params[:user_id]).shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
     elsif params[:social_service_user_id].present?
       social_user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id])
+
       if social_user.user_id
-        Rollbar.error("Super user changed scenario4", request: request) if current_user&.id == 5 && social_user.user_id == 2
+        if current_user&.id == 5 && social_user.user_id == 2
+          flash.now[:info] = "Business owner changing"
+          Rollbar.error("Super user changed scenario4", request: request)
+        end
         write_user_bot_cookies(:current_super_user_id, social_user.user_id)
       end
     else
