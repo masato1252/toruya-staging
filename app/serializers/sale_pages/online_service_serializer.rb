@@ -22,7 +22,7 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   end
 
   attribute :purchase_url do |object|
-    Rails.application.routes.url_helpers.new_lines_customers_online_service_purchases_url(slug: object.slug)
+    Rails.application.routes.url_helpers.new_lines_customers_online_service_purchases_url(slug: object.slug, _from: "sale_page")
   end
 
   attribute :company_info do |object|

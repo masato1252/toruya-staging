@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersController
+  include MixpanelHelper
   before_action :sale_page
   skip_before_action :track_ahoy_visit, only: [:create]
   skip_before_action :verify_authenticity_token, only: [:create]
+  before_action :tracking_from, only: [:new]
 
   def new
     if @sale_page.ended?

@@ -4,9 +4,11 @@ require "mixpanel_tracker"
 require "flow_backtracer"
 
 class BookingPagesController < ActionController::Base
+  include MixpanelHelper
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
   protect_from_forgery with: :exception, prepend: true
   skip_before_action :verify_authenticity_token, only: [:booking_reservation]
+  before_action :tracking_from, only: [:show]
 
   layout "booking"
 
@@ -41,16 +43,10 @@ class BookingPagesController < ActionController::Base
 
     if @customer
       Current.customer = @customer
-
-      if params[:social_user_id]
-        Current.mixpanel_extra_properties = { from: "customer_bot" }
-      else
-        Current.mixpanel_extra_properties = { from: "directly" }
-      end
     else
       Current.customer = params[:social_user_id] || SecureRandom.uuid
-      Current.mixpanel_extra_properties = { from: params[:from], from_id: params[:from_id] }
     end
+
 
     active_booking_options_number = @booking_page.booking_options.active.count
     @has_active_booking_option =  !active_booking_options_number.zero?
