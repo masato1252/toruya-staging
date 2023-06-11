@@ -3,7 +3,7 @@
 class SalePages::BookingPageSerializer < SalePageSerializer
   attribute :product do |object|
     ::BookingPageSerializer.new(object.product).attributes_hash.merge!(
-      url: Rails.application.routes.url_helpers.booking_page_url(object.product.slug, _from: "sale_page", _from_id: object.id)
+      url: Rails.application.routes.url_helpers.booking_page_url(object.product.slug)
     )
   end
 
