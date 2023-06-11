@@ -99,7 +99,7 @@ const PriceBlock = ({
     }
 
     return (
-      <a href={purchase_url ? `${purchase_url}/${payment_type}` : "#"} className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank">
+      <a href={purchase_url ? `${purchase_url}/${payment_type}?_from=sale_page` : "#"} className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank">
         <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
       </a>
     )
