@@ -2,7 +2,7 @@
 
 class CompanyInfoSerializer
   include JSONAPI::Serializer
-  attribute :id, :email, :template_variables, :logo_url
+  attribute :id, :email, :template_variables, :logo_url, :website
 
   attribute :type do |object|
     object.class.name
