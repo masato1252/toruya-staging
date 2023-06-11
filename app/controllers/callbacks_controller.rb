@@ -93,7 +93,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
       queries = {
         status: outcome.valid?,
         social_user_id: outcome.result.social_user_id
-      }.merge(param)
+      }.merge(param, Rack::Utils.parse_nested_query(uri.query || {}))
+
       uri.query = URI.encode_www_form(queries)
 
       if outcome.result.social_user_id.present?

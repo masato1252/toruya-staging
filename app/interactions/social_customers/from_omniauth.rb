@@ -12,14 +12,17 @@ module SocialCustomers
     def execute
       social_account = SocialAccount.find(MessageEncryptor.decrypt(param["oauth_social_account_id"]))
 
-      social_customer =
-        SocialCustomer
-        .create_with(social_rich_menu_key: SocialAccounts::RichMenus::CustomerReservations::KEY)
-        .find_or_create_by(
-          user_id: social_account.user_id,
-          social_user_id: auth.uid,
-          social_account_id: social_account.id
-      )
+      social_customer = nil
+      with_retry do
+        social_customer =
+          SocialCustomer
+          .create_with(social_rich_menu_key: SocialAccounts::RichMenus::CustomerReservations::KEY)
+          .find_or_create_by(
+            user_id: social_account.user_id,
+            social_user_id: auth.uid,
+            social_account_id: social_account.id
+          )
+      end
       social_customer.social_user_name = auth.info.name
       social_customer.social_user_picture_url = auth.info.image
 
