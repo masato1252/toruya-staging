@@ -11,7 +11,7 @@ amazon_development:
   access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
   secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   region: ap-southeast-1
-  bucket: toruya-development
+  bucket: development-toruya
 
 amazon_staging:
   service: S3
