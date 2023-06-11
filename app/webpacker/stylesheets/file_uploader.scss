@@ -6,6 +6,10 @@
   min-height: 90px;
   display: flex;
   align-items: center;
+
+  .fileContainer .chooseFileButton {
+    border-radius: 30px;
+  }
 }
 
 .fileContainer {
