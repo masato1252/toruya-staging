@@ -21,7 +21,10 @@ RSpec.describe SocialMessages::Recent do
       outcome
 
       expect(social_message.reload.readed_at).not_to be_nil
-      expect(outcome.result).to eq([MessageSerializer.new(social_message).attributes_hash])
+      expect(outcome.result).to eq(
+        messages: [MessageSerializer.new(social_message).attributes_hash],
+        has_more_messages: false
+      )
     end
 
     context "when this customer got multiple social customers(line account)" do
@@ -37,7 +40,10 @@ RSpec.describe SocialMessages::Recent do
 
         expect(social_message.reload.readed_at).not_to be_nil
         expect(social_message2.reload.readed_at).not_to be_nil
-        expect(outcome.result).to eq([MessageSerializer.new(social_message).attributes_hash, MessageSerializer.new(social_message2).attributes_hash])
+        expect(outcome.result).to eq(
+          messages: [MessageSerializer.new(social_message).attributes_hash, MessageSerializer.new(social_message2).attributes_hash],
+          has_more_messages: false
+        )
       end
     end
   end

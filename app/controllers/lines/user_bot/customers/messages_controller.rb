@@ -9,9 +9,11 @@ class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardCon
       return
     end
 
-    social_messages = SocialMessages::Recent.run!(customer: @customer)
-
-    render json: { messages: social_messages }
+    render json: SocialMessages::Recent.run!(
+      customer: @customer,
+      oldest_message_at: params[:oldest_message_at],
+      oldest_message_id: params[:oldest_message_id]
+    )
   end
 
   private
