@@ -20,7 +20,8 @@ module Notifiers
         def deliverable
           expected_schedule_time &&
             custom_message.receiver_ids.exclude?(receiver.id.to_s) &&
-            receiver.online_service_customer_relations.where(online_service: custom_message.service).exists?
+            (product_relation = receiver.online_service_customer_relations.where(online_service: custom_message.service).current.take) &&
+            !product_relation.upsell_sold?
         end
 
         def execute
