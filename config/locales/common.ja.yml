@@ -215,5 +215,6 @@ ja:
     item:
       list: 一覧表示
       new: 新規作成
+    no_connection: 未連携
   errors:
     invalid_url: 無効なURL

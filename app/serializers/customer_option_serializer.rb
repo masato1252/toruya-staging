@@ -26,4 +26,8 @@ class CustomerOptionSerializer
   attribute :socialUserId do |c|
     c.social_customer&.social_user_id
   end
+
+  attribute :socialUserName do |c|
+    c.social_customer&.social_user_name.presence || I18n.t("common.no_connection")
+  end
 end
