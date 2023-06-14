@@ -38,12 +38,30 @@ const BottomBar = () => {
 
 const UserBotCustomerMessages = () => {
   const { selected_customer, temp_new_messages } = useGlobalContext()
-  const messages = useCustomerMessages(selected_customer)
+  const { messages, has_more_messages, fetchMessages } = useCustomerMessages(selected_customer)
   const messageListRef = useRef(null);
+  let more_message_view;
 
   useLayoutEffect(() => {
     messageListRef.current.scrollIntoView({ behavior: "auto" });
-  }, [messages, temp_new_messages])
+  }, [messages[messages.length - 1], temp_new_messages])
+
+  if (has_more_messages === true) {
+    more_message_view = (
+      <div className="centerize">
+        <button className="btn btn-gray" onClick={fetchMessages}>
+          {I18n.t("action.load_more")}
+        </button>
+      </div>
+    )
+  }
+  else if (has_more_messages === false) {
+    more_message_view = (
+      <div className="centerize warning">
+        {I18n.t("action.no_more_message")}
+      </div>
+    )
+  }
 
   return (
     <div className="customer-view">
@@ -51,6 +69,7 @@ const UserBotCustomerMessages = () => {
       <CustomerNav />
 
       <div id="chat-box">
+        {more_message_view}
         {[...messages, ...temp_new_messages].map((message, index) => <Message message={message} key={`${message.id}-${index}`} />)}
         <div ref={messageListRef} />
         <CustomerMessageForm />

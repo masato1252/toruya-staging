@@ -204,12 +204,14 @@ const CustomerServices = {
       responseType: "json"
     })
   },
-  messages: (id) => {
+  messages: (id, oldest_message_at = null, oldest_message_id = null) => {
     return request({
       method: "GET",
       url: Routes.lines_user_bot_customer_messages_path({format: "json"}),
       params: {
         id,
+        oldest_message_at,
+        oldest_message_id
       },
       responseType: "json"
     })
