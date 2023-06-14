@@ -36,6 +36,7 @@ module BookingPages
       #   {"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"},
       #   {"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"}
       # [
+      string :booking_type, default: nil # event_booking, only_special_dates_booking, and any
       array :special_dates, default: nil do
         hash do
           string :start_at_date_part
@@ -47,13 +48,14 @@ module BookingPages
     end
 
     def execute
+      booking_type = attrs.delete(:booking_type)
       booking_options = attrs.delete(:options)
       new_option = attrs.delete(:new_option)
       special_dates = attrs.delete(:special_dates)
 
       booking_page.transaction do
         case update_attribute
-        when "special_dates"
+        when "booking_type"
           booking_page.booking_page_special_dates.destroy_all
 
           if special_dates
@@ -61,6 +63,7 @@ module BookingPages
               booking_page.booking_page_special_dates.create(date_times)
             end
           end
+          booking_page.update(event_booking: booking_type == "event_booking")
         when "new_option"
           booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_option).uniq )
         when "start_at"

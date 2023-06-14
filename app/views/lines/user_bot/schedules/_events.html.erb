@@ -31,6 +31,23 @@
           <% end %>
         </div>
       <% end %>
+    <% elsif schedule[:type] == :booking_page_holder_schedule %>
+      <a href="#"  data-toggle="modal" data-target=<%= "#booking-page-holder-modal-#{schedule[:id]}" %> class="modal-link booking-page-holder event">
+        <div class="state"></div>
+        <div class="time">
+          <div class="start-time">
+            <%= schedule[:start_time] %>
+          </div>
+          <div class="start-time">
+            <%= schedule[:end_time] %>
+          </div>
+        </div>
+        <div class="content">
+          <%= schedule[:reason] %>
+        </div>
+        <div class="info"></div>
+        <div class="extra"></div>
+      </a>
     <% else %>
       <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule[:id]}" %> class="modal-link event">
         <div class="state"></div>
@@ -60,6 +77,18 @@
     start_time_time_part: schedule[:start_time],
     end_time_time_part: schedule[:end_time],
     calendarfield_prefix: "temp_leaving_schedule_#{schedule[:id]}",
+    reason: schedule[:reason]
+  %>
+<% end %>
+
+<% schedules.select{|s| s[:type] == :booking_page_holder_schedule }.each do |schedule| %>
+  <%= render "reservations/holder_modal",
+    date: date,
+    modal_id: "booking-page-holder-modal-#{schedule[:id]}",
+    booking_page_id: schedule[:booking_page_id],
+    start_time_date_part: schedule[:start_date],
+    start_time_time_part: schedule[:start_time],
+    end_time_time_part: schedule[:end_time],
     reason: schedule[:reason]
   %>
 <% end %>

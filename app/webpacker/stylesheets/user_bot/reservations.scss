@@ -10,6 +10,10 @@
     display: table-row;
     background-color: #ffffff;
 
+    &.booking-page-holder {
+      background-color: $gray-background-1;
+    }
+
     .year {
       display: table-cell;
       max-width:1px; overflow:visible;

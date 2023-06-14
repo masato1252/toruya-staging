@@ -78,6 +78,7 @@ ja:
       diagnosis: 登録する
     verify_line: 動作テスト
     purchase_info: 購入情報を見る
+    booking_page_edit: 予約ページを編集
   common:
     no_service_warning_html: <h1>利用店舗様の都合によりご利用いただけません。<br>店舗責任者にお問い合わせください。</h1>
     processing: 送信中
@@ -212,6 +213,7 @@ ja:
     copy: コピー
     right_away_after_purchased: 購入後すぐ
     meeting_url: ミーティングURL
+    event: イベント
     item:
       list: 一覧表示
       new: 新規作成

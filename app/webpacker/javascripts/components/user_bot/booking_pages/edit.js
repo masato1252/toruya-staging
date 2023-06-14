@@ -35,7 +35,8 @@ const BookingPageEdit =({props}) => {
       booking_page_id: props.booking_page.id,
       data: _.assign(
         data,
-        { special_dates: data.had_special_date == "true" ? data.special_dates : [] },
+        { special_dates: _.includes(["event_booking", "only_special_dates_booking"], data.booking_type) ? data.special_dates : [] },
+        { booking_type: data.booking_type },
         { attribute: props.attribute },
         { booking_start_times: data.had_specific_booking_start_times === "true" ? data.booking_start_times : [] }
       )
@@ -59,7 +60,7 @@ const BookingPageEdit =({props}) => {
       line_sharing: String(props.booking_page.line_sharing),
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
       draft: String(props.booking_page.draft),
-      had_special_date: String(props.booking_page.had_special_date),
+      booking_type: props.booking_page.booking_type,
       had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
     }
   });
@@ -106,7 +107,7 @@ const BookingPageEdit =({props}) => {
           </select>
         )
         break
-      case "special_dates":
+      case "booking_type":
         return <AvailableBookingDatesField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />
         break;
       case "booking_time":

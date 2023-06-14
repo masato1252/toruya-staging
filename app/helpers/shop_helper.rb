@@ -35,8 +35,8 @@ module ShopHelper
   end
 
   def shop_logo(shop, size, extent: true, image_class: "")
-    if shop.logo.attached?
-      image_tag(shop_logo_url(shop, size), class: image_class)
+    if shop.logo.attached? && (url = shop_logo_url(shop, size))
+      image_tag(url, class: image_class)
     end
   end
 end

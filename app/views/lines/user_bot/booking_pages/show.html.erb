@@ -53,8 +53,8 @@
         <div class="field-group-header" id="special_dates"><%= I18n.t("settings.booking_page.form.booking_dates_available_booking_datetime") %></div>
         <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_dates_available_booking_date") %></div>
         <%= render "lines/user_bot/field_row",
-          path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :special_dates),
-          title: @booking_page.only_special_dates_booking? ? I18n.t("settings.booking_page.form.special_date_label") : I18n.t("settings.booking_page.form.default_available_dates_label")  %>
+          path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :booking_type),
+          title: I18n.t("settings.booking_page.form.#{@booking_page.booking_type}_label") %>
 
         <div class="field-header" id="interval"><%= I18n.t("settings.booking_page.form.interval_period_header") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :booking_time), title: @booking_page.specific_booking_start_times.present? ? @booking_page.specific_booking_start_times.join(", ") : "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %>
