@@ -156,7 +156,7 @@ RSpec.describe BookingPages::Update do
     end
 
     context "update_attribute is special_dates" do
-      let(:update_attribute) { "special_dates" }
+      let(:update_attribute) { "booking_type" }
 
       before do
         args[:attrs][:special_dates] = [
