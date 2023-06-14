@@ -85,6 +85,10 @@ const UserBotCustomerInfoView = () => {
 
       <div className="customer-info">
         <dl className="address">
+          <dt>{i18n.line_info}</dt>
+          <dd>{selected_customer.socialUserName}</dd>
+        </dl>
+        <dl className="address">
           <dt>{i18n.address}</dt>
           <dd>{selected_customer.addressDetails?.city}</dd>
         </dl>

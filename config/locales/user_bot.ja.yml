@@ -65,6 +65,7 @@ ja:
         delete_confirmation_message: 顧客データは削除したら元には戻せません。
         unread_confirmation_message: 未読メッセージとして後ほど通知しますか？
         reply_later: 後で通知
+        line_info: LINE名
       settings:
         dashboard:
           title: アカウント設定
