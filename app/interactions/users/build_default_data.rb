@@ -20,6 +20,10 @@ module Users
           trial_expired_date: Time.current.advance(days: Plan::TRIAL_PLAN_THRESHOLD_DAYS).to_date
         )
       end
+
+      unless user.user_metric
+        user.build_user_metric
+      end
     end
   end
 end

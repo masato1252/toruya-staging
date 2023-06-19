@@ -6,8 +6,10 @@
 #  id               :bigint           not null, primary key
 #  content_type     :string
 #  message_type     :integer
+#  nth_time         :integer
 #  raw_content      :text
 #  readed_at        :datetime
+#  scenario         :string
 #  schedule_at      :datetime
 #  sent_at          :datetime
 #  created_at       :datetime         not null
@@ -18,7 +20,7 @@
 #
 # Indexes
 #
-#  social_user_message_index  (social_user_id)
+#  message_scenario_index  (social_user_id,scenario)
 #
 
 class SocialUserMessage < ApplicationRecord

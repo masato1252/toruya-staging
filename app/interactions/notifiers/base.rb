@@ -39,6 +39,7 @@ module Notifiers
     class_attribute :deliver_by_email, instance_writer: false
     class_attribute :mailer, instance_writer: false
     class_attribute :mailer_method, instance_writer: false
+    class_attribute :nth_time_scenario, instance_writer: false
     delegate :email, to: :target_email_user
     delegate :phone_number, to: :target_phone_user
 
@@ -107,6 +108,10 @@ module Notifiers
       SocialUserMessages::Create::TEXT_TYPE
     end
 
+    def message_scenario; end
+
+    def nth_time_message; end
+
     def send_line
       case target_line_user
       when SocialUser
@@ -114,6 +119,8 @@ module Notifiers
           social_user: target_line_user,
           content: message,
           content_type: content_type,
+          scenario: message_scenario,
+          nth_time: nth_time_message,
           message_type: SocialMessage.message_types[:bot],
           readed: true
         )
@@ -182,6 +189,20 @@ module Notifiers
     def receiver_should_be_staff_account
       unless receiver.is_a?(StaffAccount)
         errors.add(:receiver, :should_be_staff_account)
+      end
+    end
+
+    def nth_time
+      support_nth_times = CustomMessage.where(scenario: nth_time_scenario).order(nth_time: :desc).distinct(:nth_time).pluck(:nth_time)
+      expected_nth_time = SocialUserMessage.where(social_user: receiver, scenario: nth_time_scenario).distinct(:nth_time).count + 1
+
+      # [4, 2, 1]
+      #
+      # If expected_nth_time is 5 => return 4
+      # If expected_nth_time is 4 => return 4
+      # If expected_nth_time is 3 => return 2
+      support_nth_times.each do |nth|
+        return nth if expected_nth_time >= nth
       end
     end
   end

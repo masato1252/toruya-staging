@@ -4,9 +4,10 @@ module CustomMessages
   module Users
     class Next < ActiveInteraction::Base
       object :custom_message, default: nil
-      string :scenario, default: nil
       object :receiver, class: User
       boolean :schedule_right_away, default: false
+      string :scenario, default: nil
+      integer :nth_time, default: nil
 
       validate :validate_next_scenario
       validates :scenario, inclusion: { in: CustomMessages::Users::Template::SCENARIOS }, allow_nil: true
@@ -39,7 +40,7 @@ module CustomMessages
       def next_custom_messages
         return @next_custom_messages if defined?(@next_custom_messages)
 
-        @next_custom_messages = CustomMessage.scenario_of(nil, user_scenario)
+        @next_custom_messages = CustomMessage.scenario_of(nil, user_scenario, nth_time_message).order(content_type: :desc)
         after_days = @next_custom_messages.where("after_days > ?", custom_message&.after_days || -100).first&.after_days
 
         @next_custom_messages =
@@ -60,6 +61,10 @@ module CustomMessages
         if !custom_message && !scenario
           errors.add(:custom_message, :invalid_params)
         end
+
+        if (!nth_time && scenario) || (nth_time && !scenario)
+          errors.add(:custom_message, :invalid_params)
+        end
       end
 
       def scenario_start_at
@@ -73,6 +78,10 @@ module CustomMessages
 
       def user_scenario
         scenario || custom_message.scenario
+      end
+
+      def nth_time_message
+        nth_time || custom_message.nth_time
       end
     end
   end

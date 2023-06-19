@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe CustomMessages::Users::Next do
   let(:prev_custom_message) { FactoryBot.create(:custom_message, :user_signed_up_scenario, service: service, after_days: prev_after_days) }
   let(:scenario) { nil }
+  let(:nth_time) { nil }
   let(:prev_after_days) { nil }
   let(:service) { nil }
   let(:receiver) { FactoryBot.create(:user) }
@@ -14,7 +15,8 @@ RSpec.describe CustomMessages::Users::Next do
     {
       receiver: receiver,
       custom_message: prev_custom_message,
-      scenario: scenario
+      scenario: scenario,
+      nth_time: nth_time
     }
   end
   let(:outcome) { described_class.run(args) }
@@ -125,11 +127,13 @@ RSpec.describe CustomMessages::Users::Next do
       let(:new_custom_message_after_days ) { 0 }
       let(:custom_message) { nil }
       let(:scenario) { CustomMessages::Users::Template::USER_SIGN_UP }
+      let(:nth_time) { 1 }
       let(:args) do
         {
           receiver: receiver,
           product: service,
-          scenario: scenario
+          scenario: scenario,
+          nth_time: nth_time
         }
       end
 
@@ -160,6 +164,8 @@ RSpec.describe CustomMessages::Users::Next do
           })
 
           outcome
+
+          expect(outcome).to be_valid
         end
       end
 
@@ -168,6 +174,8 @@ RSpec.describe CustomMessages::Users::Next do
           expect(Notifiers::Users::CustomMessages::Send).not_to receive(:perform_at)
 
           outcome
+
+          expect(outcome).to be_valid
         end
       end
     end

@@ -14,6 +14,8 @@ module SocialUserMessages
     object :social_user
     string :content
     string :content_type, default: TEXT_TYPE
+    string :scenario, default: nil
+    integer :nth_time, default: nil
     boolean :readed
     integer :message_type
     time :schedule_at, default: nil
@@ -28,6 +30,8 @@ module SocialUserMessages
         readed_at: readed ? Time.zone.now : nil,
         message_type: message_type,
         content_type: content_type,
+        scenario: scenario,
+        nth_time: nth_time,
         schedule_at: schedule_at
       )
 

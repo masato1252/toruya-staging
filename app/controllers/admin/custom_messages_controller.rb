@@ -5,11 +5,11 @@ module Admin
     def scenarios; end
 
     def scenario
-      @sequence_messages = CustomMessage.scenario_of(nil, params[:scenario]).order("after_days ASC")
+      @sequence_messages = CustomMessage.where(scenario: params[:scenario]).order("nth_time ASC, after_days ASC")
     end
 
     def new
-      @message = CustomMessage.new(content_type: CustomMessage::TEXT_TYPE, after_days: 3, flex_template: "video_description_card")
+      @message = CustomMessage.new(content_type: CustomMessage::TEXT_TYPE, after_days: 3, flex_template: "video_description_card", nth_time: 1)
     end
 
     def edit
@@ -25,6 +25,7 @@ module Admin
           content: message_content,
           flex_template: params[:flex_template],
           after_days: params[:after_days],
+          nth_time: params[:nth_time],
           content_type: params[:content_type],
         )
 
@@ -37,6 +38,7 @@ module Admin
         content: message_content,
         flex_template: params[:flex_template],
         after_days: params[:after_days],
+        nth_time: params[:nth_time],
         content_type: params[:content_type]
       )
 

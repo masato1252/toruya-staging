@@ -2,7 +2,7 @@
 
 class CustomMessageSerializer
   include JSONAPI::Serializer
-  attribute :id, :content, :after_days, :content_type, :flex_template, :scenario, :service_id, :service_type
+  attribute :id, :content, :after_days, :content_type, :flex_template, :scenario, :service_id, :service_type, :nth_time
 
   attribute :picture_url do |custom_message|
     if custom_message.picture.attached?

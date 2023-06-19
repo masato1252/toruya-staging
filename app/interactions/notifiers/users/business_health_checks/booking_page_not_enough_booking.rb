@@ -2,8 +2,8 @@
 
 module Notifiers
   module Users
-    module Customers
-      class FirstManuallyCreation < Base
+    module BusinessHealthChecks
+      class BookingPageNotEnoughBooking < Base
         deliver_by :line
 
         # No default message, since all Toruya message was setup by us manually
@@ -20,7 +20,7 @@ module Notifiers
           )
         end
 
-        self.nth_time_scenario = ::CustomMessages::Users::Template::FIRST_CUSTOMER_DATA_MANUALLY_CREATED
+        self.nth_time_scenario = ::CustomMessages::Users::Template::BOOKING_PAGE_NOT_ENOUGH_BOOKING
       end
     end
   end

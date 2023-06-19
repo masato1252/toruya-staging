@@ -2,8 +2,8 @@
 
 module Notifiers
   module Users
-    module Customers
-      class FirstManuallyCreation < Base
+    module BusinessHealthChecks
+      class NoNewPurchase < Base
         deliver_by :line
 
         # No default message, since all Toruya message was setup by us manually
@@ -20,7 +20,7 @@ module Notifiers
           )
         end
 
-        self.nth_time_scenario = ::CustomMessages::Users::Template::FIRST_CUSTOMER_DATA_MANUALLY_CREATED
+        self.nth_time_scenario = ::CustomMessages::Users::Template::NO_NEW_PURCHASE
       end
     end
   end

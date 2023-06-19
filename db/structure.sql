@@ -984,7 +984,8 @@ CREATE TABLE public.custom_messages (
     receiver_ids character varying[] DEFAULT '{}'::character varying[],
     flex_template character varying,
     content_type character varying DEFAULT 'text'::character varying,
-    before_minutes integer
+    before_minutes integer,
+    nth_time integer DEFAULT 1
 );
 
 
@@ -2470,7 +2471,9 @@ CREATE TABLE public.social_user_messages (
     schedule_at timestamp without time zone,
     sent_at timestamp without time zone,
     content_type character varying,
-    slack_message_id character varying
+    slack_message_id character varying,
+    scenario character varying,
+    nth_time integer
 );
 
 
@@ -2780,6 +2783,36 @@ CREATE TABLE public.tags (
     updated_at timestamp without time zone,
     taggings_count integer DEFAULT 0
 );
+
+
+--
+-- Name: user_metrics; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_metrics (
+    id bigint NOT NULL,
+    user_id bigint,
+    content json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: user_metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_metrics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_metrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_metrics_id_seq OWNED BY public.user_metrics.id;
 
 
 --
@@ -3409,6 +3442,13 @@ ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: user_metrics id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_metrics ALTER COLUMN id SET DEFAULT nextval('public.user_metrics_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4035,6 +4075,14 @@ ALTER TABLE ONLY public.taggings
 
 ALTER TABLE ONLY public.tags
     ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_metrics user_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_metrics
+    ADD CONSTRAINT user_metrics_pkey PRIMARY KEY (id);
 
 
 --
@@ -4748,6 +4796,13 @@ CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
 
 
 --
+-- Name: index_user_metrics_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_metrics_on_user_id ON public.user_metrics USING btree (user_id);
+
+
+--
 -- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4829,6 +4884,13 @@ CREATE INDEX jp_name_index ON public.customers USING btree (user_id, phonetic_la
 --
 
 CREATE INDEX menu_reservation_setting_rules_index ON public.menu_reservation_setting_rules USING btree (menu_id, reservation_type, start_date, end_date);
+
+
+--
+-- Name: message_scenario_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX message_scenario_index ON public.social_user_messages USING btree (social_user_id, scenario);
 
 
 --
@@ -4962,13 +5024,6 @@ CREATE UNIQUE INDEX social_customer_unique_index ON public.social_customers USIN
 --
 
 CREATE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
-
-
---
--- Name: social_user_message_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX social_user_message_index ON public.social_user_messages USING btree (social_user_id);
 
 
 --
@@ -5306,6 +5361,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230523072534'),
 ('20230523072535'),
 ('20230601140649'),
-('20230620094659');
+('20230616093508'),
+('20230620094659'),
+('20230621014139');
 
 

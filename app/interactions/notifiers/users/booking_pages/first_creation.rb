@@ -14,10 +14,13 @@ module Notifiers
           super
 
           ::CustomMessages::Users::Next.run(
-            scenario: ::CustomMessages::Users::Template::FIRST_BOOKING_PAGE_CREATED,
-            receiver: receiver
+            scenario: nth_time_scenario,
+            receiver: receiver,
+            nth_time: nth_time
           )
         end
+
+        self.nth_time_scenario = ::CustomMessages::Users::Template::FIRST_BOOKING_PAGE_CREATED
       end
     end
   end

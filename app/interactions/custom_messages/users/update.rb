@@ -6,6 +6,7 @@ module CustomMessages
       object :custom_message
       string :content
       integer :after_days
+      integer :nth_time
       string :flex_template, default: nil
       string :content_type
 
@@ -13,6 +14,7 @@ module CustomMessages
         custom_message.assign_attributes(
           content: content,
           after_days: after_days,
+          nth_time: nth_time,
           flex_template: flex_template,
           content_type: content_type
         )

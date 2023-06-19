@@ -5,6 +5,7 @@ module CustomMessages
       string :scenario
       string :flex_template, default: nil
       integer :after_days
+      integer :nth_time
       string :content_type
 
       validates :after_days, numericality: { greater_than_or_equal_to: 0 }
@@ -14,6 +15,7 @@ module CustomMessages
           scenario: scenario,
           content: content,
           after_days: after_days,
+          nth_time: nth_time,
           flex_template: flex_template,
           content_type: content_type
         )

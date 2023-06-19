@@ -24,6 +24,10 @@ module Notifiers
             !product_relation.upsell_sold?
         end
 
+        def message_scenario
+          custom_message.scenario
+        end
+
         def execute
           super
 

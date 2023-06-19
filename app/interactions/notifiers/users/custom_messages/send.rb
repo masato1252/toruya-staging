@@ -23,18 +23,19 @@ module Notifiers
         end
 
         def deliverable
-          expected_schedule_time &&
-            custom_message.receiver_ids.exclude?(receiver.id.to_s)
+          expected_schedule_time
+        end
+
+        def message_scenario
+          custom_message.scenario
+        end
+
+        def nth_time_message
+          custom_message.nth_time
         end
 
         def execute
           super
-
-          if errors.blank?
-            custom_message.with_lock do
-              custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).map(&:to_s).uniq) if deliverable
-            end
-          end
 
           ::CustomMessages::Users::Next.run(
             custom_message: custom_message,
