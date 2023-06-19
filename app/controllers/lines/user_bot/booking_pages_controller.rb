@@ -33,7 +33,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     if @booking_page.booking_page_options.count > 1
-      @booking_page.booking_page_options.find_by(booking_option_id: params[:booking_option_id]).destroy
+      @booking_page.booking_page_options.find_by(booking_option_id: params[:booking_option_id])&.destroy
 
       redirect_to lines_user_bot_booking_page_path(@booking_page.id, anchor: "new_option")
     else

@@ -82,5 +82,23 @@ RSpec.describe Notifiers::Customers::CustomMessages::Send, :with_line do
         perform_enqueued_jobs
       end
     end
+
+    context "when this online service's upsell sale page was sold" do
+      let(:upsell_sale_page) { FactoryBot.create(:sale_page, :online_service, user: receiver.user) }
+      let!(:sold_sale_page_relation) { FactoryBot.create(:online_service_customer_relation, :free, sale_page: upsell_sale_page, customer: receiver) }
+      before do
+        relation.online_service.update(sale_page: upsell_sale_page)
+      end
+
+      it "doesn't send line but still schedule next message" do
+        expect(CustomMessages::Customers::Next).to receive(:run)
+
+        expect {
+          outcome
+        }.not_to change {
+          SocialMessage.where(social_customer: receiver.social_customer).count
+        }
+      end
+    end
   end
 end
