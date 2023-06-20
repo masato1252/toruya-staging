@@ -609,5 +609,21 @@ RSpec.describe Booking::CreateReservation do
         expect(reservation_customer).to be_payment_paid
       end
     end
+
+    context "when sale_page_id exists" do
+      let(:sale_page_id) { 1 }
+
+      it "tracks this reservation with customer's sale page" do
+        args[:sale_page_id] = sale_page_id
+        args[:customer_info] = { "id": customer.id }
+        args[:present_customer_info] = { "id": customer.id }
+
+        outcome
+
+        result = outcome.result
+        reservation_customer = ReservationCustomer.find_by!(reservation: result[:reservation], customer: result[:customer])
+        expect(reservation_customer.sale_page_id).to eq(sale_page_id)
+      end
+    end
   end
 end

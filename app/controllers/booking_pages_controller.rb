@@ -79,7 +79,8 @@ class BookingPagesController < ActionController::Base
       customer_info: params[:customer_info].to_h,
       present_customer_info: params[:present_customer_info].to_h,
       social_user_id: params[:social_user_id],
-      stripe_token: params[:stripe_token]
+      stripe_token: params[:stripe_token],
+      sale_page_id: params[:sale_page_id]
     )
 
     if outcome.valid?

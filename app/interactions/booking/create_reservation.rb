@@ -68,6 +68,7 @@ module Booking
     end
     # present_customer_info and customer_info format is the same
     hash :present_customer_info, strip: false, default: nil
+    integer :sale_page_id, default: nil
 
     validate :validates_enough_customer_data
 
@@ -210,22 +211,26 @@ module Booking
                         booking_at: Time.current,
                         details: {
                           new_customer_info: new_customer_info.attributes.compact,
-                        }
+                        },
+                        sale_page_id: reservation_customer.sale_page_id.presence || sale_page_id
                       )
                     else
-                      ReservationCustomers::Create.run(reservation: same_content_reservation, customer_data: {
-                        customer_id: customer.id,
-                        state: "pending",
-                        booking_page_id: booking_page.id,
-                        booking_option_id: booking_option_id,
-                        booking_amount_cents: booking_option.amount.fractional,
-                        booking_amount_currency: booking_option.amount.currency.to_s,
-                        tax_include: booking_option.tax_include,
-                        booking_at: Time.current,
-                        details: {
-                          new_customer_info: new_customer_info.attributes.compact,
-                        }
-                      })
+                      ReservationCustomers::Create.run(
+                        reservation: same_content_reservation,
+                        customer_data: {
+                          customer_id: customer.id,
+                          state: "pending",
+                          booking_page_id: booking_page.id,
+                          booking_option_id: booking_option_id,
+                          booking_amount_cents: booking_option.amount.fractional,
+                          booking_amount_currency: booking_option.amount.currency.to_s,
+                          tax_include: booking_option.tax_include,
+                          booking_at: Time.current,
+                          details: {
+                            new_customer_info: new_customer_info.attributes.compact,
+                          },
+                          sale_page_id: sale_page_id
+                        })
                       same_content_reservation.count_of_customers = same_content_reservation.reservation_customers.active.count
                       same_content_reservation.save
                     end
@@ -249,7 +254,8 @@ module Booking
                           booking_at: Time.current,
                           details: {
                             new_customer_info: new_customer_info.attributes.compact,
-                          }
+                          },
+                          sale_page_id: sale_page_id
                         }],
                         menu_staffs_list: valid_menus_spots,
                         staff_states: staff_states,

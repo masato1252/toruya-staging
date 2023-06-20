@@ -1859,7 +1859,8 @@ CREATE TABLE public.reservation_customers (
     tax_include boolean,
     booking_at timestamp without time zone,
     details jsonb,
-    payment_state integer DEFAULT 0
+    payment_state integer DEFAULT 0,
+    sale_page_id integer
 );
 
 
@@ -4516,6 +4517,13 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 
 
 --
+-- Name: index_reservation_customers_on_sale_page_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservation_customers_on_sale_page_id_and_created_at ON public.reservation_customers USING btree (sale_page_id, created_at);
+
+
+--
 -- Name: index_reservation_menus_on_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5297,6 +5305,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230517142813'),
 ('20230523072534'),
 ('20230523072535'),
-('20230601140649');
+('20230601140649'),
+('20230620094659');
 
 

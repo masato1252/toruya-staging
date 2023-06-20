@@ -47,10 +47,11 @@ module Metrics
         visit_count = visit_scope.where(product_id: product_id, product_type: "SalePage").where(started_at: metric_period).count
         relations = OnlineServiceCustomerRelation.where(created_at: metric_period, sale_page_id: product_id, bundled_service_id: nil).current
         relations = relations.where(online_service_id: online_service_id) if online_service_id
-        reservation_customer_relations = ReservationCustomer.where(created_at: metric_period, booking_page_id: sale_page.product_id) if sale_page&.is_booking_page?
 
         purchased_count, total_revenue =
           if sale_page&.is_booking_page?
+            reservation_customer_relations = ReservationCustomer.where(created_at: metric_period, sale_page_id: sale_page.id)
+            reservation_customer_relations = ReservationCustomer.where(created_at: metric_period, booking_page_id: sale_page.product_id) if !reservation_customer_relations.exists?
             [reservation_customer_relations.count, CustomerPayment.where(product_type: "ReservationCustomer", product_id: reservation_customer_relations.select(:id)).completed.sum(:amount_cents).to_i]
           else
             [relations.count, CustomerPayment.where(product_type: "OnlineServiceCustomerRelation", product_id: relations.select(:id)).completed.sum(:amount_cents).to_i]

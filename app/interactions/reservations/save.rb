@@ -23,6 +23,7 @@ module Reservations
           #   new_customer_info: { ... },
           # }
           hash :details, strip: false, default: nil
+          integer :sale_page_id, default: nil
         end
       end
       array :menu_staffs_list do
