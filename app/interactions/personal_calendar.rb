@@ -17,8 +17,6 @@ class PersonalCalendar < ActiveInteraction::Base
       holidays: [],
     }
 
-    date_range = date.beginning_of_month.beginning_of_day..date.end_of_month.end_of_day
-
     working_shop_options.each do |option|
       shop = option.shop
       staff = option.staff
@@ -40,11 +38,27 @@ class PersonalCalendar < ActiveInteraction::Base
     end
 
     reservation_dates += Users::ReservationDates.run!(user: user, all_shop_ids: all_shop_ids, date_range: date_range)
+    event_booking_page_ids = BookingPage.where(shop_id: all_shop_ids, event_booking: true).pluck(:id)
+    reservation_dates += BookingPageSpecialDate.where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", beginning_of_month, end_of_month).pluck(:start_at).map(&:to_date)
 
     return [
       compose(CalendarSchedules::Create, rules: working_dates, date_range: date_range),
       reservation_dates.uniq,
       user.custom_schedules.where(start_time: date_range).pluck(:start_time).map(&:to_date)
     ]
+  end
+
+  private
+
+  def beginning_of_month
+    @beginning_of_month ||= date.beginning_of_month.beginning_of_day
+  end
+
+  def end_of_month
+    @end_of_month ||= date.end_of_month.end_of_day
+  end
+
+  def date_range
+    @date_range ||= beginning_of_month..end_of_month
   end
 end
