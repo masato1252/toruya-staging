@@ -90,7 +90,7 @@ const UserBotCustomerInfoView = () => {
         </dl>
         <dl className="address">
           <dt>{i18n.address}</dt>
-          <dd>{selected_customer.addressDetails?.city}</dd>
+          <dd>{selected_customer.addressDetails?.region}{selected_customer.addressDetails?.city}</dd>
         </dl>
         <dl className="phone">
           <dt>{i18n.phone_number}</dt>
