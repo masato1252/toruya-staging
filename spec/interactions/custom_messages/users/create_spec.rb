@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe CustomMessages::Users::Create do
   let(:content) { "foo" }
   let(:scenario) { CustomMessages::Users::Template::USER_SIGN_UP }
+  let(:nth_time) { 1 }
   let(:after_days) { 0 }
   let(:content_type) { CustomMessage::TEXT_TYPE }
   let(:args) do
@@ -12,6 +13,7 @@ RSpec.describe CustomMessages::Users::Create do
       content: content,
       scenario: scenario,
       after_days: after_days,
+      nth_time: nth_time,
       content_type: content_type
     }
   end
@@ -22,7 +24,7 @@ RSpec.describe CustomMessages::Users::Create do
       expect {
         outcome
       }.to change {
-        CustomMessage.where(service: nil, scenario: scenario, after_days: after_days).count
+        CustomMessage.where(service: nil, scenario: scenario, after_days: after_days, nth_time: nth_time).count
       }.by(1)
 
       message = CustomMessage.find_by(service: nil, scenario: scenario, after_days: after_days)

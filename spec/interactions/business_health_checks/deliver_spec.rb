@@ -6,7 +6,8 @@ RSpec.describe BusinessHealthChecks::Deliver do
   let(:subscription) { FactoryBot.create(:subscription) }
   let(:user) { subscription.user }
   let(:social_user) { FactoryBot.create(:social_user, user: user) }
-  let!(:sale_page) { FactoryBot.create(:sale_page, :booking_page, user: user) }
+  let(:booking_page) { FactoryBot.create(:booking_page, user: user, created_at: 31.days.ago) }
+  let!(:sale_page) { FactoryBot.create(:sale_page, user: user, product: booking_page) }
   before { user.create_user_metric }
 
   let(:args) do

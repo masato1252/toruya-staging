@@ -16,7 +16,6 @@ module SocialMessages
     file :image, default: nil
     string :content
     string :content_type, default: TEXT_TYPE
-    string :message_scenario, default: nil
     boolean :readed
     integer :message_type
     time :schedule_at, default: nil
@@ -36,7 +35,6 @@ module SocialMessages
         sent_at: is_message_from_customer || !send_line ? Time.current : nil,
         schedule_at: schedule_at,
         message_type: message_type,
-        message_scenario: message_scenario,
         broadcast: broadcast
       )
 

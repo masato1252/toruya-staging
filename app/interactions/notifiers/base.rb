@@ -194,7 +194,7 @@ module Notifiers
 
     def nth_time
       support_nth_times = CustomMessage.where(scenario: nth_time_scenario).order(nth_time: :desc).distinct(:nth_time).pluck(:nth_time)
-      expected_nth_time = SocialUserMessage.where(social_user: receiver, scenario: nth_time_scenario).distinct(:nth_time).count + 1
+      expected_nth_time = SocialUserMessage.where(social_user: target_line_user, scenario: nth_time_scenario).distinct(:nth_time).count + 1
 
       # [4, 2, 1]
       #

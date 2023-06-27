@@ -28,7 +28,7 @@ module BusinessHealthChecks
     end
 
     def enough_sale_and_booking_page
-      @enough_sale_and_booking_page ||= user.sale_pages.exists? && user.booking_pages.where("created_at > ?", 30.days.ago).exists?
+      @enough_sale_and_booking_page ||= user.sale_pages.exists? && user.booking_pages.active.where("created_at < ?", 30.days.ago).exists?
     end
 
     def booking_page_visit_scope
