@@ -31,6 +31,7 @@ class SocialUserMessage < ApplicationRecord
   has_one_attached :image
 
   scope :unread, -> { where(readed_at: nil) }
+  scope :sent, -> { where.not(sent_at: nil) }
 
   enum message_type: {
     bot: 0,
