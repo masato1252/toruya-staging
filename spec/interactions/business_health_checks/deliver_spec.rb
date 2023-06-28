@@ -137,14 +137,15 @@ RSpec.describe BusinessHealthChecks::Deliver do
         outcome
       end
 
-      context "when no new purchased for a period(no purchase in 60 days)" do
-        it "delivers no new purchase reminder message" do
-          FactoryBot.create(:reservation_customer, reservation: FactoryBot.create(:reservation, user: user), booking_page: sale_page.product, created_at: 61.days.ago)
-          allow(Notifiers::Users::BusinessHealthChecks::NoNewPurchase).to receive(:run)
+      context "when no new customer for a period(no purchase in 60 days)" do
+        it "delivers no new customer reminder message" do
+          FactoryBot.create(:reservation_customer, reservation: FactoryBot.create(:reservation, user: user), booking_page: sale_page.product)
+          FactoryBot.create(:social_customer, user: user, created_at: 61.days.ago)
+          allow(Notifiers::Users::BusinessHealthChecks::NoNewCustomer).to receive(:run)
 
           outcome
 
-          expect(Notifiers::Users::BusinessHealthChecks::NoNewPurchase).to have_received(:run).with(
+          expect(Notifiers::Users::BusinessHealthChecks::NoNewCustomer).to have_received(:run).with(
             receiver: user
           )
         end

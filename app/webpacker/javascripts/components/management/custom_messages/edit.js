@@ -79,7 +79,7 @@ const CustomMessageEdit =({props}) => {
       case "first_customer_data_manually_created":
       case "booking_page_not_enough_page_view":
       case "booking_page_not_enough_booking":
-      case "no_new_purchase":
+      case "no_new_customer":
       case "user_sign_up":
         return (
           <>

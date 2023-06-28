@@ -4,7 +4,7 @@ module BusinessHealthChecks
   class Deliver < ActiveInteraction::Base
     BOOKING_PAGE_VISIT_CRITERIA = 10
     BOOKING_PAGE_CONVERSION_RATE_CRITERIA = 0.1
-    NO_NEW_PURCHASE_CHECKING_PERIOD = 60
+    NO_NEW_CUSTOMER_CHECKING_PERIOD = 60
     object :subscription
 
     def execute
@@ -12,8 +12,8 @@ module BusinessHealthChecks
         Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughPageView.run(receiver: user)
       elsif enough_sale_and_booking_page && any_booking_page_visit_ever_over_criteria && !any_booking_page_conversion_rate_ever_over_criteria
         Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughBooking.run(receiver: user)
-      elsif enough_sale_and_booking_page && any_booking_page_visit_ever_over_criteria && any_booking_page_conversion_rate_ever_over_criteria && !any_new_booking_for_a_period
-        Notifiers::Users::BusinessHealthChecks::NoNewPurchase.run(receiver: user)
+      elsif enough_sale_and_booking_page && any_booking_page_visit_ever_over_criteria && any_booking_page_conversion_rate_ever_over_criteria && !any_new_customer_for_a_period
+        Notifiers::Users::BusinessHealthChecks::NoNewCustomer.run(receiver: user)
       end
     end
 
@@ -67,9 +67,8 @@ module BusinessHealthChecks
         end
     end
 
-    def any_new_booking_for_a_period
-      ReservationCustomer.where(reservation_id: reservation_ids).where.not(booking_page_id: nil).where(created_at: NO_NEW_PURCHASE_CHECKING_PERIOD.days.ago..).exists? ||
-        OnlineServiceCustomerRelation.sold.where(online_service_id: user.online_service_ids).where(created_at: NO_NEW_PURCHASE_CHECKING_PERIOD.days.ago..).exists?
+    def any_new_customer_for_a_period
+      SocialCustomer.where(user_id: user.id).where.not(customer_id: nil).where(created_at: NO_NEW_CUSTOMER_CHECKING_PERIOD.days.ago..).exists?
     end
   end
 end
