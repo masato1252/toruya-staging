@@ -13,6 +13,6 @@
 class UserMetric < ApplicationRecord
   store_accessor :content, %i[
     any_booking_page_visit_ever_over_criteria
-    any_booking_page_conversion_rate_ever_over_criteria
+    any_booking_page_page_view_and_conversion_rate_ever_over_criteria
   ]
 end

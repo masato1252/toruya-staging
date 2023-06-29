@@ -10,9 +10,9 @@ module BusinessHealthChecks
     def execute
       if enough_sale_and_booking_page && !any_booking_page_visit_ever_over_criteria
         Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughPageView.run(receiver: user)
-      elsif enough_sale_and_booking_page && any_booking_page_visit_ever_over_criteria && !any_booking_page_conversion_rate_ever_over_criteria
+      elsif enough_sale_and_booking_page && any_booking_page_visit_ever_over_criteria && !any_booking_page_page_view_and_conversion_rate_ever_over_criteria
         Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughBooking.run(receiver: user)
-      elsif enough_sale_and_booking_page && any_booking_page_visit_ever_over_criteria && any_booking_page_conversion_rate_ever_over_criteria && !any_new_customer_for_a_period
+      elsif enough_sale_and_booking_page && any_booking_page_visit_ever_over_criteria && any_booking_page_page_view_and_conversion_rate_ever_over_criteria && !any_new_customer_for_a_period
         Notifiers::Users::BusinessHealthChecks::NoNewCustomer.run(receiver: user)
       end
     end
@@ -44,7 +44,7 @@ module BusinessHealthChecks
         end
     end
 
-    def any_booking_page_conversion_rate_ever_over_criteria
+    def any_booking_page_page_view_and_conversion_rate_ever_over_criteria
       # booking_page_id_with_reservations_count order by count
       # {
       #   $booking_page_id => $reservations_count,
@@ -52,13 +52,16 @@ module BusinessHealthChecks
       #   2 => 121,
       #   ...
       # }
-      @any_booking_page_conversion_rate_ever_over_criteria ||=
-        user.user_metric.any_booking_page_conversion_rate_ever_over_criteria || begin
+      @any_booking_page_page_view_and_conversion_rate_ever_over_criteria ||=
+        user.user_metric.any_booking_page_page_view_and_conversion_rate_ever_over_criteria || begin
       booking_page_id_with_reservations_count = ReservationCustomer.where(reservation_id: reservation_ids).where.not(booking_page_id: nil).group(:booking_page_id).order(count: :desc).count
       booking_page_id_with_visits_count = booking_page_visit_scope.where(product_id: booking_page_id_with_reservations_count.keys).group(:product_id).count
       booking_page_id_with_reservations_count.each do |booking_page_id, reservations_count|
-        if (reservations_count / booking_page_id_with_visits_count[booking_page_id].to_f) > BOOKING_PAGE_CONVERSION_RATE_CRITERIA
-          user.user_metric.update(any_booking_page_conversion_rate_ever_over_criteria: true)
+        booking_page_view = booking_page_id_with_visits_count[booking_page_id].to_f
+
+        if (reservations_count / booking_page_view) > BOOKING_PAGE_CONVERSION_RATE_CRITERIA &&
+            (booking_page_view > BOOKING_PAGE_VISIT_CRITERIA)
+          user.user_metric.update(any_booking_page_page_view_and_conversion_rate_ever_over_criteria: true)
           return true
         end
       end

@@ -151,5 +151,27 @@ RSpec.describe BusinessHealthChecks::Deliver do
         end
       end
     end
+
+    context 'when not the same page had enough booking page and conversion rate' do
+      before do
+        stub_const("BusinessHealthChecks::Deliver::BOOKING_PAGE_VISIT_CRITERIA", 1)
+        stub_const("BusinessHealthChecks::Deliver::BOOKING_PAGE_CONVERSION_RATE_CRITERIA", 0.01)
+        # 2 page views
+        FactoryBot.create(:ahoy_visit, product: sale_page.product, owner: user)
+        FactoryBot.create(:ahoy_visit, product: sale_page.product, owner: user)
+      end
+
+      it "delivers not enough booking first time reminder message" do
+        other_booking_page = FactoryBot.create(:booking_page, user: user, created_at: 31.days.ago)
+        FactoryBot.create(:reservation_customer, reservation: FactoryBot.create(:reservation, user: user), booking_page: other_booking_page)
+        allow(Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughBooking).to receive(:run)
+
+        outcome
+
+        expect(Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughBooking).to have_received(:run).with(
+          receiver: user
+        )
+      end
+    end
   end
 end
