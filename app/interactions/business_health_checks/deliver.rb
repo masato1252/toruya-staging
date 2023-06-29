@@ -58,6 +58,7 @@ module BusinessHealthChecks
       booking_page_id_with_visits_count = booking_page_visit_scope.where(product_id: booking_page_id_with_reservations_count.keys).group(:product_id).count
       booking_page_id_with_reservations_count.each do |booking_page_id, reservations_count|
         booking_page_view = booking_page_id_with_visits_count[booking_page_id].to_f
+        next if booking_page_view.zero?
 
         if (reservations_count / booking_page_view) > BOOKING_PAGE_CONVERSION_RATE_CRITERIA &&
             (booking_page_view > BOOKING_PAGE_VISIT_CRITERIA)
