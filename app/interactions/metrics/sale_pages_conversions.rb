@@ -51,7 +51,6 @@ module Metrics
         purchased_count, total_revenue =
           if sale_page&.is_booking_page?
             reservation_customer_relations = ReservationCustomer.where(created_at: metric_period, sale_page_id: sale_page.id)
-            reservation_customer_relations = ReservationCustomer.where(created_at: metric_period, booking_page_id: sale_page.product_id) if !reservation_customer_relations.exists?
             [reservation_customer_relations.count, CustomerPayment.where(product_type: "ReservationCustomer", product_id: reservation_customer_relations.select(:id)).completed.sum(:amount_cents).to_i]
           else
             [relations.count, CustomerPayment.where(product_type: "OnlineServiceCustomerRelation", product_id: relations.select(:id)).completed.sum(:amount_cents).to_i]
