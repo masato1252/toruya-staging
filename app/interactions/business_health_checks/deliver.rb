@@ -38,7 +38,7 @@ module BusinessHealthChecks
     def any_booking_page_visit_ever_over_criteria
       @any_booking_page_visit_ever_over_criteria ||=
         user.user_metric.any_booking_page_visit_ever_over_criteria || begin
-      matched = Ahoy::Visit.select(:product_id, :product_type).where(owner_id: user.id, product_type: "BookingPage").group(:product_id, :product_type).having("count(product_id) > #{BOOKING_PAGE_VISIT_CRITERIA}").exists?
+      matched = Ahoy::Visit.select(:product_id, :product_type).where(owner_id: user.id, product_type: "BookingPage").where(product_id: user.booking_page_ids).group(:product_id, :product_type).having("count(product_id) > #{BOOKING_PAGE_VISIT_CRITERIA}").exists?
       user.user_metric.update(any_booking_page_visit_ever_over_criteria: matched) if matched
       matched
         end
@@ -54,7 +54,7 @@ module BusinessHealthChecks
       # }
       @any_booking_page_page_view_and_conversion_rate_ever_over_criteria ||=
         user.user_metric.any_booking_page_page_view_and_conversion_rate_ever_over_criteria || begin
-      booking_page_id_with_reservations_count = ReservationCustomer.where(reservation_id: reservation_ids).where.not(booking_page_id: nil).group(:booking_page_id).order(count: :desc).count
+      booking_page_id_with_reservations_count = ReservationCustomer.where(reservation_id: reservation_ids).where(booking_page_id: user.booking_page_ids).group(:booking_page_id).order(count: :desc).count
       booking_page_id_with_visits_count = booking_page_visit_scope.where(product_id: booking_page_id_with_reservations_count.keys).group(:product_id).count
       booking_page_id_with_reservations_count.each do |booking_page_id, reservations_count|
         booking_page_view = booking_page_id_with_visits_count[booking_page_id].to_f
