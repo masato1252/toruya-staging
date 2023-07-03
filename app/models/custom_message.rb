@@ -8,6 +8,7 @@
 #  content        :text             not null
 #  content_type   :string           default("text")
 #  flex_template  :string
+#  nth_time       :integer          default(1)
 #  receiver_ids   :string           default([]), is an Array
 #  scenario       :string           not null
 #  service_type   :string
@@ -30,7 +31,7 @@ class CustomMessage < ApplicationRecord
   FLEX_TYPE = "flex"
   CONTENT_TYPES = [TEXT_TYPE, FLEX_TYPE].freeze
 
-  scope :scenario_of, -> (service, scenario) { where(service: service, scenario: scenario) }
+  scope :scenario_of, -> (service, scenario, nth_time = 1) { where(service: service, scenario: scenario, nth_time: nth_time) }
   scope :right_away, -> { where(after_days: nil) }
   scope :sequence, -> { where.not(after_days: nil) }
   validates :service_type, inclusion: { in: %w(OnlineService BookingPage Shop Lesson Episode) }, allow_nil: true

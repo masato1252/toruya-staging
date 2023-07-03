@@ -15,10 +15,13 @@ module Notifiers
         super
 
         ::CustomMessages::Users::Next.run(
-          scenario: ::CustomMessages::Users::Template::USER_SIGN_UP,
-          receiver: receiver
+          scenario: nth_time_scenario,
+          receiver: receiver,
+          nth_time: nth_time
         )
       end
+
+      self.nth_time_scenario = ::CustomMessages::Users::Template::USER_SIGN_UP
     end
   end
 end

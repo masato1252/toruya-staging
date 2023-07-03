@@ -8,8 +8,20 @@ module CustomMessages
       SECOND_BOOKING_PAGE_CREATED = "second_booking_page_created"
       ELEVENTH_BOOKING_PAGE_CREATED = "eleventh_booking_page_created"
       FIRST_CUSTOMER_DATA_MANUALLY_CREATED = "first_customer_data_manually_created"
+      BOOKING_PAGE_NOT_ENOUGH_PAGE_VIEW = "booking_page_not_enough_page_view"
+      BOOKING_PAGE_NOT_ENOUGH_BOOKING = "booking_page_not_enough_booking"
+      NO_NEW_CUSTOMER = "no_new_customer"
 
-      SCENARIOS = [USER_SIGN_UP, FIRST_BOOKING_PAGE_CREATED, SECOND_BOOKING_PAGE_CREATED, ELEVENTH_BOOKING_PAGE_CREATED, FIRST_CUSTOMER_DATA_MANUALLY_CREATED].freeze
+      SCENARIOS = [
+        USER_SIGN_UP,
+        FIRST_BOOKING_PAGE_CREATED,
+        SECOND_BOOKING_PAGE_CREATED,
+        ELEVENTH_BOOKING_PAGE_CREATED,
+        FIRST_CUSTOMER_DATA_MANUALLY_CREATED,
+        BOOKING_PAGE_NOT_ENOUGH_PAGE_VIEW,
+        BOOKING_PAGE_NOT_ENOUGH_BOOKING,
+        NO_NEW_CUSTOMER
+      ].freeze
 
       string :scenario
 

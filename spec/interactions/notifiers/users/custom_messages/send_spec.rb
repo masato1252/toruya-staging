@@ -27,11 +27,11 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
       }.to change {
         SocialUserMessage.where(
           social_user: receiver.social_user,
-          raw_content: content
+          raw_content: content,
+          scenario: custom_message.scenario,
+          nth_time: custom_message.nth_time
         ).count
       }.by(1)
-
-      expect(custom_message.receiver_ids).to eq([receiver.id.to_s])
     end
 
     context "when send line failed" do
@@ -44,27 +44,9 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
           outcome
         }.to change {
           SocialUserMessage.where(
-            social_user: receiver.social_user
+            social_user: receiver.social_user,
           ).count
         }.by(1)
-
-        expect(custom_message.receiver_ids).to eq([])
-      end
-    end
-
-    context "when this custom message was ever sent before" do
-      let(:custom_message) { FactoryBot.create(:custom_message, receiver_ids: [receiver.id]) }
-
-      it "doesn't send line but still schedule next message" do
-        expect(CustomMessages::Users::Next).to receive(:run)
-
-        expect {
-          outcome
-        }.not_to change {
-          SocialUserMessage.where(social_user: receiver.social_user).count
-        }
-
-        expect(custom_message.receiver_ids).to eq([receiver.id.to_s])
       end
     end
 

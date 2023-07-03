@@ -27,6 +27,7 @@
 # payment_state pending, and permission_state active might be purchased from bundler
 class OnlineServiceCustomerRelation < ApplicationRecord
   ACTIVE_STATES = %w[pending free paid partial_paid].freeze
+  SOLD_STATES = %w[paid partial_paid]
 
   include SayHi
   hi_track_event "online_service_purchased"
@@ -47,6 +48,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   scope :available, -> { active.current.where("expire_at is NULL or expire_at >= ?", Time.current) }
   scope :uncanceled, -> { where.not(payment_state: :canceled) }
   scope :current, -> { where(current: true) }
+  scope :sold, -> { where(payment_state: SOLD_STATES) }
 
   enum payment_state: {
     pending: 0,

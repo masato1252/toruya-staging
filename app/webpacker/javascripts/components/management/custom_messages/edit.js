@@ -19,6 +19,7 @@ const CustomMessageEdit =({props}) => {
   const textareaRef = useRef();
   const [content, setContent] = useState(props.message.content || "")
   const [after_days, setAfterDays] = useState(props.message.after_days)
+  const [nth_time, setNthTime] = useState(props.message.nth_time)
 
   useEffect(() => {
     textareaRef.current?.focus()
@@ -30,6 +31,7 @@ const CustomMessageEdit =({props}) => {
       data: _.assign( data, {
         content: content,
         after_days: after_days,
+        nth_time: nth_time,
         flex_template: data.flex_template
       })
     })
@@ -44,6 +46,7 @@ const CustomMessageEdit =({props}) => {
         data: _.assign( data, {
           content: content,
           after_days: after_days,
+          nth_time: nth_time,
           flex_template: data.flex_template
         })
       })
@@ -54,6 +57,7 @@ const CustomMessageEdit =({props}) => {
         data: _.assign( data, {
           content: content,
           after_days: after_days,
+          nth_time: nth_time,
           flex_template: data.flex_template
         })
       })
@@ -73,6 +77,9 @@ const CustomMessageEdit =({props}) => {
       case "second_booking_page_created":
       case "eleventh_booking_page_created":
       case "first_customer_data_manually_created":
+      case "booking_page_not_enough_page_view":
+      case "booking_page_not_enough_booking":
+      case "no_new_customer":
       case "user_sign_up":
         return (
           <>
@@ -87,6 +94,18 @@ const CustomMessageEdit =({props}) => {
                   }}
                 />
                 {I18n.t('common.day_word')}
+              </span>
+              <br />
+              <span>
+                {'nth time'}<br />
+                <input
+                  type='tel'
+                  value={nth_time}
+                  onChange={(event) => {
+                    setNthTime(event.target.value)
+                  }}
+                />
+                nth time
               </span>
             </div>
             <div className="field-row">

@@ -18,7 +18,7 @@ RSpec.describe Notifiers::Users::UserSignedUp do
       outcome
     end
 
-    context "when there is are some custom messages" do
+    context "when there are some custom messages" do
       it "schedules next custom_message" do
         FactoryBot.create(:custom_message, :user_signed_up_scenario, after_days: 0)
         FactoryBot.create(:custom_message, :user_signed_up_scenario, after_days: 0)
