@@ -7,6 +7,7 @@ FactoryBot.define do
     sequence(:last_name) { |n| "last_name#{n}" }
     sequence(:phonetic_first_name) { |n| "phonetic_first_name#{n}" }
     sequence(:phonetic_last_name) { |n| "phonetic_last_name#{n}" }
+    sequence(:phone_number) { |n| "1234567#{n}" }
     sequence(:zip_code) { |n| "zip_code#{n}" }
     sequence(:address) { |n| "address#{n}" }
     sequence(:website) { |n| "website#{n}" }

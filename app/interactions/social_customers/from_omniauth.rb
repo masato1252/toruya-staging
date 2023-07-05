@@ -32,7 +32,15 @@ module SocialCustomers
       social_customer.save
 
       if customer_is_owner?
-        SocialCustomers::CreateOwnerCustomer.run(social_customer: social_customer)
+        profile = social_customer.user.profile
+        SocialCustomers::FindOrCreateCustomer.run(
+          social_customer: social_customer,
+          customer_last_name: profile.last_name,
+          customer_first_name: profile.first_name,
+          customer_phonetic_last_name: profile.phonetic_last_name,
+          customer_phonetic_first_name: profile.phonetic_first_name,
+          customer_phone_number: profile.phone_number
+        )
       end
 
       if param["customer_id"]
