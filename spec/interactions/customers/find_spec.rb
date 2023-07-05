@@ -66,7 +66,7 @@ RSpec.describe Customers::Find do
         end
       end
 
-      context "when these customer ever had reservations" do
+      context "when these customers ever had reservations" do
         it "returns the recent reservation's customer" do
           customer1 = FactoryBot.create(
             :customer, user: user, first_name: first_name, last_name: last_name,
@@ -76,6 +76,25 @@ RSpec.describe Customers::Find do
             phone_numbers_details: ["type" => "mobile", "value" => phone_number])
           FactoryBot.create(:reservation_customer, customer: customer1)
           FactoryBot.create(:reservation_customer, customer: customer2)
+
+          result = outcome.result
+
+          expect(result).to eq({
+            found_customer: customer2,
+            matched_customers: [customer1, customer2]
+          })
+        end
+      end
+
+      context "when these customers connected with social customer" do
+        it "returns the recent reservation's customer" do
+          customer1 = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            phone_numbers_details: ["type" => "mobile", "value" => phone_number])
+          customer2 = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            phone_numbers_details: ["type" => "mobile", "value" => phone_number])
+          FactoryBot.create(:social_customer, customer: customer2)
 
           result = outcome.result
 
