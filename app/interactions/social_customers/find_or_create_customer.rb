@@ -35,6 +35,8 @@ module SocialCustomers
           social_customer: social_customer,
           customer: customer
         )
+
+        customer
       end
     end
   end

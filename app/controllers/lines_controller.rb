@@ -14,7 +14,7 @@ class LinesController < ActionController::Base
   def identify_shop_customer; end
 
   def customer_sign_in
-    SocialCustomers::FindOrCreateCustomer.run(
+    customer = SocialCustomers::FindOrCreateCustomer.run!(
       social_customer: social_customer,
       customer_last_name: params[:customer_last_name],
       customer_first_name: params[:customer_first_name],
@@ -37,7 +37,7 @@ class LinesController < ActionController::Base
     )
 
     if identification_code
-      SocialCustomers::FindOrCreateCustomer.run(
+      customer = SocialCustomers::FindOrCreateCustomer.run!(
         social_customer: social_customer,
         customer_last_name: params[:customer_last_name],
         customer_first_name: params[:customer_first_name],
