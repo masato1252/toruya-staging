@@ -22,7 +22,7 @@ module SocialMessages
       elsif response.code == "401"
         errors.add(:social_message, :sent_failed_line_settings_wrong)
       elsif response.code == "429"
-        Notifiers::Users::Notifications::LineReachedMonthlyLimit.run(receiver: social_customer.user.social_user)
+        Notifiers::Users::Notifications::LineReachedMonthlyLimit.perform_debounce(receiver: social_customer.user.social_user)
 
         errors.add(:social_message, :sent_failed_line_limit)
       else
