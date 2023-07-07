@@ -27,8 +27,8 @@ ja:
     free:
       title: フリー
       period: ""
-      shop_can_set: 無制限
-      staff_in_charge: 無制限
+      shop_can_set: 1軒
+      staff_in_charge: 1名(オーナー)
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       booking_page_number: 無制限
@@ -44,8 +44,8 @@ ja:
     basic:
       title: ベーシック
       period: 月額
-      shop_can_set: 無制限
-      staff_in_charge: 無制限
+      shop_can_set: 1軒
+      staff_in_charge: 1名(オーナー)
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       booking_page_number: 無制限
@@ -61,8 +61,8 @@ ja:
     premium:
       title: プレミアム
       period: 月額
-      shop_can_set: 無制限
-      staff_in_charge: 無制限
+      shop_can_set: 1軒
+      staff_in_charge: 1名(オーナー)
       reservation_restriction: 無制限
       customer_number: 無制限
       booking_page_number: 無制限
