@@ -80,6 +80,7 @@ ja:
           sale_page_state: 販売ページがあります
           last_thirty_customers_payment: 過去30日間の売上
           web_details_page: 詳細はWEB版管理画面で
+          line_page_warning: LINE社のサイトに移動します。LINEデベロッパーズの仕様についてはLINE社にお問合せください。
         custom_messages:
           auto_message: 自動送信メッセージ(デフォルト)
         plans:
