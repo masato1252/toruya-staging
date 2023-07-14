@@ -121,13 +121,15 @@ namespace :analytic do
       google_worksheet = Google::Drive.spreadsheet(worksheet: 2)
       new_row_number = google_worksheet.num_rows + 1
 
-      last_month_paid_user_ids = Subscription.charge_required.where(created_at: ..Time.current.beginning_of_month).pluck(:user_id)
-      current_month_paid_user_ids = Subscription.charge_required.pluck(:user_id)
+      last_month_paid_user_ids = SubscriptionCharge.where(created_at: 2.month.ago..1.month.ago).pluck(:user_id).uniq
+      current_month_paid_user_ids = SubscriptionCharge.where(created_at: 1.month.ago..Time.current).pluck(:user_id).uniq
       new_row_data = [
         Time.current.to_fs(:date),
         Subscription.charge_required.count,
         (current_month_paid_user_ids - last_month_paid_user_ids).length,
-        (last_month_paid_user_ids - current_month_paid_user_ids).length
+        (last_month_paid_user_ids - current_month_paid_user_ids).length,
+        (current_month_paid_user_ids - last_month_paid_user_ids).join(", "),
+        (last_month_paid_user_ids - current_month_paid_user_ids).join(", ")
       ]
       new_row_data.each_with_index do |data, index|
         google_worksheet[new_row_number, index + 1] = data
