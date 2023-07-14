@@ -37,6 +37,8 @@ module SocialCustomers
         )
 
         customer
+      else
+        social_customer.customer
       end
     end
   end
