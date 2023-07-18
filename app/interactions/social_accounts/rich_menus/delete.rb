@@ -9,11 +9,18 @@ module SocialAccounts
 
       def execute
         response = nil
-        unless Rails.env.development?
-          response = ::LineClient.delete_rich_menu(social_rich_menu)
-        end
 
-        social_rich_menu.destroy if response.is_a?(Net::HTTPOK)
+        if Rails.env.development?
+          social_rich_menu.destroy
+        else
+          response = ::LineClient.delete_rich_menu(social_rich_menu)
+
+          if response.is_a?(Net::HTTPOK)
+            social_rich_menu.destroy
+          else
+            errors.add(:social_rich_menu, :delete_failed)
+          end
+        end
       end
     end
   end
