@@ -113,6 +113,8 @@ module Notifiers
     def nth_time_message; end
 
     def send_line
+      return if message.blank?
+
       case target_line_user
       when SocialUser
         outcome = SocialUserMessages::Create.run(

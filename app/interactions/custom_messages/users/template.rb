@@ -4,6 +4,7 @@ module CustomMessages
   module Users
     class Template < ActiveInteraction::Base
       USER_SIGN_UP = "user_sign_up"
+      LINE_SETTINGS_VERIFIED = "line_settings_verified"
       FIRST_BOOKING_PAGE_CREATED = "first_booking_page_created"
       SECOND_BOOKING_PAGE_CREATED = "second_booking_page_created"
       ELEVENTH_BOOKING_PAGE_CREATED = "eleventh_booking_page_created"
@@ -14,6 +15,7 @@ module CustomMessages
 
       SCENARIOS = [
         USER_SIGN_UP,
+        LINE_SETTINGS_VERIFIED,
         FIRST_BOOKING_PAGE_CREATED,
         SECOND_BOOKING_PAGE_CREATED,
         ELEVENTH_BOOKING_PAGE_CREATED,
