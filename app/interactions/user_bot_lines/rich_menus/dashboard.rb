@@ -108,7 +108,7 @@ module UserBotLines
         }
 
         compose(
-          ::RichMenus::Create,
+          ::RichMenus::ToruyaOfficialCreate,
           body: body,
           key: KEY
         )

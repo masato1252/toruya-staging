@@ -136,6 +136,7 @@ class LineClient
     end
   end
 
+  # social_customer: SocialCustomer or SocialUser object
   def self.link_rich_menu(social_customer:, social_rich_menu:)
     error_handler(__method__, social_customer.id, social_rich_menu.id) do
       social_customer.client.link_user_rich_menu(social_customer.social_user_id, social_rich_menu.social_rich_menu_id)
