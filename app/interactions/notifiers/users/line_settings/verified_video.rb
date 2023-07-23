@@ -8,8 +8,8 @@ module Notifiers
 
         def message
           {
-            originalContentUrl: "https://toruya.com/user-bot/userbot_shopsettingdone202205.mp4",
-            previewImageUrl: "https://toruya.com/user-bot/userbot_shopsettingdone202205.png"
+            originalContentUrl: "https://toruya.com/user-bot/userbot_shopsettingdone.mp4",
+            previewImageUrl: "https://toruya.com/user-bot/userbot_shopsettingdone.png"
           }.to_json
         end
 
