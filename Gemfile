@@ -88,6 +88,7 @@ gem 'psych', '< 4' # https://stackoverflow.com/questions/71191685/visit-psych-no
 gem 'marginalia'
 gem "rqrcode", "~> 2.0"
 gem 'chunky_png'
+gem 'pycall'
 
 group :development, :test do
   gem "byebug", platform: :mri

@@ -465,6 +465,7 @@ GEM
     public_suffix (5.0.1)
     puma (4.3.12)
       nio4r (~> 2.0)
+    pycall (1.4.2)
     racc (1.6.2)
     rack (2.2.7)
     rack-cors (1.1.1)
@@ -723,6 +724,7 @@ DEPENDENCIES
   pry-byebug
   psych (< 4)
   puma (~> 4.3.3)
+  pycall
   rack-cors
   rack-mini-profiler
   rails (~> 7.0.4)
