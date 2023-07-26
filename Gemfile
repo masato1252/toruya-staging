@@ -88,6 +88,7 @@ gem "rqrcode", "~> 2.0"
 gem 'chunky_png'
 gem 'pycall'
 gem 'ruby-openai'
+gem 'pycall'
 
 group :development, :test do
   gem "byebug", platform: :mri
