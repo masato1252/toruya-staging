@@ -1,16 +1,12 @@
+# frozen_string_literal: true
+
+# https://api.slack.com/messaging/sending
 class SlackClient
-  include Singleton
+  include HTTParty
+  base_uri 'https://slack.com/api'
+  headers Authorization: "Bearer #{ENV['SLACK_API_TOKEN']}"
 
-  def initialize
-    @client = Slack::Web::Client.new
-  end
-
-
-  def send(*args)
-    @client.chat_postMessage(*args)
-  end
-
-  def self.send(*args)
-    instance.send(*args)
+  def self.send(args)
+    Hashie::Mash.new(post("/chat.postMessage", body: args))
   end
 end
