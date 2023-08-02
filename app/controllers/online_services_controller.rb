@@ -7,7 +7,8 @@ class OnlineServicesController < Lines::CustomersController
   skip_before_action :verify_authenticity_token, only: [:watch_lesson, :watch_episode]
 
   def show
-    @service_member = online_service.online_service_customer_relations.where(customer: current_customer).last
+    @service_member = online_service.online_service_customer_relations.where(customer: current_customer).active.last
+    @service_member ||= online_service.online_service_customer_relations.where(customer: current_customer).last
 
     @online_service_hash =
       if @online_service.course_like?
@@ -25,7 +26,9 @@ class OnlineServicesController < Lines::CustomersController
 
   def customer_status
     # authorize owner and customer
-    @relation = online_service.online_service_customer_relations.where(customer: current_customer).last
+    @relation = online_service.online_service_customer_relations.where(customer: current_customer).active.last
+    @relation ||= online_service.online_service_customer_relations.where(customer: current_customer).last
+
     @customer = current_customer
     @is_owner = false
     @able_to_change_credit_card = OnlineServiceCustomerRelations::ChangeCreditCardAbility.run!(relation: @relation)
