@@ -3,8 +3,7 @@
 module OnlineServices
   class CustomerPaymentsController < ::OnlineServicesController
     def new
-      @relation = online_service.online_service_customer_relations.where(customer: current_customer).active.last
-      @relation ||= online_service.online_service_customer_relations.where(customer: current_customer).last
+      @relation = online_service.online_service_customer_relations.where(customer: current_customer).last
       # subscription there is no order_id for each payment
       @price =
         if @relation.online_service.recurring_charge_required?
@@ -15,8 +14,7 @@ module OnlineServices
     end
 
     def create
-      relation = online_service.online_service_customer_relations.where(customer: current_customer).active.last
-      relation ||= online_service.online_service_customer_relations.where(customer: current_customer).last
+      relation = online_service.online_service_customer_relations.where(customer: current_customer).last
 
       Customers::StoreStripeCustomer.run!(customer: relation.customer, authorize_token: params[:token])
 
