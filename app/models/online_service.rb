@@ -234,7 +234,7 @@ class OnlineService < ApplicationRecord
   end
 
   def start_at_for_customer(customer)
-    start_at || self.online_service_customer_relations.find_by!(customer: customer).active_at
+    start_at || OnlineServiceCustomerRelation.where(online_service: self, customer: customer).first.active_at
   end
 
   def start_time

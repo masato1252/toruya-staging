@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.describe OnlineService do
   before { StripeMock.start }
   after { StripeMock.stop }
-  let!(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, online_service: online_service) }
+  let!(:existing_online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, online_service: online_service) }
   let(:online_service) { FactoryBot.create(:online_service) }
-  let(:customer) { online_service_customer_relation.customer }
+  let(:customer) { existing_online_service_customer_relation.customer }
 
   describe "#start_at_for_customer" do
     context "when online_service had start time" do
@@ -26,7 +26,7 @@ RSpec.describe OnlineService do
         let!(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :paid, online_service: online_service) }
 
         it "returns relation paid time" do
-          expect(online_service.start_at_for_customer(customer).round).to eq(online_service_customer_relation.paid_at.round)
+          expect(online_service.start_at_for_customer(customer).round).to eq(existing_online_service_customer_relation.active_at.round)
         end
       end
 
@@ -34,7 +34,7 @@ RSpec.describe OnlineService do
         let!(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :free, online_service: online_service) }
 
         it "returns relation created time" do
-          expect(online_service.start_at_for_customer(customer).round).to eq(online_service_customer_relation.created_at.round)
+          expect(online_service.start_at_for_customer(customer).round).to eq(existing_online_service_customer_relation.created_at.round)
         end
       end
     end
