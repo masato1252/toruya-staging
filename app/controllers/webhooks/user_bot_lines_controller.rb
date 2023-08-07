@@ -35,7 +35,7 @@ class Webhooks::UserBotLinesController < WebhooksController
   # }]
   def create
     Array.wrap(params[:events]).each do |event|
-      UserBotLines::HandleEvent.perform_later!(event: event.permit!.to_h)
+      UserBotLines::HandleEvent.run(event: event.permit!.to_h)
     end
 
     head :ok
