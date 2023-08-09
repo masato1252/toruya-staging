@@ -17,7 +17,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     end
 
     # Mix off custom schedules and reservations
-    off_schedules = CustomSchedule.closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).where(user_id: current_user.id)
+    off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: current_user.id)
     event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
     booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
 

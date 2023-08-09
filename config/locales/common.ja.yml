@@ -220,5 +220,7 @@ ja:
       list: 一覧表示
       new: 新規作成
     no_connection: 未連携
+    from_when: から
+    until_when: まで
   errors:
     invalid_url: 無効なURL

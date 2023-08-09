@@ -37,7 +37,7 @@ class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardControl
   private
 
   def custom_schedules_params
-    params.permit(custom_schedules: [:id, :shop_id, :open, :start_time_date_part, :start_time_time_part, :end_time_time_part, :reason, :_destroy])
+    params.permit(custom_schedules: [:id, :shop_id, :open, :start_time_date_part, :start_time_time_part, :end_time_date_part, :end_time_time_part, :reason, :_destroy])
   end
 
   def custom_schedule_permission(custom_schedule)

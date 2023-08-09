@@ -7,6 +7,7 @@ module CustomSchedules
       string :shop_id, default: nil
       string :start_time_date_part, default: nil
       string :start_time_time_part, default: nil
+      string :end_time_date_part, default: nil
       string :end_time_time_part, default: nil
       string :reason, default: nil
       boolean :open, default: false

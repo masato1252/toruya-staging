@@ -53,10 +53,10 @@
         <div class="state"></div>
         <div class="time">
           <div class="start-time">
-            <%= schedule[:start_time] %>
+            <%= schedule[:start_date] %> <%= schedule[:start_time_time_part] %>
           </div>
           <div class="start-time">
-            <%= schedule[:end_time] %>
+            <%= schedule[:end_date] %> <%= schedule[:end_time_time_part] %>
           </div>
         </div>
         <div class="content">
@@ -71,11 +71,13 @@
 <% #event used css table design, the off_date_modal used, either, that causes some conflict %>
 <% schedules.select{|s| s[:type] == :off_schedule }.each do |schedule| %>
   <%= render "reservations/off_date_modal",
-    date: date,
     modal_id: "off-date-modal-#{schedule[:id]}",
     custom_schedule_id: schedule[:id],
-    start_time_time_part: schedule[:start_time],
-    end_time_time_part: schedule[:end_time],
+    date: schedule[:start_time_date_part] || date,
+    start_time_date_part: schedule[:start_time_date_part],
+    start_time_time_part: schedule[:start_time_time_part],
+    end_time_date_part: schedule[:end_time_date_part],
+    end_time_time_part: schedule[:end_time_time_part],
     calendarfield_prefix: "temp_leaving_schedule_#{schedule[:id]}",
     reason: schedule[:reason]
   %>
