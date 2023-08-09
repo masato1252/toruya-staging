@@ -113,7 +113,7 @@ const CustomerMessageForm = () => {
           {submitting ? (
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
           ) : (
-            I18n.t("action.send")
+            schedule_at ? I18n.t("action.send_on_schedule") : I18n.t("action.send")
           )}
         </button>
       </div>
