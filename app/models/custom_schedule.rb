@@ -70,4 +70,8 @@ class CustomSchedule < ApplicationRecord
   def end_time_time
     end_time.to_fs(:time)
   end
+
+  def dates
+    (start_time.to_date..end_time.to_date).to_a
+  end
 end

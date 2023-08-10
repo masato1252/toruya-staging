@@ -44,7 +44,7 @@ class PersonalCalendar < ActiveInteraction::Base
     return [
       compose(CalendarSchedules::Create, rules: working_dates, date_range: date_range),
       reservation_dates.uniq,
-      user.custom_schedules.where(start_time: date_range).pluck(:start_time).map(&:to_date)
+      user.custom_schedules.where(start_time: date_range).map(&:dates).flatten.uniq
     ]
   end
 
