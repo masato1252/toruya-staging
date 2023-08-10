@@ -28,7 +28,7 @@ class CustomSchedule < ApplicationRecord
   # staff's open custom_schedules: Both shop_id, staff_id exist
   # staff's closed custom_schedules: Only staff_id exists, won't be created after https://github.com/ilake/kasaike/pull/457
 
-  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
+  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_date_part, :end_time_time_part
 
   belongs_to :user, optional: true
   belongs_to :shop, optional: true
@@ -50,8 +50,8 @@ class CustomSchedule < ApplicationRecord
   end
 
   def set_end_time
-    if start_time_date_part && end_time_time_part
-      self.end_time = Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
+    if (end_time_date_part || start_time_date_part) && end_time_time_part
+      self.end_time = Time.zone.parse("#{end_time_date_part || start_time_date_part}-#{end_time_time_part}")
     end
   end
 
@@ -61,5 +61,13 @@ class CustomSchedule < ApplicationRecord
 
   def start_time_time
     start_time.to_fs(:time)
+  end
+
+  def end_time_date
+    end_time.to_fs(:date)
+  end
+
+  def end_time_time
+    end_time.to_fs(:time)
   end
 end
