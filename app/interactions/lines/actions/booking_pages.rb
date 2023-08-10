@@ -56,7 +56,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
       if booking_page.started? && !booking_page.ended?
         LineMessages::FlexTemplateContent.two_header_card(
           title1: booking_page.title,
-          title2: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title).first(300),
+          title2: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title).first(100),
           action_templates: [
             LineActions::Uri.new(
               action: "book",
