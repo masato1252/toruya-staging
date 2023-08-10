@@ -17,6 +17,9 @@ module Images
         end
       rescue ActiveStorage::InvariableError
         Rails.application.routes.url_helpers.url_for(image)
+      rescue => e
+        Rollbar.error(e)
+        Rails.application.routes.url_helpers.url_for(image)
       end
     rescue
       nil
