@@ -5,7 +5,7 @@ module Seeders
     def self.seed!
       ::SaleTemplate.create(
         edit_body: [
-          { component: "input", name: "target", placeholder: "ターゲット", title: "この販売ページのターゲットは誰ですか？", type: "text" },
+          { component: "input", name: "target", placeholder: "ターゲット", title: "この宣伝用LPのターゲットは誰ですか？", type: "text" },
           { component: "word", content: "の" },
           { component: "input", type: "text", name: "problem", placeholder: "悩み", title: "ターゲットの悩みは何ですか？" },
           { component: "word", content: "を" },
@@ -32,7 +32,7 @@ module Seeders
         edit_body: [
           { component: "input", type: "text", name: "problem", placeholder: "悩み", title: "ターゲットの悩みは何ですか？" },
           { component: "word", content: "な" },
-          { component: "input", name: "target", placeholder: "ターゲット", title: "この販売ページのターゲットは誰ですか？", type: "text" },
+          { component: "input", name: "target", placeholder: "ターゲット", title: "この宣伝用LPのターゲットは誰ですか？", type: "text" },
           { component: "word", content: "が" },
           { component: "br" },
           { component: "input", type: "text", name: "result", placeholder: "解決後の状態", title: "この商品を利用することで\n悩みが解決されたターゲットは\nどんな未来を手に入れられますか？", font_size: "22px" },

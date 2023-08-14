@@ -629,8 +629,8 @@ ja:
         online_services/update:
           attributes:
             attrs:
-              bundle_services_subscription_required: "^サブスク販売している販売ページがあるため、少なくとも１つのサービスを「月額・年額の支払い期限まで」に設定してください。"
-              bundle_services_all_end_time_required: "^サブスク販売でない販売ページがあるため、「月額・年額の支払い期限まで」は設定できません。"
+              bundle_services_subscription_required: "^サブスク販売している宣伝用LPがあるため、少なくとも１つのサービスを「月額・年額の支払い期限まで」に設定してください。"
+              bundle_services_all_end_time_required: "^サブスク販売でない宣伝用LPがあるため、「月額・年額の支払い期限まで」は設定できません。"
         chapters/delete:
           attributes:
             chapter:

@@ -77,12 +77,12 @@ ja:
           line_rich_menu: リッチメニュー
           now_state: あなたは現在
           customer_info_state: 顧客情報があります
-          sale_page_state: 販売ページがあります
+          sale_page_state: 宣伝用LPがあります
           last_thirty_customers_payment: 過去30日間の売上
           web_details_page: 詳細はWEB版管理画面で
           line_page_warning: LINE社のサイトに移動します。LINEデベロッパーズの仕様についてはLINE社にお問合せください。
         custom_messages:
-          auto_message: 自動送信メッセージ(デフォルト)
+          auto_message: リマインド配信(デフォルト)
         plans:
           save: 選択する
           save_and_pay: 選択する
@@ -114,7 +114,7 @@ ja:
           shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
         company:
-          info_hint: 主に販売ページに表示されます。
+          info_hint: 主に宣伝用LPに表示されます。
         shop:
           shop_management: 店舗管理
           shop_info_label: 店舗情報
@@ -125,11 +125,12 @@ ja:
           website_label: Webサイト
           logo_label: 店舗ロゴ
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
-          info_hint: 販売ページや予約ページオンラインサービスで表示されます
+          info_hint: 宣伝用LPや予約ページオンラインサービスで表示されます
           phone_number_hint_html: "空欄にしておくと「お問合せ」メニューの<br>「電話する」ボタンが非表示になります。"
         custom_message:
           line_message_title: LINEメッセージ設定
-          auto_message_label: 自動送信メッセージ
+          auto_message_booking_label: リマインド配信
+          auto_message_service_label: ステップ配信
           send_message_label: 送信メッセージ
           content: メッセージ内容
           preview: プレビュー
@@ -399,12 +400,12 @@ ja:
         check_step: プレビュー
       metrics:
         title: アクセス解析
-        sale_page: 販売ページ
+        sale_page: 宣伝用LP
         visit_count: 表示数
         purchased_count: 登録数
         conversion_rate: 成約率
         total_revenue: 売上合計
-        weekly_sale_page_visit_count: 解析情報：販売ページ
+        weekly_sale_page_visit_count: 解析情報：宣伝用LP
         weekly_service_sale_page_visit_count: "解析情報：%{service_name}"
         no_data: 表示できるデータがありません
         active_customers_rate: アクティブ顧客率
@@ -452,13 +453,13 @@ ja:
         check_this_page: プレビュー
         want_to_create_a_new_menu: 新しいメニューが必要ですか？
         create_a_new_menu: 新しいメニューを作成する
-        create_a_sale_page: 販売ページを使うと ネットで予約募集できます
-        create_a_sale_page_btn: 販売ページを作成
+        create_a_sale_page: 宣伝用LPを使うと ネットで予約募集できます
+        create_a_sale_page_btn: 宣伝用LPを作成
       sales:
         modal:
-          title: 販売ページを確認
+          title: 宣伝用LPを確認
         edit:
-          sale_pages: 販売ページ
+          sale_pages: 宣伝用LP
           sales_about: ページ概要
           selling_product: 販売商品
           selling_start_at: 販売開始
@@ -468,7 +469,7 @@ ja:
           internal_name: 管理用タイトル
           normal_price: 通常価格
           selling_number: 販売個数
-          page_content: 販売ページコンテンツ
+          page_content: 宣伝用LPコンテンツ
           content_header: ヘッドライン
           content_video: ヘッダー動画
           why_content: 購入理由
@@ -477,7 +478,7 @@ ja:
           faq: よくある質問
           flow: サービスの流れ
           reviews: 顧客の声
-          delete_sale_page: 販売ページを削除
+          delete_sale_page: 宣伝用LPを削除
           flow_steps: "%{flow_number}ステップ"
           benefit_items: "%{benefit_number}項目"
           question_items: "%{question_number}問"
@@ -502,15 +503,15 @@ ja:
           normal_price_subtitle: 通常価格
           quantity_title: 販売方法
           quantity_subtitle: 販売個数
-          sale_template_variables_title: 販売ページコンテンツ
+          sale_template_variables_title: 宣伝用LPコンテンツ
           sale_template_variables_subtitle: ヘッドライン
-          introduction_video_url_title: 販売ページコンテンツ
+          introduction_video_url_title: 宣伝用LPコンテンツ
           introduction_video_url_subtitle: ヘッダー動画
-          why_content_title: 販売ページコンテンツ
+          why_content_title: 宣伝用LPコンテンツ
           why_content_subtitle: 購入理由
           published_title: 公開状況
           published_subtitle: 公開状況
-          benefits_title: 販売ページコンテンツ
+          benefits_title: 宣伝用LPコンテンツ
           benefits_subtitle: 利益
           benefits_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。
           benefits_content_header:
@@ -524,18 +525,18 @@ ja:
             membership: このサービスで出来ること
             bundler: このサービスで出来ること
           add_benefit: 項目を追加
-          staff_title: 販売ページコンテンツ
+          staff_title: 宣伝用LPコンテンツ
           staff_subtitle: 担当スタッフ
-          flow_title: 販売ページコンテンツ
+          flow_title: 宣伝用LPコンテンツ
           flow_subtitle: サービスの流れ
           flow_header: 予約からご利用までの 流れを説明してください。
-          faq_title: 販売ページコンテンツ
+          faq_title: 宣伝用LPコンテンツ
           faq_subtitle: よくある質問
           faq_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。
           faq_content_header: よくある質問
           faq_question_placeholder: 質問を入力
           faq_answer_placeholder: 質問への答えを入力
-          reviews_title: 販売ページコンテンツ
+          reviews_title: 宣伝用LPコンテンツ
           reviews_subtitle: 顧客の声
           reviews_header: 顧客の声を入力してください。
           review_content_header: お客様の声
@@ -545,11 +546,11 @@ ja:
           add_review: 顧客の声を追加
           customer_picture_requirement_tip: 顧客画像
         new:
-          what_to_sale: この販売ページの目的は何ですか？
+          what_to_sale: この宣伝用LPの目的は何ですか？
           online_booking: オンライン予約募集
-          add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の販売ページを作成
+          add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の宣伝用LPを作成
           online_service: オンラインサービス利用者募集
-          online_service_to_sell_more: オンラインサービスの利用者を増やす為の販売ページを作成
+          online_service_to_sell_more: オンラインサービスの利用者を増やす為の宣伝用LPを作成
         online_service_creation:
           service_step: 商品
           price_step: 販売価格
@@ -559,7 +560,7 @@ ja:
           sell_what_service: どのサービスを販売しますか？
           service_start: 利用開始
           service_end: 利用終了
-          sell_what_price: この販売ページでは、幾らで販売しますか？
+          sell_what_price: この宣伝用LPでは、幾らで販売しますか？
           sell_free_price: 無料で提供
           what_normal_price: このサービスに通常価格はありますか？
           normal_price_cost: はい、あります
@@ -588,7 +589,7 @@ ja:
           what_buyer_future: 予約メニューの売りや購入者の未来像を、文章で入力
           what_buyer_future_tip: ※改行１回で行替え、改行２回で段落替え
           staff_introduction: 主に担当するスタッフのプロフィール
-          staff_change_tip: ※この情報は全ての販売ページに反映されます。
+          staff_change_tip: ※この情報は全ての宣伝用LPに反映されます。
           introduce_who_do_this: 主に担当するスタッフを紹介してください
           content_picture_requirement_tip: "画像を設定\n 幅335px以上、高185px以上"
           staff_picture_requirement_tip: "画像を設定\n 幅180px以上 高さ180px以上"
@@ -601,10 +602,10 @@ ja:
             step1: "予約カレンダーから\n希望日時を選んで仮予約"
             step2: "予約が承認されたら予約完了"
             step3: "ご予約の当日は\n余裕をもってご来店ください"
-          sale_page_like_this: 販売ページは以下の様に表示されます
+          sale_page_like_this: 宣伝用LPは以下の様に表示されます
           sale_page_confirm_title_html: "最低限の設定ができましたので<br />設定内容を確認してください"
-          create_this_sale_page: この設定で販売ページを作成する
-          share_sale_page: 作成した販売ページをシェアしましょう
+          create_this_sale_page: この設定で宣伝用LPを作成する
+          share_sale_page: 作成した宣伝用LPをシェアしましょう
       online_service_creation:
         goals:
           collection:
@@ -691,11 +692,11 @@ ja:
         after_bought: 購入後
         after_n_days: 日後まで
         after_n_months: ヶ月後まで
-        what_want_to_upsell: このサービス利用後に購入をお勧めしたい アップセル販売ページはありますか？
+        what_want_to_upsell: このサービス利用後に購入をお勧めしたい アップセル宣伝用LPはありますか？
         select_upsell_product: セールスページを選択
         below_is_what_you_want: 以下のサービスを作成してよろしいですか？
         create_by_this_setting: この設定でサービスを作成する
-        create_a_sale_page: 作成したサービスを販売する 販売ページを作成しましょう
+        create_a_sale_page: 作成したサービスを販売する 宣伝用LPを作成しましょう
         stripe_required_warning: サービスを有料販売するには、Stripeアカウントの連携設定が必要です。
         sale_page_like_this: サービスページは以下の様に表示されます
         setup_line_bot_for_customers: "ご利用中サービス一覧の\n 表示内容を設定"
