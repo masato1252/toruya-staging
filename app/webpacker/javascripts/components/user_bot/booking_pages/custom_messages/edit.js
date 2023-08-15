@@ -139,7 +139,7 @@ const CustomMessageEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={I18n.t("user_bot.dashboards.settings.custom_message.auto_message_label")}
+        title={props.title || I18n.t("user_bot.dashboards.settings.custom_message.auto_message_booking_label")}
       />
       <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
       {renderCorrespondField()}

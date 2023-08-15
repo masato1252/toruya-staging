@@ -5,6 +5,7 @@
         props: {
           scenario: params[:scenario],
           previous_path: lines_user_bot_settings_shop_custom_messages_path(shop_id: @shop.id),
+          title: t("user_bot.dashboards.settings.custom_messages.auto_message"),
           message: {
             id: @message&.id,
             service_id: @shop.id,
