@@ -9,17 +9,19 @@ import os
 import openai
 import pinecone
 import pdb
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # https://gpt-index.readthedocs.io/en/latest/core_modules/data_modules/index/vector_store_guide.html
 # https://gpt-index.readthedocs.io/en/stable/examples/vector_stores/PineconeIndexDemo.html
 # https://www.youtube.com/watch?v=WKvAWub8VCU
 # https://docs.pinecone.io/docs/insert-data
 # https://stackoverflow.com/a/76466198/609365
-OPENAI_ACCESS_TOKEN = "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"
-os.environ["OPENAI_API_KEY"] = OPENAI_ACCESS_TOKEN
-openai.api_key = OPENAI_ACCESS_TOKEN
+os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
-PINECONE_API_KEY = "2539cb4c-90a3-4a13-96e6-6722605e13f3"
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 PINECONE_ENV = "asia-southeast1-gcp-free"
 os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
 os.environ["PINECONE_ENVIRONMENT"] = PINECONE_ENV
@@ -48,7 +50,6 @@ class WebDataPinecone:
         for document in documents:
             document.metadata['user_id'] = 1
 
-
         embed_model = OpenAIEmbedding(model='text-embedding-ada-002', embed_batch_size=100)
         service_context = ServiceContext.from_defaults(embed_model = embed_model)
         storage_context = StorageContext.from_defaults(vector_store = vector_store)
@@ -56,6 +57,3 @@ class WebDataPinecone:
         index = GPTVectorStoreIndex.from_documents(documents, storage_context = storage_context, service_context = service_context)
 
         return documents
-
-
-WebDataPinecone.build()
