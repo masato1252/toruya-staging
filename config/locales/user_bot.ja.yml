@@ -81,8 +81,6 @@ ja:
           last_thirty_customers_payment: 過去30日間の売上
           web_details_page: 詳細はWEB版管理画面で
           line_page_warning: LINE社のサイトに移動します。LINEデベロッパーズの仕様についてはLINE社にお問合せください。
-        custom_messages:
-          auto_message: リマインド配信(デフォルト)
         plans:
           save: 選択する
           save_and_pay: 選択する
@@ -127,7 +125,10 @@ ja:
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
           info_hint: 宣伝用LPや予約ページオンラインサービスで表示されます
           phone_number_hint_html: "空欄にしておくと「お問合せ」メニューの<br>「電話する」ボタンが非表示になります。"
+        custom_messages:
+          auto_message: リマインド配信(デフォルト)
         custom_message:
+          auto_message_label: 自動送信メッセージ
           line_message_title: LINEメッセージ設定
           auto_message_booking_label: リマインド配信
           auto_message_service_label: ステップ配信
@@ -460,7 +461,7 @@ ja:
           title: 宣伝用LPを確認
         edit:
           sale_pages: 宣伝用LP
-          sales_about: ページ概要
+          sales_about: LP概要
           selling_product: 販売商品
           selling_start_at: 販売開始
           selling_end_at: 販売終了
@@ -489,12 +490,12 @@ ja:
             published: 公開
             private: 限定公開
         form:
-          start_time_title: ページ概要
+          start_time_title: LP概要
           start_time_subtitle: "販売開始"
-          internal_name_title: ページ概要
+          internal_name_title: LP概要
           internal_name_subtitle: 管理用タイトル
           internal_name_desc_html: この設定内容は、管理用に使用するため<br>顧客には表示されません
-          end_time_title: ページ概要
+          end_time_title: LP概要
           end_time_subtitle: 販売終了
           selling_price_title: 販売方法
           selling_price_subtitle: 販売価格
@@ -693,7 +694,7 @@ ja:
         after_n_days: 日後まで
         after_n_months: ヶ月後まで
         what_want_to_upsell: このサービス利用後に購入をお勧めしたい アップセル宣伝用LPはありますか？
-        select_upsell_product: セールスページを選択
+        select_upsell_product: 宣伝用LPを選択
         below_is_what_you_want: 以下のサービスを作成してよろしいですか？
         create_by_this_setting: この設定でサービスを作成する
         create_a_sale_page: 作成したサービスを販売する 宣伝用LPを作成しましょう

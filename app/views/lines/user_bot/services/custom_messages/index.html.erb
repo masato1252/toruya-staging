@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="booking-page-show form with-top-bar">
-        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: @online_service.course_like? ? t("user_bot.dashboards.settings.custom_message.auto_message_label") : t("user_bot.dashboards.settings.custom_message.auto_message_service_label") %>
 
         <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.custom_message.online_service.section_title") %></div>
         <div class="field-header"><%= t("user_bot.dashboards.settings.custom_message.online_service.service_page_title") %></div>
