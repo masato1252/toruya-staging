@@ -45,7 +45,6 @@ gem "puma", "~> 4.3.3"
 gem "kaminari"
 gem "cancancan", "~> 1.15.0"
 gem "wicked_pdf"
-gem "wkhtmltopdf-binary"
 gem "carrierwave"
 gem "fog-aws", "~> 3.5.2"
 gem "aws-sdk-s3" # for activestorage

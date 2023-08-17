@@ -636,7 +636,6 @@ GEM
       activesupport
     with_advisory_lock (4.6.0)
       activerecord (>= 4.2)
-    wkhtmltopdf-binary (0.12.6.6)
     zeitwerk (2.6.8)
 
 PLATFORMS
@@ -747,7 +746,6 @@ DEPENDENCIES
   week_of_month
   wicked_pdf
   with_advisory_lock
-  wkhtmltopdf-binary
 
 RUBY VERSION
    ruby 3.1.3p185
