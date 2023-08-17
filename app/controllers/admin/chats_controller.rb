@@ -33,5 +33,10 @@ module Admin
         redirect_to: admin_chats_path(social_service_user_id: params[:customer_id])
       }
     end
+
+    def ai_reply
+      ai_response = LlamaIndex::Ai.query(user_id: "toruya", question: params[:question])
+      render json: ai_response
+    end
   end
 end

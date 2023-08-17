@@ -33,6 +33,7 @@ TEMPLATE_STR = (
     "Given the context information and not prior knowledge\n"
     "Answer should be always used the same language with question\n"
     "But if you don't know the answer, always reply in English with 'NO CONTEXT'"
+    "The Answer need to be text format with proper linkbreak to make it readable"
     "answer the query.\n"
     "Query: {query_str}\n"
     "Answer: "
