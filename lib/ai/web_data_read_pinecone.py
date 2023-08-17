@@ -38,13 +38,17 @@ QA_TEMPLATE = Prompt(TEMPLATE_STR)
 class WebDataReadPinecone:
     @classmethod
     def query(cls, question):
+        index_name = "toruya-dev"
+        user_id = 'toruya-admin'
 
         pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-        vector_store = PineconeVectorStore(pinecone.Index("toruya-dev"))
+        vector_store = PineconeVectorStore(pinecone.Index(index_name), namespace="staging")
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
         # https://gpt-index.readthedocs.io/en/stable/examples/vector_stores/ZepIndexDemo.html#querying-with-metadata-filters
-        filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=1)])
-        query_engine = index.as_query_engine(filters=filters, text_qa_template=QA_TEMPLATE)
+        filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
 
         return query_engine.query(question)
+
+print(WebDataReadPinecone.query("認証コードSMSが受け取れませ"))
+# print(WebDataReadPinecone.query("ふくらむ集客経費"))
