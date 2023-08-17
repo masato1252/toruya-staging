@@ -1,3 +1,6 @@
+# https://gpt-index.readthedocs.io/en/v0.6.27/how_to/customization/custom_prompts.html#full-example
+# https://github.com/jerryjliu/llama_index/blob/1f6566812863d6cdca8fa272abb6592173e80b30/llama_index/prompts/default_prompts.py#L99-L108
+# https://gpt-index.readthedocs.io/en/stable/examples/vector_stores/ZepIndexDemo.html#querying-with-metadata-filters
 import pinecone
 import os
 import sys
@@ -19,9 +22,9 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
 PINECONE_ENV = "asia-southeast1-gcp-free"
+index_name = os.getenv('PINECONE_INDEX_NAME')
+pinecone_namespace = os.getenv('PINECONE_NAMESPACE')
 
-# https://gpt-index.readthedocs.io/en/v0.6.27/how_to/customization/custom_prompts.html#full-example
-# https://github.com/jerryjliu/llama_index/blob/1f6566812863d6cdca8fa272abb6592173e80b30/llama_index/prompts/default_prompts.py#L99-L108
 TEMPLATE_STR = (
     "Context information is below.\n"
     "---------------------\n"
@@ -35,20 +38,14 @@ TEMPLATE_STR = (
     "Answer: "
 )
 QA_TEMPLATE = Prompt(TEMPLATE_STR)
-class WebDataReadPinecone:
+class LlamaIndexPineconeQuery:
     @classmethod
-    def query(cls, question):
-        index_name = "toruya-dev"
-        user_id = 'toruya-admin'
-
+    def perform(cls, user_id, question):
         pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-        vector_store = PineconeVectorStore(pinecone.Index(index_name), namespace="staging")
+        vector_store = PineconeVectorStore(pinecone.Index(index_name), namespace=pinecone_namespace)
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
-        # https://gpt-index.readthedocs.io/en/stable/examples/vector_stores/ZepIndexDemo.html#querying-with-metadata-filters
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
+        query_engine = index.as_query_engine(filters=filters, text_qa_template=QA_TEMPLATE)
 
         return query_engine.query(question)
-
-print(WebDataReadPinecone.query("認証コードSMSが受け取れませ"))
-# print(WebDataReadPinecone.query("ふくらむ集客経費"))
