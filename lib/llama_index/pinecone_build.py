@@ -68,8 +68,8 @@ class LlamaIndexPineconeBuild:
             document.id_ = document.metadata.get('URL') or document.metadata['Source']
             document.metadata['user_id'] = user_id
 
-        embed_model = OpenAIEmbedding(model='text-embedding-ada-002', embed_batch_size=100)
-        service_context = ServiceContext.from_defaults(embed_model = embed_model)
+        embed_model = OpenAIEmbedding(model='text-embedding-ada-002')
+        service_context = ServiceContext.from_defaults(embed_model=embed_model, chunk_size=512)
         storage_context = StorageContext.from_defaults(vector_store = vector_store)
 
         try:
