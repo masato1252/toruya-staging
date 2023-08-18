@@ -31,7 +31,7 @@ module ShopHelper
   end
 
   def staff_picture_url(staff, size)
-    Images::Process.run!(image: staff.picture, resize: "#{size}")
+    Images::Process.run!(image: staff.picture, resize: "#{size}") if staff.picture.attached?
   end
 
   def shop_logo(shop, size, extent: true, image_class: "")
