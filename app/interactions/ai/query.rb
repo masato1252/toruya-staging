@@ -9,10 +9,18 @@ module Ai
 
     def execute
       response = AI_QUERY.perform(user_id, question)
+      message = response.to_s
+      references = response.metadata.to_h.values.map {|h| h['Source'] || h['URL'] }.uniq
+
+      references.each do |reference|
+        unless message.match?(/#{reference}/)
+           message << "\n#{reference}"
+        end
+      end
 
       {
-        message: response.to_s,
-        references: response.metadata.to_h.values.map {|h| h['Source'] || h['URL'] }.uniq
+        message: message,
+        references: references
       }
     end
 

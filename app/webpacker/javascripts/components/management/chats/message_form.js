@@ -32,7 +32,7 @@ const MessageForm = () => {
       alert(error.response.data.error_message)
     }
     else {
-      setResponse(`${resp.data["message"]}\n\n${resp.data["references"].join("\n")}`)
+      setResponse(resp.data["message"])
     }
   }
 
@@ -59,13 +59,15 @@ const MessageForm = () => {
     <div id="chat-form">
       <ProcessingBar processing={processing} />
       <button className="btn btn-orange" onClick={aiReply} >AI Reply</button>
+      <br />
+      <label>AI Question</label>
       <TextareaAutosize
         placeholder="AI Question"
         value={question || ""}
         onChange={(e) => setQuestion(e.target.value) }
         className="w-full"
       />
-
+      <label>Reply</label>
       <TextareaAutosize
         ref={ref}
         className="extend with-border"
