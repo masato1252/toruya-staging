@@ -12,8 +12,8 @@ from llama_index.vector_stores.types import ExactMatchFilter, MetadataFilters
 from dotenv import load_dotenv
 import logging
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+# logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 load_dotenv()
 
