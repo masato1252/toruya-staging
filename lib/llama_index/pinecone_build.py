@@ -39,10 +39,6 @@ os.environ["PINECONE_ENVIRONMENT"] = PINECONE_ENV
 index_name = os.getenv('PINECONE_INDEX_NAME')
 pinecone_namespace = os.getenv('PINECONE_NAMESPACE')
 
-def is_sitemap_url(url):
-    sitemap_pattern = re.compile(r".*\.xml$|.*sitemap.*")
-    return bool(sitemap_pattern.match(url))
-
 class LlamaIndexPineconeBuild:
     @classmethod
     def perform(cls, user_id, url):
@@ -54,18 +50,12 @@ class LlamaIndexPineconeBuild:
         pinecone_index = pinecone.Index(index_name)
         vector_store = PineconeVectorStore(pinecone_index=pinecone_index, namespace=pinecone_namespace)
 
-        loader = SitemapReader()
         BeautifulSoupWebReader = download_loader("BeautifulSoupWebReader")
         web_loader = BeautifulSoupWebReader()
-        documents = []
-
-        if is_sitemap_url(url):
-            documents = loader.load_data(sitemap_url=url)
-        else:
-            documents = web_loader.load_data(urls=[url])
+        documents = web_loader.load_data(urls=[url])
 
         for document in documents:
-            document.id_ = document.metadata.get('URL') or document.metadata['Source']
+            document.id_ = document.metadata['URL']
             document.metadata['user_id'] = user_id
 
         embed_model = OpenAIEmbedding(model='text-embedding-ada-002')
