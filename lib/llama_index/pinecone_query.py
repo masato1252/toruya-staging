@@ -21,7 +21,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
 openai.api_key = os.environ["OPENAI_API_KEY"]
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
-PINECONE_ENV = "asia-southeast1-gcp-free"
+PINECONE_ENV = os.getenv('PINECONE_ENVIRONMENT')
 index_name = os.getenv('PINECONE_INDEX_NAME')
 pinecone_namespace = os.getenv('PINECONE_NAMESPACE')
 

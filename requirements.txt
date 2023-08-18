@@ -1,6 +1,5 @@
 llama-index
 llama_hub
-chromadb
 html2text
 pinecone-client
 transformers
