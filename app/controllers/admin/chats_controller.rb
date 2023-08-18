@@ -33,5 +33,10 @@ module Admin
         redirect_to: admin_chats_path(social_service_user_id: params[:customer_id])
       }
     end
+
+    def ai_reply
+      outcome = Ai::Query.run(user_id: "toruya", question: params[:question])
+      return_json_response(outcome, outcome.result)
+    end
   end
 end

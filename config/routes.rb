@@ -589,7 +589,11 @@ Rails.application.routes.draw do
 
       resource :subscription, only: [:destroy]
       resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id
-      resources :chats, only: [:index, :create, :destroy]
+      resources :chats, only: [:index, :create, :destroy] do
+        collection do
+          post :ai_reply
+        end
+      end
       resource :memo, only: [:create]
       resources :business_applications, only: [:index] do
         member do

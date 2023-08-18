@@ -1,0 +1,9 @@
+llama-index
+llama_hub
+chromadb
+html2text
+pinecone-client
+transformers
+nltk
+flax
+python-dotenv
