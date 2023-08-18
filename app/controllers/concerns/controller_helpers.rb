@@ -9,7 +9,7 @@ module ControllerHelpers
     {
       status: outcome.valid? ? "successful" : "failed",
       error_message: outcome.errors.full_messages.join(", ")
-    }.merge!(data)
+    }.merge!(data || {})
   end
 
   def return_json_response(outcome, data = {})

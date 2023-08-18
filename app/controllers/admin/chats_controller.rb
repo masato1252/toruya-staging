@@ -35,8 +35,8 @@ module Admin
     end
 
     def ai_reply
-      ai_response = LlamaIndex::Ai.query(user_id: "toruya", question: params[:question])
-      render json: ai_response
+      outcome = Ai::Query.run(user_id: "toruya", question: params[:question])
+      return_json_response(outcome, outcome.result)
     end
   end
 end

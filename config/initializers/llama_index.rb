@@ -10,5 +10,3 @@ llama_index_pinecone_query = PyCall.import_module("pinecone_query")
 
 AI_BUILD = llama_index_pinecone_build.LlamaIndexPineconeBuild
 AI_QUERY = llama_index_pinecone_query.LlamaIndexPineconeQuery
-
-require "llama_index/ai"

@@ -29,7 +29,7 @@ const MessageForm = () => {
     setProcessing(false)
 
     if (error) {
-      toastr.error(error.response.data.error_message)
+      alert(error.response.data.error_message)
     }
     else {
       setResponse(`${resp.data["message"]}\n\n${resp.data["references"].join("\n")}`)
