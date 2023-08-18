@@ -45,7 +45,7 @@ def is_sitemap_url(url):
 
 class LlamaIndexPineconeBuild:
     @classmethod
-    def perform(cls, user_id, urls):
+    def perform(cls, user_id, url):
         pinecone.init(api_key = PINECONE_API_KEY, environment = PINECONE_ENV)
 
         if index_name not in pinecone.list_indexes():
@@ -59,11 +59,10 @@ class LlamaIndexPineconeBuild:
         web_loader = BeautifulSoupWebReader()
         documents = []
 
-        for url in urls:
-            if is_sitemap_url(url):
-                documents += loader.load_data(sitemap_url=url)
-            else:
-                documents += web_loader.load_data(urls=[url])
+        if is_sitemap_url(url):
+            documents = loader.load_data(sitemap_url=url)
+        else:
+            documents = web_loader.load_data(urls=[url])
 
         for document in documents:
             document.id_ = document.metadata.get('URL') or document.metadata['Source']

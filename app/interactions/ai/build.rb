@@ -8,7 +8,9 @@ module Ai
     end
 
     def execute
-      AI_BUILD.perform(user_id, urls)
+      urls.each do |url|
+        AiBuildJob.perform_later(user_id, url)
+      end
     end
   end
 end
