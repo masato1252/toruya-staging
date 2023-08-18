@@ -1,13 +1,34 @@
 "use strict";
 
-import React from "react";
+import React, { useState } from "react";
+
 import { CustomerServices, CommonServices } from "components/user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js'
+import ProcessingBar from "shared/processing_bar";
 
-const Message = ({message}) => {
+const Message = ({message, reply_ai_message}) => {
+  const [processing, setProcessing] = useState(false)
+
+  const aiReply = async () => {
+    setProcessing(true)
+    const [error, resp] = await CommonServices.create({
+      url: Routes.ai_reply_admin_chats_path({format: "json"}),
+      data: { question: message.text }
+    })
+    setProcessing(false)
+
+    if (error) {
+      alert(error.response.data.error_message)
+    }
+    else {
+      reply_ai_message(resp.data["message"])
+    }
+  }
+
   return (
     <div className="row message">
+      <ProcessingBar processing={processing} processingMessage={I18n.t("admin.chat.ai_processing")} />
       <div className={`${message.message_type} ${message.id}`} >
         <div className={`col-sm-10 break-line-content message-content ${message.sent ? "" : "unsend"}`}>
           {message.is_image ? <img className="w-full" src={message.text.previewImageUrl || ""} /> : message.text}
@@ -37,6 +58,7 @@ const Message = ({message}) => {
             }
           }}
         >
+          {message.message_type === "user" && !message.is_image && <button className="btn btn-orange" onClick={aiReply} >AI Reply</button>}
           {message.message_type === "bot" && <i className="fa fa-robot" aria-hidden="true"></i>}
           {(message.message_type === "customer_reply_bot" || message.message_type === "user_reply_bot") && <i className="fa fa-hand-point-up" aria-hidden="true"></i> }
           {!message.sent && message.id && <i className="fa fa-trash" aria-hidden="true"></i>}

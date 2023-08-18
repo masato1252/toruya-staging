@@ -19,7 +19,8 @@ import _ from "lodash";
 // }
 
 const initialState = {
-  messages: {}
+  messages: {},
+  reply_message: ""
 }
 
 export default (state = initialState, action) => {
@@ -49,6 +50,11 @@ export default (state = initialState, action) => {
           ...state.messages,
           [action.payload.customer.id]: [...(state.messages[action.payload.customer.id] || []), action.payload.message]
         }
+      }
+    case "REPLY_MESSAGE":
+      return {
+        ...state,
+        reply_message: action.payload.reply_message
       }
     default:
       return state;

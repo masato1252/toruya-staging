@@ -22,3 +22,5 @@ ja:
       next_charge_date: "次回支払い %{date}"
       sign_up_date: "登録 %{date}"
       trial_end_date: "試用期間 ~ %{date}"
+      ai_processing: AI返信を作成中
+      reply_placeholder: 返信内容を入力
