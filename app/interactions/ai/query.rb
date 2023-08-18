@@ -8,13 +8,20 @@ module Ai
     validate :validate_question
 
     def execute
-      response = AI_QUERY.perform(user_id, question)
-      message = response.to_s
-      references = response.metadata.to_h.values.map {|h| h['Source'] || h['URL'] }.uniq
+      if Rails.env.development?
+        message ="企業情報を変更するには、以下の手順を実行します。\n\n1. ユーザーメニューから「設定画面」を選択します。\n2. アカウント設定メニューの「アカウント登録情報」欄から「企業情報」メニ
+ューを選択します。\n3. 変更したい情報を選択して編集し、「保存」ボタンを押します。\n\n詳細な手順と画像は、以下のリンク先のページで確認することができます。\n[企業情報を変更する](https://toruya.com/help/setting_companyinfo/)"
 
-      references.each do |reference|
-        unless message.match?(/#{reference}/)
-           message << "\n#{reference}"
+        references = ["https://toruya.com/help/setting_companyinfo/"]
+      else
+        response = AI_QUERY.perform(user_id, question)
+        message = response.to_s
+        references = response.metadata.to_h.values.map {|h| h['Source'] || h['URL'] }.uniq
+
+        references.each do |reference|
+          unless message.match?(/#{reference}/)
+            message << "\n#{reference}"
+          end
         end
       end
 
