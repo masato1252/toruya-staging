@@ -218,19 +218,6 @@ a {
   cursor: row-resize;
 }
 
-.processing-bar {
-  text-align: center;
-  width: 300px;
-  height: 100px;
-  line-height: 100px;
-  position: fixed;
-  top: 20%;
-  left: calc(50% - 150px);;
-  background: #def5ff;
-  border: 1px solid #7dd2f9;
-  z-index: 999;
-}
-
 .top-navigation-bar {
   position: fixed;
 
