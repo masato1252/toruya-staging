@@ -7,11 +7,12 @@ import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js'
 import ProcessingBar from "shared/processing_bar";
 
-const Message = ({message, reply_ai_message}) => {
+const Message = ({message, reply_ai_message, ai_question}) => {
   const [processing, setProcessing] = useState(false)
 
   const aiReply = async () => {
     setProcessing(true)
+    ai_question(message.text)
     const [error, resp] = await CommonServices.create({
       url: Routes.ai_reply_admin_chats_path({format: "json"}),
       data: { question: message.text }

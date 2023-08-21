@@ -46,6 +46,14 @@ const MessageList = () => {
         return (
           <Message
             message={message}
+            ai_question={(text) => {
+              dispatch({
+                type: "AI_QUESTION",
+                payload: {
+                  ai_question: text
+                }
+              })
+            }}
             reply_ai_message={(text) => {
               dispatch({
                 type: "REPLY_MESSAGE",

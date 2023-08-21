@@ -56,6 +56,11 @@ export default (state = initialState, action) => {
         ...state,
         reply_message: action.payload.reply_message
       }
+    case "AI_QUESTION":
+      return {
+        ...state,
+        ai_question: action.payload.ai_question
+      }
     default:
       return state;
   }

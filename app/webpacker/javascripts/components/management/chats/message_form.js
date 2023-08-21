@@ -9,12 +9,35 @@ import { GlobalContext } from "context/chats/global_state";
 import { SubmitButton } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js'
+import ProcessingBar from "shared/processing_bar";
 
 const MessageForm = () => {
   moment.locale('ja');
   const ref = useRef()
-  const { selected_customer, selected_channel_id, reply_message, dispatch } = useContext(GlobalContext)
+  const { selected_customer, selected_channel_id, reply_message, ai_question, dispatch } = useContext(GlobalContext)
   const [schedule_at, setScheduleAt] = useState(null)
+  const [processing, setProcessing] = useState(false)
+
+  const aiReply = async () => {
+    setProcessing(true)
+    const [error, resp] = await CommonServices.create({
+      url: Routes.ai_reply_admin_chats_path({format: "json"}),
+      data: { question: ai_question }
+    })
+    setProcessing(false)
+
+    if (error) {
+      alert(error.response.data.error_message)
+    }
+    else {
+      dispatch({
+        type: "REPLY_MESSAGE",
+        payload: {
+          reply_message: resp.data["message"]
+        }
+      })
+    }
+  }
 
   const handleSubmit = async () => {
     if (!ref.current.value) return;
@@ -37,18 +60,33 @@ const MessageForm = () => {
 
   return (
     <div id="chat-form">
+      <ProcessingBar processing={processing} processingMessage={I18n.t("admin.chat.ai_processing")} />
+      <label>AI Question</label>
+      <button className="btn btn-orange" onClick={aiReply} >AI Reply</button>
+      <TextareaAutosize
+        value={ai_question}
+        onChange={(e) =>
+          dispatch({
+            type: "AI_QUESTION",
+            payload: {
+              ai_question: e.target.value
+            }
+          })
+        }
+        className="w-full"
+      />
       <TextareaAutosize
         ref={ref}
         className="extend with-border"
         placeholder={I18n.t("admin.chat.reply_placeholder")}
         value={reply_message}
         onChange={(e) =>
-            dispatch({
-              type: "REPLY_MESSAGE",
-              payload: {
-                reply_message: e.target.value
-              }
-            })
+          dispatch({
+            type: "REPLY_MESSAGE",
+            payload: {
+              reply_message: e.target.value
+            }
+          })
         }
       />
       <div className="text-left">
