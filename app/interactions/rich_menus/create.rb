@@ -47,12 +47,12 @@ module RichMenus
 
           # Link rich menu to social users or social customer
           SocialUser.where(social_rich_menu_key: key).find_each do |social_user|
-            RichMenus::Connect.run(social_target: social_user, social_rich_menu: rich_menu)
+            RichMenus::Connect.perform_later(social_target: social_user, social_rich_menu: rich_menu)
           end
 
           if social_account
             social_account.social_customers.where(social_rich_menu_key: key).find_each do |social_customer|
-              RichMenus::Connect.run(social_target: social_customer, social_rich_menu: rich_menu)
+              RichMenus::Connect.perform_later(social_target: social_customer, social_rich_menu: rich_menu)
             end
           end
         else
