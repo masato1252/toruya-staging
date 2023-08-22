@@ -58,6 +58,7 @@ class LlamaIndexPineconeBuild:
             document.id_ = document.metadata['URL']
             document.metadata['user_id'] = user_id
 
+        # https://www.theinternet.io/articles/ask-ai/why-does-openai-use-1536-dimensions-for-embeddings-specifically-the-text-embedding-ada-002-model/
         embed_model = OpenAIEmbedding(model='text-embedding-ada-002')
         service_context = ServiceContext.from_defaults(embed_model=embed_model, chunk_size=512)
         storage_context = StorageContext.from_defaults(vector_store = vector_store)

@@ -15,7 +15,7 @@ const Message = ({message, reply_ai_message, ai_question}) => {
     ai_question(message.text)
     const [error, resp] = await CommonServices.create({
       url: Routes.ai_reply_admin_chats_path({format: "json"}),
-      data: { question: message.text }
+      data: { question: message.text, prompt: localStorage.getItem("prompt") }
     })
     setProcessing(false)
 

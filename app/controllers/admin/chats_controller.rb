@@ -35,7 +35,7 @@ module Admin
     end
 
     def ai_reply
-      outcome = Ai::Query.run(user_id: "toruya", question: params[:question])
+      outcome = Ai::Query.run(user_id: "toruya", question: params[:question], prompt: params[:prompt])
       return_json_response(outcome, outcome.result)
     end
   end

@@ -4,6 +4,7 @@ module Ai
   class Query < ActiveInteraction::Base
     string :user_id
     string :question
+    string :prompt, default: nil
 
     validate :validate_question
 
@@ -14,7 +15,7 @@ module Ai
 
         references = ["https://toruya.com/help/setting_companyinfo/"]
       else
-        response = AI_QUERY.perform(user_id, question)
+        response = AI_QUERY.perform(user_id, question, prompt)
         message = response.to_s
         references = response.metadata.to_h.values.map {|h| h['Source'] || h['URL'] }.uniq
 

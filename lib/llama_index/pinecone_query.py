@@ -42,15 +42,14 @@ TEMPLATE_STR = (
     "Query: {query_str}\n"
     "Answer: "
 )
-QA_TEMPLATE = Prompt(TEMPLATE_STR)
 class LlamaIndexPineconeQuery:
     @classmethod
-    def perform(cls, user_id, question):
+    def perform(cls, user_id, question, prompt):
         pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
         vector_store = PineconeVectorStore(pinecone.Index(index_name), namespace=pinecone_namespace)
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
-        query_engine = index.as_query_engine(filters=filters, text_qa_template=QA_TEMPLATE)
+        query_engine = index.as_query_engine(filters=filters, text_qa_template=Prompt(prompt or TEMPLATE_STR))
 
         return query_engine.query(question)
