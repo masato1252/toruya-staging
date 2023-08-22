@@ -36,6 +36,7 @@ TEMPLATE_STR = (
     "And do not provide reference url in answer.\n"
     "Your answer should always base on context information, don't make up your own answer\n"
     "If you don't know the answer, always reply in English with 'NO CONTEXT'\n"
+    "If you find multiple questions at once, just reply 'AIが正しくお返事できるように、ご質問は１つずつ送信してください。'\n"
     "answer the query.\n"
     "Query: {query_str}\n"
     "Answer: "
