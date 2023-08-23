@@ -1,21 +1,21 @@
 .events {
-  display: table;
-  border-collapse: separate;
-  border-spacing: 0 10px;
   width: 100%;
   color: $black;
   padding: 0 6px;
 
   .event {
-    display: table-row;
+    display: flex;
+    flex-direction: row;
     background-color: #ffffff;
+    border: 1px solid $gray7;
+    border-radius: 3px;
+    margin: 5px;
 
     &.booking-page-holder {
       background-color: $gray-background-1;
     }
 
     .year {
-      display: table-cell;
       max-width:1px; overflow:visible;
       padding: 9px;
       background-color: $gray-background-1;
@@ -24,7 +24,6 @@
     }
 
     .cell {
-      display: table-cell;
       background-color: $gray-background-1;
     }
 
@@ -34,23 +33,12 @@
     .content,
     .info,
     .extra {
-      display: table-cell;
-      border-top: 1px solid $gray7;
-      border-bottom: 1px solid $gray7;
       padding: 3px;
     }
 
-    .extra {
-      border-right: 1px solid $gray7;
-      border-top-right-radius: 3px;
-      border-bottom-right-radius: 3px;
-    }
-
     .state {
+      border-right: 1px solid $gray7;
       width: 20px;
-      border: 1px solid $gray7;
-      border-top-left-radius: 3px;
-      border-bottom-left-radius: 3px;
       vertical-align: middle;
       margin-right: 6px;
     }
