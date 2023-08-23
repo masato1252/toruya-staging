@@ -19,7 +19,9 @@ module Ai
         message = response.to_s
         references = response.metadata.to_h.values.map {|h| h['Source'] || h['URL'] }.uniq
 
-        references.each do |reference|
+        reference = references.first
+
+        if reference
           unless message.match?(/#{reference}/)
             message << "\n#{reference}"
           end
