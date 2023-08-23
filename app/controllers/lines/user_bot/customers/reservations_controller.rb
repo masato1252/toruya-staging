@@ -21,7 +21,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
         monthDate: I18n.l(relation.created_at, format: :month_day_wday),
         startTime: I18n.l(relation.created_at, format: :hour_minute),
         menu: relation.online_service.name,
-        shop: relation.online_service.company.name,
+        shop: relation.online_service.company.company_name,
         state: relation.state,
         "time" => relation.created_at.to_i
       }

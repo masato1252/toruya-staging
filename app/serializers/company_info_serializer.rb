@@ -20,7 +20,7 @@ class CompanyInfoSerializer
   attribute :name do |object|
     case object
     when Shop
-      object.display_name
+      object.name
     when Profile
       object.company_name
     end
