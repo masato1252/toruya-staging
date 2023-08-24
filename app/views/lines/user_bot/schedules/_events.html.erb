@@ -1,9 +1,9 @@
-<div class="events container table">
+<div class="events">
   <% schedules.each do |schedule| %>
     <% if schedule[:type] == :reservation %>
-      <%= modal_link_to lines_user_bot_shop_reservation_path(schedule[:shop], schedule[:id], reservations_approval_flow: reservations_approval_flow), class: "modal-link event flex" do %>
-        <div class="state <%= schedule[:state] %> col-sm-1"></div>
-        <div class="time col-sm-2">
+      <%= modal_link_to lines_user_bot_shop_reservation_path(schedule[:shop], schedule[:id], reservations_approval_flow: reservations_approval_flow), class: "modal-link event" do %>
+        <div class="state <%= schedule[:state] %>"></div>
+        <div class="time">
           <div class="start-time">
             <%= schedule[:start_time] %>
           </div>
@@ -11,7 +11,7 @@
             <%= schedule[:end_time] %>
           </div>
         </div>
-        <div class="content col-sm-4">
+        <div class="content">
           <div class="top">
             <%= schedule[:menus_name] %>
           </div>
@@ -19,10 +19,10 @@
             <%= schedule[:customer_names_sentence] %>
           </div>
         </div>
-        <div class="info col-sm-4">
+        <div class="info">
           <%= schedule[:shop_name] %>
         </div>
-        <div class="extra col-sm-1">
+        <div class="extra">
           <% if schedule[:with_warnings] %>
             <span class="error-status warning"><i class="fa fa-check-circle" aria-hispanen="true"></i></span>
           <% end %>
@@ -32,9 +32,9 @@
         </div>
       <% end %>
     <% elsif schedule[:type] == :booking_page_holder_schedule %>
-      <a href="#"  data-toggle="modal" data-target=<%= "#booking-page-holder-modal-#{schedule[:id]}" %> class="modal-link booking-page-holder event flex">
-        <div class="state col-sm-1"></div>
-        <div class="time col-sm-2">
+      <a href="#"  data-toggle="modal" data-target=<%= "#booking-page-holder-modal-#{schedule[:id]}" %> class="modal-link booking-page-holder event">
+        <div class="state"></div>
+        <div class="time">
           <div class="start-time">
             <%= schedule[:start_time] %>
           </div>
@@ -42,14 +42,16 @@
             <%= schedule[:end_time] %>
           </div>
         </div>
-        <div class="content col-sm-9">
+        <div class="content">
           <%= schedule[:reason] %>
         </div>
+        <div class="info"></div>
+        <div class="extra"></div>
       </a>
     <% else %>
-      <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule[:id]}" %> class="modal-link event flex">
-        <div class="state col-sm-1"></div>
-        <div class="time col-sm-2">
+      <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule[:id]}" %> class="modal-link event">
+        <div class="state"></div>
+        <div class="time">
           <div class="start-time">
             <%= schedule[:start_date] != schedule[:end_date] ? schedule[:start_date] : nil %><%= schedule[:start_time_time_part] %>
           </div>
@@ -57,7 +59,9 @@
             <%= schedule[:start_date] != schedule[:end_date] ? schedule[:end_date] : nil %><%= schedule[:end_time_time_part] %>
           </div>
         </div>
-        <div class="content col-sm-9"><%= schedule[:reason] %></div>
+        <div class="content"></div>
+        <div class="info"><%= schedule[:reason] %></div>
+        <div class="extra"></div>
       </a>
     <% end %>
   <% end %>
