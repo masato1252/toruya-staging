@@ -221,7 +221,7 @@ const SocialAccountEdit =({props}) => {
           {['name'].includes(props.attribute) && (
             <div class="fake-mobile-layout">
               <SaleDemoPage
-                shop={{...props.shop, name: watch("short_name") || watch("name")}}
+                shop={{...props.shop, name: watch("name") || watch("short_name")}}
               />
             </div>
           )}
