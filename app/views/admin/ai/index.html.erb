@@ -1,0 +1,10 @@
+<%= render "admin/features" %>
+<%= form_with(url: admin_ai_index_path) do |f| %>
+  <div class="field">
+    <%= f.label :url %> <%= f.url_field :url, autofocus: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit t("common.send") %>
+  </div>
+<% end %>

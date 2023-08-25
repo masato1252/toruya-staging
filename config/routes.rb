@@ -601,6 +601,7 @@ Rails.application.routes.draw do
           post "reject"
         end
       end
+      resources :ai, only: [:index, :create]
 
       resources :withdrawals, only: [] do
         member do
