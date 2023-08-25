@@ -7,7 +7,7 @@ module Admin
     def create
       Ai::Build.run(user_id: "toruya", urls: Array.wrap(params[:url])) if params[:url].present?
 
-      head :no_content
+      redirect_back fallback_location: admin_ai_index_path, notice: "Submitted"
     end
   end
 end
