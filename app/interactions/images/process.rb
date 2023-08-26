@@ -6,6 +6,8 @@ module Images
     string :resize
 
     def execute
+      return unless image.attached?
+
       begin
         picture_variant = image.variant(resize: resize, flatten: true)
         filename = picture_variant.blob.filename.to_s
