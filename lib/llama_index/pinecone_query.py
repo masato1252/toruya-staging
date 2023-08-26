@@ -50,6 +50,12 @@ class LlamaIndexPineconeQuery:
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
-        query_engine = index.as_query_engine(filters=filters, text_qa_template=Prompt(prompt or TEMPLATE_STR))
+        query_engine = index.as_query_engine(
+                filters=filters,
+                text_qa_template=Prompt(prompt or TEMPLATE_STR),
+                response_mode= "tree_summarize",
+                top_k=5
+                )
+
 
         return query_engine.query(question)
