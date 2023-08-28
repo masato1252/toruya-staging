@@ -9,8 +9,6 @@ import pdb
 from llama_index import Prompt, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore
 from llama_index.vector_stores.types import ExactMatchFilter, MetadataFilters
-from llama_index.query_engine import RetrySourceQueryEngine
-from llama_index.evaluation import QueryResponseEvaluator
 from dotenv import load_dotenv
 import logging
 
@@ -52,14 +50,11 @@ class LlamaIndexPineconeQuery:
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
-        base_query_engine = index.as_query_engine(
+        query_engine = index.as_query_engine(
                 filters=filters,
                 text_qa_template=Prompt(prompt or TEMPLATE_STR),
                 response_mode= "tree_summarize",
                 top_k=5
                 )
 
-        query_response_evaluator = QueryResponseEvaluator()
-        retry_source_query_engine = RetrySourceQueryEngine(base_query_engine, query_response_evaluator)
-
-        return retry_source_query_engine.query(question)
+        return query_engine.query(question)
