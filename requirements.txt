@@ -1,4 +1,4 @@
-llama-index
+llama-index==0.8.11
 llama_hub
 html2text
 pinecone-client
