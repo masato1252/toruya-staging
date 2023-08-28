@@ -456,6 +456,9 @@ ja:
         create_a_new_menu: 新しいメニューを作成する
         create_a_sale_page: 宣伝用LPを使うと ネットで予約募集できます
         create_a_sale_page_btn: 宣伝用LPを作成
+        create_sale_page_later_warning_html: サービスは作成できましたが<br>宣伝用LPが未作成のため<br>顧客がサービスに登録できません
+        remember_create_sale_page: 忘れずに宣伝用LPを作成してください
+        create_sale_page_later_btn: 後で作る
       sales:
         modal:
           title: 宣伝用LPを確認
@@ -697,7 +700,7 @@ ja:
         select_upsell_product: 宣伝用LPを選択
         below_is_what_you_want: 以下のサービスを作成してよろしいですか？
         create_by_this_setting: この設定でサービスを作成する
-        create_a_sale_page: 作成したサービスを販売する 宣伝用LPを作成しましょう
+        create_a_sale_page: 作成したサービスを利用するには 宣伝用LPが必要です
         stripe_required_warning: サービスを有料販売するには、Stripeアカウントの連携設定が必要です。
         sale_page_like_this: サービスページは以下の様に表示されます
         setup_line_bot_for_customers: "ご利用中サービス一覧の\n 表示内容を設定"
