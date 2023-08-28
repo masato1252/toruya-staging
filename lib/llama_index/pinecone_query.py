@@ -9,7 +9,7 @@ import pdb
 from llama_index import Prompt, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore
 from llama_index.vector_stores.types import ExactMatchFilter, MetadataFilters
-from llama_index.query_engine import RetryQueryEngine
+from llama_index.query_engine import RetrySourceQueryEngine
 from llama_index.evaluation import QueryResponseEvaluator
 from dotenv import load_dotenv
 import logging
@@ -60,6 +60,6 @@ class LlamaIndexPineconeQuery:
                 )
 
         query_response_evaluator = QueryResponseEvaluator()
-        retry_query_engine = RetryQueryEngine(base_query_engine, query_response_evaluator)
+        retry_source_query_engine = RetrySourceQueryEngine(base_query_engine, query_response_evaluator)
 
-        return retry_query_engine.query(question)
+        return retry_source_query_engine.query(question)
