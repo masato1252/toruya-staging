@@ -17,6 +17,15 @@ module Ai
       else
         response = AI_QUERY.perform(user_id, question, prompt)
         message = response.to_s
+        references = response.metadata.to_h.values.map {|h| h['Source'] || h['URL'] }.uniq
+
+        reference = references.first
+
+        if reference
+          unless message.match?(/#{reference}/)
+            message << "\n#{reference}"
+          end
+        end
       end
 
       {
