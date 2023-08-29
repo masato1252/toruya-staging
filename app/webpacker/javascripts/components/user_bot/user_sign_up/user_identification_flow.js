@@ -42,8 +42,14 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
 
     const [error, response] = await IdentificationCodesServices.create(data);
 
-    setValue("uuid", response.data.uuid)
-    setValue("user_id", response.data.user_id)
+    setValue("uuid", response.data?.uuid)
+    setValue("user_id", response.data?.user_id)
+
+    if (!response.data.user_id) {
+      setError("phone_number", {
+        message: response.data.errors.message
+      });
+    }
   }
 
   const identifyCode = async (data) => {
@@ -116,8 +122,10 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           onlyCountries={['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']}
           value={phone_number}
           onChange={ (phone) => setValue("phone_number", phone) }
-          placeholder='0123456789'
+          autoFormat={false}
+          placeholder='09012345678'
         />
+        <ErrorMessage error={errors.phone_number?.message} />
         {!watchIsIdentificationCodeExists && (
           <div className="centerize">
             <a href="#" className="btn btn-tarco submit" onClick={handleSubmit(generateCode)} disabled={isSubmitting}>

@@ -66,6 +66,16 @@ class LinesController < ActionController::Base
   end
 
   def ask_identification_code
+    if Phonelib.invalid_for_country?(params[:customer_phone_number], 'JP') && Phonelib.invalid?(params[:customer_phone_number])
+      render json: {
+        identification_successful: false,
+        errors: {
+          message: I18n.t("errors.invalid_jp_phone_number")
+        }
+      }
+      return
+    end
+
     identification_code = IdentificationCodes::Create.run!(
       user: social_customer.user,
       customer: customer,

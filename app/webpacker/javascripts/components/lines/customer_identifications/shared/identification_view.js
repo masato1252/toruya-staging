@@ -138,7 +138,7 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
     askIdentificationCodeCall = null;
     document.getElementById("booking-code").focus();
 
-    if (errors) setAskingIdentificationCode(errors.message)
+    if (errors) setIdentificationCodeError(errors.message)
   }
 
   const renderIdentificationCode = () => {

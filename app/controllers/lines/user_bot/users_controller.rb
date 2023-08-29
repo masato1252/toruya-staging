@@ -20,6 +20,16 @@ class Lines::UserBot::UsersController < Lines::UserBotController
   end
 
   def generate_code
+    if Phonelib.invalid_for_country?(params[:phone_number], 'JP') && Phonelib.invalid?(params[:phone_number])
+      render json: {
+        user_id: nil,
+        errors: {
+          message: I18n.t("errors.invalid_jp_phone_number")
+        }
+      }
+      return
+    end
+
     identification_code = IdentificationCodes::Create.run!(
       phone_number: params[:phone_number]
     )
