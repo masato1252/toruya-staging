@@ -5,6 +5,15 @@
   width: 100%;
   color: $black;
   padding: 0 6px;
+  background-color: #fff;
+
+  .event-row {
+    display: table;
+  }
+
+  a.event {
+    height: 56px;
+  }
 
   .event {
     display: table-row;
@@ -48,15 +57,58 @@
 
     .state {
       width: 20px;
+      min-width: 20px;
       border: 1px solid $gray7;
       border-top-left-radius: 3px;
       border-bottom-left-radius: 3px;
       vertical-align: middle;
-      margin-right: 6px;
     }
 
     .start-time {
       margin-left: 6px;
     }
   }
+}
+
+.schedules {
+  .events {
+    display: block;
+    border-spacing: inherit;
+
+    a.event {
+      height: 56px;
+    }
+  }
+}
+
+.schedules {
+  .events {
+    display: block;
+    border-spacing: inherit;
+  }
+
+  .event {
+    .time {
+      width: 56px;
+    }
+
+    .content {
+      width: 100%;
+    }
+
+    .info {
+      max-width: 100px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}
+
+.event-row {
+  display: table;
+  width: 100%;
+  height: 56px;
+  margin: 0;
+  padding: 5px 0;
 }
