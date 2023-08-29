@@ -157,6 +157,10 @@ Rails.application.routes.draw do
             get :callback_modal
           end
 
+          collection do
+            post :reset
+          end
+
           resource :rich_menu, only: [:edit, :create, :destroy]
         end
 
@@ -333,6 +337,7 @@ Rails.application.routes.draw do
           get :line_settings_verified
           get :trial_end
           get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
+          get :change_verified_line_settings
         end
       end
 

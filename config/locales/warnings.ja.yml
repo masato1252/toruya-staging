@@ -19,3 +19,7 @@ ja:
     line_settings_verified:
       verify_title: LINE連携の動作確認が必要です
       verify_content_html: Toruyaを存分に活かしていただくためにも、LINE連携の動作確認をしてください。
+    change_verified_line_settings:
+      title: 連携解除が必要です
+      content_html: この設定を変更するには、すべてのLINE連携を解除する必要があります
+      disconnect_btn: 連携を解除する
