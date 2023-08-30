@@ -6,7 +6,7 @@ import os
 import sys
 import openai
 import pdb
-from llama_index import QuestionAnswerPrompt, VectorStoreIndex
+from llama_index import PromptTemplate, VectorStoreIndex
 from llama_index.vector_stores import PineconeVectorStore
 from llama_index.vector_stores.types import ExactMatchFilter, MetadataFilters
 from llama_index.query_engine import RetryQueryEngine
@@ -52,7 +52,7 @@ class LlamaIndexPineconeQuery:
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
-        base_query_engine = index.as_query_engine(filters=filters, text_qa_template=QuestionAnswerPrompt(prompt or TEMPLATE_STR))
+        base_query_engine = index.as_query_engine(filters=filters, text_qa_template=PromptTemplate(prompt or TEMPLATE_STR))
         query_response_evaluator = QueryResponseEvaluator()
         query_engine = RetryQueryEngine(base_query_engine, query_response_evaluator)
 
