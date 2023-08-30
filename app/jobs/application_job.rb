@@ -23,7 +23,7 @@ class ApplicationJob < ActiveJob::Base
   discard_on ActiveJob::DeserializationError
 
   BUFFER = 1 # second.
-  DEFAULT_DELAY = 20 # seconds
+  DEFAULT_DELAY = 90 # seconds
 
   class_attribute :debounce_settings
   class_attribute :throttle_settings
