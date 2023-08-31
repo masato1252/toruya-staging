@@ -605,6 +605,8 @@ Rails.application.routes.draw do
         collection do
           post :correct
           post :incorrect
+          post :build_by_url
+          post :build_by_faq
         end
       end
 

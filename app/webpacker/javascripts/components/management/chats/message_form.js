@@ -52,6 +52,20 @@ const MessageForm = () => {
     }
   }
 
+  const buildAiFaqSample = async () => {
+    const [error, resp] = await CommonServices.create({
+      url: Routes.build_by_faq_admin_ai_index_path({format: "json"}),
+      data: { question: ai_question, answer: reply_message }
+    })
+
+    if (error) {
+      alert(error.response.data.error_message)
+    }
+    else {
+      toastr.success("AI Sample Submitted")
+    }
+  }
+
   const handleSubmit = async () => {
     if (!ref.current.value) return;
 
@@ -105,6 +119,7 @@ const MessageForm = () => {
       />
       <button onClick={markCorrect} className="btn btn-tarco">Correct</button>
       <button onClick={markInCorrect} className="btn btn-warning">Incorrect</button>
+      <button onClick={buildAiFaqSample} className="btn btn-success">Build Ai Faq</button>
       <div className="text-left">
         <div className="margin-around m10 mt-0">
           <label>

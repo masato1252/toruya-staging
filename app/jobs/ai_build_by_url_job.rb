@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AiBuildJob < ApplicationJob
+class AiBuildByUrlJob < ApplicationJob
   queue_as :low_priority
 
   def perform(user_id, url)
@@ -8,10 +8,10 @@ class AiBuildJob < ApplicationJob
       links = get_all_links_from_sitemap(url)
 
       links.each do |link|
-        AiBuildJob.perform_later(user_id, link)
+        AiBuildByUrlJob.perform_later(user_id, link)
       end
     else
-      AI_BUILD.perform(user_id, url)
+      AI_BUILD.build_by_url(user_id, url)
     end
   end
 

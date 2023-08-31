@@ -1,5 +1,5 @@
 <%= render "admin/features" %>
-<%= form_with(url: admin_ai_index_path, local: true) do |f| %>
+<%= form_with(url: build_by_url_admin_ai_index_path, local: true) do |f| %>
   <div class="field">
     <%= f.label :url %> <%= f.url_field :url, autofocus: true %>
   </div>

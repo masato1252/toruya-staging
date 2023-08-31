@@ -46,7 +46,7 @@ TEMPLATE_STR = (
 )
 class LlamaIndexPineconeQuery:
     @classmethod
-    def perform(cls, user_id, question, prompt):
+    def perform(cls, user_id, question, prompt=None):
         pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
         vector_store = PineconeVectorStore(pinecone.Index(index_name), namespace=pinecone_namespace)
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)

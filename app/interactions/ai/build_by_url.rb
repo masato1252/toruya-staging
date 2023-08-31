@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ai
-  class Build < ActiveInteraction::Base
+  class BuildByUrl < ActiveInteraction::Base
     string :user_id
     array :urls do
       string
@@ -9,7 +9,7 @@ module Ai
 
     def execute
       urls.each do |url|
-        AiBuildJob.perform_later(user_id, url)
+        AiBuildByUrlJob.perform_later(user_id, url)
       end
     end
   end
