@@ -51,7 +51,13 @@ class CustomSchedule < ApplicationRecord
 
   def set_end_time
     if (end_time_date_part || start_time_date_part) && end_time_time_part
-      self.end_time = Time.zone.parse("#{end_time_date_part || start_time_date_part}-#{end_time_time_part}")
+      date_part = end_time_date_part || start_time_date_part
+
+      if Time.zone.parse(start_time_date_part) > Time.zone.parse(date_part)
+        date_part = start_time_date_part
+      end
+
+      self.end_time = Time.zone.parse("#{date_part}-#{end_time_time_part}")
     end
   end
 
