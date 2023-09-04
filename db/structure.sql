@@ -287,6 +287,39 @@ ALTER SEQUENCE public.ahoy_visits_id_seq OWNED BY public.ahoy_visits.id;
 
 
 --
+-- Name: ai_faqs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_faqs (
+    id bigint NOT NULL,
+    user_id character varying,
+    question text,
+    answer text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_faqs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_faqs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_faqs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_faqs_id_seq OWNED BY public.ai_faqs.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2980,6 +3013,13 @@ ALTER TABLE ONLY public.ahoy_visits ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: ai_faqs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_faqs ALTER COLUMN id SET DEFAULT nextval('public.ai_faqs_id_seq'::regclass);
+
+
+--
 -- Name: blazer_audits id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3515,6 +3555,14 @@ ALTER TABLE ONLY public.ahoy_events
 
 ALTER TABLE ONLY public.ahoy_visits
     ADD CONSTRAINT ahoy_visits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_faqs ai_faqs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_faqs
+    ADD CONSTRAINT ai_faqs_pkey PRIMARY KEY (id);
 
 
 --
@@ -4275,6 +4323,13 @@ CREATE INDEX index_ahoy_visits_on_user_id ON public.ahoy_visits USING btree (use
 --
 
 CREATE UNIQUE INDEX index_ahoy_visits_on_visit_token ON public.ahoy_visits USING btree (visit_token);
+
+
+--
+-- Name: index_ai_faqs_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_faqs_on_user_id ON public.ai_faqs USING btree (user_id);
 
 
 --
@@ -5364,6 +5419,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230616093508'),
 ('20230620094659'),
 ('20230621014139'),
-('20230815055914');
+('20230815055914'),
+('20230830144948');
 
 

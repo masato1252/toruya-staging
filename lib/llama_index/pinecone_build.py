@@ -9,7 +9,7 @@
 # https://stackoverflow.com/a/76466198/609365
 # https://betterprogramming.pub/refreshing-private-data-sources-with-llamaindex-document-management-1d1f1529f5eb
 # https://gpt-index.readthedocs.io/en/latest/core_modules/data_modules/index/document_management.html#refresh
-from llama_index import VectorStoreIndex, GPTVectorStoreIndex, StorageContext, ServiceContext, download_loader
+from llama_index import Document, VectorStoreIndex, GPTVectorStoreIndex, StorageContext, ServiceContext, download_loader
 from llama_hub.web.sitemap.base import SitemapReader
 from llama_index.vector_stores import PineconeVectorStore
 from llama_index.embeddings.openai import OpenAIEmbedding
@@ -41,7 +41,7 @@ pinecone_namespace = os.getenv('PINECONE_NAMESPACE')
 
 class LlamaIndexPineconeBuild:
     @classmethod
-    def perform(cls, user_id, url):
+    def init_index(cls):
         pinecone.init(api_key = PINECONE_API_KEY, environment = PINECONE_ENV)
 
         if index_name not in pinecone.list_indexes():
@@ -49,6 +49,18 @@ class LlamaIndexPineconeBuild:
 
         pinecone_index = pinecone.Index(index_name)
         vector_store = PineconeVectorStore(pinecone_index=pinecone_index, namespace=pinecone_namespace)
+        # https://www.theinternet.io/articles/ask-ai/why-does-openai-use-1536-dimensions-for-embeddings-specifically-the-text-embedding-ada-002-model/
+        embed_model = OpenAIEmbedding(model='text-embedding-ada-002')
+        service_context = ServiceContext.from_defaults(embed_model=embed_model, chunk_size=512)
+        storage_context = StorageContext.from_defaults(vector_store = vector_store)
+
+        index = VectorStoreIndex.from_vector_store(vector_store=vector_store, service_context=service_context)
+
+        return index
+
+    @classmethod
+    def build_by_url(cls, user_id, url):
+        pinecone.init(api_key = PINECONE_API_KEY, environment = PINECONE_ENV)
 
         BeautifulSoupWebReader = download_loader("BeautifulSoupWebReader")
         web_loader = BeautifulSoupWebReader()
@@ -58,15 +70,22 @@ class LlamaIndexPineconeBuild:
             document.id_ = document.metadata['URL']
             document.metadata['user_id'] = user_id
 
-        # https://www.theinternet.io/articles/ask-ai/why-does-openai-use-1536-dimensions-for-embeddings-specifically-the-text-embedding-ada-002-model/
-        embed_model = OpenAIEmbedding(model='text-embedding-ada-002')
-        service_context = ServiceContext.from_defaults(embed_model=embed_model, chunk_size=512)
-        storage_context = StorageContext.from_defaults(vector_store = vector_store)
-
-        try:
-            index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
-            refresh_ref_docs = index.refresh_ref_docs(documents, update_kwargs={"delete_kwargs": {'delete_from_docstore': True}})
-        except:
-            index = GPTVectorStoreIndex.from_documents(documents, storage_context = storage_context, service_context = service_context)
+        index = cls.init_index()
+        refresh_ref_docs = index.refresh_ref_docs(documents, update_kwargs={"delete_kwargs": {'delete_from_docstore': True}})
 
         return index
+
+    @classmethod
+    def build_by_text(cls, user_id, document_id, document_text):
+        index = cls.init_index()
+        documents = [Document(id_=document_id, text=document_text, metadata={'user_id': user_id})]
+        refresh_ref_docs = index.refresh_ref_docs(documents, update_kwargs={"delete_kwargs": {'delete_from_docstore': True}})
+
+        return index
+
+    @classmethod
+    def delete_doc(cls, user_id, document_id):
+        index = cls.init_index()
+        result = index.delete_ref_doc(document_id, delete_from_docstore=True)
+
+        return result
