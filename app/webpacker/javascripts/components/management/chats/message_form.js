@@ -117,9 +117,7 @@ const MessageForm = () => {
           })
         }
       />
-      <button onClick={markCorrect} className="btn btn-tarco">Correct</button>
-      <button onClick={markInCorrect} className="btn btn-warning">Incorrect</button>
-      <button onClick={buildAiFaqSample} className="btn btn-success">Build Ai Faq</button>
+      <button onClick={buildAiFaqSample} className="btn btn-success">{I18n.t("admin.chat.build_ai_faq")}</button>
       <div className="text-left">
         <div className="margin-around m10 mt-0">
           <label>
