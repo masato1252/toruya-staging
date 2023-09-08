@@ -17,11 +17,11 @@ module Admin
     end
 
     def correct
-      ::TrackProcessedActionJob.perform_later(SecureRandom.uuid, "ai_evaluate", { correct: true })
+      ::TrackProcessedActionJob.perform_later("toruya", "ai_evaluate", { correct: true })
     end
 
     def incorrect
-      ::TrackProcessedActionJob.perform_later(SecureRandom.uuid, "ai_evaluate", { correct: false })
+      ::TrackProcessedActionJob.perform_later("toruya", "ai_evaluate", { correct: false })
     end
   end
 end
