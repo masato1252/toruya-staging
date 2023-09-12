@@ -1,0 +1,6 @@
+<%= react_component("lines/ai_support", {
+  encrypted_social_service_user_id: params[:encrypted_social_service_user_id],
+  categories: [ { label: "ご質問内容をお選びください", value: "" }].concat( I18n.t("ai_support.categories").map {|category| { label: category, value: category }})
+},
+{ camelize_props: false }
+) %>
