@@ -24,7 +24,7 @@ RSpec.describe Customers::VerifyIdentificationCode do
       let(:code) { booking_code.code }
 
       it "returns the matched booking code object and connect with social_customer" do
-        expect(LineClient).to receive(:send).with(social_customer, I18n.t("line.bot.connected_successfuly"))
+        expect(LineClient).to receive(:send).with(social_customer, I18n.t("line.bot.connected_successfully"))
         expect(LineClient).to receive(:link_rich_menu).with(social_customer: social_customer, social_rich_menu: social_rich_menu).and_return(spy(invalid?: false))
 
         expect(outcome.result).to eq(booking_code)
