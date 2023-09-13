@@ -158,7 +158,7 @@ const ProfileEdit =({props}) => {
                 ref={register({ required: true })}
                 name={`${props.attribute}[city]`}
                 type="text"
-                className="expaned"
+                className="expanded"
               />
             </div>
             <div className="field-row">
@@ -167,7 +167,7 @@ const ProfileEdit =({props}) => {
                 name="street1"
                 name={`${props.attribute}[street1]`}
                 type="text"
-                className="expaned"
+                className="expanded"
               />
             </div>
             <div className="field-row">
@@ -175,7 +175,7 @@ const ProfileEdit =({props}) => {
                 ref={register()}
                 name={`${props.attribute}[street2]`}
                 type="text"
-                className="expaned"
+                className="expanded"
               />
             </div>
           </>

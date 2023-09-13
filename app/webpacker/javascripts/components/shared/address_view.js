@@ -53,7 +53,7 @@ const AddressView = ({save_btn_text, handleSubmitCallback}) => {
             name="city"
             placeholder={I18n.t("common.address_city")}
             type="text"
-            className="expaned"
+            className="expanded"
           />
         </div>
         <div className="field">
@@ -62,7 +62,7 @@ const AddressView = ({save_btn_text, handleSubmitCallback}) => {
             name="street1"
             placeholder={I18n.t("common.address_street1")}
             type="text"
-            className="expaned"
+            className="expanded"
           />
         </div>
         <div className="field">
@@ -71,7 +71,7 @@ const AddressView = ({save_btn_text, handleSubmitCallback}) => {
             name="street2"
             placeholder={I18n.t("common.address_street2")}
             type="text"
-            className="expaned"
+            className="expanded"
           />
         </div>
         <div className="centerize">

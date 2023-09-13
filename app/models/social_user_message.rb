@@ -37,7 +37,9 @@ class SocialUserMessage < ApplicationRecord
     bot: 0,
     admin: 1,
     user: 2,
-    user_reply_bot: 3
+    user_reply_bot: 3,
+    user_ai_question: 4,
+    user_ai_response: 5
   }
 
   def hi_message

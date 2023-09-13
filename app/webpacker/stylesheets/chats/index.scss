@@ -37,6 +37,7 @@ $message_size: 8px;
 
     .bot,
     .staff,
+    .user_ai_response,
     .admin {
       float: $staff_message_position;
 
@@ -48,12 +49,21 @@ $message_size: 8px;
     .customer,
     .customer_reply_bot,
     .user,
+    .user_ai_question,
     .user_reply_bot {
       float: $customer_message_position;
 
       * {
         float: $customer_message_position;
       }
+    }
+
+    .user_ai_question > .message-content {
+      background-color: $palette-color13;
+    }
+
+    .user_ai_response > .message-content {
+      background-color: $palette-color12;
     }
 
     .bot > .message-content {

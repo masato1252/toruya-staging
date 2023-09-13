@@ -177,7 +177,7 @@
   input[type="tel"] {
     width: 45%;
 
-    &.expaned {
+    &.expanded {
       width: 80%;
     }
   }
@@ -323,4 +323,13 @@ textarea {
   border: 1px solid #7dd2f9;
   z-index: 999;
   color: #555555 !important;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-base {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
 }

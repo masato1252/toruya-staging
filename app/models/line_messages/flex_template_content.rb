@@ -212,5 +212,32 @@ module LineMessages
         }
       }
     end
+
+    def self.title_button_card(title:, action_templates:)
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": title,
+              "size": "lg",
+              "align": "start",
+              "weight": "bold",
+              "wrap": true
+            },
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "md",
+          "contents": action_templates
+        }
+      }
+    end
   end
 end

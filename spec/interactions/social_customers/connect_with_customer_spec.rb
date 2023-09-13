@@ -20,7 +20,7 @@ RSpec.describe SocialCustomers::ConnectWithCustomer do
       outcome
 
       expect(social_customer.customer_id).to eq(customer.id)
-      expect(LineClient).to have_received(:send).with(social_customer, I18n.t("line.bot.connected_successfuly"))
+      expect(LineClient).to have_received(:send).with(social_customer, I18n.t("line.bot.connected_successfully"))
     end
 
     context "when customer was connected with other social_customer" do
