@@ -51,16 +51,16 @@ export const AiSupport = (props) => {
       <TextareaAutosize
         ref={register({ required: true})}
         className="ai-question extend"
-        placeholder="Please ask your question"
+        placeholder={I18n.t("ai_support.ask_ai")}
         name="ai_question"
       />
       <button disabled={formState.isSubmitting} onClick={handleSubmit(onSubmit)} className="btn btn-success">
-        Send Your question to AI
+        {I18n.t("ai_support.send_question_to_ai")}
       </button>
-      <TextareaAutosize className="extend bg-white" disabled={true} value={ai_response} />
+      <TextareaAutosize className="extend bg-white text-base" disabled={true} value={ai_response} />
       {ai_response && (
         <button className="btn btn-tarco" onClick={askMoreQuestion}>
-          need to ask other question?
+          {I18n.t("ai_support.other_question")}
         </button>
       )}
     </>

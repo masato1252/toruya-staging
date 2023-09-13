@@ -13,6 +13,9 @@ ja:
       - 宣伝用LP
       - セグメント配信
       - その他
+    ask_ai: 質問を入力してください
+    send_question_to_ai: AIに質問を送信
+    other_question: 別の質問をする
   line_verification:
     line_login_confirm_title: "LINE連携の確認"
     line_login_confirm_desc_html: "連携が正しくできているか確認するために<br>LINEでログインしてください。"
