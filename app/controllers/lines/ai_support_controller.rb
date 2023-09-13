@@ -12,6 +12,8 @@ class Lines::AiSupportController < ActionController::Base
   end
 
   def create
+    ::TrackProcessedActionJob.perform_later("toruya", "ai_reply", {})
+
     question = "#{params[:category]}\n#{params[:ai_question]}"
     outcome = Ai::Query.run(user_id: "toruya", question: question)
 
