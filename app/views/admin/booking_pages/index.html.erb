@@ -1,0 +1,8 @@
+<ul>
+  <% @booking_pages.each do |booking_page| %>
+    <li>
+      <%= l(booking_page.created_at, format: :long_date_with_wday)%>
+      <%= link_to booking_page.name, booking_page_path(booking_page), target: "_blank" %>
+    </li>
+<% end %>
+</ul>

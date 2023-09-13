@@ -635,6 +635,9 @@ Rails.application.routes.draw do
           post "scenario/:scenario/demo", action: "demo", as: :demo
         end
       end
+
+      resources :sale_pages, only: [:index]
+      resources :booking_pages, only: [:index]
     end
   end
 

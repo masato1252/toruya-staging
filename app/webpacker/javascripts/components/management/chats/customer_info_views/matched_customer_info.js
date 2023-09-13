@@ -105,13 +105,17 @@ export default () => {
         </li>
         <hr />
         <li>
-          {I18n.t("admin.chat.booking_pages", { count: selected_customer.booking_pages_count } )}
+          <a href={Routes.admin_booking_pages_path({ social_service_user_id: selected_customer.id })} target="_blank">
+            {I18n.t("admin.chat.booking_pages", { count: selected_customer.booking_pages_count } )}
+          </a>
         </li>
         <li>
           {I18n.t("admin.chat.online_services", { count: selected_customer.online_services_count } )}
         </li>
         <li>
-          {I18n.t("admin.chat.sale_pages", { count: selected_customer.sale_pages_count } )}
+          <a href={Routes.admin_sale_pages_path({ social_service_user_id: selected_customer.id })} target="_blank">
+            {I18n.t("admin.chat.sale_pages", { count: selected_customer.sale_pages_count } )}
+          </a>
         </li>
         <li>
           {I18n.t("admin.chat.customers", { count: selected_customer.customers_count } )}
