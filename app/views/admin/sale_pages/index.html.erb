@@ -2,6 +2,12 @@
   <% @sale_pages.each do |sale_page| %>
     <li>
       <%= l(sale_page.created_at, format: :long_date_with_wday)%>
+      <% if sale_page.is_booking_page? %>
+        <i class="fa fa-calendar"></i>
+      <% else %>
+        <i class="fa fa-mobile-alt"></i>
+        <%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{sale_page.product.goal_type}.title") %>
+      <% end %>
       <%= link_to sale_page.product_name, sale_page_path(sale_page), target: "_blank" %>
     </li>
 <% end %>
