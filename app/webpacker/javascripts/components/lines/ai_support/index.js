@@ -57,7 +57,7 @@ export const AiSupport = (props) => {
       <button disabled={formState.isSubmitting} onClick={handleSubmit(onSubmit)} className="btn btn-success">
         {I18n.t("ai_support.send_question_to_ai")}
       </button>
-      <TextareaAutosize className="extend bg-white text-base" disabled={true} value={ai_response} />
+      <TextareaAutosize className="extend bg-white text-base text-black" disabled={true} value={ai_response} />
       {ai_response && (
         <button className="btn btn-tarco" onClick={askMoreQuestion}>
           {I18n.t("ai_support.other_question")}
