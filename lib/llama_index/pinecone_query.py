@@ -6,11 +6,13 @@ import os
 import sys
 import openai
 import pdb
-from llama_index import PromptTemplate, VectorStoreIndex
+from llama_index import PromptTemplate, VectorStoreIndex, ServiceContext
 from llama_index.vector_stores import PineconeVectorStore
 from llama_index.vector_stores.types import ExactMatchFilter, MetadataFilters
 from llama_index.query_engine import RetryQueryEngine
 from llama_index.evaluation import QueryResponseEvaluator
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.llms import OpenAI
 from dotenv import load_dotenv
 import logging
 
@@ -50,9 +52,11 @@ class LlamaIndexPineconeQuery:
         pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
         vector_store = PineconeVectorStore(pinecone.Index(index_name), namespace=pinecone_namespace)
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
+        embed_model = OpenAIEmbedding(model='text-embedding-ada-002')
+        service_context = ServiceContext.from_defaults(embed_model=embed_model, chunk_size=512, llm="default")
 
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
-        base_query_engine = index.as_query_engine(filters=filters, text_qa_template=PromptTemplate(prompt or TEMPLATE_STR))
+        base_query_engine = index.as_query_engine(service_context=service_context, filters=filters, text_qa_template=PromptTemplate(prompt or TEMPLATE_STR))
         query_response_evaluator = QueryResponseEvaluator()
         query_engine = RetryQueryEngine(base_query_engine, query_response_evaluator)
 
