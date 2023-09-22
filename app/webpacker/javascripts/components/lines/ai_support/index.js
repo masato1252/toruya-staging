@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from 'react-autosize-textarea';
-import ReactMarkdown from 'react-markdown'
+import Linkify from 'linkify-react'
 
 import { SelectOptions } from "shared/components"
 import { CommonServices } from "components/user_bot/api"
@@ -58,7 +58,10 @@ export const AiSupport = (props) => {
       <button disabled={formState.isSubmitting} onClick={handleSubmit(onSubmit)} className="btn btn-success">
         {I18n.t("ai_support.send_question_to_ai")}
       </button>
-      <ReactMarkdown className="margin-around extend bg-white text-base text-black break-line-content" children={ai_response} />
+      <div className="margin-around extend bg-white text-base text-black break-line-content">
+        <Linkify>{ai_response}</Linkify>
+      </div>
+
       {ai_response && (
         <button className="btn btn-tarco" onClick={askMoreQuestion}>
           {I18n.t("ai_support.other_question")}
