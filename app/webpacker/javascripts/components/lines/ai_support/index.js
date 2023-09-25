@@ -49,15 +49,19 @@ export const AiSupport = (props) => {
         <SelectOptions options={props.categories} />
       </select>
       {errors["ai_question"] && <div className="danger">{I18n.t("common.required_label")}</div>}
-      <TextareaAutosize
-        ref={register({ required: true})}
-        className="ai-question extend"
-        placeholder={I18n.t("ai_support.ask_ai")}
-        name="ai_question"
-      />
-      <button disabled={formState.isSubmitting} onClick={handleSubmit(onSubmit)} className="btn btn-success">
-        {I18n.t("ai_support.send_question_to_ai")}
-      </button>
+      {watch("category") && (
+        <>
+          <TextareaAutosize
+            ref={register({ required: true})}
+            className="ai-question extend"
+            placeholder={I18n.t("ai_support.ask_ai")}
+            name="ai_question"
+          />
+          <button disabled={formState.isSubmitting} onClick={handleSubmit(onSubmit)} className="btn btn-success">
+            {I18n.t("ai_support.send_question_to_ai")}
+          </button>
+        </>
+      )}
       <div className="margin-around extend bg-white text-base text-black break-line-content">
         <Linkify>{ai_response}</Linkify>
       </div>
