@@ -67,6 +67,11 @@ ja:
         reply_later: 後で通知
         line_info: LINE名
       settings:
+        support:
+          user_support: ユーザーサポート
+          documents: ヘルプマニュアル
+          faq: よくある質問
+          ai_support: AIサポート
         dashboard:
           title: アカウント設定
           info_label: アカウント登録情報
