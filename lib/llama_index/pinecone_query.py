@@ -15,9 +15,11 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms import OpenAI
 from dotenv import load_dotenv
 import logging
+import time
 
 # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+logging.basicConfig(filename='log/pinecone_query.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 load_dotenv()
 
@@ -49,15 +51,41 @@ TEMPLATE_STR = (
 class LlamaIndexPineconeQuery:
     @classmethod
     def perform(cls, user_id, question, prompt=None):
+        start_time = time.time()
+
         pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
+
+        pinecone_init_end_time = time.time()
+        execution_time = pinecone_init_end_time - start_time
+        logging.info(f'pinecone_init: {execution_time:.2f} seconds')
+        print(f'pinecone_init: {execution_time:.2f} seconds')
+
         vector_store = PineconeVectorStore(pinecone.Index(index_name), namespace=pinecone_namespace)
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
+        llm = OpenAI()
+
+        index_end_time = time.time()
+        execution_time = index_end_time - pinecone_init_end_time
+        logging.info(f'Index time: {execution_time:.2f} seconds')
+        print(f'Index time: {execution_time:.2f} seconds')
+
         embed_model = OpenAIEmbedding(model='text-embedding-ada-002')
-        service_context = ServiceContext.from_defaults(embed_model=embed_model, chunk_size=512, llm="default")
+        service_context = ServiceContext.from_defaults(embed_model=embed_model, chunk_size=512, llm=llm)
 
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
         base_query_engine = index.as_query_engine(service_context=service_context, filters=filters, text_qa_template=PromptTemplate(prompt or TEMPLATE_STR))
+        engine_end_time = time.time()
+        execution_time = engine_end_time - index_end_time
+        logging.info(f'engine time: {execution_time:.2f} seconds')
+        print(f'engine time: {execution_time:.2f} seconds')
+
         query_response_evaluator = QueryResponseEvaluator()
         query_engine = RetryQueryEngine(base_query_engine, query_response_evaluator)
+        response = query_engine.query(question)
 
-        return query_engine.query(question)
+        query_end_time = time.time()
+        execution_time = query_end_time - engine_end_time
+        logging.info(f'query time: {execution_time:.2f} seconds')
+        print(f'query time: {execution_time:.2f} seconds')
+
+        return response
