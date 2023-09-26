@@ -15,10 +15,23 @@ class Lines::AiSupportController < ActionController::Base
     ::TrackProcessedActionJob.perform_later("toruya", "ai_reply", { category: params[:category] })
 
     question = "#{params[:category]}\n#{params[:ai_question]}"
-    outcome = Ai::Query.run(user_id: "toruya", question: question)
+    ai_uid = SecureRandom.uuid
+    ::AiSupports::Create.perform_later(
+      user_id: "toruya",
+      question: question,
+      social_user: current_social_user,
+      ai_uid: ai_uid
+    )
 
-    SocialUserMessages::CreateAiMessage.run(social_user: current_social_user, ai_question: question, ai_response: outcome.result[:message])
-    return_json_response(outcome, outcome.result)
+    render json: { ai_uid: ai_uid }
+  end
+
+  def response_check
+    if message = SocialUserMessage.where(social_user: current_social_user, ai_uid: params[:ai_uid], message_type: SocialUserMessage.message_types[:user_ai_response]).take
+      render json: { message: message.raw_content }
+    else
+      render json: { message: "" }
+    end
   end
 
   def current_social_user

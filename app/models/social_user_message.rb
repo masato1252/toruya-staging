@@ -4,6 +4,7 @@
 # Table name: social_user_messages
 #
 #  id               :bigint           not null, primary key
+#  ai_uid           :string
 #  content_type     :string
 #  message_type     :integer
 #  nth_time         :integer
@@ -20,7 +21,8 @@
 #
 # Indexes
 #
-#  message_scenario_index  (social_user_id,scenario)
+#  index_social_user_messages_on_social_user_id_and_ai_uid  (social_user_id,ai_uid)
+#  message_scenario_index                                   (social_user_id,scenario)
 #
 
 class SocialUserMessage < ApplicationRecord

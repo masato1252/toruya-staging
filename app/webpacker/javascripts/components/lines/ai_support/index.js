@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from 'react-autosize-textarea';
 import Linkify from 'linkify-react'
@@ -9,11 +9,21 @@ import { SelectOptions } from "shared/components"
 import { CommonServices } from "components/user_bot/api"
 import ProcessingBar from "shared/processing_bar";
 import I18n from 'i18n-js/index.js.erb';
+import useInterval from 'libraries/use_interval';
 
 export const AiSupport = (props) => {
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({});
   const [ai_response, setAiResponse] = useState("")
   const [processing, setProcessing] = useState(false)
+  const [isAiChecking, setAiChecking] = useState(false);
+  const [ai_uid, setAiUid] = useState("")
+
+  useInterval(
+    () => {
+      checkAiResponse()
+    },
+    isAiChecking? 3000 : null
+  );
 
   const onSubmit = async (data) => {
     setProcessing(true)
@@ -23,13 +33,23 @@ export const AiSupport = (props) => {
       url: Routes.lines_ai_support_index_path({format: 'json'}),
       data: _.assign( data, { encrypted_social_service_user_id: props.encrypted_social_service_user_id })
     })
-    setProcessing(false)
 
-    if (error) {
-      toastr.error(error.response.data.error_message)
-    }
-    else {
+    setAiChecking(true)
+    setAiUid(response.data["ai_uid"])
+  }
+
+  const checkAiResponse = async () => {
+    if (!ai_uid) return;
+
+    let [error, response] = await CommonServices.get({
+      url: Routes.response_check_lines_ai_support_index_path({format: 'json'}),
+      data: { ai_uid: ai_uid, encrypted_social_service_user_id: props.encrypted_social_service_user_id }
+    })
+
+    if (response.data["message"]) {
       setAiResponse(response.data["message"])
+      setProcessing(false)
+      setAiChecking(false)
     }
   }
 
@@ -57,7 +77,7 @@ export const AiSupport = (props) => {
             placeholder={I18n.t("ai_support.ask_ai")}
             name="ai_question"
           />
-          <button disabled={formState.isSubmitting} onClick={handleSubmit(onSubmit)} className="btn btn-success">
+          <button disabled={formState.isSubmitting || processing} onClick={handleSubmit(onSubmit)} className="btn btn-success">
             {I18n.t("ai_support.send_question_to_ai")}
           </button>
         </>

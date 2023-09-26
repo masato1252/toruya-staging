@@ -4732,6 +4732,13 @@ CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON pub
 
 
 --
+-- Name: index_social_user_messages_on_social_user_id_and_ai_uid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_user_messages_on_social_user_id_and_ai_uid ON public.social_user_messages USING btree (social_user_id, ai_uid);
+
+
+--
 -- Name: index_social_users_on_social_rich_menu_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5420,6 +5427,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230620094659'),
 ('20230621014139'),
 ('20230815055914'),
-('20230830144948');
+('20230830144948'),
+('20230926140612');
 
 
