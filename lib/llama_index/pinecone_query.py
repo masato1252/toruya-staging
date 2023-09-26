@@ -57,7 +57,7 @@ class LlamaIndexPineconeQuery:
 
         filters = MetadataFilters(filters=[ExactMatchFilter(key="user_id", value=user_id)])
         base_query_engine = index.as_query_engine(service_context=service_context, filters=filters, text_qa_template=PromptTemplate(prompt or TEMPLATE_STR))
-        # query_response_evaluator = QueryResponseEvaluator()
-        # query_engine = RetryQueryEngine(base_query_engine, query_response_evaluator)
+        query_response_evaluator = QueryResponseEvaluator()
+        query_engine = RetryQueryEngine(base_query_engine, query_response_evaluator)
 
-        return base_query_engine.query(question)
+        return query_engine.query(question)
