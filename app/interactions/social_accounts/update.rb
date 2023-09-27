@@ -34,7 +34,7 @@ module SocialAccounts
             account.update(login_channel_secret: MessageEncryptor.encrypt(attrs[:login_channel_secret]))
           end
 
-          if account.bot_data_finished?
+          if account.line_settings_verified?
             SocialAccounts::RichMenus::CustomerReservations.perform_later(social_account: account)
           end
 
