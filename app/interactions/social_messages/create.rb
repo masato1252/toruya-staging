@@ -54,6 +54,7 @@ module SocialMessages
       end
 
       if is_message_from_customer
+        # TODO: Need to deal with other pending
         # Switch user rich menu to tell users there are new messages
         ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
 

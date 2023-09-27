@@ -7,6 +7,7 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
   string :rich_menu_key
 
   def execute
+    # TODO: Need to deal with other pending
     if rich_menu_key == UserBotLines::RichMenus::Dashboard::KEY &&
         social_user.user.social_account &&
         social_user.user.social_account.social_messages.handleable.unread.exists?

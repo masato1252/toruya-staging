@@ -4,6 +4,7 @@ module SocialMessages
     object :social_message
 
     def execute
+      # TODO: Need to deal with other pending
       if social_message.unread? && social_message.customer? && social_customer.customer
         UserBotLines::Actions::SwitchRichMenu.run(
           social_user: social_customer.user.social_user,
