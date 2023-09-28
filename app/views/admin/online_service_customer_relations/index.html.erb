@@ -3,6 +3,7 @@
     <li>
       <%= relation.start_date_text %> ~ <%= relation.end_date_text %> : 
       <%= link_to relation.online_service.name, sale_page_path(relation.sale_page), target: "_blank" %>
+      <%= relation.customer.name %>
       <%= relation.payment_state %>
       <%= Money.new(relation.product_amount).format %>
     </li>
