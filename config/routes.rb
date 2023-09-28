@@ -642,6 +642,7 @@ Rails.application.routes.draw do
 
       resources :sale_pages, only: [:index]
       resources :booking_pages, only: [:index]
+      resources :online_service_customer_relations, only: [:index]
     end
   end
 

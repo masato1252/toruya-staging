@@ -19,6 +19,7 @@ ja:
       sale_pages: "宣伝用LP %{count}"
       customers: "顧客データ %{count}"
       reservations: "予約データ %{count}"
+      service_relations: "service relation %{count}"
       next_charge_date: "次回支払い %{date}"
       sign_up_date: "登録 %{date}"
       trial_end_date: "試用期間 ~ %{date}"

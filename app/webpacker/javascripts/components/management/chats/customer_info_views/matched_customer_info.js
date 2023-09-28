@@ -121,6 +121,11 @@ export default () => {
           {I18n.t("admin.chat.customers", { count: selected_customer.customers_count } )}
         </li>
         <li>
+          <a href={Routes.admin_online_service_customer_relations_path({ social_service_user_id: selected_customer.id })} target="_blank">
+            {I18n.t("admin.chat.service_relations", { count: selected_customer.service_relations_count } )}
+          </a>
+        </li>
+        <li>
           {I18n.t("admin.chat.reservations", { count: selected_customer.reservations_count } )}
         </li>
         <li>

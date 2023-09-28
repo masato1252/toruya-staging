@@ -64,6 +64,10 @@ class SocialUserSerializer
     social_user.user&.reservations&.count || 0
   end
 
+  attribute :service_relations_count do |social_user|
+    social_user.user ? OnlineServiceCustomerRelation.joins(:online_service).where("online_services.user_id": social_user.user_id).count : 0
+  end
+
   attribute :member_plan_name do |social_user|
     social_user.user&.member_plan_name
   end
