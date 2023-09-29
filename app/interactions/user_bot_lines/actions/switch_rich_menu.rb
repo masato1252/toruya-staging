@@ -7,11 +7,11 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
   string :rich_menu_key
 
   def execute
-    # TODO: Need to deal with other pending
     if rich_menu_key == UserBotLines::RichMenus::Dashboard::KEY &&
         (
           (user.social_account && user.social_account.social_messages.handleable.unread.exists?) ||
-          user.pending_reservations.exists?
+          user.pending_reservations.exists? ||
+          user.missing_sale_page_services.exists?
         )
       menu_key = UserBotLines::RichMenus::DashboardWithNotifications::KEY
     end

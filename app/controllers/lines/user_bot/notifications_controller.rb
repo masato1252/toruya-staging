@@ -4,8 +4,9 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
   def index
     @messages = current_user.social_account.social_messages.handleable.unread
     @reservations = current_user.pending_reservations
+    @services = current_user.missing_sale_page_services
 
-    if @messages.empty? || @reservations.empty?
+    if @messages.empty? || @reservations.empty? || @services.empty?
       UserBotLines::Actions::SwitchRichMenu.run(
         social_user: social_user,
         rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY

@@ -17,6 +17,7 @@
       <% end %>
     <% end %>
   </div>
+
   <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_reservations_label") %></div>
   <div class="booking-pages-list">
     <% @reservations.each do |reservation| %>
@@ -27,6 +28,19 @@
         <div>
           <h3><%= I18n.l(reservation.start_time, format: :date_with_wday) %> ~ <%= I18n.l(reservation.end_time, format: :time_only) %></h3>
           <div class="desc dotdotdot"><%= customer_names_sentence(reservation) %></div>
+        </div>
+        <i class="fa fa-angle-right"></i>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.missing_sale_page_service_label") %></div>
+  <div class="booking-pages-list">
+    <% @services.each do |service| %>
+      <%= link_to new_lines_user_bot_sales_online_service_path(slug: service.slug), class: "field-row with-next-arrow" do %>
+        <div>
+          <h3><%= service.internal_product_name %></h3>
+          <div class="desc dotdotdot"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
         </div>
         <i class="fa fa-angle-right"></i>
       <% end %>
