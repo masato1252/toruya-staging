@@ -17,4 +17,19 @@
       <% end %>
     <% end %>
   </div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_reservations_label") %></div>
+  <div class="booking-pages-list">
+    <% @reservations.each do |reservation| %>
+      <%= link_to date_lines_user_bot_schedules_path(
+        reservation.start_time.to_fs(:date),
+        reservation_id: reservation.id
+      ), class: "field-row with-next-arrow" do %>
+        <div>
+          <h3><%= I18n.l(reservation.start_time, format: :date_with_wday) %> ~ <%= I18n.l(reservation.end_time, format: :time_only) %></h3>
+          <div class="desc dotdotdot"><%= customer_names_sentence(reservation) %></div>
+        </div>
+        <i class="fa fa-angle-right"></i>
+      <% end %>
+    <% end %>
+  </div>
 </div>

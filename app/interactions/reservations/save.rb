@@ -142,6 +142,7 @@ module Reservations
         end
 
         compose(Users::UpdateCustomerLatestActivityAt, user: user)
+        UserBotLines::Actions::SwitchRichMenu.run(social_user: user.social_user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY) if user.social_user
 
         reservation
       end

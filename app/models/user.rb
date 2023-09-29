@@ -231,6 +231,13 @@ class User < ApplicationRecord
     "👩 New user joined, user_id: #{id}"
   end
 
+  def pending_reservations
+    reservation_scope = Reservation.joins(reservation_customers: :customer).where(user_id: id).where("reservations.start_time > ?", 1.day.ago).where("reservations.deleted_at": nil)
+    reservation_scope.where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).or(
+      reservation_scope.where("reservation_customers.state": "pending").where("customers.deleted_at": nil)
+    ).order("reservations.start_time ASC, reservations.id ASC").distinct
+  end
+
   private
 
   def today_reservations
