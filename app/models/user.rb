@@ -244,6 +244,10 @@ class User < ApplicationRecord
     online_services.where(id: missing_sale_page_service_ids)
   end
 
+  def pending_customer_services
+    online_services.external.joins(:online_service_customer_relations).where("online_service_customer_relations.permission_state": :pending).uniq
+  end
+
   private
 
   def today_reservations

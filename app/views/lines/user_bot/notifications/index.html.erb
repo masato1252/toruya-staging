@@ -34,9 +34,22 @@
     <% end %>
   </div>
 
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_customer_services_label") %></div>
+  <div class="booking-pages-list">
+    <% @pending_customer_services.each do |service| %>
+      <%= link_to lines_user_bot_service_customers_path(service), class: "field-row with-next-arrow" do %>
+        <div>
+          <h3><%= service.internal_product_name %></h3>
+          <div class="desc dotdotdot"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
+        </div>
+        <i class="fa fa-angle-right"></i>
+      <% end %>
+    <% end %>
+  </div>
+
   <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.missing_sale_page_service_label") %></div>
   <div class="booking-pages-list">
-    <% @services.each do |service| %>
+    <% @missing_sale_page_services.each do |service| %>
       <%= link_to new_lines_user_bot_sales_online_service_path(slug: service.slug), class: "field-row with-next-arrow" do %>
         <div>
           <h3><%= service.internal_product_name %></h3>

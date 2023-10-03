@@ -719,3 +719,4 @@ ja:
         unread_message_label: お問合せメッセージ
         pending_reservations_label: 確認が必要な予約
         missing_sale_page_service_label: 宣伝用LPが未作成のサービス
+        pending_customer_services_label: 確認が必要なサービス
