@@ -2506,7 +2506,8 @@ CREATE TABLE public.social_user_messages (
     content_type character varying,
     slack_message_id character varying,
     scenario character varying,
-    nth_time integer
+    nth_time integer,
+    ai_uid character varying
 );
 
 

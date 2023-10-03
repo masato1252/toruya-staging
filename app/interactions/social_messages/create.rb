@@ -62,6 +62,10 @@ module SocialMessages
           Notifiers::Users::LineSettings::VerifiedMessage.perform_later!(receiver: social_user)
           Notifiers::Users::LineSettings::VerifiedVideo.perform_later!(receiver: social_user)
           Notifiers::Users::LineSettingsVerified.perform_at(schedule_at: 1.minute.from_now, receiver: social_user.user)
+
+          if social_account.line_settings_verified?
+            SocialAccounts::RichMenus::CustomerReservations.perform_debounce(social_account: social_account)
+          end
         end
 
         case content_type

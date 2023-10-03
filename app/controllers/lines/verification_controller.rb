@@ -59,6 +59,10 @@ class Lines::VerificationController < ActionController::Base
         Notifiers::Users::LineSettings::VerifyFailedVideo.run(receiver: current_user.social_user)
       end
     end
+
+    if current_user.social_account&.line_settings_verified?
+      SocialAccounts::RichMenus::CustomerReservations.perform_debounce(social_account: current_user.social_account)
+    end
   end
 
   def current_user
