@@ -1,0 +1,19 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("reservation.modal.refund.title") %>
+      </h4>
+    </div>
+    <%= form_with url: refund_lines_user_bot_customer_payment_path(@payment), local: true do |form| %>
+      <div class="modal-body">
+        <%= t("reservation.modal.refund.message") %><br />
+        <%= t("common.price") %><%= text_field_tag :amount, @payment.amount.fractional %><%= t("common.unit") %>
+      </div>
+      <div class="modal-footer centerize">
+        <button type="button" class="btn btn-yellow" data-dismiss="modal"><%= t("common.close") %></button>
+        <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message")  } %>
+      </div>
+    <% end %>
+  </div>
+</div>

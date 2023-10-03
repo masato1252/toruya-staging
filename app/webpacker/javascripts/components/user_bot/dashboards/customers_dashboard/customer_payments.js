@@ -7,6 +7,26 @@ import CustomerNav from "./customer_nav";
 
 import { CustomerServices } from "user_bot/api"
 
+const PaymentCell = ({payment}) => {
+  return (
+    <>
+      <div className={`state ${payment.state}`}></div>
+      <dd className="date">{payment.month_date}</dd>
+      <div className="time">
+        <div className="start-time">
+          {payment.time}
+        </div>
+      </div>
+      <div className="content">
+        {payment.product_name}
+      </div>
+      <div className="extra">
+        {payment.amount}
+      </div>
+    </>
+  )
+}
+
 const UserBotCustomerPayments = () =>{
   const { selected_customer, payments, dispatch, props, updateCustomer } = useGlobalContext()
   let previousYear;
@@ -53,21 +73,21 @@ const UserBotCustomerPayments = () =>{
         return (
           <React.Fragment key={`payment-${payment.id}`}>
             {divider}
-            <div className="event">
-              <div className={`state ${payment.state}`}></div>
-              <dd className="date">{payment.month_date}</dd>
-              <div className="time">
-                <div className="start-time">
-                  {payment.time}
+            {
+              payment.state === "completed" ? (
+                <div className="event"
+                  data-controller="modal"
+                  data-modal-target="#dummyModal"
+                  data-action="click->modal#popup"
+                  data-modal-path={Routes.refund_modal_lines_user_bot_customer_payment_path(payment.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
+                  <PaymentCell payment={payment} />
                 </div>
-              </div>
-              <div className="content">
-                {payment.product_name}
-              </div>
-              <div className="extra">
-                {payment.amount}
-              </div>
-            </div>
+              ) : (
+                <div className="event">
+                  <PaymentCell payment={payment} />
+                </div>
+              )
+            }
           </React.Fragment>
         )
       })}

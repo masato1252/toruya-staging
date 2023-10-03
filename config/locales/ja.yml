@@ -155,8 +155,8 @@ ja:
         message: 予約をキャンセルする前に、支払済の顧客に返金してください。
         paid_customers_title: 支払済の顧客
       refund:
-        title: 返金
-        message: Stripeを通じて返金する金額を入力してください。
+        title: 返金する
+        message: 返金は Stripe を通して行われます。返済のタイミングや手数料については Stripe へお問合せください。
         submit_btn: 返　金
         confirmation_message: このままStripeから返金を実行しますか？
       staff_states:

@@ -15,6 +15,28 @@ class Lines::UserBot::Customers::PaymentsController < Lines::UserBotDashboardCon
     }
   end
 
+  def refund_modal
+    @payment = CustomerPayment.find(params[:id])
+    render layout: false
+  end
+
+  def refund
+    customer_payment = CustomerPayment.find(params[:id])
+    outcome = CustomerPayments::Refund.run(
+      customer_payment: customer_payment,
+      amount: Money.new(params[:amount], Money.default_currency.iso_code)
+    )
+
+    if outcome.invalid?
+      Rollbar.error(
+        "Unexpected CustomerPayments::Refund",
+        errors: outcome.errors.details
+      )
+    end
+
+    redirect_to lines_user_bot_customers_path(customer_id: customer_payment.customer_id, user_id: Current.business_owner.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:payments])
+  end
+
   private
 
   def set_customer

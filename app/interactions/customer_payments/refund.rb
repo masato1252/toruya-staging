@@ -3,22 +3,23 @@
 require "slack_client"
 
 # https://stripe.com/docs/refunds#tracing-refunds
-class CustomerPayments::RefundReservation < ActiveInteraction::Base
-  object :reservation_customer
+class CustomerPayments::Refund < ActiveInteraction::Base
+  object :customer_payment
   object :amount, class: Money
 
   validate :validate_refundable
   validate :validate_amount
 
   def execute
-    paid_payment.transaction do
+    customer_payment.transaction do
       begin
         stripe_refund = Stripe::Refund.create(
           {
-            charge: paid_payment.stripe_charge_details["id"],
+            charge: customer_payment.stripe_charge_details["id"],
             amount: amount.fractional,
             metadata: {
-              reservation_customer_id: reservation_customer.id
+              product_id: customer_payment.product_id,
+              product_type: customer_payment.product_type
             }
           },
           stripe_account: customer.user.stripe_provider.uid
@@ -28,19 +29,20 @@ class CustomerPayments::RefundReservation < ActiveInteraction::Base
           refund_payment(stripe_refund)
         else
           Rollbar.warning(
-            "refund_reservation_failed",
+            "refund_payment_failed",
             stripe_refund: stripe_refund.as_json,
-            reservation_customer: reservation_customer.id
+            product_id: customer_payment.product_id,
+            product_type: customer_payment.product_type
           )
 
-          errors.add(:reservation_customer, :refund_failed)
+          errors.add(:customer_payment, :refund_failed)
         end
       rescue Stripe::CardError, Stripe::StripeError => error
         if error.code == "charge_already_refunded"
           refund_payment
         else
           Rollbar.error(error)
-          errors.add(:reservation_customer, :refund_failed)
+          errors.add(:customer_payment, :refund_failed)
         end
       end
     end
@@ -50,31 +52,39 @@ class CustomerPayments::RefundReservation < ActiveInteraction::Base
 
   def refund_payment(stripe_refund_response = nil)
     payment = customer.customer_payments.create!(
-      product: reservation_customer,
+      product: product,
       amount: -amount,
       manual: true
     )
 
     payment.stripe_charge_details = stripe_refund_response.as_json
     payment.refunded!
-    reservation_customer.payment_refunded!
-  end
-
-  def paid_payment
-    @paid_payment ||= customer.customer_payments.completed.where(product: reservation_customer).first
+    product_refund
   end
 
   def customer
-    @customer ||= reservation_customer.customer
+    @customer ||= customer_payment.customer
+  end
+
+  def product
+    customer_payment.product
+  end
+
+  def product_refund
+    product.is_a?(ReservationCustomer) ? reservation_customer.payment_refunded! : product.refunded_payment_state!
+  end
+
+  def payment_refunded
+    product.is_a?(ReservationCustomer) ? product.payment_refunded? : product.refunded_payment_state?
   end
 
   def validate_refundable
-    errors.add(:reservation_customer, :reservation_was_refunded) if reservation_customer.payment_refunded?
+    errors.add(:reservation_customer, :product_was_refunded) if payment_refunded
   end
 
   def validate_amount
-    if amount > reservation_customer.booking_amount
-      errors.add(:amount, :over_booking_amount)
+    if amount > customer_payment.amount
+      errors.add(:amount, :over_paid_amount)
     end
 
     unless amount.positive?

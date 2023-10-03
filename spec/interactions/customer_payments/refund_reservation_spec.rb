@@ -25,7 +25,7 @@ RSpec.describe CustomerPayments::RefundReservation do
       expect {
         outcome
       }.to change {
-        CustomerPayment.where(customer_id: reservation_customer.customer_id, product: reservation_customer, amount_cents: booking_amount.fractional, manual: true).refunded.count
+        CustomerPayment.where(customer_id: reservation_customer.customer_id, product: reservation_customer, amount_cents: -booking_amount.fractional, manual: true).refunded.count
       }.by(1)
 
       expect(reservation_customer).to be_payment_refunded
