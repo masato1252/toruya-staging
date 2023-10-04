@@ -245,7 +245,7 @@ class User < ApplicationRecord
   end
 
   def pending_customer_services
-    online_services.external.joins(:online_service_customer_relations).where("online_service_customer_relations.permission_state": :pending).uniq
+    online_services.external.joins(:online_service_customer_relations).where("online_service_customer_relations.permission_state": :pending).select("id", "internal_name", "name", "goal_type").distinct
   end
 
   private
