@@ -1,7 +1,9 @@
 <div class="booking-pages form with-top-bar">
   <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.notifications.title") %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.unread_message_label") %></div>
+  <% if @messages.present? %>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.unread_message_label") %></div>
+  <% end %>
   <div class="booking-pages-list">
     <% @messages.each do |message| %>
       <%= link_to lines_user_bot_customers_path(
@@ -18,7 +20,9 @@
     <% end %>
   </div>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_reservations_label") %></div>
+  <% if @reservations.present? %>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_reservations_label") %></div>
+  <% end %>
   <div class="booking-pages-list">
     <% @reservations.each do |reservation| %>
       <%= link_to date_lines_user_bot_schedules_path(
@@ -34,7 +38,9 @@
     <% end %>
   </div>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_customer_services_label") %></div>
+  <% if @pending_customer_services.present? %>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_customer_services_label") %></div>
+  <% end %>
   <div class="booking-pages-list">
     <% @pending_customer_services.each do |service| %>
       <%= link_to lines_user_bot_service_customers_path(service), class: "field-row with-next-arrow" do %>
@@ -47,7 +53,9 @@
     <% end %>
   </div>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.missing_sale_page_service_label") %></div>
+  <% if @missing_sale_page_services.present? %>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.missing_sale_page_service_label") %></div>
+  <% end %>
   <div class="booking-pages-list">
     <% @missing_sale_page_services.each do |service| %>
       <%= link_to new_lines_user_bot_sales_online_service_path(slug: service.slug), class: "field-row with-next-arrow" do %>
