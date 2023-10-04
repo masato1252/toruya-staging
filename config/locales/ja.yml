@@ -741,3 +741,4 @@ ja:
           attributes:
             attrs:
               has_full_width_characters: "^半角文字で入力してください"
+              invalid_settings: "^不正な値です"

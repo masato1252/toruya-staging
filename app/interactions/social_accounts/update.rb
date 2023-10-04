@@ -4,6 +4,8 @@ require "message_encryptor"
 
 module SocialAccounts
   class Update < ActiveInteraction::Base
+    INVALID_TOKEN_REGEXP = /[\s|\/]/
+
     object :user
     string :update_attribute
 
@@ -18,6 +20,7 @@ module SocialAccounts
     end
 
     validate :validate_full_width_characters
+    validate :validate_raw_settings
 
     def execute
       begin
@@ -60,6 +63,20 @@ module SocialAccounts
       errors.add(:attrs, :has_full_width_characters) if attrs[:basic_id].present? && attrs[:basic_id].multibyte?
       errors.add(:attrs, :has_full_width_characters) if attrs[:login_channel_id].present? && attrs[:login_channel_id].multibyte?
       errors.add(:attrs, :has_full_width_characters) if attrs[:login_channel_secret].present? && attrs[:login_channel_secret].multibyte?
+    end
+
+    def validate_raw_settings
+      if attrs[:channel_token]&.match?(INVALID_TOKEN_REGEXP)
+        errors.add(:attrs, :invalid_settings)
+      end
+
+      if attrs[:channel_secret]&.match?(INVALID_TOKEN_REGEXP)
+        errors.add(:attrs, :invalid_settings)
+      end
+
+      if attrs[:login_channel_secret]&.match?(INVALID_TOKEN_REGEXP)
+        errors.add(:attrs, :invalid_settings)
+      end
     end
   end
 end
