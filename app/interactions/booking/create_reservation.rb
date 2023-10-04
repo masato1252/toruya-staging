@@ -87,7 +87,7 @@ module Booking
       #     if booking page is allow overlap, then try to create a new reservation, like reservation doesn't exist case
       #     if not allow overlap, show error message
       #
-      # else reservation doens't exist
+      # else reservation doesn't exist
       #  use Booking::SharedMethods loop_for_reserable_spot to find the available staffs 
 
       Reservation.transaction do
