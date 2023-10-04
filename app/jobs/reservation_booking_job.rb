@@ -14,14 +14,12 @@ class ReservationBookingJob < ApplicationJob
     )
 
     CustomMessage.scenario_of(booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER).where.not(before_minutes: nil).each do |custom_message|
-      if reservation.notifiable?
-        Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
-          schedule_at: reservation.start_time.advance(minutes: -custom_message.before_minutes),
-          custom_message: custom_message,
-          reservation: reservation,
-          receiver: customer
-        )
-      end
+      Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
+        schedule_at: reservation.start_time.advance(minutes: -custom_message.before_minutes),
+        custom_message: custom_message,
+        reservation: reservation,
+        receiver: customer
+      )
     end
   end
 end
