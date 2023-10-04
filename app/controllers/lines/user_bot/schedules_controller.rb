@@ -15,6 +15,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
       user_ability = ability(r.shop.user, r.shop)
       user_ability.responsible_for_reservation(r) || (member_shop_ids.include?(r.shop_id.to_s) && user_ability.can?(:see, r))
     end
+    @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
 
     # Mix off custom schedules and reservations
     off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: current_user.id)

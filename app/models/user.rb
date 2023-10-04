@@ -101,6 +101,7 @@ class User < ApplicationRecord
   has_one :user_metric
   has_many :web_push_subscriptions
   has_many :sale_pages, -> { active }
+  has_many :all_sale_pages, class_name: "SalePage"
   has_many :online_services
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
@@ -229,6 +230,22 @@ class User < ApplicationRecord
 
   def hi_message
     "👩 New user joined, user_id: #{id}"
+  end
+
+  def pending_reservations
+    reservation_scope = Reservation.joins(reservation_customers: :customer).where(user_id: id).where("reservations.start_time > ?", 1.day.ago).where("reservations.deleted_at": nil)
+    reservation_scope.where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).or(
+      reservation_scope.where("reservation_customers.state": "pending").where("customers.deleted_at": nil)
+    ).order("reservations.start_time ASC, reservations.id ASC").distinct
+  end
+
+  def missing_sale_page_services
+    missing_sale_page_service_ids = online_services.pluck(:id) - all_sale_pages.where(product_type: "OnlineService").pluck(:product_id)
+    online_services.where(id: missing_sale_page_service_ids)
+  end
+
+  def pending_customer_services
+    online_services.external.joins(:online_service_customer_relations).where("online_service_customer_relations.permission_state": :pending).select("id", "internal_name", "name", "goal_type").distinct
   end
 
   private

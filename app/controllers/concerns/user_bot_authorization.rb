@@ -62,6 +62,7 @@ module UserBotAuthorization
           Rollbar.error("Super user changed scenario4", request: request)
         end
         write_user_bot_cookies(:current_super_user_id, social_user.user_id)
+        write_user_bot_cookies(:social_service_user_id, params[:social_service_user_id].presence || user_bot_cookies(:social_service_user_id))
       end
     else
       write_user_bot_cookies(:current_super_user_id, current_user.id) if user_bot_cookies(:current_super_user_id).nil?

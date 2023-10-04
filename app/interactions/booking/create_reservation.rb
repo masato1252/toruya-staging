@@ -87,7 +87,7 @@ module Booking
       #     if booking page is allow overlap, then try to create a new reservation, like reservation doesn't exist case
       #     if not allow overlap, show error message
       #
-      # else reservation doens't exist
+      # else reservation doesn't exist
       #  use Booking::SharedMethods loop_for_reserable_spot to find the available staffs 
 
       Reservation.transaction do
@@ -293,6 +293,8 @@ module Booking
               end
             end
 
+            UserBotLines::Actions::SwitchRichMenu.run(social_user: user.social_user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY) if user.social_user
+
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
           else
             errors.add(:base, :reservation_something_wrong)
@@ -402,9 +404,6 @@ module Booking
       end
 
       customer_outcome.result
-    end
-
-    def update_existing_customer
     end
   end
 end
