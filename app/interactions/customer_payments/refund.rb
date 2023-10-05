@@ -39,6 +39,7 @@ class CustomerPayments::Refund < ActiveInteraction::Base
         end
       rescue Stripe::CardError, Stripe::StripeError => error
         if error.code == "charge_already_refunded"
+          errors.add(:customer_payment, :refunded)
           refund_payment
         else
           Rollbar.error(error)
@@ -79,7 +80,7 @@ class CustomerPayments::Refund < ActiveInteraction::Base
   end
 
   def validate_refundable
-    errors.add(:reservation_customer, :product_was_refunded) if payment_refunded
+    errors.add(:customer_payment, :product_was_refunded) if payment_refunded
   end
 
   def validate_amount
