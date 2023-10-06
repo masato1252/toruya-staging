@@ -180,6 +180,7 @@ class OnlineService < ApplicationRecord
   has_many :all_online_service_customer_relations, class_name: "OnlineServiceCustomerRelation"
   has_many :customers, through: :online_service_customer_relations
   has_many :available_online_service_customer_relations, -> { available }, class_name: "OnlineServiceCustomerRelation"
+  has_many :handle_required_online_service_customer_relations, -> { current.pending.uncanceled.unexpired }, class_name: "OnlineServiceCustomerRelation"
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters, -> { order(position: :asc, id: :asc) }
   has_many :lessons, -> { order("chapters.position": :asc, position: :asc, id: :asc) }, through: :chapters

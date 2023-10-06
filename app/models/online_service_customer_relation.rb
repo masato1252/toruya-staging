@@ -45,7 +45,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   # Don't add this scope, where("online_services.start_at is NULL or online_services.start_at < :now", now: Time.current)
   # because we need to a scope to filter the relations is legal to send them messages or do something even before service started
   # So this scope couldn't guarantee customer could start to use service since it doesn't check service start time
-  scope :available, -> { active.current.where("expire_at is NULL or expire_at >= ?", Time.current) }
+  scope :available, -> { active.current.unexpired }
+  scope :unexpired, -> { where("expire_at is NULL or expire_at >= ?", Time.current) }
   scope :uncanceled, -> { where.not(payment_state: :canceled) }
   scope :current, -> { where(current: true) }
   scope :sold, -> { where(payment_state: SOLD_STATES) }
