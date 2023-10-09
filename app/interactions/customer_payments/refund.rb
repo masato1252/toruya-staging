@@ -35,15 +35,19 @@ class CustomerPayments::Refund < ActiveInteraction::Base
             product_type: customer_payment.product_type
           )
 
-          errors.add(:customer_payment, :refund_failed)
+          errors.add(:customer_payment, :else)
         end
       rescue Stripe::CardError, Stripe::StripeError => error
-        if error.code == "charge_already_refunded"
-          errors.add(:customer_payment, :refunded)
+        Rollbar.error(error)
+
+        case error.code
+        when "charge_already_refunded"
+          errors.add(:customer_payment, error.code.to_sym)
           refund_payment
+        when "charge_disputed", "charge_not_refundable", "refund_disputed_payment", "return_intent_already_processed"
+          errors.add(:customer_payment, error.code.to_sym)
         else
-          Rollbar.error(error)
-          errors.add(:customer_payment, :refund_failed)
+          errors.add(:customer_payment, :else)
         end
       end
     end
@@ -72,7 +76,7 @@ class CustomerPayments::Refund < ActiveInteraction::Base
   end
 
   def product_refund
-    product.is_a?(ReservationCustomer) ? reservation_customer.payment_refunded! : product.refunded_payment_state!
+    product.is_a?(ReservationCustomer) ? product.payment_refunded! : product.refunded_payment_state!
   end
 
   def payment_refunded
@@ -80,16 +84,16 @@ class CustomerPayments::Refund < ActiveInteraction::Base
   end
 
   def validate_refundable
-    errors.add(:customer_payment, :product_was_refunded) if payment_refunded
+    errors.add(:customer_payment, :charge_already_refunded) if payment_refunded
   end
 
   def validate_amount
     if amount > customer_payment.amount
-      errors.add(:amount, :over_paid_amount)
+      errors.add(:customer_payment, :else)
     end
 
     unless amount.positive?
-      errors.add(:amount, :positive_required)
+      errors.add(:customer_payment, :else)
     end
   end
 end

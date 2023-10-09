@@ -81,16 +81,22 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def refund
-    outcome = CustomerPayments::RefundReservation.run(
-      reservation_customer: ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id]),
-      amount: Money.new(params[:amount], Money.default_currency.iso_code)
-    )
+    reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+    customer = reservation_customer.customer
+    paid_payment = customer.customer_payments.completed.where(product: reservation_customer).first
 
-    if outcome.invalid?
-      Rollbar.error(
-        "Unexpected CustomerPayments::RefundReservation",
-        errors: outcome.errors.details
+    if paid_payment
+      outcome = CustomerPayments::Refund.run(
+        customer_payment: paid_payment,
+        amount: Money.new(params[:amount], Money.default_currency.iso_code)
       )
+
+      if outcome.invalid?
+        Rollbar.error(
+          "Unexpected CustomerPayments::Refund",
+          errors: outcome.errors.details
+        )
+      end
     end
 
     redirect_to lines_user_bot_customers_path(customer_id: params[:customer_id], reservation_id: params[:reservation_id], user_id: Current.business_owner.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations])

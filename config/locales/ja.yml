@@ -742,3 +742,12 @@ ja:
             attrs:
               has_full_width_characters: "^半角文字で入力してください"
               invalid_settings: "^不正な値です"
+        customer_payments/refund:
+          attributes:
+            customer_payment:
+              charge_already_refunded: ^既に返金済み
+              charge_disputed: ^不正請求の申請がされた支払い
+              charge_not_refundable: ^返金不可能な支払い
+              refund_disputed_payment: ^不正請求の申請がされた返金
+              return_intent_already_processed: ^既に返金手続き中
+              else: ^何らかの理由で返金エラー
