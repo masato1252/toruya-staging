@@ -4,7 +4,7 @@ require "message_encryptor"
 
 module SocialAccounts
   class Update < ActiveInteraction::Base
-    INVALID_TOKEN_REGEXP = /[\s]/
+    INVALID_TOKEN_REGEXP = /[\s|:]/
 
     object :user
     string :update_attribute
