@@ -240,8 +240,9 @@ class User < ApplicationRecord
   end
 
   def missing_sale_page_services
-    missing_sale_page_service_ids = online_services.pluck(:id) - all_sale_pages.where(product_type: "OnlineService").pluck(:product_id)
-    online_services.where(id: missing_sale_page_service_ids)
+    # missing_sale_page_service_ids = online_services.pluck(:id) - all_sale_pages.where(product_type: "OnlineService").pluck(:product_id)
+    # online_services.where(id: missing_sale_page_service_ids)
+    online_services.none
   end
 
   def pending_customer_services
