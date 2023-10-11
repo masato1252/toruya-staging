@@ -223,6 +223,7 @@ ja:
     no_connection: 未連携
     from_when: から
     until_when: まで
+    price: 金額
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

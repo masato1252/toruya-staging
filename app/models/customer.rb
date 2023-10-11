@@ -62,7 +62,8 @@ class Customer < ApplicationRecord
 
   DASHBOARD_TARGET_VIEWS = {
     reservations: "customer_reservations",
-    messages: "customer_messages"
+    messages: "customer_messages",
+    payments: "customer_payments"
   }
 
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down, :google_contact_missing

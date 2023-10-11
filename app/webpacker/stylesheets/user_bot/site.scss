@@ -157,6 +157,7 @@ a {
   &.failed,
   &.auth_failed,
   &.processor_failed,
+  &.refunded,
   &.draft {
     background-color: #ca4e0e;
     border: 1px #b0450d solid;

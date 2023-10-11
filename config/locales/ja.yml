@@ -155,8 +155,8 @@ ja:
         message: 予約をキャンセルする前に、支払済の顧客に返金してください。
         paid_customers_title: 支払済の顧客
       refund:
-        title: 返金
-        message: Stripeを通じて返金する金額を入力してください。
+        title: 返金する
+        message: 返金は Stripe を通して行われます。返済のタイミングや手数料については Stripe へお問合せください。
         submit_btn: 返　金
         confirmation_message: このままStripeから返金を実行しますか？
       staff_states:
@@ -742,3 +742,12 @@ ja:
             attrs:
               has_full_width_characters: "^半角文字で入力してください"
               invalid_settings: "^不正な値です"
+        customer_payments/refund:
+          attributes:
+            customer_payment:
+              charge_already_refunded: ^既に返金済み
+              charge_disputed: ^不正請求の申請がされた支払い
+              charge_not_refundable: ^返金不可能な支払い
+              refund_disputed_payment: ^不正請求の申請がされた返金
+              return_intent_already_processed: ^既に返金手続き中
+              else: ^何らかの理由で返金エラー

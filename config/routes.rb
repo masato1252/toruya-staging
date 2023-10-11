@@ -126,7 +126,12 @@ Rails.application.routes.draw do
           end
         end
         resources :messages, only: [:index]
-        resources :payments, only: [:index]
+        resources :payments, only: [:index] do
+          member do
+            get :refund_modal
+            post :refund
+          end
+        end
       end
 
       namespace :settings do
