@@ -9,6 +9,7 @@ module RichMenus
     hash :body, strip: false
     string :key
     boolean :default_menu, default: false
+    boolean :current, default: false
 
     def execute
       return unless Rails.env.production?
@@ -25,19 +26,20 @@ module RichMenus
           # Note: You cannot replace an image attached to a rich menu. To update your rich menu image,
           # create a new rich menu object and upload another image.
           ::LineClient.create_rich_menu_image(social_account: social_account, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
+
           rich_menu = SocialRichMenu.create(
             social_account: social_account,
             social_rich_menu_id: rich_menu_id,
             social_name: key,
-            body: body,
-            default: default_menu
+            body: body
           )
 
-          ::LineClient.set_default_rich_menu(rich_menu) if default_menu
+          if default_menu
+            RichMenus::SetDefault.run(social_rich_menu: rich_menu)
+          end
 
-          # Link rich menu to social users or social customer
-          social_account.social_customers.where(social_rich_menu_key: key).find_each do |social_customer|
-            RichMenus::Connect.perform_later(social_target: social_customer, social_rich_menu: rich_menu)
+          if current
+            RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
           end
         else
           # raise response.error

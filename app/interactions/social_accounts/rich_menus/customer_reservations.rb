@@ -66,7 +66,8 @@ module SocialAccounts
           social_account: social_account,
           body: body,
           key: KEY,
-          default_menu: true
+          default_menu: true,
+          current: true
         )
       end
     end
