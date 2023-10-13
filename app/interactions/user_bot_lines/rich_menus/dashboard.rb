@@ -42,7 +42,7 @@ module UserBotLines
                 "height": 843
               },
               "action": LineActions::Uri.template(
-                  label: I18n.t("toruya_line.actions.label.customers"),
+                label: I18n.t("toruya_line.actions.label.customers"),
                 url: LiffRouting.liff_url(:customers)
               )
             },
