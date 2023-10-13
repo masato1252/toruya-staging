@@ -114,6 +114,6 @@ class ReservationCustomer < ApplicationRecord
   end
 
   def hi_message
-    "🗓 New reservation updated, reservation_id: #{reservation_id}, customer_id: #{customer_id}, sale_page_id: #{sale_page_id}, booking_page_id: #{booking_page_id}, booking_option_id: #{booking_option_id}, user_id: #{customer.user_id}, state: #{state}, booking_at: #{booking_at ? I18n.l(booking_at, format: :long_date_with_wday) : ""}"
+    "🗓 New reservation updated, reservation_id: #{reservation_id}, customer_id: #{customer_id}, sale_page_id: #{sale_page_id}, booking_page_id: #{booking_page_id}, booking_option_id: #{booking_option_id}, user_id: #{customer.user_id}, state: #{state}, booking_at: #{booking_at ? I18n.l(booking_at, format: :long_date_with_wday) : ""} reservation_start_time: #{I18n.l(reservation.start_time, format: :long_date_with_wday)}"
   end
 end
