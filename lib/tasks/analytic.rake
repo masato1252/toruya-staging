@@ -18,7 +18,7 @@ namespace :analytic do
       #   VisitAnalyticReportJob.perform_later(visit.owner_id)
       # end
 
-      user_ids = Subscription.charge_required.where("expired_date > ?", Date.today).pluck(:user_id)
+      user_ids = Subscription.charge_required.expired.pluck(:user_id)
       SlackClient.send(channel: 'sayhi', text: "Charging #{user_ids.size} user_id: #{user_ids.join(", ")}")
     end
   end
@@ -125,7 +125,7 @@ namespace :analytic do
       current_month_paid_user_ids = SubscriptionCharge.where(created_at: 1.month.ago..Time.current).pluck(:user_id).uniq
       new_row_data = [
         Time.current.to_fs(:date),
-        Subscription.charge_required.count,
+        Subscription.charge_required.unexpired.count,
         (current_month_paid_user_ids - last_month_paid_user_ids).length,
         (last_month_paid_user_ids - current_month_paid_user_ids).length,
         (current_month_paid_user_ids - last_month_paid_user_ids).join(", "),
