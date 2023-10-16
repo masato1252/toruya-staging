@@ -124,7 +124,9 @@ module UserBotLines
         compose(
           ::RichMenus::ToruyaOfficialCreate,
           body: body,
-          key: KEY
+          key: KEY,
+          internal_name: sentence,
+          bar_label: sentence
         )
       end
     end

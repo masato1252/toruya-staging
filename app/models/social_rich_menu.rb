@@ -5,10 +5,12 @@
 # Table name: social_rich_menus
 #
 #  id                  :bigint           not null, primary key
+#  bar_label           :string
 #  body                :jsonb
 #  current             :boolean
 #  default             :boolean
 #  end_at              :datetime
+#  internal_name       :string
 #  social_name         :string
 #  start_at            :datetime
 #  social_account_id   :integer
@@ -27,6 +29,8 @@ class SocialRichMenu < ApplicationRecord
   LINE_OFFICIAL_RICH_MENU_KEY = "line_official"
 
   belongs_to :social_account, required: false
+
+  has_one_attached :image # content picture
 
   def account
     social_account || UserBotSocialAccount

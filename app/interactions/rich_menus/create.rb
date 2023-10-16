@@ -6,10 +6,13 @@ require "line_client"
 module RichMenus
   class Create < ActiveInteraction::Base
     object :social_account
+    string :internal_name
+    string :bar_label
     hash :body, strip: false
     string :key
     boolean :default_menu, default: false
     boolean :current, default: false
+    file :image, default: nil
 
     def execute
       return unless Rails.env.production?
@@ -25,14 +28,17 @@ module RichMenus
           rich_menu_id = JSON.parse(response.body)["richMenuId"]
           # Note: You cannot replace an image attached to a rich menu. To update your rich menu image,
           # create a new rich menu object and upload another image.
-          ::LineClient.create_rich_menu_image(social_account: social_account, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
 
           rich_menu = SocialRichMenu.create(
             social_account: social_account,
             social_rich_menu_id: rich_menu_id,
             social_name: key,
-            body: body
+            body: body,
+            internal_name: internal_name,
+            bar_label: bar_label
           )
+
+          ::LineClient.create_rich_menu_image(social_account: social_account, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path(rich_menu))
 
           if default_menu
             RichMenus::SetDefault.run(social_rich_menu: rich_menu)
@@ -49,8 +55,13 @@ module RichMenus
 
     private
 
-    def rich_menu_file_path
-      File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{key}.png")
+    def rich_menu_file_path(rich_menu)
+      if image
+        rich_menu.update(image: image)
+        Rails.application.routes.url_helpers.url_for(rich_menu.image)
+      else
+        File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{key}.png")
+      end
     end
   end
 end

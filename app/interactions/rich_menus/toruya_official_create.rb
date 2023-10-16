@@ -7,6 +7,8 @@ module RichMenus
   class ToruyaOfficialCreate < ActiveInteraction::Base
     hash :body, strip: false
     string :key
+    string :internal_name
+    string :bar_label
     boolean :default_menu, default: false
 
     def execute
@@ -25,7 +27,14 @@ module RichMenus
           # create a new rich menu object and upload another image.
           ::LineClient.create_rich_menu_image(social_account: UserBotSocialAccount, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
 
-          rich_menu = SocialRichMenu.create(social_rich_menu_id: rich_menu_id, social_name: key, body: body, default: default_menu)
+          rich_menu = SocialRichMenu.create(
+            social_rich_menu_id: rich_menu_id,
+            social_name: key,
+            body: body,
+            internal_name: internal_name,
+            bar_label: bar_label,
+            default: default_menu
+          )
 
           ::LineClient.set_default_rich_menu(rich_menu) if default_menu
 

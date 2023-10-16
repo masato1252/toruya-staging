@@ -1,6 +1,7 @@
 module RichMenus
   class Body < ActiveInteraction::Base
-    string :name
+    string :internal_name
+    string :bar_label
     string :layout_type # a, b etc...
     array :actions do
       hash do
@@ -150,8 +151,8 @@ module RichMenus
 
     def execute
       {
-        "name": name,
-        "chatBarText": name,
+        "name": internal_name,
+        "chatBarText": bar_label,
         "selected": true,
         "size": LAYOUT_TYPES[layout_type][:size],
         "areas": areas

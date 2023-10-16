@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.describe RichMenus::Body do
   let(:args) do
     {
-      name: "foo",
+      internal_name: "foo",
+      bar_label: "foo",
       layout_type: layout_type,
       actions: actions
     }

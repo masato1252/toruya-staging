@@ -6,7 +6,11 @@ module RichMenus
 
     def execute
       response = LineClient.delete_rich_menu(social_rich_menu)
-      social_rich_menu.destroy if response.is_a?(Net::HTTPOK)
+
+      if response.is_a?(Net::HTTPOK)
+        social_rich_menu.image.purge_later if social_rich_menu.image
+        social_rich_menu.destroy
+      end
     end
   end
 end
