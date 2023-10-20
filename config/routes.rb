@@ -173,6 +173,11 @@ Rails.application.routes.draw do
           end
 
           resource :rich_menu, only: [:edit, :create, :destroy]
+          resources :social_rich_menus, only: [:index, :new, :edit, :destroy] do
+            collection do
+              post :upsert
+            end
+          end
         end
 
         resources :business_schedules, only: [:update] do

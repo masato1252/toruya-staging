@@ -614,6 +614,16 @@ ja:
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
           unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
           invalid_menu_html: "この予約価格に設定されているメニューには、%{shop_name}が利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。<a href=%{url}>メニュー設定</a>ページより%{shop_name}を利用店舗として設定してください。"
+    social_rich_menus:
+      action_types:
+        incoming_reservations: 全ての予約
+        booking_pages: 新たに予約する
+        contacts: お問い合わせ
+        services: 利用中サービス
+        sale_page: Sale Page
+        booking_page: Booking Page
+        text: テキスト
+        uri: リンク
     social_account:
       sider_label: Line
       settings: 設定

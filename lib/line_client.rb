@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "utils"
+
 class LineClient
   COLUMNS_NUMBER_LIMIT = 10
   BUTTON_DESC_LIMIT = 60
@@ -119,8 +121,18 @@ class LineClient
   end
 
   def self.create_rich_menu_image(social_account:, rich_menu_id:, file_path: )
-    File.open(file_path, "r") do |file|
-      social_account.client.create_rich_menu_image(rich_menu_id, file)
+
+    if file_path.match?(/http/)
+      error_handler(__method__, social_account.id, rich_menu_id, file_path) do
+        tempfile = Utils.file_from_url(file_path)
+        rsp = social_account.client.create_rich_menu_image(rich_menu_id, tempfile)
+        tempfile.close
+        rsp
+      end
+    else
+      File.open(file_path, "r") do |file|
+        social_account.client.create_rich_menu_image(rich_menu_id, file)
+      end
     end
   end
 

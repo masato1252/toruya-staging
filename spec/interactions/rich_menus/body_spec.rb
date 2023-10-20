@@ -14,11 +14,15 @@ RSpec.describe RichMenus::Body do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    let(:layout_type) { "k" }
+    let(:layout_type) { "h" }
     let(:actions) do
       [
         {
-          type: "message",
+          type: "incoming_reservations",
+          value: "incoming_reservations"
+        },
+        {
+          type: "text",
           value: "foo"
         },
         {
@@ -43,7 +47,20 @@ RSpec.describe RichMenus::Body do
             bounds: {
               "x": 0,
               "y": 0,
-              "width": 1250,
+              "width": 833,
+              "height": 843
+            },
+            action: {
+              "type": "message",
+              "label": "全ての予約",
+              "text": "全ての予約"
+            }
+          },
+          {
+            bounds: {
+              "x": 834,
+              "y": 0,
+              "width": 833,
               "height": 843
             },
             action: {
@@ -54,9 +71,9 @@ RSpec.describe RichMenus::Body do
           },
           {
             bounds: {
-              "x": 1251,
+              "x": 1667,
               "y": 0,
-              "width": 1250,
+              "width": 833,
               "height": 843
             },
             action: {

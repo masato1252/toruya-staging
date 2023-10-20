@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module RichMenus
   class Upsert < ActiveInteraction::Base
     object :social_account
-    string :key, default: nil # nil is for create, update should have key
-    file :image # there is no real update in line rich menu, it is always creation
+    string :social_name, default: nil # nil is for create, update should have key
+    file :image, default: nil # there is no real update in line rich menu, it is always creation
 
     string :internal_name
     string :bar_label
@@ -27,8 +29,10 @@ module RichMenus
       compose(
         RichMenus::Create,
         social_account: social_account,
+        internal_name: internal_name,
+        bar_label: bar_label,
         body: body,
-        key: key || SecureRandom.uuid,
+        key: social_name || SecureRandom.uuid,
         image: image
       )
     end

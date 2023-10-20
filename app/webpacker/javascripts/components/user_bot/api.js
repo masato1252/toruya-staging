@@ -539,9 +539,10 @@ const CommonServices = {
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
       },
       url: url,
-      data: data,
+      data: serialize(data),
       responseType: "json"
     })
   },
@@ -549,10 +550,11 @@ const CommonServices = {
     return request({
       method: "PUT",
       headers: {
-        "X-CSRF-Token": Rails.csrfToken()
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
       },
       url: url,
-      data: data,
+      data: serialize(data),
       responseType: "json"
     })
   },

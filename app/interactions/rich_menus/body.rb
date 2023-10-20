@@ -16,7 +16,7 @@ module RichMenus
       # 2500x1686
       # | 1 | 2 | 3 |
       # | 4 | 5 | 6 |
-      "a" => {
+      a: {
         size: { "width": 2500, "height": 1686 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 833, "height": 843 },
@@ -31,7 +31,7 @@ module RichMenus
       # 2500x1686
       # | 1 | 2 |
       # | 3 | 4 |
-      "b" => {
+      b: {
         size: { "width": 2500, "height": 1686 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 1250, "height": 843 },
@@ -44,7 +44,7 @@ module RichMenus
       # 2500x1686
       # |     1     |
       # | 2 | 3 | 4 |
-      "c" => {
+      c: {
         size: { "width": 2500, "height": 1686 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 2500, "height": 843 },
@@ -57,7 +57,7 @@ module RichMenus
       # 2500x1686
       # |   1   | 2 |
       # |       | 3 |
-      "d" => {
+      d: {
         size: { "width": 2500, "height": 1686 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 1666, "height": 1686 },
@@ -69,7 +69,7 @@ module RichMenus
       # 2500x1686
       # |   1   |
       # |   2   |
-      "e" => {
+      e: {
         size: { "width": 2500, "height": 1686 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 2500, "height": 843 },
@@ -80,7 +80,7 @@ module RichMenus
       # 2500x1686
       # | 1 | 2 |
       # |   |   |
-      "f" => {
+      f: {
         size: { "width": 2500, "height": 1686 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 1250, "height": 1686 },
@@ -91,7 +91,7 @@ module RichMenus
       # 2500x1686
       # |   1   |
       # |       |
-      "g" => {
+      g: {
         size: { "width": 2500, "height": 1686 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 2500, "height": 1686 }
@@ -100,7 +100,7 @@ module RichMenus
       # h
       # 2500x843
       # | 1 | 2 | 3 |
-      "h" => {
+      h: {
         size: { "width": 2500, "height": 843 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 833, "height": 843 },
@@ -111,7 +111,7 @@ module RichMenus
       # i
       # 2500x843
       # | 1 |   2   |
-      "i" => {
+      i: {
         size: { "width": 2500, "height": 843 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 833, "height": 843 },
@@ -121,7 +121,7 @@ module RichMenus
       # j
       # 2500x843
       # |   1   | 2 |
-      "j" => {
+      j: {
         size: { "width": 2500, "height": 843 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 1666, "height": 843 },
@@ -131,7 +131,7 @@ module RichMenus
       # k
       # 2500x843
       # |  1  |  2  |
-      "k" => {
+      k: {
         size: { "width": 2500, "height": 843 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 1250, "height": 843 },
@@ -141,7 +141,7 @@ module RichMenus
       # L
       # 2500x843
       # |     1     |
-      "l" => {
+      l: {
         size: { "width": 2500, "height": 843 },
         action_bounds: [
           { "x": 0, "y": 0, "width": 2500, "height": 843 }
@@ -154,7 +154,7 @@ module RichMenus
         "name": internal_name,
         "chatBarText": bar_label,
         "selected": true,
-        "size": LAYOUT_TYPES[layout_type][:size],
+        "size": LAYOUT_TYPES[layout_type.to_sym][:size],
         "areas": areas
       }
     end
@@ -163,11 +163,22 @@ module RichMenus
 
     def areas
       actions.map.with_index do |action, i|
-        bounds = LAYOUT_TYPES[layout_type][:action_bounds][i]
+        bounds = LAYOUT_TYPES[layout_type.to_sym][:action_bounds][i]
 
         action =
           case action[:type]
-          when "message"
+          when *SocialRichMenu::KEYWORDS
+            {
+              "type": "message",
+              "label": I18n.t("line.bot.keywords.#{action[:type]}"),
+              "text": I18n.t("line.bot.keywords.#{action[:type]}")
+            }
+          when "booking_page", "sale_page"
+            LineActions::Uri.template(
+              label: action[:type],
+              url: action[:value]
+            )
+          when "text"
             {
               "type": "message",
               "label": action[:value],

@@ -207,4 +207,8 @@ module OptionsHelper
   def day_options
     (1..31).to_a.map {|year| { label: year, value: year }}
   end
+
+  def rich_menu_layout_option_image_path(index)
+    "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menu_layouts/richmenu_layout_#{index}.png"
+  end
 end

@@ -17,50 +17,64 @@ module RichMenus
     def execute
       return unless Rails.env.production?
 
-      SocialRichMenu.transaction do
-        social_account.social_rich_menus.where(social_name: key).each do |rich_menu|
-          compose(RichMenus::Delete, social_rich_menu: rich_menu)
-        end
+      response = ::LineClient.create_rich_menu(social_account: social_account, body: body)
 
-        response = ::LineClient.create_rich_menu(social_account: social_account, body: body)
+      if response.is_a?(Net::HTTPOK)
+        rich_menu_id = JSON.parse(response.body)["richMenuId"]
+        # Note: You cannot replace an image attached to a rich menu. To update your rich menu image,
+        # create a new rich menu object and upload another image.
 
-        if response.is_a?(Net::HTTPOK)
-          rich_menu_id = JSON.parse(response.body)["richMenuId"]
-          # Note: You cannot replace an image attached to a rich menu. To update your rich menu image,
-          # create a new rich menu object and upload another image.
+        rich_menu = SocialRichMenu.create(
+          social_account: social_account,
+          social_rich_menu_id: rich_menu_id,
+          social_name: key,
+          body: body,
+          internal_name: internal_name,
+          bar_label: bar_label
+        )
 
-          rich_menu = SocialRichMenu.create(
-            social_account: social_account,
-            social_rich_menu_id: rich_menu_id,
-            social_name: key,
-            body: body,
-            internal_name: internal_name,
-            bar_label: bar_label
-          )
+        rich_menu.image.attach(io: image, filename: File.basename(image.path)) if image
 
-          ::LineClient.create_rich_menu_image(social_account: social_account, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path(rich_menu))
+        image_response = ::LineClient.create_rich_menu_image(
+          social_account: social_account,
+          rich_menu_id: rich_menu.social_rich_menu_id,
+          file_path: rich_menu_file_path(rich_menu)
+        )
 
-          if default_menu
+        if image_response.is_a?(Net::HTTPOK)
+          if default_menu || single_rich_menu
             RichMenus::SetDefault.run(social_rich_menu: rich_menu)
           end
 
-          if current
+          if current || single_rich_menu
             RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
           end
+
+          social_account.social_rich_menus.where(social_name: key).where.not(id: rich_menu.id).each do |rich_menu|
+            compose(RichMenus::Delete, social_rich_menu: rich_menu)
+          end
         else
-          # raise response.error
+          compose(RichMenus::Delete, social_rich_menu: rich_menu)
+          errors.add(:image, :invalid)
         end
+      else
+        # raise response.error
       end
     end
 
     private
 
+    def single_rich_menu
+      return @single_rich_menu if defined?(@single_rich_menu)
+
+      @single_rich_menu = !social_account.social_rich_menus.where.not(social_name: key).exists?
+    end
+
     def rich_menu_file_path(rich_menu)
-      if image
-        rich_menu.update(image: image)
-        Rails.application.routes.url_helpers.url_for(rich_menu.image)
+      if rich_menu.image.attached?
+        rich_menu.image.url
       else
-        File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{key}.png")
+        File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{rich_menu.social_name}.png")
       end
     end
   end
