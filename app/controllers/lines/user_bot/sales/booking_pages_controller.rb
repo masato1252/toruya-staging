@@ -2,7 +2,7 @@
 
 class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardController
   def new
-    @sale_templates = SaleTemplate.all
+    @sale_templates = SaleTemplate.all.order("id")
     if booking_page = BookingPage.find_by(slug: params[:booking_page_id]) || BookingPage.find_by(id: params[:booking_page_id])
       @selected_booking_page = BookingPageSerializer.new(booking_page).attributes_hash
     end

@@ -2,7 +2,7 @@
 
 class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardController
   def new
-    @sale_templates = SaleTemplate.all
+    @sale_templates = SaleTemplate.all.order("id")
 
     if service = OnlineService.find_by(slug: params[:slug])
       @selected_online_service = OnlineServiceSerializer.new(service).attributes_hash
