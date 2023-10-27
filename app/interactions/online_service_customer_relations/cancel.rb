@@ -22,7 +22,8 @@ class OnlineServiceCustomerRelations::Cancel < ActiveInteraction::Base
         )
 
         relation.stripe_subscription_id = nil
-        relation.expire_at = Time.at(canceled_stripe_subscription.current_period_end)
+        # when subscription was canceled from stripe side, there is no canceled_stripe_subscription
+        relation.expire_at = canceled_stripe_subscription.try(:canceled_stripe_subscription) ? Time.at(canceled_stripe_subscription.current_period_end) : Time.current
         relation.canceled_payment_state!
 
         # Only bundler had bundled_service_relations
