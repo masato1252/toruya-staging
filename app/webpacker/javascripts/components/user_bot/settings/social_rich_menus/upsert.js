@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 import ImageUploader from "react-images-upload";
+import I18n from 'i18n-js/index.js.erb';
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SelectOptions } from "shared/components"
 import ImageSelect from "shared/image_select"
@@ -94,10 +95,10 @@ const SocialRichMenuUpsert = ({props}) => {
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }
-              title={"Title"}
+              title={I18n.t("settings.social_rich_menus.edit_title")}
             />
             <input type="hidden" ref={register()} name="social_name" />
-            <div className="field-header">{"Internal Name"}</div>
+            <div className="field-header">{I18n.t("settings.social_rich_menus.internal_name")}</div>
             <div className="field-row">
               <input
                 ref={register({ required: true })}
@@ -105,7 +106,7 @@ const SocialRichMenuUpsert = ({props}) => {
                 type="text"
               />
             </div>
-            <div className="field-header">{"bar label"}</div>
+            <div className="field-header">{I18n.t("settings.social_rich_menus.bar_label")}</div>
             <div className="field-row">
               <input
                 ref={register({ required: true })}
@@ -113,7 +114,7 @@ const SocialRichMenuUpsert = ({props}) => {
                 type="text"
               />
             </div>
-            <div className="field-header">{"layout type"}</div>
+            <div className="field-header">{I18n.t("settings.social_rich_menus.layout_type")}</div>
             <ImageSelect
               name="layout_type"
               handleChange={(option) => {
@@ -123,14 +124,14 @@ const SocialRichMenuUpsert = ({props}) => {
               options={props.layout_options}
             />
             <input type="hidden" name="layout_type" ref={register()} />
-            <div className="field-header">{"picture"}</div>
+            <div className="field-header">{I18n.t("settings.social_rich_menus.picture")}</div>
             <div className="field-row default-uploader-button-container">
               <ImageUploader
                 defaultImages={watch("image_url")?.length ? [watch("image_url")] : []}
                 withIcon={false}
                 withPreview={true}
                 withLabel={false}
-                buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}
+                buttonText={I18n.t("settings.social_rich_menus.picture_hint")}
                 singleImage={true}
                 onChange={onDrop}
                 imgExtension={[".jpg", ".png", ".jpeg"]}
@@ -138,7 +139,7 @@ const SocialRichMenuUpsert = ({props}) => {
               />
               <input type="hidden" name="image_url" ref={register()} />
             </div>
-            <div className="field-header">{"actions"}</div>
+            <div className="field-header">{I18n.t("settings.social_rich_menus.actions")}</div>
             {
               watch("layout_type") && _.times(props.layout_actions[watch("layout_type")]["size"]).map((_use, index) => {
                 return (

@@ -15,7 +15,7 @@ class LineClient
 
     if response.is_a?(Net::HTTPBadRequest)
       Rollbar.error(
-        "Line clinet Request failed",
+        "Line client Request failed",
         response: response.body,
         args: args,
         backtrace: caller

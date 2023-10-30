@@ -32,11 +32,17 @@ class SocialRichMenu < ApplicationRecord
   store_accessor :context, %i[image_errors]
 
   belongs_to :social_account, required: false
+  scope :current, -> { where(current: true) }
+  scope :pending, -> { where(current: nil) }
 
   has_one_attached :image # content picture
 
   def account
     social_account || UserBotSocialAccount
+  end
+
+  def default_image_url
+    "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/#{social_name}.png"
   end
 
   def state

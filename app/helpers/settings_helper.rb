@@ -61,4 +61,8 @@ module SettingsHelper
       I18n.l(broadcast.broadcast_at, format: :long_date_with_wday)
     end
   end
+
+  def rich_menu_image_url(rich_menu, size = nil)
+    Images::Process.run!(image: rich_menu.image, resize: size || "120") || rich_menu.default_image_url
+  end
 end

@@ -10,17 +10,21 @@
         <%= render "lines/user_bot/field_row",
           title: @social_account.using_line_official_account? ? t("user_bot.dashboards.settings.rich_menu.manual") : t("user_bot.dashboards.settings.rich_menu.auto") %>
 
-        <div class="action-block">
-          <% if @social_account.using_line_official_account? %>
+        <% if @social_account.using_line_official_account? %>
+          <div class="action-block">
             <p>
             <%= t("user_bot.dashboards.settings.rich_menu.auto_description_html") %>
             </p>
-          <% else %>
-            <p>
-            <%= t("user_bot.dashboards.settings.rich_menu.manual_description_html") %>
-            </p>
-          <% end %>
-        </div>
+          </div>
+        <% else %>
+          <div class="field-row justify-center flex-col">
+            <%= image_tag(rich_menu_image_url(@current_rich_menu, "240"), class: "demo-image") %>
+            <%= link_to t("settings.social_rich_menus.edit_button"), lines_user_bot_settings_social_account_social_rich_menus_path, class: "btn btn-yellow my-4" %>
+            <div class="action-block">
+              <%= t("user_bot.dashboards.settings.rich_menu.manual_description_html") %>
+            </div>
+          </div>
+        <% end %>
         <div class="action-block">
           <% if @social_account.using_line_official_account? %>
             <%= button_to t("user_bot.dashboards.settings.rich_menu.auto_switch_btn"),

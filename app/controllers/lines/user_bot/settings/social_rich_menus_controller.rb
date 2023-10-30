@@ -4,7 +4,8 @@ require "utils"
 
 class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashboardController
   def index
-    @rich_menus = Current.business_owner.social_account.social_rich_menus
+    @current_rich_menu = Current.business_owner.social_account.social_rich_menus.current.take
+    @pending_rich_menus = Current.business_owner.social_account.social_rich_menus.pending
   end
 
   def new

@@ -624,6 +624,17 @@ ja:
         booking_page: Booking Page
         text: テキスト
         uri: リンク
+      edit_title: リッチメニュー編集
+      index_title: リッチメニュー
+      edit_button: リッチメニューを編集する
+      internal_name: 管理用タイトル
+      bar_label: メニューバーのテキスト
+      layout_type: テンプレート
+      picture: 画像
+      actions: アクション
+      sale_page: 宣伝用LP
+      booking_page: 予約ページ
+      picture_hint: "画像を設定\n 幅800px〜2500px"
     social_account:
       sider_label: Line
       settings: 設定

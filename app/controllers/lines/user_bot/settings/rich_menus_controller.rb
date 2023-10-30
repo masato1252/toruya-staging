@@ -3,6 +3,7 @@
 class Lines::UserBot::Settings::RichMenusController < Lines::UserBotDashboardController
   def edit
     @social_account = Current.business_owner.social_account
+    @current_rich_menu = Current.business_owner.social_account.social_rich_menus.current.take
   end
 
   def create
