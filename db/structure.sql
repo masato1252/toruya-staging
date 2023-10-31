@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -21,20 +28,6 @@ CREATE EXTENSION IF NOT EXISTS btree_gin WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION btree_gin IS 'support for indexing common datatypes in GIN';
-
-
---
--- Name: cube; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA public;
-
-
---
--- Name: EXTENSION cube; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION cube IS 'data type for multidimensional cubes';
 
 
 --
@@ -66,8 +59,6 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 
 
 SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- Name: access_providers; Type: TABLE; Schema: public; Owner: -
@@ -1822,39 +1813,6 @@ ALTER SEQUENCE public.ranks_id_seq OWNED BY public.ranks.id;
 
 
 --
--- Name: referral_credits; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.referral_credits (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    referral_id bigint,
-    subscription_charge_id bigint,
-    amount numeric NOT NULL,
-    created_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: referral_credits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.referral_credits_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: referral_credits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.referral_credits_id_seq OWNED BY public.referral_credits.id;
-
-
---
 -- Name: referrals; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2856,26 +2814,6 @@ CREATE TABLE public.taggings (
 
 
 --
--- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.taggings_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.taggings_id_seq OWNED BY public.taggings.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2886,26 +2824,6 @@ CREATE TABLE public.tags (
     updated_at timestamp without time zone,
     taggings_count integer DEFAULT 0
 );
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -3390,13 +3308,6 @@ ALTER TABLE ONLY public.ranks ALTER COLUMN id SET DEFAULT nextval('public.ranks_
 
 
 --
--- Name: referral_credits id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.referral_credits ALTER COLUMN id SET DEFAULT nextval('public.referral_credits_id_seq'::regclass);
-
-
---
 -- Name: referrals id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3576,20 +3487,6 @@ ALTER TABLE ONLY public.subscription_charges ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('public.subscriptions_id_seq'::regclass);
-
-
---
--- Name: taggings id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.taggings_id_seq'::regclass);
-
-
---
--- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
 
 
 --
@@ -4002,14 +3899,6 @@ ALTER TABLE ONLY public.query_filters
 
 ALTER TABLE ONLY public.ranks
     ADD CONSTRAINT ranks_pkey PRIMARY KEY (id);
-
-
---
--- Name: referral_credits referral_credits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.referral_credits
-    ADD CONSTRAINT referral_credits_pkey PRIMARY KEY (id);
 
 
 --
@@ -4722,27 +4611,6 @@ CREATE INDEX index_query_filters_on_user_id ON public.query_filters USING btree 
 --
 
 CREATE INDEX index_ranks_on_user_id ON public.ranks USING btree (user_id);
-
-
---
--- Name: index_referral_credits_on_referral_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_referral_credits_on_referral_id ON public.referral_credits USING btree (referral_id);
-
-
---
--- Name: index_referral_credits_on_subscription_charge_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_referral_credits_on_subscription_charge_id ON public.referral_credits USING btree (subscription_charge_id);
-
-
---
--- Name: index_referral_credits_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_referral_credits_on_user_id ON public.referral_credits USING btree (user_id);
 
 
 --
