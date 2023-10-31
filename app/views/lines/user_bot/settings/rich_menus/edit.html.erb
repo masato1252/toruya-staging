@@ -18,11 +18,9 @@
           </div>
         <% else %>
           <div class="field-row justify-center flex-col">
+            <p><%= t("settings.social_rich_menus.current_rich_menu") %></p>
             <%= image_tag(rich_menu_image_url(@current_rich_menu, "240"), class: "demo-image") %>
             <%= link_to t("settings.social_rich_menus.edit_button"), lines_user_bot_settings_social_account_social_rich_menus_path, class: "btn btn-yellow my-4" %>
-            <div class="action-block">
-              <%= t("user_bot.dashboards.settings.rich_menu.manual_description_html") %>
-            </div>
           </div>
         <% end %>
         <div class="action-block">
@@ -30,6 +28,9 @@
             <%= button_to t("user_bot.dashboards.settings.rich_menu.auto_switch_btn"),
               lines_user_bot_settings_social_account_rich_menu_path, method: :post, class: "btn btn-orange", data: { disable_with: t("common.processing") } %>
           <% else %>
+            <div class="action-block">
+              <%= t("user_bot.dashboards.settings.rich_menu.manual_description_html") %>
+            </div>
             <%= button_to t("user_bot.dashboards.settings.rich_menu.manual_switch_btn"), lines_user_bot_settings_social_account_rich_menu_path, method: :delete, class: "btn btn-orange", data: { disable_with: t("common.processing") } %>
           <% end %>
         </div>

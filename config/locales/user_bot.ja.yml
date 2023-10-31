@@ -99,7 +99,7 @@ ja:
           title: 販促用LINE
           manual_description_html: "手動に切り替えることで<br />LINEオフィシャルアカウント管理画面で<br />設定したリッチメニューが表示されます。"
           manual_switch_btn: 手動に切り替える
-          auto_description_html: "自動に切り替えることで<br />Toruyaの機能と連動させたリッチメニューが<br />自動的に表示されます。"
+          auto_description_html: "自動に切り替えることで<br />Toruyaの機能と連動させたリッチメニューや<br />キャンペーンメニューなど<br />リッチメニュー管理がより便利になります。"
           auto_switch_btn: 自動に切り替える
           help_link: Toruyaのリッチメニュー活用法
         business_schedules:

@@ -66,7 +66,7 @@ module SocialAccounts
           social_account: social_account,
           body: body,
           key: KEY,
-          internal_name: sentence,
+          internal_name: I18n.t("common.default"),
           bar_label: sentence,
           default_menu: true,
           current: true

@@ -627,6 +627,9 @@ ja:
       edit_title: リッチメニュー編集
       index_title: リッチメニュー
       edit_button: リッチメニューを編集する
+      current: 表示中
+      pending: 待機中
+      current_rich_menu: 現在の表示
       internal_name: 管理用タイトル
       bar_label: メニューバーのテキスト
       layout_type: テンプレート
