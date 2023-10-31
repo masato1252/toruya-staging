@@ -620,8 +620,8 @@ ja:
         booking_pages: 新たに予約する
         contacts: お問い合わせ
         services: 利用中サービス
-        sale_page: Sale Page
-        booking_page: Booking Page
+        sale_page: 宣伝用LP
+        booking_page: 予約ページ
         text: テキスト
         uri: リンク
       edit_title: リッチメニュー編集
