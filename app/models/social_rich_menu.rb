@@ -42,7 +42,7 @@ class SocialRichMenu < ApplicationRecord
   end
 
   def default_image_url
-    "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/#{social_name}.png"
+    social_name ? "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/#{social_name}.png" : nil
   end
 
   def state
@@ -54,6 +54,8 @@ class SocialRichMenu < ApplicationRecord
   end
 
   def layout_type
+    return "a" unless body&.dig("areas")
+
     body_bounds = body["areas"].map { |area| area["bounds"] }
 
     RichMenus::Body::LAYOUT_TYPES.find do |k, h|
@@ -62,6 +64,8 @@ class SocialRichMenu < ApplicationRecord
   end
 
   def actions
+    return [] unless body&.dig("areas")
+
     body_actions = body["areas"].map { |area| area["action"] }
     label_key_mapping = I18n.t("line.bot.keywords").invert
     # ja support only

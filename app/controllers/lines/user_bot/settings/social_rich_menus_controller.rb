@@ -9,6 +9,11 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def new
+    @rich_menu = Current.business_owner.social_account.social_rich_menus.new
+    @sale_pages = Current.business_owner.sale_pages.includes(:product).order("updated_at DESC")
+    @booking_pages = Current.business_owner.booking_pages.started.order("updated_at DESC")
+
+    render :edit
   end
 
   def edit
@@ -32,12 +37,21 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
       bar_label: params[:bar_label],
       image: params[:image],
       layout_type: params[:layout_type],
-      actions: params.permit![:actions]
+      actions: params.permit![:actions],
+      current: params[:current],
+      default: params[:default]
     )
 
     return_json_response(outcome, { redirect_to: lines_user_bot_settings_social_account_social_rich_menus_path })
   end
 
   def destroy
+  end
+
+  def current
+    rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
+    RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
+
+    redirect_to lines_user_bot_settings_social_account_social_rich_menus_path
   end
 end

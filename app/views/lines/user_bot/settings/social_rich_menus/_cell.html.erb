@@ -1,5 +1,6 @@
 <div>
   <%= image_tag(rich_menu_image_url(rich_menu), class: "preview-image") %>
   <span class="dotdotdot"><%= rich_menu.internal_name %></span>
+  <%= button_to "Set Current", current_lines_user_bot_settings_social_account_social_rich_menu_path(rich_menu), class: "btn btn-tarco", method: :put %>
   <div class="desc"><%= %></div>
 </div>

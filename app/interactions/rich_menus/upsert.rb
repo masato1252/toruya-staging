@@ -5,6 +5,8 @@ module RichMenus
     object :social_account
     string :social_name, default: nil # nil is for create, update should have key
     file :image, default: nil # there is no real update in line rich menu, it is always creation
+    boolean :current, default: false
+    boolean :default, default: false
 
     string :internal_name
     string :bar_label
@@ -32,8 +34,10 @@ module RichMenus
         internal_name: internal_name,
         bar_label: bar_label,
         body: body,
-        key: social_name || SecureRandom.uuid,
-        image: image
+        key: social_name.presence || SecureRandom.uuid,
+        image: image,
+        current: current,
+        default_menu: default
       )
     end
   end

@@ -177,6 +177,10 @@ Rails.application.routes.draw do
             collection do
               post :upsert
             end
+
+            member do
+              put :current
+            end
           end
         end
 

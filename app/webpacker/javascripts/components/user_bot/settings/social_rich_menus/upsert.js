@@ -97,6 +97,8 @@ const SocialRichMenuUpsert = ({props}) => {
               }
               title={I18n.t("settings.social_rich_menus.edit_title")}
             />
+            <input type="hidden" ref={register()} name="current" />
+            <input type="hidden" ref={register()} name="default" />
             <input type="hidden" ref={register()} name="social_name" />
             <div className="field-header">{I18n.t("settings.social_rich_menus.internal_name")}</div>
             <div className="field-row">
