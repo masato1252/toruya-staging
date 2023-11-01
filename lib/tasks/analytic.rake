@@ -115,10 +115,35 @@ namespace :analytic do
     end
   end
 
-  task :paid_user_data => :environment do
+  task :function_biweekly_usage => :environment do
     # Only reports on 1st and 14th of each moth
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
       google_worksheet = Google::Drive.spreadsheet(worksheet: 2)
+      new_row_number = google_worksheet.num_rows + 1
+
+      new_row_data = [
+        Time.current.to_fs(:date),
+        BookingPage.where(created_at: 14.days.ago..Time.current).select(:user_id).distinct.count,
+        OnlineService.where(created_at: 14.days.ago..Time.current).select(:user_id).distinct.count,
+        SalePage.where(created_at: 14.days.ago..Time.current).select(:user_id).distinct.count,
+        Broadcast.where(created_at: 14.days.ago..Time.current).select(:user_id).distinct.count,
+        CustomerPayment.completed.where(created_at: 14.days.ago..Time.current).count,
+        CustomerPayment.completed.where(created_at: 14.days.ago..Time.current).sum(:amount_cents)
+      ]
+      new_row_data.each_with_index do |data, index|
+        google_worksheet[new_row_number, index + 1] = data
+      end
+
+      google_worksheet.save
+
+      SlackClient.send(channel: 'sayhi', text: "Biweekly usage https://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=1491437126")
+    end
+  end
+
+  task :paid_user_data => :environment do
+    # Only reports on 1st and 14th of each moth
+    if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 3)
       new_row_number = google_worksheet.num_rows + 1
 
       last_month_paid_user_ids = SubscriptionCharge.where(created_at: 2.month.ago..1.month.ago).pluck(:user_id).uniq
