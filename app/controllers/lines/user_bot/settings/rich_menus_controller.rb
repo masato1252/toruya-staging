@@ -10,7 +10,7 @@ class Lines::UserBot::Settings::RichMenusController < Lines::UserBotDashboardCon
     # Switch back to toruya default
     SocialAccounts::RichMenus::SwitchBackToruya.run(social_account: Current.business_owner.social_account)
 
-    redirect_to lines_user_bot_settings_path
+    redirect_to lines_user_bot_settings_social_account_social_rich_menus_path
   end
 
   def destroy

@@ -64,7 +64,7 @@ class Lines::HandleEvent < ActiveInteraction::Base
         begin
           SocialCustomer.transaction do
             SocialCustomer
-              .create_with(social_rich_menu_key: SocialAccounts::RichMenus::CustomerReservations::KEY)
+              .create_with(social_rich_menu_key: social_account.current_rich_menu&.social_name || SocialAccounts::RichMenus::CustomerReservations::KEY)
               .find_or_create_by(
                 user_id: social_account.user_id,
                 social_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],

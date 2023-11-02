@@ -33,7 +33,9 @@ class SocialRichMenu < ApplicationRecord
 
   belongs_to :social_account, required: false
   scope :current, -> { where(current: true) }
+  scope :not_official, -> { where.not(social_name: LINE_OFFICIAL_RICH_MENU_KEY) }
   scope :pending, -> { where(current: nil) }
+  scope :default, -> { where(default: true) }
 
   has_one_attached :image # content picture
 
@@ -51,6 +53,10 @@ class SocialRichMenu < ApplicationRecord
     else
       "pending"
     end
+  end
+
+  def official?
+    social_name == LINE_OFFICIAL_RICH_MENU_KEY
   end
 
   def layout_type

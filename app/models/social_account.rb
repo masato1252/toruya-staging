@@ -27,6 +27,7 @@ class SocialAccount < ApplicationRecord
   has_many :social_customers, dependent: :destroy
   has_many :social_messages, dependent: :destroy
   has_many :social_rich_menus
+  has_one :current_rich_menu, -> { current }, class_name: "SocialRichMenu"
   belongs_to :user
 
   def client
