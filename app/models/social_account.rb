@@ -87,6 +87,10 @@ class SocialAccount < ApplicationRecord
   end
 
   def using_line_official_account?
-    social_rich_menus.where(social_name: SocialRichMenu::LINE_OFFICIAL_RICH_MENU_KEY).exists?
+    current_rich_menu&.official?
+  end
+
+  def current_rich_menu_key
+    current_rich_menu&.social_name || SocialAccounts::RichMenus::CustomerReservations::KEY
   end
 end

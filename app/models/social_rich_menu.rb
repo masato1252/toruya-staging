@@ -107,4 +107,12 @@ class SocialRichMenu < ApplicationRecord
       end
     end
   end
+
+  def image_url
+    if image.attached?
+      image.url
+    else
+      File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{social_name}.png")
+    end
+  end
 end

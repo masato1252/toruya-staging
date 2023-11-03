@@ -48,6 +48,8 @@ module UserBotLines
           ::RichMenus::ToruyaOfficialCreate,
           body: body,
           key: KEY,
+          internal_name: KEY,
+          bar_label: I18n.t("user_bot.guest.rich_menu_bar"),
           default_menu: true
         )
       end

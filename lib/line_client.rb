@@ -121,7 +121,6 @@ class LineClient
   end
 
   def self.create_rich_menu_image(social_account:, rich_menu_id:, file_path: )
-
     if file_path.match?(/http/)
       error_handler(__method__, social_account.id, rich_menu_id, file_path) do
         tempfile = Utils.file_from_url(file_path)

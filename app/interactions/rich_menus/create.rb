@@ -35,11 +35,7 @@ module RichMenus
 
         rich_menu.image.attach(io: image, filename: File.basename(image.path)) if image
 
-        image_response = ::LineClient.create_rich_menu_image(
-          social_account: social_account,
-          rich_menu_id: rich_menu.social_rich_menu_id,
-          file_path: rich_menu_file_path(rich_menu)
-        )
+        image_response = compose(::RichMenus::LinkImage, social_account: social_account, social_rich_menu: rich_menu)
 
         if image_response.is_a?(Net::HTTPOK)
           if default_menu || single_rich_menu
@@ -68,14 +64,6 @@ module RichMenus
       return @single_rich_menu if defined?(@single_rich_menu)
 
       @single_rich_menu = !social_account.social_rich_menus.where.not(social_name: key).exists?
-    end
-
-    def rich_menu_file_path(rich_menu)
-      if rich_menu.image.attached?
-        rich_menu.image.url
-      else
-        File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{rich_menu.social_name}.png")
-      end
     end
   end
 end
