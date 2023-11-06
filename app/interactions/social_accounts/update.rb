@@ -4,7 +4,7 @@ require "message_encryptor"
 
 module SocialAccounts
   class Update < ActiveInteraction::Base
-    INVALID_TOKEN_REGEXP = /[\s|:]/
+    INVALID_TOKEN_REGEXP = /[:]/
 
     object :user
     string :update_attribute
@@ -30,11 +30,11 @@ module SocialAccounts
           when "channel_id", "label", "basic_id", "login_channel_id"
             account.update(attrs.slice(update_attribute))
           when "channel_token"
-            account.update(channel_token: MessageEncryptor.encrypt(attrs[:channel_token]))
+            account.update(channel_token: MessageEncryptor.encrypt(attrs[:channel_token]&.strip))
           when "channel_secret"
-            account.update(channel_secret: MessageEncryptor.encrypt(attrs[:channel_secret]))
+            account.update(channel_secret: MessageEncryptor.encrypt(attrs[:channel_secret]&.strip))
           when "login_channel_secret"
-            account.update(login_channel_secret: MessageEncryptor.encrypt(attrs[:login_channel_secret]))
+            account.update(login_channel_secret: MessageEncryptor.encrypt(attrs[:login_channel_secret]&.strip))
           end
 
           if account.line_settings_verified?

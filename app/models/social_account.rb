@@ -24,7 +24,6 @@
 require "message_encryptor"
 
 class SocialAccount < ApplicationRecord
-  INVALID_TOKEN_REGEXP = /[\s|\/]/
   has_many :social_customers, dependent: :destroy
   has_many :social_messages, dependent: :destroy
   has_many :social_rich_menus
