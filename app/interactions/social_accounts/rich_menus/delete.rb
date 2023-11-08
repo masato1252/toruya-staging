@@ -15,7 +15,7 @@ module SocialAccounts
         else
           response = ::LineClient.delete_rich_menu(social_rich_menu)
 
-          if response.is_a?(Net::HTTPOK)
+          if response.is_a?(Net::HTTPOK) || response.is_a?(Net::HTTPNotFound)
             social_rich_menu.destroy
           else
             errors.add(:social_rich_menu, :delete_failed)
