@@ -52,7 +52,7 @@ module Users
       if user.persisted? && new_user
         Notifiers::Users::UserSignedUp.run(receiver: user)
         Notifiers::Users::Notifications::ShopSettingsReminder.perform_at(schedule_at: 24.hours.from_now, receiver: user)
-        Notifiers::Users::Notifications::LineSettings.perform_at(schedule_at: 2.weeks.from_now, receiver: user)
+        Notifiers::Users::Notifications::LineSettings.perform_at(schedule_at: 1.weeks.from_now, receiver: user)
       end
 
       user
