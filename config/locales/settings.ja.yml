@@ -638,6 +638,7 @@ ja:
       sale_page: 宣伝用LP
       booking_page: 予約ページ
       picture_hint: "画像を設定\n 幅800px〜2500px"
+      default_desc: 他にメニューが無い場合に表示
     social_account:
       sider_label: Line
       settings: 設定

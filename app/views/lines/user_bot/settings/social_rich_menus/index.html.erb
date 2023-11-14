@@ -6,10 +6,7 @@
         <div class="field-header"><%= t("settings.social_rich_menus.current") %></div>
         <%= render "lines/user_bot/field_state", state: @current_rich_menu.state do %>
           <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_social_rich_menu_path(@current_rich_menu) do %>
-            <div>
-              <%= image_tag(rich_menu_image_url(@current_rich_menu), class: "preview-image") %>
-              <span class="dotdotdot"><%= @current_rich_menu.internal_name %></span>
-            </div>
+            <%= render "cell", rich_menu: @current_rich_menu %>
           <% end %>
         <% end %>
 
