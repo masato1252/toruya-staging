@@ -12,11 +12,14 @@ module Profiles
       string :phone_number, default: nil
       string :email, default: nil
       string :zip_code, default: nil
+      string :where_know_toruya, default: nil
+      string :what_main_problem, default: nil
     end
 
     def execute
       user.transaction do
-        profile = user.build_profile(params)
+        profile = Profile.new(params)
+        profile.user = user
         profile.save
 
         if profile.new_record?

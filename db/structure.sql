@@ -1722,7 +1722,8 @@ CREATE TABLE public.profiles (
     street2 character varying,
     personal_address_details jsonb,
     company_address_details jsonb,
-    template_variables json
+    template_variables json,
+    context jsonb
 );
 
 
@@ -5453,6 +5454,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230815055914'),
 ('20230830144948'),
 ('20230926140612'),
-('20231013231105');
+('20231013231105'),
+('20231114141536');
 
 

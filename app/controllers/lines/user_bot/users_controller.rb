@@ -52,6 +52,8 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       phone_number: params[:phone_number],
       email: params[:email],
       referral_token: params[:referral_token],
+      where_know_toruya: params[:where_know_toruya],
+      what_main_problem: params[:what_main_problem],
       social_user: social_user
     )
 

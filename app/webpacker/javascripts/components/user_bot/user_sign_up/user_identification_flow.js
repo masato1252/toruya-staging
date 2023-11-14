@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from 'react-phone-input-2'
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { IdentificationCodesServices, UsersServices } from "user_bot/api";
+import I18n from 'i18n-js/index.js.erb';
 
 import { ErrorMessage, RequiredLabel } from "shared/components";
 
@@ -197,6 +199,20 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             placeholder={phonetic_first_name}
             type="text"
             name="phonetic_first_name"
+          />
+        </div>
+        <h4>{I18n.t("user_bot.guest.user_sign_up.know_more_about_you")}</h4>
+        <div className="field">
+          <input
+            type="text"
+            ref={register()}
+            placeholder={I18n.t("user_bot.guest.user_sign_up.where_u_find_toruya")}
+            name="where_know_toruya"
+          />
+          <TextareaAutosize
+            ref={register()}
+            placeholder={I18n.t("user_bot.guest.user_sign_up.what_you_expect_toruya_solve")}
+            name="what_main_problem"
           />
         </div>
         <h4>
