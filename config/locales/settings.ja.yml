@@ -614,6 +614,32 @@ ja:
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
           unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
           invalid_menu_html: "この予約価格に設定されているメニューには、%{shop_name}が利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。<a href=%{url}>メニュー設定</a>ページより%{shop_name}を利用店舗として設定してください。"
+    social_rich_menus:
+      action_types:
+        incoming_reservations: 全ての予約
+        booking_pages: 新たに予約する
+        contacts: お問い合わせ
+        services: 利用中サービス
+        sale_page: 宣伝用LP
+        booking_page: 予約ページ
+        text: テキスト
+        uri: リンク
+      edit_title: リッチメニュー編集
+      index_title: リッチメニュー
+      edit_button: リッチメニューを編集する
+      current: 表示中
+      pending: 待機中
+      current_rich_menu: 現在の表示
+      internal_name: 管理用タイトル
+      bar_label: メニューバーのテキスト
+      layout_type: テンプレート
+      picture: 画像
+      actions: アクション
+      sale_page: 宣伝用LP
+      booking_page: 予約ページ
+      picture_hint: "画像を設定\n 幅800px〜2500px"
+      default_desc: 他にメニューが無い場合に表示
+      show_it_now: 今すぐ表示
     social_account:
       sider_label: Line
       settings: 設定

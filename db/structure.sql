@@ -2465,7 +2465,14 @@ CREATE TABLE public.social_rich_menus (
     id bigint NOT NULL,
     social_account_id integer,
     social_rich_menu_id character varying,
-    social_name character varying
+    social_name character varying,
+    body jsonb,
+    current boolean,
+    "default" boolean,
+    start_at timestamp(6) without time zone,
+    end_at timestamp(6) without time zone,
+    internal_name character varying,
+    bar_label character varying
 );
 
 
@@ -4173,6 +4180,13 @@ CREATE UNIQUE INDEX contact_groups_google_index ON public.contact_groups USING b
 
 
 --
+-- Name: current_rich_menu; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX current_rich_menu ON public.social_rich_menus USING btree (social_account_id, current);
+
+
+--
 -- Name: customer_names_on_first_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4212,6 +4226,13 @@ CREATE INDEX customers_basic_index ON public.customers USING btree (user_id, con
 --
 
 CREATE UNIQUE INDEX customers_google_index ON public.customers USING btree (user_id, google_uid, google_contact_id);
+
+
+--
+-- Name: default_rich_menu; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX default_rich_menu ON public.social_rich_menus USING btree (social_account_id, "default");
 
 
 --
@@ -5419,6 +5440,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230207141752'),
 ('20230213153853'),
 ('20230314135331'),
+('20230408232251'),
 ('20230516222442'),
 ('20230517142813'),
 ('20230523072534'),
@@ -5427,8 +5449,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230616093508'),
 ('20230620094659'),
 ('20230621014139'),
+('20230718133125'),
 ('20230815055914'),
 ('20230830144948'),
-('20230926140612');
+('20230926140612'),
+('20231013231105');
 
 

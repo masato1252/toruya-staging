@@ -42,7 +42,7 @@ module UserBotLines
                 "height": 843
               },
               "action": LineActions::Uri.template(
-                  label: I18n.t("toruya_line.actions.label.customers"),
+                label: I18n.t("toruya_line.actions.label.customers"),
                 url: LiffRouting.liff_url(:customers)
               )
             },
@@ -108,9 +108,11 @@ module UserBotLines
         }
 
         compose(
-          ::RichMenus::Create,
+          ::RichMenus::ToruyaOfficialCreate,
           body: body,
-          key: KEY
+          key: KEY,
+          internal_name: KEY,
+          bar_label: I18n.t("user_bot.guest.rich_menu_bar")
         )
       end
     end

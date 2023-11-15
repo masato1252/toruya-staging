@@ -17,7 +17,7 @@ module SocialAccounts
           },
           "selected": true,
           "name": KEY,
-            "chatBarText": sentence,
+          "chatBarText": sentence,
           "areas": [
             {
               "bounds": {
@@ -66,7 +66,10 @@ module SocialAccounts
           social_account: social_account,
           body: body,
           key: KEY,
-          default_menu: true
+          internal_name: I18n.t("common.default"),
+          bar_label: sentence,
+          default_menu: true,
+          current: true
         )
       end
     end

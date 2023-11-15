@@ -1,0 +1,10 @@
+<div class="flex flex-row">
+  <div class="mr-2-5">
+    <%= image_tag(rich_menu_image_url(rich_menu), class: "preview-image") %>
+  </div>
+  <div class="flex flex-col">
+    <span class="dotdotdot"><%= rich_menu.internal_name %></span>
+    <div class="desc"><%= rich_menu.default ? t("settings.social_rich_menus.default_desc") : " " %></div>
+    <%= button_to t("settings.social_rich_menus.show_it_now"), current_lines_user_bot_settings_social_account_social_rich_menu_path(rich_menu), class: "btn btn-tarco", method: :put if !rich_menu.current %>
+  </div>
+</div>

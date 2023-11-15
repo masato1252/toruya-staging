@@ -50,6 +50,27 @@ RSpec.describe Lines::HandleEvent do
           ).count
         }.by(1)
       end
+
+      context "when current account use custom rich menu" do
+        let!(:social_rich_menu) { FactoryBot.create(:social_rich_menu, social_account: social_account) }
+
+        it "creates a social customer with expected rich menu" do
+          response = Net::HTTPOK.new(1.0, "200", "OK")
+          expect(LineClient).to receive(:profile).and_return(response)
+          expect(response).to receive(:body) { {displayName: "foo", pictureUrl: "bar"}.to_json }
+          expect(Lines::MessageEvent).to receive(:run!)
+
+          expect {
+            outcome
+          }.to change {
+            SocialCustomer.where(
+              social_account: social_account,
+              user_id: social_account.user_id,
+              social_rich_menu_key: social_rich_menu.social_name
+            ).count
+          }.by(1)
+        end
+      end
     end
   end
 end

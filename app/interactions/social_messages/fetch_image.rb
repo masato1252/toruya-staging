@@ -12,6 +12,7 @@ module SocialMessages
       tf.write(response.body)
       tf.rewind
       social_message.image.attach(io: tf, filename: "img.jpg", content_type: "image/jpg")
+      tf.close
     end
   end
 end

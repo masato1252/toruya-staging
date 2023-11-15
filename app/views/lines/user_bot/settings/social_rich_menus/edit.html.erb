@@ -1,0 +1,28 @@
+<%= react_component("user_bot/settings/social_rich_menus/upsert", {
+  props: {
+    rich_menu: SocialRichMenuSerializer.new(@rich_menu).attributes_hash,
+    layout_options: RichMenus::Body::LAYOUT_TYPES.map.with_index { |(type, _type_attributes), index| { value: type, image: rich_menu_layout_option_image_path(index + 1) } },
+    layout_actions: RichMenus::Body::LAYOUT_TYPES.each_with_object({}) { |(k, v), h| h[k] = { size: v[:action_bounds].length } },
+    action_labels: ("A".."K").to_a,
+    action_types: I18n.t("settings.social_rich_menus.action_types").map { |type, label| { label: label, value: type } },
+    keywords: SocialRichMenu::KEYWORDS,
+    sale_pages: @sale_pages.map do |sale_page|
+      next unless sale_page.product
+
+      {
+        label: sale_page.internal_sale_name,
+        value: Rails.application.routes.url_helpers.sale_page_url(sale_page)
+      }
+    end.compact,
+    booking_pages: @booking_pages.map do |booking_page|
+      next if booking_page.ended? || !booking_page.started?
+
+      {
+        label: booking_page.title,
+        value: Rails.application.routes.url_helpers.booking_page_url(booking_page)
+      }
+    end.compact,
+  },
+},
+{ camelize_props: false }
+) %>

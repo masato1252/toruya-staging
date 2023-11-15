@@ -16,7 +16,7 @@ module SocialCustomers
       with_retry do
         social_customer =
           SocialCustomer
-          .create_with(social_rich_menu_key: SocialAccounts::RichMenus::CustomerReservations::KEY)
+          .create_with(social_rich_menu_key: social_account.current_rich_menu_key)
           .find_or_create_by(
             user_id: social_account.user_id,
             social_user_id: auth.uid,

@@ -91,9 +91,11 @@ module UserBotLines
         }
 
         compose(
-          ::RichMenus::Create,
+          ::RichMenus::ToruyaOfficialCreate,
           body: body,
-          key: KEY
+          key: KEY,
+          internal_name: KEY,
+          bar_label: I18n.t("user_bot.guest.rich_menu_bar")
         )
       end
     end

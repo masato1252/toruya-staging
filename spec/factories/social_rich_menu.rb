@@ -5,6 +5,7 @@ FactoryBot.define do
     association :social_account
     social_rich_menu_id { SecureRandom.hex }
     social_name { Faker::Lorem.word }
+    current { true }
 
     trait :reservations do
       social_name { SocialAccounts::RichMenus::CustomerReservations::KEY }
