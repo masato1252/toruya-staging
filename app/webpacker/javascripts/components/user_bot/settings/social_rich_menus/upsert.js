@@ -146,11 +146,12 @@ const SocialRichMenuUpsert = ({props}) => {
               watch("layout_type") && _.times(props.layout_actions[watch("layout_type")]["size"]).map((_use, index) => {
                 return (
                   <div className="field-row flex-col items-start" key={`layout-type-${index}`}>
+                    <b>{props.action_labels[index]}</b>
                     <select autoFocus={true} name={`actions[${index}].type`} ref={register({ required: true })}>
                       <option value="">{I18n.t("common.select")}</option>
                       <SelectOptions options={props.action_types} />
                     </select>
-                      <ActionTypeFields action_type={watch(`actions[${index}].type`)} register={register} index={index} props={props} errors={errors} />
+                    <ActionTypeFields action_type={watch(`actions[${index}].type`)} register={register} index={index} props={props} errors={errors} />
                   </div>
                 )
               }

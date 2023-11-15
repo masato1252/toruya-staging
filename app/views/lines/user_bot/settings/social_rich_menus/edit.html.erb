@@ -3,6 +3,7 @@
     rich_menu: SocialRichMenuSerializer.new(@rich_menu).attributes_hash,
     layout_options: RichMenus::Body::LAYOUT_TYPES.map.with_index { |(type, _type_attributes), index| { value: type, image: rich_menu_layout_option_image_path(index + 1) } },
     layout_actions: RichMenus::Body::LAYOUT_TYPES.each_with_object({}) { |(k, v), h| h[k] = { size: v[:action_bounds].length } },
+    action_labels: ("A".."K").to_a,
     action_types: I18n.t("settings.social_rich_menus.action_types").map { |type, label| { label: label, value: type } },
     keywords: SocialRichMenu::KEYWORDS,
     sale_pages: @sale_pages.map do |sale_page|
