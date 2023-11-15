@@ -51,6 +51,7 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   def current
     rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
     RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
+    HiEventJob.perform_later(rich_menu.social_account, "rich_menu_switch")
 
     redirect_to lines_user_bot_settings_social_account_social_rich_menus_path
   end
