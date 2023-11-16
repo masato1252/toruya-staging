@@ -28,13 +28,13 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def create
-    outcome = Broadcasts::Create.run(user: Current.business_owner, params: params[:broadcast].permit!.to_h)
+    outcome = Broadcasts::Create.run(user: Current.business_owner, params: params.permit!.to_h)
 
     return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path })
   end
 
   def update
-    outcome = Broadcasts::Update.run(broadcast: Current.business_owner.broadcasts.find(params[:id]), params: params[:broadcast].permit!.to_h, update_attribute: params[:attribute])
+    outcome = Broadcasts::Update.run(broadcast: Current.business_owner.broadcasts.find(params[:id]), params: params.permit!.to_h, update_attribute: params[:attribute])
 
     return_json_response(outcome, { redirect_to: lines_user_bot_broadcast_path(outcome.result) })
   end
