@@ -19,6 +19,9 @@ ja:
         confirm_customer_info: 確認コード送信
         create_customer_info: 保存してLINEと連携する
         sms_faq: 認証コードSMSが届きませんか？
+        know_more_about_you: あなたについてお聞かせください
+        where_u_find_toruya: Toruyaを知ったキッカケは？
+        what_you_expect_toruya_solve: Toruyaを使って解決したい問題は？
         booking_code:
           code: 確認コード
           resend: コード再送

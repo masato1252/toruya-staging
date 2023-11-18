@@ -10,6 +10,8 @@ module Users
     string :phone_number
     string :referral_token, default: nil
     string :email, default: nil
+    string :where_know_toruya, default: nil
+    string :what_main_problem, default: nil
 
     def execute
       formatted_phone = Phonelib.parse(phone_number).international(false)
@@ -44,6 +46,8 @@ module Users
           first_name: first_name,
           phonetic_last_name: phonetic_last_name,
           phonetic_first_name: phonetic_first_name,
+          where_know_toruya: where_know_toruya,
+          what_main_problem: what_main_problem,
           email: email
         })
         user

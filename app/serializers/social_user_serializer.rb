@@ -89,4 +89,12 @@ class SocialUserSerializer
   attribute :trial_end_date do |social_user|
     social_user.user&.subscription&.trial_expired_date&.to_date
   end
+
+  attribute :where_know_toruya do |social_user|
+    social_user.user&.profile&.where_know_toruya
+  end
+
+  attribute :what_main_problem do |social_user|
+    social_user.user&.profile&.what_main_problem
+  end
 end

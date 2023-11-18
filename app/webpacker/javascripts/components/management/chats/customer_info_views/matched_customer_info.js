@@ -135,6 +135,12 @@ export default () => {
             disabled={!selected_customer.in_paid_plan}
           />
         </li>
+        <li>
+          {selected_customer.where_know_toruya}
+        </li>
+        <li>
+          {selected_customer.what_main_problem}
+        </li>
       </ul>
     </>
   )

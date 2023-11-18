@@ -11,6 +11,7 @@
 #  company_name             :string
 #  company_phone_number     :string
 #  company_zip_code         :string
+#  context                  :jsonb
 #  email                    :string
 #  first_name               :string
 #  last_name                :string
@@ -39,6 +40,7 @@
 
 class Profile < ApplicationRecord
   include NormalizeName
+  store :context, accessors: [:where_know_toruya, :what_main_problem], coder: JSON
 
   belongs_to :user
 
