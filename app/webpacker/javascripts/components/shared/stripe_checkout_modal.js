@@ -10,7 +10,7 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
 
   const handleToken = async (token) => {
     setProcessing(true)
-    const [error, response] = await PaymentServices.payPlan({token: token, plan: plan_key, rank})
+    const [error, response] = await PaymentServices.payPlan({token: token, plan: plan_key, rank, business_owner_id: props.business_owner_id})
     setProcessing(false)
 
     if (error) {

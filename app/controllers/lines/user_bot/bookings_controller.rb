@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   def new
-    @shop = Current.business_owner.shops.count == 1 ? Current.business_owner.shops.first : nil
+    @booking_shop = Current.business_owner.shops.count == 1 ? Current.business_owner.shops.first : nil
   end
 
   def page
@@ -15,7 +15,7 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
 
   def available_options
     menu_result = ::Menus::CategoryGroup.run!(menu_options: shop_menus_options)
-    outcome = ::BookingPages::AvailableBookingOptions.run(shop: shop)
+    outcome = ::BookingPages::AvailableBookingOptions.run(shop: Current.business_owner.shops.find(params[:shop_id]))
 
     shop_booking_options = outcome.result.map do |option|
       view_context.custom_option(view_context.booking_option_item(option))
@@ -27,11 +27,5 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
         booking_options: shop_booking_options
     }
     )
-  end
-
-  private
-
-  def shop
-    @shop ||= Current.business_owner.shops.find(params[:shop_id])
   end
 end

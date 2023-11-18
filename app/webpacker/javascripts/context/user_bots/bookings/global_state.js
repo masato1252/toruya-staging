@@ -32,7 +32,7 @@ export const GlobalProvider = ({ props, children }) => {
   const fetchShopMenus = async () => {
     const shop_id = state.booking_creation_states.selected_shop.id
 
-    const [error, response] = await BookingServices.available_options({super_user_id: props.super_user_id, shop_id})
+    const [error, response] = await BookingServices.available_options({ business_owner_id: props.business_owner_id, shop_id})
 
     dispatch({
       type: "SET_ATTRIBUTE",
@@ -55,6 +55,7 @@ export const GlobalProvider = ({ props, children }) => {
     const [error, response] = await BookingServices.create_booking_page(
       {
         data: {
+          business_owner_id: props.business_owner_id,
           super_user_id: props.super_user_id,
           shop_id: selected_shop.id,
           menu_id: selected_menu.value,

@@ -1,5 +1,6 @@
 <%= react_component("user_bot/settings/social_rich_menus/upsert", {
   props: {
+    business_owner_id: business_owner_id,
     rich_menu: SocialRichMenuSerializer.new(@rich_menu).attributes_hash,
     layout_options: RichMenus::Body::LAYOUT_TYPES.map.with_index { |(type, _type_attributes), index| { value: type, image: rich_menu_layout_option_image_path(index + 1) } },
     layout_actions: RichMenus::Body::LAYOUT_TYPES.each_with_object({}) { |(k, v), h| h[k] = { size: v[:action_bounds].length } },

@@ -8,19 +8,16 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def new
-    authorize! :create, Staff
   end
 
   def edit
   end
 
   def create
-    authorize! :create, Staff
-
     outcome = Staffs::Invite.run(user: Current.business_owner, phone_number: params[:phone_number])
 
     if outcome.valid?
-      redirect_to lines_user_bot_settings_staffs_path, notice: I18n.t("settings.staff_account.sent_message")
+      redirect_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), notice: I18n.t("settings.staff_account.sent_message")
     else
       render :new
     end

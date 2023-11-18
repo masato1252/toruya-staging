@@ -57,7 +57,7 @@ class CustomerPayment < ApplicationRecord
     sale_page = SalePage.find_by(id: payment_bonus.sale_page_id)
 
     I18n.t("user_bot.dashboards.settings.service_customer_relation.free_bonus", service_name: sale_page.product_name, free_bonus_month: payment_bonus.bonus_month)
-  rescue JSON::ParserError
+  rescue JSON::ParserError, ActionView::Template::Error
     nil
   end
 end

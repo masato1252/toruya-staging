@@ -1,16 +1,17 @@
-<%= jump_out_modal(trial_end_lines_user_bot_warnings_path, static: true) if !Current.business_owner.subscription.active? %>
-<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) if !ability(Current.business_owner).can?(:create, BookingPage) %>
-<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !Current.business_owner.social_account&.line_settings_verified? %>
+<%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
+<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !ability(Current.business_owner).can?(:create, BookingPage) %>
+<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.social_account&.line_settings_verified? %>
 
 <% if ability(Current.business_owner).can?(:create, BookingPage) && Current.business_owner.social_account&.line_settings_finished? %>
   <%= react_component("user_bot/bookings/creation_flow", {
     props: {
+      business_owner_id: business_owner_id,
       line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
       line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id)),
       super_user_id: Current.business_owner.id,
-      selected_shop: @shop ? CompanyInfoSerializer.new(@shop).attributes_hash : {},
+      selected_shop: @shop ? CompanyInfoSerializer.new(@booking_shop).attributes_hash : {},
       note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),
-      shops: @shop ? [] : Current.business_owner.shops.includes(logo_attachment: :blob).map { |s| CompanyInfoSerializer.new(s).attributes_hash },
+      shops: @booking_shop ? [] : Current.business_owner.shops.includes(logo_attachment: :blob).map { |s| CompanyInfoSerializer.new(s).attributes_hash },
       i18n: {
       }.merge!([
         t("activerecord.attributes.menu"),

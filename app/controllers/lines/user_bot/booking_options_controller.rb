@@ -30,7 +30,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
 
     outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_booking_option_path(@booking_option.id, anchor: params[:attribute]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_booking_option_path(business_owner_id, @booking_option.id, anchor: params[:attribute]) })
   end
 
   def reorder_menu_priority
@@ -47,7 +47,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])&.destroy
     @booking_option.update(minutes: @booking_option.booking_option_menus.sum(:required_time))
 
-    redirect_to lines_user_bot_booking_option_path(@booking_option.id, anchor: "new_menu")
+    redirect_to lines_user_bot_booking_option_path(business_owner_id, @booking_option.id, anchor: "new_menu")
   end
 
   def destroy
@@ -56,9 +56,9 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     outcome = BookingOptions::Delete.run(booking_option: booking_option)
 
     if outcome.valid?
-      redirect_to lines_user_bot_booking_options_path(Current.business_owner), notice: I18n.t("common.delete_successfully_message")
+      redirect_to lines_user_bot_booking_options_path(business_owner_id), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_booking_option_path(booking_option), flash: { alert: outcome.errors.full_messages.join(", ") }
+      redirect_to lines_user_bot_booking_option_path(business_owner_id, booking_option), flash: { alert: outcome.errors.full_messages.join(", ") }
     end
   end
 

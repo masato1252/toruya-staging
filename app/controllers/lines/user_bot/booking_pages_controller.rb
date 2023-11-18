@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
-  before_action :authorize_booking_page
-
   def index
     @booking_pages = Current.business_owner.booking_pages.includes(:booking_options, :shop).order("updated_at DESC")
   end
@@ -26,7 +24,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
     outcome = ::BookingPages::Update.run(booking_page: @booking_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(@booking_page.id, anchor: params[:attribute]) })
+    render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(@booking_page.id, business_owner_id: business_owner_id, anchor: params[:attribute]) })
   end
 
   def delete_option
@@ -35,9 +33,9 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     if @booking_page.booking_page_options.count > 1
       @booking_page.booking_page_options.find_by(booking_option_id: params[:booking_option_id])&.destroy
 
-      redirect_to lines_user_bot_booking_page_path(@booking_page.id, anchor: "new_option")
+      redirect_to lines_user_bot_booking_page_path(@booking_page.id, business_owner_id: business_owner_id, anchor: "new_option")
     else
-      redirect_to lines_user_bot_booking_page_path(@booking_page.id, anchor: "new_option"), alert: "You should have at least one booking price"
+      redirect_to lines_user_bot_booking_page_path(@booking_page.id, business_owner_id: business_owner_id, anchor: "new_option"), alert: "You should have at least one booking price"
     end
   end
 
@@ -45,9 +43,9 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     if booking_page.update(deleted_at: Time.current)
-      redirect_to lines_user_bot_booking_pages_path, notice: I18n.t("common.delete_successfully_message")
+      redirect_to lines_user_bot_booking_pages_path(business_owner_id: props.business_owner_id), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_booking_pages_path
+      redirect_to lines_user_bot_booking_pages_path(business_owner_id: props.business_owner_id)
     end
   end
 
@@ -60,11 +58,5 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     else
       head :ok
     end
-  end
-
-  private
-
-  def authorize_booking_page
-    authorize! :manage, BookingPage
   end
 end

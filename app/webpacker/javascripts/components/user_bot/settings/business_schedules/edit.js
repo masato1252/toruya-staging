@@ -24,7 +24,7 @@ const BusinessScheduleEdit =({props}) => {
     let error, response;
 
     [error, response] = await BusinessScheduleServices.update({
-      data: data
+      data: _.assign( data, { business_owner_id: props.business_owner_id })
     })
 
     window.location = response.data.redirect_to

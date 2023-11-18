@@ -30,13 +30,13 @@ export const GlobalProvider = ({ props, children }) => {
 
   const lessonData = () => {
     return {
-      ...state.lesson_creation_states
+      ...state.lesson_creation_states, business_owner_id: props.business_owner_id
     }
   }
 
   const createLesson = async () => {
     const [error, response] = await CommonServices.create({
-      url: Routes.lines_user_bot_service_chapter_lessons_path(props.lesson.online_service_id, props.lesson.chapter_id),
+      url: Routes.lines_user_bot_service_chapter_lessons_path(props.business_owner_id, props.lesson.online_service_id, props.lesson.chapter_id),
       data: lessonData()
     })
 

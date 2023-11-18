@@ -8,7 +8,7 @@
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
         <div class="booking-pages-list">
           <% @online_services.each do |service| %>
-            <%= link_to lines_user_bot_service_path(service), class: "field-row with-next-arrow" do %>
+            <%= link_to lines_user_bot_service_path(service, business_owner_id: business_owner_id), class: "field-row with-next-arrow" do %>
               <div>
                 <h3><%= service.internal_name.presence || service.name %></h3>
                 <div class="desc"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
@@ -17,6 +17,13 @@
             <% end %>
           <% end %>
         </div>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+          <%= link_to new_lines_user_bot_service_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+            <i class="fas fa-plus fa-2x"></i>
+            <div class="word"><%= I18n.t("action.add_more") %></div>
+          <% end %>
+        <% end %>
       </div>
     </div>
 

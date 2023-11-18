@@ -30,7 +30,12 @@ export const GlobalProvider = ({ props, children }) => {
   const [state, dispatch] = useReducer(reducers, initialValue)
 
   const broadcastData = () => {
-    return _.pick(state.broadcast_creation_states, ["query", "content", "schedule_at", "query_type"])
+    return _.assign(
+      _.pick(state.broadcast_creation_states, ["query", "content", "schedule_at", "query_type"]),
+      {
+        business_owner_id: props.business_owner_id
+      }
+    )
   }
 
   const fetchCustomersCount = async () => {
@@ -39,7 +44,7 @@ export const GlobalProvider = ({ props, children }) => {
 
     const [error, response] = await CommonServices.update(
       {
-        url: Routes.customers_count_lines_user_bot_broadcasts_path({format: "json"}),
+        url: Routes.customers_count_lines_user_bot_broadcasts_path(props.business_owner_id, {format: "json"}),
         data: {
           query: state.broadcast_creation_states.query,
           query_type: state.broadcast_creation_states.query_type
@@ -62,7 +67,7 @@ export const GlobalProvider = ({ props, children }) => {
     if (state.broadcast_creation_states.id) {
       [error, response] = await CommonServices.update(
         {
-          url: Routes.lines_user_bot_broadcast_path(state.broadcast_creation_states.id, {format: "json"}),
+          url: Routes.lines_user_bot_broadcast_path(props.business_owner_id, state.broadcast_creation_states.id, {format: "json"}),
           data: broadcastData()
         }
       )
@@ -70,7 +75,7 @@ export const GlobalProvider = ({ props, children }) => {
     else {
       [error, response] = await CommonServices.create(
         {
-          url: Routes.lines_user_bot_broadcasts_path({format: "json"}),
+          url: Routes.lines_user_bot_broadcasts_path(props.business_owner_id, {format: "json"}),
           data: broadcastData()
         }
       )

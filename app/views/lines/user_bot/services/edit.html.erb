@@ -1,5 +1,7 @@
 <%= react_component("user_bot/services/edit", {
   props: {
+    business_owner_id: business_owner_id,
+    back_path: lines_user_bot_service_path({ business_owner_id: business_owner_id, id: @service.id }),
     service: OnlineServiceSerializer.new(@service).attributes_hash,
     attribute: @attribute,
     companies: Current.business_owner.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(

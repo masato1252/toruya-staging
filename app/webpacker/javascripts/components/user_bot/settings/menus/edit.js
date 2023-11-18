@@ -23,7 +23,7 @@ const MenuEdit =({props}) => {
     let error, response;
 
     [error, response] = await MenuServices.update({
-      data: _.assign( data, { attribute: props.attribute, menu_shops: menu_shops_options })
+      data: _.assign( data, { attribute: props.attribute, menu_shops: menu_shops_options, business_owner_id: props.business_owner_id })
     })
 
     if (error) {

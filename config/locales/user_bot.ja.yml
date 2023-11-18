@@ -122,6 +122,7 @@ ja:
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
         company:
           info_hint: 主に宣伝用LPに表示されます。
+          staffs: スタッフ
         shop:
           shop_management: 店舗管理
           shop_info_label: 店舗情報
@@ -311,6 +312,7 @@ ja:
           connection_title: Stripeアカウント連携
           stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
           stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
+          owner_warning: スタッフアカウントからはStripe連携できません。アカウントオーナーに連携設定を依頼して下さい。
       broadcasts:
         broadcast_title: 配信条件
         broadcast_conditions: 配信条件一覧

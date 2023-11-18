@@ -1,5 +1,6 @@
 <%= react_component("user_bot/settings/profiles/edit", {
   props: {
+    business_owner_id: business_owner_id,
     profile: CompanyInfoSerializer.new(@profile).attributes_hash.merge!(@profile.slice(:company_name, :company_address_details, :company_phone_number)),
     attribute: params[:attribute],
     previous_path: @previous_path,

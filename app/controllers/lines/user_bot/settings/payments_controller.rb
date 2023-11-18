@@ -16,10 +16,10 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
 
     outcome =
       if new_plan.business_level?
-        Plans::SubscribeBusinessPlan.run(user: current_user, authorize_token: params[:token])
+        Plans::SubscribeBusinessPlan.run(user: Current.business_owner, authorize_token: params[:token])
       elsif new_plan.is_child?
         Plans::SubscribeChildPlan.run(
-          user: current_user,
+          user: Current.business_owner,
           plan: new_plan,
           rank: params[:rank],
           authorize_token: params[:token],
@@ -27,7 +27,7 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
         )
       else
         Plans::Subscribe.run(
-          user: current_user,
+          user: Current.business_owner,
           plan: new_plan,
           rank: params[:rank],
           authorize_token: params[:token],
@@ -48,20 +48,20 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       redirect_path = user_bot_cookies(:redirect_to)
       delete_user_bot_cookies(:redirect_to)
 
-      render json: { redirect_path: redirect_path || lines_user_bot_settings_path }
+      render json: { redirect_path: redirect_path || lines_user_bot_settings_path(business_owner_id: business_owner_id) }
     end
   end
 
   def change_card
-    outcome = Payments::StoreStripeCustomer.run(user: current_user, authorize_token: params[:token])
+    outcome = Payments::StoreStripeCustomer.run(user: Current.business_owner, authorize_token: params[:token])
 
     return_json_response(outcome, {
-      redirect_to: lines_user_bot_settings_path
+      redirect_to: lines_user_bot_settings_path(business_owner_id: business_owner_id)
     })
   end
 
   def refund
-    outcome = Subscriptions::Refund.run(user: current_user)
+    outcome = Subscriptions::Refund.run(user: Current.business_owner)
 
     if outcome.valid?
       flash[:notice] = I18n.t("settings.plans.payment.refund_successfully_message")
@@ -69,7 +69,7 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       flash[:alert] =  I18n.t("settings.plans.payment.refund_failed_message")
     end
 
-    redirect_to lines_user_bot_settings_payments_path
+    redirect_to lines_user_bot_settings_payments_path(business_owner_id: business_owner_id)
   end
 
   def receipt
@@ -96,8 +96,8 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def downgrade
-    Subscriptions::Unsubscribe.run(user: current_user)
+    Subscriptions::Unsubscribe.run(user: Current.business_owner)
 
-    redirect_to lines_user_bot_settings_path
+    redirect_to lines_user_bot_settings_path(business_owner_id: business_owner_id)
   end
 end

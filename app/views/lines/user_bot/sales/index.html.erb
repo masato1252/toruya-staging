@@ -8,7 +8,7 @@
         <div class="booking-pages-list">
           <% @sale_pages.each do |sale_page| %>
             <% next unless sale_page.product %>
-            <%= link_to lines_user_bot_sale_path(sale_page), class: "field-row with-next-arrow" do %>
+            <%= link_to lines_user_bot_sale_path(sale_page, business_owner_id: business_owner_id), class: "field-row with-next-arrow" do %>
               <div>
                 <h3>
                   <% if sale_page.is_booking_page? %>
@@ -39,6 +39,13 @@
             <% end %>
           <% end %>
         </div>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+          <%= link_to new_lines_user_bot_sale_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+            <i class="fas fa-plus fa-2x"></i>
+            <div class="word"><%= I18n.t("action.add_more") %></div>
+          <% end %>
+        <% end %>
       </div>
     </div>
 

@@ -9,7 +9,7 @@ module RichMenus
     def execute
       response = ::LineClient.set_default_rich_menu(social_rich_menu)
 
-      if response.is_a?(Net::HTTPOK)
+      if response.is_a?(Net::HTTPOK) || Rails.env.development?
         social_rich_menu.with_lock do
           social_rich_menu.account.social_rich_menus.update_all(default: nil)
           social_rich_menu.update(default: true)

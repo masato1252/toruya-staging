@@ -16,12 +16,12 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
   def update
     outcome = BusinessSchedules::Update.run(shop: shop, attrs: params.permit!.to_h)
 
-    render json: json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: params[:shop_id]) })
+    render json: json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: params[:shop_id], business_owner_id: business_owner_id) })
   end
 
   private
 
   def shop
-    @shop ||= Current.business_owner.shops.find(params[:shop_id])
+    @shop ||= Current.business_owner.shops.find(params[:shop_id]) if params[:shop_id]
   end
 end

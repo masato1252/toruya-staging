@@ -51,7 +51,7 @@ const ChaptersIndex =({props}) => {
   const handleDragEnd = React.useRef(
     debounce(async (newItems) => {
       const [error, response] = await CommonServices.update({
-        url: Routes.reorder_lines_user_bot_service_chapters_path(props.online_service_id),
+        url: Routes.reorder_lines_user_bot_service_chapters_path(props.online_service_id, { business_owner_id: props.business_owner_id }),
         data: { items: newItems }
       })
 
@@ -167,7 +167,7 @@ const SortableChapter = ({props, id, chapter_id, lessons}) => {
 
   return (
     <div ref={setNodeRef} style={style}>
-      <a className="field-row with-next-arrow with-format header-row" href={Routes.edit_lines_user_bot_service_chapter_path(props.online_service_id, id)}>
+      <a className="field-row with-next-arrow with-format header-row" href={Routes.edit_lines_user_bot_service_chapter_path(props.online_service_id, id, { business_owner_id: props.business_owner_id })}>
         <span className="dotdotdot">
           <span  {...attributes} {...listeners} className="drag-handler">
             <i className="fa fa-ellipsis-v"></i>
@@ -184,7 +184,7 @@ const SortableChapter = ({props, id, chapter_id, lessons}) => {
         {lessons.map(lessonId => <SortableItem props={props} key={lessonId} chapter_id={id} id={lessonId} />)}
       </SortableContext>
       <div className="action-block">
-        <a className="btn btn-tarco btn-extend" href={Routes.new_lines_user_bot_service_chapter_lesson_path(props.online_service_id, id)}>
+        <a className="btn btn-tarco btn-extend" href={Routes.new_lines_user_bot_service_chapter_lesson_path(props.online_service_id, id, { business_owner_id: props.business_owner_id })}>
           {I18n.t("user_bot.dashboards.settings.course.add_a_lesson")}
         </a>
       </div>
@@ -211,7 +211,7 @@ const SortableItem = ({props, chapter_id, id}) => {
       ref={setNodeRef}
       style={style}
       className="field-row with-next-arrow with-format"
-      href={Routes.lines_user_bot_service_chapter_lesson_path(props.online_service_id, chapter_id, id)}
+      href={Routes.lines_user_bot_service_chapter_lesson_path(props.online_service_id, chapter_id, id, { business_owner_id: props.business_owner_id })}
     >
       <span className="dotdotdot">
         <span  {...attributes} {...listeners} className="drag-handler">

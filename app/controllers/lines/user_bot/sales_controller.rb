@@ -21,16 +21,16 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
 
     outcome = SalePages::Update.run(sale_page: sale_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_sale_path(sale_page.id, anchor: params[:attribute]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_sale_path(sale_page.id, business_owner_id: business_owner_id, anchor: params[:attribute]) })
   end
 
   def destroy
     sale_page = Current.business_owner.sale_pages.find(params[:id])
 
     if sale_page.update(deleted_at: Time.current)
-      redirect_to lines_user_bot_sales_path, notice: I18n.t("common.delete_successfully_message")
+      redirect_to lines_user_bot_sales_path(business_owner_id: business_owner_id), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_sales_path
+      redirect_to lines_user_bot_sales_path(business_owner_id: business_owner_id)
     end
   end
 
@@ -40,9 +40,9 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
     outcome = SalePages::Clone.run(sale_page: sale_page)
 
     if outcome.valid?
-      redirect_to lines_user_bot_sale_path(outcome.result)
+      redirect_to lines_user_bot_sale_path(outcome.result, business_owner_id: business_owner_id)
     else
-      redirect_to lines_user_bot_sale_path(sale_page)
+      redirect_to lines_user_bot_sale_path(sale_page, business_owner_id: business_owner_id)
     end
   end
 end

@@ -32,7 +32,7 @@ const LessonEdit =({props}) => {
 
     [_, response] = await CommonServices.update({
       url: Routes.lines_user_bot_service_lesson_path(props.lesson.online_service_id, props.lesson.id, {format: 'json'}),
-      data: _.assign( data, { attribute: props.attribute, chapter_id: (data.chapter_id || props.lesson.chapter_id), start_time: start_time })
+      data: _.assign( data, { attribute: props.attribute, chapter_id: (data.chapter_id || props.lesson.chapter_id), start_time: start_time, business_owner_id: props.business_owner_id })
     })
 
     window.location = response.data.redirect_to
@@ -156,7 +156,7 @@ const LessonEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_service_chapter_lesson_path(props.lesson.online_service_id, props.lesson.chapter_id, props.lesson.id)}>
+                <a href={Routes.lines_user_bot_service_chapter_lesson_path(props.lesson.online_service_id, props.lesson.chapter_id, props.lesson.id, { business_owner_id: props.business_owner_id })}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

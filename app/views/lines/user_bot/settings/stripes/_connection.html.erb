@@ -2,10 +2,12 @@
   <%= t("user_bot.dashboards.settings.stripe.stripe_desc1_html") %>
 </div>
 <div class="centerize">
-  <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: local_assigns[:oauth_redirect_to_url] || lines_user_bot_settings_path),
-    class: "btn-stripe-connect btn btn-yellow" do %>
+  <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: local_assigns[:oauth_redirect_to_url] || lines_user_bot_settings_path(business_owner_id: business_owner_id)),
+    class: "btn-stripe-connect btn btn-yellow",
+    disabled: !is_owner do %>
     <%= Current.business_owner.stripe_provider ? t("action.stripe_connected") : t("action.stripe_connect") %>
   <% end %>
+  <div class="warning"><%= t("user_bot.dashboards.settings.stripe.owner_warning") %></div>
 </div>
 
 <div class="margin-around centerize">

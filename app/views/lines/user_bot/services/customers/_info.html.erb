@@ -1,6 +1,6 @@
 <div class="field-header" id="name"><%= t("common.customer_name") %></div>
 <% if @is_owner %>
-  <%= render "lines/user_bot/field_row", title: @customer.name, path: lines_user_bot_customers_path(customer_id: @customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations], from: FROM[:service_customer_show]) %>
+  <%= render "lines/user_bot/field_row", title: @customer.name, path: lines_user_bot_customers_path(business_owner_id: business_owner_id, customer_id: @customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations], from: FROM[:service_customer_show]) %>
 <% else %>
   <%= render "lines/user_bot/field_row", title: @customer.name %>
 <% end %>

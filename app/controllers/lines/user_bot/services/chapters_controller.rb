@@ -26,7 +26,7 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
       name: params[:name]
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id]) })
   end
 
   def update
@@ -38,7 +38,7 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
       name: params[:name]
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id]) })
   end
 
   def destroy
@@ -51,7 +51,7 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
       flash[:alert] = outcome.errors.full_messages.join(", ")
     end
 
-    redirect_to lines_user_bot_service_chapters_path(params[:service_id])
+    redirect_to lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id])
   end
 
   def reorder
@@ -74,6 +74,6 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
       items: params.permit!.to_h[:items]
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id]) })
   end
 end

@@ -34,8 +34,8 @@ const OnlineServiceEdit =({props}) => {
   const requestData = (data) => {
     let request_data;
 
-    request_data  = _.assign(data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, bundled_services })
-    if (props.attribute == "message_template") request_data = { ...request_data, message_template }
+    request_data  = _.assign(data, { id: props.service.id, business_owner_id: props.business_owner_id, attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, bundled_services })
+    if (props.attribute == "message_template") request_data = { ...request_data, message_template, business_owner_id: props.business_owner_id }
 
     return request_data
   }
@@ -253,8 +253,10 @@ const OnlineServiceEdit =({props}) => {
                   const [error, response] = await OnlineServices.update({
                     online_service_id: props.service.id,
                     data: _.assign( {
+                      id: props.service.id,
                       company_type: company.type,
-                      company_id: company.id
+                      company_id: company.id,
+                      business_owner_id: props.business_owner_id
                     }, { attribute: props.attribute })
                   })
 
@@ -342,7 +344,9 @@ const OnlineServiceEdit =({props}) => {
                       const [error, response] = await OnlineServices.update({
                         online_service_id: props.service.id,
                         data: _.assign( {
+                          id: props.service.id,
                           upsell_sale_page_id: 0,
+                          business_owner_id: props.business_owner_id
                         }, { attribute: props.attribute })
                       })
 
@@ -498,7 +502,7 @@ const OnlineServiceEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_service_path(props.service.id)}>
+                <a href={props.back_path}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

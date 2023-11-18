@@ -1,4 +1,4 @@
-<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path, static: true) if !Current.business_owner.social_account&.line_settings_verified? %>
+<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.social_account&.line_settings_verified? %>
 
 <div class="container-fluid">
   <div class="row">
@@ -17,7 +17,7 @@
         <% end %>
 
         <div class="action-block centerize">
-          <%= link_to new_lines_user_bot_sales_booking_page_path, class: "btn btn-tarco btn-extend btn-flexible" do %>
+          <%= link_to new_lines_user_bot_sales_booking_page_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
             <i class="fa fa-calendar-alt fa-4x"></i>
             <h4><%= I18n.t("user_bot.dashboards.sales.new.online_booking") %></h4>
             <p class="break-line-content">
@@ -27,7 +27,7 @@
 
         </div>
         <div class="action-block centerize">
-          <%= link_to new_lines_user_bot_sales_online_service_path, class: "btn btn-tarco btn-extend btn-flexible" do %>
+          <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
             <i class="fa fa-mobile-alt fa-4x"></i>
             <h4><%= I18n.t("user_bot.dashboards.sales.new.online_service") %></h4>
             <p class="break-line-content">

@@ -69,7 +69,7 @@ const UsersServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_settings_profile_path({format: "json"}),
+      url: Routes.lines_user_bot_settings_profile_path(data.business_owner_id, {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -305,7 +305,7 @@ const CustomerServices = {
 }
 
 const PaymentServices = {
-  payPlan: ({token, plan, rank}) => {
+  payPlan: ({token, plan, rank, business_owner_id}) => {
     return request({
       method: "POST",
       headers: {
@@ -315,7 +315,8 @@ const PaymentServices = {
       data: {
         token,
         plan,
-        rank
+        rank,
+        business_owner_id
       },
       responseType: "json"
     })
@@ -329,22 +330,11 @@ const BookingPageServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_booking_page_path(booking_page_id, {format: "json"}),
+      url: Routes.lines_user_bot_booking_page_path(data.business_owner_id, booking_page_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
-  },
-  purchase: ({data}) => {
-    return request({
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": Rails.csrfToken()
-      },
-      url: Routes.lines_customers_online_service_purchases_path({format: "json"}),
-      data: data,
-      responseType: "json"
-    })
-  },
+  }
 }
 
 const BookingOptionServices = {
@@ -354,7 +344,7 @@ const BookingOptionServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_booking_option_path(booking_option_id, {format: "json"}),
+      url: Routes.lines_user_bot_booking_option_path(data.business_owner_id, booking_option_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -365,7 +355,7 @@ const BookingOptionServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.reorder_menu_priority_lines_user_bot_booking_option_path(booking_option_id, {format: "json"}),
+      url: Routes.reorder_menu_priority_lines_user_bot_booking_option_path(data.business_owner_id, booking_option_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -373,12 +363,12 @@ const BookingOptionServices = {
 }
 
 const BookingServices = {
-  available_options: ({super_user_id, shop_id}) => {
+  available_options: ({business_owner_id, shop_id}) => {
     return request({
       method: "GET",
-      url: Routes.available_options_lines_user_bot_bookings_path({format: "json"}),
+      url: Routes.available_options_lines_user_bot_bookings_path(business_owner_id, {format: "json"}),
       params: {
-        super_user_id,
+        business_owner_id,
         shop_id,
       },
       responseType: "json"
@@ -390,7 +380,7 @@ const BookingServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.page_lines_user_bot_bookings_path({format: "json"}),
+      url: Routes.page_lines_user_bot_bookings_path(data.business_owner_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -433,7 +423,7 @@ const SaleServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_sales_booking_pages_path({format: "json"}),
+      url: Routes.lines_user_bot_sales_booking_pages_path(data.business_owner_id, {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -445,7 +435,7 @@ const SaleServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_sales_online_services_path({format: "json"}),
+      url: Routes.lines_user_bot_sales_online_services_path(data.business_owner_id, {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -468,7 +458,7 @@ const SaleServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_sale_path(sale_page_id, {format: "json"}),
+      url: Routes.lines_user_bot_sale_path(data.business_owner_id, sale_page_id, {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -483,7 +473,7 @@ const OnlineServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_services_path({format: "json"}),
+      url: Routes.lines_user_bot_services_path(data.business_owner_id, {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -495,7 +485,7 @@ const OnlineServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_service_path(online_service_id, {format: "json"}),
+      url: Routes.lines_user_bot_service_path(data.business_owner_id, online_service_id, {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -507,7 +497,7 @@ const OnlineServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.demo_message_lines_user_bot_service_path(online_service_id, {format: "json"}),
+      url: Routes.demo_message_lines_user_bot_service_path(data.business_owner_id, online_service_id, {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -567,7 +557,7 @@ const BusinessScheduleServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_settings_business_schedule_path(data['id'], {format: "json"}),
+      url: Routes.lines_user_bot_settings_business_schedule_path(data.business_owner_id, data['id'], {format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -582,7 +572,7 @@ const ShopServices = {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_settings_shop_path(data['id'], {format: "json"}),
+      url: Routes.lines_user_bot_settings_shop_path(data.business_owner_id, data['id'], {format: "json"}),
       data: serialize(data),
       responseType: "json"
     })
@@ -596,7 +586,7 @@ const MenuServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken(),
       },
-      url: Routes.lines_user_bot_settings_menu_path(data['id'], {format: "json"}),
+      url: Routes.lines_user_bot_settings_menu_path(data.business_owner_id, data['id'], {format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -624,7 +614,7 @@ const CustomMessageServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_custom_messages_path({format: "json"}),
+      url: Routes.lines_user_bot_custom_messages_path(data.business_owner_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -635,7 +625,7 @@ const CustomMessageServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken(),
       },
-      url: Routes.demo_lines_user_bot_custom_messages_path(),
+      url: Routes.demo_lines_user_bot_custom_messages_path(data.business_owner_id),
       data: data,
       responseType: "json"
     })

@@ -20,7 +20,7 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
       start_time: params[:start_time].permit!.to_h
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id]) })
   end
 
   def show
@@ -42,7 +42,7 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
 
     outcome = ::Lessons::Update.run(lesson: lesson, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapter_lesson_path(params[:service_id], params[:chapter_id], params[:id], anchor: params[:attribute]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_chapter_lesson_path(params[:service_id], params[:chapter_id], params[:id], anchor: params[:attribute], business_owner_id: params[:business_owner_id]) })
   end
 
   def destroy
@@ -50,6 +50,6 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
 
     lesson.destroy!
 
-    redirect_to lines_user_bot_service_chapters_path(params[:service_id])
+    redirect_to lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id])
   end
 end

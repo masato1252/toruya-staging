@@ -2,34 +2,34 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="service-show form with-top-bar">
-        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_chapters_path(@online_service), title: I18n.t("user_bot.dashboards.settings.course.lessons.show.title") %>
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_chapters_path(@online_service, business_owner_id: business_owner_id), title: I18n.t("user_bot.dashboards.settings.course.lessons.show.title") %>
 
         <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.settings.course.lessons.show.content_label") %></div>
         <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.name_title") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :name), title: @lesson.name %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :name, business_owner_id: business_owner_id), title: @lesson.name %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.chapter_id_title") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :chapter_id), title: @chapter.name %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :chapter_id, business_owner_id: business_owner_id), title: @chapter.name %>
 
         <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.settings.course.lessons.show.content_url_label") %></div>
         <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.content_url_title") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :content_url) do %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :content_url, business_owner_id: business_owner_id) do %>
           <span class="dotdotdot"><%= @lesson.content_url %></span>
           <%= image_tag(@lesson.thumbnail_url, class: "preview-image") if @lesson.thumbnail_url %>
         <% end %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.note_title") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :note), title: @lesson.note %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :note, business_owner_id: business_owner_id), title: @lesson.note %>
 
         <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.settings.course.lessons.show.start_time_label") %></div>
         <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.start_time_title") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :start_time), title: @lesson.start_time_text %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :start_time, business_owner_id: business_owner_id), title: @lesson.start_time_text %>
 
         <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
-        <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapter_lesson_custom_messages_path(@online_service, @chapter, @lesson), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+        <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapter_lesson_custom_messages_path(@online_service, @chapter, @lesson, business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-          <%= link_to lines_user_bot_service_lesson_path(@lesson, service_id: @online_service.id),
+          <%= link_to lines_user_bot_service_lesson_path(@lesson, service_id: @online_service.id, business_owner_id: business_owner_id),
             method: :delete,
             data: { confirm: t("common.are_you_sure_message") },
             class: "btn btn-orange btn-circle btn-tweak btn-bottom-left" do %>

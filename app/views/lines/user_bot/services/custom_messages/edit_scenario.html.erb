@@ -1,5 +1,6 @@
 <%= react_component("user_bot/services/custom_messages/edit", {
   props: {
+    business_owner_id: business_owner_id,
     scenario: params[:scenario],
     message: {
       id: @message&.id,

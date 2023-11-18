@@ -1,8 +1,9 @@
 <%=
   react_component "user_bot/settings/plans", {
     props: {
+      business_owner_id: business_owner_id,
       formAuthenticityToken: form_authenticity_token,
-      paymentPath: lines_user_bot_settings_payments_path,
+      paymentPath: lines_user_bot_settings_payments_path(business_owner_id: business_owner_id),
       stripe_key: Rails.application.secrets.stripe_publishable_key,
       locale: I18n.default_locale,
       email: Current.business_owner.email,

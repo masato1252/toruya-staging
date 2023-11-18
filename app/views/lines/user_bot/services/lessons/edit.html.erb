@@ -1,5 +1,6 @@
 <%= react_component("user_bot/services/lessons/edit", {
   props: {
+    business_owner_id: business_owner_id,
     attribute: @attribute,
     lesson: LessonSerializer.new(@lesson, { params: { is_owner: true } }).attributes_hash,
     course: CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash,

@@ -30,7 +30,7 @@ const BookingOptionEdit =({props}) => {
 
     [error, response] = await BookingOptionServices.update({
       booking_option_id: props.booking_option.id,
-      data: _.assign( data, { attribute: props.attribute })
+      data: _.assign( data, { attribute: props.attribute, business_owner_id: props.business_owner_id })
     })
 
     responseHandler(error, response)
@@ -93,7 +93,7 @@ const BookingOptionEdit =({props}) => {
     <div className="form with-top-bar">
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_booking_option_path(props.booking_option.id)}>
+          <a href={Routes.lines_user_bot_booking_option_path(props.business_owner_id, props.booking_option.id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }

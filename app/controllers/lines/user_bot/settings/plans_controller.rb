@@ -2,7 +2,7 @@
 
 class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardController
   def index
-    @plans_properties = Plans::Properties.run!(user: current_user)
+    @plans_properties = Plans::Properties.run!(user: Current.business_owner)
     @plan_labels = I18n.t("plans")[:labels]
 
     @charge_directly = Current.business_owner.subscription.current_plan.free_level?

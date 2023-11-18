@@ -1,5 +1,6 @@
 <%= react_component("user_bot/broadcasts/edit", {
   props: {
+    business_owner_id: business_owner_id,
     broadcast: BroadcastSerializer.new(@broadcast).attributes_hash,
     attribute: @attribute,
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),

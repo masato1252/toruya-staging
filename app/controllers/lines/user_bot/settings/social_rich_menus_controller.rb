@@ -42,7 +42,7 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
       default: params[:default]
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_settings_social_account_social_rich_menus_path })
+    return_json_response(outcome, { redirect_to: lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: business_owner_id) })
   end
 
   def destroy
@@ -53,6 +53,6 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
     RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
     HiEventJob.perform_later(rich_menu.social_account, "rich_menu_switch")
 
-    redirect_to lines_user_bot_settings_social_account_social_rich_menus_path
+    redirect_to lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: business_owner_id)
   end
 end

@@ -34,7 +34,7 @@ const EpisodeEdit =({props}) => {
     let response;
 
     [_, response] = await CommonServices.update({
-      url: Routes.lines_user_bot_service_episode_path(props.episode.online_service_id, props.episode.id, {format: 'json'}),
+      url: Routes.lines_user_bot_service_episode_path(props.business_owner_id, props.episode.online_service_id, props.episode.id, {format: 'json'}),
       data: _.assign( data, { attribute: props.attribute, start_time: start_time, end_time: end_time, tags: tags })
     })
 
@@ -177,7 +177,7 @@ const EpisodeEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_service_episode_path(props.episode.online_service_id, props.episode.id)}>
+                <a href={Routes.lines_user_bot_service_episode_path(props.business_owner_id, props.episode.online_service_id, props.episode.id)}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

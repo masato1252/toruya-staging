@@ -59,7 +59,7 @@ const GoalSelectionStep = ({next, step}) => {
               data-controller="modal"
               data-modal-target="#dummyModal"
               data-action="click->modal#popup"
-              data-modal-path={Routes.create_course_lines_user_bot_warnings_path()}
+              data-modal-path={Routes.create_course_lines_user_bot_warnings_path({ business_owner_id: props.business_owner_id })}
               className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative servica-goal-btn-size"
               disabled={!goal.enabled}
               key={goal.key}>

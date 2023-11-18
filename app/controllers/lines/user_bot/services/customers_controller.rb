@@ -9,7 +9,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
   def show
     @online_service = Current.business_owner.online_services.find(params[:service_id])
-    @relation = @online_service.online_service_customer_relations.find(params[:id])
+    @relation = @online_service.all_online_service_customer_relations.find(params[:id])
     @customer = @relation.customer
     @is_owner = true
   end
@@ -20,7 +20,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
     ::Sales::OnlineServices::Approve.run!(relation: relation)
 
-    redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
+    redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
   end
 
   def cancel
@@ -29,7 +29,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
     ::Sales::OnlineServices::Cancel.run!(relation: relation)
 
-    redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
+    redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
   end
 
   def change_expire_at
