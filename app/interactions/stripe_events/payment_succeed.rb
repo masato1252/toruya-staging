@@ -18,6 +18,8 @@ module StripeEvents
           event: event.as_json
         })
         SlackClient.send(channel: 'development', text: "There is unexpected subscription #{data_object.subscription}, check is a legal toruya subscription or not, if it is a legal subscription, need to resend webhook manually in https://dashboard.stripe.com/webhooks/")
+
+        errors.add(:event, :unexpected_subscription)
         return
       end
 
