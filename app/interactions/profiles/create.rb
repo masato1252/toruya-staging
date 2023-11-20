@@ -35,6 +35,10 @@ module Profiles
           end
         end
 
+        if profile.where_know_toruya.present? || profile.what_main_problem.present?
+          UserProfilingJob.perform_later(profile.id)
+        end
+
         profile
       end
     end
