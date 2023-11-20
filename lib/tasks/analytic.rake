@@ -173,4 +173,19 @@ namespace :analytic do
       SlackClient.send(channel: 'sayhi', text: "Paid user usage \n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=476056491")
     end
   end
+
+  task :paid_user_map_data => :environment do
+    if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
+      google_worksheet = Google::Drive.spreadsheet(google_sheet_id: "1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4", worksheet: 0)
+
+      row_data = Subscription.charge_required.map{|s| ppp = s.user.profile; [ppp.company_name, ppp.company_address, ppp.phone_number] }
+      row_data.each_with_index do |col_data, row_number|
+        col_data.each_with_index do |data, col_index|
+          google_worksheet[row_number + 2, col_index + 1] = data
+        end
+      end
+
+      google_worksheet.save
+    end
+  end
 end
