@@ -14,10 +14,7 @@ module StripeEvents
         relation = OnlineServiceCustomerRelation.find_by!(stripe_subscription_id: data_object.subscription)
       end
       unless relation
-        Rollbar.error("Unexpected subscription", {
-          event: event.as_json
-        })
-        SlackClient.send(channel: 'development', text: "There is unexpected subscription #{data_object.subscription}, check is a legal toruya subscription or not, if it is a legal subscription, need to resend webhook manually in https://dashboard.stripe.com/webhooks/")
+        SubscriptionCheckingJob.set(wait_until: 10.minutes.from_now).perform_later(event.as_json, data_object.subscription)
 
         errors.add(:event, :unexpected_subscription)
         return
