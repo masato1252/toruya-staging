@@ -12,6 +12,7 @@ module CustomMessages
       BOOKING_PAGE_NOT_ENOUGH_PAGE_VIEW = "booking_page_not_enough_page_view"
       BOOKING_PAGE_NOT_ENOUGH_BOOKING = "booking_page_not_enough_booking"
       NO_NEW_CUSTOMER = "no_new_customer"
+      NO_LINE_SETTINGS = "no_line_settings"
 
       SCENARIOS = [
         USER_SIGN_UP,
@@ -22,7 +23,8 @@ module CustomMessages
         FIRST_CUSTOMER_DATA_MANUALLY_CREATED,
         BOOKING_PAGE_NOT_ENOUGH_PAGE_VIEW,
         BOOKING_PAGE_NOT_ENOUGH_BOOKING,
-        NO_NEW_CUSTOMER
+        NO_NEW_CUSTOMER,
+        NO_LINE_SETTINGS
       ].freeze
 
       string :scenario
