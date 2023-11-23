@@ -23,10 +23,13 @@ class Webhooks::StripeController < WebhooksController
     if outcome.valid?
       head :ok
     else
-      Rollbar.error("WebHook stripe error", {
-        event: event,
-        errors: outcome.errors.details
-      })
+      if event.type != 'invoice.payment_succeeded'
+        Rollbar.error("WebHook stripe error", {
+          event: event,
+          errors: outcome.errors.details
+        })
+      end
+
       head :bad_request
     end
   end
