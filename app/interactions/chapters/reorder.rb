@@ -4,7 +4,7 @@ module Chapters
     array :items do
       hash do
         integer :id
-        array :lessons do
+        array :lessons, default: [] do
           integer
         end
       end
