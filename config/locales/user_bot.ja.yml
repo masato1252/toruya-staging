@@ -17,7 +17,7 @@ ja:
         referral_code_title: 紹介コード
         referral_code_placeholder: ある場合は入力
         confirm_customer_info: 確認コード送信
-        create_customer_info: 保存してLINEと連携する
+        create_customer_info: 保存してユーザー登録を完了
         sms_faq: 認証コードSMSが届きませんか？
         know_more_about_you: あなたについてお聞かせください
         where_u_find_toruya: Toruyaを知ったキッカケは？
