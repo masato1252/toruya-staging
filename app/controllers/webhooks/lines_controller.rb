@@ -34,6 +34,11 @@ class Webhooks::LinesController < WebhooksController
   #   }
   # }]
   def create
+    if !social_account
+      head :ok
+      return
+    end
+
     Array.wrap(params[:events]).each do |event|
       Lines::HandleEvent.run(social_account: social_account, event: event.permit!.to_h)
     end
@@ -44,7 +49,7 @@ class Webhooks::LinesController < WebhooksController
   private
 
   def social_account
-    @social_account ||= SocialAccount.find_by!(channel_id: params[:channel_id])
+    @social_account ||= SocialAccount.find_by(channel_id: params[:channel_id])
   end
 
   def verify_header
