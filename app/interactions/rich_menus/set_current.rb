@@ -13,9 +13,7 @@ module RichMenus
       end
 
       # Link rich menu to social customer
-      social_rich_menu.account.social_customers.find_each do |social_customer|
-        RichMenus::Connect.perform_later(social_target: social_customer, social_rich_menu: social_rich_menu)
-      end
+      SocialAccounts::RichMenus::Connect.perform_later(social_rich_menu: social_rich_menu)
     end
   end
 end
