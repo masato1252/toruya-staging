@@ -34,11 +34,6 @@ class Webhooks::LinesController < WebhooksController
   #   }
   # }]
   def create
-    if !social_account
-      head :ok
-      return
-    end
-
     Array.wrap(params[:events]).each do |event|
       Lines::HandleEvent.run(social_account: social_account, event: event.permit!.to_h)
     end
@@ -53,6 +48,11 @@ class Webhooks::LinesController < WebhooksController
   end
 
   def verify_header
+    if !social_account
+      head :ok
+      return
+    end
+
     channel_secret = social_account.channel_secret # Channel secret string
     http_request_body = request.raw_post # Request body string
     hash = OpenSSL::HMAC::digest(OpenSSL::Digest::SHA256.new, channel_secret, http_request_body)
