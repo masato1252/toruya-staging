@@ -7,7 +7,6 @@
 #  id                  :bigint           not null, primary key
 #  bar_label           :string
 #  body                :jsonb
-#  context             :jsonb
 #  current             :boolean
 #  default             :boolean
 #  end_at              :datetime

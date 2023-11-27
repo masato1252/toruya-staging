@@ -23,7 +23,7 @@ module Notifiers
         end
 
         def deliverable
-          expected_schedule_time
+          expected_schedule_time && !custom_message.ever_sent_to_user(receiver)
         end
 
         def message_scenario
@@ -43,12 +43,16 @@ module Notifiers
           )
         end
 
+        def custom_message_id
+          custom_message.id
+        end
+
         private
 
         def expected_schedule_time
           if schedule_at && custom_message.after_days && scenario_start_at
             expected_schedule_at = scenario_start_at.advance(days: custom_message.after_days).change(hour: 9)
-            return expected_schedule_at.to_fs(:iso8601) == schedule_at.to_fs(:iso8601)
+            return expected_schedule_at.to_fs(:iso8601) == schedule_at.change(hour: 9).to_fs(:iso8601)
           end
 
           true # real time

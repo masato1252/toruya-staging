@@ -19,6 +19,7 @@ module SocialUserMessages
     boolean :readed
     integer :message_type
     time :schedule_at, default: nil
+    integer :custom_message_id, default: nil
 
     validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
     validates :content, presence: true
@@ -32,7 +33,8 @@ module SocialUserMessages
         content_type: content_type,
         scenario: scenario,
         nth_time: nth_time,
-        schedule_at: schedule_at
+        schedule_at: schedule_at,
+        custom_message_id: custom_message_id
       )
 
       if message.errors.present?

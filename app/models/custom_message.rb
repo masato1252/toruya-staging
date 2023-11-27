@@ -42,4 +42,8 @@ class CustomMessage < ApplicationRecord
   belongs_to :service, polymorphic: true, optional: true # OnlineService, BookingPage or nil(Toruya user)
 
   has_one_attached :picture # content picture
+
+  def ever_sent_to_user(user)
+    SocialUserMessage.where(custom_message_id: id, social_user_id: user.social_user_id).where.not(sent_at: nil).exists?
+  end
 end

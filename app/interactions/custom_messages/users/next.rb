@@ -25,7 +25,7 @@ module CustomMessages
       private
 
       def send_schedule_message(message)
-        schedule_at = scenario_start_at.advance(days: message.after_days).change(hour: 9)
+        schedule_at = scenario_start_at.advance(days: message.after_days).change(hour: 9, min: rand(5), sec: rand(59))
 
         if schedule_at > Time.current || message.after_days == 0
           Notifiers::Users::CustomMessages::Send.perform_at(

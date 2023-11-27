@@ -34,6 +34,30 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
       }.by(1)
     end
 
+    context "when user received the same custom message before" do
+      before do
+        FactoryBot.create(
+          :social_user_message,
+          social_user: receiver.social_user,
+          custom_message_id: custom_message.id,
+          scenario: custom_message.scenario,
+          nth_time: custom_message.nth_time
+        )
+      end
+
+      it "does NOT deliver again" do
+        expect {
+          outcome
+        }.not_to change {
+          SocialUserMessage.where(
+            social_user: receiver.social_user,
+            scenario: custom_message.scenario,
+            nth_time: custom_message.nth_time
+          ).count
+        }
+      end
+    end
+
     context "when send line failed" do
       let(:response_body) { { "message": "Send message failed" }.to_json }
       let(:response){ instance_double(Net::HTTPResponse, code: "400", body: response_body)}

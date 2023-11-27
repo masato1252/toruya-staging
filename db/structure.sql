@@ -2515,7 +2515,8 @@ CREATE TABLE public.social_user_messages (
     slack_message_id character varying,
     scenario character varying,
     nth_time integer,
-    ai_uid character varying
+    ai_uid character varying,
+    custom_message_id integer
 );
 
 
@@ -4188,6 +4189,13 @@ CREATE UNIQUE INDEX current_rich_menu ON public.social_rich_menus USING btree (s
 
 
 --
+-- Name: custom_message_social_user_messages_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX custom_message_social_user_messages_index ON public.social_user_messages USING btree (social_user_id, custom_message_id);
+
+
+--
 -- Name: customer_names_on_first_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5455,6 +5463,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230830144948'),
 ('20230926140612'),
 ('20231013231105'),
-('20231114141536');
+('20231114141536'),
+('20231127020713');
 
 

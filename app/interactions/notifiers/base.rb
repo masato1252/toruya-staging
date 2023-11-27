@@ -122,7 +122,8 @@ module Notifiers
           scenario: message_scenario,
           nth_time: nth_time_message,
           message_type: SocialMessage.message_types[:bot],
-          readed: true
+          readed: true,
+          custom_message_id: custom_message_id
         )
         errors.merge!(outcome.errors) if outcome.invalid?
       when SocialCustomer
@@ -173,6 +174,10 @@ module Notifiers
     end
 
     private
+
+    def custom_message_id
+      nil
+    end
 
     def receiver_should_be_customer
       unless receiver.is_a?(Customer)
