@@ -21,13 +21,11 @@ module SocialUsers
           retry
         end
 
-      if social_user.social_user_name.blank?
-        response = LineClient.profile(social_user)
+      response = LineClient.profile(social_user)
 
-        if response.is_a?(Net::HTTPOK)
-          body = JSON.parse(response.body)
-          social_user.update(social_user_name: body[SOCIAL_USER_NAME_KEY], social_user_picture_url: body[SOCIAL_USER_PICTURE_KEY])
-        end
+      if response.is_a?(Net::HTTPOK)
+        body = JSON.parse(response.body)
+        social_user.update(social_user_name: body[SOCIAL_USER_NAME_KEY], social_user_picture_url: body[SOCIAL_USER_PICTURE_KEY])
       end
 
       social_user
