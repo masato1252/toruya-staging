@@ -4,9 +4,6 @@ require "line_client"
 
 module SocialUsers
   class Initialize < ActiveInteraction::Base
-    SOCIAL_USER_NAME_KEY = "displayName".freeze
-    SOCIAL_USER_PICTURE_KEY = "pictureUrl".freeze
-
     string :social_service_user_id
 
     def execute
@@ -21,12 +18,7 @@ module SocialUsers
           retry
         end
 
-      response = LineClient.profile(social_user)
-
-      if response.is_a?(Net::HTTPOK)
-        body = JSON.parse(response.body)
-        social_user.update(social_user_name: body[SOCIAL_USER_NAME_KEY], social_user_picture_url: body[SOCIAL_USER_PICTURE_KEY])
-      end
+      LineProfileJob.perform_later(social_user)
 
       social_user
     end

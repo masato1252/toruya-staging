@@ -3,8 +3,6 @@
 require "line_client"
 
 class Lines::HandleEvent < ActiveInteraction::Base
-  SOCIAL_USER_NAME_KEY = "displayName".freeze
-  SOCIAL_USER_PICTURE_KEY = "pictureUrl".freeze
   EVENT_SOURCE_KEY = "source".freeze
   EVENT_USER_ID_KEY = "userId".freeze
   EVENT_TYPE_KEY = "type".freeze
@@ -74,14 +72,7 @@ class Lines::HandleEvent < ActiveInteraction::Base
           retry
         end
 
-      if social_customer.social_user_name.blank?
-        response = LineClient.profile(social_customer)
-
-        if response.is_a?(Net::HTTPOK)
-          body = JSON.parse(response.body)
-          social_customer.update(social_user_name: body[SOCIAL_USER_NAME_KEY], social_user_picture_url: body[SOCIAL_USER_PICTURE_KEY])
-        end
-      end
+      LineProfileJob.perform_later(social_customer)
 
       # Lines::MessageEvent
       # Lines::FollowEvent
