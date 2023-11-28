@@ -59,6 +59,8 @@ export default ({ props }) => {
           console.log("User Channel disconnected")
         },
         received: ({type, data}) => {
+          console.log({ type, data })
+
           switch (type) {
             case "customer_new_message":
               customerNewMessage(data)

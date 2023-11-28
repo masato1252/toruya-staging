@@ -48,7 +48,7 @@ class AdminChannel < ApplicationCable::Channel
       .order("social_users.updated_at DESC").limit(20)
 
     if data['last_updated_at']
-      social_users = social_users.where("social_users.updated_at < ?", data['last_updated_at'])
+      social_users = social_users.where("social_users.updated_at < ?", Time.zone.parse(data['last_updated_at']))
     end
 
     _users = social_users.map { |user| SocialUserSerializer.new(user).attributes_hash }

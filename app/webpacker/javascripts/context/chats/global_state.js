@@ -58,6 +58,7 @@ export const GlobalProvider = ({ children }) => {
   }
 
   const getCustomers = (last_updated_at = null) => {
+    console.log({ subscription, selected_channel_id, last_updated_at })
     if (subscription) {
       subscription.perform("get_customers", { channel_id: selected_channel_id, last_updated_at: last_updated_at});
     }

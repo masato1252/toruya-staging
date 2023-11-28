@@ -26,6 +26,7 @@ const initialState = {
 export default (state = initialState, action) => {
   let channel_customers, social_customer, shop_customer;
 
+  console.log({action, state})
   switch(action.type) {
     case "APPEND_CUSTOMERS":
       const new_customers = [...(state.customers[action.payload.channel_id] || []), ...action.payload.customers ]
