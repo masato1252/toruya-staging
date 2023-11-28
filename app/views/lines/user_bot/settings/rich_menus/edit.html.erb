@@ -19,7 +19,7 @@
         <% else %>
           <div class="field-row justify-center flex-col">
             <p><%= t("settings.social_rich_menus.current_rich_menu") %></p>
-            <%= image_tag(rich_menu_image_url(@current_rich_menu, "240"), class: "demo-image") %>
+            <%= image_tag(rich_menu_image_url(@current_rich_menu, "240"), class: "demo-image") if @current_rich_menu %>
             <%= link_to t("settings.social_rich_menus.edit_button"), lines_user_bot_settings_social_account_social_rich_menus_path, class: "btn btn-yellow my-4" %>
           </div>
         <% end %>
