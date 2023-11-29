@@ -41,6 +41,8 @@ RSpec.describe Lines::HandleEvent do
         expect {
           outcome
         }.to change {
+          perform_enqueued_jobs
+
           SocialCustomer.where(
             social_account: social_account,
             user_id: social_account.user_id,
@@ -63,6 +65,8 @@ RSpec.describe Lines::HandleEvent do
           expect {
             outcome
           }.to change {
+            perform_enqueued_jobs
+
             SocialCustomer.where(
               social_account: social_account,
               user_id: social_account.user_id,

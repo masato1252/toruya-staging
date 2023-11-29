@@ -39,6 +39,8 @@ RSpec.describe UserBotLines::HandleEvent do
         expect {
           outcome
         }.to change {
+          perform_enqueued_jobs
+
           SocialUser.where(
             social_user_name: "foo",
             social_user_picture_url: "bar",
