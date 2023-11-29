@@ -66,7 +66,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       end
 
       if Rails.configuration.x.env.production?
-        HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Sale Page #{sale_page.slug} customer_id: #{customer.id} Stripe charge💰")
+        HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Sale Page #{Rails.application.routes.url_helpers.sale_page_url(sale_page.slug)} customer_id: #{customer.id} Stripe charge💰")
       end
     rescue Stripe::CardError => error
       payment.stripe_charge_details = error.json_body[:error]

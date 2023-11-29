@@ -38,7 +38,7 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
       payment.completed!
 
       if Rails.configuration.x.env.production?
-        SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Booking Page #{reservation_customer.booking_page_id} Stripe charge💰")
+        SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Booking Page #{Rails.application.routes.url_helpers.booking_page_url(reservation_customer.booking_page_id)} Stripe charge💰")
       end
     rescue Stripe::CardError => error
       payment.stripe_charge_details = error.json_body[:error]

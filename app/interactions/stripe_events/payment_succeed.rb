@@ -78,7 +78,7 @@ module StripeEvents
         end
 
         if Rails.configuration.x.env.production?
-          HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Membership: Sale Page #{relation.sale_page.slug} customer_id: #{relation.customer.id} Stripe charge💰")
+          HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Membership: Sale Page #{Rails.application.routes.url_helpers.sale_page_url(relation.sale_page.slug)} customer_id: #{relation.customer.id} Stripe charge💰")
         end
 
         payment
