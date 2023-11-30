@@ -132,11 +132,11 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
         redirect_to: SiteRouting.new(view_context).schedule_date_path(reservation_date: outcome.result.start_time.to_fs(:date))
       }
     else
-      Rollbar.warning("Create reservation failed",
-        errors_messages: outcome.errors.full_messages.join(", "),
-        errors_details: outcome.errors.details,
-        params: reservation_params_hash
-      )
+      # Rollbar.warning("Create reservation failed",
+      #   errors_messages: outcome.errors.full_messages.join(", "),
+      #   errors_details: outcome.errors.details,
+      #   params: reservation_params_hash
+      # )
       redirect_to form_lines_user_bot_shop_reservations_path(reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end
@@ -159,11 +159,11 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
         }
       end
     else
-      Rollbar.warning("Update reservation failed",
-        errors_messages: outcome.errors.full_messages.join(", "),
-        errors_details: outcome.errors.details,
-        params: reservation_params_hash
-      )
+      # Rollbar.warning("Update reservation failed",
+      #   errors_messages: outcome.errors.full_messages.join(", "),
+      #   errors_details: outcome.errors.details,
+      #   params: reservation_params_hash
+      # )
       redirect_to form_lines_user_bot_shop_reservations_path(reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end

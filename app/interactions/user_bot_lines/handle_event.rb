@@ -64,10 +64,10 @@ class UserBotLines::HandleEvent < ActiveInteraction::Base
       # UserBotLines::PostbackEvent
       "UserBotLines::#{event[EVENT_TYPE_KEY].camelize}Event".constantize.run!(social_user: social_user, event: event)
     else
-      Rollbar.warning("Unexpected event type".freeze,
-        social_user_id: social_user&.id,
-        event: event
-      )
+      # Rollbar.warning("Unexpected event type".freeze,
+      #   social_user_id: social_user&.id,
+      #   event: event
+      # )
     end
   end
 end

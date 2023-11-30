@@ -61,12 +61,12 @@ class Settings::MenusController < SettingsController
         redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.create_successfully_message")
       end
     else
-      Rollbar.warning(
-        "Unexpected menu create failed",
-        errors_messages: outcome.errors.full_messages.join(", "),
-        errors_details: outcome.errors.details,
-        params: params
-      )
+      # Rollbar.warning(
+      #   "Unexpected menu create failed",
+      #   errors_messages: outcome.errors.full_messages.join(", "),
+      #   errors_details: outcome.errors.details,
+      #   params: params
+      # )
 
       redirect_to new_settings_user_menu_path(super_user), alert: outcome.errors.full_messages.join(", ")
     end
@@ -90,13 +90,13 @@ class Settings::MenusController < SettingsController
     if outcome.valid?
       redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.update_successfully_message")
     else
-      Rollbar.warning(
-        "Unexpected menu update failed",
-        errors_messages: outcome.errors.full_messages.join(", "),
-        errors_details: outcome.errors.details,
-        menu_id: @menu.id,
-        params: params
-      )
+      # Rollbar.warning(
+      #   "Unexpected menu update failed",
+      #   errors_messages: outcome.errors.full_messages.join(", "),
+      #   errors_details: outcome.errors.details,
+      #   menu_id: @menu.id,
+      #   params: params
+      # )
 
       redirect_to edit_settings_user_menu_path(super_user, @menu), alert: outcome.errors.full_messages.join(", ")
     end

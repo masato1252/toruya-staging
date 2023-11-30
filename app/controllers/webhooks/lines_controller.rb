@@ -60,7 +60,7 @@ class Webhooks::LinesController < WebhooksController
 
     # Compare X-Line-Signature request header string and the signature
     if signature != request.headers["X-Line-Signature"]
-      Rollbar.warning("Unexpected request", request: http_request_body)
+      # Rollbar.warning("Unexpected request", request: http_request_body)
     end
   end
 end

@@ -15,13 +15,13 @@ module Referrals
 
         # Child accounnt users charge child plans
         if activate_outcome.invalid?
-          Rollbar.warning(
-            "Unexpected Referral Activate failed",
-            errors_messages: activate_outcome.errors.full_messages.join(", "),
-            errors_details: activate_outcome.errors.details,
-            referral_id: referral,
-            charge: charge
-          )
+          # Rollbar.warning(
+          #   "Unexpected Referral Activate failed",
+          #   errors_messages: activate_outcome.errors.full_messages.join(", "),
+          #   errors_details: activate_outcome.errors.details,
+          #   referral_id: referral,
+          #   charge: charge
+          # )
         end
 
         # Refereeses get fee from referrers when referrers pay for child plans
@@ -29,13 +29,13 @@ module Referrals
           referral_fee_outcome = Payments::ReferralFee.run(referral: referral, charge: charge)
 
           if referral_fee_outcome.invalid?
-            Rollbar.warning(
-              "Unexpected Create referral fee payment failed",
-              errors_messages: referral_fee_outcome.errors.full_messages.join(", "),
-              errors_details: referral_fee_outcome.errors.details,
-              referral_id: referral,
-              charge: charge
-            )
+            # Rollbar.warning(
+            #   "Unexpected Create referral fee payment failed",
+            #   errors_messages: referral_fee_outcome.errors.full_messages.join(", "),
+            #   errors_details: referral_fee_outcome.errors.details,
+            #   referral_id: referral,
+            #   charge: charge
+            # )
           end
         end
       else
@@ -46,15 +46,15 @@ module Referrals
 
         referrer_cancel_outcome = Referrals::ReferrerCancel.run(referral: referral)
 
-        # Child accounnt users change to other plans
+        # Child account users change to other plans
         if referrer_cancel_outcome.invalid?
-          Rollbar.warning(
-            "Unexpected Referral ReferrerCancel failed",
-            errors_messages: referrer_cancel_outcome.errors.full_messages.join(", "),
-            errors_details: referrer_cancel_outcome.errors.details,
-            referral_id: referral,
-            charge: charge
-          )
+          # Rollbar.warning(
+          #   "Unexpected Referral ReferrerCancel failed",
+          #   errors_messages: referrer_cancel_outcome.errors.full_messages.join(", "),
+          #   errors_details: referrer_cancel_outcome.errors.details,
+          #   referral_id: referral,
+          #   charge: charge
+          # )
         end
       end
     end

@@ -37,7 +37,7 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
            elsif @shop && user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
              "empty_menu_shop_modal"
            else
-             Rollbar.warning('Unexpected input', request: request, parameters: params)
+             # Rollbar.warning('Unexpected input', request: request, parameters: params)
              "default_creation_reservation_warning"
            end
 

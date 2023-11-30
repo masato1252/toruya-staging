@@ -37,10 +37,10 @@ class Lines::PostbackEvent < ActiveInteraction::Base
 
       "Lines::Actions::#{data[EVENT_ACTION_KEY].camelize}".constantize.run!(social_customer: social_customer)
     else
-      Rollbar.warning("Unexpected action type".freeze,
-        social_customer_id: social_customer.id,
-        event: event
-      )
+      # Rollbar.warning("Unexpected action type".freeze,
+      #   social_customer_id: social_customer.id,
+      #   event: event
+      # )
     end
   end
 

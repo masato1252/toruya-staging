@@ -30,7 +30,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
           message_type: SocialMessage.message_types[:customer]
         )
       when "text"
-        Rollbar.info("Line text message", event: event)
+        # Rollbar.info("Line text message", event: event)
 
         case event["message"]["text"].strip
         when I18n.t("line.bot.keywords.booking_pages")
@@ -82,7 +82,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
           message_type: is_toruya_customer_message ? SocialMessage.message_types[:customer] : SocialMessage.message_types[:customer_reply_bot]
         )
       else
-        Rollbar.warning("Line chat room don't support message type", event: event)
+        # Rollbar.warning("Line chat room don't support message type", event: event)
 
         compose(
           SocialMessages::Create,

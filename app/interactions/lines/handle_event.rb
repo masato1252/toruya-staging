@@ -79,10 +79,10 @@ class Lines::HandleEvent < ActiveInteraction::Base
       # Lines::PostbackEvent
       "Lines::#{event[EVENT_TYPE_KEY].camelize}Event".constantize.run!(social_customer: social_customer, event: event)
     else
-      Rollbar.warning("Unexpected event type".freeze,
-        social_account_id: social_account.id,
-        event: event
-      )
+      # Rollbar.warning("Unexpected event type".freeze,
+      #   social_account_id: social_account.id,
+      #   event: event
+      # )
     end
   end
 end

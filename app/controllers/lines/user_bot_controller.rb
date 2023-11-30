@@ -29,14 +29,14 @@ class Lines::UserBotController < ActionController::Base
     @current_user ||= User.find_by(id: user_bot_cookies(:current_user_id))
 
     if @current_user && @social_user&.user && @current_user.id != @social_user.user_id
-      Rollbar.warning(
-        "Unmatch user id from user bot",
-        params: {
-          social_service_user_id: @social_user.social_service_user_id,
-          user_id: @current_user&.id,
-          social_user_user_id: social_user.user_id
-        }
-      )
+      # Rollbar.warning(
+      #   "Unmatch user id from user bot",
+      #   params: {
+      #     social_service_user_id: @social_user.social_service_user_id,
+      #     user_id: @current_user&.id,
+      #     social_user_user_id: social_user.user_id
+      #   }
+      # )
     end
 
     @current_user

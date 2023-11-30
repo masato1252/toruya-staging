@@ -151,11 +151,11 @@ class ReservationsController < DashboardController
         redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
       end
     else
-      Rollbar.warning("Create reservation failed",
-        errors_messages: outcome.errors.full_messages.join(", "),
-        errors_details: outcome.errors.details,
-        params: reservation_params_hash
-      )
+      # Rollbar.warning("Create reservation failed",
+      #   errors_messages: outcome.errors.full_messages.join(", "),
+      #   errors_details: outcome.errors.details,
+      #   params: reservation_params_hash
+      # )
       redirect_to form_shop_reservations_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end
@@ -174,11 +174,11 @@ class ReservationsController < DashboardController
         redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
       end
     else
-      Rollbar.warning("Update reservation failed",
-        errors_messages: outcome.errors.full_messages.join(", "),
-        errors_details: outcome.errors.details,
-        params: reservation_params_hash
-      )
+      # Rollbar.warning("Update reservation failed",
+      #   errors_messages: outcome.errors.full_messages.join(", "),
+      #   errors_details: outcome.errors.details,
+      #   params: reservation_params_hash
+      # )
       redirect_to form_shop_reservations_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end

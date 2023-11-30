@@ -20,15 +20,15 @@ module Subscriptions
 
         charge_amount = new_plan_price - residual_value
         unless charge_amount.positive?
-          Rollbar.warning(
-            "Unexpected charge amount",
-            user_id: user.id,
-            plan_id: plan.id,
-            rank: charging_rank,
-            new_plan_price: new_plan_price.format,
-            residual_value: residual_value.format,
-            authorize_token: authorize_token
-          )
+          # Rollbar.warning(
+          #   "Unexpected charge amount",
+          #   user_id: user.id,
+          #   plan_id: plan.id,
+          #   rank: charging_rank,
+          #   new_plan_price: new_plan_price.format,
+          #   residual_value: residual_value.format,
+          #   authorize_token: authorize_token
+          # )
 
           charge_amount = new_plan_price
         end

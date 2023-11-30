@@ -47,7 +47,7 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
           Notifiers::Users::AiSupportFlex.perform_debounce(receiver: social_user)
         end
       else
-        Rollbar.warning("Line chat room don't support message type", event: event)
+        # Rollbar.warning("Line chat room don't support message type", event: event)
 
         LineClient.send(social_user, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
       end

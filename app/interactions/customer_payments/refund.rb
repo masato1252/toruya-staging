@@ -28,12 +28,12 @@ class CustomerPayments::Refund < ActiveInteraction::Base
         if stripe_refund.status == STRIPE_REFUND_STATUS[:succeeded]
           refund_payment(stripe_refund)
         else
-          Rollbar.warning(
-            "refund_payment_failed",
-            stripe_refund: stripe_refund.as_json,
-            product_id: customer_payment.product_id,
-            product_type: customer_payment.product_type
-          )
+          # Rollbar.warning(
+          #   "refund_payment_failed",
+          #   stripe_refund: stripe_refund.as_json,
+          #   product_id: customer_payment.product_id,
+          #   product_type: customer_payment.product_type
+          # )
 
           errors.add(:customer_payment, :else)
         end
