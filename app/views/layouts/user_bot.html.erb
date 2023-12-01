@@ -42,7 +42,7 @@
             <hr class="my-2" />
             <li>
               <%= link_to lines_user_bot_business_owners_path do %>
-                <%= image_tag Current.business_owner.social_user.social_user_picture_url, class: "avatar" %> <%= Current.business_owner.name %>
+                <%= image_tag Current.business_owner.social_user.social_user_picture_url, class: "avatar" if Current.business_owner.social_user %> <%= Current.business_owner.name %>
               <% end %>
             </li>
           <% end %>
