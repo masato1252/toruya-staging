@@ -84,6 +84,7 @@ namespace :analytic do
       new_row_data = [
         Time.current.to_fs(:date),
         total_toruya_user_count.to_i,
+        nil,
         total_line_settings.to_i,
         line_settings_done_count,
         login_api_verified_count,
