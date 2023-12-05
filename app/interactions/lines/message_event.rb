@@ -15,7 +15,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
     if event.present?
       case event["message"]["type"]
       when "image"
-        Rollbar.info("Line image message", event: event)
+        # Rollbar.info("Line image message", event: event)
 
         compose(
           SocialMessages::Create,
