@@ -1096,7 +1096,8 @@ CREATE TABLE public.customer_payments (
     stripe_charge_details jsonb,
     order_id character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    memo character varying
 );
 
 
@@ -5464,6 +5465,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230926140612'),
 ('20231013231105'),
 ('20231114141536'),
-('20231127020713');
+('20231127020713'),
+('20231206053439');
 
 
