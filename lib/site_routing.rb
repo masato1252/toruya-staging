@@ -45,7 +45,7 @@ class SiteRouting
 
   # TODO: controller and view required
   def edit_settings_user_staff_path(user, staff, shop_id)
-    from_line_bot ? h.edit_lines_user_bot_settings_staff_path(staff) : h.edit_settings_user_staff_path(user, staff, shop_id: shop_id)
+    from_line_bot ? h.edit_lines_user_bot_settings_staff_path(business_owner_id: user.id, id: staff.id) : h.edit_settings_user_staff_path(user, staff, shop_id: shop_id)
   end
 
   def member_path(*args)
