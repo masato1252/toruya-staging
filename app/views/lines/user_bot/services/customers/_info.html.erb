@@ -15,7 +15,11 @@
 <%= render "lines/user_bot/field_row", title: I18n.l(@relation.created_at, format: :long_date_with_wday) %>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
-<%= render "lines/user_bot/field_row", title: @relation.end_date_text %>
+<div class="field-row with-format">
+  <%= @relation.end_date_text %>
+
+  <%= link_to t("user_bot.dashboards.settings.service_customer_relation.change_expire_at"), "#", class: "btn btn-yellow", data: { toggle: "modal", target: "#change-expire-at-modal" } if @is_owner %>
+</div>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
 <%= render "lines/user_bot/field_row" do %>
@@ -46,9 +50,9 @@
         <% if payment.bonus_text.present? %>
           <%= payment.bonus_text %>
         <% else %>
-          <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %>
+          <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %> <%= "(#{payment.memo})"if payment.memo.present? %>
         <% end %>
-        <%= I18n.l(payment.charge_at) %>
+        <%= I18n.l(payment.charge_at || payment.created_at) %>
       </span>
       <% if @relation.online_service.recurring_charge_required? %>
         <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id]), class: "btn btn-yellow" if !@is_owner && payment.failed? && !@relation.payment_legal_to_access? %>
@@ -58,3 +62,37 @@
     <% end %>
   </div>
 <% end %>
+
+<div class="modal fade" id="change-expire-at-modal" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">
+        <%= t("user_bot.dashboards.settings.service_customer_relation.change_expire_at_title") %>
+      </h4>
+    </div>
+
+    <%= form_with url: change_expire_at_lines_user_bot_service_customer_path(slug: @relation.online_service.slug, id: @relation.id), method: :put, local: true do |form| %>
+      <div class="modal-body">
+        <h4><%= t("user_bot.dashboards.settings.service_customer_relation.change_expire_at_time_label") %></h4>
+        <div class="field">
+          <%= datetime_field_tag :expire_at %>
+        </div>
+        <div class="field">
+          <%= text_field_tag :memo, nil, placeholder: t("user_bot.dashboards.settings.service_customer_relation.expire_change_reason") %>
+        </div>
+        <div class="danger">
+        <%= t("user_bot.dashboards.settings.service_customer_relation.no_undo_for_changes") %>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <dl>
+          <dd>
+            <%= form.submit t("action.change_and_save"), class: "btn btn-yellow" %>
+          </dd>
+        </dl>
+      </div>
+    <% end %>
+  </div>
+</div>

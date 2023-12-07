@@ -8,6 +8,7 @@
 #  charge_at             :datetime
 #  expired_at            :datetime
 #  manual                :boolean          default(FALSE), not null
+#  memo                  :string
 #  product_type          :string
 #  state                 :integer          default("active"), not null
 #  stripe_charge_details :jsonb
@@ -24,6 +25,8 @@
 #
 
 class CustomerPayment < ApplicationRecord
+  NON_PAYMENT_STATES = %i(change_expire_at)
+
   belongs_to :product, polymorphic: true
   belongs_to :customer
   monetize :amount_cents
@@ -35,7 +38,8 @@ class CustomerPayment < ApplicationRecord
     auth_failed: 3,
     processor_failed: 4,
     refund_failed: 5,
-    bonus: 6
+    bonus: 6,
+    change_expire_at: 7
   }
 
   def failed?
@@ -43,6 +47,8 @@ class CustomerPayment < ApplicationRecord
   end
 
   def bonus_text
+    return if order_id.blank?
+
     bonus_info_json = JSON.parse(order_id)
     payment_bonus = CustomerPaymentBonus.new(bonus_info_json)
     sale_page = SalePage.find_by(id: payment_bonus.sale_page_id)

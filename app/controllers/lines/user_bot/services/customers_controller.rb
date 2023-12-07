@@ -31,4 +31,17 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
     redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
   end
+
+  def change_expire_at
+    online_service = Current.business_owner.online_services.find(params[:service_id])
+    relation = online_service.online_service_customer_relations.find(params[:id])
+
+    CustomerPayments::ChangeServiceExpireAt.run!(
+      online_service_customer_relation: relation,
+      expire_at: params[:expire_at],
+      memo: params[:memo]
+    )
+
+    redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
+  end
 end

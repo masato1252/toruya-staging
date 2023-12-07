@@ -276,13 +276,18 @@ ja:
           register: 利用者
           register_info: 利用者情報
           permission_state: ご利用状況
-          payment_state: お支払い状況
+          payment_state: ご利用状況
           payment_plan: ご利用プラン
           signup_date: サービス登録日
           expire_date: サービス利用期限
           cancel_confirmation: この顧客の登録をキャンセルしてよろしいですか？
           stop_usage_confirmation: 支払い状況に関わらず、今すぐサービス提供を停止します。
           free_bonus: "%{service_name}購入により%{free_bonus_month}ヶ月間無料"
+          no_undo_for_changes:  ※一度変更したら元に戻せません！
+          change_expire_at: 利用期限を変更
+          change_expire_at_title: 利用期限を変更する
+          expire_change_reason: 変更理由
+          change_expire_at_time_label: 新しい利用期限(ずっと利用可能にする場合は空欄のまま保存)
           permission_states:
             accessible: 利用可能
             available: 利用可能
@@ -299,6 +304,7 @@ ja:
             completed: 支払い完了
             auth_failed: 失敗
             processor_failed: 失敗
+            change_expire_at: 利用期限変更
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携
@@ -586,6 +592,7 @@ ja:
           sell_unlimit_number: 限定せずに販売する
           what_introduction_video: ヘッドラインに動画を使用すると 動画セミナーが売れやすくなります。
           introduction_video_hint: YouTubeご利用の場合は「公開」に設定してください。
+          end_time_changes_warning: この設定を変更しても、既に登録済みの顧客の利用期限は変わりません。
         booking_page_creation:
           booking_step: 予約ページ
           content_step: 内容

@@ -247,6 +247,7 @@ Rails.application.routes.draw do
           member do
             post :approve
             delete :cancel
+            put :change_expire_at
           end
         end
 
@@ -687,8 +688,8 @@ Rails.application.routes.draw do
             get "/:encrypted_social_service_user_id/new(/:order_id)", action: :new, as: :new
             put :change_card
           end
-    end
-  end
+        end
+      end
     end
   end
 

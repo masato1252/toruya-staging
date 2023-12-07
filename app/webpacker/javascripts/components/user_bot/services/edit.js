@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
 import _ from "lodash";
 
+import I18n from 'i18n-js/index.js.erb';
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, EndOnMonthRadio, EndOnDaysRadio, EndAtRadio, NeverEndRadio, SubscriptionRadio } from "shared/components"
 import { OnlineServices } from "user_bot/api"
 import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
@@ -481,6 +482,9 @@ const OnlineServiceEdit =({props}) => {
                 />
                 {I18n.t("user_bot.dashboards.online_service_creation.never_expire")}
               </label>
+            </div>
+            <div className="warning">
+              {I18n.t("user_bot.dashboards.sales.online_service_creation.end_time_changes_warning")}
             </div>
           </div>
         )
