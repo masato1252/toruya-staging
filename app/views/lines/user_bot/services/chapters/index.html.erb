@@ -11,7 +11,9 @@
             online_service_id: @online_service.id,
             chapter_with_lessons: @online_service.chapters.includes(:lessons).map { |chapter| { chapter_id: "chapter_#{chapter.id}", id: chapter.id, lessons: chapter.lessons.pluck(:id) } },
             chapters: @online_service.chapters.each_with_object({}) { |chapter, h| h[chapter.id] = { id: chapter.id, name: chapter.name } },
-            lessons: @online_service.lessons.each_with_object({}) { |lesson, h| h[lesson.id] = { id: lesson.id, name: lesson.name } }
+            lessons: @online_service.lessons.each_with_object({}) { |lesson, h| h[lesson.id] = { id: lesson.id, name: lesson.name } },
+            booking_pages: Current.business_owner.booking_pages.where(id: [51, 128, 662]).map { |booking_page| { label: booking_page.name, value: booking_page.id } },
+            booking_page_options: Current.business_owner.booking_pages.where(draft: false).started.map { |booking_page| { label: booking_page.name, value: booking_page.id } },
           },
         },
         { camelize_props: false }

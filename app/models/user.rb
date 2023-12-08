@@ -99,6 +99,7 @@ class User < ApplicationRecord
   has_one :business_application
   has_one :social_user
   has_one :user_metric
+  has_one :user_setting
   has_many :web_push_subscriptions
   has_many :sale_pages, -> { active }
   has_many :all_sale_pages, class_name: "SalePage"
@@ -109,6 +110,7 @@ class User < ApplicationRecord
   delegate :current_plan, :trial_expired_date, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
+  delegate :line_keyword_booking_page_ids, to: :user_setting
 
   scope :admin, -> { where(id: ADMIN_IDS) }
   scope :not_admin, -> { where.not.admin }
@@ -250,6 +252,10 @@ class User < ApplicationRecord
 
   def available_for_staffs_managements
     [1, 2, 5].include?(id)
+  end
+
+  def line_keyword_booking_pages
+    booking_pages.where(id: line_keyword_booking_page_ids).sort_by { |page| line_keyword_booking_page_ids.index(page.id.to_s) }
   end
 
   private

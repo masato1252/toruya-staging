@@ -2861,6 +2861,36 @@ ALTER SEQUENCE public.user_metrics_id_seq OWNED BY public.user_metrics.id;
 
 
 --
+-- Name: user_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_settings (
+    id bigint NOT NULL,
+    user_id bigint,
+    content json DEFAULT '{}'::json
+);
+
+
+--
+-- Name: user_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_settings_id_seq OWNED BY public.user_settings.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3498,6 +3528,13 @@ ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.user_metrics ALTER COLUMN id SET DEFAULT nextval('public.user_metrics_id_seq'::regclass);
+
+
+--
+-- Name: user_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_settings ALTER COLUMN id SET DEFAULT nextval('public.user_settings_id_seq'::regclass);
 
 
 --
@@ -4143,6 +4180,14 @@ ALTER TABLE ONLY public.tags
 
 ALTER TABLE ONLY public.user_metrics
     ADD CONSTRAINT user_metrics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_settings user_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_settings
+    ADD CONSTRAINT user_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -4905,6 +4950,13 @@ CREATE INDEX index_user_metrics_on_user_id ON public.user_metrics USING btree (u
 
 
 --
+-- Name: index_user_settings_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_settings_on_user_id ON public.user_settings USING btree (user_id);
+
+
+--
 -- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5475,6 +5527,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231114141536'),
 ('20231127020713'),
 ('20231206053439'),
+('20231208115249'),
 ('20231219091457');
 
 
