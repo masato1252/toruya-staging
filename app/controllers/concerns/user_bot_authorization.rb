@@ -56,7 +56,7 @@ module UserBotAuthorization
     elsif params[:social_service_user_id].present?
       social_user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id])
 
-      if social_user.user_id
+      if social_user&.user_id
         if current_user&.id == 5 && social_user.user_id == 2
           flash.now[:info] = "Business owner changing"
           Rollbar.error("Super user changed scenario4", request: request)
