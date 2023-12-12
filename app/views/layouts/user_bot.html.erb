@@ -42,7 +42,10 @@
             <hr class="my-2" />
             <li>
               <%= link_to lines_user_bot_business_owners_path do %>
-                <%= image_tag Current.business_owner.social_user.social_user_picture_url, class: "avatar" if Current.business_owner.social_user %> <%= Current.business_owner.name %>
+                <div class= "flex justify-between items-center">
+                  <span><%= Current.business_owner.company_name %></span>
+                  <i class="fas fa-caret-down"></i>
+                </div>
               <% end %>
             </li>
           <% end %>

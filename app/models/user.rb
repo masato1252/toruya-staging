@@ -105,8 +105,7 @@ class User < ApplicationRecord
   has_many :online_services
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
-  delegate :name, to: :profile, allow_nil: true
-  delegate :display_last_name, to: :profile, allow_nil: true
+  delegate :name, :company_name, :display_last_name, to: :profile, allow_nil: true
   delegate :current_plan, :trial_expired_date, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
