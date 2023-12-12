@@ -629,27 +629,34 @@ ja:
         goals:
           collection:
             title: お友だち集め
+            line_title: PDFダウンロード
             description: 公式LINEにお友だちを集めるためのPDFダウンロードサービスを作成
           free_lesson:
             title: 無料レッスン
+            line_title: 無料レッスン
             description: １本のビデオを使った無料レッスンを作成
           paid_lesson:
             title: 有料レッスン
+            line_title: 有料レッスン
             description: １本のビデオを使った有料レッスンを作成
           free_course:
             title: 無料オンラインコース
+            line_title: 無料オンラインコース
             description: 複数のビデオレッスンとPDFワークブックを順番に提供するオンラインコースを作成
           course:
             title: オンラインコース
+            line_title: オンラインコース
             description: 複数のビデオレッスンとPDFワークブックを順番に提供するオンラインコースを作成
           membership:
             title: 会員制サービス
+            line_title: 会員制サービス
             description: 複数のビデオレッスンとPDFワークブックを継続購入してもらう会員制サービスを作成
           external:
             title: 外部サービス
+            line_title: 外部サービス
             description: 外部サービスの利用者向けLINEマーケティングのためのサービスを作成
           bundler:
-            title: サービスセット
+            line_title: サービスセット
             description: 複数のサービスをセットにして販売するためのサービスを作成
         solutions:
           video:

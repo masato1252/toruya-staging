@@ -29,7 +29,7 @@ module Templates
         picture_url: online_service.picture_url,
         content_url: content_url || customer_status_online_service_url,
         title: online_service.name,
-        context: "#{I18n.t("common.type")}：#{I18n.t("user_bot.dashboards.online_service_creation.goals.#{online_service.goal_type}.title")}\n#{I18n.t("common.term")}：#{online_service_customer_relation.end_date_text}",
+        context: "#{I18n.t("common.type")}：#{I18n.t("user_bot.dashboards.online_service_creation.goals.#{online_service.goal_type}.line_title")}\n#{I18n.t("common.term")}：#{online_service_customer_relation.end_date_text}",
         action_templates: action_templates.map(&:template)
       )
     end
