@@ -1,0 +1,13 @@
+<%= react_component("user_bot/settings/staffs/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    staff: StaffSerializer.new(@staff).attributes_hash.merge(
+      @staff.attributes.slice("last_name", "first_name", "phonetic_last_name", "phonetic_first_name"),
+      phone_number: @staff.phone_number
+    ),
+    attribute: params[:attribute],
+    title: t("user_bot.dashboards.settings.staffs.list_page_header")
+  }
+},
+{ camelize_props: false }
+) %>

@@ -10,7 +10,11 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   def new
   end
 
+  def show
+  end
+
   def edit
+    @staff = Current.business_owner.staffs.find(params[:id])
   end
 
   def create
@@ -24,6 +28,19 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def update
+    outcome = Staffs::Patch.run(
+      staff: @staff,
+      attribute: params[:attribute],
+      last_name: params[:last_name],
+      first_name: params[:first_name],
+      phonetic_last_name: params[:phonetic_last_name],
+      phonetic_first_name: params[:phonetic_first_name],
+      phone_number: params[:phone_number],
+      picture: params[:picture],
+      introduction: params[:introduction]
+    )
+
+    return_json_response(outcome, { redirect_to: lines_user_bot_settings_staff_path(Current.business_owner, @staff) })
   end
 
   def destroy

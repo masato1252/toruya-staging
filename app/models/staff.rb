@@ -47,8 +47,24 @@ class Staff < ApplicationRecord
   scope :deleted, -> { where.not(deleted_at: nil) }
   scope :undeleted, -> { where(deleted_at: nil) }
 
+  delegate :phone_number, :level, to: :staff_account, allow_nil: true
+
   def active?
     !deleted_at && staff_account&.active?
+  end
+
+  def state
+    if active?
+      "active"
+    elsif deleted_at?
+      "deleted"
+    else
+      "pending"
+    end
+  end
+
+  def display_name
+    name.presence || staff_account.phone_number || "スタッフ #{staff.id}"
   end
 
   # no any business schedule exists

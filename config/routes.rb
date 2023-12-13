@@ -311,7 +311,7 @@ Rails.application.routes.draw do
             end
           end
 
-          resources :staffs, except: [:show] do
+          resources :staffs do
             collection do
               get :resend_activation_sms
             end

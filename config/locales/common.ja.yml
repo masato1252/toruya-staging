@@ -103,6 +103,7 @@ ja:
     address_street2: 建物名／部屋番号
     address: 住所
     phone_number: 電話番号
+    cellphone_number: 携帯電話番号
     email: メール
     birthday: 生年月日
     memo: メモ

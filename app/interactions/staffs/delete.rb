@@ -14,9 +14,9 @@ module Staffs
 
         staff.update_columns(deleted_at: Time.current)
 
-        if Reservation.future.active.joins(:reservation_staffs).where("reservation_staffs.staff_id = ?", staff.id).exists?
-          NotificationMailer.staff_deleted(staff).deliver_later
-        end
+        # if Reservation.future.active.joins(:reservation_staffs).where("reservation_staffs.staff_id = ?", staff.id).exists?
+        #   NotificationMailer.staff_deleted(staff).deliver_later
+        # end
 
         staff.shop_relations.destroy_all
         staff.staff_menus.destroy_all

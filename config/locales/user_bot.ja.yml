@@ -313,6 +313,20 @@ ja:
           stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
           stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
           owner_warning: スタッフアカウントからはStripe連携できません。アカウントオーナーに連携設定を依頼して下さい。
+        staffs:
+          list_page_title: スタッフ
+          list_page_header: 登録スタッフ
+          delete: スタッフを削除
+          authority: 権限
+          authorities:
+            admin: 管理者
+            owner: 所有者
+            employee: 従業員
+          new_page_title: 新規スタッフ追加
+          new_page_header: 携帯電話番号
+          new_page_desc: スタッフ登録ページをSMS送信します
+          cellphone_input_placeholder: スタッフの携帯電話番号
+          new_page_methods_html: <b>【スタッフ登録方法】</b><br /> ①スタッフ登録ページをSMS送信<br /> ②スタッフ自信で登録ページからスタッフ登録<br /> ③スタッフとしてToruyaを利用
       broadcasts:
         broadcast_title: 配信条件
         broadcast_conditions: 配信条件一覧
