@@ -35,6 +35,7 @@ ja:
         page_title: ユーザーログイン
         message:
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
+          successful_message_html: <p>ユーザー登録ありがとうございました！</p><p>LINEのユーザーメニューから<br>onLINEセミナー集客を始めましょう。</p>
         line:
           successful_message: ログインしました
       shop_info:
