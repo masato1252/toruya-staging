@@ -36,6 +36,7 @@ ja:
     pay: 支払う
     reply: 返信
     send: 送信する
+    sms_resend: SMSを再送
     send_now: 配信する
     send_on_schedule: 送信予約する
     save_as_schedule: 配信予約を保存
@@ -228,6 +229,7 @@ ja:
     from_when: から
     until_when: まで
     price: 金額
+    no_data: 未登録
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

@@ -14,7 +14,6 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def edit
-    @staff = Current.business_owner.staffs.find(params[:id])
   end
 
   def create
@@ -54,7 +53,11 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
     end
   end
 
-  def resend_activation_email
+  def resend_activation_sms
+    Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: @staff.staff_account, user: @staff.staff_account.owner)
+
+    flash[:success] = I18n.t("settings.staff_account.sent_message")
+    redirect_back(fallback_location: lines_user_bot_settings_staff_path(Current.business_owner, @staff))
   end
 
   private

@@ -318,6 +318,7 @@ ja:
           list_page_header: 登録スタッフ
           delete: スタッフを削除
           authority: 権限
+          introduction: 紹介文
           authorities:
             admin: 管理者
             owner: 所有者
