@@ -105,13 +105,6 @@
     <%= link_to lines_user_bot_booking_page_path(@booking_page), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
       <i class="fa fa-minus"></i> <span><%= I18n.t("settings.booking_page.form.delete_page") %></span>
     <% end %>
-
-    <% if @booking_page.booking_options.exists? %>
-      <%= modal_link_to preview_modal_lines_user_bot_booking_page_path(@booking_page), class: "btn btn-tarco btn-save btn-tweak btn-with-word" do %>
-        <i class="fa fa-share-square fa-2x"></i>
-        <div class="word"><%= I18n.t("action.share") %></div>
-      <% end %>
-    <% end %>
   </div>
 
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
