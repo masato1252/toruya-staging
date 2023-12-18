@@ -26,7 +26,7 @@
   <body>
     <%= custom_bootstrap_flash %>
     <div class="responsive-content flex-row">
-      <% non_mobile do %>
+      <% not_phone do %>
         <ul class="mobile-content desktop-navigator hidden-xs">
           <li>
             <%= link_to lines_user_bot_metrics_dashboard_path do %>

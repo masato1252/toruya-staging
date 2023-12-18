@@ -144,6 +144,12 @@ module ApplicationHelper
     %Q|<iframe width='100%' height='auto' src='https://www.youtube.com/embed/#{TOURS_VIDEOS[key]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>|.html_safe
   end
 
+  def not_phone
+    if phone_types.exclude?(device_detector.device_type)
+      yield
+    end
+  end
+
   def mobile_only
     if mobile_types.include?(device_detector.device_type)
       yield
@@ -174,6 +180,10 @@ module ApplicationHelper
   end
 
   private
+
+  def phone_types
+    ["smartphone", "feature phone"]
+  end
 
   def mobile_types
     ["smartphone", "feature phone", "tablet"]
