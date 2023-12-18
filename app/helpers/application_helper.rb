@@ -176,6 +176,6 @@ module ApplicationHelper
   private
 
   def mobile_types
-    ["smartphone", "feature phone"]
+    ["smartphone", "feature phone", "tablet"]
   end
 end
