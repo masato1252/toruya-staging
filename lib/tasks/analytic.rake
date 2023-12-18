@@ -189,4 +189,60 @@ namespace :analytic do
       google_worksheet.save
     end
   end
+
+  task :reply_time => :environment do
+    if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 5)
+      new_row_number = google_worksheet.num_rows + 1
+
+      reply_periods = SocialUserMessage.where(message_type: 2, created_at: 14.days.ago..).group_by(&:social_user_id).map do |social_user_id, messages|
+        sm = messages.last
+        user_reply = SocialUserMessage.where(message_type: 1).where("created_at > ?", sm.created_at).first if sm
+
+        if user_reply
+          period = user_reply.created_at - sm.created_at
+
+          { SocialUser.find(social_user_id).user_id => period / 3600.0 }
+        else
+          { SocialUser.find(social_user_id).user_id => nil }
+        end
+      end
+
+      period_hours = reply_periods.map {|k| k.values.first }.compact
+      average_reply_time = period_hours.sum/period_hours.length
+
+      average_messages_count_a_day = SocialUserMessage.where(message_type: 2, created_at: 90.days.ago..).count / (3 * 30.0)
+
+      new_row_data = [
+        "#{14.days.ago.to_fs(:date)} ~ #{Time.current.to_fs(:date)}",
+        average_reply_time,
+        average_messages_count_a_day
+      ]
+
+      new_row_data.each_with_index do |data, index|
+        google_worksheet[new_row_number, index + 1] = data
+      end
+
+      google_worksheet.save
+    end
+    # reply_periods = SocialMessage.where(message_type: 2, created_at: 90.days.ago.., social_account_id: User.find(2).social_account.id).group_by(&:social_customer_id).map do |social_customer_id, messages|
+    #   sm = messages.last
+    #   user_reply = SocialMessage.where(message_type: 1).where("created_at > ?", sm.created_at).first if sm
+    #
+    #   if user_reply
+    #     period = user_reply.created_at - sm.created_at
+    #
+    #     { SocialCustomer.find(social_customer_id).customer_id => period / 3600.0 }
+    #   else
+    #     { SocialCustomer.find(social_customer_id).customer_id => nil }
+    #   end
+    # end
+    #
+    # period_hours = reply_periods.map {|k| k.values.first }.compact
+    # period_hours.sum/period_hours.length
+    # # you: 1 hours
+    # # your mom: 1.5
+    # SocialMessage.where(message_type: 2, created_at: 90.days.ago.., social_account_id: User.find(5).social_account.id).count / (3 * 30.0)
+    # #  2  message 1 day
+  end
 end
