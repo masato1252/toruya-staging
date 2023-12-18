@@ -194,29 +194,36 @@ namespace :analytic do
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
       google_worksheet = Google::Drive.spreadsheet(worksheet: 5)
       new_row_number = google_worksheet.num_rows + 1
+      no_reply_user_ids = []
 
       reply_periods = SocialUserMessage.where(message_type: 2, created_at: 14.days.ago..).group_by(&:social_user_id).map do |social_user_id, messages|
-        sm = messages.last
-        user_reply = SocialUserMessage.where(message_type: 1).where("created_at > ?", sm.created_at).first if sm
+        last_user_message = messages.last
+        last_staff_message = SocialUserMessage.where(message_type: 1, social_user_id: social_user_id).where("created_at < ?", last_user_message.created_at).last
+        last_staff_message_time = last_staff_message&.created_at || 14.days.ago
+        first_user_message = messages.sort_by(&:created_at).find { |m| m.created_at > last_staff_message_time }
 
-        if user_reply
-          period = user_reply.created_at - sm.created_at
+        staff_reply = SocialUserMessage.where(message_type: 1).where("created_at > ?", first_user_message.created_at).first if first_user_message
+
+        if staff_reply
+          period = staff_reply.created_at - first_user_message.created_at
 
           { SocialUser.find(social_user_id).user_id => period / 3600.0 }
         else
-          { SocialUser.find(social_user_id).user_id => nil }
+          no_reply_user_ids << SocialUser.find(social_user_id).user_id 
+          { SocialUser.find(social_user_id).user_id => nil || 48 }
         end
       end
 
       period_hours = reply_periods.map {|k| k.values.first }.compact
       average_reply_time = period_hours.sum/period_hours.length
 
-      average_messages_count_a_day = SocialUserMessage.where(message_type: 2, created_at: 90.days.ago..).count / (3 * 30.0)
+      average_messages_count_a_day = SocialUserMessage.where(message_type: 2, created_at: 14.days.ago..).count / (14.0)
 
       new_row_data = [
         "#{14.days.ago.to_fs(:date)} ~ #{Time.current.to_fs(:date)}",
         average_reply_time,
-        average_messages_count_a_day
+        average_messages_count_a_day,
+        no_reply_user_ids.join(", ")
       ]
 
       new_row_data.each_with_index do |data, index|
@@ -225,6 +232,31 @@ namespace :analytic do
 
       google_worksheet.save
     end
+
+    # reply_periods = SocialMessage.where(message_type: 2, created_at: 14.days.ago.., social_account_id: User.find(2).social_account.id).group_by(&:social_customer_id).map do |social_customer_id, messages|
+    #   last_user_message = messages.last
+    #   last_staff_message = SocialMessage.where(message_type: 1, social_customer_id: social_customer_id).where("created_at < ?", last_user_message.created_at).last
+    #   last_staff_message_time = last_staff_message&.created_at || 14.days.ago
+    #   first_user_message = messages.sort_by(&:created_at).find { |m| m.created_at > last_staff_message_time }
+    #
+    #   staff_reply = SocialMessage.where(message_type: 1).where("created_at > ?", first_user_message.created_at).first if first_user_message
+    #
+    #   if staff_reply
+    #     period = staff_reply.created_at - first_user_message.created_at
+    #
+    #    { SocialCustomer.find(social_customer_id).customer_id => period / 3600.0 }
+    #   else
+    #    { SocialCustomer.find(social_customer_id).customer_id => nil }
+    #   end
+    # end
+    #
+    # period_hours = reply_periods.map {|k| k.values.first }.compact
+    # average_reply_time = period_hours.sum/period_hours.length
+    # user: 5 => 1.37
+    # user: 2 => 1.6
+
+    # average_messages_count_a_day = SocialMessage.where(message_type: 2, created_at: 14.days.ago..).count / (3 * 30.0)
+
     # reply_periods = SocialMessage.where(message_type: 2, created_at: 90.days.ago.., social_account_id: User.find(2).social_account.id).group_by(&:social_customer_id).map do |social_customer_id, messages|
     #   sm = messages.last
     #   user_reply = SocialMessage.where(message_type: 1).where("created_at > ?", sm.created_at).first if sm
