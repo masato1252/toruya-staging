@@ -2552,7 +2552,8 @@ CREATE TABLE public.social_users (
     social_user_picture_url character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    social_rich_menu_key character varying
+    social_rich_menu_key character varying,
+    pinned boolean DEFAULT false NOT NULL
 );
 
 
@@ -4771,6 +4772,13 @@ CREATE INDEX index_social_user_messages_on_social_user_id_and_ai_uid ON public.s
 
 
 --
+-- Name: index_social_users_on_pinned_and_updated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_users_on_pinned_and_updated_at ON public.social_users USING btree (pinned, updated_at);
+
+
+--
 -- Name: index_social_users_on_social_rich_menu_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5466,6 +5474,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231013231105'),
 ('20231114141536'),
 ('20231127020713'),
-('20231206053439');
+('20231206053439'),
+('20231219091457');
 
 

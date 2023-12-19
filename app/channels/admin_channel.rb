@@ -45,7 +45,7 @@ class AdminChannel < ApplicationCable::Channel
 
     social_users = SocialUser
       .includes(:social_user_messages, :memos)
-      .order("social_users.updated_at DESC").limit(20)
+      .order("social_users.pinned DESC, social_users.updated_at DESC").limit(20)
 
     if data['last_updated_at']
       social_users = social_users.where("social_users.updated_at < ?", Time.zone.parse(data['last_updated_at']))
@@ -66,6 +66,11 @@ class AdminChannel < ApplicationCable::Channel
   def disconnect_customer(data)
     social_user = SocialUser.find_by!(social_service_user_id: data["customer_id"])
     social_user.update!(user_id: nil)
+  end
+
+  def toggle_customer_pin(data)
+    social_user = SocialUser.find_by!(social_service_user_id: data["customer_id"])
+    social_user.update!(pinned: !social_user.pinned)
   end
 
   def staff

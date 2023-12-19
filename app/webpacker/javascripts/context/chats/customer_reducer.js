@@ -130,6 +130,23 @@ export default (state = initialState, action) => {
           [state.selected_customer.channel_id]: channel_customers.map(el => (el.id === state.selected_customer.id ? {...el, has_more_messages: action.payload.has_more_messages} : el))
         }
       }
+    case "TOGGLE_CUSTOMER_PIN":
+      if (action.payload) {
+        channel_customers = state.customers[action.payload.channel_id] || []
+        const matched_customer = channel_customers.find(customer => customer.id === action.payload.id) || action.payload || {}
+
+        return {
+          ...state,
+          selected_customer: matched_customer ? { ...matched_customer, pinned: !action.payload.pinned } : state.selected_customer,
+          customers: {
+            ...state.customers,
+            [action.payload.channel_id]: channel_customers.map(el => (el.id === action.payload.id ? {...el, pinned: !action.payload.pinned } : el))
+          }
+        }
+      }
+      else {
+        return state
+      }
     default:
       return state;
   }
