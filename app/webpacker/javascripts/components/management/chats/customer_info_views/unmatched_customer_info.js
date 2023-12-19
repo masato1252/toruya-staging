@@ -35,6 +35,19 @@ export default () => {
 
   return (
     <>
+      <i
+        className={`fa fa-thumbtack ${selected_customer.pinned ? 'text-lime-400' : ''}`}
+        onClick={() => {
+          dispatch({
+            type: "TOGGLE_CUSTOMER_PIN",
+            payload: selected_customer
+          })
+
+          subscription.perform("toggle_customer_pin", {
+            customer_id: selected_customer.id
+          })
+        }}>
+      </i>
       <div className="info">
         Connect a shop customer with the line customer, you could reconnect with another customer at anytime.
       </div>
