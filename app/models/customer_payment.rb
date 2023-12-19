@@ -26,10 +26,13 @@
 
 class CustomerPayment < ApplicationRecord
   NON_PAYMENT_STATES = %i(change_expire_at)
+  PAYMENT_STATES = %i(active completed refunded auth_failed processor_failed refund_failed bonus)
 
   belongs_to :product, polymorphic: true
   belongs_to :customer
   monetize :amount_cents
+
+  scope :payment_type, -> { where(state: PAYMENT_STATES) }
 
   enum state: {
     active: 0,

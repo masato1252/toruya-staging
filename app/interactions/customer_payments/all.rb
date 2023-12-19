@@ -5,7 +5,7 @@ module CustomerPayments
     object :customer
 
     def execute
-      customer.customer_payments.order(id: :desc)
+      customer.customer_payments.payment_type.order(id: :desc)
     end
   end
 end
