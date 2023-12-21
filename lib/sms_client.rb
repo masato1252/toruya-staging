@@ -4,7 +4,7 @@ class SmsClient
   HARUKO_PHONE = "08036238534".freeze
 
   def self.send(phone_number, message)
-    return if Rails.env.test?
+    return if Rails.env.test? || Rails.env.development?
     return if phone_number.blank?
 
     phone_number = phone_number.gsub(/[^0-9]/, '')

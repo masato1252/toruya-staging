@@ -7,14 +7,12 @@ module Profiles
     hash :params do
       string :company_name, default: nil
       string :company_phone_number, default: nil
-      string :zip_code
-      string :region
-      string :city
+      string :zip_code, default: nil
+      string :region, default: nil
+      string :city, default: nil
       string :street1, default: nil
       string :street2, default: nil
     end
-
-    validate :validate_address
 
     def execute
       ApplicationRecord.transaction do
@@ -41,12 +39,6 @@ module Profiles
     end
 
     private
-
-    def validate_address
-      if address.invalid?
-        errors.add(:params, :address_invalid)
-      end
-    end
 
     def address
       @address ||= Address.new(params)

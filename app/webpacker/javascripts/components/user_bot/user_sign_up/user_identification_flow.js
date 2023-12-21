@@ -17,7 +17,11 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   } = props.i18n.user_sign_up;
   const { confirm, required_label } = props.i18n;
 
-  const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm();
+  const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm({
+    defaultValues: {
+      phone_number: props.phone_number
+    }
+  });
   const { isSubmitting } = formState;
   const [is_phone_identified, setPhoneIdentified] = useState(!!props.is_user_logged_in)
   const watchIsUserMatched = watch("user_id")

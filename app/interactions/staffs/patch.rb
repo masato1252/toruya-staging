@@ -24,7 +24,8 @@ module Staffs
             phonetic_first_name: phonetic_first_name
           )
         when "phone_number"
-          staff.staff_account.update!(phone_number: phone_number)
+          formatted_phone = Phonelib.parse(phone_number, :jp).international(false)
+          staff.staff_account.update!(phone_number: formatted_phone)
         when "staff_info"
           if picture
             staff.picture.purge

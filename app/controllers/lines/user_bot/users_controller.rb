@@ -16,6 +16,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
 
   # user sign up
   def sign_up
+    @staff_account = StaffAccount.find_by(token: params[:staff_token])
     render layout: 'booking'
   end
 
@@ -71,7 +72,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
 
   # It is login in behavior, either
   def identify_code
-    identification_code = IdentificationCodes::VerifyUser.run!(
+    outcome = IdentificationCodes::VerifyUser.run(
       social_user: social_user,
       phone_number: params[:phone_number],
       uuid: params[:uuid],
@@ -79,7 +80,8 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       staff_token: params[:staff_token]
     )
 
-    if identification_code
+    if outcome.valid?
+      identification_code = outcome.result
       if social_user.user
         write_user_bot_cookies(:current_user_id, social_user.user_id)
       end
@@ -89,7 +91,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       render json: {
         identification_successful: false,
         errors: {
-          message: I18n.t("booking_page.message.booking_code_failed_message")
+          message: outcome.errors.full_messages.to_sentence
         }
       }
     end
@@ -114,6 +116,18 @@ class Lines::UserBot::UsersController < Lines::UserBotController
   end
 
   def check_shop_profile
-    render json: { is_shop_profile_created: current_user&.profile&.company_address_details&.present? }
+    if current_user && params[:staff_token]
+      outcome = StaffAccounts::ConnectUser.run(token: params[:staff_token], user: current_user)
+
+      if outcome.valid?
+        render json: { is_shop_profile_created: current_user&.profile&.company_address_details&.present? }
+      else
+        write_user_bot_cookies(:current_user_id, nil)
+
+        head :bad_request
+      end
+    else
+      render json: { is_shop_profile_created: current_user&.profile&.company_address_details&.present? }
+    end
   end
 end

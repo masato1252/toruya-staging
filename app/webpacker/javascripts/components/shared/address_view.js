@@ -8,7 +8,7 @@ import useAddress from "libraries/use_address";
 import { RequiredLabel } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
 
-const AddressView = ({save_btn_text, handleSubmitCallback}) => {
+const AddressView = ({save_btn_text, show_skip_btn, handleSubmitCallback}) => {
   const { register, handleSubmit, watch, setValue, formState } = useForm();
   const { isSubmitting } = formState;
   const address = useAddress(watch("zip_code"))
@@ -30,7 +30,7 @@ const AddressView = ({save_btn_text, handleSubmitCallback}) => {
         </h4>
         <div className="field">
           <input
-            ref={register({ required: true })}
+            ref={register()}
             name="zip_code"
             placeholder="1234567"
             type="tel"
@@ -41,7 +41,7 @@ const AddressView = ({save_btn_text, handleSubmitCallback}) => {
         </h4>
         <div className="field">
           <input
-            ref={register({ required: true })}
+            ref={register()}
             name="region"
             placeholder={I18n.t("common.address_region")}
             type="text"
@@ -49,7 +49,7 @@ const AddressView = ({save_btn_text, handleSubmitCallback}) => {
         </div>
         <div className="field">
           <input
-            ref={register({ required: true })}
+            ref={register()}
             name="city"
             placeholder={I18n.t("common.address_city")}
             type="text"
@@ -74,7 +74,12 @@ const AddressView = ({save_btn_text, handleSubmitCallback}) => {
             className="expanded"
           />
         </div>
-        <div className="centerize">
+        <div className="action-block centerize">
+          {show_skip_btn ? (
+            <a href="#" className="btn btn-gray submit mr-2-5" onClick={handleSubmit(onSubmit)}>
+              { isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : I18n.t("action.no_need_setup") }
+            </a>
+          ) : <></> }
           <a href="#" className="btn btn-yellow submit" onClick={handleSubmit(onSubmit)}>
             { isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : save_btn_text || I18n.t("action.next_step") }
           </a>
