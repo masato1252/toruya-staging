@@ -232,49 +232,103 @@ namespace :analytic do
 
       google_worksheet.save
     end
+  end
 
-    # reply_periods = SocialMessage.where(message_type: 2, created_at: 14.days.ago.., social_account_id: User.find(2).social_account.id).group_by(&:social_customer_id).map do |social_customer_id, messages|
-    #   last_user_message = messages.last
-    #   last_staff_message = SocialMessage.where(message_type: 1, social_customer_id: social_customer_id).where("created_at < ?", last_user_message.created_at).last
-    #   last_staff_message_time = last_staff_message&.created_at || 14.days.ago
-    #   first_user_message = messages.sort_by(&:created_at).find { |m| m.created_at > last_staff_message_time }
-    #
-    #   staff_reply = SocialMessage.where(message_type: 1).where("created_at > ?", first_user_message.created_at).first if first_user_message
-    #
-    #   if staff_reply
-    #     period = staff_reply.created_at - first_user_message.created_at
-    #
-    #    { SocialCustomer.find(social_customer_id).customer_id => period / 3600.0 }
-    #   else
-    #    { SocialCustomer.find(social_customer_id).customer_id => nil }
-    #   end
-    # end
-    #
-    # period_hours = reply_periods.map {|k| k.values.first }.compact
-    # average_reply_time = period_hours.sum/period_hours.length
-    # user: 5 => 1.37
-    # user: 2 => 1.6
+  task :retention_rate => :environment do
+    # join_user_ids = []
+    # joined_month = {
+    #   "year-month" => {
+    #     new_user_ids => [],
+    #     new_user_base_amount => 0,
+    #     after_months =>[
+    #       [],
+    #     ],
+    #     rate => [ ]
+    #     dollar_rate => [ ]
+    #   }
+    # }
+    current_month = Time.new(2021, 7)
+    end_month = Time.current.prev_month.end_of_month
+    join_user_ids = []
+    joined_month = {}
+    helper = ApplicationController.helpers
 
-    # average_messages_count_a_day = SocialMessage.where(message_type: 2, created_at: 14.days.ago..).count / (3 * 30.0)
+    scenario = ENV['scenario'] || "retention_rate" # net_retention_rate, amount
 
-    # reply_periods = SocialMessage.where(message_type: 2, created_at: 90.days.ago.., social_account_id: User.find(2).social_account.id).group_by(&:social_customer_id).map do |social_customer_id, messages|
-    #   sm = messages.last
-    #   user_reply = SocialMessage.where(message_type: 1).where("created_at > ?", sm.created_at).first if sm
-    #
-    #   if user_reply
-    #     period = user_reply.created_at - sm.created_at
-    #
-    #     { SocialCustomer.find(social_customer_id).customer_id => period / 3600.0 }
-    #   else
-    #     { SocialCustomer.find(social_customer_id).customer_id => nil }
-    #   end
-    # end
-    #
-    # period_hours = reply_periods.map {|k| k.values.first }.compact
-    # period_hours.sum/period_hours.length
-    # # you: 1 hours
-    # # your mom: 1.5
-    # SocialMessage.where(message_type: 2, created_at: 90.days.ago.., social_account_id: User.find(5).social_account.id).count / (3 * 30.0)
-    # #  2  message 1 day
+    while current_month < end_month
+      charges = SubscriptionCharge.completed.where(created_at: current_month..current_month.end_of_month)
+      user_ids = charges.pluck(:user_id)
+      new_user_ids = user_ids - join_user_ids
+
+      join_user_ids.concat(new_user_ids)
+      year_month = current_month.strftime("%Y-%m")
+
+      joined_month[year_month] ||= {}
+      joined_month[year_month]["new_user_ids"] = new_user_ids
+      joined_month[year_month]["new_user_base_amount"] = charges.where(user_id: new_user_ids).sum(:amount_cents)
+
+      joined_month.each do |month_of_year, metric|
+        still_pay_user_ids = (metric["new_user_ids"] & user_ids)
+
+        joined_month[month_of_year]["after_months"] ||= []
+        joined_month[month_of_year]["after_months"] << still_pay_user_ids
+        joined_month[month_of_year]["amount"] ||= []
+        existing_users_paid = charges.where(user_id: still_pay_user_ids).sum(:amount_cents)
+        joined_month[month_of_year]["amount"] << existing_users_paid
+
+        joined_month[month_of_year]["rate"] ||= []
+        joined_month[month_of_year]["dollar_rate"] ||= []
+
+        if metric["new_user_ids"].blank?
+          joined_month[month_of_year]["rate"] << ""
+          joined_month[month_of_year]["dollar_rate"] << ""
+        elsif still_pay_user_ids.blank?
+          joined_month[month_of_year]["rate"] << 0
+          joined_month[month_of_year]["dollar_rate"] << ""
+        else
+          joined_month[month_of_year]["rate"] << (still_pay_user_ids.length / metric["new_user_ids"].length.to_f).round(2)
+          joined_month[month_of_year]["dollar_rate"] << existing_users_paid / metric["new_user_base_amount"].to_f
+        end
+      end
+
+      current_month = current_month.next_month
+    end
+
+    worksheet = case scenario
+                when "retention_rate"
+                  6
+                when "net_retention_rate"
+                  7
+                when "amount"
+                  8
+                end
+
+    google_worksheet = Google::Drive.spreadsheet(worksheet: worksheet)
+
+    joined_month
+    new_row_number = 5
+    joined_month.each do |year_month, metric|
+      google_worksheet[new_row_number, 1] = year_month
+      google_worksheet[new_row_number, 2] = metric["new_user_ids"].length
+      google_worksheet[new_row_number, 3] = metric["new_user_ids"].join(", ")
+
+      if metric["rate"]
+        metric["rate"].each.with_index do |rate, index|
+          case scenario
+          when "retention_rate"
+            google_worksheet[new_row_number, index + 4] = rate
+          when "net_retention_rate"
+            google_worksheet[new_row_number, index + 4] = metric["dollar_rate"][index]
+          when "amount"
+            google_worksheet[new_row_number, index + 4] = metric["amount"][index]
+          end
+        end
+      else
+      end
+
+      new_row_number = new_row_number + 1
+    end
+
+    google_worksheet.save
   end
 end
