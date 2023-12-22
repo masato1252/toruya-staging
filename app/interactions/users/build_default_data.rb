@@ -24,6 +24,10 @@ module Users
       unless user.user_metric
         user.build_user_metric
       end
+
+      unless user.user_setting
+        user.build_user_setting
+      end
     end
   end
 end

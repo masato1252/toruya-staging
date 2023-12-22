@@ -87,6 +87,7 @@ gem 'marginalia'
 gem "rqrcode", "~> 2.0"
 gem 'chunky_png'
 gem 'pycall'
+gem 'activerecord-typedstore'
 
 group :development, :test do
   gem "byebug", platform: :mri

@@ -58,6 +58,8 @@ module BookingPages
         else
           errors.merge!(booking_page.errors)
         end
+
+        BookingPages::ChangeLineSharing.run(booking_page: booking_page)
       end
 
       booking_page

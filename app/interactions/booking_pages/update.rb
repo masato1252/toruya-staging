@@ -75,8 +75,12 @@ module BookingPages
             interval: attrs[:interval],
             specific_booking_start_times: attrs[:booking_start_times].map{|h| h[:start_time]}.sort.uniq
           )
-        when "name", "title", "draft", "line_sharing", "shop_id", "booking_limit_day", "greeting", "note", "overbooking_restriction", "online_payment_enabled"
+        when "name", "title", "draft", "shop_id", "booking_limit_day", "greeting", "note", "overbooking_restriction", "online_payment_enabled"
           booking_page.update(attrs.slice(update_attribute))
+        when "line_sharing"
+          booking_page.update(attrs.slice(update_attribute))
+
+          BookingPages::ChangeLineSharing.run(booking_page: booking_page)
         end
 
         if booking_page.errors.present?
@@ -102,6 +106,10 @@ module BookingPages
           end
         end
       end
+    end
+
+    def user
+      @user ||= booking_page.user
     end
   end
 end

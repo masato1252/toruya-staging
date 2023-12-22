@@ -97,6 +97,8 @@ GEM
     activerecord (7.0.4.3)
       activemodel (= 7.0.4.3)
       activesupport (= 7.0.4.3)
+    activerecord-typedstore (1.5.1)
+      activerecord (>= 6.1)
     activestorage (7.0.4.3)
       actionpack (= 7.0.4.3)
       activejob (= 7.0.4.3)
@@ -649,6 +651,7 @@ DEPENDENCIES
   active_interaction
   active_link_to
   active_record_query_trace
+  activerecord-typedstore
   acts-as-taggable-on
   ahoy_matey
   annotate

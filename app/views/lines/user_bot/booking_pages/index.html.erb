@@ -18,7 +18,13 @@
           <% end %>
         </div>
 
-        <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+          <%= link_to edit_booking_pages_lines_user_bot_settings_line_keyword_path(business_owner_id: business_owner_id),
+            class: "btn btn-tarco btn-circle btn-tweak btn-bottom-left btn-with-word" do %>
+            <i class="fa fab fa-line fa-2x"></i>
+            <div class="word"><%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %></div>
+          <% end %>
+
           <%= link_to new_lines_user_bot_booking_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
             <i class="fas fa-plus fa-2x"></i>
             <div class="word"><%= I18n.t("action.add_more") %></div>

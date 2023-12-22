@@ -42,6 +42,31 @@ RSpec.describe BookingPages::Update do
     context "update_attribute is line_sharing" do
       it_behaves_like "updates booking page normal attribute", "line_sharing", true
       it_behaves_like "updates booking page normal attribute", "line_sharing", false
+
+      let(:update_attribute) { "line_sharing" }
+      context "when line sharing is true" do
+        before { args[:attrs]["line_sharing"] = true }
+
+        it "updates user line_keyword_booking_page_ids" do
+          outcome
+
+          expect(user.reload.line_keyword_booking_page_ids).to include(booking_page.id.to_s)
+        end
+      end
+      context "when line sharing is true" do
+        before do
+          args[:attrs]["line_sharing"] = false
+          user.user_setting.update(line_keyword_booking_page_ids: [booking_page.id])
+        end
+
+
+        it "updates user line_keyword_booking_page_ids" do
+          expect(user.reload.line_keyword_booking_page_ids).to include(booking_page.id.to_s)
+          outcome
+
+          expect(user.reload.line_keyword_booking_page_ids).not_to include(booking_page.id.to_s)
+        end
+      end
     end
 
     context "update_attribute is booking_limit_day" do

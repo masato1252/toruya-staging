@@ -246,6 +246,13 @@ Rails.application.routes.draw do
         end
 
         namespace :settings do
+          resource :line_keyword, only: [] do
+            member do
+              get :edit_booking_pages
+              put :upsert_booking_pages
+            end
+          end
+
           resource :profile, only: %i[show edit update] do
             collection do
               get :company
