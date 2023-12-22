@@ -50,7 +50,7 @@
   <% @services_mapping_total_amount.slice(0, Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER).each do |h| %>
     <div class="row">
       <div class="col-sm-9">
-        <%= link_to h[:service].internal_product_name, lines_user_bot_metrics_online_service_path(h[:service]) %>
+        <%= link_to h[:service].internal_product_name, lines_user_bot_metrics_online_service_path(business_owner_id, h[:service]) %>
       </div>
       <div class="col-sm-3">
         <%= h[:total_revenue] %>
@@ -59,7 +59,7 @@
   <% end %>
   <% if @services_mapping_total_amount.length > Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER %>
     <div class="row p-6 text-right">
-      <%= link_to t("user_bot.dashboards.metrics.other_services"), lines_user_bot_metrics_online_services_path %>
+      <%= link_to t("user_bot.dashboards.metrics.other_services"), lines_user_bot_metrics_online_services_path(business_owner_id) %>
     </div>
   <% end %>
 </div>

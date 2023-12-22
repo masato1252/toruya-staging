@@ -43,9 +43,9 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     if booking_page.update(deleted_at: Time.current)
-      redirect_to lines_user_bot_booking_pages_path(business_owner_id: props.business_owner_id), notice: I18n.t("common.delete_successfully_message")
+      redirect_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_booking_pages_path(business_owner_id: props.business_owner_id)
+      redirect_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id)
     end
   end
 

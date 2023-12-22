@@ -68,7 +68,6 @@ module ViewHelpers
           ENV["DEV_USER_ID"] || params[:business_owner_id] || user_bot_cookies(:current_super_user_id)
         end
       else
-        Rollbar.error("user 5 read super_user from here", request: request) if current_user&.id == 5
         session[:current_super_user_id]
       end
     @super_user ||= User.find_by(id: super_user_id)
