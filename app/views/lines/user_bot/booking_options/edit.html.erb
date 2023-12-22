@@ -1,5 +1,6 @@
 <%= react_component("user_bot/booking_options/edit", {
   props: {
+    business_owner_id: business_owner_id,
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes),
     editing_menu: @editing_menu,
     booking_option: @booking_option.attributes.merge!(

@@ -32,6 +32,7 @@ const CustomMessageEdit =({props}) => {
     [error, response] = await CustomMessageServices.demo({
       data: _.assign( data, {
         id: props.message.id,
+        business_owner_id: props.business_owner_id,
         scenario: props.scenario,
         content: template,
         service_id: props.message.service_id,
@@ -48,6 +49,7 @@ const CustomMessageEdit =({props}) => {
     const [error, response] = await CustomMessageServices.update({
       data: _.assign( data, {
         id: props.message.id,
+        business_owner_id: props.business_owner_id,
         scenario: props.scenario,
         content: template,
         service_id: props.message.service_id,
@@ -141,7 +143,7 @@ const CustomMessageEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_service_custom_messages_path(props.message.service_id)}>
+                <a href={Routes.lines_user_bot_service_custom_messages_path(props.business_owner_id, props.message.service_id)}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

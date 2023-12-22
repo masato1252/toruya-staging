@@ -18,9 +18,9 @@ RSpec.describe IdentificationCodes::Verify do
         expect(outcome.result).to eq(booking_code)
       end
 
-      context "when booking_code created #{IdentificationCodes::Verify::VALID_TIME_PERIOD} minutes before" do
+      context "when booking_code created #{IdentificationCodes::Verify::VALID_TIME_PERIOD} hours before" do
         before do
-          Timecop.freeze((IdentificationCodes::Verify::VALID_TIME_PERIOD + 1).minutes.ago) do
+          Timecop.freeze((IdentificationCodes::Verify::VALID_TIME_PERIOD + 1).hours.ago) do
             booking_code
           end
         end

@@ -87,16 +87,16 @@ const Plans = ({props}) => {
     }
   };
 
-  const seletedPlanCustomerContext = (plan_level = "basic") => {
+  const selectedPlanCustomerContext = (plan_level = "basic") => {
     return props.plans[plan_level].details["ranks"].find(plan_context => plan_context.rank === parseInt(selected_rank))
   }
 
   const customer_number_limit_info = (plan_level = "basic") => {
-    return seletedPlanCustomerContext(plan_level)["max_customers_limit"]
+    return selectedPlanCustomerContext(plan_level)["max_customers_limit"]
   }
 
   const cost_info = (plan_level = "basic") => {
-    return seletedPlanCustomerContext(plan_level)["costFormat"]
+    return selectedPlanCustomerContext(plan_level)["costFormat"]
   }
 
   return (
@@ -107,7 +107,7 @@ const Plans = ({props}) => {
         }) => (
           <div style={style}>
             <TopNavigationBar
-              leading={<a href={Routes.lines_user_bot_settings_path()}><i className="fa fa-angle-left fa-2x"></i></a>}
+              leading={<a href={Routes.lines_user_bot_settings_path(props.business_owner_id)}><i className="fa fa-angle-left fa-2x"></i></a>}
               title={props.i18n.plan_info.caption}
               sticky={true}
             />
@@ -235,6 +235,7 @@ const Plans = ({props}) => {
           <div className="col">
             {props.in_paid_plan && (
               <SupportModal
+                props={props}
                 trigger_btn={<button className="btn btn-orange">{props.i18n.unsubscribe}</button>}
                 content={props.i18n.unsubscribe_modal_content}
                 btn={props.i18n.unsubscribe_modal_button}
@@ -292,13 +293,14 @@ const Plans = ({props}) => {
         desc={selectedPlan()?.name}
         details_desc={`${basicPlan.details.period}: ${cost_info(selected_plan_level)}`}
         pay_btn={props.i18n.pay}
-        payment_path={Routes.lines_user_bot_settings_payments_path()}
+        payment_path={Routes.lines_user_bot_settings_payments_path(props.business_owner_id)}
         props={props}
         handleFailure={handleFailure}
       />
       <StripeChangeCardModal
-        change_card_path={Routes.change_card_lines_user_bot_settings_payments_path({format: "json"})}
+        change_card_path={Routes.change_card_lines_user_bot_settings_payments_path(props.business_owner_id, {format: "json"})}
         stripe_key={props.stripe_key}
+        business_owner_id={props.business_owner_id}
         header="Trouya"
         pay_btn={I18n.t('plans.actions.change_card')}
       />

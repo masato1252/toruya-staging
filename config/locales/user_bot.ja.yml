@@ -26,7 +26,8 @@ ja:
           code: 確認コード
           resend: コード再送
         message:
-          successful_message_html: <p>ユーザー登録ありがとうございました！</p><p>LINEのユーザーメニューから<br>onLINEセミナー集客を始めましょう。</p>
+          successful_message_html: <div><p>ユーザー登録ありがとうございました！</p><p>LINEのユーザーメニューから<br>onLINEセミナー集客を始めましょう。</p><br><p>パソコンやタブレット端末からToruyaを使用する場合は、WEB版管理画面をご利用ください。</p><br>
+            https://manager.toruya.com/userlogin</div>
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
           booking_code_message: 携帯電話にお送りした確認コードを入力してください。
           booking_code_failed_message: 確認コードが間違っています
@@ -122,6 +123,7 @@ ja:
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
         company:
           info_hint: 主に宣伝用LPに表示されます。
+          staffs: スタッフ
         shop:
           shop_management: 店舗管理
           shop_info_label: 店舗情報
@@ -311,6 +313,22 @@ ja:
           connection_title: Stripeアカウント連携
           stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
           stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
+          owner_warning: スタッフアカウントからはStripe連携できません。アカウントオーナーに連携設定を依頼して下さい。
+        staffs:
+          list_page_title: スタッフ
+          list_page_header: 登録スタッフ
+          delete: スタッフを削除
+          authority: 権限
+          introduction: 紹介文
+          authorities:
+            admin: 管理者
+            owner: 所有者
+            employee: 従業員
+          new_page_title: 新規スタッフ追加
+          new_page_header: 携帯電話番号
+          new_page_desc: スタッフ登録ページをSMS送信します
+          cellphone_input_placeholder: スタッフの携帯電話番号
+          new_page_methods_html: <b>【スタッフ登録方法】</b><br /> ①スタッフ登録ページをSMS送信<br /> ②スタッフ自信で登録ページからスタッフ登録<br /> ③スタッフとしてToruyaを利用
       broadcasts:
         broadcast_title: 配信条件
         broadcast_conditions: 配信条件一覧

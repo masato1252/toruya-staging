@@ -33,6 +33,7 @@ export const GlobalProvider = ({ props, children }) => {
 
     request_data = {
       ...state.services_creation_states,
+      business_owner_id: props.business_owner_id,
       upsell: {
         sale_page_id: state.services_creation_states.upsell?.sale_page?.id
       }
@@ -40,7 +41,11 @@ export const GlobalProvider = ({ props, children }) => {
 
     delete request_data.message_template;
     if (state.services_creation_states.message_template.picture) {
-      request_data = { ...request_data, message_template: _.pick(state.services_creation_states.message_template, ["picture"]) }
+      request_data = {
+        ...request_data,
+        business_owner_id: props.business_owner_id,
+        message_template: _.pick(state.services_creation_states.message_template, ["picture"])
+      }
     }
 
     return request_data

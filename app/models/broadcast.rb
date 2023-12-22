@@ -52,9 +52,9 @@ class Broadcast < ApplicationRecord
     product_name =
       case filter["field"]
       when "menu_ids"
-        user.menus.find(filter["value"]).name
+        user.menus.find(id: filter["value"])&.name
       when "online_service_ids"
-        user.online_services.find(filter["value"]).name
+        user.online_services.find(id: filter["value"])&.name
       end
 
     I18n.t("broadcast.target.specific_product", product_name: product_name)
@@ -67,10 +67,10 @@ class Broadcast < ApplicationRecord
     query["filters"].map do |filter|
       case filter["field"]
       when "menu_ids"
-        user.menus.find(filter["value"]).name
+        user.menus.find_by(id: filter["value"])&.name
       when "online_service_ids"
-        user.online_services.find(filter["value"]).name
+        user.online_services.find_by(id: filter["value"]).name
       end
-    end
+    end.compact
   end
 end

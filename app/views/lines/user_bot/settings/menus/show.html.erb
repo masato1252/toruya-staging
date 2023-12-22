@@ -1,8 +1,8 @@
 <div class="settings-dashboard form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_menus_path, title: t("common.menu") %>
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_menus_path(business_owner_id), title: t("common.menu") %>
   <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.menu.basic_settings") %></div>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.name") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :name) do %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :name) do %>
     <div>
       <%= @menu.name %><br />
       <p class="desc">
@@ -11,19 +11,19 @@
     </div>
   <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.minutes") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :minutes) do %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :minutes) do %>
     <div>
       <%= @menu.minutes %>
     </div>
   <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.interval") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :interval) do %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :interval) do %>
     <div>
       <%= @menu.interval %>
     </div>
   <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.menu_shops") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :menu_shops) do %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :menu_shops) do %>
     <div>
       <% @menu_shops.each do |menu_shop| %>
         <div class="dotdotdot">
@@ -36,10 +36,10 @@
     </div>
   <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.method") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :online), title: t("user_bot.dashboards.settings.menu.methods.#{@menu.online ? "online" : "local"}") %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :online), title: t("user_bot.dashboards.settings.menu.methods.#{@menu.online ? "online" : "local"}") %>
 
   <div class="action-block">
-    <%= link_to lines_user_bot_settings_menu_path(@menu),
+    <%= link_to lines_user_bot_settings_menu_path(business_owner_id, @menu),
       method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
       <i class="fa fa-minus"></i> <span><%= I18n.t("action.delete") %></span>
     <% end %>

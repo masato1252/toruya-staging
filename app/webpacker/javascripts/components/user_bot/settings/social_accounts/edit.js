@@ -16,7 +16,7 @@ const SocialAccountEdit =({props}) => {
     let error, response;
 
     [error, response] = await SocialAccountServices.update({
-      data: _.assign( data, { attribute: props.attribute })
+      data: _.assign( data, { attribute: props.attribute, business_owner_id: props.business_owner_id })
     })
 
     responseHandler(error, response)

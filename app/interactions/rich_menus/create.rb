@@ -15,6 +15,24 @@ module RichMenus
     file :image, default: nil
 
     def execute
+      if Rails.env.development?
+        rich_menu = SocialRichMenu.create(
+          social_account: social_account,
+          social_rich_menu_id: SecureRandom.uuid,
+          social_name: key,
+          body: body,
+          internal_name: internal_name,
+          bar_label: bar_label
+        )
+        rich_menu.image.attach(io: image, filename: File.basename(image.path)) if image
+        RichMenus::SetDefault.run(social_rich_menu: rich_menu)
+        RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
+
+        social_account.social_rich_menus.where(social_name: key).where.not(id: rich_menu.id).each do |rich_menu|
+          compose(RichMenus::Delete, social_rich_menu: rich_menu)
+        end
+        return
+      end
       return unless Rails.env.production?
 
       response = ::LineClient.create_rich_menu(social_account: social_account, body: body)

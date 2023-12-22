@@ -34,6 +34,7 @@ export const GlobalProvider = ({ props, children }) => {
   const _salePageData = () => {
     return {
       ...state.sales_creation_states,
+      business_owner_id: props.business_owner_id,
       selected_booking_page: selected_booking_page.id,
       selected_template: selected_template.id,
       product_content: _.pick(product_content, ["picture", "desc1", "desc2"]),

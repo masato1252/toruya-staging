@@ -1,5 +1,6 @@
 <%= react_component("user_bot/settings/menus/edit", {
   props: {
+    business_owner_id: business_owner_id,
     menu: MenuSerializer.new(@menu).attributes_hash,
     attribute: params[:attribute],
     menu_shops_options: @menu_shops_options

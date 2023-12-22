@@ -28,7 +28,7 @@ const ProfileEdit =({props}) => {
     let error, response;
 
     [error, response] = await UsersServices.updateProfile({
-      data: _.assign( data, { attribute: props.attribute, logo: data["logo"]?.[0] })
+      data: _.assign( data, { attribute: props.attribute, logo: data["logo"]?.[0], business_owner_id: props.business_owner_id })
     })
 
     if (error) {

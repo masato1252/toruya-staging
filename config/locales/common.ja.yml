@@ -36,6 +36,7 @@ ja:
     pay: 支払う
     reply: 返信
     send: 送信する
+    sms_resend: SMSを再送
     send_now: 配信する
     send_on_schedule: 送信予約する
     save_as_schedule: 配信予約を保存
@@ -44,6 +45,7 @@ ja:
     next_step: 次　へ
     skip_step: 設定せずに次へ
     prev_step: 戻　る
+    no_need_setup: 設定せずに
     add_step: ステップを追加
     book_now: 今すぐ予約する
     sales:
@@ -103,6 +105,7 @@ ja:
     address_street2: 建物名／部屋番号
     address: 住所
     phone_number: 電話番号
+    cellphone_number: 携帯電話番号
     email: メール
     birthday: 生年月日
     memo: メモ
@@ -227,6 +230,7 @@ ja:
     from_when: から
     until_when: まで
     price: 金額
+    no_data: 未登録
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

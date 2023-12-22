@@ -85,6 +85,7 @@ const BroadcastEdit =({props}) => {
       url: Routes.lines_user_bot_broadcast_path(props.broadcast.id, {format: 'json'}),
       data: _.assign( data, {
         attribute: props.attribute,
+        business_owner_id: props.business_owner_id,
         ...submittedData()
       })
     })

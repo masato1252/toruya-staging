@@ -5,7 +5,7 @@ import { PaymentServices, CommonServices } from "components/user_bot/api"
 import ProcessingBar from "shared/processing_bar";
 import I18n from 'i18n-js/index.js.erb';
 
-const StripeChangeCardModal = ({change_card_path, ...rest}) => {
+const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) => {
   const [processing, setProcessing] = useState(false)
 
   const handleToken = async (token) => {
@@ -13,7 +13,7 @@ const StripeChangeCardModal = ({change_card_path, ...rest}) => {
     console.log("token", token)
     const [error, response] = await CommonServices.update({
       url: change_card_path,
-      data: { token }
+      data: { token, business_owner_id }
     })
     setProcessing(false)
 

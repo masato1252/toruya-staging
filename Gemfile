@@ -95,6 +95,7 @@ group :development, :test do
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem 'pry-byebug'
+  gem 'wkhtmltopdf-binary-edge-alpine'
 end
 
 group :development do

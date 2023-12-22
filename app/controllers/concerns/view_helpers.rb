@@ -28,6 +28,7 @@ module ViewHelpers
     helper_method :booking_settings_presenter
     helper_method :previous_controller_is
     helper_method :working_time_range
+    helper_method :is_owner
   end
 
   def shops
@@ -62,9 +63,9 @@ module ViewHelpers
     super_user_id =
       if from_line_bot
         if ENV["DISABLE_SUPER_USER_DEV_ID"]
-          user_bot_cookies(:current_super_user_id) || ENV["DEV_USER_ID"]
+          params[:business_owner_id] || user_bot_cookies(:current_super_user_id) || ENV["DEV_USER_ID"]
         else
-          ENV["DEV_USER_ID"] || user_bot_cookies(:current_super_user_id)
+          ENV["DEV_USER_ID"] || params[:business_owner_id] || user_bot_cookies(:current_super_user_id)
         end
       else
         Rollbar.error("user 5 read super_user from here", request: request) if current_user&.id == 5

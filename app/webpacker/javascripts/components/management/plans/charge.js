@@ -25,7 +25,8 @@ class PlanCharge extends React.Component {
         authenticity_token: this.props.formAuthenticityToken,
         plan: this.props.plan.key,
         rank: this.props.rank,
-        change_immediately: this.props.chargeImmediately
+        change_immediately: this.props.chargeImmediately,
+        business_owner_id: this.props.business_owner_id
       };
 
       // event doesn't have id property.

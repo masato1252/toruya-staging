@@ -68,7 +68,7 @@ const SocialRichMenuUpsert = ({props}) => {
 
     [error, response] = await CommonServices.create({
       url: Routes.upsert_lines_user_bot_settings_social_account_social_rich_menus_path({format: "json"}),
-      data: { ...data, image: image }
+      data: { ...data, image: image, business_owner_id: props.business_owner_id }
     })
 
     if (error) {
@@ -91,7 +91,7 @@ const SocialRichMenuUpsert = ({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_settings_social_account_social_rich_menus_path()}>
+                <a href={Routes.lines_user_bot_settings_social_account_social_rich_menus_path({ business_owner_id: props.business_owner_id })}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

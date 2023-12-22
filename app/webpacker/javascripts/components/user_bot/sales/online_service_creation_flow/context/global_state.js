@@ -35,6 +35,7 @@ export const GlobalProvider = ({ props, children }) => {
   const _salePageData = () => {
     let submittedData = {
       ...state.sales_creation_states,
+      business_owner_id: props.business_owner_id,
       selected_online_service_id: selected_online_service.id,
       selected_template_id: selected_template.id,
       content: _.pick(product_content, ["picture", "desc1", "desc2"]),

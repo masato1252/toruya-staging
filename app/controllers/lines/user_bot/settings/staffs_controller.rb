@@ -8,25 +8,38 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def new
-    authorize! :create, Staff
+  end
+
+  def show
   end
 
   def edit
   end
 
   def create
-    authorize! :create, Staff
-
     outcome = Staffs::Invite.run(user: Current.business_owner, phone_number: params[:phone_number])
 
     if outcome.valid?
-      redirect_to lines_user_bot_settings_staffs_path, notice: I18n.t("settings.staff_account.sent_message")
+      redirect_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), notice: I18n.t("settings.staff_account.sent_message")
     else
       render :new
     end
   end
 
   def update
+    outcome = Staffs::Patch.run(
+      staff: @staff,
+      attribute: params[:attribute],
+      last_name: params[:last_name],
+      first_name: params[:first_name],
+      phonetic_last_name: params[:phonetic_last_name],
+      phonetic_first_name: params[:phonetic_first_name],
+      phone_number: params[:phone_number],
+      picture: params[:picture],
+      introduction: params[:introduction]
+    )
+
+    return_json_response(outcome, { redirect_to: lines_user_bot_settings_staff_path(Current.business_owner, @staff) })
   end
 
   def destroy
@@ -40,7 +53,11 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
     end
   end
 
-  def resend_activation_email
+  def resend_activation_sms
+    Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: @staff.staff_account, user: @staff.staff_account.owner)
+
+    flash[:success] = I18n.t("settings.staff_account.sent_message")
+    redirect_back(fallback_location: lines_user_bot_settings_staff_path(Current.business_owner, @staff))
   end
 
   private

@@ -7,12 +7,12 @@ import arrayMove from "array-move";
 import { BookingOptionServices } from "user_bot/api"
 import { DragHandle } from "shared/components";
 
-const SortableMenuOption = sortableElement(({booking_option_id, menu, i18n}) => {
+const SortableMenuOption = sortableElement(({props, booking_option_id, menu, i18n}) => {
   const { menu_time_span, minute } = i18n;
 
   return (
     <div className="field-row with-next-arrow">
-      <a href={Routes.edit_lines_user_bot_booking_option_path(booking_option_id, { menu_id: menu.value, attribute: "menu_required_time" })} className="menu-block">
+      <a href={Routes.edit_lines_user_bot_booking_option_path(props.business_owner_id, booking_option_id, { menu_id: menu.value, attribute: "menu_required_time" })} className="menu-block">
         <div className="menu-info">
           <DragHandle />
           <div>
@@ -23,7 +23,7 @@ const SortableMenuOption = sortableElement(({booking_option_id, menu, i18n}) => 
         <i className="fa fa-angle-right"></i>
       </a>
       <a
-        href={Routes.delete_menu_lines_user_bot_booking_option_path(booking_option_id, menu.value)}
+        href={Routes.delete_menu_lines_user_bot_booking_option_path(props.business_owner_id, booking_option_id, menu.value)}
         className="btn btn-orange"
         data-method="delete"
         data-confirm={i18n.are_you_sure_message}
@@ -35,11 +35,12 @@ const SortableMenuOption = sortableElement(({booking_option_id, menu, i18n}) => 
   )
 });
 
-const SortableMenuList = sortableContainer(({booking_option_id, menus, i18n}) => {
+const SortableMenuList = sortableContainer(({props, booking_option_id, menus, i18n}) => {
   return (
     <div>
       {menus.map((menu, index) => (
         <SortableMenuOption
+          props={props}
           key={`menu-${menu.value}-${index}`}
           booking_option_id={booking_option_id}
           menu={menu}
@@ -65,12 +66,13 @@ const BookingOptionMenus = (({props}) => {
 
     BookingOptionServices.reorder({
       booking_option_id: props.booking_option.id,
-      data: {sorted_menus_ids: sorted_menus.map(menu => menu.value) }
+      data: {sorted_menus_ids: sorted_menus.map(menu => menu.value), business_owner_id: props.business_owner_id }
     })
   };
 
   return (
     <SortableMenuList
+      props={props}
       useDragHandle
       booking_option_id={props.booking_option.id}
       menus={menus}

@@ -138,6 +138,7 @@ a {
 
   &.inactive,
   &.canceled,
+  &.deleted,
   &.checked_out {
     background-color: $gray5;
     border: 1px solid $gray7;

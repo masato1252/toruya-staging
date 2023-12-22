@@ -135,6 +135,7 @@ const SalePageEdit =({props}) => {
       sale_page_id: props.sale_page.id,
       data: _.assign( data, {
         attribute: props.attribute,
+        business_owner_id: props.business_owner_id,
         ...submittedData
       })
     })
@@ -405,7 +406,7 @@ const SalePageEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_sale_path(props.sale_page.id)}>
+                <a href={Routes.lines_user_bot_sale_path(props.business_owner_id, props.sale_page.id)}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

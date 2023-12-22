@@ -35,6 +35,7 @@ const BookingPageEdit =({props}) => {
       booking_page_id: props.booking_page.id,
       data: _.assign(
         data,
+        { business_owner_id: props.business_owner_id },
         { special_dates: _.includes(["event_booking", "only_special_dates_booking"], data.booking_type) ? data.special_dates : [] },
         { booking_type: data.booking_type },
         { attribute: props.attribute },
@@ -143,7 +144,7 @@ const BookingPageEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_booking_page_path(props.booking_page.id)}>
+                <a href={Routes.lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id)}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

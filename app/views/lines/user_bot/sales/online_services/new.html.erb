@@ -1,7 +1,8 @@
-<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) if !ability(current_user).can?(:create, SalePage) %>
+<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !ability(current_user).can?(:create, SalePage) %>
 
 <%= react_component("user_bot/sales/online_service_creation_flow", {
   props: {
+    business_owner_id: business_owner_id,
     selected_online_service: @selected_online_service,
     online_services: Current.business_owner.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
       {

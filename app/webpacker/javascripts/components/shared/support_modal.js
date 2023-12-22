@@ -8,7 +8,7 @@ import { SocialUserMessagesServices } from "user_bot/api";
 import { SubmitButton } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
 
-const SupportModal = ({trigger_btn, content, btn, reply, defaultOpen, from_cancel}) => {
+const SupportModal = ({props, trigger_btn, content, btn, reply, defaultOpen, from_cancel}) => {
   const [submitted, setSubmitted] = useState(false)
   const { formState, register, handleSubmit} = useForm({})
 
@@ -18,6 +18,7 @@ const SupportModal = ({trigger_btn, content, btn, reply, defaultOpen, from_cance
     await SocialUserMessagesServices.create({
       data: {
         ...data,
+        business_owner_id: props.business_owner_id,
         content: from_cancel ? `${data.content}${I18n.t("common.cancel_request")}` : data.content
       }
     })

@@ -1,7 +1,8 @@
-<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) if !ability(current_user).can?(:create, SalePage) %>
+<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !ability(current_user).can?(:create, SalePage) %>
 
 <%= react_component("user_bot/sales/booking_page_creation_flow", {
   props: {
+    business_owner_id: business_owner_id,
     social_account_add_friend_url: Current.business_owner.social_accounts.first&.add_friend_url,
     selected_booking_page: @selected_booking_page,
     booking_pages: Current.business_owner.booking_pages.select {|page| page.primary_product }.map { |b|

@@ -16,7 +16,7 @@ export const UserShopInfo = ({props, finalView}) => {
 
   useEffect(() => {
     const checkShop = async () => {
-      const [error, response] = await UsersServices.checkShop({social_service_user_id: props.social_user})
+      const [error, response] = await UsersServices.checkShop({social_service_user_id: props.social_user, staff_token: props.staff_token })
 
       setShopProfile(response.data.is_shop_profile_created)
       setCheckShopProfile(true)
@@ -73,6 +73,7 @@ export const UserShopInfo = ({props, finalView}) => {
         </div>
       </div>
       <AddressView
+        show_skip_btn={!!props.staff_token}
         save_btn_text={save_btn}
         handleSubmitCallback={onSubmit}
       />

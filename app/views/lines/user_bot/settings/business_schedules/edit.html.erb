@@ -3,6 +3,7 @@
     <div class="col-sm-6 px-0 settings-view">
       <%= react_component("user_bot/settings/business_schedules/edit", {
         props: {
+          business_owner_id: business_owner_id,
           business_schedule: BusinessScheduleSerializer.new(@business_schedule).attributes_hash,
         }
       },

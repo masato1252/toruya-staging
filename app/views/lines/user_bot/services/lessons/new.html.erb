@@ -1,5 +1,6 @@
 <%= react_component("user_bot/services/lessons/new", {
   props: {
+    business_owner_id: business_owner_id,
     solutions: @online_service.solution_options,
     lesson: {
       online_service_id: @online_service.id,

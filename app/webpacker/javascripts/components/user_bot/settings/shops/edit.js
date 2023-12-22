@@ -23,7 +23,7 @@ const SocialAccountEdit =({props}) => {
     let error, response;
 
     [error, response] = await ShopServices.update({
-      data: _.assign( data, { attribute: props.attribute, logo: data["logo"]?.[0] })
+      data: _.assign( data, { attribute: props.attribute, logo: data["logo"]?.[0], business_owner_id: props.business_owner_id })
     })
 
     if (error) {
@@ -72,7 +72,7 @@ const SocialAccountEdit =({props}) => {
             <div className="field-row">
               <input ref={register} name={props.attribute} type="text" className="extend" />
             </div>
-            <p class="desc margin-around centerize">
+            <p className="desc margin-around centerize">
               <div dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.shop.phone_number_hint_html") }} />
             </p>
           </>
@@ -90,7 +90,7 @@ const SocialAccountEdit =({props}) => {
                 {I18n.t("user_bot.dashboards.settings.shop.logo_limit_description")}
               </p>
             </div>
-            <p class="desc margin-around centerize">
+            <p className="desc margin-around centerize">
               {I18n.t("user_bot.dashboards.settings.company.info_hint")}
             </p>
           </>
@@ -107,7 +107,7 @@ const SocialAccountEdit =({props}) => {
               {I18n.t("common.short_shop_name")}
               <input ref={register({ required: true })} name="short_name" type="text" />
             </div>
-            <p class="desc margin-around centerize">
+            <p className="desc margin-around centerize">
               {I18n.t("user_bot.dashboards.settings.company.info_hint")}
             </p>
           </>
@@ -157,7 +157,7 @@ const SocialAccountEdit =({props}) => {
                 type="text"
               />
             </div>
-            <p class="desc margin-around centerize">
+            <p className="desc margin-around centerize">
               {I18n.t("user_bot.dashboards.settings.company.info_hint")}
             </p>
           </>
@@ -219,7 +219,7 @@ const SocialAccountEdit =({props}) => {
 
         <div className="col-sm-6 px-0 hidden-xs preview-view">
           {['name'].includes(props.attribute) && (
-            <div class="fake-mobile-layout">
+            <div className="fake-mobile-layout">
               <SaleDemoPage
                 shop={{...props.shop, name: watch("name") || watch("short_name")}}
               />
@@ -249,14 +249,14 @@ const SocialAccountEdit =({props}) => {
             </div>
           )}
           {['logo'].includes(props.attribute) && (
-            <div class="fake-mobile-layout">
+            <div className="fake-mobile-layout">
               <SaleDemoPage
                 shop={{...props.shop, logo_url: watch("logo_url")}}
               />
             </div>
           )}
           {['address'].includes(props.attribute) && (
-            <div class="fake-mobile-layout">
+            <div className="fake-mobile-layout">
               <SaleDemoPage
                 shop={{...props.shop, address: `〒${watch('address_details[zip_code]')}${watch('address_details[region]')}${watch('address_details[city]')}${watch('address_details[street1]')}${watch('address_details[street2]')}`}}
               />

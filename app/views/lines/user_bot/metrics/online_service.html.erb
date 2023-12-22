@@ -3,11 +3,11 @@
 
   <%= react_component("user_bot/metrics/sale_pages_visits", {
     demo: params[:demo],
-    metric_path: lines_user_bot_metrics_online_services_sale_pages_visits_path({ id: params[:id], format: "json" }),
+    metric_path: lines_user_bot_metrics_online_services_sale_pages_visits_path({ id: params[:id], business_owner_id: business_owner_id, format: "json" }),
     header: I18n.t("user_bot.dashboards.metrics.weekly_service_sale_page_visit_count", service_name: @online_service.internal_product_name)
   }, { camelize_props: false }) %>
   <%= react_component("user_bot/metrics/sale_pages_conversions", {
     demo: params[:demo],
-    metric_path: lines_user_bot_metrics_online_services_sale_pages_conversions_path({ id: params[:id], format: "json" }),
+    metric_path: lines_user_bot_metrics_online_services_sale_pages_conversions_path({ id: params[:id], business_owner_id: business_owner_id, format: "json" }),
   }, { camelize_props: false }) %>
 </div>

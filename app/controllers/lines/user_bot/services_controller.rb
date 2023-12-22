@@ -52,6 +52,6 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
 
     outcome = OnlineServices::Update.run(online_service: service, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_path(service.id, anchor: params[:attribute]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_path(service.id, business_owner_id: service.user_id, anchor: params[:attribute]) })
   end
 end

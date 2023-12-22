@@ -36,7 +36,7 @@ export const GlobalProvider = ({ props, children }) => {
 
   const createEpisode = async () => {
     const [error, response] = await CommonServices.create({
-      url: Routes.lines_user_bot_service_episodes_path(props.online_service.id),
+      url: Routes.lines_user_bot_service_episodes_path(props.business_owner_id, props.online_service.id),
       data: episodeData()
     })
 

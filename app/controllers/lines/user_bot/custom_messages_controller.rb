@@ -22,15 +22,15 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
     redirect_path =
       case service
       when OnlineService
-        lines_user_bot_service_custom_messages_path(params[:service_id])
+        lines_user_bot_service_custom_messages_path(params[:service_id], business_owner_id: business_owner_id)
       when BookingPage
-        lines_user_bot_booking_page_custom_messages_path(params[:service_id])
+        lines_user_bot_booking_page_custom_messages_path(params[:service_id], business_owner_id: business_owner_id)
       when Shop
-        lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
+        lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id], business_owner_id: business_owner_id)
       when Lesson
-        lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id)
+        lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id, business_owner_id: business_owner_id)
       when Episode
-        lines_user_bot_service_episode_custom_messages_path(service_id: service.online_service_id, episode_id: service.id)
+        lines_user_bot_service_episode_custom_messages_path(service_id: service.online_service_id, episode_id: service.id, business_owner_id: business_owner_id)
       end
 
     return_json_response(outcome, { redirect_to: redirect_path })
@@ -57,15 +57,15 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
     redirect_path =
       case service
       when OnlineService
-        lines_user_bot_service_custom_messages_path(params[:service_id])
+        lines_user_bot_service_custom_messages_path(params[:service_id], business_owner_id: business_owner_id)
       when BookingPage
-        lines_user_bot_booking_page_custom_messages_path(params[:service_id])
+        lines_user_bot_booking_page_custom_messages_path(params[:service_id], business_owner_id: business_owner_id)
       when Shop
-        lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id])
+        lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:service_id], business_owner_id: business_owner_id)
       when Lesson
-        lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id)
+        lines_user_bot_service_chapter_lesson_custom_messages_path(service_id: service.chapter.online_service_id, chapter_id: service.chapter_id, lesson_id: service.id, business_owner_id: business_owner_id)
       when Episode
-        lines_user_bot_service_episode_custom_messages_path(service_id: service.online_service_id, episode_id: service.id)
+        lines_user_bot_service_episode_custom_messages_path(service_id: service.online_service_id, episode_id: service.id, business_owner_id: business_owner_id)
       end
 
     message.destroy

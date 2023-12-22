@@ -30,34 +30,34 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def create
     outcome = Broadcasts::Create.run(user: Current.business_owner, params: params.permit!.to_h)
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path })
+    return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) })
   end
 
   def update
     outcome = Broadcasts::Update.run(broadcast: Current.business_owner.broadcasts.find(params[:id]), params: params.permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_broadcast_path(outcome.result) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_broadcast_path(outcome.result, business_owner_id: business_owner_id) })
   end
 
   def draft
     broadcast = Current.business_owner.broadcasts.find(params[:id])
     Broadcasts::Draft.run(broadcast: broadcast)
 
-    redirect_to lines_user_bot_broadcast_path(broadcast)
+    redirect_to lines_user_bot_broadcast_path(broadcast, business_owner_id: business_owner_id)
   end
 
   def activate
     broadcast = Current.business_owner.broadcasts.find(params[:id])
     Broadcasts::Activate.run(broadcast: broadcast)
 
-    redirect_to lines_user_bot_broadcast_path(broadcast)
+    redirect_to lines_user_bot_broadcast_path(broadcast, business_owner_id: business_owner_id)
   end
 
   def clone
     broadcast = Current.business_owner.broadcasts.find(params[:id])
     new_broadcast = Broadcasts::Clone.run!(broadcast: broadcast)
 
-    redirect_to lines_user_bot_broadcasts_path, notice: I18n.t("user_bot.dashboards.broadcasts.clone_successfully")
+    redirect_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id), notice: I18n.t("user_bot.dashboards.broadcasts.clone_successfully")
   end
 
   def customers_count

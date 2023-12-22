@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="payments form">
-        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.dashboard.payments_label") %>
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.dashboard.payments_label") %>
 
         <%= flash_messages %>
         <table class="history">
@@ -72,7 +72,7 @@
                 </div>
                 <div class="modal-footer">
                   <%= link_to t("settings.plans.refund.cancel_btn"), '#', class: "btn btn-tarco", data: { dismiss: "modal" } %>
-                  <%= link_to t("settings.plans.refund.confirm_btn"), refund_lines_user_bot_settings_payments_path, class: "btn btn-orange" %>
+                  <%= link_to t("settings.plans.refund.confirm_btn"), refund_lines_user_bot_settings_payments_path(business_owner_id: business_owner_id), class: "btn btn-orange" %>
                 </div>
               </div>
             </div>

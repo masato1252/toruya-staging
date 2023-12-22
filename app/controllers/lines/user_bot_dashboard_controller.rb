@@ -53,6 +53,11 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
   helper_method :device_detector
 
+  def business_owner_id
+    params[:business_owner_id].presence || Current.business_owner&.id
+  end
+  helper_method :business_owner_id
+
   def shop_menus_options
     @shop_menus_options ||=
       ShopMenu.includes(:menu).where(shop: shop).where("menus.deleted_at": nil).references(:menus).map do |shop_menu|

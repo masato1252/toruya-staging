@@ -20,15 +20,17 @@ const ChapterEdit =({props}) => {
 
     if (props.chapter.id) {
       [error, response] = await CommonServices.update({
-        url: Routes.lines_user_bot_service_chapter_path(props.chapter.online_service_id, props.chapter.id, {format: "json"}),
+        url: Routes.lines_user_bot_service_chapter_path(pros.business_owner_id, props.chapter.online_service_id, props.chapter.id, {format: "json"}),
         data: _.assign(data, {
+          business_owner_id: props.business_owner_id
         })
       })
     }
     else {
       [error, response] = await CommonServices.create({
-        url: Routes.lines_user_bot_service_chapters_path(props.chapter.online_service_id, {format: "json"}),
+        url: Routes.lines_user_bot_service_chapters_path(props.business_owner_id, props.chapter.online_service_id, {format: "json"}),
         data: _.assign(data, {
+          business_owner_id: props.business_owner_id
         })
       })
     }
@@ -48,7 +50,7 @@ const ChapterEdit =({props}) => {
     <div className="form with-top-bar">
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_service_chapters_path(props.chapter.online_service_id)}>
+          <a href={Routes.lines_user_bot_service_chapters_path(props.business_owner_id, props.chapter.online_service_id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }

@@ -4,9 +4,9 @@ ja:
       title: お急ぎの方はAIサポートをご利用ください
       button: AIサポートを利用
     user_sign_up:
-      message: "ユーザー登録ありがとうございます。\n\n本日から%{trial_end_date}まで無料でご利用いただけます。"
+      message: "ユーザー登録ありがとうございます。\n\n本日から%{trial_end_date}まで無料でご利用いただけます。\n\nパソコンやタブレット端末からToruyaを使用する場合は、WEB版管理画面をご利用ください。\n\nhttps://manager.toruya.com/userlogin"
     created_shop:
-      message: "ユーザー登録と店舗設定が完了しました！\n\n今日から%{trial_end_date}まで無料でお試しいただけます。\n\n次に管理画面から、LINE公式アカウントの連携設定をしてください。\n\n📝LINE連携マニュアル\n\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1"
+      message: "ユーザー登録と店舗設定が完了しました！\n\n今日から%{trial_end_date}まで無料でお試しいただけます。\n\n次に管理画面から、LINE公式アカウントの連携設定をしてください。\n\n📝LINE連携マニュアル\n\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1\n\nパソコンやタブレット端末からToruyaを使用する場合は、WEB版管理画面をご利用ください。\n\nhttps://manager.toruya.com/userlogin"
     line_api_settings_finished:
       message: "LINE連携の設定が完了しました！\n\n次に、今お送りした「設定確認を始める」ボタンをクリックして、LINE連携が正しくできているか確認してください。"
       card_button: "設定確認を始める"

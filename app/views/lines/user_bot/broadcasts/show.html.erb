@@ -2,15 +2,15 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="form with-top-bar">
-        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_broadcasts_path, title: t("user_bot.dashboards.broadcasts.broadcast_conditions") %>
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_broadcasts_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.broadcasts.broadcast_conditions") %>
 
         <div class="field-header"><%= t("user_bot.dashboards.broadcasts.content") %></div>
-        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_broadcast_path(@broadcast, attribute: :content) : nil do %>
+        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id, attribute: :content) : nil do %>
           <p class="p10 bg-gray rounded break-line-content w-full"><%= @broadcast.content %></p>
         <% end %>
 
         <div class="field-header"><%= t("user_bot.dashboards.broadcasts.audiences") %></div>
-        <%= render "lines/user_bot/field_row", path: @broadcast.draft? && !@broadcast.vip_customers? ? edit_lines_user_bot_broadcast_path(@broadcast, attribute: :query) : nil do %>
+        <%= render "lines/user_bot/field_row", path: @broadcast.draft? && !@broadcast.vip_customers? ? edit_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id, attribute: :query) : nil do %>
           <div class="w-full"><%= I18n.t("user_bot.dashboards.broadcast_creation.#{@broadcast.query_type}") %></div>
           <% @broadcast.targets.each do |target_name| %>
             <div class="btn btn-gray mx-2 my-2"><%= target_name %></div>
@@ -24,7 +24,7 @@
         <%= render "lines/user_bot/field_row", title: t("broadcast.states.#{@broadcast.state}") %>
 
         <div class="field-header"><%= t("user_bot.dashboards.broadcasts.time") %></div>
-        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_broadcast_path(@broadcast, attribute: :schedule_at) : nil, title: broadcast_deliver_at(@broadcast) %>
+        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id, attribute: :schedule_at) : nil, title: broadcast_deliver_at(@broadcast) %>
 
         <p class="action-block break-line-content warning">
         <% if @broadcast.active? %>
@@ -35,7 +35,7 @@
         </p>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
-          <%= link_to clone_lines_user_bot_broadcast_path(@broadcast),
+          <%= link_to clone_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id),
             method: :post,
             data: { disable_with: t("common.processing") },
             class: "btn btn-yellow btn-circle btn-tweak btn-with-word btn-bottom-left" do %>
@@ -45,12 +45,12 @@
 
           <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@broadcast.updated_at, format: :long_date) %></span>
           <% if @broadcast.active? %>
-            <%= link_to  draft_lines_user_bot_broadcast_path(@broadcast), method: :put , data: { confirm: t("user_bot.dashboards.broadcasts.are_you_sure_to_stop") }, class: "btn btn-orange btn-circle btn-save btn-tweak btn-with-word" do %>
+            <%= link_to  draft_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id), method: :put , data: { confirm: t("user_bot.dashboards.broadcasts.are_you_sure_to_stop") }, class: "btn btn-orange btn-circle btn-save btn-tweak btn-with-word" do %>
               <i class="fa fa-ban fa-2x"></i>
               <div class="word"><%= t("user_bot.dashboards.broadcasts.stop_send") %></div>
             <% end %>
           <% elsif @broadcast.draft? %>
-            <%= link_to activate_lines_user_bot_broadcast_path(@broadcast), method: :put, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+            <%= link_to activate_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id), method: :put, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
               <i class="fa fa-envelope fa-2x"></i>
               <div class="word"><%= t("action.activate") %></div>
             <% end %>

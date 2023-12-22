@@ -1,16 +1,17 @@
 <div class="booking-option-show form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_options_path, title: @booking_option.name %>
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_options_path(business_owner_id), title: @booking_option.name %>
 
   <div class="field-group-header" id="name"><%= I18n.t("settings.booking_option.form.price_name") %></div>
   <div class="field-header"><%= I18n.t("settings.booking_option.form.price_name") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(@booking_option, attribute: :name), title: @booking_option.name %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :name), title: @booking_option.name %>
 
   <div class="field-header" id="display_name"><%= I18n.t("settings.booking_option.form.display_name") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(@booking_option, attribute: :display_name), title: @booking_option.display_name %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :display_name), title: @booking_option.display_name %>
   <div class="field-group-header" id="new_menu"><%= I18n.t("settings.booking_option.form.menu_for_sale_label") %></div>
   <div class="field-header"><%= I18n.t("common.menu") %></div>
   <%= react_component("user_bot/booking_options/menus", {
     props: {
+      business_owner_id: business_owner_id,
       booking_option: @booking_option.attributes.merge!(
         menus: @booking_option.booking_option_menus.includes(menu: :shop_menus).order("priority").map { |booking_option_menu|
           booking_option_menu.attributes.slice("priority", "required_time").merge(no_available_shop: !booking_option_menu.menu.shop_menus.exists?).reverse_merge!(menu_group_options(@menu_result[:menu_options], :minutes, :interval).find { |option| option["value"] == booking_option_menu.menu_id } || {})},
@@ -28,7 +29,7 @@
   ) %>
 
   <div class="action-block">
-    <%= link_to edit_lines_user_bot_booking_option_path(@booking_option, attribute: :new_menu), class: "btn btn-yellow" do %>
+    <%= link_to edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :new_menu), class: "btn btn-yellow" do %>
       <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_option.form.new_menu") %></span>
     <% end %>
   </div>
@@ -40,28 +41,28 @@
   <% end %>
 
   <div class="field-header" id="menu_restrict_order"><%= I18n.t("settings.booking_option.form.menu_restrict_order_label") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(@booking_option, attribute: :menu_restrict_order), title: @booking_option.menu_restrict_order ? I18n.t("settings.booking_option.form.menu_restrict_order") : I18n.t("settings.booking_option.form.menu_restrict_dont_need_order") %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :menu_restrict_order), title: @booking_option.menu_restrict_order ? I18n.t("settings.booking_option.form.menu_restrict_order") : I18n.t("settings.booking_option.form.menu_restrict_dont_need_order") %>
 
   <div class="field-header" id="price"><%= I18n.t("settings.booking_option.form.price_label") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(@booking_option, attribute: :price), title: "#{@booking_option.amount.format(:ja_default_format)}(#{t("settings.booking_option.form.#{@booking_option.tax_include ? "tax_include" : "tax_excluded"}")})" %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :price), title: "#{@booking_option.amount.format(:ja_default_format)}(#{t("settings.booking_option.form.#{@booking_option.tax_include ? "tax_include" : "tax_excluded"}")})" %>
 
   <div class="field-header" id="start_at"><%= I18n.t("settings.booking_option.form.sale_start") %></div>
   <%= render "lines/user_bot/field_row",
-    path: edit_lines_user_bot_booking_option_path(@booking_option, attribute: :start_at),
+    path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :start_at),
     title: @booking_option.start_at ? I18n.l(@booking_option.start_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_now")
   %>
 
   <div class="field-header" id="end_at"><%= I18n.t("settings.booking_option.form.sale_end") %></div>
   <%= render "lines/user_bot/field_row",
-    path: edit_lines_user_bot_booking_option_path(@booking_option, attribute: :end_at),
+    path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :end_at),
     title: @booking_option.end_at ? I18n.l(@booking_option.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_forever")
   %>
 
   <div class="field-group-header" id="memo"><%= I18n.t("settings.booking_option.form.note_label") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(@booking_option, attribute: :memo), title: @booking_option.memo %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :memo), title: @booking_option.memo %>
 
   <div class="action-block">
-    <%= link_to lines_user_bot_booking_option_path(@booking_option),
+    <%= link_to lines_user_bot_booking_option_path(business_owner_id, @booking_option),
       method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
       <i class="fa fa-minus"></i> <span><%= I18n.t("settings.booking_option.form.delete_option") %></span>
     <% end %>

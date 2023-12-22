@@ -6,13 +6,6 @@ class Lines::UserBot::BusinessOwnersController < Lines::UserBotDashboardControll
   end
 
   def update
-    write_user_bot_cookies(:current_super_user_id, params[:id])
-    if current_user&.id == 5 && params[:id].to_i == 2
-      flash[:info] = "Business owner changing"
-      Rollbar.error("Super user changed scenario4", request: request)
-    end
-    Rollbar.error("Super user changed scenario6", request: request) if current_user&.id == 5 && params[:id].to_i == 5
-
-    redirect_to root_url
+    redirect_to lines_user_bot_metrics_dashboard_path(business_owner_id: params[:id])
   end
 end

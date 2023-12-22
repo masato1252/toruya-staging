@@ -4,14 +4,15 @@
       <%= react_component("user_bot/booking_pages/custom_messages/edit", {
         props: {
           scenario: params[:scenario],
-          previous_path: lines_user_bot_settings_shop_custom_messages_path(shop_id: @shop.id),
+          business_owner_id: business_owner_id,
+          previous_path: lines_user_bot_settings_shop_custom_messages_path(shop_id: @shop.id, business_owner_id: business_owner_id),
           title: t("user_bot.dashboards.settings.custom_messages.auto_message"),
           message: {
             id: @message&.id,
             service_id: @shop.id,
             service_type: @shop.class.name,
             template: @template,
-          }.merge!(@shop.message_template_variables(current_user))
+          }.merge!(@shop.message_template_variables(Current.business_owner))
         }
       },
       { camelize_props: false }

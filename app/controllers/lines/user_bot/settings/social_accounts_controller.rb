@@ -6,7 +6,7 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   def reset
     SocialAccounts::Clean.run!(user: Current.business_owner)
 
-    redirect_back(fallback_location: lines_user_bot_settings_path)
+    redirect_back(fallback_location: lines_user_bot_settings_path(business_owner_id: business_owner_id))
   end
 
   def message_api
@@ -23,9 +23,9 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
     @previous_path =
       case params[:attribute]
       when "login_channel_id", "login_channel_secret"
-        login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute])
+        login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute], business_owner_id: business_owner_id)
       else
-        message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute])
+        message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute], business_owner_id: business_owner_id)
       end
   end
 
@@ -36,9 +36,9 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
 
     case params[:attribute]
     when "login_channel_id", "login_channel_secret"
-      return_json_response(outcome, { redirect_to: login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
+      return_json_response(outcome, { redirect_to: login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute], business_owner_id: business_owner_id) })
     else
-      return_json_response(outcome, { redirect_to: message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
+      return_json_response(outcome, { redirect_to: message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute], business_owner_id: business_owner_id) })
     end
   end
 

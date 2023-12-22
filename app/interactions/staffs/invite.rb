@@ -9,7 +9,8 @@ module Staffs
       user.with_lock do
         staff = user.staffs.new
         staff.save
-        compose(StaffAccounts::Create, staff: staff, params: { phone_number: phone_number })
+        # All the staff be invited was admin currently.
+        compose(StaffAccounts::Create, staff: staff, params: { phone_number: phone_number, level: "admin" })
       end
     end
   end

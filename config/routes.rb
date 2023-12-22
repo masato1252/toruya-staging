@@ -49,23 +49,6 @@ Rails.application.routes.draw do
         get :check_shop_profile
       end
 
-      namespace :metrics do
-        get :dashboard, path: '/'
-        get :sale_pages
-        get :online_services
-        get "/online_services/:id", action: "online_service", as: :online_service, constraints: { id: /\d+/ }
-
-        namespace :sale_pages do
-          get :visits
-          get :conversions
-        end
-
-        namespace :online_services do
-          get "/:id/sale_pages_visits", action: :sale_pages_visits, as: :sale_pages_visits
-          get "/:id/sale_pages_conversions", action: :sale_pages_conversions, as: :sale_pages_conversions
-        end
-      end
-
       resources :business_owners, only: [:index, :update]
       resources :schedules, only: [:index] do
         collection do
@@ -78,20 +61,6 @@ Rails.application.routes.draw do
         collection do
           get "personal_working_schedule"
           get "/social_service_user_id/:social_service_user_id", action: "index"
-        end
-      end
-
-      resources :broadcasts, only: [:index, :new, :create, :show, :update, :edit] do
-        collection do
-          get "/new/social_service_user_id/:social_service_user_id", action: "new"
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-          put :customers_count
-        end
-
-        member do
-          put :draft
-          put :activate
-          post :clone
         end
       end
 
@@ -134,129 +103,76 @@ Rails.application.routes.draw do
         end
       end
 
-      namespace :settings do
-        resources :staffs, except: [:show] do
-          collection do
-            get :resend_activation_sms
+      # business owner scope START
+      scope "/owner/(:business_owner_id)" do
+        namespace :metrics do
+          get :dashboard, path: '/'
+          get :sale_pages
+          get :online_services
+          get "/online_services/:id", action: "online_service", as: :online_service, constraints: { id: /\d+/ }
+
+          namespace :sale_pages do
+            get :visits
+            get :conversions
           end
-        end
-        resource :stripe, only: %i[show]
-        resource :profile, only: %i[show edit update] do
-          collection do
-            get :company
+
+          namespace :online_services do
+            get "/:id/sale_pages_visits", action: :sale_pages_visits, as: :sale_pages_visits
+            get "/:id/sale_pages_conversions", action: :sale_pages_conversions, as: :sale_pages_conversions
           end
         end
 
-        resources :plans, only: [:index]
-        resources :payments, only: [:index, :create] do
+        resources :broadcasts, only: [:index, :new, :create, :show, :update, :edit] do
           collection do
-            get :refund
-            get :downgrade
-            put :change_card
+            get "/new/social_service_user_id/:social_service_user_id", action: "new"
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+            put :customers_count
           end
 
           member do
-            get :receipt
+            put :draft
+            put :activate
+            post :clone
           end
         end
 
-        resource :social_account, only: [:edit, :update] do
-          member do
-            get :message_api
-            get :login_api
-            get :webhook_modal
-            get :callback_modal
-          end
-
+        resources :services, only: [:new, :create, :index, :show, :edit, :update] do
           collection do
-            post :reset
+            get "/new/social_service_user_id/:social_service_user_id", action: "new"
+            get "/social_service_user_id/:social_service_user_id", action: "index"
           end
 
-          resource :rich_menu, only: [:edit, :create, :destroy]
-          resources :social_rich_menus, only: [:index, :new, :edit] do
-            collection do
-              post :upsert
-            end
-
-            member do
-              put :current
-            end
-          end
-        end
-
-        resources :business_schedules, only: [:update] do
-          collection do
-            get :shops
-            get "/shop/:shop_id", action: :index, as: :index
-            get "/shop/:shop_id/edit/:id", action: :edit, as: :edit
-          end
-        end
-
-        resources :shops, only: [:index, :show, :update, :edit] do
-          collection do
-            get :custom_messages
-          end
-
-          resources :custom_messages, only: [:index] do
+          resources :custom_messages, only: [:index], module: "services" do
             collection do
               get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
             end
           end
-        end
-        resources :menus, only: [:index, :show, :update, :edit] do
-          collection do
-            get "/social_service_user_id/:social_service_user_id", action: "index"
+
+          resources :customers, only: [:index, :show], module: :services do
+            member do
+              post :approve
+              delete :cancel
+              put :change_expire_at
+            end
           end
-        end
 
-      end
-
-      resources :settings, only: [:index] do
-        collection do
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-        end
-      end
-
-      namespace :settings do
-        resources :staffs, only: [:edit]
-        resources :reservation_settings, except: [:show]
-        resources :menus, except: [:show]
-      end
-
-      resources :bookings, only: [:new] do
-        collection do
-          get "/new/social_service_user_id/:social_service_user_id", action: "new"
-          get :available_options
-          post :page
-        end
-      end
-
-      resources :services, only: [:new, :create, :index, :show, :edit, :update] do
-        collection do
-          get "/new/social_service_user_id/:social_service_user_id", action: "new"
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-        end
-
-        resources :custom_messages, only: [:index], module: "services" do
-          collection do
-            get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
+          resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create, :destroy] do
+            collection do
+              put :reorder
+            end
+            resources :lessons, only: [:new, :create, :show, :edit] do
+              resources :custom_messages, only: [:index], module: "lessons" do
+                collection do
+                  get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
+                end
+              end
+            end
           end
-        end
 
-        resources :customers, only: [:index, :show], module: :services do
-          member do
-            post :approve
-            delete :cancel
-            put :change_expire_at
-          end
-        end
+          resources :lessons, module: :services, only: [:update, :destroy]
 
-        resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create, :destroy] do
-          collection do
-            put :reorder
-          end
-          resources :lessons, only: [:new, :create, :show, :edit] do
-            resources :custom_messages, only: [:index], module: "lessons" do
+          resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show, :update, :destroy] do
+            resources :custom_messages, only: [:index], module: "episodes" do
               collection do
                 get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
               end
@@ -264,67 +180,151 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :lessons, module: :services, only: [:update, :destroy]
+        resources :sales, only: [:new, :index, :show, :edit, :update, :destroy] do
+          collection do
+            get "/new/social_service_user_id/:social_service_user_id", action: "new"
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
 
-        resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show, :update, :destroy] do
-          resources :custom_messages, only: [:index], module: "episodes" do
+          member do
+            post :clone
+          end
+        end
+
+        scope module: :sales, as: :sales, path: :sales do
+          resources :booking_pages, only: [:new, :create]
+          resources :online_services, only: [:new, :create]
+        end
+
+        resources :custom_messages, only: [:destroy] do
+          collection do
+            put :update
+            post :demo
+          end
+        end
+
+        resources :bookings, only: [:new] do
+          collection do
+            get "/new/social_service_user_id/:social_service_user_id", action: "new"
+            get :available_options
+            post :page
+          end
+        end
+
+        resources :booking_pages do
+          collection do
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
+
+          member do
+            delete "/booking_options/:booking_option_id", action: "delete_option", as: :delete_option
+            get :preview_modal
+          end
+
+          resources :custom_messages, only: [:index], module: "booking_pages" do
             collection do
               get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
             end
           end
         end
-      end
 
-      resources :custom_messages, only: [:destroy] do
-        collection do
-          put :update
-          post :demo
-        end
-      end
-
-      resources :sales, only: [:new, :index, :show, :edit, :update, :destroy] do
-        collection do
-          get "/new/social_service_user_id/:social_service_user_id", action: "new"
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-        end
-
-        member do
-          post :clone
-        end
-      end
-
-      scope module: :sales, as: :sales, path: :sales do
-        resources :booking_pages, only: [:new, :create]
-        resources :online_services, only: [:new, :create]
-      end
-
-      resources :booking_pages do
-        collection do
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-        end
-
-        member do
-          delete "/booking_options/:booking_option_id", action: "delete_option", as: :delete_option
-          get :preview_modal
-        end
-
-        resources :custom_messages, only: [:index], module: "booking_pages" do
+        resources :booking_options do
           collection do
-            get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
+
+          member do
+            delete "/menus/:menu_id", action: "delete_menu", as: :delete_menu
+            patch :reorder_menu_priority
+          end
+        end
+
+        resources :settings, only: [:index] do
+          collection do
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
+        end
+
+        namespace :settings do
+          resource :profile, only: %i[show edit update] do
+            collection do
+              get :company
+            end
+          end
+
+          resources :plans, only: [:index]
+          resources :payments, only: [:index, :create] do
+            collection do
+              get :refund
+              get :downgrade
+              put :change_card
+            end
+
+            member do
+              get :receipt
+            end
+          end
+
+          resource :stripe, only: %i[show]
+
+          resource :social_account, only: [:edit, :update] do
+            member do
+              get :message_api
+              get :login_api
+              get :webhook_modal
+              get :callback_modal
+            end
+
+            collection do
+              post :reset
+            end
+
+            resource :rich_menu, only: [:edit, :create, :destroy]
+            resources :social_rich_menus, only: [:index, :new, :edit] do
+              collection do
+                post :upsert
+              end
+
+              member do
+                put :current
+              end
+            end
+          end
+
+          resources :business_schedules, only: [:update] do
+            collection do
+              get :shops
+              get "/shop/:shop_id", action: :index, as: :index
+              get "/shop/:shop_id/edit/:id", action: :edit, as: :edit
+            end
+          end
+
+          resources :shops, only: [:index, :show, :update, :edit] do
+            collection do
+              get :custom_messages
+            end
+
+            resources :custom_messages, only: [:index] do
+              collection do
+                get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
+              end
+            end
+          end
+
+          resources :staffs do
+            collection do
+              get :resend_activation_sms
+            end
+          end
+
+          resources :menus do
+            collection do
+              get "/social_service_user_id/:social_service_user_id", action: "index"
+            end
           end
         end
       end
-
-      resources :booking_options do
-        collection do
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-        end
-
-        member do
-          delete "/menus/:menu_id", action: "delete_menu", as: :delete_menu
-          patch :reorder_menu_priority
-        end
-      end
+      # business owner scope END
 
       resources :online_service_customer_relations, only: [:show]
       resources :shops, only: [] do

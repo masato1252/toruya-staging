@@ -320,3 +320,10 @@ $line-margin: 20px;
 .text-lime-400 {
   color: rgb(163, 230, 53);
 }
+
+.avatar {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}

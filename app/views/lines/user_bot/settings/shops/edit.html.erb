@@ -1,5 +1,6 @@
 <%= react_component("user_bot/settings/shops/edit", {
   props: {
+    business_owner_id: business_owner_id,
     shop: CompanyInfoSerializer.new(@shop).attributes_hash.merge!(@shop.slice(:name, :address_details)),
     attribute: params[:attribute],
     previous_path: @previous_path,
