@@ -248,6 +248,10 @@ class User < ApplicationRecord
     online_services.external.joins(:handle_required_online_service_customer_relations).select("id", "internal_name", "name", "goal_type").distinct
   end
 
+  def available_for_staffs_managements
+    [1, 2, 5].include?(id)
+  end
+
   private
 
   def today_reservations

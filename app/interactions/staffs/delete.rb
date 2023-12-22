@@ -28,7 +28,7 @@ module Staffs
 
     def validate_owner
       if staff.staff_account&.owner?
-        # do nothing, owner staff is not deleteable
+        # do nothing, owner staff is not deletable
         errors.add(:staff, :undeleteable)
       end
     end

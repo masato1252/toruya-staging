@@ -26,7 +26,8 @@ ja:
           code: 確認コード
           resend: コード再送
         message:
-          successful_message_html: <p>ユーザー登録ありがとうございました！</p><p>LINEのユーザーメニューから<br>onLINEセミナー集客を始めましょう。</p>
+          successful_message_html: <div><p>ユーザー登録ありがとうございました！</p><p>LINEのユーザーメニューから<br>onLINEセミナー集客を始めましょう。</p><br><p>パソコンやタブレット端末からToruyaを使用する場合は、WEB版管理画面をご利用ください。</p><br>
+            https://manager.toruya.com/userlogin</div>
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
           booking_code_message: 携帯電話にお送りした確認コードを入力してください。
           booking_code_failed_message: 確認コードが間違っています
