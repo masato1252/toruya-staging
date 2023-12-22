@@ -63,36 +63,38 @@
   </div>
 <% end %>
 
-<div class="modal fade" id="change-expire-at-modal" role="dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">
-        <%= t("user_bot.dashboards.settings.service_customer_relation.change_expire_at_title") %>
-      </h4>
+<% if @is_owner %>
+  <div class="modal fade" id="change-expire-at-modal" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t("user_bot.dashboards.settings.service_customer_relation.change_expire_at_title") %>
+        </h4>
+      </div>
+
+      <%= form_with url: change_expire_at_lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: @relation.online_service_id, id: @relation.id), method: :put, local: true do |form| %>
+        <div class="modal-body">
+          <h4><%= t("user_bot.dashboards.settings.service_customer_relation.change_expire_at_time_label") %></h4>
+          <div class="field">
+            <%= datetime_field_tag :expire_at %>
+          </div>
+          <div class="field">
+            <%= text_field_tag :memo, nil, placeholder: t("user_bot.dashboards.settings.service_customer_relation.expire_change_reason") %>
+          </div>
+          <div class="danger">
+            <%= t("user_bot.dashboards.settings.service_customer_relation.no_undo_for_changes") %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <dl>
+            <dd>
+              <%= form.submit t("action.change_and_save"), class: "btn btn-yellow" %>
+            </dd>
+          </dl>
+        </div>
+      <% end %>
     </div>
-
-    <%= form_with url: change_expire_at_lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: @relation.online_service_id, id: @relation.id), method: :put, local: true do |form| %>
-      <div class="modal-body">
-        <h4><%= t("user_bot.dashboards.settings.service_customer_relation.change_expire_at_time_label") %></h4>
-        <div class="field">
-          <%= datetime_field_tag :expire_at %>
-        </div>
-        <div class="field">
-          <%= text_field_tag :memo, nil, placeholder: t("user_bot.dashboards.settings.service_customer_relation.expire_change_reason") %>
-        </div>
-        <div class="danger">
-        <%= t("user_bot.dashboards.settings.service_customer_relation.no_undo_for_changes") %>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <dl>
-          <dd>
-            <%= form.submit t("action.change_and_save"), class: "btn btn-yellow" %>
-          </dd>
-        </dl>
-      </div>
-    <% end %>
   </div>
-</div>
+<% end %>
