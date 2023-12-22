@@ -64,7 +64,7 @@ class Staff < ApplicationRecord
   end
 
   def display_name
-    name.presence || staff_account.phone_number || "スタッフ #{staff.id}"
+    name.presence || staff_account.phone_number || "スタッフ #{id}"
   end
 
   # no any business schedule exists
