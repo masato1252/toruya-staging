@@ -7,13 +7,30 @@ module Admin
     end
 
     def create
-      SocialUserMessages::Create.run!(
+      if params[:message].present?
+        SocialUserMessages::Create.run!(
+          social_user: SocialUser.find_by!(social_service_user_id: params[:customer_id]),
+          content: params[:message],
+          readed: true,
+          message_type: SocialUserMessage.message_types[:admin],
+          schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
+        )
+      end
+
+    if params[:image].present?
+      outcome = SocialUserMessages::Create.run(
         social_user: SocialUser.find_by!(social_service_user_id: params[:customer_id]),
-        content: params[:message],
+        content: {
+          originalContentUrl: "tmp_original_content_url",
+          previewImageUrl: "tmp_preview_image_url"
+        }.to_json,
+        image: params[:image],
         readed: true,
         message_type: SocialUserMessage.message_types[:admin],
+        content_type: SocialMessages::Create::IMAGE_TYPE,
         schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
       )
+    end
 
       render json: {
         status: "successful",

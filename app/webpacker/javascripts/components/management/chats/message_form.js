@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import moment from "moment-timezone";
 import TextareaAutosize from 'react-autosize-textarea';
 
@@ -14,7 +14,7 @@ import ProcessingBar from "shared/processing_bar";
 const MessageForm = () => {
   moment.locale('ja');
   const ref = useRef()
-  const { selected_customer, selected_channel_id, reply_message, ai_question, dispatch } = useContext(GlobalContext)
+  const { selected_customer, selected_channel_id, reply_message, reply_images, reply_image_urls, ai_question, dispatch } = useContext(GlobalContext)
   const [schedule_at, setScheduleAt] = useState(null)
   const [processing, setProcessing] = useState(false)
   const [prompt, setPrompt] = useState(localStorage.getItem("prompt") || " Context information is below.\n ---------------------\n {context_str}\n ---------------------\n Given the context information and not prior knowledge\n Answer should be always used the same language with question\n Answer should use wordings and terms from documents as possible instead of words or terms from questions\n Answer should always base on context information, don't make up your own answer\n The Answer need to be text format with proper linkbreak to make it readable\n And do not provide reference url in answer.\n If you don't know the answer, always reply in English with 'NO CONTEXT'\n If you find multiple questions at once, just reply 'AIが正しくお返事できるように、ご質問は１つずつ送信してください。'\n answer the query.\n Query: {query_str}\n Answer:")
@@ -67,12 +67,12 @@ const MessageForm = () => {
   }
 
   const handleSubmit = async () => {
-    if (!ref.current.value) return;
+    if (!ref.current.value && reply_images.length < 1) return;
 
     const [error, response] = await CommonServices.create({
       url: Routes.admin_chats_path({format: "json"}),
       data: {
-        customer_id: selected_customer.id, message: ref.current.value, schedule_at: schedule_at
+        customer_id: selected_customer.id, message: ref.current.value, schedule_at: schedule_at, image: reply_images[0]
       }
     })
 
@@ -82,6 +82,20 @@ const MessageForm = () => {
       window.location.replace(response?.data?.redirect_to)
     }
   }
+
+  useEffect(() => {
+    if (reply_images.length < 1) return;
+
+    const newImageUrls = [];
+    reply_images.forEach(image => newImageUrls.push(URL.createObjectURL(image)));
+
+    dispatch({
+      type: "REPLY_IMAGE_URL_MESSAGE",
+      payload: {
+        reply_image_urls: newImageUrls
+      }
+    })
+  }, [reply_images])
 
   if (!selected_customer.id) return <></>
 
@@ -117,6 +131,23 @@ const MessageForm = () => {
           })
         }
       />
+      <div>
+        <label className="flex flex-col">
+          <i className='fas fa-image fa-2x'></i>
+          <input
+            type="file" accept="image/png, image/jpg, image/jpeg"
+            onChange={(e) => {
+              dispatch({
+                type: "REPLY_IMAGE_MESSAGE",
+                payload: {
+                  reply_images: [...e.target.files]
+                }
+              })
+            }}
+          className="display-hidden" />
+          {reply_image_urls.map(imageSrc => <img src={imageSrc} key={imageSrc} className="w-full h-full object-contain" />)}
+        </label>
+      </div>
       <button onClick={buildAiFaqSample} className="btn btn-success">{I18n.t("admin.chat.build_ai_faq")}</button>
       <div className="text-left">
         <div className="margin-around m10 mt-0">

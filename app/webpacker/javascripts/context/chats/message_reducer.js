@@ -20,7 +20,9 @@ import _ from "lodash";
 
 const initialState = {
   messages: {},
-  reply_message: ""
+  reply_message: "",
+  reply_images: [],
+  reply_image_urls: []
 }
 
 export default (state = initialState, action) => {
@@ -55,6 +57,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         reply_message: action.payload.reply_message
+      }
+    case "REPLY_IMAGE_MESSAGE":
+      return {
+        ...state,
+        reply_images: action.payload.reply_images
+      }
+    case "REPLY_IMAGE_URL_MESSAGE":
+      return {
+        ...state,
+        reply_image_urls: action.payload.reply_image_urls
       }
     case "AI_QUESTION":
       return {

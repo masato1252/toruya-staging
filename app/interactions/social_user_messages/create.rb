@@ -14,6 +14,7 @@ module SocialUserMessages
     object :social_user
     string :content
     string :content_type, default: TEXT_TYPE
+    file :image, default: nil
     string :scenario, default: nil
     integer :nth_time, default: nil
     boolean :readed
@@ -40,6 +41,16 @@ module SocialUserMessages
       if message.errors.present?
         errors.merge!(message.errors)
       elsif message_type == SocialUserMessage.message_types[:bot] || message_type == SocialUserMessage.message_types[:admin]
+        if image.present?
+          message.image.attach(io: image, filename: image.original_filename)
+          message.update(
+            raw_content: {
+              originalContentUrl: Images::Process.run!(image: message.image, resize: "750"),
+              previewImageUrl: Images::Process.run!(image: message.image, resize: "750")
+            }.to_json
+          )
+        end
+
         if schedule_at
           SocialUserMessages::Send.perform_at!(schedule_at: schedule_at, social_user_message: message)
         else
