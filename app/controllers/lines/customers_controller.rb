@@ -40,4 +40,9 @@ class Lines::CustomersController < ActionController::Base
       end
   end
   helper_method :device_detector
+
+  def business_owner_id
+    params[:business_owner_id].presence || Current.business_owner&.id
+  end
+  helper_method :business_owner_id
 end
