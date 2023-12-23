@@ -157,7 +157,7 @@ const CustomMessageEdit =({props}) => {
                   data-confirm={I18n.t("common.message_delete_confirmation_message")}
                   rel="nofollow"
                   data-method="delete"
-                  href={Routes.lines_user_bot_custom_message_path(props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
+                  href={Routes.lines_user_bot_custom_message_path(props.business_owner_id, props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
                   <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
                 </a>
             )}
