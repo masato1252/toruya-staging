@@ -27,7 +27,7 @@
     <% if @relation.bundler_relation %>
       <% if @is_owner %>
         <%= @relation.bundler_relation.online_service.name %>
-        <%= link_to t("action.purchase_info"), lines_user_bot_service_customer_path(service_id: @relation.bundler_relation.online_service.id, id: @relation.bundler_relation.id), class: "btn btn-yellow" %>
+        <%= link_to t("action.purchase_info"), lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: @relation.bundler_relation.online_service.id, id: @relation.bundler_relation.id), class: "btn btn-yellow" %>
       <% else %>
         <%= @relation.bundler_relation.online_service.name %>
         <%= link_to t("action.purchase_info"), customer_status_online_service_path(slug: @relation.bundler_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(@customer.social_customer.social_user_id)), class: "btn btn-yellow" %>

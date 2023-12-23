@@ -25,7 +25,7 @@
       <div class="modal-footer">
         <dl>
           <dd>
-            <%= link_to t("action.details"), lines_user_bot_service_customer_path(@relation.online_service, @relation, from: "customer_dashboard"), class: "btn enhanced BTNtarco" %>
+            <%= link_to t("action.details"), lines_user_bot_service_customer_path(business_owner_id, @relation.online_service, @relation, from: "customer_dashboard"), class: "btn enhanced BTNtarco" %>
           </dd>
         </dl>
       </div>

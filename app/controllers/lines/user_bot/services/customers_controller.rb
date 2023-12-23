@@ -42,6 +42,6 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
       memo: params[:memo]
     )
 
-    redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
+    redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
   end
 end
