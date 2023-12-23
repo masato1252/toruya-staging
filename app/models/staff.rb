@@ -42,10 +42,11 @@ class Staff < ApplicationRecord
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 
-  scope :active, -> { undeleted.where.not(first_name: "").joins(:staff_account).merge(StaffAccount.active) }
-  scope :active_without_data, -> { undeleted.where(first_name: "").joins(:staff_account).merge(StaffAccount.active) }
+  scope :active, -> { undeleted.where.not(first_name: "").joins(:staff_account).merge(StaffAccount.active.visible) }
+  scope :active_without_data, -> { undeleted.where(first_name: "").joins(:staff_account).merge(StaffAccount.active.visible) }
   scope :deleted, -> { where.not(deleted_at: nil) }
   scope :undeleted, -> { where(deleted_at: nil) }
+  scope :visible, -> { joins(:staff_account).merge(StaffAccount.visible) }
 
   delegate :phone_number, :level, to: :staff_account, allow_nil: true
 

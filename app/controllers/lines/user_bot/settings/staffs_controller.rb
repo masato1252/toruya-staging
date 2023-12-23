@@ -4,7 +4,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   before_action :set_staff, only: [:show, :edit, :update, :destroy, :resend_activation_sms]
 
   def index
-    @staffs = Staff.where(user: Current.business_owner).undeleted.includes(:staff_account).order(:id)
+    @staffs = Staff.where(user: Current.business_owner).undeleted.includes(:staff_account).visible.order(:id)
   end
 
   def new

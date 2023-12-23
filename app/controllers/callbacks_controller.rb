@@ -65,6 +65,15 @@ class CallbacksController < Devise::OmniauthCallbacksController
         sign_in(user)
         write_user_bot_cookies(:current_user_id, user.id)
 
+        if param["existing_owner_id"] # existing user add another line account
+          existing_user = User.find(param["existing_owner_id"])
+          Users::CreateOwnerStaff.run(owner_user: existing_user, user: user)
+          Users::CreateOwnerStaff.run(owner_user: user, user: existing_user)
+
+          redirect_to lines_user_bot_metrics_dashboard_path(business_owner_id: user.id)
+          return
+        end
+
         if param["staff_token"]
           staff_connect_outcome = StaffAccounts::ConnectUser.run(token: param["staff_token"], user: user)
 
@@ -73,8 +82,17 @@ class CallbacksController < Devise::OmniauthCallbacksController
           redirect_to Addressable::URI.new(path: param.delete("oauth_redirect_to_url")).to_s
         end
       elsif outcome.valid? && outcome.result.user.nil?
-        # line sign up
-        redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"])
+        if param["existing_owner_id"] # existing user add another line account
+          existing_user = User.find(param["existing_owner_id"])
+          social_user = outcome.result
+
+          new_user = Users::NewAccount.run!(user: existing_user, social_user: social_user)
+
+          redirect_to lines_user_bot_settings_path(new_user.id), notice: "Set up you new account line settings"
+        else
+          # user sign up
+          redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"])
+        end
       else
         redirect_to root_path
       end
