@@ -307,20 +307,21 @@ namespace :analytic do
 
     joined_month
     new_row_number = 5
+    start_column = 2
     joined_month.each do |year_month, metric|
-      google_worksheet[new_row_number, 1] = year_month
-      google_worksheet[new_row_number, 2] = metric["new_user_ids"].length
-      google_worksheet[new_row_number, 3] = metric["new_user_ids"].join(", ")
+      google_worksheet[new_row_number, start_column] = year_month
+      google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
+      google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
 
       if metric["rate"]
         metric["rate"].each.with_index do |rate, index|
           case scenario
           when "retention_rate"
-            google_worksheet[new_row_number, index + 4] = rate
+            google_worksheet[new_row_number, index + start_column + 3] = rate
           when "net_retention_rate"
-            google_worksheet[new_row_number, index + 4] = metric["dollar_rate"][index]
+            google_worksheet[new_row_number, index + start_column + 3] = metric["dollar_rate"][index]
           when "amount"
-            google_worksheet[new_row_number, index + 4] = metric["amount"][index]
+            google_worksheet[new_row_number, index + start_column + 3] = metric["amount"][index]
           end
         end
       else
