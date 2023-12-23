@@ -31,7 +31,7 @@ class OnlineServicesController < Lines::CustomersController
     @is_owner = false
     @able_to_change_credit_card = OnlineServiceCustomerRelations::ChangeCreditCardAbility.run!(relation: @relation)
 
-    render layout: "user_bot"
+    render layout: "customer_user_bot"
   end
 
   def watch_lesson

@@ -1,0 +1,36 @@
+<html lang="<%= I18n.locale %>">
+  <head>
+    <% if content_for?(:title) %>
+      <%= yield :title %>
+    <% else %>
+      <title>Toruyaースモールビジネスの顧客管理ツールー</title>
+    <% end %>
+    <%= yield :meta_tags if content_for(:meta_tags) %>
+    <%= csrf_meta_tags %>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%#XXX stylesheet_pack_tag and javascript_pack_tag couldn't use the same file name user_bot.js, user_bot.scss %>
+    <%= stylesheet_packs_with_chunks_tag "user_bot_stylesheets" %>
+    <%= javascript_packs_with_chunks_tag "user_bot" %>
+    <%= javascript_packs_with_chunks_tag "user_bot_stylesheets" if Rails.env.development? %>
+    <%= yield :script if content_for?(:script) %>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script type="text/javascript">
+      I18n.defaultLocale = "<%= I18n.default_locale %>";
+      I18n.locale = "<%= I18n.locale %>";
+    </script>
+    <%= render "layouts/google_analytics" %>
+  </head>
+
+  <body>
+    <%= custom_bootstrap_flash %>
+    <div class="responsive-content flex-row">
+      <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">
+        <%= yield %>
+      </div>
+    </div>
+    <div class="modal fade" id="dummyModal" tabindex="-1" role="dialog"></div>
+    <div class="modal fade" id="dummyModal2" tabindex="-1" role="dialog"></div>
+  </body>
+</html>
