@@ -47,8 +47,8 @@ module SocialMessages
         message.image.attach(io: image, filename: image.original_filename) 
         message.update(
           raw_content: {
-            originalContentUrl: Images::Process.run!(image: message.image, resize: "750"),
-            previewImageUrl: Images::Process.run!(image: message.image, resize: "750")
+            originalContentUrl: message.image.url,
+            previewImageUrl: message.image.url
           }.to_json
         )
       end
