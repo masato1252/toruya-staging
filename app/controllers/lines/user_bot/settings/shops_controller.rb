@@ -22,9 +22,9 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
     @previous_path =
       case params[:attribute]
       when "holiday_working"
-        index_lines_user_bot_settings_business_schedules_path(shop_id: params[:id])
+        index_lines_user_bot_settings_business_schedules_path(business_owner_id, shop_id: params[:id])
       else
-        lines_user_bot_settings_shop_path(params[:id])
+        lines_user_bot_settings_shop_path(business_owner_id, params[:id])
       end
 
     @header =
@@ -42,9 +42,9 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
 
     case params[:attribute]
     when "holiday_working"
-      return_json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: params[:id]) })
+      return_json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(business_owner_id, shop_id: params[:id]) })
     else
-      return_json_response(outcome, { redirect_to: lines_user_bot_settings_shop_path(shop_id: params[:id]) })
+      return_json_response(outcome, { redirect_to: lines_user_bot_settings_shop_path(business_owner_id, shop_id: params[:id]) })
     end
   end
 

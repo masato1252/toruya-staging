@@ -43,7 +43,7 @@
   <% end %>
   <div class="booking-pages-list">
     <% @pending_customer_services.each do |service| %>
-      <%= link_to lines_user_bot_service_customers_path(service), class: "field-row with-next-arrow" do %>
+      <%= link_to lines_user_bot_service_customers_path(business_owner_id, service), class: "field-row with-next-arrow" do %>
         <div>
           <h3><%= service.internal_product_name %></h3>
           <div class="desc dotdotdot"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
@@ -58,7 +58,7 @@
   <% end %>
   <div class="booking-pages-list">
     <% @missing_sale_page_services.each do |service| %>
-      <%= link_to new_lines_user_bot_sales_online_service_path(slug: service.slug), class: "field-row with-next-arrow" do %>
+      <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id, slug: service.slug), class: "field-row with-next-arrow" do %>
         <div>
           <h3><%= service.internal_product_name %></h3>
           <div class="desc dotdotdot"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>

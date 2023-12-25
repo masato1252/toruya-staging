@@ -43,7 +43,7 @@ const BroadcastEdit =({props}) => {
 
     const [_error, response] = await CommonServices.update(
       {
-        url: Routes.customers_count_lines_user_bot_broadcasts_path({format: "json"}),
+        url: Routes.customers_count_lines_user_bot_broadcasts_path(props.business_owner_id, {format: "json"}),
         data: {
           query: query,
           query_type: props.broadcast.query_type
@@ -82,7 +82,7 @@ const BroadcastEdit =({props}) => {
     let error, response;
 
     [error, response] = await CommonServices.update({
-      url: Routes.lines_user_bot_broadcast_path(props.broadcast.id, {format: 'json'}),
+      url: Routes.lines_user_bot_broadcast_path(props.business_owner_id, props.broadcast.id, {format: 'json'}),
       data: _.assign( data, {
         attribute: props.attribute,
         business_owner_id: props.business_owner_id,
@@ -294,7 +294,7 @@ const BroadcastEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_broadcast_path(props.broadcast.id)}>
+                <a href={Routes.lines_user_bot_broadcast_path(props.business_owner_id, props.broadcast.id)}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

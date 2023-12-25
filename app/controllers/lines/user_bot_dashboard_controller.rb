@@ -54,7 +54,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   helper_method :device_detector
 
   def business_owner_id
-    params[:business_owner_id].presence || Current.business_owner&.id
+    params[:business_owner_id].presence || Current.business_owner&.id || Current.user&.id
   end
   helper_method :business_owner_id
 

@@ -31,7 +31,7 @@ const LessonEdit =({props}) => {
     let response;
 
     [_, response] = await CommonServices.update({
-      url: Routes.lines_user_bot_service_lesson_path(props.lesson.online_service_id, props.lesson.id, {format: 'json'}),
+      url: Routes.lines_user_bot_service_lesson_path(props.business_owner_id, props.lesson.online_service_id, props.lesson.id, {format: 'json'}),
       data: _.assign( data, { attribute: props.attribute, chapter_id: (data.chapter_id || props.lesson.chapter_id), start_time: start_time, business_owner_id: props.business_owner_id })
     })
 

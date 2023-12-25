@@ -28,6 +28,7 @@ const CustomMessageEdit =({props}) => {
   const onDemo = async (data) => {
     await CustomMessageServices.demo({
       data: _.assign( data, {
+        business_owner_id: props.business_owner_id,
         id: props.message.id,
         scenario: props.scenario,
         content: template,
@@ -107,7 +108,7 @@ const CustomMessageEdit =({props}) => {
     <div className="form with-top-bar">
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_service_chapter_lesson_custom_messages_path(props.message.online_service_id, props.message.chapter_id, props.message.lesson_id)}>
+          <a href={Routes.lines_user_bot_service_chapter_lesson_custom_messages_path(props.business_owner_id, props.message.online_service_id, props.message.chapter_id, props.message.lesson_id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
@@ -121,7 +122,7 @@ const CustomMessageEdit =({props}) => {
             data-confirm={I18n.t("common.message_delete_confirmation_message")}
             rel="nofollow"
             data-method="delete"
-            href={Routes.lines_user_bot_custom_message_path(props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
+            href={Routes.lines_user_bot_custom_message_path(props.business_owner_id, props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
             <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
           </a>
         )}

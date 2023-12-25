@@ -44,7 +44,7 @@ const BusinessScheduleEdit =({props}) => {
 
       <TopNavigationBar
         leading={
-          <a href={Routes.index_lines_user_bot_settings_business_schedules_path({shop_id: props.business_schedule.shop_id})}>
+          <a href={Routes.index_lines_user_bot_settings_business_schedules_path(props.business_owner_id, {shop_id: props.business_schedule.shop_id})}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }

@@ -44,7 +44,7 @@ const GoalSelectionStep = ({next, step}) => {
                 </div>
                 <div className="modal-footer centerize">
                   <a
-                    href={Routes.lines_user_bot_settings_stripe_path()}
+                    href={Routes.lines_user_bot_settings_stripe_path(props.business_owner_id)}
                     className="btn btn-yellow">
                     {I18n.t("action.stripe_setting_btn")}
                   </a>

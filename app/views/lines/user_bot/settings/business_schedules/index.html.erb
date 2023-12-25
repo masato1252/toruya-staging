@@ -1,11 +1,11 @@
 <div class="settings-dashboard form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: shops_lines_user_bot_settings_business_schedules_path, title: t("user_bot.dashboards.settings.business_schedules.business_time") %>
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: shops_lines_user_bot_settings_business_schedules_path(business_owner_id), title: t("user_bot.dashboards.settings.business_schedules.business_time") %>
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.base_business_time") %></div>
   <% (1..7).each do |wday| %>
     <% business_schedule = @wdays_business_schedules.find {|schedule| schedule.day_of_week == wday % 7} %>
 
-    <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: business_schedule.shop_id, id: business_schedule.id), class: "field-row" do %>
+    <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: business_schedule.shop_id, id: business_schedule.id, business_owner_id: business_owner_id), class: "field-row" do %>
       <span><%= I18n.t("date.day_names").at(wday % 7) %></span>
       <span>
         <% if business_schedule.start_time || business_schedule.end_time %>
@@ -19,7 +19,7 @@
   <% end %>
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.holiday_label") %></div>
-  <%= link_to edit_lines_user_bot_settings_shop_path(id: @shop.id, attribute: "holiday_working"), class: "field-row" do %>
+  <%= link_to edit_lines_user_bot_settings_shop_path(id: @shop.id, business_owner_id: business_owner_id, attribute: "holiday_working"), class: "field-row" do %>
     <span><%= t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label") %></span>
     <span>
       <%= @shop.holiday_working ? content_tag(:span, "OPEN", class: 'successful') : content_tag(:span, "CLOSE", class: 'danger') %>

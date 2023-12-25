@@ -1,4 +1,4 @@
-<%= jump_out_modal(callback_modal_lines_user_bot_settings_social_account_path) if @social_account.is_login_available? %>
+<%= jump_out_modal(callback_modal_lines_user_bot_settings_social_account_path(business_owner_id)) if @social_account.is_login_available? %>
 
 <div class="container-fluid">
   <div class="row">
@@ -23,7 +23,7 @@
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
           <span></span>
           <% if @social_account.is_login_available? %>
-            <%= modal_link_to callback_modal_lines_user_bot_settings_social_account_path, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+            <%= modal_link_to callback_modal_lines_user_bot_settings_social_account_path(business_owner_id), class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
               <i class="fa fa-window-restore fa-2x"></i>
               <div class="word"><%= I18n.t("user_bot.dashboards.settings.social_account.copy_url_btn") %></div>
             <% end %>

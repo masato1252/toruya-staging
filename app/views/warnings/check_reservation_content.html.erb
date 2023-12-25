@@ -9,7 +9,7 @@
       <%= t("warnings.create_reservation_content.upgrade_content_html", customers_limit: Plan.max_customers_limit(Plan::FREE_LEVEL, Current.business_owner.subscription.rank)) %>
     </div>
     <div class="modal-footer centerize">
-      <%= link_to t("action.upgrade_to_basic"), lines_user_bot_settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" %>
+      <%= link_to t("action.upgrade_to_basic"), lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" %>
     </div>
   </div>
 </div>

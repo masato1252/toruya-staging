@@ -143,7 +143,7 @@ const MenuEdit =({props}) => {
       <input type="hidden" name="id" ref={register({ required: true })} />
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_settings_menu_path(props.menu.id)}>
+          <a href={Routes.lines_user_bot_settings_menu_path(props.business_owner_id, props.menu.id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }

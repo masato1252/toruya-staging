@@ -74,12 +74,12 @@ class Lines::VerificationController < ActionController::Base
 
   def line_settings_required
     if !current_user.social_account&.is_login_available?
-      redirect_to login_api_lines_user_bot_settings_social_account_path
+      redirect_to login_api_lines_user_bot_settings_social_account_path(business_owner_id: current_user&.id)
       return
     end
 
     if !current_user.social_account&.bot_data_finished?
-      redirect_to message_api_lines_user_bot_settings_social_account_path
+      redirect_to message_api_lines_user_bot_settings_social_account_path(business_owner_id: current_user&.id)
       return
     end
   end

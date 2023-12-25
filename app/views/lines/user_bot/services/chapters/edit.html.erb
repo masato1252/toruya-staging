@@ -11,7 +11,7 @@
 { camelize_props: false }
 ) %>
 <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-  <%= link_to lines_user_bot_service_chapter_path(@online_service, @chapter),
+  <%= link_to lines_user_bot_service_chapter_path(business_owner_id, @online_service, @chapter),
     method: :delete,
     data: { confirm: t("common.are_you_sure_message") },
     class: "btn btn-orange btn-circle btn-tweak btn-bottom-left" do %>

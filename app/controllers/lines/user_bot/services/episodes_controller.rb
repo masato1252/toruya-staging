@@ -36,7 +36,7 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
       tags: params[:tags]
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_episodes_path(params[:service_id]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_episodes_path(business_owner_id, params[:service_id]) })
   end
 
   def update
@@ -45,7 +45,7 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
 
     outcome = ::Episodes::Update.run(episode: episode, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_service_episode_path(params[:service_id], params[:id], anchor: params[:attribute]) })
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_episode_path(business_owner_id, params[:service_id], params[:id], anchor: params[:attribute]) })
   end
 
   def destroy
@@ -54,6 +54,6 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
 
     episode.destroy!
 
-    redirect_to lines_user_bot_service_episodes_path(params[:service_id])
+    redirect_to lines_user_bot_service_episodes_path(business_owner_id, params[:service_id])
   end
 end
