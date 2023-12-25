@@ -6,6 +6,16 @@ class CustomerPayments::ChangeServiceExpireAt < ActiveInteraction::Base
   string :memo, default: nil
 
   def execute
+    return if online_service_customer_relation.subscription?
+
+    if online_service.bundler?
+      bundled_online_service_ids = online_service.bundled_services.pluck(:online_service_id)
+
+      OnlineServiceCustomerRelation.where(online_service_id: bundled_online_service_ids, customer_id: online_service_customer_relation.customer_id).each do |relation|
+        compose(CustomerPayments::ChangeServiceExpireAt, online_service_customer_relation: relation, memo: memo)
+      end
+    end
+
     online_service_customer_relation.with_lock do
       customer.customer_payments.create!(
         product: online_service_customer_relation,
@@ -25,5 +35,9 @@ class CustomerPayments::ChangeServiceExpireAt < ActiveInteraction::Base
 
   def customer
     @customer ||= online_service_customer_relation.customer
+  end
+
+  def online_service
+    @online_service ||= online_service_customer_relation.online_service
   end
 end

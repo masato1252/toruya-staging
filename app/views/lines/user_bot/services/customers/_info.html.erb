@@ -18,7 +18,7 @@
 <div class="field-row with-format">
   <%= @relation.end_date_text %>
 
-  <%= link_to t("user_bot.dashboards.settings.service_customer_relation.change_expire_at"), "#", class: "btn btn-yellow", data: { toggle: "modal", target: "#change-expire-at-modal" } if @is_owner %>
+  <%= link_to t("user_bot.dashboards.settings.service_customer_relation.change_expire_at"), "#", class: "btn btn-yellow", data: { toggle: "modal", target: "#change-expire-at-modal" } if @is_owner && !@relation.subscription? %>
 </div>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
