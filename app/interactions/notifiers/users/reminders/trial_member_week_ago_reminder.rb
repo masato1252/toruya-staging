@@ -12,7 +12,7 @@ module Notifiers
             user_name: user.name,
             signup_date: I18n.l(signup_date, format: :year_month_date),
             trial_expired_date: I18n.l(trial_expired_date, format: :year_month_date),
-            plan_url: Rails.application.routes.url_helpers.lines_user_bot_settings_plans_url(encrypted_user_id: MessageEncryptor.encrypt(user.id, expires_at: 2.week.from_now))
+            plan_url: Rails.application.routes.url_helpers.lines_user_bot_settings_plans_url(business_owner_id: user.id, encrypted_user_id: MessageEncryptor.encrypt(user.id, expires_at: 2.week.from_now))
           )
         end
 
