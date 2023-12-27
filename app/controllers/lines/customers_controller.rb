@@ -17,7 +17,13 @@ class Lines::CustomersController < ActionController::Base
   helper_method :current_customer
 
   def current_social_customer
-    social_user_id = params[:encrypted_social_service_user_id] ? MessageEncryptor.decrypt(params[:encrypted_social_service_user_id]) : cookies[:line_social_user_id_of_customer]
+    social_user_id =
+      if params[:encrypted_social_service_user_id]
+        _id = MessageEncryptor.decrypt(params[:encrypted_social_service_user_id])
+        cookies.permanent[:line_social_user_id_of_customer] = _id
+      else
+        cookies[:line_social_user_id_of_customer]
+      end
 
     @current_social_customer ||= current_owner.social_customers.find_by(social_user_id: social_user_id)
   end
