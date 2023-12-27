@@ -749,7 +749,7 @@ ja:
         rich_menus/create:
           attributes:
             image:
-              invalid: "^無效"
+              invalid: "^画像無效"
         customer_payments/refund:
           attributes:
             customer_payment:
