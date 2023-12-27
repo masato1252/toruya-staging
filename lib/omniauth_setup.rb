@@ -23,13 +23,15 @@ class OmniauthSetup
 
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
-    if @request.cookies["who"] && MessageEncryptor.decrypt(@request.cookies["who"]) == CallbacksController::TORUYA_USER
+    who = @request.parameters["who"].presence || @request.cookies["who"]
+    if who && MessageEncryptor.decrypt(who) == CallbacksController::TORUYA_USER
       {
         client_id: Rails.application.secrets.toruya_line_login_id,
         client_secret: Rails.application.secrets.toruya_line_login_secret
       }
     else
-      account = SocialAccount.find(MessageEncryptor.decrypt(@request.cookies["oauth_social_account_id"]))
+      oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || @request.cookies["oauth_social_account_id"]
+      account = SocialAccount.find(MessageEncryptor.decrypt(oauth_social_account_id))
 
       {
         client_id: account.login_channel_id,
