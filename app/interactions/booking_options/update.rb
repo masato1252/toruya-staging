@@ -39,12 +39,16 @@ module BookingOptions
         when "name", "display_name", "menu_restrict_order", "memo"
           booking_option.update(attrs.slice(update_attribute))
         when "new_menu"
-          booking_option.booking_option_menus.create(
-            menu_id: attrs["new_menu_id"],
-            priority: booking_option.booking_option_menus.count,
-            required_time: attrs["new_menu_required_time"]
-          )
-          booking_option.update(minutes: booking_option.booking_option_menus.sum(:required_time))
+          if attrs["new_menu_id"]
+            booking_option.booking_option_menus.create(
+              menu_id: attrs["new_menu_id"],
+              priority: booking_option.booking_option_menus.count,
+              required_time: attrs["new_menu_required_time"]
+            )
+            booking_option.update(minutes: booking_option.booking_option_menus.sum(:required_time))
+          else
+            errors.add(:update_attribute, :new_menu_id_not_exist)
+          end
         when "start_at"
           booking_option.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "end_at"

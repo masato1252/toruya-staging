@@ -635,6 +635,10 @@ ja:
           attributes:
             chapter:
               lessons_exists: "^レッスンが設定された章は削除できません。"
+        booking_options/update:
+          attributes:
+            update_attribute:
+              new_menu_id_not_exist: "^メニューを選択"
         booking_options/delete:
           attributes:
             booking_option:
