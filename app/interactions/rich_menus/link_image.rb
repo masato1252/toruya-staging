@@ -20,6 +20,8 @@ module RichMenus
     def file_url_or_path
       if social_rich_menu.image.attached?
         social_rich_menu.image.url
+      elsif social_rich_menu.social_name.match?(/[0-9]/)
+        File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{SocialAccounts::RichMenus::CustomerReservations::KEY}.png")
       else
         File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{social_rich_menu.social_name}.png")
       end
