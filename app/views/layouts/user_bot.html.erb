@@ -25,124 +25,135 @@
 
   <body>
     <%= custom_bootstrap_flash %>
-    <div class="responsive-content flex-row">
-      <% not_phone do %>
-        <ul class="mobile-content desktop-navigator hidden-xs">
-          <li>
-            <%= link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
-              <img class="logo" src='<%= asset_pack_path("media/assets/user_bot/logo.png") %>' />
-            <% end %>
-          </li>
-
-          <% if current_user && current_user.staff_accounts.count > 1 %>
-            <li>
-              <i class="fa fa-user"></i> <%= Current.user.name %>
-            </li>
-
-            <hr class="my-2" />
-            <li>
-              <%= link_to lines_user_bot_business_owners_path do %>
-                <div class= "flex justify-between items-center">
-                  <span><%= Current.business_owner.company_name %></span>
-                  <i class="fas fa-caret-down"></i>
-                </div>
-              <% end %>
-            </li>
+    <div class="responsive-content flex-row" data-controller="collapse" data-collapse-status=<%= is_not_phone? ? "open" : "closed" %>>
+      <ul class="mobile-content desktop-navigator" data-target="collapse.content">
+        <li>
+          <%= link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
+            <img class="logo" src='<%= asset_pack_path("media/assets/user_bot/logo.png") %>' />
           <% end %>
+        </li>
 
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
-              <i class="fa fa-chart-line fa-2x"></i> <%= t("user_bot.dashboards.metrics.title") %>
-            <% end %>
-
-            <ul class='nav'>
-              <li>
-                <%= active_link_to t("sidebar.metrics.dashboard_title"), lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path(business_owner_id: business_owner_id) %>
-              </li>
-            </ul>
+        <% if current_user && current_user.staff_accounts.count > 1 %>
+          <li>
+            <i class="fa fa-user"></i> <%= Current.user.name %>
           </li>
 
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_services_path(business_owner_id: business_owner_id) do %>
-              <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.services.online_service") %>
-            <% end %>
+          <hr class="my-2" />
+        <% end %>
 
-            <ul class='nav'>
-              <li>
-                <%= link_to t("common.item.list"), lines_user_bot_services_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= link_to t("common.item.new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id) %>
-              </li>
-            </ul>
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-chart-line fa-2x"></i> <%= t("user_bot.dashboards.metrics.title") %>
+        <% end %>
+
+        <ul class='nav'>
+          <li>
+            <%= active_link_to t("sidebar.metrics.dashboard_title"), lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) %>
           </li>
-
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) do %>
-              <i class="fa fa-comment fa-2x"></i> <%= t("sidebar.broadcast.title") %>
-            <% end %>
-
-            <ul class='nav'>
-              <li>
-                <%= link_to t("user_bot.dashboards.broadcasts.broadcast_conditions"), lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= link_to t("common.item.new"), new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id) %>
-              </li>
-            </ul>
+          <li>
+            <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>
           </li>
-
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_sales_path(business_owner_id: business_owner_id) do %>
-              <i class="fa fa-bullhorn fa-2x"></i> <%= t("user_bot.dashboards.sales.edit.sale_pages") %>
-            <% end %>
-
-            <ul class='nav'>
-              <li>
-                <%= link_to t("common.item.list"), lines_user_bot_sales_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= link_to t("common.item.new"), new_lines_user_bot_sale_path(business_owner_id: business_owner_id) %>
-              </li>
-            </ul>
-          </li>
-
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /booking|menu/ do %>
-              <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
-            <% end %>
-
-            <ul class='nav'>
-              <li>
-                <%= active_link_to t("common.item.list"), lines_user_bot_booking_pages_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= active_link_to t("common.item.new"), new_lines_user_bot_booking_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= active_link_to t("common.booking_price"), lines_user_bot_booking_options_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= active_link_to t("common.menu"), lines_user_bot_settings_menus_path(business_owner_id: business_owner_id) %>
-              </li>
-            </ul>
-          </li>
-
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_settings_path(business_owner_id: business_owner_id) do %>
-              <i class="fa fa-wrench fa-2x"></i> <%= t("user_bot.dashboards.settings.dashboard.title") %>
-            <% end if admin? %>
+          <li>
+            <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path(business_owner_id: business_owner_id) %>
           </li>
         </ul>
-      <% end %>
+        </li>
+
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_services_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.services.online_service") %>
+        <% end %>
+
+        <ul class='nav'>
+          <li>
+            <%= link_to t("common.item.list"), lines_user_bot_services_path(business_owner_id: business_owner_id) %>
+          </li>
+          <li>
+            <%= link_to t("common.item.new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id) %>
+          </li>
+        </ul>
+        </li>
+
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-comment fa-2x"></i> <%= t("sidebar.broadcast.title") %>
+        <% end %>
+
+        <ul class='nav'>
+          <li>
+            <%= link_to t("user_bot.dashboards.broadcasts.broadcast_conditions"), lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) %>
+          </li>
+          <li>
+            <%= link_to t("common.item.new"), new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id) %>
+          </li>
+        </ul>
+        </li>
+
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_sales_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-bullhorn fa-2x"></i> <%= t("user_bot.dashboards.sales.edit.sale_pages") %>
+        <% end %>
+
+        <ul class='nav'>
+          <li>
+            <%= link_to t("common.item.list"), lines_user_bot_sales_path(business_owner_id: business_owner_id) %>
+          </li>
+          <li>
+            <%= link_to t("common.item.new"), new_lines_user_bot_sale_path(business_owner_id: business_owner_id) %>
+          </li>
+        </ul>
+        </li>
+
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /booking|menu/ do %>
+            <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
+        <% end %>
+
+        <ul class='nav'>
+          <li>
+            <%= active_link_to t("common.item.list"), lines_user_bot_booking_pages_path(business_owner_id: business_owner_id) %>
+          </li>
+          <li>
+            <%= active_link_to t("common.item.new"), new_lines_user_bot_booking_path(business_owner_id: business_owner_id) %>
+          </li>
+          <li>
+            <%= active_link_to t("common.booking_price"), lines_user_bot_booking_options_path(business_owner_id: business_owner_id) %>
+          </li>
+          <li>
+            <%= active_link_to t("common.menu"), lines_user_bot_settings_menus_path(business_owner_id: business_owner_id) %>
+          </li>
+        </ul>
+        </li>
+
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_settings_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-wrench fa-2x"></i> <%= t("user_bot.dashboards.settings.dashboard.title") %>
+          <% end if admin? %>
+        </li>
+      </ul>
 
       <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">
+        <div class="top-navigation-function-bar">
+          <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-bars text-white") %>
+
+          <div class="dropdown open" data-controller="collapse" data-collapse-status="closed" data-action="click->collapse#toggle" >
+            <span class="text-white"><%= Current.business_owner.company_name %></span>
+            <i class="fas fa-caret-down text-white"></i>
+            <ul class="dropdown-menu" data-target="collapse.content">
+              <% current_user.staff_accounts.active.includes(:owner).map(&:owner).each do |owner| %>
+                <%= link_to lines_user_bot_business_owner_path(owner), method: :put do %>
+                  <li class="dropdown-header p-3 text-16px"><%= owner.company_name %></li>
+                <% end %>
+              <% end %>
+              <li>
+                <%= button_to toruya_new_line_account_url(lines_user_bot_settings_path), class: "btn btn-tarco" do %>
+                  Add your another line account
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <%= yield %>
       </div>
     </div>

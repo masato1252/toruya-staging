@@ -49,8 +49,8 @@ $line-margin: 20px;
   font-size: 12px;
 }
 
-.text-12px {
-  font-size: 12px;
+.text-16px {
+  font-size: 16px;
 }
 
 .text-6xl {
@@ -307,6 +307,10 @@ $line-margin: 20px;
 
 .text-tarco {
   color: $palette-color2;
+}
+
+.text-white {
+  color: #ffffff;
 }
 
 .font-bold {

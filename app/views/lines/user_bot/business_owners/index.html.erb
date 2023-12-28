@@ -1,7 +1,0 @@
-<% @owners.each do |owner| %>
-  <%= button_to owner.company_name, lines_user_bot_business_owner_path(owner), class: "btn btn-gray", method: :put %>
-<% end %>
-
-<%= button_to toruya_new_line_account_url(lines_user_bot_settings_path), class: "btn btn-tarco" do %>
-  Add your another line account
-<% end %>
