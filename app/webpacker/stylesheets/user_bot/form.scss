@@ -33,7 +33,11 @@
   }
 
   &.with-top-bar {
-    padding-top: $bar-height;
+    padding-top: $bar-height * 2;
+
+    @include media-breakpoint-up(tablet) {
+      padding-top: $bar-height;
+    }
   }
 
   .action-block {

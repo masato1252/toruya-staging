@@ -33,13 +33,12 @@
           <% end %>
         </li>
 
-        <% if current_user && current_user.staff_accounts.count > 1 %>
-          <li>
-            <i class="fa fa-user"></i> <%= Current.user.name %>
-          </li>
+        <li class="flex justify-between">
+          <span><i class="fa fa-user"></i> <%= Current.user&.name %></span>
+          <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
+        </li>
 
-          <hr class="my-2" />
-        <% end %>
+        <hr class="my-2" />
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
@@ -146,7 +145,7 @@
                 <% end %>
               <% end %>
               <li>
-                <%= button_to toruya_new_line_account_url(lines_user_bot_settings_path), class: "btn btn-tarco" do %>
+                <%= button_to toruya_new_line_account_url(lines_user_bot_settings_path), class: "btn btn-tarco mx-1" do %>
                   Add your another line account
                 <% end %>
               </li>
