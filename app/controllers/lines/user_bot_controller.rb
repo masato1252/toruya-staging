@@ -9,6 +9,7 @@ class Lines::UserBotController < ActionController::Base
   layout "user_bot_guest"
   attr_reader :social_user
   helper_method :social_user
+  alias_method :current_social_user, :social_user
 
   before_action :authenticate_social_user!
   skip_before_action :track_ahoy_visit
