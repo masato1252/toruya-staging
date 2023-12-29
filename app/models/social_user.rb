@@ -35,4 +35,8 @@ class SocialUser < ApplicationRecord
   def social_user_id
     social_service_user_id
   end
+
+  def same_social_user_scope
+    SocialUser.where(social_service_user_id: social_service_user_id)
+  end
 end

@@ -7,7 +7,7 @@ module Users
 
     def execute
       ApplicationRecord.transaction do
-        user = User.new
+        user = User.new(password: Devise.friendly_token[0, 20])
         user.skip_confirmation!
         user.skip_confirmation_notification!
         user.referral_token ||= Devise.friendly_token[0,5]
@@ -38,7 +38,7 @@ module Users
           user: user,
           social_user: social_user,
           params: {
-            company_name: "#{existing_user.company_name} 2",
+            company_name: "#{existing_user.company_name} #{SocialUser.where(social_service_user_id: social_user.social_service_user_id).count}",
             company_phone_number: existing_user.phone_number,
             zip_code: existing_user.profile.zip_code,
             region: existing_user.profile.region,
