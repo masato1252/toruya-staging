@@ -234,3 +234,5 @@ ja:
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。
+    not_enough_info: "所要情報不足"
+    short_than_menu_minutes: "この価格は最低%{required_minutes}分メニューの所要時間が必要です。"

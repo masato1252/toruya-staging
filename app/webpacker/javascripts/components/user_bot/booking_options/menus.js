@@ -16,7 +16,7 @@ const SortableMenuOption = sortableElement(({props, booking_option_id, menu, i18
         <div className="menu-info">
           <DragHandle />
           <div>
-            <h3>{menu.label}</h3>
+            <a href={Routes.lines_user_bot_settings_menu_path(props.business_owner_id, menu.value)}><h3>{menu.label}</h3></a>
             <div className="desc">{i18n.required_time}{menu.required_time}{i18n.minute}</div>
           </div>
         </div>
@@ -31,6 +31,7 @@ const SortableMenuOption = sortableElement(({props, booking_option_id, menu, i18
         {i18n.delete}
       </a>
       {menu.no_available_shop && <div className="warning">{i18n.form_errors.no_available_shop}</div> }
+      {(menu.minutes > menu.required_time) && <div className="danger">{I18n.t("errors.short_than_menu_minutes", { required_minutes: menu.minutes })}</div>}
     </div>
   )
 });
