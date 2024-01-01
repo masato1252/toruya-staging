@@ -16,7 +16,7 @@ const SortableMenuOption = sortableElement(({props, booking_option_id, menu, i18
         <div className="menu-info">
           <DragHandle />
           <div>
-            <a href={Routes.lines_user_bot_settings_menu_path(props.business_owner_id, menu.value)}><h3>{menu.label}</h3></a>
+            <h3>{menu.label}</h3>
             <div className="desc">{i18n.required_time}{menu.required_time}{i18n.minute}</div>
           </div>
         </div>
