@@ -10,6 +10,7 @@ RSpec.describe CustomerPayments::Refund do
   after { StripeMock.stop }
   let(:booking_amount) { 1.to_money }
   let(:customer) { FactoryBot.create(:customer, with_stripe: true) }
+  let(:user) { customer.user }
   let(:reservation_customer) { FactoryBot.create(:reservation_customer, :booking_option, customer: customer, booking_amount: booking_amount) }
   let(:customer_payment) { customer.customer_payments.completed.where(product: reservation_customer).first }
 
@@ -30,6 +31,32 @@ RSpec.describe CustomerPayments::Refund do
       }.by(1)
 
       expect(reservation_customer.reload).to be_payment_refunded
+    end
+
+    context 'when refund a bundler service' do
+      before do
+        CustomerPayments::PurchaseOnlineService.run(online_service_customer_relation: relation, manual: true, first_time_charge: true)
+      end
+      let(:bundler_service) { FactoryBot.create(:online_service, :bundler, :with_stripe, user: user) }
+      let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, customer: customer, online_service: bundler_service, permission_state: :active, sale_page: sale_page) }
+      let(:sale_page) { FactoryBot.create(:sale_page, :one_time_payment, product: bundler_service, user: user, selling_price_amount_cents: booking_amount) }
+      let(:customer_payment) { customer.customer_payments.completed.where(product: relation).first }
+
+      it "canceled its bundled service" do
+        bundled_service_with_end_at = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.tomorrow)
+        bundled_service_with_forever = FactoryBot.create(:bundled_service, bundler_service: bundler_service)
+        relation_with_end_at_service = FactoryBot.create(:online_service_customer_relation, :bundler_payment, online_service: bundled_service_with_end_at.online_service, customer: customer, sale_page: sale_page, permission_state: :active, expire_at: Time.current.tomorrow, bundled_service: bundled_service_with_end_at)
+        relation_with_forever_service = FactoryBot.create(:online_service_customer_relation, :bundler_payment, online_service: bundled_service_with_forever.online_service, customer: customer, sale_page: sale_page, permission_state: :active, bundled_service: bundled_service_with_forever)
+
+        outcome
+
+        relation.reload
+
+        expect(relation).to be_active
+        expect(relation).to be_refunded_payment_state
+        expect(relation_with_end_at_service.reload).to be_pending
+        expect(relation_with_forever_service.reload).to be_pending
+      end
     end
   end
 end

@@ -56,15 +56,24 @@ class CustomerPayments::Refund < ActiveInteraction::Base
   private
 
   def refund_payment(stripe_refund_response = nil)
-    payment = customer.customer_payments.create!(
-      product: product,
-      amount: -amount,
-      manual: true
-    )
+    ApplicationRecord.transaction do
+      payment = customer.customer_payments.create!(
+        product: product,
+        amount: -amount,
+        manual: true
+      )
 
-    payment.stripe_charge_details = stripe_refund_response.as_json
-    payment.refunded!
-    product_refund
+      payment.stripe_charge_details = stripe_refund_response.as_json
+      payment.refunded!
+      product_refund
+
+      if product.is_a?(OnlineServiceCustomerRelation)
+        # Only bundler had bundled_service_relations
+        product.bundled_service_relations.each do |bundled_service_relation|
+          OnlineServiceCustomerRelations::ReconnectBestContract.run(relation: bundled_service_relation)
+        end
+      end
+    end
   end
 
   def customer
