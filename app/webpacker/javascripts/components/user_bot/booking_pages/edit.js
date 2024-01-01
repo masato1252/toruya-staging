@@ -46,11 +46,7 @@ const BookingPageEdit =({props}) => {
     if (response.data.status == "successful") {
       window.location = response.data.redirect_to
     } else {
-      console.error(response.data.error_message)
-
-      setError(props.attribute, {
-        message: response.data.error_message
-      })
+      toastr.error(response.data.error_message)
     }
   }
 
@@ -103,9 +99,30 @@ const BookingPageEdit =({props}) => {
         break;
       case "new_option":
         return (
-          <select autoFocus={true} className="extend" name="new_option" ref={register({ required: true })}>
-            <SelectOptions options={props.booking_page.available_booking_options} />
-          </select>
+          <div>
+            <select autoFocus={true} className="extend" name="new_option_id" ref={register()}>
+              <option value="">{I18n.t("common.select_a_booking_option")}</option>
+              <SelectOptions options={props.booking_page.available_booking_options} />
+            </select>
+            <hr />
+            <br />
+            <h3 className="header centerize">{I18n.t("user_bot.dashboards.booking_page_creation.create_a_new_menu")}</h3>
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
+            <input autoFocus={true} ref={register()} name="new_menu_name" className="extend" type="text" />
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</div>
+            <input autoFocus={true} ref={register()} name="new_menu_minutes" className="extend" type="tel" />
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
+            <input autoFocus={true} ref={register()} name="new_menu_price" className="extend" type="tel" />
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
+            <label className="field-row flex-start">
+              <input name="new_menu_online_state" type="radio" value="true" ref={register()} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_online`)}
+            </label>
+            <label className="field-row flex-start">
+              <input name="new_menu_online_state" type="radio" value="false" ref={register()} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_local`)}
+            </label>
+          </div>
         )
         break
       case "booking_type":

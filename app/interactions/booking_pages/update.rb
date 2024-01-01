@@ -25,7 +25,11 @@ module BookingPages
       end
       boolean :overbooking_restriction, default: true
 
-      integer :new_option, default: nil
+      integer :new_option_id, default: nil
+      string :new_menu_name, default: nil
+      string :new_menu_minutes, default: nil
+      string :new_menu_price, default: nil
+      boolean :new_menu_online_state, default: false
 
       string :start_at_date_part, default: nil
       string :start_at_time_part, default: nil
@@ -50,7 +54,7 @@ module BookingPages
     def execute
       booking_type = attrs.delete(:booking_type)
       booking_options = attrs.delete(:options)
-      new_option = attrs.delete(:new_option)
+      new_option_id = attrs.delete(:new_option_id)
       special_dates = attrs.delete(:special_dates)
 
       booking_page.transaction do
@@ -65,7 +69,61 @@ module BookingPages
           end
           booking_page.update(event_booking: booking_type == "event_booking")
         when "new_option"
-          booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_option).uniq )
+          if attrs[:new_menu_name].present? && attrs[:new_menu_minutes].present? && attrs[:new_menu_price].present?
+            ApplicationRecord.transaction do
+              category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
+
+              menu = compose(
+                Menus::Update,
+                menu: user.menus.new,
+                attrs: {
+                  name: attrs[:new_menu_name],
+                  short_name: attrs[:new_menu_name],
+                  minutes: attrs[:new_menu_minutes],
+                  online: attrs[:new_menu_online_state],
+                  interval: 0,
+                  min_staffs_number: 1,
+                  category_ids: [category.id],
+                  shop_menus_attributes: [
+                    shop_id: booking_shop.id,
+                    max_seat_number: 1
+                  ],
+                  staff_menus_attributes: [
+                    staff_id: user.current_staff(user).id,
+                    priority: 0,
+                    max_customers: 1
+                  ],
+                },
+                reservation_setting_id: reservation_setting.id,
+                menu_reservation_setting_rule_attributes: {
+                  start_date: Date.today
+                }
+              )
+
+              default_booking_option_attrs = {
+                name: menu.name,
+                display_name: menu.name,
+                minutes: menu.minutes,
+                amount_cents: attrs[:new_menu_price],
+                tax_include: true,
+                menus: {
+                  "0" => { 'value' => menu.id, "priority" => 0, "required_time" => menu.minutes },
+                }
+              }
+
+              new_booking_option = compose(
+                BookingOptions::Save,
+                booking_option: user.booking_options.new,
+                attrs: default_booking_option_attrs
+              )
+
+              booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_booking_option.id).uniq )
+            end
+          elsif new_option_id
+            booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_option_id).uniq )
+          else
+            errors.add(:base, I18n.t("errors.not_enough_info"))
+          end
         when "start_at"
           booking_page.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "end_at"
@@ -110,6 +168,18 @@ module BookingPages
 
     def user
       @user ||= booking_page.user
+    end
+
+    def booking_shop
+      @booking_shop = booking_page.shop
+    end
+
+    def reservation_setting
+      user.reservation_settings.where(day_type: ReservationSetting::BUSINESS_DAYS, start_time: nil, end_time: nil).first ||
+        user.reservation_settings.create(
+          name: I18n.t("common.full_working_time"),
+          short_name: I18n.t("common.full_working_time"),
+          day_type: ReservationSetting::BUSINESS_DAYS)
     end
   end
 end
