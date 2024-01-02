@@ -84,15 +84,19 @@ module BookingPages
                   interval: 0,
                   min_staffs_number: 1,
                   category_ids: [category.id],
-                  shop_menus_attributes: [
-                    shop_id: booking_shop.id,
-                    max_seat_number: 1
-                  ],
-                  staff_menus_attributes: [
-                    staff_id: user.current_staff(user).id,
-                    priority: 0,
-                    max_customers: 1
-                  ],
+                  shop_menus_attributes: user.shop_ids.map do |shop_id|
+                    {
+                      shop_id: shop_id,
+                      max_seat_number: 1
+                    }
+                  end,
+                  staff_menus_attributes: user.staff_ids.map do |staff_id|
+                    {
+                      staff_id: staff_id,
+                      priority: 0,
+                      max_customers: 1
+                    }
+                  end
                 },
                 reservation_setting_id: reservation_setting.id,
                 menu_reservation_setting_rule_attributes: {
@@ -168,10 +172,6 @@ module BookingPages
 
     def user
       @user ||= booking_page.user
-    end
-
-    def booking_shop
-      @booking_shop = booking_page.shop
     end
 
     def reservation_setting

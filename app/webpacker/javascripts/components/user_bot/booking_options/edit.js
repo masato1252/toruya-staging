@@ -74,11 +74,33 @@ const BookingOptionEdit =({props}) => {
         break;
       case "new_menu":
         return (
-          <NewMenuField
-            i18n={i18n} register={register} watch={watch} control={control}
-            menu_group_options={props.menu_group_options}
-            setValue={setValue}
-          />
+          <div>
+            <NewMenuField
+              i18n={i18n} register={register} watch={watch} control={control}
+              menu_group_options={props.menu_group_options}
+              setValue={setValue}
+            />
+            <hr />
+            <br />
+            <h3 className="centerize">OR</h3>
+            <h3 className="header centerize">{I18n.t("user_bot.dashboards.booking_page_creation.create_a_new_menu")}</h3>
+
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
+            <input autoFocus={true} ref={register()} name="new_menu_name" className="extend" type="text" />
+
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</div>
+            <input autoFocus={true} ref={register()} name="new_menu_minutes" className="extend" type="tel" />
+
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
+            <label className="field-row flex-start">
+              <input name="new_menu_online_state" type="radio" value="true" ref={register()} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_online`)}
+            </label>
+            <label className="field-row flex-start">
+              <input name="new_menu_online_state" type="radio" value="false" ref={register()} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_local`)}
+            </label>
+          </div>
         )
         break
       case "start_at":
