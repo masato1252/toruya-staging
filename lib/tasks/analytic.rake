@@ -253,8 +253,6 @@ namespace :analytic do
     joined_month = {}
     helper = ApplicationController.helpers
 
-    scenario = ENV['scenario'] || "retention_rate" # net_retention_rate, amount
-
     while current_month < end_month
       charges = SubscriptionCharge.completed.where(created_at: current_month..current_month.end_of_month)
       user_ids = charges.pluck(:user_id)
@@ -294,42 +292,44 @@ namespace :analytic do
       current_month = current_month.next_month
     end
 
-    worksheet = case scenario
-                when "retention_rate"
-                  6
-                when "net_retention_rate"
-                  7
-                when "amount"
-                  8
-                end
+    ["retention_rate", "net_retention_rate", "amount"].each do |scenario|
+      worksheet = case scenario
+                  when "retention_rate"
+                    6
+                  when "net_retention_rate"
+                    7
+                  when "amount"
+                    8
+                  end
 
-    google_worksheet = Google::Drive.spreadsheet(worksheet: worksheet)
+      google_worksheet = Google::Drive.spreadsheet(worksheet: worksheet)
 
-    joined_month
-    new_row_number = 5
-    start_column = 2
-    joined_month.each do |year_month, metric|
-      google_worksheet[new_row_number, start_column] = year_month
-      google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
-      google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
+      joined_month
+      new_row_number = 5
+      start_column = 2
+      joined_month.each do |year_month, metric|
+        google_worksheet[new_row_number, start_column] = year_month
+        google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
+        google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
 
-      if metric["rate"]
-        metric["rate"].each.with_index do |rate, index|
-          case scenario
-          when "retention_rate"
-            google_worksheet[new_row_number, index + start_column + 3] = rate
-          when "net_retention_rate"
-            google_worksheet[new_row_number, index + start_column + 3] = metric["dollar_rate"][index]
-          when "amount"
-            google_worksheet[new_row_number, index + start_column + 3] = metric["amount"][index]
+        if metric["rate"]
+          metric["rate"].each.with_index do |rate, index|
+            case scenario
+            when "retention_rate"
+              google_worksheet[new_row_number, index + start_column + 3] = rate
+            when "net_retention_rate"
+              google_worksheet[new_row_number, index + start_column + 3] = metric["dollar_rate"][index]
+            when "amount"
+              google_worksheet[new_row_number, index + start_column + 3] = metric["amount"][index]
+            end
           end
+        else
         end
-      else
+
+        new_row_number = new_row_number + 1
       end
 
-      new_row_number = new_row_number + 1
+      google_worksheet.save
     end
-
-    google_worksheet.save
   end
 end
