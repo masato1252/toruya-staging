@@ -32,7 +32,7 @@ class OmniauthSetup
     else
       oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || @request.cookies["oauth_social_account_id"]
       unless oauth_social_account_id
-        Rollbar.error("Unexpected line callback", request: request)
+        Rollbar.error("Unexpected line callback", request: @request)
       end
 
       account = SocialAccount.find(MessageEncryptor.decrypt(oauth_social_account_id))
