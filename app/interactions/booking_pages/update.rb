@@ -68,66 +68,62 @@ module BookingPages
             end
           end
           booking_page.update(event_booking: booking_type == "event_booking")
-        when "new_option"
-          if attrs[:new_menu_name].present? && attrs[:new_menu_minutes].present? && attrs[:new_menu_price].present?
-            ApplicationRecord.transaction do
-              category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
+        when "new_option_menu"
+          ApplicationRecord.transaction do
+            category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
 
-              menu = compose(
-                Menus::Update,
-                menu: user.menus.new,
-                attrs: {
-                  name: attrs[:new_menu_name],
-                  short_name: attrs[:new_menu_name],
-                  minutes: attrs[:new_menu_minutes],
-                  online: attrs[:new_menu_online_state],
-                  interval: 0,
-                  min_staffs_number: 1,
-                  category_ids: [category.id],
-                  shop_menus_attributes: user.shop_ids.map do |shop_id|
-                    {
-                      shop_id: shop_id,
-                      max_seat_number: 1
-                    }
-                  end,
-                  staff_menus_attributes: user.staff_ids.map do |staff_id|
-                    {
-                      staff_id: staff_id,
-                      priority: 0,
-                      max_customers: 1
-                    }
-                  end
-                },
-                reservation_setting_id: reservation_setting.id,
-                menu_reservation_setting_rule_attributes: {
-                  start_date: Date.today
-                }
-              )
-
-              default_booking_option_attrs = {
-                name: menu.name,
-                display_name: menu.name,
-                minutes: menu.minutes,
-                amount_cents: attrs[:new_menu_price],
-                tax_include: true,
-                menus: {
-                  "0" => { 'value' => menu.id, "priority" => 0, "required_time" => menu.minutes },
-                }
+            menu = compose(
+              Menus::Update,
+              menu: user.menus.new,
+              attrs: {
+                name: attrs[:new_menu_name],
+                short_name: attrs[:new_menu_name],
+                minutes: attrs[:new_menu_minutes],
+                online: attrs[:new_menu_online_state],
+                interval: 0,
+                min_staffs_number: 1,
+                category_ids: [category.id],
+                shop_menus_attributes: user.shop_ids.map do |shop_id|
+                  {
+                    shop_id: shop_id,
+                    max_seat_number: 1
+                  }
+                end,
+                staff_menus_attributes: user.staff_ids.map do |staff_id|
+                  {
+                    staff_id: staff_id,
+                    priority: 0,
+                    max_customers: 1
+                  }
+                end
+              },
+              reservation_setting_id: reservation_setting.id,
+              menu_reservation_setting_rule_attributes: {
+                start_date: Date.today
               }
+            )
 
-              new_booking_option = compose(
-                BookingOptions::Save,
-                booking_option: user.booking_options.new,
-                attrs: default_booking_option_attrs
-              )
+            default_booking_option_attrs = {
+              name: menu.name,
+              display_name: menu.name,
+              minutes: menu.minutes,
+              amount_cents: attrs[:new_menu_price],
+              tax_include: true,
+              menus: {
+                "0" => { 'value' => menu.id, "priority" => 0, "required_time" => menu.minutes },
+              }
+            }
 
-              booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_booking_option.id).uniq )
-            end
-          elsif new_option_id
-            booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_option_id).uniq )
-          else
-            errors.add(:base, I18n.t("errors.not_enough_info"))
+            new_booking_option = compose(
+              BookingOptions::Save,
+              booking_option: user.booking_options.new,
+              attrs: default_booking_option_attrs
+            )
+
+            booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_booking_option.id).uniq )
           end
+        when "new_option"
+          booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_option_id).uniq )
         when "start_at"
           booking_page.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "end_at"

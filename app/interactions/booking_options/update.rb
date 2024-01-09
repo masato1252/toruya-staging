@@ -42,49 +42,49 @@ module BookingOptions
         case update_attribute
         when "name", "display_name", "menu_restrict_order", "memo"
           booking_option.update(attrs.slice(update_attribute))
-        when "new_menu"
-          if attrs[:new_menu_name].present? && attrs[:new_menu_minutes].present?
-            ApplicationRecord.transaction do
-              category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
+        when "new_pure_menu"
+          ApplicationRecord.transaction do
+            category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
 
-              menu = compose(
-                Menus::Update,
-                menu: user.menus.new,
-                attrs: {
-                  name: attrs[:new_menu_name],
-                  short_name: attrs[:new_menu_name],
-                  minutes: attrs[:new_menu_minutes],
-                  online: attrs[:new_menu_online_state],
-                  interval: 0,
-                  min_staffs_number: 1,
-                  category_ids: [category.id],
-                  shop_menus_attributes: user.shop_ids.map do |shop_id|
-                    {
-                      shop_id: shop_id,
-                      max_seat_number: 1
-                    }
-                  end,
-                  staff_menus_attributes: user.staff_ids.map do |staff_id|
-                    {
-                      staff_id: staff_id,
-                      priority: 0,
-                      max_customers: 1
-                    }
-                  end
-                },
-                reservation_setting_id: reservation_setting.id,
-                menu_reservation_setting_rule_attributes: {
-                  start_date: Date.today
-                }
-              )
-              booking_option.booking_option_menus.create!(
-                menu_id: menu.id,
-                priority: booking_option.booking_option_menus.count,
-                required_time: menu.minutes
-              )
-              booking_option.update!(minutes: booking_option.booking_option_menus.sum(:required_time))
-            end
-          elsif attrs["new_menu_id"]
+            menu = compose(
+              Menus::Update,
+              menu: user.menus.new,
+              attrs: {
+                name: attrs[:new_menu_name],
+                short_name: attrs[:new_menu_name],
+                minutes: attrs[:new_menu_minutes],
+                online: attrs[:new_menu_online_state],
+                interval: 0,
+                min_staffs_number: 1,
+                category_ids: [category.id],
+                shop_menus_attributes: user.shop_ids.map do |shop_id|
+                  {
+                    shop_id: shop_id,
+                    max_seat_number: 1
+                  }
+                end,
+                staff_menus_attributes: user.staff_ids.map do |staff_id|
+                  {
+                    staff_id: staff_id,
+                    priority: 0,
+                    max_customers: 1
+                  }
+                end
+              },
+              reservation_setting_id: reservation_setting.id,
+              menu_reservation_setting_rule_attributes: {
+                start_date: Date.today
+              }
+            )
+            booking_option.booking_option_menus.create!(
+              menu_id: menu.id,
+              priority: booking_option.booking_option_menus.count,
+              required_time: menu.minutes
+            )
+            booking_option.update!(minutes: booking_option.booking_option_menus.sum(:required_time))
+          end
+        when "new_menu"
+          if attrs["new_menu_id"]
             option_menu = booking_option.booking_option_menus.create(
               menu_id: attrs["new_menu_id"],
               priority: booking_option.booking_option_menus.count,

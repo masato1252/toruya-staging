@@ -1,12 +1,10 @@
 "use strict"
 
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import DayPickerInput from 'react-day-picker/DayPickerInput';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import _ from "lodash";
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
-import DateTimeFieldsRow from "shared/datetime_fields_row";
 import { BookingPageServices } from "user_bot/api"
 
 import BookingTimeField from "./booking_time_field";
@@ -22,6 +20,7 @@ import ShopField from "./shop_field";
 
 const BookingPageEdit =({props}) => {
   const i18n = props.i18n;
+  const [a_new_booking_option, setNewBookingOption] = useState(false)
 
   const onSubmit = async (data) => {
     console.log(data)
@@ -74,21 +73,18 @@ const BookingPageEdit =({props}) => {
             <div className="field-row hint no-border"> {i18n.hint} </div>
           </>
         );
-        break
       case "greeting":
         return (
           <div className="field-row column-direction">
             <textarea autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.greeting_placeholder} rows="4" colos="40" className="extend" />
           </div>
         );
-        break;
       case "note":
         return (
           <div className="field-row column-direction">
             <textarea autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.note_label} rows="4" colos="40" className="extend" />
           </div>
             );
-        break;
       case "shop_id":
         return (
           <>
@@ -96,66 +92,65 @@ const BookingPageEdit =({props}) => {
             <ErrorMessage error={errors.shop_id?.message} />
           </>
         )
-        break;
-      case "new_option":
+      case "new_option_menu":
         return (
           <div>
-            <select autoFocus={true} className="extend" name="new_option_id" ref={register()}>
-              <option value="">{I18n.t("common.select_a_booking_option")}</option>
-              <SelectOptions options={props.booking_page.available_booking_options} />
-            </select>
-            <hr />
-            <br />
-            <h3 className="centerize">OR</h3>
-            <h3 className="header centerize">{I18n.t("user_bot.dashboards.booking_page_creation.create_a_new_menu")}</h3>
+            <h3 className="header centerize">{I18n.t("settings.booking_page.form.create_a_new_option")}</h3>
 
             <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
-            <input autoFocus={true} ref={register()} name="new_menu_name" className="extend" type="text" />
+            <input autoFocus={true} ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
 
             <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</div>
-            <input autoFocus={true} ref={register()} name="new_menu_minutes" className="extend" type="tel" />
+            <input autoFocus={true} ref={register({ required: true })} name="new_menu_minutes" className="extend" type="tel" />
 
             <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
-            <input autoFocus={true} ref={register()} name="new_menu_price" className="extend" type="tel" />
+            <input autoFocus={true} ref={register({ required: true })} name="new_menu_price" className="extend" type="tel" />
 
             <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
             <label className="field-row flex-start">
-              <input name="new_menu_online_state" type="radio" value="true" ref={register()} />
+              <input name="new_menu_online_state" type="radio" value="true" ref={register({ required: true })} />
               {I18n.t(`user_bot.dashboards.booking_page_creation.menu_online`)}
             </label>
             <label className="field-row flex-start">
-              <input name="new_menu_online_state" type="radio" value="false" ref={register()} />
+              <input name="new_menu_online_state" type="radio" value="false" ref={register({ required: true })} />
               {I18n.t(`user_bot.dashboards.booking_page_creation.menu_local`)}
             </label>
           </div>
         )
-        break
+      case "new_option":
+        return (
+          <div>
+            <select autoFocus={true} className="extend" name="new_option_id" ref={register()}>
+              <SelectOptions options={props.booking_page.available_booking_options} />
+            </select>
+            <hr />
+            <br />
+            <div className="margin-around centerize">
+              <h3 className="centerize">{I18n.t("settings.booking_page.form.does_require_a_new_option")}</h3>
+              <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_menu" })} className="btn btn-orange">
+                {I18n.t("settings.booking_page.form.create_a_new_option")}
+              </a>
+            </div>
+          </div>
+        )
       case "booking_type":
         return <AvailableBookingDatesField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />
-        break;
       case "booking_time":
         return <BookingTimeField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />
-        break;
       case "booking_limit_day":
         return <BookingLimitDayField i18n={i18n} register={register} />
-        break;
       case "start_at":
         return <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />
-        break;
       case "end_at":
         return <BookingEndAtField i18n={i18n} register={register} watch={watch} control={control} />
       case "overbooking_restriction":
         return <OverbookingRestrictionField i18n={i18n} register={register} />
-        break;
       case "line_sharing":
         return <LineSharingField i18n={i18n} register={register} />
-        break;
       case "online_payment_enabled":
         return <OnlinePaymentEnabledField i18n={i18n} register={register} />
-        break;
       case "draft":
         return <DraftField i18n={i18n} register={register} />
-        break;
     }
   }
 
