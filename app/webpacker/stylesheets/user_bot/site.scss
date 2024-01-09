@@ -634,3 +634,11 @@ h3.header {
   z-index: 99999;
   border-radius: 0.375rem;
 }
+
+.with-function-bar {
+  padding-top: $bar-height * 2;
+
+  @include media-breakpoint-up(tablet) {
+    padding-top: $bar-height;
+  }
+}

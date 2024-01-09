@@ -195,6 +195,10 @@ module ApplicationHelper
     image_tag(png.to_data_url)
   end
 
+  def function_bar_enabled?
+    %w[schedules].exclude?(controller_name)
+  end
+
   private
 
   def phone_types

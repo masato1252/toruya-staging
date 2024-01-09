@@ -7,7 +7,7 @@
   background-color: #9e9e9e;
   margin-top: 0;
   border: 0;
-  z-index: 999;
+  z-index: $function-bar-zindex;
   position: fixed;
 
   @include media-breakpoint-up(tablet) {

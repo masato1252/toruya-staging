@@ -3,13 +3,14 @@
 require "site_routing"
 
 class NotificationsPresenter
-  attr_reader :current_user, :h, :reservations_approval_flow
+  attr_reader :current_user, :h, :reservations_approval_flow, :view_all_accounts
   delegate :link_to, to: :h
 
   def initialize(h, current_user, params = {})
     @h = h
     @current_user = current_user
     @reservation_id = params[:reservation_id]
+    @view_all_accounts = params[:view_all_accounts]
   end
 
   def data
@@ -149,11 +150,21 @@ class NotificationsPresenter
   end
 
   def staff_ids
-    @staff_ids ||= current_user.staff_accounts.active.pluck(:staff_id)
+    @staff_ids ||=
+      if view_all_accounts
+        current_user.staff_accounts.active.pluck(:staff_id)
+      else
+        [current_user.current_staff(Current.business_owner).id]
+      end
   end
 
   # XXX: includes current_user themselves
   def working_shop_owners
-    @working_shop_owners ||= current_user.staff_accounts.active.map(&:owner)
+    @working_shop_owners ||=
+      if view_all_accounts
+        current_user.staff_accounts.active.map(&:owner)
+      else
+        [Current.business_owner]
+      end
   end
 end

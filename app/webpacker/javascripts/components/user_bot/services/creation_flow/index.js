@@ -90,7 +90,7 @@ const CreationFlow = ({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0 settings-view">
+        <div className="col-sm-6 px-0 settings-view with-function-bar">
           <GlobalProvider props={props}>
             <GoalFlowDispatcher />
           </GlobalProvider>

@@ -83,7 +83,7 @@
 .input-group {
   position: fixed;
   top: $bar-height;
-  z-index: 999;
+  z-index: $search-input-zindex;
 
   .input-group-addon {
     background-color: $palette-color6;
