@@ -23,6 +23,11 @@ class Lines::UserBotController < ActionController::Base
     @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
   end
 
+  def current_users
+    social_user.same_social_user_scope.map(&:user)
+  end
+  helper_method :current_users
+
   def current_user
     # XXX: for security, one the user pass the phone number identification able to set the current_user_id,
     # So even the line user id was stolen, it still useless for our main feature, they only could access

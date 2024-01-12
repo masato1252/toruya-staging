@@ -12,6 +12,7 @@ class AdminController < ApplicationController
     remember_me(user)
     sign_in(user)
     write_user_bot_cookies(:current_user_id, user.id)
+    write_user_bot_cookies(:social_service_user_id, user.social_user&.social_service_user_id)
 
     redirect_to root_path
   end

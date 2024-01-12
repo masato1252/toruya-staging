@@ -30,6 +30,11 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
   helper_method :current_user
 
+  def current_users
+    social_user.same_social_user_scope.map(&:user)
+  end
+  helper_method :current_users
+
   def social_user
     @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
   end
