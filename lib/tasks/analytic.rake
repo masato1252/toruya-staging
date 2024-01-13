@@ -240,6 +240,7 @@ namespace :analytic do
     #   "year-month" => {
     #     new_user_ids => [],
     #     new_user_base_amount => 0,
+    #     revenue_of_month => 123,
     #     after_months =>[
     #       [],
     #     ],
@@ -264,6 +265,7 @@ namespace :analytic do
       joined_month[year_month] ||= {}
       joined_month[year_month]["new_user_ids"] = new_user_ids
       joined_month[year_month]["new_user_base_amount"] = charges.where(user_id: new_user_ids).sum(:amount_cents)
+      joined_month[year_month]["revenue_of_month"] = charges.sum(:amount_cents)
 
       joined_month.each do |month_of_year, metric|
         still_pay_user_ids = (metric["new_user_ids"] & user_ids)
@@ -292,13 +294,13 @@ namespace :analytic do
       current_month = current_month.next_month
     end
 
-    ["retention_rate", "net_retention_rate", "amount"].each do |scenario|
+    ["retention_rate", "net_retention_rate", "money"].each do |scenario|
       worksheet = case scenario
                   when "retention_rate"
                     6
                   when "net_retention_rate"
                     7
-                  when "amount"
+                  when "money"
                     8
                   end
 
@@ -308,9 +310,17 @@ namespace :analytic do
       new_row_number = 5
       start_column = 2
       joined_month.each do |year_month, metric|
-        google_worksheet[new_row_number, start_column] = year_month
-        google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
-        google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
+        case scenario
+        when "retention_rate", "net_retention_rate"
+          google_worksheet[new_row_number, start_column] = year_month
+          google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
+          google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
+        when "money"
+          google_worksheet[new_row_number, start_column - 1] = metric["revenue_of_month"]
+          google_worksheet[new_row_number, start_column] = year_month
+          google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
+          google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
+        end
 
         if metric["rate"]
           metric["rate"].each.with_index do |rate, index|
@@ -319,11 +329,10 @@ namespace :analytic do
               google_worksheet[new_row_number, index + start_column + 3] = rate
             when "net_retention_rate"
               google_worksheet[new_row_number, index + start_column + 3] = metric["dollar_rate"][index]
-            when "amount"
+            when "money"
               google_worksheet[new_row_number, index + start_column + 3] = metric["amount"][index]
             end
           end
-        else
         end
 
         new_row_number = new_row_number + 1
