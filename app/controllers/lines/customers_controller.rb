@@ -18,7 +18,7 @@ class Lines::CustomersController < ActionController::Base
 
   def current_social_customer
     social_user_id =
-      if params[:encrypted_social_service_user_id]
+      if params[:encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:encrypted_social_service_user_id])
         cookies.permanent[:line_social_user_id_of_customer] = _id
       else
