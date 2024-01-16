@@ -9,7 +9,7 @@ export default class LineUserRedirector extends Controller {
       .then(() => {
         liff.getProfile()
           .then(profile => {
-            window.location.replace(this.url + '/social_service_user_id/' + profile.userId)
+            window.location.replace(this.url + '/social_service_user_id/' + profile.userId + '?redirect_from_rich_menu=true')
           })
           .catch((err) => {
             console.log('error', err);

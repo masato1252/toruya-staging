@@ -39,4 +39,23 @@ class SocialUser < ApplicationRecord
   def same_social_user_scope
     SocialUser.where(social_service_user_id: social_service_user_id)
   end
+
+  def current_users
+    @current_users ||= same_social_user_scope.map(&:user).compact.sort do |user1, user2|
+      user1.id <=> user2.id
+    end
+  end
+
+  def root_user
+    @root_user ||= current_users.first
+  end
+
+  def manage_accounts
+    @manage_accounts ||=
+      begin
+        owners = current_users.map {|user| user&.staff_accounts.where(level: "owner")&.active&.includes(:owner)&.map(&:owner) }.compact.flatten.uniq
+        managers = current_users.map {|user| user&.staff_accounts.where.not(level: "owner")&.active&.includes(:owner)&.map(&:owner) }.compact.flatten.uniq
+        [ owners, managers ].flatten
+      end
+  end
 end

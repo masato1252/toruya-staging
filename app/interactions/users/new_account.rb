@@ -31,14 +31,14 @@ module Users
           phonetic_first_name: existing_user.phonetic_first_name
         })
 
-        compose(Users::CreateOwnerStaff, owner_user: existing_user, user: user)
-        compose(Users::CreateOwnerStaff, owner_user: user, user: existing_user)
+        # compose(Users::CreateOwnerStaff, owner_user: existing_user, user: user)
+        # compose(Users::CreateOwnerStaff, owner_user: user, user: existing_user)
         compose(
           Profiles::UpdateShopInfo,
           user: user,
           social_user: social_user,
           params: {
-            company_name: "#{existing_user.company_name} #{SocialUser.where(social_service_user_id: social_user.social_service_user_id).count}",
+            company_name: "#{existing_user.company_name} #{social_user.same_social_user_scope.count}",
             company_phone_number: existing_user.phone_number,
             zip_code: existing_user.profile.zip_code,
             region: existing_user.profile.region,

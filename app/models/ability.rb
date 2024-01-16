@@ -24,7 +24,9 @@ class Ability
   end
 
   def admin_level
-    @shop_owner_level = current_user == super_user || current_user.current_staff_account(super_user).admin? || current_user.current_staff_account(super_user).owner?
+    @shop_owner_level = current_user == super_user ||
+      current_users.map { |u| u.current_staff_account(super_user)&.admin? }.any? ||
+      current_users.map { |u| u.current_staff_account(super_user)&.owner? }.any?
   end
   alias_method :admin?, :admin_level
 
@@ -258,5 +260,13 @@ class Ability
     else
       true
     end
+  end
+
+  def social_user
+    current_user.social_user
+  end
+
+  def current_users
+    social_user.current_users
   end
 end

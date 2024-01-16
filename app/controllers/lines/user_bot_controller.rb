@@ -24,7 +24,7 @@ class Lines::UserBotController < ActionController::Base
   end
 
   def current_users
-    social_user.same_social_user_scope.map(&:user)
+    social_user.current_users
   end
   helper_method :current_users
 

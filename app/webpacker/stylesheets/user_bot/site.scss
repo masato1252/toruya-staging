@@ -642,3 +642,6 @@ h3.header {
     padding-top: $bar-height;
   }
 }
+  @include media-breakpoint-up(tablet) {
+    margin-top: 36px;
+  }

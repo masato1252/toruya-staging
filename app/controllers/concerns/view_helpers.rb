@@ -72,6 +72,7 @@ module ViewHelpers
       end
     @super_user ||= User.find_by(id: super_user_id)
   end
+  alias_method :business_owner, :super_user
 
   def current_ability
     @current_ability ||= Ability.new(current_user, Current.business_owner, shop)
