@@ -33,7 +33,7 @@ const UserBotCustomerPayments = () =>{
   let divider;
 
   const fetchPayments = async () => {
-    const [error, response] = await CustomerServices.payments({ user_id: props.super_user_id, customer_id: selected_customer.id })
+    const [error, response] = await CustomerServices.payments({ business_owner_id: props.business_owner_id, customer_id: selected_customer.id })
 
     dispatch({
       type: "ASSIGN_CUSTOMER_PAYMENTS",

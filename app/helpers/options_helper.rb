@@ -139,6 +139,7 @@ module OptionsHelper
 
     React.camelize_props({
       type: 'Reservation',
+      user_id: r.user_id,
       id: r.id,
       year: r.start_time.year,
       date: r.start_time.to_fs(:date),

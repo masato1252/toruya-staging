@@ -75,8 +75,8 @@
           <% end %>
 
           <dd>
-          <% if @user_ability.can?(:manage_shop_reservations, @reservation.shop) && @user_ability.can?(:edit, @reservation) %>
-            <%= link_to t("action.details"), site_routing_helper.reservation_form_path(@reservation, from: "customer_dashboard", from_customer_id: @customer.id, customer_id: @customer.id), class: "btn enhanced BTNtarco" %>
+            <% if @user_ability.can?(:manage_shop_reservations, @reservation.shop) && @user_ability.can?(:edit, @reservation) %>
+            <%= link_to t("action.details"), site_routing_helper.reservation_form_path(@reservation, business_owner_id: business_owner_id, from: "customer_dashboard", from_customer_id: @customer.id, customer_id: @customer.id), class: "btn enhanced BTNtarco" %>
           <% else %>
             <%= link_to t("action.details"), "#", class: "btn BTNtarco enhanced disabled" %>
           <% end %>

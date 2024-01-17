@@ -110,7 +110,7 @@ group :development do
   gem "bullet"
   gem "awesome_rails_console"
   gem "derailed_benchmarks"
-  gem "rack-mini-profiler"
+  # gem "rack-mini-profiler"
   gem "stackprof"
   gem "memory_profiler"
   gem "benchmark-memory"

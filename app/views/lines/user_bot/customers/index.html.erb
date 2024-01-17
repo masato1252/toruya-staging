@@ -1,9 +1,9 @@
-<%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
-<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.shop, @reservation, customer_id: params[:customer_id], from: "customer_dashboard")) if @reservation %>
+<%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
+<%= jump_out_modal(lines_user_bot_shop_reservation_path(business_owner_id, @reservation.shop, @reservation, customer_id: params[:customer_id], from: "customer_dashboard")) if @reservation %>
 
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
-    super_user_id: @customer ? @customer.user_id : Current.business_owner.id,
+    business_owner_id: business_owner_id,
     from: params[:from],
     from_options: FROM,
     referrer: request.referrer,

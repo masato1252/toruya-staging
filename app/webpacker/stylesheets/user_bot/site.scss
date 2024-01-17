@@ -642,6 +642,9 @@ h3.header {
     padding-top: $bar-height;
   }
 }
+
+.mobile {
   @include media-breakpoint-up(tablet) {
     margin-top: 36px;
   }
+}

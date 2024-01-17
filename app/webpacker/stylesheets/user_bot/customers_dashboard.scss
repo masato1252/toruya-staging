@@ -2,6 +2,10 @@
   // Make top bar and search bar don't cover the customer list
   padding-top: $bar-height * 2 + 6px;
 
+  @include media-breakpoint-up(tablet) {
+    padding-top: $bar-height + 6px;
+  }
+
   .customers-list-dashboard {
     padding-bottom: $bar-height;
 
@@ -81,8 +85,8 @@
 }
 
 .input-group {
-  position: fixed;
-  top: $bar-height;
+  position: sticky;
+  top: $bar-height * 2;
   z-index: $search-input-zindex;
 
   .input-group-addon {

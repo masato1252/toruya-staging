@@ -239,7 +239,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
 
     @staff_options =
-      shop.available_staffs.map do |staff|
+      Current.business_owner.staffs.map do |staff|
         ::Option.new(id: staff.id, name: staff.name, handable_customers: nil)
       end
   end

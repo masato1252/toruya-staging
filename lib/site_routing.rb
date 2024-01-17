@@ -25,22 +25,13 @@ class SiteRouting
     end
   end
 
-  def customers_path(user_id, *args)
+  def customers_path(business_owner_id, *args)
     options = args.extract_options!
-
-    if from_line_bot
-      h.lines_user_bot_customers_path(options.merge(user_id: user_id))
-    else
-      h.user_customers_path(options.merge(user_id: user_id))
-    end
+    h.lines_user_bot_customers_path(options.merge(business_owner_id: business_owner_id))
   end
 
   def reservation_form_path(reservation, *args)
-    if from_line_bot
-      h.form_lines_user_bot_shop_reservations_path(reservation.shop, reservation, *args)
-    else
-      h.form_shop_reservations_path(reservation.shop, reservation, *args)
-    end
+    h.form_lines_user_bot_shop_reservations_path(reservation.shop, reservation, *args)
   end
 
   # TODO: controller and view required
@@ -89,15 +80,15 @@ class SiteRouting
   end
 
   def accept_customer_user_reservations_path(reservation, customer)
-    from_line_bot ? h.accept_lines_user_bot_customer_reservations_path(reservation, customer) : h.accept_customer_user_reservations_path(reservation.shop.user, reservation, customer)
+    from_line_bot ? h.accept_lines_user_bot_customer_reservations_path(reservation.user_id, reservation, customer) : h.accept_customer_user_reservations_path(reservation.shop.user, reservation, customer)
   end
 
   def pend_customer_user_reservations_path(reservation, customer)
-    from_line_bot ? h.pend_lines_user_bot_customer_reservations_path(reservation, customer) : h.pend_customer_user_reservations_path(reservation.shop.user, reservation, customer)
+    h.pend_lines_user_bot_customer_reservations_path(business_owner_id: reservation.user_id, reservation_id: reservation.id, customer_id: customer.id)
   end
 
   def cancel_customer_user_reservations_path(reservation, customer)
-    from_line_bot ? h.cancel_lines_user_bot_customer_reservations_path(reservation, customer) : h.cancel_customer_user_reservations_path(reservation.shop.user, reservation, customer)
+    from_line_bot ? h.cancel_lines_user_bot_customer_reservations_path(reservation.user_id, reservation, customer) : h.cancel_customer_user_reservations_path(reservation.shop.user, reservation, customer)
   end
 
   def data_changed_user_customers_path(reservation_customer)

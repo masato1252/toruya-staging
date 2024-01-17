@@ -41,7 +41,7 @@ class SocialUser < ApplicationRecord
   end
 
   def current_users
-    @current_users ||= same_social_user_scope.map(&:user).compact.sort do |user1, user2|
+    @current_users ||= same_social_user_scope.includes(user: :staff_accounts).map(&:user).compact.sort do |user1, user2|
       user1.id <=> user2.id
     end
   end
@@ -53,8 +53,8 @@ class SocialUser < ApplicationRecord
   def manage_accounts
     @manage_accounts ||=
       begin
-        owners = current_users.map {|user| user.staff_accounts.where(level: "owner").active.includes(:owner).map(&:owner) }.flatten.uniq
-        managers = current_users.map {|user| user.staff_accounts.where.not(level: "owner").active.includes(:owner).map(&:owner) }.flatten.uniq
+        owners = current_users.map {|user| user.staff_accounts.where(level: "owner").active.includes(owner: :profile).map(&:owner) }.flatten.uniq
+        managers = current_users.map {|user| user.staff_accounts.where.not(level: "owner").active.includes(owner: :profile).map(&:owner) }.flatten.uniq
         [ owners, managers ].flatten
       end
   end

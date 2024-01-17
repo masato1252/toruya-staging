@@ -52,7 +52,7 @@ const Message = ({message, reply_ai_message, ai_question}) => {
                 })
               }
               else {
-                [error, response] = await CustomerServices.delete_message({ user_id: message.user_id, customer_id: message.toruya_customer_id, message_id: message.id })
+                [error, response] = await CustomerServices.delete_message({ business_owner_id: message.user_id, customer_id: message.toruya_customer_id, message_id: message.id })
               }
 
               window.location.replace(response?.data?.redirect_to)

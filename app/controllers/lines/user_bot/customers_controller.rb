@@ -7,14 +7,12 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     @customers =
       Current.business_owner
       .customers
-      .contact_groups_scope(current_user_staff)
       .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
       .order("updated_at DESC")
       .limit(::Customers::Search::PER_PAGE)
     @customer =
       Current.business_owner
       .customers
-      .contact_groups_scope(current_user_staff)
       .includes(:rank, :contact_group, :social_customer).find_by(id: params[:customer_id])
 
     @reservation = ReservationCustomer.find_by(customer_id: params[:customer_id], reservation_id: params[:reservation_id])&.reservation
@@ -52,7 +50,6 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     customers =
       Current.business_owner
       .customers
-      .contact_groups_scope(current_user_staff)
       .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
       .order("updated_at DESC, id DESC")
       .where(

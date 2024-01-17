@@ -90,7 +90,7 @@ module ViewHelpers
   end
 
   def shop
-    @shop ||= Shop.find_by(id: from_line_bot ? user_bot_cookies(:current_shop_id) : session[:current_shop_id])
+    @shop ||= Shop.find_by(id: params[:shop_id] || user_bot_cookies(:current_shop_id))
   end
 
   def staffs

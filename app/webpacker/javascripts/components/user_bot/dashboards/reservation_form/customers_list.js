@@ -26,7 +26,7 @@ const ReservationCustomersList = () =>  {
       }
     )
 
-    const [error, response] = await ReservationServices.addCustomer({shop_id: props.reservation_form.shop.id, data: params})
+    const [error, response] = await ReservationServices.addCustomer({business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, data: params})
     window.location = response.data.redirect_to;
     setProcessing(false)
   }

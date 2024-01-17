@@ -126,7 +126,7 @@
             modal_target: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:manage_shop_reservations, reservation.shop) && user_ability.can?(:edit, reservation) && user_ability.can?(:check_content, reservation) %>
-          <%= link_to t("action.details"), SiteRouting.new(self).reservation_form_path(reservation, from_customer_id: params[:from_customer_id]), class: "btn enhanced BTNtarco" %>
+          <%= link_to t("action.details"), SiteRouting.new(self).reservation_form_path(reservation, business_owner_id: business_owner_id, from_customer_id: params[:from_customer_id]), class: "btn enhanced BTNtarco" %>
         <% else %>
           <%= link_to t("action.details"), "#", class: "btn enhanced BTNtarco disabled" %>
         <% end %>

@@ -24,7 +24,7 @@ const BottomBar = () => {
         onClick={
           () => {
             if (confirm(I18n.t("user_bot.dashboards.customer.unread_confirmation_message"))) {
-              CustomerServices.unread_message({ user_id: selected_customer.userId, customer_id: selected_customer.id })
+              CustomerServices.unread_message({ business_owner_id: selected_customer.userId, customer_id: selected_customer.id })
               dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_view" }})
             }
           }

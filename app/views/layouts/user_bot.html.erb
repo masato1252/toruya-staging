@@ -47,6 +47,12 @@
         </li>
 
         <li class="p-1">
+          <%= active_link_to lines_user_bot_customers_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-wrench fa-2x"></i> <%= t("user_bot.dashboards.customer.title") %>
+          <% end if admin? %>
+        </li>
+
+        <li class="p-1">
           <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /booking|menu/ do %>
             <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
           <% end %>

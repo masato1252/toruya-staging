@@ -77,46 +77,46 @@ const UsersServices = {
 }
 
 const ReservationServices = {
-  create: (shop_id, data) => {
+  create: ({ business_owner_id, shop_id, data }) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_shop_reservations_path(shop_id, {format: "json"}),
+      url: Routes.lines_user_bot_shop_reservations_path(business_owner_id, shop_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
   },
-  update: (shop_id, reservation_id, data) => {
+  update: ({ business_owner_id, shop_id, reservation_id, data }) => {
     return request({
       method: "PUT",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_shop_reservation_path(shop_id, reservation_id, {format: "json"}),
+      url: Routes.lines_user_bot_shop_reservation_path(business_owner_id, shop_id, reservation_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
   },
-  validate: (shop_id, reservation_id = null, data) => {
+  validate: ({ business_owner_id, shop_id, reservation_id, data }) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.validate_lines_user_bot_shop_reservations_path(shop_id, reservation_id, {format: "json"}),
+      url: Routes.validate_lines_user_bot_shop_reservations_path(business_owner_id, shop_id, reservation_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
   },
-  addCustomer: ({shop_id, data}) => {
+  addCustomer: ({ business_owner_id, shop_id, data }) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.add_customer_lines_user_bot_shop_reservations_path(shop_id, {format: "json"}),
+      url: Routes.add_customer_lines_user_bot_shop_reservations_path(business_owner_id, shop_id, {format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -124,91 +124,92 @@ const ReservationServices = {
 }
 
 const CustomerServices = {
-  details: (user_id, customer_id) => {
+  details: ({ business_owner_id, customer_id }) => {
     return request({
       method: "GET",
       url: Routes.details_lines_user_bot_customers_path({format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         customer_id
       },
       responseType: "json"
     })
   },
-  recent: (user_id, last_updated_id = null, last_updated_at = null) => {
+  recent: ({ business_owner_id, last_updated_id, last_updated_at }) => {
     return request({
       method: "GET",
       url: Routes.recent_lines_user_bot_customers_path({format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         last_updated_at,
         last_updated_id
       },
       responseType: "json"
     })
   },
-  search: ({user_id, page, keyword}) => {
+  search: ({ business_owner_id, page, keyword }) => {
     return request({
       method: "GET",
       url: Routes.search_lines_user_bot_customers_path({format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         page,
         keyword
       },
       responseType: "json"
     })
   },
-  filter: ({user_id, page, pattern_number}) => {
+  filter: ({ business_owner_id, page, pattern_number }) => {
     return request({
       method: "GET",
       url: Routes.filter_lines_user_bot_customers_path({format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         page,
         pattern_number: pattern_number || 0
       },
       responseType: "json"
     })
   },
-  reservations: ({user_id, customer_id}) => {
+  reservations: ({ business_owner_id, customer_id }) => {
     return request({
       method: "GET",
       url: Routes.lines_user_bot_customer_reservations_path({format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         customer_id,
       },
       responseType: "json"
     })
   },
-  payments: ({user_id, customer_id}) => {
+  payments: ({ business_owner_id, customer_id }) => {
     return request({
       method: "GET",
       url: Routes.lines_user_bot_customer_payments_path({format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         customer_id,
       },
       responseType: "json"
     })
   },
-  save: (user_id, data) => {
+  save: ({ business_owner_id, data }) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.save_lines_user_bot_customers_path({user_id: user_id, format: "json"}),
+      url: Routes.save_lines_user_bot_customers_path({business_owner_id: business_owner_id, format: "json"}),
       data: data,
       responseType: "json"
     })
   },
-  messages: (id, oldest_message_at = null, oldest_message_id = null) => {
+  messages: ({ business_owner_id, id, oldest_message_at, oldest_message_id }) => {
     return request({
       method: "GET",
       url: Routes.lines_user_bot_customer_messages_path({format: "json"}),
       params: {
+        business_owner_id,
         id,
         oldest_message_at,
         oldest_message_id
@@ -216,54 +217,55 @@ const CustomerServices = {
       responseType: "json"
     })
   },
-  delete: (user_id, id) => {
+  delete: ({ business_owner_id, id }) => {
     return request({
       method: "DELETE",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.delete_lines_user_bot_customers_path({user_id: user_id, format: "json"}),
+      url: Routes.delete_lines_user_bot_customers_path({business_owner_id: business_owner_id, format: "json"}),
       params: {
         id,
       },
       responseType: "json"
     })
   },
-  toggle_reminder_permission: (user_id, customer_id) => {
+  toggle_reminder_permission: ({ business_owner_id, customer_id }) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.toggle_reminder_permission_lines_user_bot_customers_path({format: "json"}),
+      url: Routes.toggle_reminder_permission_lines_user_bot_customers_path({business_owner_id: business_owner_id, format: "json"}),
       data: {
-        user_id,
+        business_owner_id,
         id: customer_id,
       },
       responseType: "json"
     })
   },
-  find_duplicate_customers: ({user_id, last_name, first_name}) => {
+  find_duplicate_customers: ({ business_owner_id, last_name, first_name }) => {
     return request({
       method: "GET",
       url: Routes.find_duplicate_customers_lines_user_bot_customers_path({format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         last_name,
         first_name
       },
       responseType: "json"
     })
   },
-  reply_message: ({customer_id, message, schedule_at, image}) => {
+  reply_message: ({ business_owner_id, customer_id, message, schedule_at, image }) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken(),
         "content-type": "multipart/form-data"
       },
-      url: Routes.reply_message_lines_user_bot_customers_path({format: "json"}),
+      url: Routes.reply_message_lines_user_bot_customers_path({business_owner_id: business_owner_id, format: "json"}),
       data: serialize({
+        business_owner_id,
         customer_id,
         message,
         schedule_at,
@@ -272,30 +274,30 @@ const CustomerServices = {
       responseType: "json"
     })
   },
-  delete_message: ({user_id, customer_id, message_id}) => {
+  delete_message: ({ business_owner_id, customer_id, message_id }) => {
     return request({
       method: "DELETE",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.delete_message_lines_user_bot_customers_path({format: "json"}),
+      url: Routes.delete_message_lines_user_bot_customers_path({business_owner_id: business_owner_id, format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         customer_id,
         message_id
       },
       responseType: "json"
     })
   },
-  unread_message: ({user_id, customer_id, message_id}) => {
+  unread_message: ({ business_owner_id, customer_id, message_id }) => {
     return request({
       method: "PUT",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.unread_message_lines_user_bot_customers_path({format: "json"}),
+      url: Routes.unread_message_lines_user_bot_customers_path({business_owner_id: business_owner_id, format: "json"}),
       params: {
-        user_id,
+        business_owner_id,
         customer_id,
         message_id
       },
