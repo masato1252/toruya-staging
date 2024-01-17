@@ -20,33 +20,6 @@ class Lines::UserBotDashboardController < ActionController::Base
   skip_before_action :track_ahoy_visit
   before_action :redirect_from_rich_menu
 
-  def current_user
-    # @current_user ||= User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
-    # if !@current_user && params[:encrypted_user_id]
-    #   @current_user = User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
-    #   write_user_bot_cookies(:current_user_id, @current_user.id) if @current_user
-    # end
-    @current_user ||= current_users.find { |u| u.current_staff_account(business_owner)&.owner? } || current_users.find { |u| u.current_staff_account(business_owner)&.admin? }
-  end
-  helper_method :current_user
-
-  def current_users
-    social_user.current_users
-  end
-  helper_method :current_users
-
-  def root_user
-    social_user.root_user
-  end
-  helper_method :root_user
-
-  def social_user
-    @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
-  end
-  helper_method :social_user
-  alias_method :current_social_user, :social_user
-  helper_method :current_social_user
-
   def from_line_bot
     true
   end
@@ -64,11 +37,6 @@ class Lines::UserBotDashboardController < ActionController::Base
       end
   end
   helper_method :device_detector
-
-  def business_owner_id
-    params[:business_owner_id].presence || Current.business_owner&.id || Current.user&.id
-  end
-  helper_method :business_owner_id
 
   def shop_menus_options
     @shop_menus_options ||=

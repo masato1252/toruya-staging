@@ -9,7 +9,6 @@ module ViewHelpers
     helper_method :staffs
     helper_method :staff
     helper_method :shop_staff
-    helper_method :super_user
     helper_method :current_user_staff_account
     helper_method :current_user_staff
     helper_method :working_shop_options
@@ -29,6 +28,57 @@ module ViewHelpers
     helper_method :previous_controller_is
     helper_method :working_time_range
     helper_method :is_owner
+
+    helper_method :super_user
+    helper_method :business_owner
+    helper_method :current_user
+    helper_method :current_users
+    helper_method :root_user
+    helper_method :social_user
+    helper_method :current_social_user
+    helper_method :business_owner_id
+  end
+
+  def social_user
+    @social_user ||=
+      if ENV["DEV_USER_ID"]
+        User.find(ENV["DEV_USER_ID"]).social_user
+      elsif params[:encrypted_user_id]
+        _social_user = User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id])).social_user
+        write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
+        _social_user
+      else
+        SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
+      end
+  end
+  alias_method :current_social_user, :social_user
+
+  def current_user
+    @current_user ||= current_users.find { |u| u.current_staff_account(business_owner)&.present? }
+  end
+
+  def current_users
+    social_user.current_users
+  end
+
+  def root_user
+    social_user.root_user
+  end
+
+  def super_user
+    @super_user ||=
+      if params[:encrypted_user_id]
+        User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
+      elsif params[:business_owner_id]
+        User.find_by(id: params[:business_owner_id])
+      else
+        root_user
+      end
+  end
+  alias_method :business_owner, :super_user
+
+  def business_owner_id
+    params[:business_owner_id].presence || business_owner&.id || current_user&.id
   end
 
   def shops
@@ -59,20 +109,6 @@ module ViewHelpers
     @shop_staff ||= ShopStaff.find_by(shop: shop, staff: staff)
   end
 
-  def super_user
-    super_user_id =
-      if from_line_bot
-        if ENV["DISABLE_SUPER_USER_DEV_ID"]
-          params[:business_owner_id] || user_bot_cookies(:current_super_user_id) || ENV["DEV_USER_ID"]
-        else
-          ENV["DEV_USER_ID"] || params[:business_owner_id] || user_bot_cookies(:current_super_user_id)
-        end
-      else
-        session[:current_super_user_id]
-      end
-    @super_user ||= User.find_by(id: super_user_id)
-  end
-  alias_method :business_owner, :super_user
 
   def current_ability
     @current_ability ||= Ability.new(current_user, Current.business_owner, shop)
