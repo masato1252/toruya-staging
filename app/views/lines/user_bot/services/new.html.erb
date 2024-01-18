@@ -7,7 +7,7 @@
     business_owner_id: business_owner_id,
     is_premium_member: Current.business_owner.premium_member?,
     line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
-    line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id)),
+    line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id)),
     service_goals: ::OnlineService.goals,
     user_payable: Current.business_owner.payable?,
     companies: Current.business_owner.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(

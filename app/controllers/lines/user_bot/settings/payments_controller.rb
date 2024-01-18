@@ -2,7 +2,6 @@
 
 class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardController
   skip_before_action :authenticate_current_user!, only: [:receipt]
-  skip_before_action :where_user_are, only: [:receipt]
   skip_before_action :authenticate_super_user, only: [:receipt]
 
   def index

@@ -53,6 +53,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   def line
     param = request.env["omniauth.params"]
 
+    Rollbar.info("ToruyaUser", param: param )
     if param["who"] && MessageEncryptor.decrypt(param["who"]) == TORUYA_USER
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
@@ -97,6 +98,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_path
       end
     else
+      Rollbar.info(
+        "ToruyaUser",
+        param: param,
+        who: MessageEncryptor.decrypt(param["who"])
+      )
       outcome = ::SocialCustomers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
         param: param,

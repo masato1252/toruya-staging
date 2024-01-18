@@ -12,7 +12,7 @@ class Lines::VerificationController < ActionController::Base
     @login_api_ready = current_user.social_account&.login_api_verified?
 
     if @login_api_ready
-      redirect_to lines_verification_message_api_status_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
+      redirect_to lines_verification_message_api_status_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], encrypted_business_owner_id: MessageEncryptor.encrypt(current_user.id))
       return
     end
   end
@@ -21,7 +21,7 @@ class Lines::VerificationController < ActionController::Base
     @login_api_ready = current_user.social_account&.login_api_verified?
 
     if !@login_api_ready
-      redirect_to lines_verification_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
+      redirect_to lines_verification_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], encrypted_business_owner_id: MessageEncryptor.encrypt(current_user.id))
       return
     end
 
@@ -66,7 +66,12 @@ class Lines::VerificationController < ActionController::Base
   end
 
   def current_user
-    @current_user ||= SocialUser.find_by(social_service_user_id: MessageEncryptor.decrypt(params[:encrypted_social_service_user_id]))&.user
+    @current_user ||=
+      if params[:encrypted_business_owner_id]
+        User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_business_owner_id]))
+      else
+        SocialUser.find_by(social_service_user_id: MessageEncryptor.decrypt(params[:encrypted_social_service_user_id]))&.user
+      end
   end
   helper_method :current_user
 

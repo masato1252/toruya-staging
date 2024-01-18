@@ -47,18 +47,18 @@ module ViewHelpers
         _social_user = User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id])).social_user
         write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
         _social_user
-      else
+      elsif user_bot_cookies(:social_service_user_id)
         SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
       end
   end
   alias_method :current_social_user, :social_user
 
   def current_user
-    @current_user ||= current_users.find { |u| u.current_staff_account(business_owner)&.present? }
+    @current_user ||= current_users&.find { |u| u.current_staff_account(business_owner)&.present? }
   end
 
   def current_users
-    social_user.current_users
+    social_user&.current_users
   end
 
   def root_user
