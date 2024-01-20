@@ -31,16 +31,17 @@ class OmniauthSetup
       }
     else
       oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || @request.cookies["oauth_social_account_id"]
-      unless oauth_social_account_id
+
+      if oauth_social_account_id
+        account = SocialAccount.find(MessageEncryptor.decrypt(oauth_social_account_id))
+
+        {
+          client_id: account.login_channel_id,
+          client_secret: account.raw_login_channel_secret
+        }
+      else
         Rollbar.error("Unexpected line callback", request: @request)
       end
-
-      account = SocialAccount.find(MessageEncryptor.decrypt(oauth_social_account_id))
-
-      {
-        client_id: account.login_channel_id,
-        client_secret: account.raw_login_channel_secret
-      }
     end
   end
 end
