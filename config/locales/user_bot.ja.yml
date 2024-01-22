@@ -95,6 +95,10 @@ ja:
           save: 選択する
           save_and_pay: 選択する
         social_account:
+          new: アカウントの追加
+          description_html: Toruyaアカウントを追加することで<br>他のLINE公式アカウントを<br>Toruyaに連携することができます。
+          warning_html: アカウント毎に利用プランの<br>契約が必要になります。
+          new_btn: アカウントを追加する
           line_developer: LINEデベロッパーズ
           copy_url_btn: コピーURL
           verification_hint_message: Toruyaの利用を始める前に、LINE連携の動作テストを完了してください。

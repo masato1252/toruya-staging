@@ -40,7 +40,7 @@
 
         <li class="p-1">
           <%= active_link_to mine_lines_user_bot_schedules_path do %>
-            <i class="fa fa-wrench fa-2x"></i> <%= t("sidebar.calendar.mine") %>
+            <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.calendar.mine") %>
           <% end %>
         </li>
  
@@ -54,13 +54,13 @@
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_schedules_path(business_owner_id: business_owner_id) do %>
-            <i class="fa fa-wrench fa-2x"></i> <%= t("common.reservation_calendar") %>
+            <i class="fa fa-calendar fa-2x"></i> <%= t("common.reservation_calendar") %>
           <% end %>
         </li>
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_customers_path(business_owner_id: business_owner_id) do %>
-            <i class="fa fa-wrench fa-2x"></i> <%= t("user_bot.dashboards.customer.title") %>
+            <i class="fa fa-address-card fa-2x"></i> <%= t("user_bot.dashboards.customer.title") %>
           <% end %>
         </li>
 
@@ -165,9 +165,10 @@
                   <li class="dropdown-header p-3 text-16px"><%= owner.company_name %></li>
                 <% end %>
               <% end %>
+
               <li>
-                <%= button_to toruya_new_line_account_url(lines_user_bot_settings_path), class: "btn btn-tarco mx-1" do %>
-                  Add your another line account
+                <%= link_to new_lines_user_bot_settings_social_account_path, class: "btn btn-tarco mx-1" do %>
+                  <%= t("user_bot.dashboards.settings.social_account.new") %>
                 <% end %>
               </li>
             </ul>

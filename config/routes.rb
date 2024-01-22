@@ -248,7 +248,7 @@ Rails.application.routes.draw do
 
           resource :stripe, only: %i[show]
 
-          resource :social_account, only: [:edit, :update] do
+          resource :social_account, only: [:new, :edit, :update] do
             member do
               get :message_api
               get :login_api

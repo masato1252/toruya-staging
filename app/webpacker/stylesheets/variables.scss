@@ -90,7 +90,7 @@ $red: #b0450d;
 
 $desktop-sidebar-width: 250px;
 $function-bar-zindex: 999;
-$search-input-zindex: 990;
+$search-input-zindex: 400;
 
 @mixin border-radius($radius) {
   border-radius: $radius;
