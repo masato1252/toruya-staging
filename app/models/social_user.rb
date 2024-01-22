@@ -28,6 +28,10 @@ class SocialUser < ApplicationRecord
   belongs_to :user, optional: true
   has_many :social_user_messages
 
+  def single_owner?
+    manage_accounts.size == 1
+  end
+
   def client
     UserBotSocialAccount.client
   end

@@ -15,7 +15,7 @@
             </a>
           <% end %>
 
-          <% if my_calendar %>
+          <% if my_calendar || Current.social_user.single_owner? %>
             <a href="#" data-toggle="modal" data-target="#off-date-modal" class="btn btn-yellow btn-tweak btn-big">
               <%= I18n.t("action.new_off_schedule") %>
             </a>
