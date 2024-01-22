@@ -276,6 +276,7 @@ const Form = () => {
         </>
       </BottomNavigationBar>
       <CalendarModal
+        props={props}
         calendar={props.calendar}
         dateSelectedCallback={onSelectStartDate}
         selectedDate={start_time_date_part}

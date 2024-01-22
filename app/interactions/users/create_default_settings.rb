@@ -2,9 +2,6 @@
 
 module Users
   class CreateDefaultSettings < ActiveInteraction::Base
-    User.find_each do |user|
-      Users::CreateDefaultSettings.run(user: user)
-    end
     object :user
 
     def execute

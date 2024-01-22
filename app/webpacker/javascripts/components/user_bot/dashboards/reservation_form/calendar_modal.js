@@ -3,7 +3,7 @@
 import React from "react";
 import Calendar from "shared/calendar/calendar";
 
-const CalendarModal = ({i18n, calendar, dateSelectedCallback, selectedDate}) => {
+const CalendarModal = ({i18n, calendar, dateSelectedCallback, selectedDate, props}) => {
   return (
     <div className="modal fade" id="calendar-modal" tabIndex="-1" role="dialog">
       <div className="modal-dialog" role="document">
@@ -15,7 +15,7 @@ const CalendarModal = ({i18n, calendar, dateSelectedCallback, selectedDate}) => 
             <Calendar
               {...calendar}
               dateSelectedCallback={dateSelectedCallback}
-              schedulePath={Routes.personal_working_schedule_lines_user_bot_calendars_path({format: "json"})}
+              schedulePath={Routes.personal_working_schedule_lines_user_bot_calendars_path({business_owner_id: props.business_owner_id, format: "json"})}
               selectedDate={selectedDate}
             />
           </div>
