@@ -50,6 +50,19 @@ Rails.application.routes.draw do
       end
 
       resources :business_owners, only: [:update]
+      resources :schedules, only: [] do
+        collection do
+          get "mine/:reservation_date(/r/:reservation_id)", to: "schedules#mine", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :my_date
+          get :mine
+        end
+      end
+
+      resources :calendars, only: [] do
+        collection do
+          get "my_working_schedule"
+          get "/social_service_user_id/:social_service_user_id", action: "my_working_schedule"
+        end
+      end
 
       # business owner scope START
       scope "/owner/(:business_owner_id)" do

@@ -62,6 +62,7 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_one :subscription, dependent: :destroy
   has_many :reservations, -> { active }
+  has_many :all_reservations, class_name: "Reservation"
   has_many :shops, -> { active }
   has_many :menus, -> { active }
   has_many :staffs, -> { active }

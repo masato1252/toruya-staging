@@ -135,7 +135,7 @@ module OptionsHelper
                                 customer_names.first
                               end
 
-    acceptable = r.acceptable_by_staff?(current_user.current_staff(r.shop.user))
+    acceptable = r.acceptable_by_staff?(current_staff_of_owner(r.shop.user))
 
     React.camelize_props({
       type: 'Reservation',

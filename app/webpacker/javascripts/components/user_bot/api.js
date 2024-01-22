@@ -55,10 +55,10 @@ const UsersServices = {
       responseType: "json"
     })
   },
-  schedules: (date) => {
+  schedules: ({ business_owner_id, date }) => {
     return request({
       method: "GET",
-      url: Routes.personal_working_schedule_lines_user_bot_calendars_path({date: date, format: "json"}),
+      url: Routes.personal_working_schedule_lines_user_bot_calendars_path({business_owner_id: business_owner_id, date: date, format: "json"}),
       responseType: "json"
     })
   },

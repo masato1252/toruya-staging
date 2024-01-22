@@ -55,7 +55,16 @@ class SocialUser < ApplicationRecord
       begin
         owners = current_users.map {|user| user.staff_accounts.where(level: "owner").active.includes(owner: :profile).map(&:owner) }.flatten.uniq
         managers = current_users.map {|user| user.staff_accounts.where.not(level: "owner").active.includes(owner: :profile).map(&:owner) }.flatten.uniq
+
         [ owners, managers ].flatten
       end
+  end
+
+  def shops
+    manage_accounts.map(&:shops).flatten
+  end
+
+  def staffs
+    StaffAccount.where(user: current_users).active.includes(:staff).map(&:staff)
   end
 end

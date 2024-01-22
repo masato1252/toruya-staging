@@ -11,6 +11,7 @@ module ViewHelpers
     helper_method :shop_staff
     helper_method :current_user_staff_account
     helper_method :current_user_staff
+
     helper_method :working_shop_options
     helper_method :working_shop_owners
     helper_method :owning_shop_options
@@ -33,10 +34,13 @@ module ViewHelpers
     helper_method :business_owner
     helper_method :current_user
     helper_method :current_users
+    helper_method :current_staffs
     helper_method :root_user
     helper_method :social_user
     helper_method :current_social_user
     helper_method :business_owner_id
+    helper_method :current_user_of_owner
+    helper_method :current_staff_of_owner
   end
 
   def social_user
@@ -53,12 +57,24 @@ module ViewHelpers
   end
   alias_method :current_social_user, :social_user
 
+  def current_user_of_owner(owner)
+    current_users&.find { |u| u.current_staff_account(owner)&.present? }
+  end
+
+  def current_staff_of_owner(owner)
+    current_user_of_owner(owner).current_staff(owner)
+  end
+
   def current_user
     @current_user ||= current_users&.find { |u| u.current_staff_account(business_owner)&.present? }
   end
 
   def current_users
     social_user&.current_users
+  end
+
+  def current_staffs
+    social_user&.staffs
   end
 
   def root_user
@@ -150,33 +166,50 @@ module ViewHelpers
     end
   end
 
-  def working_shop_options(include_user_own: false, manager_above_level_required: false)
-    @working_shop_options ||= {}
-    cache_key = "user-own-#{include_user_own}-manager-level-#{manager_above_level_required}"
+  def working_shop_options(shops: )
+    shops.map do |shop|
+      owner = shop.user
+      staff = Current.user.current_staff(owner)
+      staff ||= owner.current_staff(owner)
 
-    return @working_shop_options[cache_key] if @working_shop_options[cache_key]
-
-    @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
-      staff = staff_account.staff
-
-      staff.shop_relations.includes(shop: :user).map do |shop_relation|
-        shop = shop_relation.shop
-
-        if include_user_own || shop.user != current_user
-          next if manager_above_level_required && ability(shop.user, shop).cannot?(:manage, :management_stuffs)
-
-          ::Option.new(shop: shop, shop_id: shop.id,
-                       staff: staff, staff_id: shop_relation.staff_id,
-                       owner: shop.user,
-                       shop_staff: shop_relation)
-        end
-      end
-    end.flatten.compact.sort_by { |option| option.shop_id }
+      ::Option.new(
+        shop: shop,
+        shop_id: shop.id,
+        staff: staff,
+        staff_id: staff.id,
+        owner: owner,
+        shop_staff: ShopStaff.where(shop: shop, staff: staff).first
+      )
+    end.compact
   end
 
-  def manage_shop_options(include_user_own: false)
-    working_shop_options(include_user_own: include_user_own, manager_above_level_required: true)
-  end
+  # def working_shop_options(include_user_own: false, manager_above_level_required: false)
+  #   @working_shop_options ||= {}
+  #   cache_key = "user-own-#{include_user_own}-manager-level-#{manager_above_level_required}"
+  #
+  #   return @working_shop_options[cache_key] if @working_shop_options[cache_key]
+  #
+  #   @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
+  #     staff = staff_account.staff
+  #
+  #     staff.shop_relations.includes(shop: :user).map do |shop_relation|
+  #       shop = shop_relation.shop
+  #
+  #       if include_user_own || shop.user != current_user
+  #         next if manager_above_level_required && ability(shop.user, shop).cannot?(:manage, :management_stuffs)
+  #
+  #         ::Option.new(shop: shop, shop_id: shop.id,
+  #                      staff: staff, staff_id: shop_relation.staff_id,
+  #                      owner: shop.user,
+  #                      shop_staff: shop_relation)
+  #       end
+  #     end
+  #   end.flatten.compact.sort_by { |option| option.shop_id }
+  # end
+
+  # def manage_shop_options(include_user_own: false)
+  #   working_shop_options(include_user_own: include_user_own, manager_above_level_required: true)
+  # end
 
   def owning_shop_options
     @owning_shop_options ||= Current.business_owner.shops.order("id").map do |shop|

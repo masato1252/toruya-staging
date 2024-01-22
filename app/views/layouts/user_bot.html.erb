@@ -28,7 +28,7 @@
     <div class="responsive-content flex-row" data-controller="collapse" data-collapse-status=<%= is_not_phone? ? "open" : "closed" %>>
       <ul class="mobile-content desktop-navigator" data-target="collapse.content">
         <li>
-          <%= link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
+          <%= link_to lines_user_bot_settings_path(business_owner_id: business_owner_id) do %>
             <img class="logo" src='<%= asset_pack_path("media/assets/user_bot/logo.png") %>' />
           <% end %>
         </li>
@@ -38,6 +38,12 @@
           <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
         </li>
 
+        <li class="p-1">
+          <%= active_link_to mine_lines_user_bot_schedules_path do %>
+            <i class="fa fa-wrench fa-2x"></i> <%= t("sidebar.calendar.mine") %>
+          <% end %>
+        </li>
+ 
         <hr class="my-2" />
 
         <li class="p-1">
@@ -47,9 +53,15 @@
         </li>
 
         <li class="p-1">
+          <%= active_link_to lines_user_bot_schedules_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-wrench fa-2x"></i> <%= t("common.reservation_calendar") %>
+          <% end %>
+        </li>
+
+        <li class="p-1">
           <%= active_link_to lines_user_bot_customers_path(business_owner_id: business_owner_id) do %>
             <i class="fa fa-wrench fa-2x"></i> <%= t("user_bot.dashboards.customer.title") %>
-          <% end if admin? %>
+          <% end %>
         </li>
 
         <li class="p-1">
@@ -140,29 +152,27 @@
       </ul>
 
       <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">
-        <% if function_bar_enabled? %>
-          <div class="top-navigation-function-bar">
-            <%= content_tag(:i, nil, data: { action: "click->collapse#toggle", target: "collapse.closeToggler" }, class: "fa fa-bars text-white") %>
-            <%= content_tag(:span, nil, data: { target: "collapse.openToggler" }) %>
+        <div class="top-navigation-function-bar">
+          <%= content_tag(:i, nil, data: { action: "click->collapse#toggle", target: "collapse.closeToggler" }, class: "fa fa-bars text-white") %>
+          <%= content_tag(:span, nil, data: { target: "collapse.openToggler" }) %>
 
-            <div class="dropdown open" data-controller="collapse" data-collapse-status="closed" data-action="click->collapse#toggle" >
-              <span class="text-white"><%= Current.business_owner.company_name %></span>
-              <i class="fas fa-caret-down text-white"></i>
-              <ul class="dropdown-menu dropdown-menu-right" data-target="collapse.content">
-                <% current_social_user.manage_accounts.each do |owner| %>
-                  <%= link_to lines_user_bot_settings_path(business_owner_id: owner.id) do %>
-                    <li class="dropdown-header p-3 text-16px"><%= owner.company_name %></li>
-                  <% end %>
+          <div class="dropdown open" data-controller="collapse" data-collapse-status="closed" data-action="click->collapse#toggle" >
+            <span class="text-white"><%= Current.business_owner.company_name %></span>
+            <i class="fas fa-caret-down text-white"></i>
+            <ul class="dropdown-menu dropdown-menu-right" data-target="collapse.content">
+              <% current_social_user.manage_accounts.each do |owner| %>
+                <%= link_to lines_user_bot_settings_path(business_owner_id: owner.id) do %>
+                  <li class="dropdown-header p-3 text-16px"><%= owner.company_name %></li>
                 <% end %>
-                <li>
-                  <%= button_to toruya_new_line_account_url(lines_user_bot_settings_path), class: "btn btn-tarco mx-1" do %>
-                    Add your another line account
-                  <% end %>
-                </li>
-              </ul>
-            </div>
+              <% end %>
+              <li>
+                <%= button_to toruya_new_line_account_url(lines_user_bot_settings_path), class: "btn btn-tarco mx-1" do %>
+                  Add your another line account
+                <% end %>
+              </li>
+            </ul>
           </div>
-        <% end %>
+        </div>
 
         <%= yield %>
       </div>

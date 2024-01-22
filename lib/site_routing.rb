@@ -44,39 +44,39 @@ class SiteRouting
   end
 
   def schedule_date_path(*args)
-    from_line_bot ? h.date_lines_user_bot_schedules_path(*args) : h.date_member_path(*args)
+    h.date_lines_user_bot_schedules_path(*args)
   end
 
   def custom_schedule_path(*args)
-    from_line_bot ? h.lines_user_bot_custom_schedule_path(*args) : h.custom_schedule_path(*args)
+    h.lines_user_bot_custom_schedule_path(*args)
   end
 
   def custom_schedules_path(*args)
-    from_line_bot ? h.lines_user_bot_custom_schedules_path(*args) : h.custom_schedules_path(*args)
+    h.lines_user_bot_custom_schedules_path(*args)
   end
 
   def check_out_shop_reservation_states_path(*args)
-    from_line_bot ? h.check_out_lines_user_bot_shop_reservation_states_path(*args) : h.check_out_shop_reservation_states_path(*args)
+    h.check_out_lines_user_bot_shop_reservation_states_path(*args)
   end
 
   def check_in_shop_reservation_states_path(*args)
-    from_line_bot ? h.check_in_lines_user_bot_shop_reservation_states_path(*args) : h.check_in_shop_reservation_states_path(*args)
+    h.check_in_lines_user_bot_shop_reservation_states_path(*args)
   end
 
   def accept_in_group_shop_reservation_states_path(*args)
-    from_line_bot ? h.accept_in_group_lines_user_bot_shop_reservation_states_path(*args) : h.accept_in_group_shop_reservation_states_path(*args)
+    h.accept_in_group_lines_user_bot_shop_reservation_states_path(*args)
   end
 
   def accept_shop_reservation_states_path(*args)
-    from_line_bot ? h.accept_lines_user_bot_shop_reservation_states_path(*args) : h.accept_shop_reservation_states_path(*args)
+    h.accept_lines_user_bot_shop_reservation_states_path(*args)
   end
 
   def pend_shop_reservation_states_path(*args)
-    from_line_bot ? h.pend_lines_user_bot_shop_reservation_states_path(*args) : h.pend_shop_reservation_states_path(*args)
+    h.pend_lines_user_bot_shop_reservation_states_path(*args)
   end
 
   def cancel_shop_reservation_states_path(*args)
-    from_line_bot ? h.cancel_lines_user_bot_shop_reservation_states_path(*args) : h.cancel_shop_reservation_states_path(*args)
+    h.cancel_lines_user_bot_shop_reservation_states_path(*args)
   end
 
   def accept_customer_user_reservations_path(reservation, customer)

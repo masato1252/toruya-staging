@@ -24,6 +24,8 @@ module StaffAccounts
         else
           errors.merge!(staff_account.errors)
         end
+
+        staff_account
       end
     end
   end

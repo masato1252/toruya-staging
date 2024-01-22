@@ -1,5 +1,5 @@
 <%= notification_messages %>
-<%= jump_out_modal(lines_user_bot_shop_reservation_path(business_owner_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
+<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservations.user_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
 
 <div class="schedule-dashboard">
   <div class="schedule-dates">
@@ -12,6 +12,8 @@
     <%= react_component(
       "user_bot/dashboards/schedules_dashboard/calendar_modal", {
         props: {
+          business_owner_id: business_owner_id,
+          my_calendar: @my_calendar,
           params: params,
           calendar: {
             dayNames: I18n.t("date.abbr_day_names"),
@@ -25,6 +27,8 @@
     <%= react_component(
       "user_bot/dashboards/schedules_dashboard/dates_list", {
         props: {
+          business_owner_id: business_owner_id,
+          my_calendar: @my_calendar,
           selectedDate: @date,
           startDate: params[:schedule_display_start_date] || @date
         }
@@ -37,8 +41,8 @@
   </div>
 
   <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: @reservations_approval_flow, date: @date %>
-  <%= render "lines/user_bot/schedules/schedule_modal" %>
-  <%= render "reservations/new_modal", date: @date %>
+  <%= render "lines/user_bot/schedules/schedule_modal", my_calendar: @my_calendar %>
+  <%= render "reservations/new_modal", date: @date, my_calendar: @my_calendar %>
   <%= render "reservations/off_date_modal", date: @date %>
 </div>
 

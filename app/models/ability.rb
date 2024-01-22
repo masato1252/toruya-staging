@@ -53,10 +53,14 @@ class Ability
   alias_method :staff?, :staff_level
 
   def responsible_for_reservation(reservation)
-    reservation.staff_ids.include?(current_user_staff.id)
+    (reservation.staff_ids & current_staffs.map(&:id)).present?
   end
 
   private
+
+  def current_staffs
+    current_user.social_user.staffs
+  end
 
   def current_user_staff_account
     current_user.current_staff_account(super_user)
@@ -241,10 +245,6 @@ class Ability
           admin? || current_user_staff.contact_group_relations.find_by(contact_group_id: customer.contact_group_id)&.details_readable?
         end
       end
-    end
-
-    if super_user.reservation_settings.exists?
-      can :create, :reservation_with_settings
     end
   end
 

@@ -28,11 +28,13 @@ module Users
           last_name: existing_user.last_name,
           first_name: existing_user.first_name,
           phonetic_last_name: existing_user.phonetic_last_name,
-          phonetic_first_name: existing_user.phonetic_first_name
+          phonetic_first_name: existing_user.phonetic_first_name,
+          address: existing_user.profile.address,
+          phone_number: existing_user.profile.phone_number,
+          email: existing_user.profile.email,
+          zip_code: existing_user.profile.zip_code
         })
 
-        # compose(Users::CreateOwnerStaff, owner_user: existing_user, user: user)
-        # compose(Users::CreateOwnerStaff, owner_user: user, user: existing_user)
         compose(
           Profiles::UpdateShopInfo,
           user: user,

@@ -11,6 +11,7 @@ module UserBotAuthorization
 
   def authenticate_current_user!
     if current_user
+      Current.social_user = current_social_user
       Current.user = current_user
     else
       redirect_to user_login_path
