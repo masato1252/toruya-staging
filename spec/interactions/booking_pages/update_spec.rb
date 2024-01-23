@@ -141,7 +141,7 @@ RSpec.describe BookingPages::Update do
       let(:update_attribute) { "new_option" }
       let(:new_booking_option) { FactoryBot.create(:booking_option, user: user) }
       before do
-        args[:attrs][:new_option] = new_booking_option.id
+        args[:attrs][:new_option_id] = new_booking_option.id
       end
 
       it "creates a new booking_page_option" do
@@ -152,6 +152,29 @@ RSpec.describe BookingPages::Update do
         expect(last_booking_option.booking_option_id).to eq(new_booking_option.id)
       end
     end
+
+    context "update_attribute is new_option_menu" do
+      let(:update_attribute) { "new_option_menu" }
+      before do
+        args[:attrs][:new_menu_name] = "foo"
+        args[:attrs][:new_menu_minutes] = 100
+        args[:attrs][:new_menu_price] = 100
+        args[:attrs][:new_menu_online_state] = true
+      end
+
+      it "creates a new booking_page_option, booking_option_menu and menu" do
+        expect {
+          outcome
+        }.to change {
+          BookingPageOption.count
+        }.and change {
+          BookingOptionMenu.count
+        }.and change {
+          Menu.count
+        }
+      end
+    end
+
     context "update_attribute is start_at" do
       let(:update_attribute) { "start_at" }
       before do

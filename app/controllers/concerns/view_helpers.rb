@@ -183,34 +183,6 @@ module ViewHelpers
     end.compact
   end
 
-  # def working_shop_options(include_user_own: false, manager_above_level_required: false)
-  #   @working_shop_options ||= {}
-  #   cache_key = "user-own-#{include_user_own}-manager-level-#{manager_above_level_required}"
-  #
-  #   return @working_shop_options[cache_key] if @working_shop_options[cache_key]
-  #
-  #   @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
-  #     staff = staff_account.staff
-  #
-  #     staff.shop_relations.includes(shop: :user).map do |shop_relation|
-  #       shop = shop_relation.shop
-  #
-  #       if include_user_own || shop.user != current_user
-  #         next if manager_above_level_required && ability(shop.user, shop).cannot?(:manage, :management_stuffs)
-  #
-  #         ::Option.new(shop: shop, shop_id: shop.id,
-  #                      staff: staff, staff_id: shop_relation.staff_id,
-  #                      owner: shop.user,
-  #                      shop_staff: shop_relation)
-  #       end
-  #     end
-  #   end.flatten.compact.sort_by { |option| option.shop_id }
-  # end
-
-  # def manage_shop_options(include_user_own: false)
-  #   working_shop_options(include_user_own: include_user_own, manager_above_level_required: true)
-  # end
-
   def owning_shop_options
     @owning_shop_options ||= Current.business_owner.shops.order("id").map do |shop|
       ::Option.new(shop: shop, owner: shop.user)

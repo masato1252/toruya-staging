@@ -201,7 +201,7 @@ class ReservationsController < DashboardController
     @time_ranges = outcome.valid? ? outcome.result : nil
 
     @customer_max_load_capability = Array.wrap(reservation_params_hash[:menu_staffs_list]).map do |menu_staffs_list|
-      # XXX: When there is the same menu, the second staffs would merge into first menu, then second menu's staff would disapper, unlikely case
+      # XXX: When there is the same menu, the second staffs would merge into first menu, then second menu's staff would disappear, unlikely case
       staff_ids = Array.wrap(menu_staffs_list[:staff_ids]).map { |hh| hh[:staff_id] }.compact
 
       if staff_ids.blank?

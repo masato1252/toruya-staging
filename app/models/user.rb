@@ -113,14 +113,14 @@ class User < ApplicationRecord
   delegate :client, to: UserBotSocialAccount
   delegate :line_keyword_booking_page_ids, to: :user_setting
 
-  scope :admin, -> { where(id: ADMIN_IDS) }
+  scope :admin, -> { joins(:social_user).where(social_service_user_id: SocialUser::ADMIN_IDS) }
   scope :not_admin, -> { where.not.admin }
   before_validation(on: :create) do
     self.public_id ||= SecureRandom.uuid
   end
 
   def super_admin?
-    ADMIN_IDS.include?(id)
+    ADMIN_IDS.include?(id) || social_user.super_admin?
   end
 
   # shop owner or staffs

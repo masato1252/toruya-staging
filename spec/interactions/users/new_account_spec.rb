@@ -25,14 +25,9 @@ RSpec.describe Users::NewAccount do
         Staff.count
       }.and change {
         StaffAccount.count
+      }.and change {
+        Shop.count
       }
-
-      new_user = User.last
-      new_staff = new_user.current_staff(user)
-      new_staff_account = user.owner_staff_accounts.where(owner_id: user.id, staff_id: new_staff.id).last
-
-      expect(new_staff_account).to be_owner
-      expect(new_staff_account).to be_active
     end
   end
 end

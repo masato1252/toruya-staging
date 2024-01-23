@@ -34,7 +34,7 @@ module StaffAccounts
 
       staff_account.mark_pending unless staff_account.active?
 
-      if resend || staff_account.email_changed? || staff_account.phone_number_changed? || 
+      if resend || staff_account.email_changed? || staff_account.phone_number_changed?
         staff_account.user =
           if staff_account.phone_number.present?
             User.find_by(phone_number: staff_account.phone_number)

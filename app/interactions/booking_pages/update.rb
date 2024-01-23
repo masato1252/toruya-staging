@@ -26,9 +26,10 @@ module BookingPages
       boolean :overbooking_restriction, default: true
 
       integer :new_option_id, default: nil
+
       string :new_menu_name, default: nil
-      string :new_menu_minutes, default: nil
-      string :new_menu_price, default: nil
+      integer :new_menu_minutes, default: nil
+      integer :new_menu_price, default: nil
       boolean :new_menu_online_state, default: false
 
       string :start_at_date_part, default: nil
@@ -83,12 +84,12 @@ module BookingPages
                 interval: 0,
                 min_staffs_number: 1,
                 category_ids: [category.id],
-                shop_menus_attributes: user.shop_ids.map do |shop_id|
+                shop_menus_attributes: [
                   {
-                    shop_id: shop_id,
+                    shop_id: booking_page.shop_id,
                     max_seat_number: 1
                   }
-                end,
+                ],
                 staff_menus_attributes: user.staff_ids.map do |staff_id|
                   {
                     staff_id: staff_id,

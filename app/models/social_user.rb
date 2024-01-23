@@ -24,9 +24,20 @@ require "user_bot_social_account"
 
 class SocialUser < ApplicationRecord
   acts_as_taggable_on :memos
+  ADMIN_IDS = [
+    "U6de618891f1113d0d7c07ce3dd209540",
+    "Ud5a6c48f7716e81f8086d1a9467fea42",
+    "Ua13ed6ae1390795b84f78eb30efb410e",
+    "Ube9f9b68d4b028c8407c50cc9e951b5e",
+    "U5f5528373cf1e4f849ad7253ed38a918"
+  ].freeze
 
   belongs_to :user, optional: true
   has_many :social_user_messages
+
+  def super_admin?
+    ADMIN_IDS.include?(social_service_user_id)
+  end
 
   def single_owner?
     manage_accounts.size == 1

@@ -14,7 +14,7 @@ class AdminController < ApplicationController
     write_user_bot_cookies(:current_user_id, user.id)
     write_user_bot_cookies(:social_service_user_id, user.social_user&.social_service_user_id)
 
-    redirect_to root_path
+    redirect_to lines_user_bot_settings_path(user.id)
   end
 
   private

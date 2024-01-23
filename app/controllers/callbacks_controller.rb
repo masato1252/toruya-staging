@@ -68,6 +68,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
       if outcome.valid? && social_user&.user
         # line sign in
         user = social_user.user
+        remember_me(user)
+        sign_in(user)
         write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
 
         if param["existing_owner_id"] # existing user add another line account

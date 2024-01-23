@@ -581,6 +581,7 @@ RSpec.describe Reservable::Reservation do
         context "when the existing reservation is not under current staff's user" do
           let!(:reservation) do
             other_owner_staff = FactoryBot.create(:staff_account, user: staff2.staff_account.user).staff
+            FactoryBot.create(:social_user, user: staff2.staff_account.user)
             FactoryBot.create(:reservation, staffs: [other_owner_staff], start_time: time_range.first, end_time: time_range.last)
           end
 
