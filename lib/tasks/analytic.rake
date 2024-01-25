@@ -253,9 +253,15 @@ namespace :analytic do
     join_user_ids = []
     joined_month = {}
     helper = ApplicationController.helpers
+    total_reservations_count = 0
+    total_people_month = 0
 
     while current_month < end_month
+      last_month = current_month.next_month > end_month
+
       charges = SubscriptionCharge.completed.where(created_at: current_month..current_month.end_of_month)
+      reservations = Reservation.where(created_at: current_month..current_month.end_of_month)
+
       user_ids = charges.pluck(:user_id)
       new_user_ids = user_ids - join_user_ids
 
@@ -269,11 +275,14 @@ namespace :analytic do
 
       joined_month.each do |month_of_year, metric|
         still_pay_user_ids = (metric["new_user_ids"] & user_ids)
+        left_user_ids = metric["new_user_ids"] - still_pay_user_ids
 
         joined_month[month_of_year]["after_months"] ||= []
         joined_month[month_of_year]["after_months"] << still_pay_user_ids
         joined_month[month_of_year]["amount"] ||= []
         existing_users_paid = charges.where(user_id: still_pay_user_ids).sum(:amount_cents)
+        existing_users_reservations = reservations.where(user_id: still_pay_user_ids).count
+
         joined_month[month_of_year]["amount"] << existing_users_paid
 
         joined_month[month_of_year]["rate"] ||= []
@@ -311,7 +320,12 @@ namespace :analytic do
       start_column = 2
       joined_month.each do |year_month, metric|
         case scenario
-        when "retention_rate", "net_retention_rate"
+        when "retention_rate"
+          google_worksheet[new_row_number, start_column - 1] = total_reservations_count / total_people_month.to_f
+          google_worksheet[new_row_number, start_column] = year_month
+          google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
+          google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
+        when "net_retention_rate"
           google_worksheet[new_row_number, start_column] = year_month
           google_worksheet[new_row_number, start_column + 1] = metric["new_user_ids"].length
           google_worksheet[new_row_number, start_column + 2] = metric["new_user_ids"].join(", ")
@@ -340,5 +354,88 @@ namespace :analytic do
 
       google_worksheet.save
     end
+  end
+
+  task :user_business_status => :environment do
+    user_ids = Subscription.charge_required.pluck(:user_id)
+    google_worksheet = Google::Drive.spreadsheet(worksheet: 9)
+
+    reservation_per_month = user_ids.map do |user_id|
+      first_paid_date = SubscriptionCharge.where(user_id: user_id).completed.order("id").first&.created_at&.to_date
+      next unless first_paid_date
+      user = User.find(user_id)
+      owner_customer_id = user.owner_social_customer.customer_id
+      customer_ids = user.customer_ids
+      reservation_ids = Reservation.where(user_id: user_id).pluck(:id)
+      reservation_customer_scope = ReservationCustomer.where(id: reservation_ids).where.not(customer_id: owner_customer_id).where(state: [:accepted, :pending])
+      reservation_count = reservation_customer_scope.count
+
+      reservation_amount = reservation_customer_scope.where(booking_option_id: user.booking_option_ids).sum(:booking_amount_cents)
+      service_amount = CustomerPayment.where(customer_id: customer_ids - Array.wrap(owner_customer_id), product_type: "OnlineServiceCustomerRelation").sum(:amount_cents)
+      period = (Date.today - first_paid_date).to_f
+      reservation_per_day = reservation_count / period
+      reservation_revenue_per_day = reservation_amount / period
+      service_revenue_per_day = service_amount / period
+      last_reservation_date = reservation_customer_scope.last&.created_at&.to_s(:date)
+      total_customers_count = Customer.where(user_id: user_id).count
+      customer_per_day = total_customers_count / period
+      total_line_customers_count = SocialCustomer.where(user_id: user.id).count
+      line_customer_per_day = total_line_customers_count / period
+
+      total_sale_page_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "SalePage").count
+      sale_page_visit_per_day = total_sale_page_visit / period
+
+      total_booking_page_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "BookingPage").count
+      booking_page_visit_per_day = total_booking_page_visit / period
+
+      {
+        user_id: user_id,
+        first_paid_date: first_paid_date&.to_s(:date),
+        reservation_count_monthly: (reservation_per_day * 30).round(2),
+        reservation_revenue_monthly: (reservation_revenue_per_day * 30).round(2).to_i,
+        service_revenue_monthly: (service_revenue_per_day * 30).round(2).to_i,
+        total_revenue_monthly: ( (reservation_revenue_per_day * 30).round(2) + (service_revenue_per_day * 30).round(2) ).to_i,
+        last_reservation_date: last_reservation_date,
+        had_reservation_in_one_month: last_reservation_date ? last_reservation_date > 30.days.ago : false,
+        had_reservation_in_three_week: last_reservation_date ? last_reservation_date > 21.days.ago : false,
+        had_reservation_in_two_week: last_reservation_date ? last_reservation_date > 14.days.ago : false,
+        had_reservation_in_one_week: last_reservation_date ? last_reservation_date > 7.days.ago : false,
+        total_customers_count: total_customers_count,
+        new_customer_monthly: (customer_per_day * 30).round(2),
+        total_line_customers_count: total_line_customers_count,
+        new_line_customer_monthly: (line_customer_per_day * 30).round(2),
+        sale_page_visit_monthly: (sale_page_visit_per_day * 30).round(2),
+        booking_page_visit_monthly: (booking_page_visit_per_day * 30).round(2)
+      }
+    end.compact.sort_by {|r| r[:reservation_count_monthly] }
+
+    new_row_number = 3
+    reservation_per_month.each do |r|
+      [
+        %|=HYPERLINK("https://manager.toruya.com/admin/chats?user_id=#{r[:user_id]}", #{r[:user_id]})|,
+        r[:reservation_count_monthly],
+        r[:reservation_revenue_monthly],
+        r[:service_revenue_monthly],
+        r[:total_revenue_monthly],
+        r[:total_customers_count],
+        r[:new_customer_monthly],
+        r[:total_line_customers_count],
+        r[:new_line_customer_monthly],
+        r[:sale_page_visit_monthly],
+        r[:booking_page_visit_monthly],
+        r[:had_reservation_in_one_month],
+        r[:had_reservation_in_three_week],
+        r[:had_reservation_in_two_week],
+        r[:had_reservation_in_one_week],
+        r[:first_paid_date],
+        r[:last_reservation_date]
+      ].each_with_index do |value, column_index|
+        google_worksheet[new_row_number, column_index + 1] = value
+      end
+
+      new_row_number = new_row_number + 1
+    end
+
+    google_worksheet.save
   end
 end
