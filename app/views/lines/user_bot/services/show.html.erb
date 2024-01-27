@@ -65,6 +65,10 @@
 
         <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
         <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service, business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.custom_message.auto_message_service_label") %>
+
+        <div class="field-group-header" id="auto_message"><%= t("sidebar.broadcast.title") %></div>
+        <%= render "lines/user_bot/field_row", path: new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id, online_service_id: @service.id), title: t("sidebar.broadcast.title") %>
+
         <% if @service.membership? %>
           <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
           <%= render "lines/user_bot/field_row", path: lines_user_bot_service_episodes_path(@service, business_owner_id: business_owner_id) do %>

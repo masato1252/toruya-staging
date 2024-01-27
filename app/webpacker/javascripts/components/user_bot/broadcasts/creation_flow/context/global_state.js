@@ -22,8 +22,9 @@ export const GlobalProvider = ({ props, children }) => {
       reducers(),
       {
         broadcast_creation_states: {
-          ...props.broadcast
-        }
+          ...props.broadcast,
+          selected_online_service: props.selected_online_service
+        },
       }
     )
   }, [])

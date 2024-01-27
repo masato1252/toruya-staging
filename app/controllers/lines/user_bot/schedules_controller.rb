@@ -36,9 +36,17 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   end
 
   def index
-    @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
-
     working_shop_ids = Current.business_owner.shop_ids
+
+    @date =
+      if params[:reservation_date].present?
+        Time.zone.parse(params[:reservation_date]).to_date
+      elsif params[:reservation_id].present?
+        Reservation.where(shop_id: working_shop_ids).find(params[:reservation_id]).start_time.to_date
+      else
+        Time.zone.now.to_date
+      end
+
     reservations = Reservation.where(shop_id: working_shop_ids)
       .uncanceled.in_date(@date)
       .includes(:menus, :customers, :staffs, shop: :user)

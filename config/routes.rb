@@ -361,6 +361,8 @@ Rails.application.routes.draw do
                 get :check_out
                 get :cancel
               end
+
+              resource :messages, only: [:new, :create]
             end
           end
         end

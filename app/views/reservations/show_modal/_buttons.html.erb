@@ -131,6 +131,13 @@
           <%= link_to t("action.details"), "#", class: "btn enhanced BTNtarco disabled" %>
         <% end %>
       </dd>
+      <hr >
+
+      <%= link_to(
+        t("action.broadcast"),
+        new_lines_user_bot_shop_reservation_messages_path(reservation.user_id, reservation.shop_id, reservation.id),
+        class: "btn btn-tarco"
+      ) %>
     </dl>
   </div>
 <% end %>

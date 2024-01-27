@@ -58,6 +58,8 @@ ja:
         delete_a_menu: メニューを削除
         add_a_staff: スタッフを追加
         staff_states_title: ステータス
+        messages:
+          broadcast_to_customer: broadcast to customer
       customer:
         title: 顧客台帳
         search_placeholder: 名前で検索
