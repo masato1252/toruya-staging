@@ -52,6 +52,7 @@ class User < ApplicationRecord
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"
   ADMIN_IDS = [1, 2, 5, 61, 813].freeze
+  CHAT_OPERATOR_IDS = [].freeze
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -121,6 +122,10 @@ class User < ApplicationRecord
 
   def super_admin?
     ADMIN_IDS.include?(id) || social_user.super_admin?
+  end
+
+  def can_admin_chat?
+    super_admin? || CHAT_OPERATOR_IDS.include?(id)
   end
 
   # shop owner or staffs
