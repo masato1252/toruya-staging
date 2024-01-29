@@ -82,7 +82,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
           remember_me(new_user)
           sign_in(new_user)
 
-          redirect_to lines_user_bot_settings_path(new_user.id), notice: "Set up you new account line settings"
+          redirect_to lines_user_bot_settings_path(new_user.id), notice: I18n.t("new_line_account.successful_message")
           return
         elsif param["staff_token"]
           staff_connect_outcome = StaffAccounts::ConnectUser.run(token: param["staff_token"], user: user)

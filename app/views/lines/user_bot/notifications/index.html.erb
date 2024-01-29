@@ -3,6 +3,7 @@
 
   <% @user_notifications.each do |user_notifications| %>
     <%= render "lines/user_bot/notifications/informations",
+      user: user_notifications[:user],
       messages: user_notifications[:messages],
       reservations: user_notifications[:reservations],
       missing_sale_page_services: user_notifications[:missing_sale_page_services],
