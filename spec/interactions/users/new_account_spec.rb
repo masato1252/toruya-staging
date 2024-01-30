@@ -4,11 +4,10 @@ require "rails_helper"
 
 RSpec.describe Users::NewAccount do
   let(:user) { FactoryBot.create(:profile).user }
-  let(:social_user) { FactoryBot.create(:social_user, user: user) }
+  let!(:social_user) { FactoryBot.create(:social_user, user: user) }
   let(:args) do
     {
-      existing_user: user,
-      social_user: social_user
+      existing_user: user
     }
   end
   let(:outcome) { described_class.run(args) }

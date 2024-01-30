@@ -3,10 +3,12 @@
 module Users
   class NewAccount < ActiveInteraction::Base
     object :existing_user, class: User
-    object :social_user
 
     def execute
       ApplicationRecord.transaction do
+        social_user = existing_user.social_user.deep_clone(only: [:social_service_user_id, :social_user_name, :social_rich_menu_key])
+        social_user.save
+
         user = User.new(password: Devise.friendly_token[0, 20])
         user.skip_confirmation!
         user.skip_confirmation_notification!
@@ -49,6 +51,8 @@ module Users
             street2: existing_user.profile.street2
           }
         )
+
+        Notifiers::Users::ExtraNewLineAccount.perform_later(receiver: user)
 
         user
       end

@@ -66,7 +66,7 @@ module ViewHelpers
   end
 
   def current_user
-    @current_user ||= current_users&.find { |u| u.current_staff_account(business_owner)&.present? }
+    @current_user ||= current_user_of_owner(business_owner)
   end
 
   def current_users

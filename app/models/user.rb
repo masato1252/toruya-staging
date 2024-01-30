@@ -253,7 +253,7 @@ class User < ApplicationRecord
   end
 
   def pending_customer_services
-    online_services.external.joins(:handle_required_online_service_customer_relations).select("id", "internal_name", "name", "goal_type").distinct
+    online_services.external.joins(:handle_required_online_service_customer_relations).select("id", "internal_name", "name", "goal_type", "user_id").distinct
   end
 
   def available_for_staffs_managements
