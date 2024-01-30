@@ -1,11 +1,12 @@
 <%= react_component("user_bot/broadcasts/reservation_customers", {
   props: {
     previous_path: request.referrer || lines_user_bot_schedules_path(business_owner_id: @reservation.user_id, reservation_id: @reservation.id),
-    reservation: @reservation.attributes.slice("id", "shop_id", "user_id"),
-    customer_names_sentence: @reservation.customers.map(&:name).join(", "),
-    message: {
-      customer_name: @reservation.customers.first.name
-    }
+    reservation: @reservation.attributes.slice("id", "shop_id", "user_id").merge!(
+      menus_sentence: @reservation.menus_sentence,
+      customers_count: @reservation.customers.count,
+      booking_time: @reservation.booking_time
+    ),
+    message: @reservation.message_template_variables(@reservation.user)
   }
 },
 { camelize_props: false }

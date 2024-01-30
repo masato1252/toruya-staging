@@ -147,6 +147,14 @@ class Reservation < ApplicationRecord
     notifiable? && reservation_customers.where(customer: customer, state: :accepted).exists? && customer.reminder_permission
   end
 
+  def booking_time
+    "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
+  end
+
+  def menus_sentence
+    menus.map(&:display_name).join(", ")
+  end
+
   private
 
   def end_time_larger_than_start_time

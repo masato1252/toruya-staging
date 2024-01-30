@@ -59,7 +59,8 @@ ja:
         add_a_staff: スタッフを追加
         staff_states_title: ステータス
         messages:
-          broadcast_to_customer: broadcast to customer
+          broadcast_to_customer: 予約客に一斉配信
+          broadcast_total_delivery: 配信予定数
       customer:
         title: 顧客台帳
         search_placeholder: 名前で検索
@@ -169,6 +170,8 @@ ja:
             episode_end_date: コンテンツ公開終了日
             lesson_name: レッスン名
             episode_name: コンテンツ名
+            meeting_url: ミーティングURL
+            booking_time: 予約時間
           booking_page:
             online_booking: オンライン予約
             page_label: 予約ページ
@@ -406,6 +409,7 @@ ja:
           bundled_services_title: 提供コンテンツ
           bundled_services_subtitle: 提供コンテンツ
           bundled_services_expiration: 各サービスの利用期限
+          broadcast_to_customers: 利用中の顧客に一斉配信
       booking_pages:
         index:
           title: オンライン予約ページ

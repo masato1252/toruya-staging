@@ -22,7 +22,7 @@
 
 class Broadcast < ApplicationRecord
   belongs_to :user
-  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_staffs", "reservation_customers"]
+  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers"]
   NORMAL_TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers"]
 
   scope :ordered, -> { order(Arel.sql("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC"))  }
@@ -76,5 +76,11 @@ class Broadcast < ApplicationRecord
         user.online_services.find_by(id: filter["value"]).name
       end
     end.compact
+  end
+
+  def target_ids
+    query["filters"].map do |filter|
+      filter["value"]
+    end
   end
 end

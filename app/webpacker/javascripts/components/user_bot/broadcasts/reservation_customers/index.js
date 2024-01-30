@@ -45,9 +45,10 @@ const ReservationCustomerBroadcast = ({props}) => {
             title={I18n.t(`user_bot.dashboards.reservation.messages.broadcast_to_customer`)}
             />
           <h3 className="header centerize">{I18n.t("user_bot.dashboards.reservation.messages.broadcast_to_customer")}</h3>
-          <div className="margin-around">
-            {props.customer_names_sentence}
-          </div>
+          <div className="margin-around">{props.reservation.booking_time} {props.reservation.menus_sentence}</div>
+
+          <h3 className="header centerize">{I18n.t("user_bot.dashboards.reservation.messages.broadcast_total_delivery")}</h3>
+          <div className="margin-around centerize">{props.reservation.customers_count}</div>
 
           <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_content_do_you_want")}</h3>
           <textarea
@@ -66,6 +67,8 @@ const ReservationCustomerBroadcast = ({props}) => {
             }}
           />
           <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
+          <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_time}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.booking_time")} </button>
+          <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{meeting_url}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.meeting_url")} </button>
           <div className="preview-hint">{I18n.t("user_bot.dashboards.broadcast_creation.preview")}</div>
           <p className="margin-around p10 bg-gray rounded break-line-content">{Translator(content, {...props.message})}</p>
 

@@ -33,7 +33,7 @@ class ReservationSerializer
   end
 
   attribute :menus_name do |reservation|
-    reservation.menus.map(&:display_name).join(", ")
+    reservation.menus_sentence
   end
 
   attribute :shop_name do |reservation|

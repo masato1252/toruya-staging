@@ -13,7 +13,7 @@
     },
     selected_online_service: params[:online_service_id] ? @online_services.find { |service| service[:value][:id] == params[:online_service_id].to_i }[:value] : nil,
     broadcast: params[:online_service_id] ? Broadcast.new(
-      query_type: "online_service",
+      query_type: "online_service_for_active_customers",
       query: {
         "filters" => [{
           "field" => "online_service_ids",

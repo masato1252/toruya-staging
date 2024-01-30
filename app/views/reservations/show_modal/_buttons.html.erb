@@ -131,13 +131,16 @@
           <%= link_to t("action.details"), "#", class: "btn enhanced BTNtarco disabled" %>
         <% end %>
       </dd>
-      <hr >
 
-      <%= link_to(
-        t("action.broadcast"),
-        new_lines_user_bot_shop_reservation_messages_path(reservation.user_id, reservation.shop_id, reservation.id),
-        class: "btn btn-tarco"
-      ) %>
+      <% if reservation.count_of_customers > 1 %>
+        <hr >
+
+        <%= link_to(
+          t("user_bot.dashboards.reservation.messages.broadcast_to_customer"),
+          new_lines_user_bot_shop_reservation_messages_path(reservation.user_id, reservation.shop_id, reservation.id),
+          class: "btn btn-yellow my-4"
+        ) %>
+    <% end %>
     </dl>
   </div>
 <% end %>
