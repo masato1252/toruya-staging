@@ -78,7 +78,7 @@ module ViewHelpers
   end
 
   def root_user
-    social_user.root_user
+    social_user&.root_user
   end
 
   def super_user
