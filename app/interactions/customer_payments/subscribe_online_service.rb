@@ -4,14 +4,27 @@ class CustomerPayments::SubscribeOnlineService < ActiveInteraction::Base
   object :online_service_customer_relation
 
   def execute
-    outcome = OnlineServiceCustomerRelations::Subscribe.run(relation: online_service_customer_relation)
+    subscribe_outcome = OnlineServiceCustomerRelations::Subscribe.run(relation: online_service_customer_relation)
 
-    if outcome.valid?
-      Sales::OnlineServices::Approve.run(relation: online_service_customer_relation)
+    if subscribe_outcome.valid?
+      outcome =
+        if product.bundler?
+          Sales::OnlineServices::ApproveBundlerService.run(relation: online_service_customer_relation)
+        else
+          Sales::OnlineServices::Approve.run(relation: online_service_customer_relation)
+        end
+
+        errors.merge!(outcome.errors)
     else
-      errors.merge!(outcome.errors)
+      errors.merge!(subscribe_outcome.errors)
 
       online_service_customer_relation.failed_payment_state!
     end
+  end
+
+  private
+
+  def product
+    online_service_customer_relation.online_service
   end
 end

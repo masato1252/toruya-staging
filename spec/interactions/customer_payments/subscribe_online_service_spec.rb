@@ -24,6 +24,18 @@ RSpec.describe CustomerPayments::SubscribeOnlineService do
       expect(relation).to be_paid_payment_state
       expect(relation).to be_active
     end
+
+    context "when service is bundler" do
+      let(:bundler_service) { FactoryBot.create(:online_service, :bundler, end_on_days: 365) }
+      let!(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, online_service: bundler_service, customer: customer) }
+
+      it "changes to expected state" do
+        outcome
+
+        expect(relation).to be_paid_payment_state
+        expect(relation).to be_active
+      end
+    end
   end
 
   context "when subscribes failed" do
