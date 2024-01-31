@@ -16,6 +16,9 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
     if @attribute == "new_option"
       @options = ::BookingPages::AvailableBookingOptions.run!(shop: @booking_page.shop)
+      @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
+    elsif @attribute == "new_option_menu"
+      @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
     end
   end
 
@@ -58,5 +61,15 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     else
       head :ok
     end
+  end
+
+  private
+
+  def menu_options
+    Current.business_owner.menus.map do |menu|
+      if menu.shop_menus.exists?
+        ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval, online: menu.online)
+      end
+    end.compact
   end
 end

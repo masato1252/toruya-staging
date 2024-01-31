@@ -415,6 +415,15 @@ ja:
           title: オンライン予約ページ
           field_header: 予約ページ
           line_status: LINE予約
+        form:
+          add_a_new_option: この価格を追加
+          new_option_with_existing_menu:
+            select_from_existing_menu: Select from a existing menu
+            create_from_a_new_menu: Create from a new menu
+      booking_options:
+        form:
+          add_this_new_menu: このメニューを追加
+          add_a_new_menu: 新メニューを追加
       broadcast_creation:
         filters_step: 配信相手
         content_step: 配信内容

@@ -27,6 +27,7 @@ module BookingPages
 
       integer :new_option_id, default: nil
 
+      integer :new_menu_id, default: nil
       string :new_menu_name, default: nil
       integer :new_menu_minutes, default: nil
       integer :new_menu_price, default: nil
@@ -71,38 +72,44 @@ module BookingPages
           booking_page.update(event_booking: booking_type == "event_booking")
         when "new_option_menu"
           ApplicationRecord.transaction do
-            category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
 
-            menu = compose(
-              Menus::Update,
-              menu: user.menus.new,
-              attrs: {
-                name: attrs[:new_menu_name],
-                short_name: attrs[:new_menu_name],
-                minutes: attrs[:new_menu_minutes],
-                online: attrs[:new_menu_online_state],
-                interval: 0,
-                min_staffs_number: 1,
-                category_ids: [category.id],
-                shop_menus_attributes: [
-                  {
-                    shop_id: booking_page.shop_id,
-                    max_seat_number: 1
+            menu =
+              if attrs[:new_menu_id]
+                Menu.find(attrs[:new_menu_id])
+              else
+                category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
+
+                compose(
+                  Menus::Update,
+                  menu: user.menus.new,
+                  attrs: {
+                    name: attrs[:new_menu_name],
+                    short_name: attrs[:new_menu_name],
+                    minutes: attrs[:new_menu_minutes],
+                    online: attrs[:new_menu_online_state],
+                    interval: 0,
+                    min_staffs_number: 1,
+                    category_ids: [category.id],
+                    shop_menus_attributes: [
+                      {
+                        shop_id: booking_page.shop_id,
+                        max_seat_number: 1
+                      }
+                    ],
+                    staff_menus_attributes: user.staff_ids.map do |staff_id|
+                      {
+                        staff_id: staff_id,
+                        priority: 0,
+                        max_customers: 1
+                      }
+                    end
+                  },
+                  reservation_setting_id: reservation_setting.id,
+                  menu_reservation_setting_rule_attributes: {
+                    start_date: Date.today
                   }
-                ],
-                staff_menus_attributes: user.staff_ids.map do |staff_id|
-                  {
-                    staff_id: staff_id,
-                    priority: 0,
-                    max_customers: 1
-                  }
-                end
-              },
-              reservation_setting_id: reservation_setting.id,
-              menu_reservation_setting_rule_attributes: {
-                start_date: Date.today
-              }
-            )
+                )
+              end
 
             default_booking_option_attrs = {
               name: menu.name,
