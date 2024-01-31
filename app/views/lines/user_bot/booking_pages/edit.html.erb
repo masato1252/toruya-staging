@@ -7,7 +7,7 @@
   <%= react_component("user_bot/booking_pages/edit", {
     props: {
       business_owner_id: business_owner_id,
-      menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes),
+      menu_group_options: @menu_result && menu_group_options(@menu_result[:category_with_menu_options], :minutes),
       booking_page: @booking_page.attributes.merge!(
         shop_id: @booking_page.shop_id.to_s,
         available_booking_options: @options ? custom_options(@options.map { |option| booking_option_item(option) }) : [],

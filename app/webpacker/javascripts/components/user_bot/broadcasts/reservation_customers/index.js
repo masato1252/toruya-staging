@@ -35,7 +35,7 @@ const ReservationCustomerBroadcast = ({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0 settings-view with-function-bar">
+        <div className="col-sm-6 px-0 settings-view">
           <TopNavigationBar
             leading={
               <a href={props.previous_path}>

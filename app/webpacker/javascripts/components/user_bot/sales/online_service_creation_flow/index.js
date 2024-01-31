@@ -21,7 +21,7 @@ const SalesOnlineServiceCreationFlow = ({props}) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-sm-6 px-0 settings-view with-function-bar">
+        <div className="col-sm-6 px-0 settings-view">
           <GlobalProvider props={props}>
             <FlowController new_version={true}>
               <OnlineServiceSelectionStep />

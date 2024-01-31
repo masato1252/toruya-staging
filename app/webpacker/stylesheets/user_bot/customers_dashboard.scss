@@ -1,10 +1,6 @@
 .customers-dashboard {
   // Make top bar and search bar don't cover the customer list
-  padding-top: $bar-height * 2 + 6px;
-
-  @include media-breakpoint-up(tablet) {
-    padding-top: $bar-height + 6px;
-  }
+  padding-top: $bar-height;
 
   .customers-list-dashboard {
     padding-bottom: $bar-height;

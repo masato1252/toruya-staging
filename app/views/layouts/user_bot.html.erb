@@ -24,7 +24,6 @@
   </head>
 
   <body>
-    <%= custom_bootstrap_flash %>
     <div class="responsive-content flex-row" data-controller="collapse" data-collapse-status=<%= is_not_phone? ? "open" : "closed" %>>
       <ul class="mobile-content desktop-navigator" data-target="collapse.content">
         <li>
@@ -175,7 +174,10 @@
           </div>
         </div>
 
-        <%= yield %>
+        <div class="with-function-bar">
+          <%= custom_bootstrap_flash %>
+          <%= yield %>
+        </div>
       </div>
     </div>
     <div class="modal fade" id="dummyModal" tabindex="-1" role="dialog"></div>

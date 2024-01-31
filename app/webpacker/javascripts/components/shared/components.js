@@ -175,7 +175,7 @@ const NotificationMessages = ({notification_messages, dispatch}) => {
     <>
       {notification_messages.map((message, i) => {
         return (
-          <div className="notification with-function-bar alert alert-info fade in" key={`notification-message-${i}`}>
+          <div className="notification alert alert-info fade in" key={`notification-message-${i}`}>
             <span key={`message-${i}`} dangerouslySetInnerHTML={{ __html: message }} />
             <button className="close" onClick={() => dispatch({
               type: "REMOVE_NOTIFICATION",

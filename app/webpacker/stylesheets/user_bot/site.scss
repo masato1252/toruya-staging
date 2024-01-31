@@ -47,10 +47,6 @@ body {
   &.rich_menus {
     background-color: $basic-gray-background;
   }
-
-  @include media-breakpoint-up(tablet) {
-    margin-top: 36px;
-  }
 }
 
 .footer {
@@ -636,15 +632,16 @@ h3.header {
 }
 
 .with-function-bar {
-  padding-top: $bar-height * 2;
-
-  @include media-breakpoint-up(tablet) {
-    padding-top: $bar-height;
-  }
+  margin-top: $bar-height;
 }
 
 .mobile {
   @include media-breakpoint-up(tablet) {
     margin-top: 36px;
   }
+}
+
+.dropdown-menu {
+  max-height: 600px;
+  overflow-y: auto;
 }
