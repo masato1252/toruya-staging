@@ -21,12 +21,13 @@ module BookingOptions
       string :end_at_date_part, default: nil
       string :end_at_time_part, default: nil
 
-      # For adding a new menu
+      # For adding a new option with existing menu
       integer :new_menu_id, default: nil
       integer :new_menu_required_time, default: nil
 
+      # For adding a new menu
       string :new_menu_name, default: nil
-      string :new_menu_minutes, default: nil
+      integer :new_menu_minutes, default: nil
       boolean :new_menu_online_state, default: false
 
       # For changing menu priority
@@ -76,11 +77,13 @@ module BookingOptions
                 start_date: Date.today
               }
             )
+
             booking_option.booking_option_menus.create!(
               menu_id: menu.id,
               priority: booking_option.booking_option_menus.count,
               required_time: menu.minutes
             )
+
             booking_option.update!(minutes: booking_option.booking_option_menus.sum(:required_time))
           end
         when "new_menu"

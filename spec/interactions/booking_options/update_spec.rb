@@ -45,6 +45,35 @@ RSpec.describe BookingOptions::Update do
       it_behaves_like "updates booking option normal attribute", "memo", "foo"
     end
 
+    context "update_attribute is new_pure_menu" do
+      let(:update_attribute) { "new_pure_menu" }
+      before do
+        args[:attrs][:new_menu_name] = "foo"
+        args[:attrs][:new_menu_minutes] = 100
+        args[:attrs][:new_menu_online_state] = true
+      end
+
+      it "creates a new booking_option_menus" do
+        expect {
+          outcome
+        }.to change {
+          booking_option.booking_option_menus.count
+        }.and change {
+          Menu.count
+        }
+
+        last_booking_menu = booking_option.booking_option_menus.last
+        new_menu = Menu.last
+
+        expect(last_booking_menu.menu.name).to eq("foo")
+        expect(last_booking_menu.required_time).to eq(100)
+        expect(last_booking_menu.priority).to eq(booking_option.booking_option_menus.count - 1)
+        expect(new_menu.name).to eq("foo")
+        expect(new_menu.minutes).to eq(100)
+        expect(new_menu.online).to eq(true)
+      end
+    end
+
     context "update_attribute is new_menu" do
       let(:update_attribute) { "new_menu" }
       let(:new_menu) { FactoryBot.create(:menu, user: user) }

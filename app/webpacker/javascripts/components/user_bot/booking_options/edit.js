@@ -81,7 +81,7 @@ const BookingOptionEdit =({props}) => {
             <input autoFocus={true} ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
 
             <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</div>
-            <input autoFocus={true} ref={register({ required: true })} name="new_menu_minutes" className="extend" type="tel" />
+            <input ref={register({ required: true })} name="new_menu_minutes" className="extend" type="tel" />
 
             <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
             <label className="field-row flex-start">

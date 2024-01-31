@@ -31,7 +31,8 @@
                       <%= t("settings.booking_page.form.form_errors.invalid_menu_html", shop_name: @booking_page.shop.name, url: lines_user_bot_settings_menu_path(menu, business_owner_id: business_owner_id)) %>
                     </div>
                   <% end %>
-                  <% if booking_option.booking_option_menus.includes(:menu).any? { |booking_option_menu| booking_option_menu.required_time < menu.minutes } %>
+
+                  <% if booking_option.booking_option_menus.includes(:menu).any? { |booking_option_menu| booking_option_menu.required_time < booking_option_menu.menu.minutes } %>
                     <div class="danger">
                       <%= t("errors.short_than_menu_minutes", required_minutes: menu.minutes) %>
                     </div>

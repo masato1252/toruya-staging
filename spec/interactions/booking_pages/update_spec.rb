@@ -155,23 +155,61 @@ RSpec.describe BookingPages::Update do
 
     context "update_attribute is new_option_menu" do
       let(:update_attribute) { "new_option_menu" }
-      before do
-        args[:attrs][:new_menu_name] = "foo"
-        args[:attrs][:new_menu_minutes] = 100
-        args[:attrs][:new_menu_price] = 100
-        args[:attrs][:new_menu_online_state] = true
+
+      context "when adding a exiting menu" do
+        before do
+          menu = FactoryBot.create(:menu, user: user)
+          args[:attrs][:new_menu_id] = menu.id
+          args[:attrs][:new_menu_required_time] = 123
+          args[:attrs][:new_menu_price] = 456
+        end
+
+        it "creates a new booking_page_option, booking_option_menu and NOT new menu" do
+          expect {
+            outcome
+          }.to change {
+            BookingOption.count
+          }.and change {
+            BookingPageOption.count
+          }.and change {
+            BookingOptionMenu.count
+          }.and not_change {
+            Menu.count
+          }
+
+          expect(BookingOption.last.amount_cents).to eq(456)
+          expect(BookingOption.last.minutes).to eq(123)
+          expect(BookingOptionMenu.last.required_time).to eq(123)
+        end
       end
 
-      it "creates a new booking_page_option, booking_option_menu and menu" do
-        expect {
-          outcome
-        }.to change {
-          BookingPageOption.count
-        }.and change {
-          BookingOptionMenu.count
-        }.and change {
-          Menu.count
-        }
+      context "when adding a new menu" do
+        before do
+          args[:attrs][:new_menu_name] = "foo"
+          args[:attrs][:new_menu_minutes] = 100
+          args[:attrs][:new_menu_price] = 100
+          args[:attrs][:new_menu_online_state] = true
+        end
+
+        it "creates a new booking_page_option, booking_option_menu and menu" do
+          expect {
+            outcome
+          }.to change {
+            BookingPageOption.count
+          }.and change {
+            BookingOptionMenu.count
+          }.and change {
+            Menu.count
+          }.and change {
+            BookingOption.count
+          }
+
+          new_menu = Menu.last
+          expect(BookingOption.last.amount_cents).to eq(100)
+          expect(new_menu.name).to eq("foo")
+          expect(new_menu.minutes).to eq(100)
+          expect(new_menu.online).to eq(true)
+        end
       end
     end
 

@@ -27,7 +27,11 @@ module BookingPages
 
       integer :new_option_id, default: nil
 
+      # For adding a new option with existing menu
       integer :new_menu_id, default: nil
+      integer :new_menu_required_time, default: nil
+
+      # For adding a new menu
       string :new_menu_name, default: nil
       integer :new_menu_minutes, default: nil
       integer :new_menu_price, default: nil
@@ -114,11 +118,11 @@ module BookingPages
             default_booking_option_attrs = {
               name: menu.name,
               display_name: menu.name,
-              minutes: menu.minutes,
+              minutes: attrs[:new_menu_required_time] || menu.minutes,
               amount_cents: attrs[:new_menu_price],
               tax_include: true,
               menus: {
-                "0" => { 'value' => menu.id, "priority" => 0, "required_time" => menu.minutes },
+                "0" => { 'value' => menu.id, "priority" => 0, "required_time" => attrs[:new_menu_required_time] || menu.minutes },
               }
             }
 
