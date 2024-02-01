@@ -43,7 +43,7 @@ const CustomerFilterCharacter = () =>{
         closeOnDocumentClick
         mouseLeaveDelay={300}
         mouseEnterDelay={0}
-        contentStyle={{ padding: '0px', border: 'none' }}
+        contentStyle={{ padding: '0px', border: 'none', width: '40px' }}
         arrow={false}
       >
         {close => (
