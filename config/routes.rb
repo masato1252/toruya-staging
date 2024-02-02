@@ -49,7 +49,6 @@ Rails.application.routes.draw do
         get :check_shop_profile
       end
 
-      resources :business_owners, only: [:update]
       resources :schedules, only: [] do
         collection do
           get "mine/:reservation_date(/r/:reservation_id)", to: "schedules#mine", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :my_date
