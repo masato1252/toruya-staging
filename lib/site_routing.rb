@@ -88,15 +88,15 @@ class SiteRouting
   end
 
   def cancel_customer_user_reservations_path(reservation, customer)
-    from_line_bot ? h.cancel_lines_user_bot_customer_reservations_path(reservation.user_id, reservation, customer) : h.cancel_customer_user_reservations_path(reservation.shop.user, reservation, customer)
+    h.cancel_lines_user_bot_customer_reservations_path(reservation.user_id, reservation, customer)
   end
 
   def data_changed_user_customers_path(reservation_customer)
-    from_line_bot ? h.data_changed_lines_user_bot_customers_path(reservation_customer) : h.data_changed_user_customers_path(reservation_customer.customer.user, reservation_customer)
+    data_changed_lines_user_bot_customers_path(reservation_customer.customer.user_id, reservation_customer)
   end
 
   def save_changes_user_customers_path(reservation_customer)
-    from_line_bot ? h.save_changes_lines_user_bot_customers_path(reservation_customer) : h.save_changes_user_customers_path(reservation_customer.customer.user, reservation_customer)
+    h.save_changes_lines_user_bot_customers_path(reservation_customer.customer.user_id, reservation_customer)
   end
 
   def create_reservation_warnings_path(*args)
