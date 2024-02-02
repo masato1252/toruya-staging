@@ -10,7 +10,7 @@ class SiteRouting
   # TODO: controller and view required
   def settings_user_menus_path(user, shop_id)
     if from_line_bot
-      h.lines_user_bot_settings_menus_path
+      h.lines_user_bot_settings_menus_path(user.id, shop_id)
     else
       h.settings_user_menus_path(user, shop_id: shop_id)
     end
@@ -19,7 +19,7 @@ class SiteRouting
   # TODO: controller and view required
   def new_settings_user_reservation_setting_path(user, shop_id)
     if from_line_bot
-      h.new_lines_user_bot_settings_reservation_setting_path
+      h.new_lines_user_bot_settings_reservation_setting_path(user.id, shop_id)
     else
       h.new_settings_user_reservation_setting_path(user, shop_id: shop_id)
     end
@@ -31,7 +31,7 @@ class SiteRouting
   end
 
   def reservation_form_path(reservation, *args)
-    h.form_lines_user_bot_shop_reservations_path(reservation.shop, reservation, *args)
+    h.form_lines_user_bot_shop_reservations_path(reservation.shop.user_id, reservation.shop, reservation, *args)
   end
 
   # TODO: controller and view required
