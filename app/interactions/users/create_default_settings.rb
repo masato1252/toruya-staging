@@ -5,10 +5,10 @@ module Users
     object :user
 
     def execute
-      if user.profile && user.profile.address.present? && !user.shops.exists?
+      if user.profile && !user.shops.exists?
         shop_name = user.profile.company_name.presence || "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
 
-        shop = Shops::Create.run(
+        Shops::Create.run(
           user: user,
           params: {
             name: shop_name,
@@ -16,8 +16,8 @@ module Users
             phone_number: profile.company_phone_number.presence || user.phone_number.presence || profile.phone_number,
             email: user.email.presence || profile.email,
             website: profile.website,
-            zip_code: profile.company_zip_code || profile.zip_code,
-            address: profile.company_address.presence || profile.address,
+            zip_code: profile.company_zip_code.presence || profile.zip_code.presence || I18n.t("common.no_data"),
+            address: profile.company_address.presence || profile.address.presence || I18n.t("common.no_data"),
             address_details: profile.company_address_details || profile.personal_address_details
           }
         )
@@ -52,7 +52,8 @@ module Users
         if staff && !staff.business_schedules.where(shop: shop).exists?
           BusinessSchedules::Create.run(
             shop: shop,
-            staff: staff, attrs: {
+            staff: staff,
+            attrs: {
               full_time: true
             }
           )

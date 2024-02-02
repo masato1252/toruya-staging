@@ -14,8 +14,8 @@ const CalendarModal = ({props}) => {
           <div className="modal-body">
             <Calendar
               {...props.calendar}
-              dateSelectedCallbackPath={Routes.lines_user_bot_schedules_path()}
-              schedulePath={Routes.personal_working_schedule_lines_user_bot_calendars_path({format: "json"})}
+              dateSelectedCallbackPath={props.my_calendar ? Routes.mine_lines_user_bot_schedules_path() : Routes.lines_user_bot_schedules_path({ business_owner_id: props.business_owner_id })}
+              schedulePath={props.my_calendar ? Routes.my_working_schedule_lines_user_bot_calendars_path({format: "json"}) : Routes.personal_working_schedule_lines_user_bot_calendars_path({business_owner_id: props.business_owner_id, format: "json"})}
               selectedDate={props.params.reservation_date}
             />
           </div>

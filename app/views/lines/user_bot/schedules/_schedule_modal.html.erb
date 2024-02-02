@@ -9,15 +9,17 @@
       </div>
       <div class="modal-body">
         <div class="edit-worktime">
-          <% if working_shop_options(include_user_own: true).present? %>
+          <% if working_shop_options(shops: my_calendar ? Current.user.social_user.shops : Current.business_owner.shops).present? %>
             <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="btn btn-yellow btn-tweak btn-big">
               <%= I18n.t("action.new_reservation") %>
             </a>
           <% end %>
 
-          <a href="#" data-toggle="modal" data-target="#off-date-modal" class="btn btn-yellow btn-tweak btn-big">
-            <%= I18n.t("action.new_off_schedule") %>
-          </a>
+          <% if my_calendar || Current.social_user&.single_owner? %>
+            <a href="#" data-toggle="modal" data-target="#off-date-modal" class="btn btn-yellow btn-tweak btn-big">
+              <%= I18n.t("action.new_off_schedule") %>
+            </a>
+          <% end %>
         </div>
       </div>
     </div>

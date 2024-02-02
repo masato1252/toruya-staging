@@ -57,7 +57,7 @@ export const GlobalProvider = ({ props, children }) => {
   }
 
   const updateCustomer = async (customer_id) => {
-    const [error, response] = await CustomerServices.details(props.super_user_id, customer_id)
+    const [error, response] = await CustomerServices.details({ business_owner_id: props.business_owner_id, customer_id: customer_id })
 
     dispatch({
       type: "UPDATE_CUSTOMER",
@@ -68,7 +68,7 @@ export const GlobalProvider = ({ props, children }) => {
   }
 
   const deleteCustomer = async (customer_id) => {
-    const [error, response] = await CustomerServices.delete(props.super_user_id, customer_id)
+    const [error, response] = await CustomerServices.delete({ business_owner_id: props.business_owner_id, id: customer_id} )
 
     dispatch({
       type: "DELETE_CUSTOMER",
@@ -85,9 +85,11 @@ export const GlobalProvider = ({ props, children }) => {
 
   const recentCustomers = async () => {
     const [error, response] = await CustomerServices.recent(
-      props.super_user_id,
-      last_updated_customer?.id,
-      last_updated_customer?.updatedAt
+      {
+        business_owner_id: props.business_owner_id,
+        last_updated_id: last_updated_customer?.id,
+        last_updated_at: last_updated_customer?.updatedAt
+      }
     )
 
     dispatch({
@@ -113,7 +115,7 @@ export const GlobalProvider = ({ props, children }) => {
 
     if (firstQuery) {
       [error, response] = await CustomerServices.filter({
-        user_id: props.super_user_id,
+        business_owner_id: props.business_owner_id,
         pattern_number: new_filter_pattern_number || filter_pattern_number
       })
     }
@@ -121,7 +123,7 @@ export const GlobalProvider = ({ props, children }) => {
       currentPageRef.current += 1;
 
       [error, response] = await CustomerServices.filter({
-        user_id: props.super_user_id,
+        business_owner_id: props.business_owner_id,
         page: currentPageRef.current,
         pattern_number: new_filter_pattern_number || filter_pattern_number
       })
@@ -154,7 +156,7 @@ export const GlobalProvider = ({ props, children }) => {
 
     if (firstQuery) {
       [error, response] = await CustomerServices.search({
-        user_id: props.super_user_id,
+        business_owner_id: props.business_owner_id,
         keyword: keywordRef.current
       })
     }
@@ -162,7 +164,7 @@ export const GlobalProvider = ({ props, children }) => {
       currentPageRef.current += 1;
 
       [error, response] = await CustomerServices.search({
-        user_id: props.super_user_id,
+        business_owner_id: props.business_owner_id,
         page: currentPageRef.current,
         keyword: keywordRef.current
       })

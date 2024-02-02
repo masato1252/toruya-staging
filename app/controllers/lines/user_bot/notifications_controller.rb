@@ -1,18 +1,24 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::NotificationsController < Lines::UserBotDashboardController
-  def index
-    @messages = current_user.social_account.social_messages.handleable.unread
-    @reservations = current_user.pending_reservations
-    @missing_sale_page_services = current_user.missing_sale_page_services
-    @pending_customer_services = current_user.pending_customer_services
+  skip_before_action :redirect_from_rich_menu
 
-    if @messages.empty? || @reservations.empty? || @missing_sale_page_services.empty? || @pending_customer_services.empty?
-      UserBotLines::Actions::SwitchRichMenu.run(
-        social_user: social_user,
-        rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY
-      )
-    end
+  def index
+    @user_notifications = current_social_user.same_social_user_scope.map do |social_user|
+      user = social_user.user
+      next unless user
+      next unless user.social_account
+
+      {
+        user: user,
+        messages: user.social_account.social_messages.handleable.unread || [],
+        reservations: user.pending_reservations || [],
+        missing_sale_page_services: user.missing_sale_page_services || [],
+        pending_customer_services: user.pending_customer_services || []
+      }
+    end.compact
+
+    UserBotLines::Actions::SwitchRichMenu.run(social_user: current_social_user, rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY)
   end
 
   private

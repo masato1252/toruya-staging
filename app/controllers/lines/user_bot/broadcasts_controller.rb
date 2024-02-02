@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def index
-    @broadcasts = Current.business_owner.broadcasts.ordered
+    @broadcasts = Current.business_owner.broadcasts.ordered.normal
   end
 
   def show
@@ -15,6 +15,12 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
         ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)
       end
     @menus = ::Menus::CategoryGroup.run!(menu_options: menus_options)
+    @online_services = Current.business_owner.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
+      {
+        label: service.internal_name.presence || service.name,
+        value: OnlineServiceSerializer.new(service).attributes_hash
+      }
+    }
   end
 
   def edit

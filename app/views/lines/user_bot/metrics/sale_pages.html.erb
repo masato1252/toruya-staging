@@ -5,9 +5,9 @@
     demo: params[:demo],
     metric_path: lines_user_bot_metrics_sale_pages_visits_path(business_owner_id, { format: "json" }),
   }, { camelize_props: false }) %>
-  <%= react_component("user_bot/metrics/sale_pages_conversions", {
-    demo: params[:demo],
-    metric_path: lines_user_bot_metrics_sale_pages_conversions_path(business_owner_id, { format: "json" }),
-  },
-  { camelize_props: false }) %>
+<%= react_component("user_bot/metrics/sale_pages_conversions", {
+  demo: params[:demo],
+  metric_path: lines_user_bot_metrics_sale_pages_conversions_path(business_owner_id, { format: "json" }),
+},
+{ camelize_props: false }) %>
 </div>

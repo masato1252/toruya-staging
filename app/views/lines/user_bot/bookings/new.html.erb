@@ -7,7 +7,7 @@
     props: {
       business_owner_id: business_owner_id,
       line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
-      line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id)),
+      line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id)),
       super_user_id: Current.business_owner.id,
       selected_shop: @booking_shop ? CompanyInfoSerializer.new(@booking_shop).attributes_hash : {},
       note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),

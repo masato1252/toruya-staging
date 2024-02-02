@@ -21,6 +21,7 @@ const CustomerMessageForm = () => {
     let error = null;
 
     [error, response] = await CustomerServices.reply_message({
+      business_owner_id: selected_customer.userId,
       customer_id: selected_customer.id,
       schedule_at: schedule_at,
       message: ref.current.value,

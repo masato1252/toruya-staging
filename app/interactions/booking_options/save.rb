@@ -35,7 +35,7 @@ module BookingOptions
               end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil
             ))
           booking_option.booking_option_menus.destroy_all
-          booking_option.booking_option_menus.create(
+          booking_option_menus = booking_option.booking_option_menus.create(
             menus&.values&.map do |menu|
               {
                 menu_id: menu["value"],
@@ -44,6 +44,12 @@ module BookingOptions
               }
             end || []
           )
+
+          if first_invalid_record = booking_option_menus.find { |booking_option_menu| booking_option_menu.invalid? }
+            errors.merge!(first_invalid_record.errors)
+
+            raise ActiveRecord::Rollback
+          end
 
           booking_option
         else

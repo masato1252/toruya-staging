@@ -16,6 +16,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
       {
         type: 'OnlineServiceCustomerRelation',
         id: relation.id,
+        userId: relation.online_service.user_id,
         year: relation.created_at.year,
         date: relation.created_at.to_fs(:date),
         monthDate: I18n.l(relation.created_at, format: :month_day_wday),

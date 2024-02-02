@@ -1,6 +1,6 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
@@ -8,7 +8,11 @@ import FlowStepIndicator from "./flow_step_indicator";
 import LineVerificationWarning from 'shared/line_verification_warning';
 
 const FiltersSelectionStep = ({next, step}) => {
-  const { props, dispatch } = useGlobalContext()
+  const { props, query_type, dispatch } = useGlobalContext()
+
+  useEffect(() => {
+    if (props.broadcast.query_type) next()
+  }, [])
 
   return (
     <div className="form settings-flow centerize">

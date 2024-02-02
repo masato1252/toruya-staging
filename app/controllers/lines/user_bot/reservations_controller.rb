@@ -32,6 +32,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       customers_list = reservarion_params.delete(:customers_list)
       reservation_id = reservarion_params.delete(:reservation_id)
       staff_states = reservarion_params.delete(:staff_states)
+      business_owner_id = reservarion_params.delete(:business_owner_id)
 
       @reservation = shop.reservations.find_or_initialize_by(id: reservation_id)
       @reservation.attributes = reservarion_params
@@ -239,7 +240,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
 
     @staff_options =
-      shop.available_staffs.map do |staff|
+      Current.business_owner.staffs.map do |staff|
         ::Option.new(id: staff.id, name: staff.name, handable_customers: nil)
       end
   end

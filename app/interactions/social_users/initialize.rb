@@ -12,6 +12,7 @@ module SocialUsers
           SocialUser.transaction do
             SocialUser
               .create_with(social_rich_menu_key: UserBotLines::RichMenus::Guest::KEY)
+              .order("id")
               .find_or_create_by(social_service_user_id: social_service_user_id)
           end
         rescue ActiveRecord::RecordNotUnique

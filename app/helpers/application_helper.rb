@@ -128,6 +128,18 @@ module ApplicationHelper
     end
   end
 
+  def toruya_new_line_account_url(oauth_redirect_to_url, *args)
+    options = args.extract_options!
+    encrypted_content = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
+    cookies[:who] = { value: encrypted_content, expires: 1.year }
+
+    options.merge!(
+      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content, existing_owner_id: root_user.id
+    )
+
+    user_line_omniauth_authorize_path(options)
+  end
+
   def toruya_line_login_url(oauth_redirect_to_url, *args)
     options = args.extract_options!
     encrypted_content = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
@@ -144,8 +156,12 @@ module ApplicationHelper
     %Q|<iframe width='100%' height='auto' src='https://www.youtube.com/embed/#{TOURS_VIDEOS[key]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>|.html_safe
   end
 
+  def is_not_phone?
+    phone_types.exclude?(device_detector.device_type)
+  end
+
   def not_phone
-    if phone_types.exclude?(device_detector.device_type)
+    if is_not_phone?
       yield
     end
   end

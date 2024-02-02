@@ -358,5 +358,30 @@ RSpec.describe Reservations::Save do
         end
       end
     end
+
+    context 'when customer booking from booking page and change start time' do
+      let!(:custom_message) { FactoryBot.create(:custom_message, scenario: CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER , service: booking_page, before_minutes: 10) }
+      let(:booking_page) { FactoryBot.create(:booking_page, user: user) }
+      let!(:reservation_customer) { FactoryBot.create(:reservation_customer, booking_page: booking_page) }
+      let(:reservation) { reservation_customer.reservation }
+      let(:customers_list) do
+        [
+          {
+            customer_id: reservation_customer.customer_id.to_s,
+            state: "pending",
+            booking_page_id: booking_page.id
+          }
+        ]
+      end
+      let(:start_time) { Time.current.tomorrow }
+
+      it 'reschedule reminder message' do
+        expect(Notifiers::Customers::CustomMessages::ReservationReminder).to receive(:perform_at) do |args|
+          expect(args[:schedule_at].round).to eq(reservation.start_time.advance(minutes: -10).round)
+        end
+
+        outcome
+      end
+    end
   end
 end

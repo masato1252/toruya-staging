@@ -15,11 +15,12 @@
       </div>
       <div class="modal-body">
         <div class="shops-list centerize">
-          <% working_shop_options(include_user_own: true).each do |option| %>
+          <% working_shop_options(shops: my_calendar ? Current.social_user.shops : Current.business_owner.shops).each do |option| %>
             <% user_ability = ability(option.owner, option.shop) %>
+
             <div class="shop-cell">
               <%= link_to_new_reservation(
-                SiteRouting.new(self).reservation_form_path(option.shop.reservations.new, start_time_date_part: @date),
+                SiteRouting.new(self).reservation_form_path(option.shop.reservations.new, business_owner_id: option.shop.user_id, start_time_date_part: @date),
                 option.shop.display_name,
                 class: from_line_bot ? "btn btn-tweak btn-tarco btn-big btn-extend" : "BTNtarco"
               ) %>

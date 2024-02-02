@@ -57,23 +57,44 @@ class CallbacksController < Devise::OmniauthCallbacksController
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
       )
+      social_user = outcome.result
+      # if param["existing_owner_id"]
+      #   1.2 user login for add another line account
+      # elsif param["staff_token"]
+      #   1.1 user login be other staff
+      # else
+      #   user login
 
-      if outcome.valid? && outcome.result&.user
+      if outcome.valid? && social_user&.user
         # line sign in
-        user = outcome.result.user
+        user = social_user.user
         remember_me(user)
         sign_in(user)
-        write_user_bot_cookies(:current_user_id, user.id)
+        write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
 
-        if param["staff_token"]
+        if param["existing_owner_id"] # existing user add another line account
+          existing_user = User.find(param["existing_owner_id"])
+          new_user = Users::NewAccount.run!(existing_user: existing_user) if existing_user.social_user.id == social_user.id
+
+          write_user_bot_cookies(:current_user_id, new_user.id)
+          remember_me(new_user)
+          sign_in(new_user)
+
+          redirect_to lines_user_bot_settings_path(new_user.id), notice: I18n.t("new_line_account.successful_message")
+          return
+        elsif param["staff_token"]
           staff_connect_outcome = StaffAccounts::ConnectUser.run(token: param["staff_token"], user: user)
 
-          redirect_to lines_user_bot_schedules_path(staff_connect_result: staff_connect_outcome.valid?)
+          if staff_connect_outcome.valid?
+            redirect_to lines_user_bot_settings_path(staff_connect_outcome.result.owner_id, staff_connect_result: staff_connect_outcome.valid?)
+          else
+            redirect_to lines_user_bot_settings_path(user.id, staff_connect_result: staff_connect_outcome.valid?)
+          end
         else
           redirect_to Addressable::URI.new(path: param.delete("oauth_redirect_to_url")).to_s
         end
       elsif outcome.valid? && outcome.result.user.nil?
-        # line sign up
+        # user sign up
         redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"])
       else
         redirect_to root_path

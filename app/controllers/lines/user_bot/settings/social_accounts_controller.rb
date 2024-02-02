@@ -3,6 +3,9 @@
 require "message_encryptor"
 
 class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboardController
+  def new
+  end
+
   def reset
     SocialAccounts::Clean.run!(user: Current.business_owner)
 

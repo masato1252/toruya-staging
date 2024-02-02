@@ -3,7 +3,7 @@ import _ from "lodash";
 import { UsersServices } from "user_bot/api";
 import mergeArrayOfObjects from "libraries/merge_array_of_objects";
 
-const useSchedules = (date) => {
+const useSchedules = ({ business_owner_id, date }) => {
   const [schedules, setSchedules] = useState({
     available_booking_dates: [],
     holiday_dates: [],
@@ -17,7 +17,7 @@ const useSchedules = (date) => {
   }, [date.year(), date.month()])
 
   const fetchSchedules = async () => {
-    const [error, response] = await UsersServices.schedules(date.format("YYYY-MM-DD"));
+    const [error, response] = await UsersServices.schedules({ business_owner_id: business_owner_id, date: date.format("YYYY-MM-DD") });
 
     setSchedules(mergeArrayOfObjects(schedules, response.data))
   }

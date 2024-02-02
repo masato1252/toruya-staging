@@ -470,7 +470,12 @@ ja:
         menu_restrict_dont_need_order: メニュー順序にこだわらず対応できるスタッフを割り振る。（推奨）
         menu_restrict_order: 設定されたメニュー順序で対応できるスタッフを割り振る。
         new_menu: メニューを追加
-        new_menu_title: メニューを追加
+        new_menu_top_bar_header: メニューを追加
+        new_menu_title: 既存のメニューから選択
+        does_require_a_new_menu: 新しいメニューが必要ですか？
+        create_a_new_menu: 新しいメニューを作成する
+        new_pure_menu_top_bar_header: メニューを追加
+        new_pure_menu_title: 新しいメニューを作成する
         menu_required_time_title: 所要時間
         menu_required_time_top_bar_header: 販売メニュー
         booking_options_total_time_tip: 販売メニューから自動計算
@@ -528,8 +533,13 @@ ja:
         greeting_placeholder: 予約ページ上部に表示されるます。
         booking_option_header: 予約価格
         new_option: 予約価格
-        new_option_title: 予約価格
+        new_option_top_bar_header: 予約価格
+        new_option_title: 既存の予約価格から選択
         add_new_option: 価格を追加
+        does_require_a_new_option: 新しい価格が必要ですか？
+        create_a_new_option: 新しい価格を作成する
+        new_option_menu_title: 新しい価格を作成する
+        new_option_menu_top_bar_header: 予約価格
         booking_option_hint: あなたのお客様はこの価格で予約をします。
         booking_option_required_time: 所要時間
         shop_header: 予約可能な店舗

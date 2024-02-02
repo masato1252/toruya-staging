@@ -43,9 +43,7 @@ module StaffAccounts
           end
 
         # Owner staff account only be created after user login, so it is definitely active
-        if staff_account.owner?
-          staff_account.mark_active
-        else
+        unless staff_account.owner?
           staff_account.mark_pending unless staff_account.disabled?
 
           staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
@@ -54,6 +52,11 @@ module StaffAccounts
             Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
           end
         end
+      end
+
+      if staff_account.owner?
+        staff_account.user = staff_account.owner
+        staff_account.mark_active
       end
 
       if staff_account.changes.present?

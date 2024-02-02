@@ -15,7 +15,7 @@ const CustomerTopRightAction = () => {
 
   switch(props.from) {
     case "reservation":
-      return <a className="btn btn-yellow" href={Routes.form_lines_user_bot_shop_reservations_path({shop_id: props.shop.id, reservation_id: props.reservation_id, from: "adding_customer", customer_id: selected_customer.id})}>
+      return <a className="btn btn-yellow" href={Routes.form_lines_user_bot_shop_reservations_path({business_owner_id: props.business_owner_id, shop_id: props.shop.id, reservation_id: props.reservation_id, from: "adding_customer", customer_id: selected_customer.id})}>
           <i className="fa fa-user-plus"></i>{props.i18n.decide_customer}
         </a>
     default:
@@ -88,7 +88,7 @@ const CustomerBasicInfo = () => {
             <a
               data-id="customer-reminder-toggler"
               onClick={() => {
-                CustomerServices.toggle_reminder_permission(props.super_user_id, selected_customer.id)
+                CustomerServices.toggle_reminder_permission({ business_owner_id: props.business_owner_id, customer_id: selected_customer.id })
 
                 const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
                   trigger: "manual",

@@ -24,7 +24,9 @@ class Ability
   end
 
   def admin_level
-    @shop_owner_level = current_user == super_user || current_user.current_staff_account(super_user).admin? || current_user.current_staff_account(super_user).owner?
+    @shop_owner_level = current_user == super_user ||
+      current_users.map { |u| u.current_staff_account(super_user)&.admin? }.any? ||
+      current_users.map { |u| u.current_staff_account(super_user)&.owner? }.any?
   end
   alias_method :admin?, :admin_level
 
@@ -51,10 +53,14 @@ class Ability
   alias_method :staff?, :staff_level
 
   def responsible_for_reservation(reservation)
-    reservation.staff_ids.include?(current_user_staff.id)
+    (reservation.staff_ids & current_staffs.map(&:id)).present?
   end
 
   private
+
+  def current_staffs
+    current_user.social_user.staffs
+  end
 
   def current_user_staff_account
     current_user.current_staff_account(super_user)
@@ -240,10 +246,6 @@ class Ability
         end
       end
     end
-
-    if super_user.reservation_settings.exists?
-      can :create, :reservation_with_settings
-    end
   end
 
   def check_customers_limit(customer_ids)
@@ -258,5 +260,13 @@ class Ability
     else
       true
     end
+  end
+
+  def social_user
+    current_user.social_user
+  end
+
+  def current_users
+    social_user.current_users
   end
 end

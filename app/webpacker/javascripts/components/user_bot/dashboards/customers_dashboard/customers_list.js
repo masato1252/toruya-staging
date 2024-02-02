@@ -22,7 +22,7 @@ const BottomBar = () => {
         onClick={() => {
           dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})
           dispatch({type: "SELECT_CUSTOMER", payload: { customer: { contactGroupId: props.contact_groups[0]?.value } } })
-          history.push(Routes.lines_user_bot_customers_path({user_id: props?.shop?.user_id}));
+          history.push(Routes.lines_user_bot_customers_path({business_owner_id: props?.shop?.user_id}));
         }
         } >
         <i className="fa fa-plus fa-2x"></i>
@@ -43,7 +43,7 @@ const CustomerFilterCharacter = () =>{
         closeOnDocumentClick
         mouseLeaveDelay={300}
         mouseEnterDelay={0}
-        contentStyle={{ padding: '0px', border: 'none' }}
+        contentStyle={{ padding: '0px', border: 'none', width: '40px' }}
         arrow={false}
       >
         {close => (
@@ -122,7 +122,7 @@ const UserBotCustomersList = ({}) => {
               selected={selected_customer?.id == customer.value}
               onHandleClick={() => {
                 selectCustomer(customer)
-                history.push(Routes.lines_user_bot_customers_path({customer_id: customer.id, user_id: props?.shop?.user_id}));
+                history.push(Routes.lines_user_bot_customers_path({customer_id: customer.id, business_owner_id: props.business_owner_id}));
               }}
             />
           })}

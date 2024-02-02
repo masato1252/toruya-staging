@@ -39,8 +39,7 @@ class ReservationsController < DashboardController
 
     # Notifications START
     @empty_reservation_setting_user_message = Notifications::EmptyReservationSettingUserPresenter.new(view_context, current_user).data(staff_account: current_user_staff_account)
-    @empty_menu_shop_message = Notifications::EmptyMenuShopPresenter.new(view_context, current_user).data(owner: super_user, shop: shop, in_shop_dashboard: true)
-    @notification_messages = [@empty_reservation_setting_user_message, @empty_menu_shop_message].compact
+    @notification_messages = [@empty_reservation_setting_user_message].compact
     # Notifications END
   end
 
@@ -202,7 +201,7 @@ class ReservationsController < DashboardController
     @time_ranges = outcome.valid? ? outcome.result : nil
 
     @customer_max_load_capability = Array.wrap(reservation_params_hash[:menu_staffs_list]).map do |menu_staffs_list|
-      # XXX: When there is the same menu, the second staffs would merge into first menu, then second menu's staff would disapper, unlikely case
+      # XXX: When there is the same menu, the second staffs would merge into first menu, then second menu's staff would disappear, unlikely case
       staff_ids = Array.wrap(menu_staffs_list[:staff_ids]).map { |hh| hh[:staff_id] }.compact
 
       if staff_ids.blank?

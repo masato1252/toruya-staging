@@ -94,7 +94,7 @@ const Form = () => {
       }
     )
 
-    const [error, response] = await ReservationServices.validate(props.reservation_form.shop.id, props.reservation_form.reservation_id, params)
+    const [error, response] = await ReservationServices.validate({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, reservation_id: props.reservation_form.reservation_id, data: params })
 
     if (response?.data) {
       dispatch({
@@ -136,10 +136,10 @@ const Form = () => {
     )
 
     if (props.reservation_form.reservation_id) {
-      [error, response] = await ReservationServices.update(props.reservation_form.shop.id, props.reservation_form.reservation_id, params)
+      [error, response] = await ReservationServices.update({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, reservation_id: props.reservation_form.reservation_id, data: params })
     }
     else {
-      [error, response] = await ReservationServices.create(props.reservation_form.shop.id, params)
+      [error, response] = await ReservationServices.create({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, data: params })
     }
 
     if (response?.data?.redirect_to) {
@@ -258,7 +258,7 @@ const Form = () => {
               data-confirm={i18n.delete_confirmation_message}
               rel="nofollow"
               data-method="delete"
-              href={Routes.lines_user_bot_shop_reservation_path(props.reservation_form.shop.id, props.reservation_form.reservation_id, { from_customer_id: props.reservation_form.from_customer_id || "" })}>
+              href={Routes.lines_user_bot_shop_reservation_path(props.business_owner_id, props.reservation_form.shop.id, props.reservation_form.reservation_id, { from_customer_id: props.reservation_form.from_customer_id || "" })}>
               <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
             </a>
 )}
@@ -276,6 +276,7 @@ const Form = () => {
         </>
       </BottomNavigationBar>
       <CalendarModal
+        props={props}
         calendar={props.calendar}
         dateSelectedCallback={onSelectStartDate}
         selectedDate={start_time_date_part}

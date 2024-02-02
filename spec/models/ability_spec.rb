@@ -8,6 +8,8 @@ RSpec.describe Ability do
   let(:shop) { nil }
   let(:ability) { described_class.new(current_user, super_user, shop) }
 
+  before { FactoryBot.create(:social_user, user: current_user) }
+
   RSpec.shared_examples "permission management" do |permission_level, action, ability_name, permission|
     it "#{permission_level} member #{permission ? "can" : "cannot" } #{action} #{ability_name}" do
       allow(super_user).to receive(:permission_level).and_return(permission_level)
@@ -548,6 +550,8 @@ RSpec.describe Ability do
         let(:staff_account) { staff.staff_account }
         let(:current_user) { staff_account.user }
         let(:super_user) { staff_account.owner }
+
+        before { FactoryBot.create(:social_user, user: current_user) }
 
         it "returns false" do
           expect(ability.can?(:read, :customers_dashboard)).to eq(false)

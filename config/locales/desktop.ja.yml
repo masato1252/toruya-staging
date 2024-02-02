@@ -1,5 +1,7 @@
 ja:
   sidebar:
+    calendar:
+      mine: Myカレンダー
     broadcast:
       title: セグメント配信
     booking_pages:

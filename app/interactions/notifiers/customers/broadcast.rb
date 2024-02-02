@@ -9,7 +9,13 @@ module Notifiers
       object :broadcast
 
       def message
-        Translator.perform(broadcast.content, { customer_name: receiver.display_last_name })
+        if broadcast.query_type == "reservation_customers"
+          reservation = Reservation.where(id: broadcast.target_ids).first
+
+          Translator.perform(broadcast.content, reservation.message_template_variables(receiver))
+        else
+          Translator.perform(broadcast.content, { customer_name: receiver.display_last_name })
+        end
       end
 
       def send_line

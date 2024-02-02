@@ -3,32 +3,20 @@
 require "site_routing"
 
 class NotificationsPresenter
-  attr_reader :current_user, :h, :reservations_approval_flow
+  attr_reader :user, :h, :reservations_approval_flow, :my_calendar
   delegate :link_to, to: :h
 
-  def initialize(h, current_user, params = {})
+  def initialize(h, user, params = {})
     @h = h
-    @current_user = current_user
+    @user = user
     @reservation_id = params[:reservation_id]
+    @my_calendar = params[:my_calendar]
   end
 
   def data
-    if h.from_line_bot
-      Array.wrap(new_pending_reservations) +
-        Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data +
-        Notifications::NonGroupCustomersPresenter.new(h, current_user).data +
-        new_staff_accounts +
-        empty_reservation_setting_users +
-        empty_menu_shops
-    else
-      Array.wrap(new_pending_reservations) +
-        Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data +
-        Notifications::NonGroupCustomersPresenter.new(h, current_user).data +
-        new_staff_accounts +
-        empty_reservation_setting_users +
-        empty_menu_shops +
-        Array(basic_settings_tour)
-    end
+    Array.wrap(new_pending_reservations) +
+      Notifications::PendingCustomerReservationsPresenter.new(h, user).data +
+      Notifications::NonGroupCustomersPresenter.new(h, user).data
   end
 
   def recent_pending_reservations
@@ -68,17 +56,17 @@ class NotificationsPresenter
         end
 
         if previous_reservation_id
-          previous_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index - 1].start_time.to_fs(:date), previous_reservation_id, popup_disabled: true)
+          previous_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index - 1].user_id, reservations[matched_index - 1].start_time.to_fs(:date), previous_reservation_id, popup_disabled: true)
         end
 
         if next_reservation_id
-          next_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index + 1].start_time.to_fs(:date), next_reservation_id, popup_disabled: true)
+          next_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index + 1].user_id, reservations[matched_index + 1].start_time.to_fs(:date), next_reservation_id, popup_disabled: true)
         end
       else
         oldest_res = recent_pending_reservations.first&.reservation
 
         text = I18n.t("notifications.pending_reservation_confirm")
-        path = SiteRouting.new(h).schedule_date_path(oldest_res.start_time.to_fs(:date), oldest_res.id, popup_disabled: true)
+        path = SiteRouting.new(h).schedule_date_path(oldest_res.user_id, oldest_res.start_time.to_fs(:date), oldest_res.id, popup_disabled: true)
       end
 
       if path
@@ -95,65 +83,21 @@ class NotificationsPresenter
     end
   end
 
-  def new_staff_accounts
-    Staff.where(user: current_user).active_without_data.includes(:staff_account).map do |staff|
-      "#{I18n.t("settings.staff_account.new_staff_active")} #{link_to(I18n.t("settings.staff_account.staff_setting"), SiteRouting.new(h).edit_settings_user_staff_path(current_user, staff, current_user.shop_ids.first))}" if h.ability(staff.user).can?(:edit, staff)
-    end.compact
-  end
-
-  def empty_reservation_setting_users
-    current_user.staff_accounts.includes(:owner).each_with_object([]) do |staff_account, array|
-      # XXX: Owner should solve this issue in basic settings warnings
-      next if staff_account.owner?
-
-      data = Notifications::EmptyReservationSettingUserPresenter.new(h, current_user).data(staff_account: staff_account)
-
-      array << data if data
-    end
-  end
-
-  def empty_menu_shops
-    h.working_shop_options(include_user_own: true).each_with_object([]) do |shop_option, array|
-      owner = shop_option.owner
-      shop = shop_option.shop
-
-      data = if current_user == owner
-               if basic_settings_tour&.empty? # basic_settings_tour finished
-                 Notifications::EmptyMenuShopPresenter.new(h, current_user).data(owner: owner, shop: shop)
-               end
-             else
-               Notifications::EmptyMenuShopPresenter.new(h, current_user).data(owner: owner, shop: shop)
-             end
-
-      array << data if data
-    end
-  end
-
-  def basic_settings_tour
-    return @basic_settings_tour_data if defined?(@basic_settings_tour_data)
-
-    @basic_settings_tour_data =
-      begin
-        data = Notifications::BasicSettingTourPresenter.new(h, current_user).data
-
-        if data
-          if h.cookies[:basic_settings_tour_warning_hidden]
-            nil # basic_settings_tour doesn't finish but don't show it
-          else
-            [data]
-          end
-        else
-          []
-        end
+  def staff_ids
+    @staff_ids ||=
+      if my_calendar
+        Current.user.social_user.staffs.map(&:id)
+      else
+        [Current.user.current_staff(user).id]
       end
   end
 
-  def staff_ids
-    @staff_ids ||= current_user.staff_accounts.active.pluck(:staff_id)
-  end
-
-  # XXX: includes current_user themselves
   def working_shop_owners
-    @working_shop_owners ||= current_user.staff_accounts.active.map(&:owner)
+    @working_shop_owners ||=
+      if my_calendar
+        Current.user.social_user.manage_accounts
+      else
+        [Current.business_owner]
+      end
   end
 end

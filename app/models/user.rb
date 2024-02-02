@@ -52,6 +52,7 @@ class User < ApplicationRecord
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"
   ADMIN_IDS = [1, 2, 5, 61, 813].freeze
+  CHAT_OPERATOR_IDS = [].freeze
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -62,6 +63,7 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_one :subscription, dependent: :destroy
   has_many :reservations, -> { active }
+  has_many :all_reservations, class_name: "Reservation"
   has_many :shops, -> { active }
   has_many :menus, -> { active }
   has_many :staffs, -> { active }
@@ -106,20 +108,24 @@ class User < ApplicationRecord
   has_many :online_services
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
-  delegate :name, :company_name, :display_last_name, to: :profile, allow_nil: true
+  delegate :name, :company_name, :display_last_name, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, to: :profile, allow_nil: true
   delegate :current_plan, :trial_expired_date, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
   delegate :line_keyword_booking_page_ids, to: :user_setting
 
-  scope :admin, -> { where(id: ADMIN_IDS) }
+  scope :admin, -> { joins(:social_user).where(social_service_user_id: SocialUser::ADMIN_IDS) }
   scope :not_admin, -> { where.not.admin }
   before_validation(on: :create) do
     self.public_id ||= SecureRandom.uuid
   end
 
   def super_admin?
-    ADMIN_IDS.include?(id)
+    ADMIN_IDS.include?(id) || social_user.super_admin?
+  end
+
+  def can_admin_chat?
+    super_admin? || CHAT_OPERATOR_IDS.include?(id)
   end
 
   # shop owner or staffs
@@ -247,7 +253,7 @@ class User < ApplicationRecord
   end
 
   def pending_customer_services
-    online_services.external.joins(:handle_required_online_service_customer_relations).select("id", "internal_name", "name", "goal_type").distinct
+    online_services.external.joins(:handle_required_online_service_customer_relations).select("id", "internal_name", "name", "goal_type", "user_id").distinct
   end
 
   def available_for_staffs_managements

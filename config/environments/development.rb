@@ -2,7 +2,7 @@
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.hosts << /(toruya.*|.*ngrok.io)/
+  config.hosts << /(toruya.*|.*ngrok.io|.*ngrok-free.app)/
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -66,7 +66,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { :host => "kasaike.dev" }
   config.action_mailer.delivery_method = :letter_opener
 
-  # [TDOD]: open this setting when we upgrade webpacker
+  # [TODD]: open this setting when we upgrade webpacker
   # yarn integrity check to ensure that all local JavaScript packages are up-to-date.
   # config.webpacker.check_yarn_integrity = true
   config.after_initialize do

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import moment from "moment-timezone";
-import { UsersServices } from "user_bot/api";
 import useSchedules from "libraries/use_schedules";
 import { isWorkingDate, isHoliday, isReservedDate, isAvailableBookingDate, isPersonalScheduleDate } from "libraries/helper";
 import mergeArrayOfObjects from "libraries/merge_array_of_objects";
@@ -14,8 +13,8 @@ const DatesList = ({props}) => {
   const period = 4;
   const [startDate, setStartDate] = useState(moment(props.startDate))
   const [endDate, setEndDate] = useState(moment(props.startDate).add(period, "day"))
-  const schedules1 = useSchedules(startDate);
-  const schedules2 = useSchedules(endDate);
+  const schedules1 = useSchedules({ business_owner_id: props.business_owner_id, date: startDate });
+  const schedules2 = useSchedules({ business_owner_id: props.business_owner_id, date: endDate});
 
   const renderDatesList = () => {
     let list = [startDate]
@@ -38,7 +37,7 @@ const DatesList = ({props}) => {
               (isPersonalScheduleDate(schedules, day) ? " personal-schedule" : "")
           }
           key={day}
-          href={Routes.date_lines_user_bot_schedules_path(day.format("YYYY-MM-DD"), { schedule_display_start_date: startDate.format("YYYY-MM-DD") })}
+          href={props.my_calendar ? Routes.my_date_lines_user_bot_schedules_path(day.format("YYYY-MM-DD"), { schedule_display_start_date: startDate.format("YYYY-MM-DD") }) : Routes.date_lines_user_bot_schedules_path(props.business_owner_id, day.format("YYYY-MM-DD"), { schedule_display_start_date: startDate.format("YYYY-MM-DD") })}
         >
           <div>
             <b>{day.format("MM/DD")}</b>

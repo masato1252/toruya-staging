@@ -13,7 +13,14 @@ module RichMenus
       else
         # XXX: Don't need to link to Toruya's rich menu if it is a official rich menu now.
         response = LineClient.link_rich_menu(social_customer: social_target, social_rich_menu: social_rich_menu)
-        social_target.update(social_rich_menu_key: social_rich_menu.social_name) if response.is_a?(Net::HTTPOK)
+
+        if response.is_a?(Net::HTTPOK)
+          if social_target.is_a?(SocialUser)
+            social_target.same_social_user_scope.update_all(social_rich_menu_key: social_rich_menu.social_name)
+          else
+            social_target.update(social_rich_menu_key: social_rich_menu.social_name)
+          end
+        end
       end
     end
   end

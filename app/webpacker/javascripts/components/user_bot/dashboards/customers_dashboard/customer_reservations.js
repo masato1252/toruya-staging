@@ -25,7 +25,7 @@ const UserBotCustomerReservations = () =>{
   }, [])
 
   const fetchReservations = async () => {
-    const [error, response] = await CustomerServices.reservations({ user_id: props.super_user_id, customer_id: selected_customer.id })
+    const [error, response] = await CustomerServices.reservations({ business_owner_id: props.business_owner_id, customer_id: selected_customer.id })
 
     dispatch({
       type: "ASSIGN_CUSTOMER_RESERVATIONS",
@@ -74,7 +74,7 @@ const UserBotCustomerReservations = () =>{
               data-controller="modal"
               data-modal-target="#dummyModal"
               data-action="click->modal#popup"
-              data-modal-path={reservation.type === "Reservation" ? Routes.lines_user_bot_shop_reservation_path(reservation.shopId, reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id }) : Routes.lines_user_bot_online_service_customer_relation_path(reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
+              data-modal-path={reservation.type === "Reservation" ? Routes.lines_user_bot_shop_reservation_path(reservation.userId, reservation.shopId, reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id }) : Routes.lines_user_bot_online_service_customer_relation_path(reservation.userId, reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
               <div className={`state ${reservation.state}`}></div>
               <dd className="date">{reservation.monthDate}</dd>
               <div className="time">

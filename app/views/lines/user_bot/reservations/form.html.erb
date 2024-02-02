@@ -1,5 +1,6 @@
 <%= react_component("user_bot/dashboards/reservation_form", {
   props: {
+    business_owner_id: business_owner_id,
     params: params,
     from: request.referrer,
     timezone: Time.zone.tzinfo.name,

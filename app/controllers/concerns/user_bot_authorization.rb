@@ -6,12 +6,12 @@ module UserBotAuthorization
   included do
     protect_from_forgery prepend: true, with: :exception
     before_action :authenticate_current_user!
-    before_action :where_user_are
     before_action :authenticate_super_user
   end
 
   def authenticate_current_user!
     if current_user
+      Current.social_user = current_social_user
       Current.user = current_user
     else
       redirect_to user_login_path
@@ -19,35 +19,6 @@ module UserBotAuthorization
   end
 
   def authenticate_super_user
-    if current_user != super_user && current_user.current_staff(super_user).nil?
-      write_user_bot_cookies(:current_super_user_id, current_user.id)
-      Current.business_owner = current_user
-      redirect_to root_path, alert: I18n.t("common.no_permission")
-    elsif super_user
-      Current.business_owner = super_user
-    end
-  end
-
-  def where_user_are
-    if (params[:user_id].present? || params[:business_owner_id].present?) && params[:shop_id].present?
-      write_user_bot_cookies(:current_super_user_id, params[:user_id])
-      write_user_bot_cookies(:current_shop_id, params[:shop_id])
-    elsif params[:shop_id].present?
-      write_user_bot_cookies(:current_shop_id, params[:shop_id])
-      write_user_bot_cookies(:current_super_user_id, Shop.find(params[:shop_id]).user_id)
-    elsif params[:user_id].present? || params[:business_owner_id].present?
-      write_user_bot_cookies(:current_super_user_id, params[:user_id] || params[:business_owner_id])
-      write_user_bot_cookies(:current_shop_id, nil) if User.find(params[:user_id] || params[:business_owner_id]).shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
-    elsif params[:social_service_user_id].present?
-      social_user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id])
-
-      if social_user&.user_id
-        write_user_bot_cookies(:current_super_user_id, social_user.user_id)
-        write_user_bot_cookies(:social_service_user_id, params[:social_service_user_id].presence || user_bot_cookies(:social_service_user_id))
-      end
-    else
-      write_user_bot_cookies(:current_super_user_id, current_user.id) if user_bot_cookies(:current_super_user_id).nil?
-      write_user_bot_cookies(:current_shop_id, nil) if current_user.shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
-    end
+    Current.business_owner = super_user || current_user
   end
 end

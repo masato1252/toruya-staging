@@ -72,13 +72,55 @@ const BookingOptionEdit =({props}) => {
           </div>
         );
         break;
+      case "new_pure_menu":
+        return (
+          <div>
+            <h3 className="header centerize">{I18n.t("settings.booking_option.form.create_a_new_menu")}</h3>
+
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
+            <input autoFocus={true} ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
+
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</div>
+            <input ref={register({ required: true })} name="new_menu_minutes" className="extend" type="tel" />
+
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
+            <label className="field-row flex-start">
+              <input name="new_menu_online_state" type="radio" value="true" ref={register({ required: true })} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_online`)}
+            </label>
+            <label className="field-row flex-start">
+              <input name="new_menu_online_state" type="radio" value="false" ref={register({ required: true })} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_local`)}
+            </label>
+          </div>
+        )
       case "new_menu":
         return (
-          <NewMenuField
-            i18n={i18n} register={register} watch={watch} control={control}
-            menu_group_options={props.menu_group_options}
-            setValue={setValue}
-          />
+          <div>
+            <NewMenuField
+              i18n={i18n} register={register} watch={watch} control={control}
+              menu_group_options={props.menu_group_options}
+              setValue={setValue}
+            />
+            <div className="margin-around centerize">
+              <button type="button" className="btn btn-yellow" onClick={handleSubmit(onSubmit)} disabled={formState.isSubmitting}>
+                {formState.isSubmitting ? (
+                  <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+                ) : (
+                  I18n.t("user_bot.dashboards.booking_options.form.add_this_new_menu")
+                )}
+              </button>
+            </div>
+            <br />
+            <br />
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_options.form.add_a_new_menu")}</div>
+            <div className="margin-around centerize">
+              <h3 className="centerize">{I18n.t("settings.booking_option.form.does_require_a_new_menu")}</h3>
+              <a href={Routes.edit_lines_user_bot_booking_option_path(props.business_owner_id, props.booking_option.id, { attribute: "new_pure_menu" })} className="btn btn-orange">
+                {I18n.t("settings.booking_option.form.create_a_new_menu")}
+              </a>
+            </div>
+          </div>
         )
         break
       case "start_at":

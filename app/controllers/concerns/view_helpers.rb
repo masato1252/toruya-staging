@@ -9,9 +9,9 @@ module ViewHelpers
     helper_method :staffs
     helper_method :staff
     helper_method :shop_staff
-    helper_method :super_user
     helper_method :current_user_staff_account
     helper_method :current_user_staff
+
     helper_method :working_shop_options
     helper_method :working_shop_owners
     helper_method :owning_shop_options
@@ -29,6 +29,72 @@ module ViewHelpers
     helper_method :previous_controller_is
     helper_method :working_time_range
     helper_method :is_owner
+
+    helper_method :super_user
+    helper_method :business_owner
+    helper_method :current_user
+    helper_method :current_users
+    helper_method :current_staffs
+    helper_method :root_user
+    helper_method :social_user
+    helper_method :current_social_user
+    helper_method :business_owner_id
+    helper_method :current_user_of_owner
+    helper_method :current_staff_of_owner
+  end
+
+  def social_user
+    @social_user ||=
+      if ENV["DEV_USER_ID"]
+        User.find(ENV["DEV_USER_ID"]).social_user
+      elsif params[:encrypted_user_id]
+        _social_user = User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id])).social_user
+        write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
+        _social_user
+      elsif user_bot_cookies(:social_service_user_id)
+        SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
+      end
+  end
+  alias_method :current_social_user, :social_user
+
+  def current_user_of_owner(owner)
+    current_users&.find { |u| u.current_staff_account(owner)&.present? }
+  end
+
+  def current_staff_of_owner(owner)
+    current_user_of_owner(owner).current_staff(owner)
+  end
+
+  def current_user
+    @current_user ||= current_user_of_owner(business_owner)
+  end
+
+  def current_users
+    social_user&.current_users
+  end
+
+  def current_staffs
+    social_user&.staffs
+  end
+
+  def root_user
+    social_user&.root_user
+  end
+
+  def super_user
+    @super_user ||=
+      if params[:encrypted_user_id]
+        User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
+      elsif params[:business_owner_id]
+        User.find_by(id: params[:business_owner_id])
+      else
+        root_user
+      end
+  end
+  alias_method :business_owner, :super_user
+
+  def business_owner_id
+    params[:business_owner_id].presence || business_owner&.id || current_user&.id
   end
 
   def shops
@@ -40,7 +106,7 @@ module ViewHelpers
   end
 
   def shop
-    @shop ||= Shop.find_by(id: from_line_bot ? user_bot_cookies(:current_shop_id) : session[:current_shop_id])
+    @shop ||= Shop.find_by(id: params[:shop_id] || user_bot_cookies(:current_shop_id))
   end
 
   def staffs
@@ -59,19 +125,6 @@ module ViewHelpers
     @shop_staff ||= ShopStaff.find_by(shop: shop, staff: staff)
   end
 
-  def super_user
-    super_user_id =
-      if from_line_bot
-        if ENV["DISABLE_SUPER_USER_DEV_ID"]
-          params[:business_owner_id] || user_bot_cookies(:current_super_user_id) || ENV["DEV_USER_ID"]
-        else
-          ENV["DEV_USER_ID"] || params[:business_owner_id] || user_bot_cookies(:current_super_user_id)
-        end
-      else
-        session[:current_super_user_id]
-      end
-    @super_user ||= User.find_by(id: super_user_id)
-  end
 
   def current_ability
     @current_ability ||= Ability.new(current_user, Current.business_owner, shop)
@@ -113,32 +166,21 @@ module ViewHelpers
     end
   end
 
-  def working_shop_options(include_user_own: false, manager_above_level_required: false)
-    @working_shop_options ||= {}
-    cache_key = "user-own-#{include_user_own}-manager-level-#{manager_above_level_required}"
+  def working_shop_options(shops: )
+    shops.map do |shop|
+      owner = shop.user
+      staff = Current.user.current_staff(owner)
+      staff ||= owner.current_staff(owner)
 
-    return @working_shop_options[cache_key] if @working_shop_options[cache_key]
-
-    @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
-      staff = staff_account.staff
-
-      staff.shop_relations.includes(shop: :user).map do |shop_relation|
-        shop = shop_relation.shop
-
-        if include_user_own || shop.user != current_user
-          next if manager_above_level_required && ability(shop.user, shop).cannot?(:manage, :management_stuffs)
-
-          ::Option.new(shop: shop, shop_id: shop.id,
-                       staff: staff, staff_id: shop_relation.staff_id,
-                       owner: shop.user,
-                       shop_staff: shop_relation)
-        end
-      end
-    end.flatten.compact.sort_by { |option| option.shop_id }
-  end
-
-  def manage_shop_options(include_user_own: false)
-    working_shop_options(include_user_own: include_user_own, manager_above_level_required: true)
+      ::Option.new(
+        shop: shop,
+        shop_id: shop.id,
+        staff: staff,
+        staff_id: staff.id,
+        owner: owner,
+        shop_staff: ShopStaff.where(shop: shop, staff: staff).first
+      )
+    end.compact
   end
 
   def owning_shop_options

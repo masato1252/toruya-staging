@@ -92,8 +92,10 @@
     flex-direction: column;
   }
 
-  .popup-content {
-    width: 90% !important;
+  [data-popup="modal"] {
+    .popup-content {
+      width: 90% !important;
+    }
   }
 }
 

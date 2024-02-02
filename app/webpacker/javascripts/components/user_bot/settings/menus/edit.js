@@ -13,6 +13,7 @@ const MenuEdit =({props}) => {
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.menu,
+      online: String(props.menu.online)
     }
   });
   const online = watch("online")
@@ -49,7 +50,6 @@ const MenuEdit =({props}) => {
             </div>
           </>
         );
-        break;
       case "minutes":
       case "interval":
         return (
@@ -58,30 +58,19 @@ const MenuEdit =({props}) => {
             {I18n.t("common.minute")}
           </div>
         );
-        break;
       case "online":
         return (
-          <div className="field-row">
-            <Controller
-              control={control}
-              name='online'
-              defaultValue={online}
-              render={({ onChange, value }) => (
-                <SwitchButton
-                  offWord={I18n.t("user_bot.dashboards.settings.menu.methods.local")}
-                  onWord={I18n.t("user_bot.dashboards.settings.menu.methods.online")}
-                  name="online"
-                  checked={value.toString() === 'true'}
-                  nosize={true}
-                  onChange={() => {
-                    onChange(value === 'true' ? 'false' : 'true')
-                  }}
-                />
-              )}
-            />
-          </div>
+          <>
+            <label className="field-row flex-start">
+              <input name="online" type="radio" value="false" ref={register({ required: true })} />
+              {I18n.t("user_bot.dashboards.settings.menu.methods.local")}
+            </label>
+            <label className="field-row flex-start">
+              <input name="online" type="radio" value="true" ref={register({ required: true })} />
+              {I18n.t("user_bot.dashboards.settings.menu.methods.online")}
+            </label>
+          </>
         )
-        break;
       case "menu_shops":
         return (
           <>

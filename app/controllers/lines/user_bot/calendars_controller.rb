@@ -2,11 +2,27 @@
 
 class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
   def personal_working_schedule
+    shop_options = working_shop_options(shops: Current.business_owner.shops)
+
     @schedules, @reservation_dates, @personal_schedule_dates =
       PersonalCalendar.run!(
-        user: current_user,
-        working_shop_options: member_shops_options,
-        all_shop_ids: working_shop_options(include_user_own: true).map(&:shop_id).uniq,
+        user: Current.business_owner,
+        working_shop_options: shop_options,
+        all_shop_ids: Current.business_owner.shop_ids,
+        date: date
+    )
+
+    render template: "calendars/working_schedule"
+  end
+
+  def my_working_schedule
+    shop_options = working_shop_options(shops: Current.social_user.shops)
+
+    @schedules, @reservation_dates, @personal_schedule_dates =
+      MyCalendar.run!(
+        social_user: Current.social_user,
+        working_shop_options: shop_options,
+        all_shop_ids: shop_options.map(&:shop_id),
         date: date
     )
 

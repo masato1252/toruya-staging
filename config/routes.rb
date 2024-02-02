@@ -49,62 +49,35 @@ Rails.application.routes.draw do
         get :check_shop_profile
       end
 
-      resources :business_owners, only: [:index, :update]
-      resources :schedules, only: [:index] do
+      resources :schedules, only: [] do
         collection do
-          get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
-          get "/social_service_user_id/:social_service_user_id", action: "index"
+          get "mine/:reservation_date(/r/:reservation_id)", to: "schedules#mine", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :my_date
+          get :mine
         end
       end
 
       resources :calendars, only: [] do
         collection do
-          get "personal_working_schedule"
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-        end
-      end
-
-      resources :customers, only: [:index] do
-        collection do
-          get :details
-          get :recent
-          get :search
-          get :find_duplicate_customers
-          get :filter
-          post :save
-          delete :delete
-          post :toggle_reminder_permission
-          post :reply_message
-          delete :delete_message
-          put :unread_message
-          get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
-          patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
-          get "/social_service_user_id/:social_service_user_id", action: "index"
-          get :csv
-        end
-      end
-
-      scope module: "customers", as: "customer", path: "customer" do
-        resources :reservations, only: [:index] do
-          collection do
-            get "/:reservation_id/pend/:customer_id", action: :pend, as: :pend
-            get "/:reservation_id/accept/:customer_id", action: :accept, as: :accept
-            get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
-            get "/:reservation_id/refund_modal/:customer_id", action: :refund_modal, as: :refund_modal
-            post "/:reservation_id/refund/:customer_id", action: :refund, as: :refund
-          end
-        end
-        resources :messages, only: [:index]
-        resources :payments, only: [:index] do
-          member do
-            get :refund_modal
-            post :refund
-          end
+          get "my_working_schedule"
+          get "/social_service_user_id/:social_service_user_id", action: "my_working_schedule"
         end
       end
 
       # business owner scope START
       scope "/owner/(:business_owner_id)" do
+        resources :schedules, only: [:index] do
+          collection do
+            get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
+        end
+
+        resources :calendars, only: [] do
+          collection do
+            get "personal_working_schedule"
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
+        end
         namespace :metrics do
           get :dashboard, path: '/'
           get :sale_pages
@@ -274,7 +247,7 @@ Rails.application.routes.draw do
 
           resource :stripe, only: %i[show]
 
-          resource :social_account, only: [:edit, :update] do
+          resource :social_account, only: [:new, :edit, :update] do
             member do
               get :message_api
               get :login_api
@@ -330,49 +303,91 @@ Rails.application.routes.draw do
             end
           end
         end
-      end
-      # business owner scope END
 
-      resources :online_service_customer_relations, only: [:show]
-      resources :shops, only: [] do
-        resources :reservations, except: [:index, :edit, :new] do
+        resources :customers, only: [:index] do
           collection do
-            post :validate
-            post :add_customer
-            get "form/(:id)", action: :form, as: :form
+            get :details
+            get :recent
+            get :search
+            get :find_duplicate_customers
+            get :filter
+            post :save
+            delete :delete
+            post :toggle_reminder_permission
+            post :reply_message
+            delete :delete_message
+            put :unread_message
+            get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
+            patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+            get :csv
           end
+        end
 
-          scope module: "reservations" do
-            resource :states, only: [] do
-              get :pend
-              get :accept
-              get :accept_in_group
-              get :check_in
-              get :check_out
-              get :cancel
+        scope module: "customers", as: "customer", path: "customer" do
+          resources :reservations, only: [:index] do
+            collection do
+              get "/:reservation_id/pend/:customer_id", action: :pend, as: :pend
+              get "/:reservation_id/accept/:customer_id", action: :accept, as: :accept
+              get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
+              get "/:reservation_id/refund_modal/:customer_id", action: :refund_modal, as: :refund_modal
+              post "/:reservation_id/refund/:customer_id", action: :refund, as: :refund
+            end
+          end
+          resources :messages, only: [:index]
+          resources :payments, only: [:index] do
+            member do
+              get :refund_modal
+              post :refund
             end
           end
         end
-      end
 
-      resources :custom_schedules, only: [:create, :update, :destroy]
-      resources :warnings, only: [], constraints: ::XhrConstraint do
-        collection do
-          get :create_reservation
-          get :create_booking_page
-          get :create_course
-          get :check_reservation_content
-          get :line_settings_verified
-          get :trial_end
-          get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
-          get :change_verified_line_settings
+        resources :shops, only: [] do
+          resources :reservations, except: [:index, :edit, :new] do
+            collection do
+              post :validate
+              post :add_customer
+              get "form/(:id)", action: :form, as: :form
+            end
+
+            scope module: "reservations" do
+              resource :states, only: [] do
+                get :pend
+                get :accept
+                get :accept_in_group
+                get :check_in
+                get :check_out
+                get :cancel
+              end
+
+              resource :messages, only: [:new, :create]
+            end
+          end
+        end
+
+        resources :online_service_customer_relations, only: [:show]
+        resources :custom_schedules, only: [:create, :update, :destroy]
+
+        resources :warnings, only: [], constraints: ::XhrConstraint do
+          collection do
+            get :create_reservation
+            get :create_booking_page
+            get :create_course
+            get :check_reservation_content
+            get :line_settings_verified
+            get :trial_end
+            get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
+            get :change_verified_line_settings
+          end
+        end
+
+        scope module: :tours, path: :tours, as: :tours do
+          get :line_settings_required_for_online_service
+          get :line_settings_required_for_booking_page
         end
       end
-
-      scope module: :tours, path: :tours, as: :tours do
-        get :line_settings_required_for_online_service
-        get :line_settings_required_for_booking_page
-      end
+      # business owner scope END
 
       resources :notifications, only: [:index] do
         collection do

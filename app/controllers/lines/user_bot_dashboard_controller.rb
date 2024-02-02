@@ -18,22 +18,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   include ControllerHelpers
 
   skip_before_action :track_ahoy_visit
-
-  def current_user
-    @current_user ||= User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
-    if !@current_user && params[:encrypted_user_id]
-      @current_user = User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
-      write_user_bot_cookies(:current_user_id, @current_user.id) if @current_user
-    end
-
-    @current_user
-  end
-  helper_method :current_user
-
-  def social_user
-    @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
-  end
-  helper_method :social_user
+  before_action :redirect_from_rich_menu
 
   def from_line_bot
     true
@@ -53,11 +38,6 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
   helper_method :device_detector
 
-  def business_owner_id
-    params[:business_owner_id].presence || Current.business_owner&.id || Current.user&.id
-  end
-  helper_method :business_owner_id
-
   def shop_menus_options
     @shop_menus_options ||=
       ShopMenu.includes(:menu).where(shop: shop).where("menus.deleted_at": nil).references(:menus).map do |shop_menu|
@@ -71,5 +51,14 @@ class Lines::UserBotDashboardController < ActionController::Base
           online: shop_menu.menu.online
         )
       end
+  end
+
+  def redirect_from_rich_menu
+    if params[:redirect_from_rich_menu] && current_users.size > 1
+      @redirect_controller = controller_name
+      @redirect_action = action_name
+      render template: "lines/user_bot/business_owners"
+      return
+    end
   end
 end

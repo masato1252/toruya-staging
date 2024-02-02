@@ -1,6 +1,6 @@
 .customers-dashboard {
   // Make top bar and search bar don't cover the customer list
-  padding-top: $bar-height * 2 + 6px;
+  padding-top: $bar-height;
 
   .customers-list-dashboard {
     padding-bottom: $bar-height;
@@ -81,9 +81,9 @@
 }
 
 .input-group {
-  position: fixed;
-  top: $bar-height;
-  z-index: 999;
+  position: sticky;
+  top: $bar-height * 2;
+  z-index: $search-input-zindex;
 
   .input-group-addon {
     background-color: $palette-color6;

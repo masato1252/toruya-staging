@@ -1,0 +1,68 @@
+<% if messages.present? %>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.unread_message_label") %></div>
+<% end %>
+<div class="booking-pages-list">
+  <% messages.each do |message| %>
+    <%= link_to lines_user_bot_customers_path(
+      business_owner_id: message.social_customer.user_id,
+      customer_id: message.social_customer.customer_id,
+      target_view: Customer::DASHBOARD_TARGET_VIEWS[:messages],
+      previous_path: lines_user_bot_notifications_path
+    ), class: "field-row with-next-arrow" do %>
+    <div>
+      <h3><%= message.social_customer.customer.name %> <span class="border p-1 border-solid border-gray-500 text-gray-500 text-10px"><%= user.company_name %></span></h3>
+      <div class="desc dotdotdot"><%= message.raw_content %></div>
+    </div>
+    <i class="fa fa-angle-right"></i>
+  <% end %>
+<% end %>
+</div>
+
+<% if reservations.present? %>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_reservations_label") %></div>
+<% end %>
+<div class="booking-pages-list">
+  <% reservations.each do |reservation| %>
+    <%= link_to date_lines_user_bot_schedules_path(
+      reservation.start_time.to_fs(:date),
+      business_owner_id: reservation.user_id,
+      reservation_id: reservation.id
+    ), class: "field-row with-next-arrow" do %>
+    <div>
+      <h3><%= I18n.l(reservation.start_time, format: :date_with_wday) %> ~ <%= I18n.l(reservation.end_time, format: :time_only) %> <span class="border p-1 border-solid border-gray-500 text-gray-500 text-10px"><%= reservation.shop.name %></span></h3>
+      <div class="desc dotdotdot"><%= customer_names_sentence(reservation) %></div>
+    </div>
+    <i class="fa fa-angle-right"></i>
+  <% end %>
+<% end %>
+</div>
+
+<% if pending_customer_services.present? %>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.pending_customer_services_label") %></div>
+<% end %>
+<div class="booking-pages-list">
+  <% pending_customer_services.each do |service| %>
+    <%= link_to lines_user_bot_service_customers_path(service.user_id, service), class: "field-row with-next-arrow" do %>
+      <div>
+        <h3><%= service.internal_product_name %> <span class="border p-1 border-solid border-gray-500 text-gray-500 text-10px"><%= user.company_name %></span></h3>
+        <div class="desc dotdotdot"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
+      </div>
+      <i class="fa fa-angle-right"></i>
+    <% end %>
+  <% end %>
+</div>
+
+<% if missing_sale_page_services.present? %>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.missing_sale_page_service_label") %></div>
+<% end %>
+<div class="booking-pages-list">
+  <% missing_sale_page_services.each do |service| %>
+    <%= link_to new_lines_user_bot_sales_online_service_path(service.user_id, slug: service.slug), class: "field-row with-next-arrow" do %>
+      <div>
+        <h3><%= service.internal_product_name %> <span class="border p-1 border-solid border-gray-500 text-gray-500 text-10px"><%= user.company_name %></span></h3>
+        <div class="desc dotdotdot"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
+      </div>
+      <i class="fa fa-angle-right"></i>
+    <% end %>
+  <% end %>
+</div>

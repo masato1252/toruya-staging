@@ -129,6 +129,23 @@ module Reservations
           end
         end
 
+        if reservation.saved_change_to_start_time?
+          reservation.reservation_customers.where.not(booking_page_id: nil).each do |reservation_customer|
+            CustomMessage.scenario_of(reservation_customer.booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER).where.not(before_minutes: nil).each do |custom_message|
+              delivery_time = reservation.start_time.advance(minutes: -custom_message.before_minutes)
+              next if Time.current > delivery_time
+
+              Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
+                schedule_at: delivery_time,
+                custom_message: custom_message,
+                reservation: reservation,
+                receiver: reservation_customer.customer
+              )
+            end
+          end
+        end
+
+
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
 
@@ -140,12 +157,12 @@ module Reservations
             reservation: reservation
           )
         end
-
-        compose(Users::UpdateCustomerLatestActivityAt, user: user)
-        UserBotLines::Actions::SwitchRichMenu.run(social_user: user.social_user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY) if user.social_user
-
-        reservation
       end
+
+      compose(Users::UpdateCustomerLatestActivityAt, user: user)
+      UserBotLines::Actions::SwitchRichMenu.run(social_user: user.social_user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY) if user.social_user
+
+      reservation
     end
 
     private
