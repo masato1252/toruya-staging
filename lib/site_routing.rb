@@ -92,7 +92,7 @@ class SiteRouting
   end
 
   def data_changed_user_customers_path(reservation_customer)
-    data_changed_lines_user_bot_customers_path(reservation_customer.customer.user_id, reservation_customer)
+    h.data_changed_lines_user_bot_customers_path(reservation_customer.customer.user_id, reservation_customer)
   end
 
   def save_changes_user_customers_path(reservation_customer)
