@@ -54,7 +54,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
 
   def redirect_from_rich_menu
-    if params[:redirect_from_rich_menu] && current_users.size > 1
+    if params[:redirect_from_rich_menu] && current_social_user && current_social_user.manage_accounts.size > 1
       @redirect_controller = controller_name
       @redirect_action = action_name
       render template: "lines/user_bot/business_owners"

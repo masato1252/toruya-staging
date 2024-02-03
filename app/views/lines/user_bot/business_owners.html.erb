@@ -5,7 +5,7 @@
     </div>
   <% end %>
 
-  <% current_users.map {|user| user&.staff_accounts&.active&.includes(:owner)&.map(&:owner) }.compact.flatten.uniq.each do |owner| %>
+  <% current_social_user.manage_accounts.each do |owner| %>
     <div class="my-2">
       <%= link_to owner.company_name, { controller: @redirect_controller, action: @redirect_action, business_owner_id: owner.id }, class: "btn btn-tarco mx-1 my1" %>
     </div>
