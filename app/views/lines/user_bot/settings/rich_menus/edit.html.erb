@@ -16,10 +16,10 @@
             <%= t("user_bot.dashboards.settings.rich_menu.auto_description_html") %>
             </p>
           </div>
-        <% else %>
+        <% elsif @current_rich_menu %>
           <div class="field-row justify-center flex-col">
             <p><%= t("settings.social_rich_menus.current_rich_menu") %></p>
-            <%= image_tag(rich_menu_image_url(@current_rich_menu, "240"), class: "demo-image") if @current_rich_menu %>
+            <%= image_tag(rich_menu_image_url(@current_rich_menu, "240"), class: "demo-image") %>
             <%= link_to t("settings.social_rich_menus.edit_button"), lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: business_owner_id), class: "btn btn-yellow my-4" %>
           </div>
         <% end %>
