@@ -33,7 +33,7 @@ class Lines::UserBotController < ActionController::Base
     # So even the line user id was stolen, it still useless for our main feature, they only could access
     # the guest feature(sign in or sign up)
     @current_user ||= User.find_by(id: user_bot_cookies(:current_user_id))
-    @current_user ||= social_user.root_user
+    @current_user ||= social_user&.root_user
   end
   helper_method :current_user
 end
