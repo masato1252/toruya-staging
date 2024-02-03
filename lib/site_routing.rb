@@ -31,7 +31,7 @@ class SiteRouting
   end
 
   def reservation_form_path(reservation, *args)
-    h.form_lines_user_bot_shop_reservations_path(reservation.shop.user_id, reservation.shop, reservation, *args)
+    h.form_lines_user_bot_shop_reservations_path(reservation.shop, reservation, *args)
   end
 
   # TODO: controller and view required
