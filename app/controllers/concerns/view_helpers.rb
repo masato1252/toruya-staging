@@ -66,7 +66,13 @@ module ViewHelpers
   end
 
   def current_user
-    @current_user ||= current_user_of_owner(business_owner)
+    @current_user ||=
+      begin
+        user = current_user_of_owner(business_owner)
+        write_user_bot_cookies(:current_user_id, user.id) if user
+
+        user
+      end
   end
 
   def current_users

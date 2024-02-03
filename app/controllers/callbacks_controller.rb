@@ -47,6 +47,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     queries = URI.decode_www_form(uri.query || "") << ["status", outcome.valid?]
     uri.query = URI.encode_www_form(queries)
 
+    flash[:success] = I18n.t("common.update_successfully_message")
     redirect_to uri.to_s
   end
 
