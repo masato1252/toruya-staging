@@ -79,7 +79,7 @@ const UserBotCustomerPayments = () =>{
                   data-controller="modal"
                   data-modal-target="#dummyModal"
                   data-action="click->modal#popup"
-                  data-modal-path={Routes.refund_modal_lines_user_bot_customer_payment_path(payment.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
+                  data-modal-path={Routes.refund_modal_lines_user_bot_customer_payment_path(props.business_owner_id, payment.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
                   <PaymentCell payment={payment} />
                 </div>
               ) : (
