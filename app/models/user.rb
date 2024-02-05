@@ -256,10 +256,6 @@ class User < ApplicationRecord
     online_services.external.joins(:handle_required_online_service_customer_relations).select("id", "internal_name", "name", "goal_type", "user_id").distinct
   end
 
-  def available_for_staffs_managements
-    [1, 2, 5].include?(id)
-  end
-
   def line_keyword_booking_pages
     booking_pages.where(id: line_keyword_booking_page_ids).sort_by { |page| line_keyword_booking_page_ids.index(page.id.to_s) }
   end

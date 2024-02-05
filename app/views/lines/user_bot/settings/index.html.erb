@@ -46,10 +46,8 @@
           <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
-        <% if current_user.available_for_staffs_managements %>
-          <%= link_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
+        <%= link_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
         <div class="field-header"><%= t("settings.plans.plan_info.caption") %></div>
