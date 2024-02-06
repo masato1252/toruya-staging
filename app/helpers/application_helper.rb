@@ -157,7 +157,7 @@ module ApplicationHelper
   end
 
   def is_not_phone?
-    phone_types.exclude?(device_detector.device_type)
+    wider_device_types.include?(device_detector.device_type)
   end
 
   def not_phone
@@ -167,13 +167,13 @@ module ApplicationHelper
   end
 
   def mobile_only
-    if mobile_types.include?(device_detector.device_type)
+    if wider_device_types.exclude?(device_detector.device_type)
       yield
     end
   end
 
   def non_mobile
-    if mobile_types.exclude?(device_detector.device_type)
+    if wider_device_types.include?(device_detector.device_type)
       yield
     end
   end
@@ -197,8 +197,8 @@ module ApplicationHelper
 
   private
 
-  def phone_types
-    ["smartphone", "feature phone"]
+  def wider_device_types
+    ["desktop"]
   end
 
   def mobile_types
