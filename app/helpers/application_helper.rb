@@ -157,6 +157,10 @@ module ApplicationHelper
   end
 
   def is_not_phone?
+    if current_user&.id == 992
+      Rollbar.error("DeviceDetector", device_detector: device_detector, device_type: device_detector.device_type)
+    end
+
     wider_device_types.include?(device_detector.device_type)
   end
 
