@@ -2474,7 +2474,9 @@ CREATE TABLE public.social_rich_menus (
     start_at timestamp(6) without time zone,
     end_at timestamp(6) without time zone,
     internal_name character varying,
-    bar_label character varying
+    bar_label character varying,
+    created_at timestamp(6) without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp(6) without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -5528,6 +5530,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231127020713'),
 ('20231206053439'),
 ('20231208115249'),
-('20231219091457');
+('20231219091457'),
+('20240207081157');
 
 

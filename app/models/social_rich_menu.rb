@@ -13,6 +13,8 @@
 #  internal_name       :string
 #  social_name         :string
 #  start_at            :datetime
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
 #  social_account_id   :integer
 #  social_rich_menu_id :string
 #
