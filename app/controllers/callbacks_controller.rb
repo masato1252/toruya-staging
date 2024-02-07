@@ -75,14 +75,18 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
         if param["existing_owner_id"] # existing user add another line account
           existing_user = User.find(param["existing_owner_id"])
-          new_user = Users::NewAccount.run!(existing_user: existing_user) if existing_user.social_user.id == social_user.id
 
-          write_user_bot_cookies(:current_user_id, new_user.id)
-          remember_me(new_user)
-          sign_in(new_user)
+          if existing_user.social_user.id == social_user.id
+            new_user = Users::NewAccount.run!(existing_user: existing_user)
 
-          redirect_to lines_user_bot_settings_path(new_user.id), notice: I18n.t("new_line_account.successful_message")
-          return
+            write_user_bot_cookies(:current_user_id, new_user.id)
+            remember_me(new_user)
+            sign_in(new_user)
+
+            redirect_to lines_user_bot_settings_path(new_user.id), notice: I18n.t("new_line_account.successful_message")
+          else
+            redirect_to lines_user_bot_settings_path(user.id), alert: I18n.t("common.update_failed_message")
+          end
         elsif param["staff_token"]
           staff_connect_outcome = StaffAccounts::ConnectUser.run(token: param["staff_token"], user: user)
 
