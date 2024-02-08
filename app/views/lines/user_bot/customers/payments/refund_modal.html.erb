@@ -5,7 +5,7 @@
         <%= t("reservation.modal.refund.title") %>
       </h4>
     </div>
-    <%= form_with url: refund_lines_user_bot_customer_payment_path(@payment), local: true do |form| %>
+    <%= form_with url: refund_lines_user_bot_customer_payment_path(@payment.customer.user_id, @payment), local: true do |form| %>
       <div class="modal-body">
         <%= t("reservation.modal.refund.message") %><br />
         <%= t("common.price") %><%= text_field_tag :amount, @payment.amount.fractional %><%= t("common.unit") %>
