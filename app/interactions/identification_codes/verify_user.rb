@@ -8,6 +8,8 @@ module IdentificationCodes
     string :code, default: nil
     string :staff_token, default: nil
 
+    validate :validate_phone_number_present
+
     def execute
       identification_code = compose(IdentificationCodes::Verify, uuid: uuid, code: code)
 
@@ -24,6 +26,14 @@ module IdentificationCodes
       end
 
       identification_code
+    end
+
+    private
+
+    def validate_phone_number_present
+      if phone_number.blank?
+        errors.add(:phone_number, :present)
+      end
     end
   end
 end

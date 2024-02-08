@@ -620,6 +620,10 @@ ja:
   active_interaction:
     errors:
       models:
+        identification_codes/verify_user:
+          attributes:
+            phone_number:
+              present: "^電話番号は入力しないでください"
         social_messages/send:
           attributes:
             social_message:
