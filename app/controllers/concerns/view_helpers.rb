@@ -47,8 +47,8 @@ module ViewHelpers
     @social_user ||=
       if ENV["DEV_USER_ID"]
         User.find(ENV["DEV_USER_ID"]).social_user
-      elsif params[:encrypted_user_id]
-        _social_user = User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id])).social_user
+      elsif params[:encrypted_user_id] && (user_id = MessageEncryptor.decrypt(params[:encrypted_user_id]))
+        _social_user = User.find_by(id: user_id).social_user
         write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
         _social_user
       elsif user_bot_cookies(:social_service_user_id)
