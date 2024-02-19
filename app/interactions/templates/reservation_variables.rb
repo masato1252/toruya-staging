@@ -7,6 +7,7 @@ module Templates
     time :start_time
     time :end_time
     string :meeting_url, default: ''
+    string :product_name
 
     def execute
       booking_time = "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
@@ -16,7 +17,8 @@ module Templates
         shop_name: shop.display_name,
         shop_phone_number: shop.phone_number,
         booking_time: booking_time,
-        meeting_url: formatted_meeting_url
+        meeting_url: formatted_meeting_url,
+        product_name: product_name
       }
     end
 

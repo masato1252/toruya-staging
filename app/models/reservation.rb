@@ -135,7 +135,8 @@ class Reservation < ApplicationRecord
       shop: shop,
       start_time: start_time,
       end_time: end_time,
-      meeting_url: meeting_url
+      meeting_url: meeting_url,
+      product_name: ReservationCustomer.find_by(reservation: self, customer: customer).booking_option&.display_name.presence || menus_sentence
     )
   end
 
