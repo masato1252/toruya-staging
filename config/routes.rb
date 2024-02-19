@@ -353,6 +353,7 @@ Rails.application.routes.draw do
             collection do
               post :validate
               post :add_customer
+              get :schedule
               get "form/(:id)", action: :form, as: :form
             end
 

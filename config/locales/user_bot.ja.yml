@@ -58,12 +58,14 @@ ja:
         calendar_hint: カレンダー
         user_not_available: "%{user_name} 不在"
       reservation:
+        no_existing_event: 予定なし
         no_ending_time_message: ※終了時刻自動計算
         schedule_modal_title: 新しい予約・予定を追加
         reservation_customers_title: 予約顧客
         delete_a_menu: メニューを削除
         add_a_staff: スタッフを追加
         staff_states_title: ステータス
+        book_this_date: この日に予約
         messages:
           broadcast_to_customer: 予約客に一斉配信
           broadcast_total_delivery: 配信予定数

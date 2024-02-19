@@ -1,0 +1,11 @@
+<div class="schedule-dashboard">
+  <div class="schedule-date">
+    <%= I18n.l(@date, format: :long) %>
+  </div>
+
+  <% if @schedules.present? %>
+    <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: false, date: @date, my_calendar: false, _from: Lines::UserBot::ReservationsController::SCHEDULE_CHECKING %>
+  <% else %>
+    <h3 class="centerize margin-around"><%= I18n.t("user_bot.dashboards.reservation.no_existing_event") %></h3>
+  <% end %>
+</div>

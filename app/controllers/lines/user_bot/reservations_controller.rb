@@ -7,6 +7,7 @@
 require "site_routing"
 
 class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
+  SCHEDULE_CHECKING = "reservations_schedule_checking"
   before_action :set_reservation, only: [:update, :destroy]
 
   def show
@@ -216,6 +217,35 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
         from: "reservation"
       )
     }
+  end
+
+  def schedule
+    working_shop_ids = Current.business_owner.shop_ids
+
+    @date = Time.zone.parse(params[:reservation_date]).to_date
+
+    reservations = Reservation.where(shop_id: working_shop_ids)
+      .uncanceled.in_date(@date)
+      .includes(:menus, :customers, :staffs, shop: :user)
+      .order("reservations.start_time ASC")
+
+    # Mix off custom schedules and reservations
+    event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
+    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
+
+    off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: Current.business_owner.owner_staff_accounts.pluck(:user_id)).includes(user: :profile)
+
+    @schedules = (reservations + booking_page_holder_schedules + off_schedules).each_with_object([]) do |schedule, schedules|
+      if schedule.is_a?(Reservation)
+        schedules << ReservationSerializer.new(schedule).attributes_hash
+      elsif schedule.is_a?(BookingPageSpecialDate)
+        schedules << BookingPageSpecialDateSerializer.new(schedule).attributes_hash
+      else
+        schedules << OffScheduleSerializer.new(schedule).attributes_hash
+      end
+    end.sort_by! { |option| option[:time] }
+
+    render layout: false
   end
 
   private

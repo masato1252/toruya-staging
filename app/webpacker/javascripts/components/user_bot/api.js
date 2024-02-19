@@ -120,6 +120,13 @@ const ReservationServices = {
       data: data,
       responseType: "json"
     })
+  },
+  schedule: ({ business_owner_id, shop_id, params }) => {
+    return request({
+      method: "GET",
+      url: Routes.schedule_lines_user_bot_shop_reservations_path(business_owner_id, shop_id, {format: "html"}),
+      params: params
+    })
   }
 }
 

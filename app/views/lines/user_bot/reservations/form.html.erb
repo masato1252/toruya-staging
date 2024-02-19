@@ -3,6 +3,7 @@
     business_owner_id: business_owner_id,
     params: params,
     from: request.referrer,
+    book_next_time: params[:book_next_time],
     timezone: Time.zone.tzinfo.name,
     calendar: {
       dayNames: I18n.t("date.abbr_day_names"),
