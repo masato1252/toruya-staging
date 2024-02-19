@@ -11,7 +11,7 @@ module StripeEvents
 
       relation = OnlineServiceCustomerRelation.find_by(stripe_subscription_id: data_object.subscription)
       unless relation
-        SubscriptionCheckingJob.set(wait_until: 10.minutes.from_now).perform_later(event.as_json, data_object.subscription)
+        SubscriptionCheckingJob.set(wait_until: 10.minutes.from_now).perform_later(event.as_json, data_object.subscription) if Rails.configuration.x.env.production?
 
         errors.add(:event, :unexpected_subscription)
         return
