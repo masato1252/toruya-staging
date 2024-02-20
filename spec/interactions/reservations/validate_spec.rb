@@ -455,7 +455,8 @@ RSpec.describe Reservations::Validate do
 
     context "when staff is a full time staff, had a personal schedule(off schedule) during the period" do
       before do
-        FactoryBot.create(:custom_schedule, :closed, user: staff1.staff_account.user, start_time: start_time, end_time: end_time)
+        schedule = FactoryBot.create(:custom_schedule, :closed, user: staff1.staff_account.user, start_time: start_time, end_time: end_time)
+        FactoryBot.create(:social_user, user: schedule.user)
       end
 
       it "returns expected error" do

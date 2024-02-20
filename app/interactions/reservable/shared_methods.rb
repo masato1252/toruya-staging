@@ -44,7 +44,9 @@ module Reservable
         where(user_id: active_staff_accounts.map(&:user_id)).
         pluck(Arel.sql("DISTINCT custom_schedules.user_id"))
 
-      active_staff_accounts.find_all {|staff_account| closed_schedule_user_ids.include?(staff_account.user_id) }.map(&:staff_id)
+      User.where(id: closed_schedule_user_ids).map do |user|
+        user.social_user.staffs
+      end.flatten.map(&:id).uniq
     end
 
     def overlap_reservations(menu_id=nil)

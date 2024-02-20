@@ -48,7 +48,7 @@ class Shop < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
 
   def staff_users
-    staffs.includes(staff_account: :user).map { |staff| staff.staff_account.user }
+    staffs.includes(staff_account: :user).map { |staff| staff.staff_account.user.social_user&.current_users }.compact.flatten
   end
 
   def company_full_address

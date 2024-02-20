@@ -184,8 +184,9 @@ RSpec.describe Booking::Calendar do
       context "when staff ask for leave on that day" do
         # ask_for_leave error
         before do
-          FactoryBot.create(:custom_schedule, :closed, shop: shop, user: staff.staff_account.user,
+          schedule = FactoryBot.create(:custom_schedule, :closed, shop: shop, user: staff.staff_account.user,
                             start_time: Time.zone.local(2019, 5, 13).beginning_of_day, end_time: Time.zone.local(2019, 5, 13).end_of_day.change(sec: 0))
+          FactoryBot.create(:social_user, user: schedule.user)
         end
 
         it "returns expected result" do

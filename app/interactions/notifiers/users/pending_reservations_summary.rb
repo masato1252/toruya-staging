@@ -30,7 +30,7 @@ module Notifiers
         @reservations ||=
           begin
             staff_ids = user.staff_accounts.active.pluck(:staff_id)
-            reservations = Reservation.active.where(aasm_state: :pending, created_at: start_time..end_time).joins(:reservation_staffs).where("reservation_staffs.staff_id": staff_ids, "reservation_staffs.state": ReservationStaff.states[:pending]).to_a
+            reservations = Reservation.active.where(aasm_state: :pending, created_at: start_time..end_time).joins(:reservation_staffs).where("reservation_staffs.staff_id": staff_ids, "reservation_staffs.state": ReservationStaff.states[:pending]).order("id").to_a
           end
       end
     end

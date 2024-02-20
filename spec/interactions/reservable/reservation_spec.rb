@@ -487,7 +487,8 @@ RSpec.describe Reservable::Reservation do
         context "when staff is a full time staff, ask for leave during(off schedule) the period" do
           let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
           before do
-            FactoryBot.create(:custom_schedule, :closed, user: staff2.staff_account.user, start_time: time_range.first, end_time: time_range.last)
+            schedule = FactoryBot.create(:custom_schedule, :closed, user: staff2.staff_account.user, start_time: time_range.first, end_time: time_range.last)
+            FactoryBot.create(:social_user, user: schedule.user)
           end
 
           it "is invalid" do
@@ -510,7 +511,8 @@ RSpec.describe Reservable::Reservation do
         context "when staff is a full time staff, had a personal schedule(off schedule) during the period" do
           let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
           before do
-            FactoryBot.create(:custom_schedule, :closed, user: staff2.staff_account.user, start_time: time_range.first, end_time: time_range.last)
+            schedule = FactoryBot.create(:custom_schedule, :closed, user: staff2.staff_account.user, start_time: time_range.first, end_time: time_range.last)
+            FactoryBot.create(:social_user, user: schedule.user)
           end
 
           it "is invalid" do
