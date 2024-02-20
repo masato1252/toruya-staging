@@ -317,6 +317,7 @@ Rails.application.routes.draw do
             delete :delete
             post :toggle_reminder_permission
             post :reply_message
+            post :save_draft_message
             delete :delete_message
             put :unread_message
             get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
