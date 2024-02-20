@@ -27,6 +27,10 @@ module Notifiers
           broadcast: broadcast
         )
       end
+
+      def deliverable
+        receiver.reminder_permission
+      end
     end
   end
 end

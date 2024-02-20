@@ -88,6 +88,7 @@ class Customer < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :active_in, ->(time_ago) { active.where("customers.updated_at > ?", time_ago) }
   scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
+  scope :marketable, -> { where(reminder_permission: true) }
 
   def with_google_contact
     @customer_with_google_contact ||=

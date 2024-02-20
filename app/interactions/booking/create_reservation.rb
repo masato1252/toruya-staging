@@ -17,7 +17,7 @@ module Booking
     string :customer_email, default: nil
     string :social_user_id, default: nil
     string :stripe_token, default: nil
-    boolean :customer_reminder_permission, default: false
+    boolean :customer_reminder_permission, default: true
     # customer_info format might like
     # {
     #   id: customer_with_google_contact&.id,

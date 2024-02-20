@@ -54,7 +54,7 @@
     customer_first_name: @customer&.first_name,
     customer_last_name: @customer&.last_name,
     customer_phone_number: @customer&.mobile_phone_number,
-    reminder_permission: @customer&.reminder_permission,
+    reminder_permission: @customer ? @customer.reminder_permission : true,
     customer_info: customer_info_hash,
     present_customer_info: customer_info_hash,
     last_selected_option_id: @last_selected_option_id,

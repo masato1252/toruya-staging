@@ -704,17 +704,6 @@ class BookingReservationForm extends React.Component {
           <div dangerouslySetInnerHTML={{ __html: Autolinker.link(this.props.booking_page.note) }} />
         </div>
 
-        <div className="reminder-permission">
-          <label>
-            <Field
-              name="booking_reservation_form[reminder_permission]"
-              component="input"
-              type="checkbox"
-            />
-            {reminder_desc}
-          </label>
-        </div>
-
         <a href="#"
           className="btn btn-tarco"
           onClick={(event) => {
@@ -1300,7 +1289,6 @@ class BookingReservationForm extends React.Component {
             "customer_phone_number",
             "customer_info",
             "present_customer_info",
-            "reminder_permission",
             "social_user_id",
             "sale_page_id"
           ),
