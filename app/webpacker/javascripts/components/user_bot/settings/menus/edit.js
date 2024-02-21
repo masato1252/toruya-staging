@@ -10,6 +10,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 const MenuEdit =({props}) => {
   const [menu_shops_options, setMenuShops] = useState(props.menu_shops_options)
+  const [menu_staffs_options, setMenuStaffs] = useState(props.menu_staffs_options)
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.menu,
@@ -24,7 +25,7 @@ const MenuEdit =({props}) => {
     let error, response;
 
     [error, response] = await MenuServices.update({
-      data: _.assign( data, { attribute: props.attribute, menu_shops: menu_shops_options, business_owner_id: props.business_owner_id })
+      data: _.assign( data, { attribute: props.attribute, menu_shops: menu_shops_options, menu_staffs: menu_staffs_options, business_owner_id: props.business_owner_id })
     })
 
     if (error) {
@@ -108,6 +109,59 @@ const MenuEdit =({props}) => {
                           setMenuShops((menu_options) => {
                             const new_menu_options = menu_options.map((menu_option) => {
                               return menu_option.shop_id == option.shop_id ? {...menu_option, max_seat_number: val} : menu_option
+                            })
+
+                            return new_menu_options
+                          })
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+            <div className="field-row hint no-border margin-around justify-center">
+              <div className="centerize" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.menu.form.hint") }} />
+            </div>
+          </>
+        )
+      case "menu_staffs":
+        return (
+          <>
+            {menu_staffs_options.map((option) => {
+              return (
+                <div className="field-row flex-start" key={option.shop_id}>
+                  <div className="flex justify-between w-full">
+                    {option.name}
+                    <SwitchButton
+                      offWord="OFF"
+                      onWord="ON"
+                      checked={option.checked}
+                      name={option.name}
+                      nosize={true}
+                      onChange={() => {
+                        setMenuStaffs((menu_options) => {
+                          const new_menu_options = menu_options.map((menu_option) => {
+                            return menu_option.staff_id == option.staff_id ? {...menu_option, checked: !menu_option.checked} : menu_option
+                          })
+
+                          return new_menu_options
+                        })
+                      }}
+                    />
+                  </div>
+
+                  {option.checked && (
+                    <div>
+                      {I18n.t("user_bot.dashboards.settings.menu.form.menu_staffs_max_customers")}
+                      <input
+                        type="tel"
+                        value={option.max_customers}
+                        onChange={(event) => {
+                          const val = event.target.value;
+                          setMenuStaffs((menu_options) => {
+                            const new_menu_options = menu_options.map((menu_option) => {
+                              return menu_option.staff_id == option.staff_id ? { ...menu_option, max_customers: val } : menu_option
                             })
 
                             return new_menu_options

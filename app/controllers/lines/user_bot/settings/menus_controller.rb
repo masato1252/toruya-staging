@@ -9,6 +9,7 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
     @menu = Current.business_owner.menus.find(params[:id])
 
     @menu_shops = @menu.shop_menus.includes(:shop)
+    @staffs = @menu.staff_menus.includes(:staff).map(&:staff)
   end
 
   def edit
@@ -22,6 +23,15 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
           Option.new(name: shop.display_name, shop_id: shop.id, max_seat_number: shop_menu.max_seat_number, checked: true)
         else
           Option.new(name: shop.display_name, shop_id: shop.id, max_seat_number: "", checked: false)
+        end
+      end
+    when "menu_staffs"
+      menu_staffs = @menu.menu_staffs.includes(:staff).to_a
+      @menu_staffs_options = Current.business_owner.staffs.map do |staff|
+        if menu_staff = menu_staffs.find { |menu_staff| menu_staff.staff_id == staff.id }
+          Option.new(name: staff.name, staff_id: staff.id, max_customers: menu_staff.max_customers, checked: true)
+        else
+          Option.new(name: staff.name, staff_id: staff.id, max_customers: "", checked: false)
         end
       end
     end

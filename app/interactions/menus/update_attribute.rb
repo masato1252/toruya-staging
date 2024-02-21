@@ -11,6 +11,7 @@ module Menus
       integer :minutes, default: nil
       integer :interval, default: nil
       array :menu_shops, default: nil
+      array :menu_staffs, default: nil
       boolean :online, default: nil
     end
 
@@ -36,6 +37,16 @@ module Menus
             if menu.min_staffs_number <= 1
               menu.staff_menus.update_all(max_customers: checked_menu_shops.map { |attr| attr[:max_seat_number].presence || "1" }.map(&:to_i).max)
             end
+          end
+        when "menu_staffs"
+          menu.transaction do
+            menu.menu_staffs.destroy_all
+            checked_menu_staffs = attrs[:menu_staffs].select{ |attribute| attribute["checked"].present? }
+            new_staff_attrs = checked_menu_staffs.map do |attr|
+              { staff_id: attr[:staff_id], max_customers: attr[:max_customers].presence || 1 }
+            end
+
+            menu.menu_staffs.create(new_staff_attrs)
           end
         end
 

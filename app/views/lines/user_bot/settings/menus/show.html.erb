@@ -35,6 +35,14 @@
       <% end %>
     </div>
   <% end %>
+
+  <div class="field-header"><%= t("user_bot.dashboards.settings.menu.staffs") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :menu_staffs) do %>
+    <div class="dotdotdot">
+      <%= @staffs.map(&:name).join(", ")%>
+    </div>
+  <% end %>
+
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.method") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :online), title: t("user_bot.dashboards.settings.menu.methods.#{@menu.online ? "online" : "local"}") %>
 
