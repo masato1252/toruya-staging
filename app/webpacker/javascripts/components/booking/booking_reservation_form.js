@@ -58,6 +58,32 @@ class BookingReservationForm extends React.Component {
     }
   }
 
+  renderOwnerWarning = () => {
+    const {
+      owner_warning1,
+      owner_warning2
+    } = this.props.i18n.done
+
+    if (this.props.is_shop_owner) {
+      if (this.booking_reservation_form_values.is_done) {
+        return (
+          <div className="notification alert alert-info fade in centerize">
+            {owner_warning1}
+            <br />
+            {owner_warning2}
+          </div>
+        )
+      }
+      else {
+        return (
+          <div className="notification alert alert-info fade in centerize">
+            {this.props.i18n.owner_personal_schedule_warning}
+          </div>
+        )
+      }
+    }
+  }
+
   renderBookingHeader = (pristine) => {
     const {
       title,
@@ -919,20 +945,11 @@ class BookingReservationForm extends React.Component {
     const {
       title,
       message1,
-      message2,
-      owner_warning1,
-      owner_warning2
+      message2
     } = this.props.i18n.done
 
     return (
       <div className="done-view">
-        {this.props.is_shop_owner && (
-          <div className="warning">
-            {owner_warning1}
-            <br />
-            {owner_warning2}
-          </div>
-        )}
         <h3 className="title">
           {title}
         </h3>
@@ -1085,6 +1102,7 @@ class BookingReservationForm extends React.Component {
               acceptCharset="UTF-8"
               method="post">
               <input name="utf8" type="hidden" value="✓" />
+              {this.renderOwnerWarning()}
               {this.renderDraftWarning()}
               {this.renderBookingHeader(pristine)}
               {this.renderBookingFlow()}
