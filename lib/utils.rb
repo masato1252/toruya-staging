@@ -23,4 +23,21 @@ module Utils
     tempfile.rewind
     tempfile
   end
+
+  def self.url_with_external_browser(url)
+    return url unless url =~ URI::regexp
+
+    uri = URI.parse(url)
+    query = if uri.query
+              CGI.parse(uri.query)
+            else
+              {}
+            end
+
+    query['openExternalBrowser'] = %w(1)
+    uri.query = URI.encode_www_form(query)
+    uri.to_s
+  rescue URI::InvalidURIError
+    url
+  end
 end

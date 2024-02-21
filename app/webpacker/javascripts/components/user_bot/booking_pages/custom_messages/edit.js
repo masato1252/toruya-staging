@@ -62,6 +62,37 @@ const CustomMessageEdit =({props}) => {
     setTemplate(newTemplate)
   }
 
+  const renderVariableButtons = () => {
+    switch(props.scenario) {
+      case "reservation_confirmed":
+      case "reservation_one_day_reminder":
+        return (
+          <div className="field-row flex-start">
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_name")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_phone_number}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_phone_number")}</button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_time}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.reservation_time")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{meeting_url}") }}> {I18n.t("common.meeting_url")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{product_name}") }}> {I18n.t("common.menu")} </button>
+          </div>
+        )
+      case "booking_page_booked":
+      case "booking_page_one_day_reminder":
+      case "booking_page_custom_reminder":
+        return (
+          <div className="field-row flex-start">
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_name")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_phone_number}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_phone_number")}</button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_time}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.reservation_time")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{meeting_url}") }}> {I18n.t("common.meeting_url")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{product_name}") }}> {I18n.t("common.menu")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_page_url}") }}> {I18n.t("common.booking_page_url")} </button>
+          </div>
+        )
+    }
+  }
+
   const renderCorrespondField = () => {
     switch(props.scenario) {
       case "booking_page_booked":
@@ -79,7 +110,7 @@ const CustomMessageEdit =({props}) => {
                     {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_reservation")}
                     <input
                       type='tel'
-                      value={before_minutes || ''}
+                      value={before_minutes ? before_minutes : 10}
                       onChange={(event) => {
                         setBeforeMinutes(event.target.value)
                       }}
@@ -110,14 +141,9 @@ const CustomMessageEdit =({props}) => {
                 }}
               />
             </div>
-            <div className="field-row flex-start">
-              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
-              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_name")} </button>
-              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_phone_number}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_phone_number")}</button>
-              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_time}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.reservation_time")} </button>
-              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{meeting_url}") }}> {I18n.t("common.meeting_url")} </button>
-              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{product_name}") }}> {I18n.t("common.menu")} </button>
-            </div>
+
+            {renderVariableButtons()}
+
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.preview")}</div>
             <div className="field-row hint no-border">
               <p className="p-6 bg-gray rounded break-line-content">

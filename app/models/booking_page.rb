@@ -105,7 +105,8 @@ class BookingPage < ApplicationRecord
       start_time: Time.current,
       end_time: Time.current.advance(hours: 1),
       meeting_url: 'https://toruya.com/',
-      product_name: booking_options.first&.display_name.presence || I18n.t("common.menu")
+      product_name: booking_options.first&.display_name.presence || I18n.t("common.menu"),
+      booking_page_url: Rails.application.routes.url_helpers.booking_page_url(slug)
     )
   end
 end

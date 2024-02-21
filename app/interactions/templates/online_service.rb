@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "message_encryptor"
+require "utils"
 
 module Templates
   class OnlineService < ActiveInteraction::Base
@@ -39,7 +40,7 @@ module Templates
     def content_url
       @content_url ||=
         if online_service.external?
-          "#{online_service.content_url}?openExternalBrowser=1"
+          Utils.url_with_external_browser(online_service.content_url)
         elsif online_service.bundler?
           nil
         else
