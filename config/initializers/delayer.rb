@@ -26,7 +26,7 @@ module Delayed
         private
 
         def argument_signature
-          Base64.strict_encode64(YAML.load(handler).job_data["arguments"].to_json)
+          Digest::MD5.hexdigest(YAML.load(handler).job_data["arguments"].to_json)
         end
       end
     end
