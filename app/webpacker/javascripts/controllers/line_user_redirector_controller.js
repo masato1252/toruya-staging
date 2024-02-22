@@ -4,7 +4,8 @@ export default class LineUserRedirector extends Controller {
   connect() {
     liff
       .init({
-        liffId: this.liffId
+        liffId: this.liffId,
+        withLoginOnExternalBrowser: true
       })
       .then(() => {
         liff.getProfile()
