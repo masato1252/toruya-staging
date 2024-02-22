@@ -1191,7 +1191,9 @@ CREATE TABLE public.delayed_jobs (
     locked_by character varying,
     queue character varying,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    args text,
+    signature character varying
 );
 
 
@@ -4595,6 +4597,13 @@ CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.cu
 
 
 --
+-- Name: index_delayed_jobs_on_signature; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_delayed_jobs_on_signature ON public.delayed_jobs USING btree (signature);
+
+
+--
 -- Name: index_episodes_on_online_service_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5531,6 +5540,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231206053439'),
 ('20231208115249'),
 ('20231219091457'),
-('20240207081157');
+('20240207081157'),
+('20240221165044');
 
 

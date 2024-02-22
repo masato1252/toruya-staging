@@ -11,3 +11,24 @@ Delayed::Worker.queue_attributes = {
   default: { priority: 10 },
   low_priority: { priority: 20 },
 }
+
+module Delayed
+  module Backend
+    module ActiveRecord
+      class Job < ::ActiveRecord::Base
+        before_validation :set_signature
+        validates :signature, uniqueness: true, allow_nil: true
+
+        def set_signature
+          self.signature = argument_signature
+        end
+
+        private
+
+        def argument_signature
+          Base64.strict_encode64(YAML.load(handler).job_data["arguments"].to_json)
+        end
+      end
+    end
+  end
+end
