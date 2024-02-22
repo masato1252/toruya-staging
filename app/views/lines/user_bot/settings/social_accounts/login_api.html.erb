@@ -17,7 +17,9 @@
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_path(attribute: :login_channel_id, business_owner_id: business_owner_id), title: @social_account.login_channel_id %>
 
         <div class="field-header"><%= t("settings.social_account.form.login_channel_secret_title") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_path(attribute: :login_channel_secret, business_owner_id: business_owner_id), title: @social_account.raw_login_channel_secret %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_path(attribute: :login_channel_secret, business_owner_id: business_owner_id), title: @social_account.raw_login_channel_secret, klass: @social_account.channel_secret_correctness? ? '' : "danger" %>
+        <%= render "lines/user_bot/settings/social_accounts/line_settings_errors" if @social_account.line_settings_finished? && !@social_account.channel_secret_correctness? %>
+
         <%= render "lines/user_bot/settings/social_accounts/line_verification", social_account: @social_account %>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>

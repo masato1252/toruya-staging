@@ -20,7 +20,8 @@
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_path(attribute: :channel_id, business_owner_id: business_owner_id), title: @social_account.channel_id %>
 
         <div class="field-header"><%= t("settings.social_account.form.channel_secret") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_path(attribute: :channel_secret, business_owner_id: business_owner_id), title: @social_account.raw_channel_secret %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_path(attribute: :channel_secret, business_owner_id: business_owner_id), title: @social_account.raw_channel_secret, klass: @social_account.channel_secret_correctness? ? '' : "danger" %>
+        <%= render "lines/user_bot/settings/social_accounts/line_settings_errors" if @social_account.line_settings_finished? && !@social_account.channel_secret_correctness? %>
 
         <div class="field-group-header"><%= t("settings.social_account.info2_label") %></div>
         <div class="field-header"><%= t("settings.social_account.form.channel_basic_id") %></div>

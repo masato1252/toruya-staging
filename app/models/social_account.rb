@@ -49,6 +49,10 @@ class SocialAccount < ApplicationRecord
     is_login_available? && user.owner_social_customer.present?
   end
 
+  def channel_secret_correctness?
+    raw_channel_secret.present? && raw_channel_secret != raw_login_channel_secret
+  end
+
   def message_api_verified?
     bot_data_finished? && social_messages.where(
       social_customer: user.owner_social_customer,
