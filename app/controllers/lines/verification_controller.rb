@@ -25,6 +25,11 @@ class Lines::VerificationController < ActionController::Base
       return
     end
 
+    if !current_user.social_account.channel_secret_correctness?
+      Notifiers::Users::LineSettings::LineChannelSecretIncorrectMessage.run(receiver: current_user.social_user)
+      return
+    end
+
     @message_api_ready = current_user.social_account&.message_api_verified?
 
     if !@message_api_ready

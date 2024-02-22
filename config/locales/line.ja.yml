@@ -29,6 +29,7 @@ ja:
       action: 動作テスト
     unverified_warning_message: LINEメッセージをお客様に送信できるように、LINE連携の動作テストを完了してください。動作テストを完了するまで、この機能が期待どおりに機能するかどうかわかりません。
     message_api_notification_message: "Toruyaと連携したLINE公式アカウントにお友だち登録して、Toruya上にあなた自身の顧客情報が作られました。\n\nLINEログイン設定が正しければ、連携したLINE公式アカウントに、Toruyaから以下の様なメッセージが届いています。"
+    channel_secret_incorrect_message: "LINEログインのチャネルシークレットの設定に間違いが見つかりました。\n\n設定項目名が同じでも、Messaging APIとLINEログインの設定が同じになることはあり得ません。\n\nもう一度設定内容をご確認ください。\n\nhttps://toruya.com/help/line_sync/#setting03_02"
   new_line_account:
     successful_message: 追加アカウントが作成されました。店舗情報と、連携するLINE公式アカウントのAPI情報を設定してください。
   toruya_line:
