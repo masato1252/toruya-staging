@@ -19,7 +19,13 @@ module LineMessages
               "size": "lg",
               "align": "start",
               "weight": "bold"
-            },
+            }
+          ]
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
             {
               "type": "text",
               "text": title2,
@@ -30,7 +36,7 @@ module LineMessages
             }
           ]
         },
-        "body": {
+        "footer": {
           "type": "box",
           "layout": "vertical",
           "contents": action_templates
