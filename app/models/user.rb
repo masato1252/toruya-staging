@@ -157,6 +157,7 @@ class User < ApplicationRecord
   def current_staff_account(super_user = nil)
     super_user ||= Current.business_owner
     super_user ||= Current.user
+    super_user ||= self
     @current_staff_accounts ||= {}
 
     return @current_staff_accounts[super_user] if @current_staff_accounts[super_user]
@@ -166,6 +167,7 @@ class User < ApplicationRecord
 
   def current_staff(super_user = nil)
     super_user ||= Current.business_owner
+    super_user ||= self
     @current_staffs ||= {}
 
     return @current_staffs[super_user] if @current_staffs[super_user]
