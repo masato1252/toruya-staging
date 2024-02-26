@@ -100,13 +100,13 @@ module BookingPages
                         max_seat_number: 1
                       }
                     ],
-                    staff_menus_attributes: user.staff_ids.map do |staff_id|
+                    staff_menus_attributes: [
                       {
-                        staff_id: staff_id,
+                        staff_id: user.current_staff(user).id,
                         priority: 0,
                         max_customers: 1
                       }
-                    end
+                    ]
                   },
                   reservation_setting_id: reservation_setting.id,
                   menu_reservation_setting_rule_attributes: {

@@ -46,6 +46,7 @@ RSpec.describe BookingOptions::Update do
     end
 
     context "update_attribute is new_pure_menu" do
+      let!(:staff_account) { FactoryBot.create(:staff_account, owner: user, user: user) }
       let(:update_attribute) { "new_pure_menu" }
       before do
         args[:attrs][:new_menu_name] = "foo"

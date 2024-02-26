@@ -155,6 +155,7 @@ RSpec.describe BookingPages::Update do
 
     context "update_attribute is new_option_menu" do
       let(:update_attribute) { "new_option_menu" }
+      let!(:staff_account) { FactoryBot.create(:staff_account, owner: user, user: user) }
 
       context "when adding a exiting menu" do
         before do
