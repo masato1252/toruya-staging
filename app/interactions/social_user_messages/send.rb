@@ -19,10 +19,6 @@ module SocialUserMessages
 
       if response.code == "200"
         social_user_message.update(sent_at: Time.current)
-
-        if social_user_message.user?
-          social_user_message.social_user.update(pinned: true)
-        end
       else
         error_message = begin
           JSON.parse(response.body)["message"]

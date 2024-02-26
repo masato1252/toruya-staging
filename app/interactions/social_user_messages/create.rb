@@ -58,6 +58,7 @@ module SocialUserMessages
         end
       elsif !readed && message_type == SocialUserMessage.message_types[:user]
         message.update(sent_at: Time.current)
+        message.social_user.update(pinned: true)
 
         case content_type
         when IMAGE_TYPE
