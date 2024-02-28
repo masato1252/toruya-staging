@@ -180,6 +180,9 @@ ja:
       connected_your_account: スタッフアカウントの設定が完了しました。
       staff_connected_successfully: スタッフ登録完了
       staff_connected_failed: このLINEアカウントは既にスタッフ登録されています。店舗管理者にご確認ください。
+    consultant:
+      consultant_connected_successfully: 登録完了
+      consultant_connected_failed: 登録失敗。店舗管理者にご確認ください。
     staff_working_time:
       title:
         working_schedules: 勤務スタイル

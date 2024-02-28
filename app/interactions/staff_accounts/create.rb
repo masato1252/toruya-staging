@@ -11,6 +11,8 @@ module StaffAccounts
       string :level, default: "employee"
     end
 
+    boolean :consultant, default: false
+
     validate :validate_unique_user
 
     def execute
@@ -49,7 +51,13 @@ module StaffAccounts
           staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
 
           if staff_account.save
-            Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
+            if consultant
+              # Send SMS to consultant their client was sign up
+              Notifiers::Users::Notifications::ConsultantClientRegistered.run(receiver: staff_account, client: staff_account.owner)
+            else
+              # Send SMS to invitee to tell them come to be a staff
+              Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
+            end
           end
         end
       end
@@ -59,13 +67,10 @@ module StaffAccounts
         staff_account.mark_active
       end
 
-      if staff_account.changes.present?
-        if staff_account.save
-          staff_account
-        else
-          errors.merge!(staff_account.errors)
-        end
-      end
+      staff_account.save
+      errors.merge!(staff_account.errors) if staff_account.errors.present?
+
+      staff_account
     end
 
     private

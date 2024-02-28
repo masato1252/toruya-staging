@@ -32,8 +32,10 @@ https://manager.toruya.com/userlogin"
         message: "%{user_name} 様\n\nあなたの代理店アカウントに、子アカウントが追加されました。\n\n設定画面からご確認ください。\n\nToruya"
       activate_staff_account:
         message: "%{user_name}さんの店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
-      activate_consultant_account:
-        message: "%{consultant_name} %{client_name}の店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
+      consultant_client_registered:
+        message: "%{client_name}さんよりLINE集客システムToruyaの招待をお届けしました。\n\nリンクをクリックしてユーザー登録してください。\n %{url}"
+      invite_consultant_client:
+        message: "%{user_name}Be my client\n %{url}"
       staff_joined:
         message: "%{staff_name} のスタッフ登録が完了しました。"
       assignee_accepted_reservation:

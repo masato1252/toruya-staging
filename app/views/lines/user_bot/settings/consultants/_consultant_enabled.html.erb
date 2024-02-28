@@ -1,0 +1,42 @@
+<% staffs.each do |staff| %>
+  <%= render "lines/user_bot/field_state", state: staff.state do %>
+    <%= render "lines/user_bot/field_row", path: lines_user_bot_settings_path(business_owner_id: staff.user_id), state: staff.state do %>
+      <div class="dotdotdot">
+        <h3><%= staff.user.name %></h3>
+        <div class="desc"><%= t("user_bot.dashboards.settings.staffs.authorities.#{staff.level}") %></div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+<% consultant_accounts.each do |consultant_account| %>
+  <%= render "lines/user_bot/field_state", state: consultant_account.state do %>
+    <%= render "lines/user_bot/field_row", path: "#", state: consultant_account.state do %>
+      <div class="dotdotdot">
+        <h3><%= consultant_account.phone_number %></h3>
+        <div class="desc"><%= t("user_bot.dashboards.settings.consultants.pending_client") %></div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+<div class="margin-around">
+  <h3><%= t("user_bot.dashboards.settings.consultants.invitation_link") %></h3>
+  <%= text_field_tag :consultant_url, Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(consultant_token: Current.business_owner.referral_token), read_only: true, class: 'extend',
+    data: {
+      controller: "clipboard",
+      action: "click->clipboard#copy",
+      clipboard_text: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(consultant_token: Current.business_owner.referral_token),
+      clipboard_popup_text: t("common.copied")
+    }
+  %>
+</div>
+<div class="margin-around">
+  <p class="desc border-0 border-t border-solid py-2 border-gray-300"><%= t("user_bot.dashboards.settings.consultants.invitation_desc") %></p>
+  <img class="w-full" src='<%= asset_pack_path("media/assets/user_bot/consultant_flow_instruction.png") %>' />
+</div>
+
+<%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+  <%= link_to new_lines_user_bot_settings_consultant_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+    <i class="fas fa-plus fa-2x"></i>
+    <div class="word"><%= I18n.t("action.add_more") %></div>
+  <% end %>
+<% end %>

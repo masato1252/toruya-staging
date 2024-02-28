@@ -5,6 +5,7 @@ module Staffs
     object :user
     string :phone_number
     string :level, default: "admin"
+    boolean :consultant, default: false
 
     def execute
       user.with_lock do
@@ -26,7 +27,7 @@ module Staffs
         end
 
         # All the staff be invited was admin currently.
-        compose(StaffAccounts::Create, staff: staff, params: { phone_number: phone_number, level: level })
+        compose(StaffAccounts::Create, staff: staff, params: { phone_number: phone_number, level: level }, consultant: consultant)
       end
     end
   end

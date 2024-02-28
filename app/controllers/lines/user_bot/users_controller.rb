@@ -81,7 +81,8 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       phone_number: params[:phone_number],
       uuid: params[:uuid],
       code: params[:code],
-      staff_token: params[:staff_token]
+      staff_token: params[:staff_token],
+      consultant_token: params[:consultant_token]
     )
 
     if outcome.valid?

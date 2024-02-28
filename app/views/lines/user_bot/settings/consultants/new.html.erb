@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_consultants_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.consultants.new_page_title") %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.consultants.new_page_header") %></div>
+
+        <div class="margin-around centerize">
+          <div class="my-2"><%= t("user_bot.dashboards.settings.consultants.new_page_invite_desc_html") %></div>
+
+          <%= form_with(url: lines_user_bot_settings_consultants_path(business_owner_id: business_owner_id), local: true) do |f| %>
+            <%= f.telephone_field :phone_number, placeholder: t("common.cellphone_number") %>
+            <%= f.submit t("common.send"), class: "btn btn-tarco" %>
+          <% end %>
+        </div>
+        <div class="flex justify-center">
+          <div class="margin-around break-line-content"><%= t("user_bot.dashboards.settings.consultants.invitation_flow_desc_html") %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

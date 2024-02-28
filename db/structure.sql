@@ -939,6 +939,40 @@ ALTER SEQUENCE public.chapters_id_seq OWNED BY public.chapters.id;
 
 
 --
+-- Name: consultant_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.consultant_accounts (
+    id bigint NOT NULL,
+    consultant_user_id bigint NOT NULL,
+    phone_number character varying NOT NULL,
+    token character varying NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: consultant_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.consultant_accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: consultant_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.consultant_accounts_id_seq OWNED BY public.consultant_accounts.id;
+
+
+--
 -- Name: contact_group_rankings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2641,7 +2675,8 @@ CREATE TABLE public.social_users (
     updated_at timestamp without time zone NOT NULL,
     social_rich_menu_key character varying,
     pinned boolean DEFAULT false NOT NULL,
-    release_version character varying
+    release_version character varying,
+    consultant_at timestamp(6) without time zone
 );
 
 
@@ -3334,6 +3369,13 @@ ALTER TABLE ONLY public.chapters ALTER COLUMN id SET DEFAULT nextval('public.cha
 
 
 --
+-- Name: consultant_accounts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.consultant_accounts ALTER COLUMN id SET DEFAULT nextval('public.consultant_accounts_id_seq'::regclass);
+
+
+--
 -- Name: contact_group_rankings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3937,6 +3979,14 @@ ALTER TABLE ONLY public.categories
 
 ALTER TABLE ONLY public.chapters
     ADD CONSTRAINT chapters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: consultant_accounts consultant_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.consultant_accounts
+    ADD CONSTRAINT consultant_accounts_pkey PRIMARY KEY (id);
 
 
 --
@@ -4792,6 +4842,13 @@ CREATE INDEX index_chapters_on_online_service_id ON public.chapters USING btree 
 
 
 --
+-- Name: index_consultant_accounts_on_consultant_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_consultant_accounts_on_consultant_user_id ON public.consultant_accounts USING btree (consultant_user_id);
+
+
+--
 -- Name: index_contact_group_rankings_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5090,6 +5147,13 @@ CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON pub
 --
 
 CREATE INDEX index_social_user_messages_on_social_user_id_and_ai_uid ON public.social_user_messages USING btree (social_user_id, ai_uid);
+
+
+--
+-- Name: index_social_users_on_consultant_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_users_on_consultant_at ON public.social_users USING btree (consultant_at);
 
 
 --
@@ -5833,8 +5897,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240318014002'),
 ('20240412022437'),
 ('20240415014225'),
+('20240417023711'),
 ('20240418151411'),
 ('20240425113626'),
+('20240427000601'),
 ('20240429031029'),
 ('20240501021924');
 

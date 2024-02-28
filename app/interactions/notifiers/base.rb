@@ -197,6 +197,12 @@ module Notifiers
       end
     end
 
+    def receiver_should_be_consultant_account
+      unless receiver.is_a?(ConsultantAccount)
+        errors.add(:receiver, :should_be_consultant_account)
+      end
+    end
+
     def nth_time
       support_nth_times = CustomMessage.where(scenario: nth_time_scenario).order(nth_time: :desc).distinct(:nth_time).pluck(:nth_time)
       expected_nth_time = SocialUserMessage.sent.where(social_user: target_line_user, scenario: nth_time_scenario).distinct(:nth_time).pluck(:nth_time).length + 1

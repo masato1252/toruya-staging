@@ -145,6 +145,7 @@ ja:
         company:
           info_hint: 主に宣伝用LPに表示されます。
           staffs: スタッフ
+          consultants: 公式サポーター
         shop:
           shop_management: 店舗管理
           shop_info_label: 店舗情報

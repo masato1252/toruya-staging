@@ -64,7 +64,8 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     const [error, response] = await IdentificationCodesServices.identify(
       _.merge(
         {
-          staff_token: props.staff_token
+          staff_token: props.staff_token,
+          consultant_token: props.consultant_token
         },
         _.pick(data, ['phone_number', 'uuid', 'code']
       )
@@ -87,7 +88,8 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     const [error, response] = await UsersServices.create(
       _.merge(
         {
-          staff_token: props.staff_token
+          staff_token: props.staff_token,
+          consultant_token: props.consultant_token
         },
         data
       )

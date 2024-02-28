@@ -4,6 +4,7 @@
 # Table name: social_users
 #
 #  id                      :bigint           not null, primary key
+#  consultant_at           :datetime
 #  pinned                  :boolean          default(FALSE), not null
 #  release_version         :string
 #  social_rich_menu_key    :string
@@ -16,6 +17,7 @@
 #
 # Indexes
 #
+#  index_social_users_on_consultant_at          (consultant_at)
 #  index_social_users_on_pinned_and_updated_at  (pinned,updated_at)
 #  index_social_users_on_social_rich_menu_key   (social_rich_menu_key)
 #  social_user_unique_index                     (user_id,social_service_user_id) UNIQUE

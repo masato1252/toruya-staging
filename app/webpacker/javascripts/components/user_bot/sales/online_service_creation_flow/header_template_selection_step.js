@@ -8,7 +8,13 @@ import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_
 import { Template, HintTitle } from "shared/builders"
 
 const HeaderTemplateSelectionStep = ({next, prev, step}) => {
-  const { props, dispatch, selected_online_service } = useGlobalContext()
+  const { initial, props, dispatch, selected_online_service, selected_template } = useGlobalContext()
+
+  useEffect(() => {
+    if (initial && selected_template) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow">

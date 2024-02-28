@@ -7,6 +7,7 @@ module IdentificationCodes
     string :uuid
     string :code, default: nil
     string :staff_token, default: nil
+    string :consultant_token, default: nil
 
     validate :validate_phone_number_present
 
@@ -17,6 +18,7 @@ module IdentificationCodes
       if identification_code && (user = User.where(phone_number: formatted_phone).take)
         compose(SocialUsers::Connect, social_user: social_user, user: user, change_rich_menu: true)
         compose(StaffAccounts::ConnectUser, token: staff_token, user: social_user.user) if staff_token.present?
+        compose(StaffAccounts::CreateConsultant, token: consultant_token, client: user) if consultant_token.present?
 
         # XXX: When user already filled in the company information, but verified code, again.
         # This means it is a sign-in behavior
