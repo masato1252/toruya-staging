@@ -23,12 +23,6 @@ module Staffs
               }
             )
           end
-
-          shop.menus.each do |menu|
-            StaffMenu
-              .create_with(priority: 0, max_customers: 1)
-              .find_or_create_by!(menu: menu, staff: staff)
-          end
         end
 
         # All the staff be invited was admin currently.
