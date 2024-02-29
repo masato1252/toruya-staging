@@ -295,6 +295,31 @@ class OnlineService < ApplicationRecord
     end
   end
 
+  def product_content_url(customer)
+    @product_content_url ||=
+      if external?
+        Utils.url_with_external_browser(content_url) || ""
+      elsif bundler?
+        ""
+      else
+        Rails.application.routes.url_helpers.online_service_url(
+          slug: slug,
+          encrypted_social_service_user_id: MessageEncryptor.encrypt(customer.social_customer.social_user_id)
+        )
+      end
+  end
+
+  def product_content_url_for_text_message(customer)
+    @product_content_url_for_text_message ||=
+      if external?
+        Utils.url_with_external_browser(content_url) || ""
+      elsif bundler?
+        ""
+      else
+        Rails.application.routes.url_helpers.online_service_url(slug: slug)
+      end
+  end
+
   def message_template_variables(customer_or_user)
     service_start_date, service_end_date =
       case customer_or_user
@@ -317,7 +342,8 @@ class OnlineService < ApplicationRecord
       customer_name: customer_or_user.display_last_name,
       service_title: name,
       service_start_date: service_start_date,
-      service_end_date: service_end_date
+      service_end_date: service_end_date,
+      service_url: product_content_url_for_text_message(customer_or_user)
     }
   end
 

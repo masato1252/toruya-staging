@@ -12,6 +12,7 @@ FactoryBot.define do
     trait :external do
       goal_type { "external" }
       solution_type { "external" }
+      content_url { "https://youtube.com" }
     end
 
     trait :membership do
