@@ -26,6 +26,10 @@ $message_size: 8px;
       color: #ffffff;
     }
 
+    .message-time {
+      text-align: right;
+    }
+
     .message-time,
     i.fa {
       color: $gray7;
