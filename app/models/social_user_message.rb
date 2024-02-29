@@ -36,6 +36,10 @@ class SocialUserMessage < ApplicationRecord
 
   scope :unread, -> { where(readed_at: nil) }
   scope :sent, -> { where.not(sent_at: nil) }
+  scope :ordered, -> { order(Arel.sql("(CASE
+                                        WHEN social_user_messages.sent_at IS NOT NULL THEN social_user_messages.sent_at
+                                        WHEN social_user_messages.schedule_at IS NOT NULL THEN social_user_messages.schedule_at
+                                        ELSE social_user_messages.created_at END) DESC, social_user_messages.id DESC"))  }
 
   enum message_type: {
     bot: 0,

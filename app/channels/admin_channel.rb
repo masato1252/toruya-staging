@@ -28,7 +28,7 @@ class AdminChannel < ApplicationCable::Channel
         (social_user_messages.created_at = :oldest_message_at AND social_user_messages.id < :oldest_message_id)",
         oldest_message_at: data["oldest_message_at"] ? Time.parse(data["oldest_message_at"]) : Time.current,
         oldest_message_id: data["oldest_message_id"] || INTEGER_MAX)
-      .order("social_user_messages.created_at DESC, social_user_messages.id DESC")
+      .ordered
       .limit(MESSAGES_PER_PAGE + 1)
 
     scope.where(readed_at: nil).update_all(readed_at: Time.current)
