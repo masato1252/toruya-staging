@@ -35,6 +35,7 @@ class Menu < ApplicationRecord
   validates :min_staffs_number, numericality: { greater_than_or_equal_to: 0 }
 
   has_many :staff_menus, inverse_of: :menu, dependent: :destroy
+  has_many :menu_staffs, inverse_of: :menu, dependent: :destroy, class_name: "StaffMenu"
   has_many :staffs, through: :staff_menus
   has_many :active_staffs, ->{ Staff.active.references(:staffs) }, through: :staff_menus, class_name: "Staff", source: :staff
   has_many :shop_menus, inverse_of: :menu, dependent: :destroy
@@ -53,6 +54,7 @@ class Menu < ApplicationRecord
   belongs_to :user
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
+  accepts_nested_attributes_for :menu_staffs, allow_destroy: true, reject_if: :reject_staffs
   accepts_nested_attributes_for :shop_menus, allow_destroy: true, reject_if: :reject_shops
 
   scope :active, -> { where(deleted_at: nil) }

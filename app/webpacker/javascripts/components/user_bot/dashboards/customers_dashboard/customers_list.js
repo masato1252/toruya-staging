@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { useHistory } from "react-router-dom";
 
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
-import { TopNavigationBar, BottomNavigationBar, NotificationMessages } from "shared/components"
+import { TopNavigationBar, BottomNavigationBar, NotificationMessages, ChangeLogsNotifications } from "shared/components"
 import CustomerSearchBar from "./customer_search_bar"
 import CustomerElement from "./customer_element"
 
@@ -99,6 +99,7 @@ const UserBotCustomersList = ({}) => {
         <TopBar />
         <CustomerSearchBar />
         <NotificationMessages notification_messages={notification_messages} dispatch={dispatch} />
+        <ChangeLogsNotifications />
         <InfiniteScroll
           className="customers-list"
           dataLength={customers.length} //This is important field to render the next data

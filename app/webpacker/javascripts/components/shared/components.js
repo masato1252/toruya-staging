@@ -190,6 +190,10 @@ const NotificationMessages = ({notification_messages, dispatch}) => {
   )
 }
 
+const ChangeLogsNotifications = () => {
+  return <div dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.change_logs.notification_message_html") }} />
+}
+
 const SelectOptions = ({ options }) => {
   return <>
     {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
@@ -430,5 +434,6 @@ export {
   EndOnMonthRadio,
   EndAtRadio,
   NeverEndRadio,
-  SubscriptionRadio
+  SubscriptionRadio,
+  ChangeLogsNotifications
 };

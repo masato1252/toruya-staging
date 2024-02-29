@@ -12,7 +12,8 @@ RSpec.describe Templates::ReservationVariables do
       shop: shop,
       start_time: Time.current,
       end_time: Time.current.tomorrow,
-      meeting_url: meeting_url
+      meeting_url: meeting_url,
+      product_name: "menu name"
     }
   end
   let(:outcome) { described_class.run(args) }

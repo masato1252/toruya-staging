@@ -37,9 +37,12 @@ class BookingPagesController < ActionController::Base
         @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])
       end
 
-    if @customer
-      @last_selected_option_id = @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
-    end
+    @last_selected_option_id =
+      if params[:last_booking_option_id]
+        params[:last_booking_option_id].to_i
+      elsif @customer
+        @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+      end
 
     if @customer
       Current.customer = @customer

@@ -1,4 +1,6 @@
 <%= notification_messages %>
+<%= t("user_bot.dashboards.change_logs.notification_message_html") %>
+
 <%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.user_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
 
 <div class="schedule-dashboard">
