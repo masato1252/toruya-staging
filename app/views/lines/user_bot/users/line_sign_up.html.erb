@@ -3,7 +3,7 @@
   <main id="socialLogin">
     <p>まずはLINEログインして<br>ユーザー登録をしてください。</p>
 
-    <%= button_to toruya_line_login_url(lines_user_bot_services_path, staff_token: params[:staff_token]), class: "btn line-button with-wording only-word" do %>
+    <%= button_to toruya_line_login_url(lines_user_bot_settings_path, staff_token: params[:staff_token]), class: "btn line-button with-wording only-word" do %>
       <%= I18n.t("common.line_login_btn_word") %>
     <% end %>
   </main>
