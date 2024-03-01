@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CallbacksController < Devise::OmniauthCallbacksController
+  skip_before_action :verify_authenticity_token
   BUSINESS_LOGIN = "business_login"
   TORUYA_USER = "toruya_user"
   SHOP_OWNER_CUSTOMER_SELF = "shop_owner_customer_self"
