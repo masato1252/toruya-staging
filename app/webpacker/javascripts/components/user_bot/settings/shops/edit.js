@@ -85,7 +85,7 @@ const SocialAccountEdit =({props}) => {
                 <input type="hidden" name="logo_url" ref={register} />
                 <img src={logo_url} className="logo" />
               </div>
-              <input ref={register} onChange={_handleImageChange} type="file" name="logo" accept="image/png,image/gif" />
+              <input ref={register} onChange={_handleImageChange} type="file" name="logo" accept="image/png,image/gif,image/jpg,image/jpeg" />
               <p className="margin-around desc centerize">
                 {I18n.t("user_bot.dashboards.settings.shop.logo_limit_description")}
               </p>

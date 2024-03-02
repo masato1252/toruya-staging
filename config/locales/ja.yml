@@ -742,7 +742,7 @@ ja:
         profiles/update_attribute:
           attributes:
             profile:
-              logo_invalid: "^店舗ロゴの画像 30KB未満のPNGまたはGIF形式"
+              logo_invalid: "^店舗ロゴの画像 50KB未満のPNG, JPGまたはGIF形式"
             attrs:
               address_invalid: "^無效地址"
         social_accounts/update:

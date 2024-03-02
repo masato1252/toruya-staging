@@ -2,7 +2,7 @@
 
 module Shops
   class Update < ActiveInteraction::Base
-    CONTENT_TYPES = %w[image/png image/gif].freeze
+    CONTENT_TYPES = %w[image/png image/gif image/jpg image/jpeg].freeze
 
     object :shop
     hash :params, strip: false do
@@ -31,7 +31,7 @@ module Shops
         end
 
         if logo_params
-          if logo_params.content_type.in?(CONTENT_TYPES) && logo_params.size.between?(0, 0.05.megabyte)
+          if logo_params.content_type.in?(CONTENT_TYPES) && logo_params.size.between?(0, 0.1.megabyte)
             shop.logo.attach(logo_params)
           else
             errors.add(:shop, :photo_invalid)
