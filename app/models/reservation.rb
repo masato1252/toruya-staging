@@ -139,7 +139,7 @@ class Reservation < ApplicationRecord
       end_time: end_time,
       meeting_url: meeting_url,
       product_name: reservation_customer&.booking_option&.display_name.presence || menus_sentence,
-      booking_page_url: reservation_customer.booking_page ? Rails.application.routes.url_helpers.booking_page_url(reservation_customer.booking_page.slug, last_booking_option_id: reservation_customer.booking_option_id) : ""
+      booking_page_url: reservation_customer&.booking_page ? Rails.application.routes.url_helpers.booking_page_url(reservation_customer.booking_page.slug, last_booking_option_id: reservation_customer.booking_option_id) : ""
     )
   end
 
