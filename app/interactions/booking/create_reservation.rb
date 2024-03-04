@@ -293,8 +293,7 @@ module Booking
               end
             end
 
-            UserBotLines::Actions::SwitchRichMenu.run(social_user: user.social_user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY) if user.social_user
-
+            ::RichMenus::BusinessSwitchRichMenu.run(owner: user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
           else
             errors.add(:base, :reservation_something_wrong)

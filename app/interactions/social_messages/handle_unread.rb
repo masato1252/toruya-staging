@@ -6,11 +6,7 @@ module SocialMessages
     def execute
       # TODO: Need to deal with other pending
       if social_message.unread? && social_message.customer? && social_customer.customer
-        UserBotLines::Actions::SwitchRichMenu.run(
-          social_user: social_customer.user.social_user,
-          rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY
-        )
-
+        ::RichMenus::BusinessSwitchRichMenu.run(owner: social_customer.user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
         compose(Users::UpdateCustomerLatestActivityAt, user: social_customer.user)
       end
     end

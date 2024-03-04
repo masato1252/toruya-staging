@@ -26,8 +26,8 @@ RSpec.describe SocialMessages::Create, :with_line do
   describe "#execute" do
     context "when message is from customer" do
       it "returns expected messages" do
-        expect(UserBotLines::Actions::SwitchRichMenu).to receive(:run).with(
-          social_user: social_customer.user.social_user,
+        expect(::RichMenus::BusinessSwitchRichMenu).to receive(:run).with(
+          owner: social_customer.user,
           rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY
         )
         outcome

@@ -4,9 +4,8 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
   skip_before_action :redirect_from_rich_menu
 
   def index
-    @user_notifications = current_social_user.same_social_user_scope.map do |social_user|
-      user = social_user.user
-      next unless user
+    # Business
+    @user_notifications = current_social_user.manage_accounts.map do |user|
       next unless user.social_account
 
       {
@@ -18,7 +17,9 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
       }
     end.compact
 
-    UserBotLines::Actions::SwitchRichMenu.run(social_user: current_social_user, rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY)
+    current_social_user.manage_accounts.each do |user|
+      ::UserBotLines::Actions::SwitchRichMenu.run(owner: user, social_user: current_social_user, rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY)
+    end
   end
 
   private
