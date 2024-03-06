@@ -42,7 +42,7 @@
     <%= I18n.l(@date, format: :long) %>
   </div>
 
-  <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: @reservations_approval_flow, date: @date %>
+  <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: @reservations_approval_flow, date: @date, my_calendar: @my_calendar %>
   <%= render "lines/user_bot/schedules/schedule_modal", my_calendar: @my_calendar %>
   <%= render "reservations/new_modal", date: @date, my_calendar: @my_calendar %>
   <%= render "reservations/off_date_modal", date: @date %>

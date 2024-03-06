@@ -56,6 +56,7 @@ ja:
           </div>"
       schedules:
         calendar_hint: カレンダー
+        user_not_available: "%{user_name} 不在"
       reservation:
         no_ending_time_message: ※終了時刻自動計算
         schedule_modal_title: 新しい予約・予定を追加

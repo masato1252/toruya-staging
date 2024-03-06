@@ -50,7 +50,7 @@
           <div class="extra"></div>
         </a>
       <% else %>
-        <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule[:id]}" %> class="modal-link event">
+        <a href="#" data-toggle="modal" data-target=<%= schedule[:user_id] == Current.user.id && "#off-date-modal-#{schedule[:id]}" %> class="modal-link event">
           <div class="state"></div>
           <div class="time">
             <div class="start-time">
@@ -60,7 +60,7 @@
               <%= schedule[:start_date] != schedule[:end_date] ? schedule[:end_date] : nil %><%= schedule[:end_time_time_part] %>
             </div>
           </div>
-          <div class="content"><%= schedule[:reason] %></div>
+          <div class="content"><%= my_calendar ? schedule[:reason] : I18n.t("user_bot.dashboards.schedules.user_not_available", user_name: schedule[:user_name]) %></div>
           <div class="extra"></div>
         </a>
       <% end %>

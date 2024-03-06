@@ -161,8 +161,11 @@
     background-position: center center;
   }
 
-  span.day.reserved,
-  span.day.personal-schedule
+  span.day.personal-schedule {
+    border-color: #dedede;
+  }
+
+  span.day.reserved
   {
     background: #dedede;
     border-color: #dedede;
