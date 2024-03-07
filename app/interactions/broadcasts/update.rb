@@ -12,6 +12,7 @@ module Broadcasts
     end
 
     validate :validate_broadcast
+    validate :validate_query
 
     def execute
       broadcast.update!(params.slice(update_attribute))
@@ -30,6 +31,18 @@ module Broadcasts
     def validate_broadcast
       unless broadcast.draft?
         errors.add(:broadcast, :invalid_state)
+      end
+    end
+
+    def validate_query
+      if params.dig(:query, :filters).nil?
+        if ["online_service", "online_service_for_active_customers"].include?(params[:query_type])
+          errors.add(:broadcast, :service_is_required)
+        end
+
+        if ["menu"].include?(params[:query_type])
+            errors.add(:broadcast, :menu_is_required)
+        end
       end
     end
   end

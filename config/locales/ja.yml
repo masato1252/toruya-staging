@@ -735,6 +735,11 @@ ja:
               is_over: "^受付終了"
               shop_or_staff_not_enough_ability: "^オーバーブッキング中！"
               lack_staffs: "^対応スタッフ不足"
+        broadcasts/update:
+          attributes:
+            broadcast:
+              service_is_required: "^少なくとも1つのサービスを設定してください。"
+              menu_is_required: "^少なくとも1つのメニューを設定してください。"
         booking_pages/update:
           attributes:
             attrs:
