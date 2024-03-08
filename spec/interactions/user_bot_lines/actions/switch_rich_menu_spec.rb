@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.describe UserBotLines::Actions::SwitchRichMenu do
   let(:social_account) { FactoryBot.create(:social_account) }
   let(:social_user) { FactoryBot.create(:social_user, user: social_account.user) }
+  let!(:staff_account) { FactoryBot.create(:staff_account, user: social_user.user, owner: social_user.user) }
   let(:args) do
     {
-      owner: social_user.user,
       social_user: social_user,
       rich_menu_key: rich_menu_key
     }

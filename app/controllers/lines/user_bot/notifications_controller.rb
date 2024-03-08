@@ -16,6 +16,8 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
         pending_customer_services: user.pending_customer_services || []
       }
     end.compact
+
+    ::UserBotLines::Actions::SwitchRichMenu.run(social_user: current_social_user, rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY)
   end
 
   private

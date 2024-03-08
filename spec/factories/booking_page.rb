@@ -12,6 +12,7 @@ FactoryBot.define do
     start_at { Time.zone.local(2016, 8, 22, 8, 0, 0) }
     end_at { Time.zone.local(2016, 8, 22, 19, 0, 0) }
     overbooking_restriction { true }
+    slug { SecureRandom.alphanumeric(10) }
 
     before(:create) do |booking_page, evaluator|
       if booking_page.start_at

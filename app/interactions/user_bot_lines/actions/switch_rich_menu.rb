@@ -3,12 +3,12 @@
 require "line_client"
 
 class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
-  object :owner, class: User
   object :social_user
   string :rich_menu_key
 
   def execute
-    if rich_menu_key == UserBotLines::RichMenus::Dashboard::KEY
+    menu_key = nil
+    social_user.manage_accounts.each do |owner|
       if (owner.social_account && owner.social_account.social_messages.handleable.unread.exists?) ||
           owner.pending_reservations.exists? ||
           owner.missing_sale_page_services.exists? ||
