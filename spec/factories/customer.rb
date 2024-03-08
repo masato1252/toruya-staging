@@ -6,6 +6,7 @@ FactoryBot.define do
     contact_group { FactoryBot.create(:contact_group, user: user) }
     last_name { Faker::Lorem.word }
     first_name { Faker::Lorem.word }
+    reminder_permission { true }
 
     transient do
       with_stripe { false }

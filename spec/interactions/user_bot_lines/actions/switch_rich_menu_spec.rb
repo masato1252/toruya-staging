@@ -7,6 +7,7 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
   let(:social_user) { FactoryBot.create(:social_user, user: social_account.user) }
   let(:args) do
     {
+      owner: social_user.user,
       social_user: social_user,
       rich_menu_key: rich_menu_key
     }

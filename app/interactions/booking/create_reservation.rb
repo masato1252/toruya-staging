@@ -17,7 +17,7 @@ module Booking
     string :customer_email, default: nil
     string :social_user_id, default: nil
     string :stripe_token, default: nil
-    boolean :customer_reminder_permission, default: false
+    boolean :customer_reminder_permission, default: true
     # customer_info format might like
     # {
     #   id: customer_with_google_contact&.id,
@@ -293,8 +293,7 @@ module Booking
               end
             end
 
-            UserBotLines::Actions::SwitchRichMenu.run(social_user: user.social_user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY) if user.social_user
-
+            ::RichMenus::BusinessSwitchRichMenu.run(owner: user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
           else
             errors.add(:base, :reservation_something_wrong)

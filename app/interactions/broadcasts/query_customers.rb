@@ -53,15 +53,15 @@ module Broadcasts
     private
 
     def not_contains_scoped(filter)
-      user.customers.where.not("#{filter["field"]} && ?", "{#{filter["value"]}}")
+      user.customers.marketable.where.not("#{filter["field"]} && ?", "{#{filter["value"]}}")
     end
 
     def contains_scoped(filter)
-      user.customers.where("#{filter["field"]} && ?", "{#{filter["value"]}}")
+      user.customers.marketable.where("#{filter["field"]} && ?", "{#{filter["value"]}}")
     end
 
     def eq_scoped(filter)
-      user.customers.joins(:rank).where("#{filter["field"]} = ?", filter["value"])
+      user.customers.marketable.joins(:rank).where("#{filter["field"]} = ?", filter["value"])
     end
   end
 end

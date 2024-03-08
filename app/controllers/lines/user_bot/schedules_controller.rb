@@ -62,7 +62,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
     booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
 
-    off_schedules = Current.social_user&.single_owner? ? CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: Current.business_owner.id) : []
+    off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: Current.business_owner.owner_staff_accounts.pluck(:user_id)).includes(user: :profile)
 
     @schedules = (reservations + booking_page_holder_schedules + off_schedules).each_with_object([]) do |schedule, schedules|
       if schedule.is_a?(Reservation)

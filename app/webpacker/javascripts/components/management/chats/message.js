@@ -66,6 +66,8 @@ const Message = ({message, reply_ai_message, ai_question}) => {
           {message.formatted_schedule_at && <i className="fa fa-calendar" aria-hidden="true"></i>}
           <p className="message-time">
             {message.sent ? message.formatted_created_at : `${message.formatted_schedule_at}`}
+            <br />
+            {message.staff_name}
           </p>
         </div>
       </div>
