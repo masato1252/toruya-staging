@@ -160,7 +160,7 @@ module Reservations
       end
 
       compose(Users::UpdateCustomerLatestActivityAt, user: user)
-      ::RichMenus::BusinessSwitchRichMenu.run(owner: user, rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
+      ::RichMenus::BusinessSwitchRichMenu.run(owner: user)
 
       reservation
     end

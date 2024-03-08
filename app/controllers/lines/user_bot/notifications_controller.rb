@@ -17,7 +17,7 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
       }
     end.compact
 
-    ::UserBotLines::Actions::SwitchRichMenu.run(social_user: current_social_user, rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY)
+    ::UserBotLines::Actions::SwitchRichMenu.run(social_user: current_social_user)
   end
 
   private

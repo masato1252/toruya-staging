@@ -14,10 +14,7 @@ RSpec.describe SocialMessages::Recent do
 
   describe "#execute" do
     it "returns expected messages" do
-      expect(UserBotLines::Actions::SwitchRichMenu).to receive(:run).with(
-        social_user: customer.user.social_user,
-        rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY
-      )
+      expect(UserBotLines::Actions::SwitchRichMenu).to receive(:run).with(social_user: customer.user.social_user)
       outcome
 
       expect(social_message.reload.readed_at).not_to be_nil
@@ -32,10 +29,7 @@ RSpec.describe SocialMessages::Recent do
       before { social_message2.social_customer.update_columns(customer_id: customer.id) }
 
       it "returns expected messages from multiple accounts" do
-        expect(UserBotLines::Actions::SwitchRichMenu).to receive(:run).with(
-          social_user: customer.user.social_user,
-          rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY
-        )
+        expect(UserBotLines::Actions::SwitchRichMenu).to receive(:run).with(social_user: customer.user.social_user)
         outcome
 
         expect(social_message.reload.readed_at).not_to be_nil

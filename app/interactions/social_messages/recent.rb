@@ -22,10 +22,7 @@ module SocialMessages
 
       scope.where(readed_at: nil).update_all(readed_at: Time.current)
 
-      UserBotLines::Actions::SwitchRichMenu.run(
-        social_user: customer.user.social_user,
-        rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY
-      )
+      UserBotLines::Actions::SwitchRichMenu.run(social_user: customer.user.social_user)
 
       _messages = social_messages[0...MESSAGES_PER_PAGE].map { |message| MessageSerializer.new(message).attributes_hash }
 

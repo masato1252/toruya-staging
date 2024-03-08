@@ -4,16 +4,19 @@ require "line_client"
 
 class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
   object :social_user
-  string :rich_menu_key
+  string :rich_menu_key, default: UserBotLines::RichMenus::Dashboard::KEY
 
   def execute
     menu_key = nil
-    social_user.manage_accounts.each do |owner|
-      if (owner.social_account && owner.social_account.social_messages.handleable.unread.exists?) ||
-          owner.pending_reservations.exists? ||
-          owner.missing_sale_page_services.exists? ||
-          owner.pending_customer_services.exists?
-        menu_key = UserBotLines::RichMenus::DashboardWithNotifications::KEY
+
+    if rich_menu_key == UserBotLines::RichMenus::Dashboard::KEY
+      social_user.manage_accounts.each do |owner|
+        if (owner.social_account && owner.social_account.social_messages.handleable.unread.exists?) ||
+            owner.pending_reservations.exists? ||
+            owner.missing_sale_page_services.exists? ||
+            owner.pending_customer_services.exists?
+          menu_key = UserBotLines::RichMenus::DashboardWithNotifications::KEY
+        end
       end
     end
 
