@@ -84,7 +84,7 @@ module UserBotLines
               "action": LineActions::Postback.template(
                 action: UserBotLines::Actions::SwitchRichMenu.class_name,
                 enabled: true,
-                params: { rich_menu_key: UserBotLines::RichMenus::Booking::KEY },
+                params: { rich_menu_key: UserBotLines::RichMenus::BookingFromNotificationDashboard::KEY },
                 displayText: false
               )
             },
@@ -99,7 +99,7 @@ module UserBotLines
               "action": LineActions::Postback.template(
                 action: UserBotLines::Actions::SwitchRichMenu.class_name,
                 enabled: true,
-                params: { rich_menu_key: UserBotLines::RichMenus::OnlineService::KEY },
+                params: { rich_menu_key: UserBotLines::RichMenus::OnlineServiceFromNotificationDashboard::KEY },
                 displayText: false
               )
             },
@@ -114,7 +114,7 @@ module UserBotLines
               "action": LineActions::Postback.template(
                 action: UserBotLines::Actions::SwitchRichMenu.class_name,
                 enabled: true,
-                params: { rich_menu_key: UserBotLines::RichMenus::Promotions::KEY },
+                params: { rich_menu_key: UserBotLines::RichMenus::PromotionsFromNotificationDashboard::KEY },
                 displayText: false
               )
             }

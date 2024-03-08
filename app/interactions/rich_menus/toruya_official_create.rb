@@ -25,7 +25,7 @@ module RichMenus
           rich_menu_id = JSON.parse(response.body)["richMenuId"]
           # Note: You cannot replace an image attached to a rich menu. To update your rich menu image,
           # create a new rich menu object and upload another image.
-          ::LineClient.create_rich_menu_image(social_account: UserBotSocialAccount, rich_menu_id: rich_menu_id, file: rich_menu_file_path)
+          ::LineClient.create_rich_menu_image(social_account: UserBotSocialAccount, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
 
           rich_menu = SocialRichMenu.create(
             social_rich_menu_id: rich_menu_id,
