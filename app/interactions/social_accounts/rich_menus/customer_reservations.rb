@@ -8,8 +8,6 @@ module SocialAccounts
       object :social_account
 
       def execute
-        Rollbar.error("CustomerReservations rich menu", user_id: social_account.user_id, backtrace: caller)
-
         sentence = I18n.t("line.bot.features.online_booking.rich_menu.bar_text")
 
         body = {
