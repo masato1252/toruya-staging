@@ -32,6 +32,10 @@ ja:
         message: "%{user_name} 様\n\nあなたの代理店アカウントに、子アカウントが追加されました。\n\n設定画面からご確認ください。\n\nToruya"
       activate_staff_account:
         message: "%{user_name}さんの店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
+      activate_consultant_account:
+        message: "%{consultant_name} %{client_name}の店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
+      staff_joined:
+        message: "%{staff_name} のスタッフ登録が完了しました。"
       line_reached_monthly_limit:
         message: "LINEのメッセージ通数が上限に達したため、顧客にメッセージ送信できませんでした"
     booking:

@@ -21,6 +21,8 @@ module StaffAccounts
             phonetic_last_name: staff.phonetic_last_name.presence || user.profile.phonetic_last_name,
             phonetic_first_name: staff.phonetic_first_name.presence || user.profile.phonetic_first_name
           )
+
+          Notifiers::Users::Notifications::StaffJoined.run(receiver: staff_account.owner)
         else
           errors.merge!(staff_account.errors)
         end
