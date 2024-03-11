@@ -50,4 +50,8 @@ class SocialUserMessageSerializer
   attribute :formatted_schedule_at do |message|
     I18n.l(message.schedule_at, format: :long_date_with_wday) if message.schedule_at
   end
+
+  attribute :staff_name do |message|
+    message.admin_user&.name
+  end
 end

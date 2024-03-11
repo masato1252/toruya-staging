@@ -105,6 +105,13 @@ export default () => {
         </li>
         <hr />
         <li>
+          {selected_customer.staffs_count} {I18n.t("common.staff")}
+        </li>
+        <li>
+          {selected_customer.accounts_count} {I18n.t("common.account")}
+        </li>
+        <hr />
+        <li>
           {I18n.t("admin.chat.sign_up_date", { date: selected_customer.sign_up_date })}
         </li>
         <li>

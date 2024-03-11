@@ -97,4 +97,12 @@ class SocialUserSerializer
   attribute :what_main_problem do |social_user|
     social_user.user&.profile&.what_main_problem
   end
+
+  attribute :staffs_count do |social_user|
+    social_user&.staffs&.size || 0
+  end
+
+  attribute :accounts_count do |social_user|
+    social_user&.current_users&.size || 0
+  end
 end
