@@ -5,6 +5,7 @@
 #
 #  id                      :bigint           not null, primary key
 #  pinned                  :boolean          default(FALSE), not null
+#  release_version         :string
 #  social_rich_menu_key    :string
 #  social_user_name        :string
 #  social_user_picture_url :string

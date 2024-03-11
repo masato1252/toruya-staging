@@ -50,7 +50,7 @@ ja:
         save_btn: 保存
     dashboards:
       change_logs:
-        notification_message_html: "<div class='notification alert alert-info' data-controller='change-log-notification' data-target='change-log-notification.content'>
+        notification_message_html: "<div class='notification alert alert-info' data-controller='change-log-notification' data-target='change-log-notification.content' data-change-log-notification-path=%{change_log_path}>
           <button class='close' data-action='click->change-log-notification#close'>x</button>
           機能アップデートがありました。<a class='text-black underline' href='https://toruya.com/updates' data-action='click->change-log-notification#close' target='_blank'>詳しくはコチラ</a>
           </div>"

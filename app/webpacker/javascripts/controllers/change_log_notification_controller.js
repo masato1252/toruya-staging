@@ -7,13 +7,13 @@ export default class ChangeLogNotificationController extends Controller {
     "content"
   ];
 
-  connect() {
+  async connect() {
     this.notification = $(this.element);
-    if (this.knewUpdated()) this.hide()
+    if (await this.isUpdated()) this.hide()
   }
 
   close() {
-    this.updated()
+    this.update()
     this.hide()
   }
 
@@ -21,11 +21,35 @@ export default class ChangeLogNotificationController extends Controller {
     this.contentTarget.classList.add("display-hidden");
   }
 
-  knewUpdated() {
-    return localStorage.getItem("toruya-release-version") == ChangeLogNotificationController.version
+  async isUpdated() {
+    if (localStorage.getItem("toruya-release-version") == ChangeLogNotificationController.version)
+      return true
+    else {
+      const response = await fetch(this.changeLogPath);
+      const data = await response.json();
+
+      if (data.release_version == ChangeLogNotificationController.version) {
+        localStorage.setItem("toruya-release-version", ChangeLogNotificationController.version)
+      }
+
+      return data.release_version == ChangeLogNotificationController.version
+    }
   }
 
-  updated() {
-    return localStorage.setItem("toruya-release-version", ChangeLogNotificationController.version)
+  update() {
+    localStorage.setItem("toruya-release-version", ChangeLogNotificationController.version)
+    fetch(this.changeLogPath, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        release_version: ChangeLogNotificationController.version
+      })
+    })
+  }
+
+  get changeLogPath() {
+    return this.data.get("path")
   }
 }

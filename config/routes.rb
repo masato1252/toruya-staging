@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     end
 
     scope module: :user_bot, path: :user_bot, as: :user_bot do
+      resource :change_log, only: [:update, :show]
+
       scope module: :users do
         get "/connect(/social_service_user_id/:social_service_user_id)", as: :connect_user, action: "connect"
         get "/sign_up(/social_service_user_id/:social_service_user_id)", as: :sign_up, action: "sign_up"
