@@ -31,6 +31,14 @@ module Reservations
           )
         end
 
+        if reservation.by_staff && reservation.by_staff != current_staff
+          Notifiers::Users::Notifications::AssigneeAcceptedReservation.run(
+            receiver: reservation.by_staff.staff_account.user,
+            assignee_name: current_staff.name,
+            booking_time_sentence: reservation.booking_time
+          )
+        end
+
         reservation
       end
     end

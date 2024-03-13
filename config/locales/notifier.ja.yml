@@ -39,6 +39,8 @@ https://manager.toruya.com/userlogin"
         message: "%{consultant_name} %{client_name}の店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
       staff_joined:
         message: "%{staff_name} のスタッフ登録が完了しました。"
+      assignee_accepted_reservation:
+        message: "%{assignee_name} さんが %{booking_time} の予約を承認しました。"
       line_reached_monthly_limit:
         message: "LINEのメッセージ通数が上限に達したため、顧客にメッセージ送信できませんでした"
     booking:
