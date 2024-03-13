@@ -12,6 +12,7 @@ module Users
     string :email, default: nil
     string :where_know_toruya, default: nil
     string :what_main_problem, default: nil
+    boolean :invited_as_staff, default: false
 
     def execute
       formatted_phone = Phonelib.parse(phone_number).international(false)
@@ -54,9 +55,11 @@ module Users
       end
 
       if user.persisted? && new_user
-        Notifiers::Users::UserSignedUp.run(receiver: user)
-        Notifiers::Users::Notifications::ShopSettingsReminder.perform_at(schedule_at: 24.hours.from_now, receiver: user)
-        Notifiers::Users::Notifications::LineSettings.perform_at(schedule_at: 1.weeks.from_now, receiver: user)
+        unless invited_as_staff
+          Notifiers::Users::UserSignedUp.run(receiver: user)
+          Notifiers::Users::Notifications::ShopSettingsReminder.perform_at(schedule_at: 24.hours.from_now, receiver: user)
+          Notifiers::Users::Notifications::LineSettings.perform_at(schedule_at: 1.weeks.from_now, receiver: user)
+        end
       end
 
       user

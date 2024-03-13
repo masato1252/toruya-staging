@@ -55,14 +55,18 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       referral_token: params[:referral_token],
       where_know_toruya: params[:where_know_toruya],
       what_main_problem: params[:what_main_problem],
-      social_user: social_user
+      social_user: social_user,
+      invited_as_staff: params[:staff_token].present?
     )
 
     ApplicationRecord.transaction do
       booking_code = BookingCode.find_by!(uuid: params[:uuid])
       booking_code.update!(user_id: user.id)
 
-      StaffAccounts::ConnectUser.run!(token: params[:staff_token], user: user) if params[:staff_token]
+      if params[:staff_token]
+        staff_account = StaffAccounts::ConnectUser.run!(token: params[:staff_token], user: user)
+        Notifiers::Users::Notifications::UserSignedUpAsStaff.run(receiver: staff_account.user, owner: staff_account.owner)
+      end
     end
 
     write_user_bot_cookies(:current_user_id, user.id)
