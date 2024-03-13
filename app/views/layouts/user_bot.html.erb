@@ -156,7 +156,7 @@
           <%= content_tag(:span, nil, data: { target: "collapse.openToggler" }) %>
 
           <div class="dropdown open" data-controller="collapse" data-collapse-status="closed" data-action="click->collapse#toggle" >
-            <span class="text-white"><%= Current.business_owner.company_name %></span>
+            <span class="text-white"><%= Current.business_owner.company_name.presence || t("action.account_switch") %></span>
             <i class="fas fa-caret-down text-white"></i>
             <ul class="dropdown-menu dropdown-menu-right" data-target="collapse.content">
               <% current_social_user.manage_accounts.each do |owner| %>
