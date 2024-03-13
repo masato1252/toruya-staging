@@ -676,7 +676,7 @@ ja:
         shops/update:
           attributes:
             shop:
-              photo_invalid: "^店舗ロゴの画像 30KB未満のPNGまたはGIF形式"
+              photo_invalid: "^店舗ロゴの画像 50KB未満のPNG, JPGまたはGIF形式"
         reservable/time:
           attributes:
             date:

@@ -53,7 +53,7 @@ module Profiles
           logo_params = attrs[:logo]
 
           if logo_params
-            if logo_params.content_type.in?(Shops::Update::CONTENT_TYPES) && logo_params.size.between?(0, 0.05.megabyte)
+            if logo_params.content_type.in?(Shops::Update::CONTENT_TYPES) && logo_params.size.between?(0, 0.1.megabyte)
               profile.logo.attach(logo_params)
             else
               errors.add(:profile, :logo_invalid)
