@@ -77,7 +77,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         if param["existing_owner_id"] # existing user add another line account
           existing_user = User.find(param["existing_owner_id"])
 
-          if existing_user.social_user.id == social_user.id
+          if existing_user.social_user.social_service_user_id == social_user.social_service_user_id
             new_user = Users::NewAccount.run!(existing_user: existing_user)
 
             write_user_bot_cookies(:current_user_id, new_user.id)
