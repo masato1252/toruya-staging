@@ -536,6 +536,7 @@ ja:
         new_option_top_bar_header: 予約価格
         new_option_title: 既存の予約価格から選択
         add_new_option: 価格を追加
+        reorder_options: 表示順を変更
         does_require_a_new_option: 新しい価格が必要ですか？
         create_a_new_option: 新しい価格を作成する
         new_option_menu_title: 新しい価格を作成する

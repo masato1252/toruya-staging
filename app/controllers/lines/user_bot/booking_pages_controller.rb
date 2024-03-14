@@ -62,6 +62,19 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     end
   end
 
+  def edit_booking_options_order
+    @booking_page = Current.business_owner.booking_pages.find(params[:id])
+    @booking_options = @booking_page.booking_options.map { |booking_option| { label: booking_option.name, value: booking_option.id, id: booking_option.id } }
+  end
+
+  def update_booking_options_order
+    booking_page = Current.business_owner.booking_pages.find(params[:id])
+    outcome = BookingPages::BookingOptionsOrder.run(booking_page: booking_page, booking_option_ids: params[:booking_option_ids])
+
+    flash[:success] = I18n.t("common.update_successfully_message")
+    return_json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(business_owner_id: business_owner_id) })
+  end
+
   private
 
   def menu_options
