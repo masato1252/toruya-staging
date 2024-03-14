@@ -86,7 +86,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
             redirect_to lines_user_bot_settings_path(new_user.id), notice: I18n.t("new_line_account.successful_message")
           else
-            Rollbar.error("NewAccountCreationFailure", existing_user_id: existing_user.id, social_user_id: social_user.id, auth_info: request.env["omniauth.auth"].info)
+            Rollbar.error("NewAccountCreationFailure", existing_user_id: existing_user.id, existing_social_user_id: existing_user.social_user.id, social_user_id: social_user.id, auth_info: request.env["omniauth.auth"].info)
 
             redirect_to lines_user_bot_settings_path(user.id), alert: I18n.t("common.update_failed_message")
           end
