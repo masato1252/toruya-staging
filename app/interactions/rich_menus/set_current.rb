@@ -14,6 +14,8 @@ module RichMenus
 
       # Link rich menu to social customer
       SocialAccounts::RichMenus::Connect.perform_later(social_rich_menu: social_rich_menu)
+
+      social_rich_menu
     end
   end
 end
