@@ -4,9 +4,11 @@
       <div class="service-show form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: edit_lines_user_bot_settings_social_account_rich_menu_path(business_owner_id: business_owner_id), title: t("settings.social_rich_menus.index_title") %>
         <div class="field-header"><%= t("settings.social_rich_menus.current") %></div>
-        <%= render "lines/user_bot/field_state", state: @current_rich_menu.state do %>
-          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_social_rich_menu_path(@current_rich_menu, business_owner_id: business_owner_id) do %>
-            <%= render "cell", rich_menu: @current_rich_menu %>
+        <% if @current_rich_menu %>
+          <%= render "lines/user_bot/field_state", state: @current_rich_menu.state do %>
+            <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_social_rich_menu_path(@current_rich_menu, business_owner_id: business_owner_id) do %>
+              <%= render "cell", rich_menu: @current_rich_menu %>
+            <% end %>
           <% end %>
         <% end %>
 
