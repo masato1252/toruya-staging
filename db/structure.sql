@@ -2557,7 +2557,8 @@ CREATE TABLE public.social_users (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     social_rich_menu_key character varying,
-    pinned boolean DEFAULT false NOT NULL
+    pinned boolean DEFAULT false NOT NULL,
+    release_version character varying
 );
 
 
@@ -5541,6 +5542,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231208115249'),
 ('20231219091457'),
 ('20240207081157'),
-('20240221165044');
+('20240221165044'),
+('20240311145252');
 
 

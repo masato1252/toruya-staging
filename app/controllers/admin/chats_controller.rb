@@ -16,7 +16,8 @@ module Admin
           content: params[:message],
           readed: true,
           message_type: SocialUserMessage.message_types[:admin],
-          schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
+          schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil,
+          admin_user_id: current_user.id
         )
       end
 
@@ -31,7 +32,8 @@ module Admin
         readed: true,
         message_type: SocialUserMessage.message_types[:admin],
         content_type: SocialMessages::Create::IMAGE_TYPE,
-        schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
+        schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil,
+        admin_user_id: current_user.id
       )
     end
 

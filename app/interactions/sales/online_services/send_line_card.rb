@@ -18,7 +18,7 @@ module Sales
             )
           else
             LineMessages::FlexTemplateContainer.template(
-              altText: I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message", service_title: sale_page.product.name),
+              altText: I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message", service_title: sale_page.product.name, service_url: ""),
               contents: compose(Templates::OnlineService, online_service_customer_relation: relation)
             )
           end

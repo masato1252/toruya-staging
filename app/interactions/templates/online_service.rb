@@ -28,7 +28,7 @@ module Templates
 
       LineMessages::FlexTemplateContent.video_description_card(
         picture_url: online_service.picture_url,
-        content_url: content_url || customer_status_online_service_url,
+        content_url: content_url.presence || customer_status_online_service_url,
         title: online_service.name,
         context: "#{I18n.t("common.type")}：#{I18n.t("user_bot.dashboards.online_service_creation.goals.#{online_service.goal_type}.line_title")}\n#{I18n.t("common.term")}：#{online_service_customer_relation.end_date_text}",
         action_templates: action_templates.map(&:template)
@@ -38,17 +38,7 @@ module Templates
     private
 
     def content_url
-      @content_url ||=
-        if online_service.external?
-          Utils.url_with_external_browser(online_service.content_url)
-        elsif online_service.bundler?
-          nil
-        else
-          Rails.application.routes.url_helpers.online_service_url(
-            slug: online_service.slug,
-            encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)
-          )
-        end
+      @content_url ||= online_service.product_content_url(online_service_customer_relation.customer)
     end
 
     def customer_status_online_service_url

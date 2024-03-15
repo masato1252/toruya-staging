@@ -21,6 +21,7 @@ module SocialUserMessages
     integer :message_type
     time :schedule_at, default: nil
     integer :custom_message_id, default: nil
+    integer :admin_user_id, default: nil
 
     validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
     validates :content, presence: true
@@ -35,7 +36,8 @@ module SocialUserMessages
         scenario: scenario,
         nth_time: nth_time,
         schedule_at: schedule_at,
-        custom_message_id: custom_message_id
+        custom_message_id: custom_message_id,
+        admin_user_id: admin_user_id
       )
 
       if message.errors.present?

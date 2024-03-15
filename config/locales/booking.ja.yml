@@ -37,6 +37,7 @@ ja:
     reset_button: 始めからやり直す
     last_selected_option: 前回ご利用のメニュー
     i_dont_use_line: LINEは使っていません
+    owner_personal_schedule_warning: 予約不可にしたい場合は『Myカレンダー』より個人の予定を作成してください。
     booking_code:
       code: 確認コード
       resend: コード再送

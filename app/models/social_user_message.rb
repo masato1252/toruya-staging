@@ -32,6 +32,7 @@ class SocialUserMessage < ApplicationRecord
   hi_channel_name "toruya_users_support"
 
   belongs_to :social_user, touch: true
+  belongs_to :admin_user, class_name: "User", required: false
   has_one_attached :image
 
   scope :unread, -> { where(readed_at: nil) }

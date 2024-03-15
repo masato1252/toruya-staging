@@ -3,6 +3,7 @@ import I18n from 'i18n-js/index.js.erb'
 import { Field } from "react-final-form";
 import _ from "lodash";
 import { sortableHandle } from "react-sortable-hoc";
+import Routes from 'js-routes.js'
 
 const ErrorMessage = ({ error }) => (
   <p className="field-error-message" dangerouslySetInnerHTML={{ __html: error }} />
@@ -191,7 +192,7 @@ const NotificationMessages = ({notification_messages, dispatch}) => {
 }
 
 const ChangeLogsNotifications = () => {
-  return <div dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.change_logs.notification_message_html") }} />
+  return <div dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.change_logs.notification_message_html", { change_log_path: Routes.lines_user_bot_change_log_path() }) }} />
 }
 
 const SelectOptions = ({ options }) => {
