@@ -44,7 +44,7 @@ module Booking
             special_dates.map do |raw_special_date|
               json_parsed_date = JSON.parse(raw_special_date)
               special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
-              next if special_date < booking_page.available_booking_start_date
+              next if special_date < booking_page.available_booking_start_date || special_date > booking_page.available_booking_end_date
 
               special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
               special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
@@ -62,7 +62,7 @@ module Booking
           # end
       else
         available_working_dates = schedules[:working_dates].map { |date| Date.parse(date) }
-        available_working_dates = available_working_dates.select { |date| date >= booking_page.available_booking_start_date }
+        available_working_dates = available_working_dates.select { |date| date >= booking_page.available_booking_start_date && date <= booking_page.available_booking_end_date }
 
         available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem

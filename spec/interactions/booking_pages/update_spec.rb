@@ -69,10 +69,6 @@ RSpec.describe BookingPages::Update do
       end
     end
 
-    context "update_attribute is booking_limit_day" do
-      it_behaves_like "updates booking page normal attribute", "booking_limit_day", 3
-    end
-
     context "update_attribute is greeting" do
       it_behaves_like "updates booking page normal attribute", "greeting", "foo"
     end
@@ -106,6 +102,24 @@ RSpec.describe BookingPages::Update do
           outcome
 
           expect(booking_page.specific_booking_start_times).to eq(["10:00", "13:00"])
+        end
+      end
+    end
+
+    context "when update_attribute is booking_available_period" do
+      let(:update_attribute) { "booking_available_period" }
+
+      context "when updating booking_limit_day & bookable_restriction_months" do
+        before do
+          args[:attrs][:booking_limit_day] = 3
+          args[:attrs][:bookable_restriction_months] = 2
+        end
+
+        it "updates booking_limit_day & bookable_restriction_months" do
+          outcome
+
+          expect(booking_page.booking_limit_day).to eq(3)
+          expect(booking_page.bookable_restriction_months).to eq(2)
         end
       end
     end

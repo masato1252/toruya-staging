@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
+import moment from "moment-timezone";
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
 import { BookingPageServices } from "user_bot/api"
 
 import BookingTimeField from "./booking_time_field";
-import BookingLimitDayField from "./booking_limit_day_field";
 import OverbookingRestrictionField from "./overbooking_restriction_field";
 import LineSharingField from "./line_sharing_field";
 import OnlinePaymentEnabledField from "./online_payment_enabled_field";
@@ -176,8 +176,42 @@ const BookingPageEdit =({props}) => {
         return <AvailableBookingDatesField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />
       case "booking_time":
         return <BookingTimeField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />
-      case "booking_limit_day":
-        return <BookingLimitDayField i18n={i18n} register={register} />
+      case "booking_available_period":
+        return (
+          <>
+            <div className="field-row flex-start">
+              <select name="bookable_restriction_months" ref={register({ required: true })}>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+              {i18n.bookable_restriction_months_before}～
+              <select name="booking_limit_day" ref={register({ required: true })}>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+              </select>
+              {i18n.booking_limit_day_before}
+            </div>
+            <div className="field-row">
+              {I18n.t("settings.booking_page.form.booking_available_period_sample", { bookable_restriction_months_date: moment().add(watch("bookable_restriction_months"), "M").format("YYYY-MM-DD"), booking_limit_day_date: moment().add(watch("booking_limit_day"), "d").format("YYYY-MM-DD") })}
+            </div>
+          </>
+        )
       case "start_at":
         return <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />
       case "end_at":

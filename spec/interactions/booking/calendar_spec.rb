@@ -124,6 +124,7 @@ RSpec.describe Booking::Calendar do
       expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
     end
 
+    # available_booking_start_date
     context "when today is 2019-05-13" do
       # Default booking page limit day is 1, that means you couldn't book today
       let(:today) { Time.zone.local(2019, 5, 13) }
@@ -132,6 +133,16 @@ RSpec.describe Booking::Calendar do
         result = outcome.result
 
         expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+      end
+    end
+
+    context 'when calendar date over available_booking_end_date' do
+      let(:date_range) { booking_page.available_booking_end_date.tomorrow..booking_page.available_booking_end_date.tomorrow.tomorrow.end_of_month }
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq([])
       end
     end
 
