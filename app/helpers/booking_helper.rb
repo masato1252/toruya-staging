@@ -9,7 +9,7 @@ module BookingHelper
       phonetic_first_name: customer&.phonetic_first_name,
       phonetic_last_name: customer&.phonetic_last_name,
       phone_number: params[:customer_phone_number]&.presence || customer&.mobile_phone_number,
-      phone_numbers: customer&.phone_numbers_details&.map { |phone| phone&.dig("value")&.gsub(/[^0-9]/, '') }.compact,
+      phone_numbers: customer&.phone_numbers_details&.map { |phone| phone&.dig("value")&.gsub(/[^0-9]/, '') }&.compact || [],
       email: customer&.email,
       emails: customer&.emails_details&.map { |email| email["value"] },
       simple_address: customer&.simple_address,
