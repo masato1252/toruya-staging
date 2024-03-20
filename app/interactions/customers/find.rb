@@ -17,7 +17,7 @@ module Customers
       end
 
       matched_customers = customers.find_all do |customer|
-        customer.phone_numbers_details&.map { |phone| phone["value"].gsub(/[^0-9]/, '') }&.include?(phone_number.gsub(/[^0-9]/, ''))
+        customer.phone_numbers_details&.map { |phone| phone["value"]&.gsub(/[^0-9]/, '') }&.include?(phone_number.gsub(/[^0-9]/, ''))
       end
 
       booking_customer =

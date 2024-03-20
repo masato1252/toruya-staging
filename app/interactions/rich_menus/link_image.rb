@@ -16,7 +16,7 @@ module RichMenus
 
       unless response.is_a?(Net::HTTPOK)
         if social_rich_menu.image.attached?
-          base64_image = ActiveSupport::Base64.encode64(URI.open(file_url_or_path) { |io| io.read })
+          base64_image = Base64.encode64(URI.open(file_url_or_path) { |io| io.read })
           Rollbar.error("Invalid Rich Menu image", response: response.body, url: file_url_or_path, base64_image: base64_image)
         else
           Rollbar.error("Invalid Rich Menu image", response: response.body, url: file_url_or_path)
