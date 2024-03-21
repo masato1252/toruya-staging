@@ -1,5 +1,9 @@
 import _ from "lodash";
 
+// draft_message_content: {
+//  customer_id: message_content
+// }
+
 const initialState = {
   total_customers_number: 0,
   selected_customer: {},
@@ -9,11 +13,12 @@ const initialState = {
   filter_pattern_number: null,
   reservations: [],
   payments: [],
-  temp_new_messages: []
+  temp_new_messages: [],
+  draft_message_content: {}
 }
 
 export default (state = initialState, action) => {
-  let new_selected_customer, new_customers;
+  let new_selected_customer, new_customers, new_draft_message_content;
 
   switch(action.type) {
     case "RESET_CUSTOMERS":
@@ -77,6 +82,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         temp_new_messages: [...state.temp_new_messages, action.payload.message],
+      }
+    case "EDIT_CUSTOMER_MESSAGE":
+      return {
+        ...state,
+        draft_message_content: {...state.draft_message_content, [action.payload.customer_id.toString()]: action.payload.message_content},
+      }
+    case "REMOVE_DRAFT_CUSTOMER_MESSAGE":
+      new_draft_message_content = _.omit(state.draft_message_content, [action.payload.customer_id.toString()]);
+
+      return {
+        ...state,
+        draft_message_content: new_draft_message_content
       }
     default:
       return state;

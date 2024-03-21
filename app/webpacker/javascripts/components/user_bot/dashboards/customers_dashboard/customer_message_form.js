@@ -1,21 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import moment from "moment-timezone";
+import { debounce } from "lodash";
 
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
-import { CustomerServices } from "components/user_bot/api"
+import { CustomerServices, CommonServices } from "components/user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 
 const CustomerMessageForm = () => {
   moment.locale('ja');
-  const ref = useRef()
-  const { selected_customer, dispatch } = useGlobalContext()
+  const { selected_customer, draft_message_content, dispatch, props } = useGlobalContext()
   const [submitting, setSubmitting] = useState(false)
+  const [drafting, setDrafting] = useState(false)
   const [schedule_at, setScheduleAt] = useState(null)
   const [images, setImages] = useState([])
   const [imageURLs, setImageURLs] = useState([])
 
   const handleSubmit = async () => {
-    if (submitting || (!ref.current?.value && !images[0])) return;
+    if (submitting || (!draftMessageContent() && !images[0])) return;
     setSubmitting(true)
     let response = null;
     let error = null;
@@ -24,12 +25,19 @@ const CustomerMessageForm = () => {
       business_owner_id: selected_customer.userId,
       customer_id: selected_customer.id,
       schedule_at: schedule_at,
-      message: ref.current.value,
+      message: draftMessageContent(),
       image: images[0]
     })
     setSubmitting(false)
 
     if (response?.data?.status == "successful") {
+      dispatch({
+        type: "REMOVE_DRAFT_CUSTOMER_MESSAGE",
+        payload: {
+          customer_id: selected_customer.id,
+        }
+      })
+
       if (response?.data?.redirect_to) {
         window.location.replace(response?.data?.redirect_to)
       }
@@ -39,15 +47,13 @@ const CustomerMessageForm = () => {
           payload: {
             message: {
               message_type: "staff",
-              text: ref.current.value,
+              text: draftMessageContent(),
               formatted_created_at: moment(Date.now()).format("llll"),
               formatted_schedule_at: schedule_at ? moment(schedule_at).format("llll") : null,
               sent: !schedule_at
             }
           }
         })
-
-        ref.current.value = null;
       }
     }
     else {
@@ -67,10 +73,39 @@ const CustomerMessageForm = () => {
     setImages([...e.target.files])
   }
 
+  const draftMessageContent = () => {
+    return draft_message_content[selected_customer.id.toString()];
+  }
+
+  const handleDraftMessage = () => {
+    if (drafting) return
+
+    setDrafting(true)
+    CommonServices.create({
+      url: Routes.save_draft_message_lines_user_bot_customers_path(props.business_owner_id, {format: "json"}),
+      data: { draft_message_content: draft_message_content }
+    })
+
+    toastr.success(I18n.t("common.save_draft_successfully_message"))
+    setDrafting(false)
+  }
+
   return (
     <div className="centerize message-form">
       <h4>{I18n.t("user_bot.dashboards.customer.customer_message_reply_title")}</h4>
-      <textarea ref={ref} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}/>
+      <textarea
+        value={draftMessageContent()}
+        onChange={(e) => {
+          dispatch({
+            type: "EDIT_CUSTOMER_MESSAGE",
+            payload: {
+              customer_id: selected_customer.id,
+              message_content: e.target.value
+            }
+          })
+        }}
+        className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}
+      />
       <div>
         <label className="flex flex-col">
           <i className='fas fa-image fa-2x'></i>
@@ -110,6 +145,13 @@ const CustomerMessageForm = () => {
         </div>
       </div>
       <div>
+        <button type="button" className="btn btn-gray mx-2" onClick={handleDraftMessage} disabled={drafting}>
+          {drafting ? (
+            <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+          ) : (
+            I18n.t("action.save_as_draft")
+          )}
+        </button>
         <button type="button" className="btn btn-yellow" onClick={handleSubmit} disabled={submitting}>
           {submitting ? (
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>

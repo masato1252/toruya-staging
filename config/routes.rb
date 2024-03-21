@@ -194,6 +194,8 @@ Rails.application.routes.draw do
           member do
             delete "/booking_options/:booking_option_id", action: "delete_option", as: :delete_option
             get :preview_modal
+            get :edit_booking_options_order
+            put :update_booking_options_order
           end
 
           resources :custom_messages, only: [:index], module: "booking_pages" do
@@ -317,6 +319,7 @@ Rails.application.routes.draw do
             delete :delete
             post :toggle_reminder_permission
             post :reply_message
+            post :save_draft_message
             delete :delete_message
             put :unread_message
             get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed

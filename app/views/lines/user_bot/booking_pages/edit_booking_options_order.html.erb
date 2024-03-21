@@ -1,0 +1,9 @@
+<%= react_component("user_bot/booking_pages/edit_booking_options_order", {
+  props: {
+    business_owner_id: business_owner_id,
+    booking_page_id: @booking_page.id,
+    booking_options: @booking_options,
+  }
+},
+{ camelize_props: false }
+)  %>

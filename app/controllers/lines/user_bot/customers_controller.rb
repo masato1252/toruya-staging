@@ -26,6 +26,9 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     # Notifications START
     @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, Current.business_owner).data.compact + Notifications::NonGroupCustomersPresenter.new(view_context, Current.business_owner).data.compact
     # Notifications END
+
+    draft_message_content = Rails.cache.read(draft_message_content_hash_cache_key)
+    @draft_message_content = draft_message_content ? JSON.parse(draft_message_content) : {}
   end
 
   def details
@@ -152,7 +155,18 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       )
     end
 
+    if outcome.valid? && draft_message_content = Rails.cache.read(draft_message_content_hash_cache_key)
+      draft_message_content.delete(customer.id.to_s)
+      Rails.cache.write(draft_message_content_hash_cache_key, draft_message_content.to_json)
+    end
+
     return_json_response(outcome, { redirect_to: params[:schedule_at] ? SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:messages]) : nil})
+  end
+
+  def save_draft_message
+    Rails.cache.write(draft_message_content_hash_cache_key, params[:draft_message_content].to_json)
+
+    head :ok
   end
 
   def delete_message
@@ -213,5 +227,9 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
   def render_customers_json(customers)
     render json: { customers: customers.map { |customer| CustomerOptionSerializer.new(customer).attributes_hash } }
+  end
+
+  def draft_message_content_hash_cache_key
+    "draft_message_content_#{Current.business_owner.id}"
   end
 end

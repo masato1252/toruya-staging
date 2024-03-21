@@ -431,6 +431,7 @@ ja:
           new_option_with_existing_menu:
             select_from_existing_menu: 既存メニューから価格作成
             create_from_a_new_menu: 新しいメニューで価格作成
+          booking_options_order_title: 価格順
       booking_options:
         form:
           add_this_new_menu: このメニューを追加

@@ -17,7 +17,9 @@
         <div class="field-header" id="shop_id"><%= I18n.t("settings.booking_page.form.shop_header") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :shop_id), title: @booking_page.shop.name %>
 
-        <div class="field-group-header" id="new_option"><%= I18n.t("settings.booking_page.form.booking_option_header") %></div>
+        <div class="field-group-header" id="new_option">
+          <%= I18n.t("settings.booking_page.form.booking_option_header") %>
+        </div>
         <% @booking_page.booking_options.includes(menus: :shop_menus).each do |booking_option| %>
           <div class="field-row option-row">
             <div class="option-info">
@@ -54,6 +56,7 @@
           <%= link_to edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :new_option), class: "btn btn-yellow" do %>
             <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_page.form.add_new_option") %></span>
           <% end %>
+          <%= link_to t("settings.booking_page.form.reorder_options"), edit_booking_options_order_lines_user_bot_booking_page_path(business_owner_id, @booking_page), class: "btn btn-tarco" %>
         </div>
 
         <div class="field-group-header" id="special_dates"><%= I18n.t("settings.booking_page.form.booking_dates_available_booking_datetime") %></div>

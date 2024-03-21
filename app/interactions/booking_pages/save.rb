@@ -37,8 +37,6 @@ module BookingPages
       booking_options = attrs.delete(:options)
       special_dates = attrs.delete(:special_dates)
 
-      attrs.merge!(booking_option_ids: booking_options&.values&.pluck(:value))
-
       booking_page.slug ||= SecureRandom.alphanumeric(10)
 
       booking_page.transaction do
@@ -48,6 +46,12 @@ module BookingPages
               end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil
             ))
           booking_page.booking_page_special_dates.destroy_all
+          booking_options.each do |k, v|
+            booking_page.booking_page_options.create(
+              booking_option_id: v['value'],
+              position: k.to_i
+            )
+          end
 
           if special_dates
             special_dates.values.each do |date_times|

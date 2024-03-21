@@ -622,7 +622,8 @@ ALTER SEQUENCE public.booking_options_id_seq OWNED BY public.booking_options.id;
 CREATE TABLE public.booking_page_options (
     id bigint NOT NULL,
     booking_page_id bigint NOT NULL,
-    booking_option_id bigint NOT NULL
+    booking_option_id bigint NOT NULL,
+    "position" integer DEFAULT 0
 );
 
 
@@ -5543,6 +5544,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231219091457'),
 ('20240207081157'),
 ('20240221165044'),
-('20240311145252');
+('20240311145252'),
+('20240314114811');
 
 

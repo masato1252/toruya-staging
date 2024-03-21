@@ -27,7 +27,7 @@ export const GlobalProvider = ({ props, children }) => {
   const initialValue = useMemo(() => {
     return _.merge(
       reducers(),
-      { customer_states: { total_customers_number: props.total_customers_number }},
+      { customer_states: { total_customers_number: props.total_customers_number, draft_message_content: props.draft_message_content }},
       { notification_states: { notification_messages: props.notification_messages }}
     )
   }, [])

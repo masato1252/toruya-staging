@@ -5,6 +5,7 @@
 # Table name: booking_page_options
 #
 #  id                :bigint           not null, primary key
+#  position          :integer          default(0)
 #  booking_option_id :bigint           not null
 #  booking_page_id   :bigint           not null
 #
