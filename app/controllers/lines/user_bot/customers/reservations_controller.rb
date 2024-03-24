@@ -24,6 +24,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
         menu: relation.online_service.name,
         shop: relation.online_service.company.company_name,
         state: relation.state,
+        reservation_customer_state: relation.state,
         "time" => relation.created_at.to_i
       }
     end
