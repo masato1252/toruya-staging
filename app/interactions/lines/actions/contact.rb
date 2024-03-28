@@ -15,7 +15,7 @@ class Lines::Actions::Contact < ActiveInteraction::Base
           [
             LineActions::Uri.new(
               label: I18n.t("action.call"),
-              url: "tel:#{user.shops.first.phone_number}",
+              url: "tel:#{user.shops.first.phone_number.gsub(/\D/, '')}",
               btn: "secondary"
             )
           ]
@@ -27,7 +27,7 @@ class Lines::Actions::Contact < ActiveInteraction::Base
           if shop.phone_number.present?
             LineActions::Uri.new(
               label: "#{shop.short_name}#{I18n.t("action.call")}",
-              url: "tel:#{shop.phone_number}",
+              url: "tel:#{shop.phone_number.gsub(/\D/, '')}",
               btn: "secondary"
             )
           end
