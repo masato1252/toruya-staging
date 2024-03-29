@@ -74,7 +74,12 @@ const CustomerMessageForm = () => {
   }
 
   const draftMessageContent = () => {
-    return draft_message_content[selected_customer.id.toString()];
+    if (draft_message_content) {
+      return draft_message_content[selected_customer?.id?.toString()];
+    }
+    else {
+      return ""
+    }
   }
 
   const handleDraftMessage = () => {
