@@ -42,7 +42,7 @@ https://manager.toruya.com/userlogin"
       assignee_accepted_reservation:
         message: "%{assignee_name} さんが %{booking_time} の予約を承認しました。"
       line_reached_monthly_limit:
-        message: "LINEのメッセージ通数が上限に達したため、顧客にメッセージ送信できませんでした"
+        message: "LINEのメッセージ通数が上限に達したため、顧客にメッセージ送信できませんでした。\nhttps://toruya.com/faq/line_free_message_and_toruya_message/"
     booking:
       shop_owner_reservation_booked_notification:
         message: "%{user_name} 様\n\n%{booking_page_title}より新しいご予約が入りました。\n\n予約カレンダーよりご確認ください。\n\nToruya"
