@@ -1,7 +1,7 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <h4 class="modal-title" id="reservation-show-modal">
-    <span class="reservation-state <%= local_assigns[:reservation_customer]&.state || reservation.aasm_state %>"><%= t("reservation.#{local_assigns[:reservation_customer]&.state || reservation.aasm_state}") %><%= "(#{reservation.reservation_staffs.accepted.pluck(:staff_id).uniq.count}/#{reservation.staffs.uniq.count})" if reservation.pending? %></span>
+    <span class="reservation-state <%= local_assigns[:reservation_customer]&.reservation_state|| reservation.aasm_state %>"><%= t("reservation.#{local_assigns[:reservation_customer]&.reservation_state || reservation.aasm_state}") %><%= "(#{reservation.reservation_staffs.accepted.pluck(:staff_id).uniq.count}/#{reservation.staffs.uniq.count})" if reservation.pending? %></span>
     <% if (params[:from_customer_id] || params[:from_filter]) && user_ability.can?(:read, :shop_dashboard) %>
       <%= link_to I18n.l(reservation.start_time, format: :date), date_shop_reservations_path(reservation.shop, reservation_date: reservation.start_time.to_fs(:date)) %>
     <% else %>

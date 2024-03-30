@@ -56,6 +56,14 @@ class ReservationCustomer < ApplicationRecord
 
   scope :active, -> { where(state: ACTIVE_STATES) }
 
+  def reservation_state
+    if accepted?
+      reservation.aasm_state
+    else
+      state
+    end
+  end
+
   def customer_data_changed?
     customer_data_changes.present?
   end

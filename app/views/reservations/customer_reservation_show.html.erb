@@ -3,7 +3,7 @@
     <%= render "reservations/show_modal/time_header", reservation: @reservation, user_ability: @user_ability, reservation_customer: @reservation_customer %>
     <div class="modal-body">
       <div class="reservation-info-row">
-        <i class="fa fa-user customer-reservation-state <%= @reservation_customer&.state %>"></i>
+        <i class="fa fa-user customer-reservation-state <%= @reservation_customer&.reservation_state %>"></i>
         <% if @customer.deleted_at || @user_ability.cannot?(:read, @customer) %>
           <span><%= @customer.name %></span>
         <% else %>
