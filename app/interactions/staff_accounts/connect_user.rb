@@ -22,7 +22,7 @@ module StaffAccounts
             phonetic_first_name: staff.phonetic_first_name.presence || user.profile.phonetic_first_name
           )
 
-          Notifiers::Users::Notifications::StaffJoined.run(receiver: staff_account.owner)
+          Notifiers::Users::Notifications::StaffJoined.perform_later(receiver: staff_account.owner, staff_name: staff.name)
         else
           errors.merge!(staff_account.errors)
         end

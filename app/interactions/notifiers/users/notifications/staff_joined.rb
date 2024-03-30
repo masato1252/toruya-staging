@@ -5,9 +5,10 @@ module Notifiers
     module Notifications
       class StaffJoined < Base
         deliver_by :line
+        string :staff_name
 
         def message
-          I18n.t("notifier.notifications.staff_joined.message", staff_name: receiver.user.name)
+          I18n.t("notifier.notifications.staff_joined.message", staff_name: staff_name)
         end
       end
     end
