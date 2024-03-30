@@ -16,7 +16,7 @@ module Templates
         )
       ]
 
-      if content_url
+      if content_url.present?
         action_templates.prepend(
           LineActions::Uri.new(
             label: I18n.t("action.online_service_actions.#{online_service.solution_type_for_message}"),
