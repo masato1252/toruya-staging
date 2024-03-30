@@ -237,7 +237,7 @@ ja:
     until_when: まで
     price: 金額
     no_data: 未登録
-    reservation_calendar: 予約カレンダ
+    reservation_calendar: 予約カレンダー
     not_paid_payment: これは未払いの支払いです。
   errors:
     invalid_url: 無効なURL
