@@ -8,6 +8,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 const CustomerMessageForm = () => {
   moment.locale('ja');
+  const ref = useRef()
   const { selected_customer, draft_message_content, dispatch, props } = useGlobalContext()
   const [submitting, setSubmitting] = useState(false)
   const [drafting, setDrafting] = useState(false)
@@ -16,7 +17,7 @@ const CustomerMessageForm = () => {
   const [imageURLs, setImageURLs] = useState([])
 
   const handleSubmit = async () => {
-    if (submitting || (!draftMessageContent() && !images[0])) return;
+    if (submitting || (!ref.current.value && !images[0])) return;
     setSubmitting(true)
     let response = null;
     let error = null;
@@ -25,7 +26,7 @@ const CustomerMessageForm = () => {
       business_owner_id: selected_customer.userId,
       customer_id: selected_customer.id,
       schedule_at: schedule_at,
-      message: draftMessageContent(),
+      message: ref.current.value,
       image: images[0]
     })
     setSubmitting(false)
@@ -47,7 +48,7 @@ const CustomerMessageForm = () => {
           payload: {
             message: {
               message_type: "staff",
-              text: draftMessageContent(),
+              text: ref.current.value,
               formatted_created_at: moment(Date.now()).format("llll"),
               formatted_schedule_at: schedule_at ? moment(schedule_at).format("llll") : null,
               sent: !schedule_at
@@ -84,11 +85,21 @@ const CustomerMessageForm = () => {
 
   const handleDraftMessage = () => {
     if (drafting) return
+    if (!ref.current.value) return
 
     setDrafting(true)
+
+    dispatch({
+      type: "EDIT_CUSTOMER_MESSAGE",
+      payload: {
+        customer_id: selected_customer.id,
+        message_content: ref.current.value
+      }
+    })
+
     CommonServices.create({
       url: Routes.save_draft_message_lines_user_bot_customers_path(props.business_owner_id, {format: "json"}),
-      data: { draft_message_content: draft_message_content }
+      data: { draft_message_content: { ...draft_message_content, [selected_customer.id.toString()]: ref.current.value } }
     })
 
     toastr.success(I18n.t("common.save_draft_successfully_message"))
@@ -98,19 +109,7 @@ const CustomerMessageForm = () => {
   return (
     <div className="centerize message-form">
       <h4>{I18n.t("user_bot.dashboards.customer.customer_message_reply_title")}</h4>
-      <textarea
-        value={draftMessageContent()}
-        onChange={(e) => {
-          dispatch({
-            type: "EDIT_CUSTOMER_MESSAGE",
-            payload: {
-              customer_id: selected_customer.id,
-              message_content: e.target.value
-            }
-          })
-        }}
-        className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}
-      />
+      <textarea ref={ref} defaultValue={draftMessageContent()} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")} />
       <div>
         <label className="flex flex-col">
           <i className='fas fa-image fa-2x'></i>
