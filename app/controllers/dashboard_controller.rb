@@ -9,7 +9,6 @@ class DashboardController < ActionController::Base
   include ParameterConverters
   include Locale
   include ExceptionHandler
-  include Sentry
 
   skip_before_action :track_ahoy_visit
   before_action :profile_required

@@ -10,7 +10,6 @@ class Settings::DashboardsController < ActionController::Base
   include ViewHelpers
   include Locale
   include ExceptionHandler
-  include Sentry
 
   def index
     # only the profile setting is finished

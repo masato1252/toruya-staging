@@ -49,6 +49,7 @@ module.exports = function(api) {
       'babel-plugin-macros',
       '@babel/plugin-syntax-dynamic-import',
       '@babel/plugin-proposal-optional-chaining',
+      '@babel/plugin-transform-nullish-coalescing-operator',
       isTestEnv && 'babel-plugin-dynamic-import-node',
       '@babel/plugin-transform-destructuring',
       [

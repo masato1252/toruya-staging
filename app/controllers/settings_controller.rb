@@ -12,7 +12,6 @@ class SettingsController < ActionController::Base
   include ViewHelpers
   include Locale
   include ExceptionHandler
-  include Sentry
 
   before_action :authorize_manager_level_permission
   before_action :profile_required

@@ -10,7 +10,6 @@ class Settings::ToursController < ActionController::Base
   include ViewHelpers
   include Locale
   include ExceptionHandler
-  include Sentry
 
   def current_step_warning
     @from_settings_tour_root = true
