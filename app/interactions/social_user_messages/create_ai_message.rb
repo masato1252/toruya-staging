@@ -29,6 +29,14 @@ module SocialUserMessages
         ai_uid: ai_uid
       )
 
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 10)
+      new_row_number = google_worksheet.num_rows + 1
+      new_row_data = [ ai_question, ai_response, ai_uid ]
+      new_row_data.each_with_index do |data, index|
+        google_worksheet[new_row_number, index + 1] = data
+      end
+      google_worksheet.save
+
       {
         ai_question_message: ai_question_message,
         ai_response_message: ai_response_message
