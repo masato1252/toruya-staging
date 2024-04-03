@@ -17,7 +17,8 @@ class UserProfilingJob < ApplicationJob
     new_row_data = [
       profile.user_id,
       profile.where_know_toruya,
-      profile.what_main_problem
+      profile.what_main_problem,
+      profile.created_at.to_s(:date)
     ]
     new_row_data.each_with_index do |data, index|
       google_worksheet[new_row_number, index + 1] = data
