@@ -7,12 +7,22 @@
     disabled: !is_owner do %>
     <%= Current.business_owner.stripe_provider ? t("action.stripe_connected") : t("action.stripe_connect") %>
   <% end %>
-  <div class="warning"><%= t("user_bot.dashboards.settings.stripe.owner_warning") %></div>
+  <% if !is_owner %>
+    <div class="warning"><%= t("user_bot.dashboards.settings.stripe.owner_warning") %></div>
+  <% end %>
 </div>
 
 <div class="margin-around centerize">
   <%= t("user_bot.dashboards.settings.stripe.stripe_desc2_html") %>
 </div>
-<div class="centerize">
+
+<div class="margin-around centerize">
   <%= link_to t("action.stripe_sign_up"), "https://stripe.com", class: "btn btn-tarco", target: "_blank" %>
 </div>
+
+<% if Current.business_owner.stripe_provider %>
+  <hr />
+  <div class="margin-around centerize">
+    <%= button_to t("user_bot.dashboards.settings.stripe.default_payment_button"), lines_user_bot_settings_stripe_path, class: "btn btn-tarco", disabled: Current.business_owner.stripe_provider&.default_payment?, method: :patch %>
+  </div>
+<% end %>

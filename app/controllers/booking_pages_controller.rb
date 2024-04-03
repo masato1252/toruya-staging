@@ -83,6 +83,8 @@ class BookingPagesController < ActionController::Base
       present_customer_info: params[:present_customer_info].to_h,
       social_user_id: params[:social_user_id],
       stripe_token: params[:stripe_token],
+      square_token: params[:square_token],
+      square_location_id: params[:square_location_id],
       sale_page_id: params[:sale_page_id]
     )
 

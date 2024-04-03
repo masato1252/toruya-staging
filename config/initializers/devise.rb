@@ -289,6 +289,17 @@ Devise.setup do |config|
     Rails.application.secrets.stripe_secret_key,
     scope: "read_write",
     stripe_landing: "login"
+
+  config.omniauth :square,
+    Rails.application.secrets.square_app_id,
+    Rails.application.secrets.square_secret_key,
+    {
+      :scope => "MERCHANT_PROFILE_READ,CUSTOMERS_WRITE,CUSTOMERS_READ,PAYMENTS_READ,PAYMENTS_WRITE,SUBSCRIPTIONS_WRITE,ITEMS_READ,ORDERS_WRITE,INVOICES_WRITE,SUBSCRIPTIONS_READ,ITEMS_WRITE",
+      :client_options => {
+        :connect_site => 'https://connect.squareupsandbox.com',
+        :site => 'https://squareupsandbox.com'
+      }
+    }
 end
 
 # Devise::Mailer.layout "mailer"

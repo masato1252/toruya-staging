@@ -28,6 +28,7 @@
 #  custom_id                    :string
 #  google_contact_id            :string
 #  rank_id                      :integer
+#  square_customer_id           :string
 #  stripe_customer_id           :string
 #  updated_by_user_id           :integer
 #  user_id                      :integer          not null

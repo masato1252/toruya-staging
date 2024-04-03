@@ -74,7 +74,8 @@ CREATE TABLE public.access_providers (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     email character varying,
-    publishable_key character varying
+    publishable_key character varying,
+    default_payment boolean DEFAULT false
 );
 
 
@@ -705,7 +706,8 @@ CREATE TABLE public.booking_pages (
     specific_booking_start_times character varying[],
     online_payment_enabled boolean DEFAULT false,
     event_booking boolean DEFAULT false,
-    bookable_restriction_months integer DEFAULT 3
+    bookable_restriction_months integer DEFAULT 3,
+    default_provider character varying
 );
 
 
@@ -1099,7 +1101,8 @@ CREATE TABLE public.customer_payments (
     order_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    memo character varying
+    memo character varying,
+    provider character varying DEFAULT 'stripe_connect'::character varying
 );
 
 
@@ -1154,7 +1157,8 @@ CREATE TABLE public.customers (
     stripe_customer_id character varying,
     menu_ids character varying[] DEFAULT '{}'::character varying[],
     online_service_ids character varying[] DEFAULT '{}'::character varying[],
-    mixpanel_profile_last_set_at timestamp without time zone
+    mixpanel_profile_last_set_at timestamp without time zone,
+    square_customer_id character varying
 );
 
 

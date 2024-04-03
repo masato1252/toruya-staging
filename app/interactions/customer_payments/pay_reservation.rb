@@ -5,6 +5,9 @@ require "order_id"
 
 class CustomerPayments::PayReservation < ActiveInteraction::Base
   object :reservation_customer
+  object :payment_provider, class: AccessProvider
+  string :source_id, default: nil
+  string :location_id, default: nil
 
   def execute
     order_id = OrderId.generate
@@ -14,47 +17,15 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
       amount: reservation_customer.booking_amount,
       charge_at: Time.current,
       manual: true,
-      order_id: order_id
+      order_id: order_id,
+      provider: payment_provider.provider
     )
 
-    begin
-      stripe_charge = Stripe::Charge.create(
-        {
-          amount: reservation_customer.booking_amount.fractional,
-          currency: Money.default_currency.iso_code,
-          customer: customer.stripe_customer_id,
-          description: "#{reservation_customer.booking_option.name}".first(STRIPE_DESCRIPTION_LIMIT),
-          metadata: {
-            reservation_customer_id: reservation_customer.id,
-            customer_id: customer.id,
-            customer_name: customer.name,
-            reservation_id: reservation.id
-          }
-        },
-        stripe_account: customer.user.stripe_provider.uid
-      )
-
-      payment.stripe_charge_details = stripe_charge.as_json
-      payment.completed!
-
-      if Rails.configuration.x.env.production?
-        SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Booking Page #{Rails.application.routes.url_helpers.booking_page_url(reservation_customer.booking_page_id)} Stripe charge💰")
-      end
-    rescue Stripe::CardError => error
-      payment.stripe_charge_details = error.json_body[:error]
-      payment.auth_failed!
-      errors.add(:customer, :auth_failed)
-
-      Rollbar.error(error, toruya_service_charge: payment.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
-    rescue Stripe::StripeError => error
-      payment.stripe_charge_details = error.json_body[:error]
-      payment.processor_failed!
-      errors.add(:customer, :processor_failed)
-
-      Rollbar.error(error, toruya_service_charge: payment.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
-    rescue => e
-      Rollbar.error(e)
-      errors.add(:customer, :something_wrong)
+    case payment_provider.provider
+    when AccessProvider.providers[:stripe_connect]
+      compose(CustomerPayments::StripePayReservation, reservation_customer: reservation_customer, payment: payment)
+    when AccessProvider.providers[:square]
+      compose(CustomerPayments::SquarePayReservation, reservation_customer: reservation_customer, payment: payment, source_id: source_id, location_id: location_id)
     end
 
     payment

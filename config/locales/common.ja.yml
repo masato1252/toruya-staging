@@ -68,6 +68,10 @@ ja:
     stripe_connect: Stripeに連携
     stripe_connected: 連携中
     stripe_sign_up: Stripeに新規登録
+    square_setting_btn: Squareを設定する
+    square_connect: Squareに連携
+    square_connected: 連携中
+    square_sign_up: Squareに新規登録
     change_credit_card: 精算カード変更
     pay_now: 今すぐ支払う
     duplicate: 複製

@@ -17,6 +17,8 @@ module Booking
     string :customer_email, default: nil
     string :social_user_id, default: nil
     string :stripe_token, default: nil
+    string :square_token, default: nil
+    string :square_location_id, default: nil
     boolean :customer_reminder_permission, default: true
     # customer_info format might like
     # {
@@ -281,9 +283,28 @@ module Booking
             compose(Users::UpdateCustomerLatestActivityAt, user: user)
 
             if stripe_token
-              compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: stripe_token)
+              compose(Customers::StorePaymentCustomer, customer: customer, authorize_token: stripe_token, payment_provider: user.stripe_provider)
               reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
-              purchase_outcome = CustomerPayments::PayReservation.run(reservation_customer: reservation_customer)
+              purchase_outcome = CustomerPayments::PayReservation.run(
+                reservation_customer: reservation_customer,
+                payment_provider: user.stripe_provider
+              )
+
+              if purchase_outcome.valid?
+                reservation_customer.payment_paid!
+              else
+                errors.add(:base, :paying_reservation_something_wrong)
+                raise ActiveRecord::Rollback
+              end
+            elsif square_token
+              compose(Customers::StorePaymentCustomer, customer: customer, authorize_token: square_token, payment_provider: user.square_provider)
+              reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
+              purchase_outcome = CustomerPayments::PayReservation.run(
+                reservation_customer: reservation_customer,
+                payment_provider: user.square_provider,
+                source_id: square_token,
+                location_id: square_location_id
+              )
 
               if purchase_outcome.valid?
                 reservation_customer.payment_paid!

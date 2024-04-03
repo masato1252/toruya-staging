@@ -22,6 +22,7 @@ import AddressView from "shared/address_view";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
 import StripeCheckoutForm from "shared/stripe_checkout_form"
+import SquareCheckoutForm from "shared/square_checkout_form"
 import I18n from 'i18n-js/index.js.erb';
 
 class BookingReservationForm extends React.Component {
@@ -719,9 +720,6 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingReservationButton = () => {
-    const { booking_failed, booking_code, booking_options, booking_option_id } = this.booking_reservation_form_values;
-    const { reminder_desc } = this.props.i18n;
-
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo()) return;
     if (!this.isCustomerTrusted()) return;
@@ -738,10 +736,10 @@ class BookingReservationForm extends React.Component {
             if (this.isAnyErrors()) {
               this.customerInfoFieldModalHideHandler()
             }
-            else if (this.props.stripe_key && this.props.booking_page.online_payment_enabled && this.isPremiumSerivce()) {
+            else if (this.isPaymentSolutionReady() && this.props.booking_page.online_payment_enabled && this.isPremiumService()) {
               this.booking_reservation_form.change("booking_reservation_form[is_paying_booking]", true)
             }
-            else if (this.isPremiumSerivce() && !this.isCustomerAddressFilled()) {
+            else if (this.isPremiumService() && !this.isCustomerAddressFilled()) {
               this.booking_reservation_form.change("booking_reservation_form[is_filling_address]", true)
             }
             else {
@@ -914,32 +912,52 @@ class BookingReservationForm extends React.Component {
 
   renderChargingView = () => {
     const {
-      booking_options,
       booking_date,
       booking_at,
-      booking_option_id,
     } = this.booking_reservation_form_values;
 
     const { time_from } = this.props.i18n;
 
     const booking_details = `${moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone).format("llll")} ${time_from}`
 
-    return (
-      <div className="done-view">
-        <StripeCheckoutForm
-          stripe_key={this.props.stripe_key}
-          handleToken={async (token) => {
-            console.log("token", token)
-            await this.booking_reservation_form.change("booking_reservation_form[stripe_token]", token)
-            this.handleSubmit()
-          }}
-          header={this.selected_booking_option().name}
-          desc={booking_details}
-          pay_btn={I18n.t("action.pay")}
-          details_desc={this.selected_booking_option().price}
-        />
-      </div>
-    )
+    switch (this.props.payment_solution.solution) {
+      case "stripe_connect":
+        return (
+          <div className="done-view">
+            <StripeCheckoutForm
+              stripe_key={this.props.payment_solution.stripe_key}
+              handleToken={async (token) => {
+                console.log("token", token)
+                await this.booking_reservation_form.change("booking_reservation_form[stripe_token]", token)
+                this.handleSubmit()
+              }}
+              header={this.selected_booking_option().name}
+              desc={booking_details}
+              pay_btn={I18n.t("action.pay")}
+              details_desc={this.selected_booking_option().price}
+            />
+          </div>
+        )
+      case "square":
+        return (
+          <div className="done-view">
+            <SquareCheckoutForm
+              square_app_id={this.props.payment_solution.square_app_id}
+              square_location_id={this.props.payment_solution.square_location_id}
+              handleToken={async (token, buyer) => {
+                console.info({ token, buyer });
+
+                await this.booking_reservation_form.change("booking_reservation_form[square_token]", token.token)
+                this.handleSubmit()
+              }}
+              header={this.selected_booking_option().name}
+              desc={booking_details}
+              pay_btn={I18n.t("action.pay")}
+              details_desc={this.selected_booking_option().price}
+            />
+          </div>
+        )
+    }
   }
 
   renderBookingDownView = () => {
@@ -984,7 +1002,11 @@ class BookingReservationForm extends React.Component {
     )
   }
 
-  isPremiumSerivce = () => {
+  isPaymentSolutionReady = () => {
+    return !!this.props.payment_solution.stripe_key || !!this.props.payment_solution.square_location_id
+  }
+
+  isPremiumService = () => {
     return !this.selected_booking_option().is_free
   }
 
@@ -1018,17 +1040,16 @@ class BookingReservationForm extends React.Component {
     const { booking_options, special_date, booking_option_id, is_done, is_paying_booking, is_filling_address, customer_info } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
-    if (is_filling_address && this.isPremiumSerivce() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
+    if (is_filling_address && this.isPremiumService() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
 
     if (is_done) {
-      if (this.isPremiumSerivce() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
+      if (this.isPremiumService() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
 
       return this.renderBookingDownView()
     }
 
-
     if (is_paying_booking) {
-      if (this.isPremiumSerivce() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
+      if (this.isPremiumService() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
 
       return (
         <div>
@@ -1271,10 +1292,10 @@ class BookingReservationForm extends React.Component {
   }
 
   onSubmit = async (event) => {
-    const { is_paying_booking, stripe_token } = this.booking_reservation_form_values
+    const { is_paying_booking, stripe_token, square_token } = this.booking_reservation_form_values
 
     if (this.bookingReserationLoading) return;
-    if (is_paying_booking && !stripe_token) return;
+    if (is_paying_booking && !stripe_token && !square_token) return;
 
     this.bookingReserationLoading = "loading";
 
@@ -1298,12 +1319,17 @@ class BookingReservationForm extends React.Component {
             authenticity_token: Rails.csrfToken(),
           },
           _.pick(
+            this.props.payment_solution,
+            "square_location_id"
+          ),
+          _.pick(
             this.booking_reservation_form_values.booking_code,
             "uuid",
           ),
           _.pick(
             this.booking_reservation_form_values,
             "stripe_token",
+            "square_token",
             "booking_option_id",
             "booking_date",
             "booking_at",

@@ -212,4 +212,13 @@ module OptionsHelper
   def rich_menu_layout_option_image_path(index)
     "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menu_layouts/richmenu_layout_#{index}.png"
   end
+
+  def payment_provider_label(provider_name)
+    case provider_name
+    when AccessProvider.providers[:stripe_connect]
+      "Stripe"
+    when AccessProvider.providers[:square]
+      "Square"
+    end
+  end
 end

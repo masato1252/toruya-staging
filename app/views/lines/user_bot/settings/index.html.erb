@@ -95,7 +95,10 @@
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
         <%= link_to lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "field-row" do %>
-          <span><%= "Stripe" %></span><i class="fa fa-angle-right"></i>
+          <span><%= "Stripe" %> <%= "(#{t("common.default")})" if business_owner.stripe_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+        <%= link_to lines_user_bot_settings_square_path(business_owner_id: business_owner_id), class: "field-row" do %>
+          <span><%= "Square" %> <%= "(#{t("common.default")})" if business_owner.square_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>

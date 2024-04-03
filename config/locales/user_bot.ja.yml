@@ -342,6 +342,27 @@ ja:
           stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
           stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
           owner_warning: スタッフアカウントからはStripe連携できません。アカウントオーナーに連携設定を依頼して下さい。
+          default_payment_button: この支払い方法をデフォルトに設定
+        square:
+          title: オンライン精算
+          connection_title: Squareアカウント連携
+          square_desc1_html: Squareアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
+          square_desc2_html: Squareアカウントが無い方は<br />あらかじめアカウント登録してください。
+          owner_warning: スタッフアカウントからはSquare連携できません。アカウントオーナーに連携設定を依頼して下さい。
+          default_payment_button: この支払い方法をデフォルトに設定
+        consultants:
+          list_page_title: 公式サポーター
+          list_page_header: サポートユーザー
+          invitation_link: 招待リンク
+          invitation_desc: 招待したサポートユーザーがToruyaにユーザー登録すると、そのユーザーのアカウント上であなたが管理者スタッフとして登録されます。
+          pending_client: ユーザー登録待ち
+          new_page_title: サポートユーザー招待
+          new_page_header: 招待したい方の携帯電話番号
+          new_page_invite_desc_html: サポートしたい方に<br>招待URLをSMS送信します
+          invitation_flow_desc_html: <b>【サポートユーザー招待方法】</b><br> ①サポートしたい方に招待URLをSMS送信<br> ②招待された方ご自身で招待URLからToruyaにユーザー登録<br> ③招待された方のアカウントに管理者スタッフとしてあなたが登録されますので、画面右上の『アカウント切替』メニューから招待された方のアカウントに切り替えてご利用ください
+          feature_checking: 機能について詳しく確認する
+          apply_support: 登録申請する
+          thanks_application: 申し込みありがとうございます。近日中にご連絡させていただきます。
         staffs:
           list_page_title: スタッフ
           list_page_header: 登録スタッフ
