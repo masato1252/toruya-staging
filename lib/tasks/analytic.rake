@@ -438,4 +438,33 @@ namespace :analytic do
 
     google_worksheet.save
   end
+
+  task :free_user_status => :environment do
+    current = Time.now.in_time_zone('Tokyo')
+
+    # Only reports on Monday
+    if current.wday == 1
+      recent_1_week_users = Subscription.free.where(created_at: current.advance(weeks: -1)..current).includes(:user).map(&:user)
+      recent_2_week_users = Subscription.free.where(created_at: current.advance(weeks: -2)..current.advance(weeks: -1)).includes(:user).map(&:user)
+      recent_3_week_users = Subscription.free.where(created_at: current.advance(weeks: -3)..current.advance(weeks: -2)).includes(:user).map(&:user)
+
+      message = [recent_1_week_users, recent_2_week_users, recent_3_week_users].map.with_index(1) do |users, week_index|
+        users_finished_settings_message = users.map do |user|
+          next unless user.social_account&.line_settings_finished?
+
+          "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
+        end.compact.join(", ")
+
+        users_not_finished_settings_message = users.map do |user|
+          next if user.social_account&.line_settings_finished?
+
+          "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
+        end.compact.join(", ")
+
+        "Last #{week_index} week Free users\nFinished Settings: #{users_finished_settings_message} \nNOT Finished: #{users_not_finished_settings_message}"
+      end.join("\n\n")
+
+      SlackClient.send(channel: 'sayhi', text: message)
+    end
+  end
 end
