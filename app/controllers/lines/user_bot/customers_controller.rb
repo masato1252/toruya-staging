@@ -231,6 +231,6 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def draft_message_content_hash_cache_key
-    "draft_message_content_#{Current.business_owner.id}"
+    "draft_message_content_#{Current.business_owner.id}_v1"
   end
 end
