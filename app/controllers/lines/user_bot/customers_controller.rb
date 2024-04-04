@@ -156,8 +156,9 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     end
 
     if outcome.valid? && draft_message_content = Rails.cache.read(draft_message_content_hash_cache_key)
-      draft_message_content.delete(customer.id.to_s)
-      Rails.cache.write(draft_message_content_hash_cache_key, draft_message_content.to_json)
+      content = JSON.parse(draft_message_content)
+      content.delete(customer.id.to_s)
+      Rails.cache.write(draft_message_content_hash_cache_key, content.to_json)
     end
 
     return_json_response(outcome, { redirect_to: params[:schedule_at] ? SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:messages]) : nil})
