@@ -157,6 +157,7 @@ class BookingReservationForm extends React.Component {
         <br />
         <div>
           <Field
+            id="customer_phonetic_last_name"
             name="booking_reservation_form[customer_phonetic_last_name]"
             component="input"
             placeholder={phonetic_last_name}
@@ -165,6 +166,7 @@ class BookingReservationForm extends React.Component {
           />
           <Error name="booking_reservation_form[customer_phonetic_last_name]" />
           <Field
+            id="customer_phonetic_first_name"
             name="booking_reservation_form[customer_phonetic_first_name]"
             component="input"
             placeholder={phonetic_first_name}
@@ -1153,9 +1155,12 @@ class BookingReservationForm extends React.Component {
   findCustomer = async (event) => {
     event.preventDefault();
 
-    const { customer_first_name, customer_last_name, customer_phone_number } = this.booking_reservation_form_values;
+    const { customer_first_name, customer_last_name, customer_phone_number, customer_phonetic_last_name, customer_phonetic_first_name } = this.booking_reservation_form_values;
 
-    if (!(customer_first_name && customer_last_name && customer_phone_number)) {
+    if (!customer_phonetic_first_name) { $("#customer_phonetic_first_name").focus() }
+    if (!customer_phonetic_last_name) { $("#customer_phonetic_last_name").focus() }
+
+    if (!(customer_first_name && customer_last_name && customer_phone_number && customer_phonetic_last_name && customer_phonetic_first_name)) {
       return;
     }
 
