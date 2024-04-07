@@ -123,6 +123,7 @@ class BookingReservationForm extends React.Component {
     const {
       found_customer,
       is_finding_customer,
+      customer_phonetic_name_failed_message
     } = this.booking_reservation_form_values;
 
     if (found_customer) return;
@@ -164,7 +165,6 @@ class BookingReservationForm extends React.Component {
             type="text"
             validate={(value) => requiredValidation(phonetic_last_name)(this, value)}
           />
-          <Error name="booking_reservation_form[customer_phonetic_last_name]" />
           <Field
             id="customer_phonetic_first_name"
             name="booking_reservation_form[customer_phonetic_first_name]"
@@ -173,7 +173,7 @@ class BookingReservationForm extends React.Component {
             type="text"
             validate={(value) => requiredValidation(phonetic_first_name)(this, value)}
           />
-          <Error name="booking_reservation_form[customer_phonetic_first_name]" />
+          <ErrorMessage error={customer_phonetic_name_failed_message} />
         </div>
         <h4>
           {phone_number}
@@ -1157,8 +1157,9 @@ class BookingReservationForm extends React.Component {
 
     const { customer_first_name, customer_last_name, customer_phone_number, customer_phonetic_last_name, customer_phonetic_first_name } = this.booking_reservation_form_values;
 
-    if (!customer_phonetic_first_name) { $("#customer_phonetic_first_name").focus() }
-    if (!customer_phonetic_last_name) { $("#customer_phonetic_last_name").focus() }
+    if (!customer_phonetic_first_name || !customer_phonetic_last_name) {
+      this.booking_reservation_form.change("booking_reservation_form[customer_phonetic_name_failed_message]", this.props.i18n.message.customer_phonetic_name_failed_message)
+    }
 
     if (!(customer_first_name && customer_last_name && customer_phone_number && customer_phonetic_last_name && customer_phonetic_first_name)) {
       return;
@@ -1170,6 +1171,7 @@ class BookingReservationForm extends React.Component {
 
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", true)
     this.booking_reservation_form.change("booking_reservation_form[booking_code_failed_message]", null)
+    this.booking_reservation_form.change("booking_reservation_form[customer_phonetic_name_failed_message]", null)
     this.findCustomerCall = "loading";
 
     const response = await axios({

@@ -15,6 +15,7 @@ module BookingPages
       boolean :online_payment_enabled, default: false
       integer :shop_id, default: nil
       integer :booking_limit_day, default: 1
+      integer :bookable_restriction_months, default: nil
       string :greeting, default: nil
       string :note, default: nil
       integer :interval, default: 30
@@ -145,7 +146,12 @@ module BookingPages
             interval: attrs[:interval],
             specific_booking_start_times: attrs[:booking_start_times].map{|h| h[:start_time]}.sort.uniq
           )
-        when "name", "title", "draft", "shop_id", "booking_limit_day", "greeting", "note", "overbooking_restriction", "online_payment_enabled"
+        when "booking_available_period"
+          booking_page.update(
+            booking_limit_day: attrs[:booking_limit_day],
+            bookable_restriction_months: attrs[:bookable_restriction_months]
+          )
+        when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "online_payment_enabled"
           booking_page.update(attrs.slice(update_attribute))
         when "line_sharing"
           booking_page.update(attrs.slice(update_attribute))

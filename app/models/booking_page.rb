@@ -4,6 +4,7 @@
 # Table name: booking_pages
 #
 #  id                           :bigint           not null, primary key
+#  bookable_restriction_months  :integer          default(3)
 #  booking_limit_day            :integer          default(1), not null
 #  deleted_at                   :datetime
 #  draft                        :boolean          default(TRUE), not null
@@ -76,6 +77,11 @@ class BookingPage < ApplicationRecord
 
   def available_booking_start_date
     Subscription.today.advance(days: booking_limit_day)
+  end
+
+  def available_booking_end_date
+    # No bookable_restriction_months nil means no restriction, use 100 months to represent
+    Subscription.today.advance(months: bookable_restriction_months || 100)
   end
 
   def started?

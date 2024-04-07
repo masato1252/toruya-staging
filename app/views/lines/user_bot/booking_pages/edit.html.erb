@@ -21,6 +21,7 @@
         end_at_type: @booking_page.end_at ? "date" : "now",
         end_at_date_part: @booking_page.end_at_date || Date.current.to_s,
         end_at_time_part: @booking_page.end_at_time,
+        bookable_restriction_months_type: @booking_page.bookable_restriction_months ? "months" : "never",
         special_dates: @booking_page.booking_page_special_dates.future.map do |special_date|
           {
             start_at_date_part: special_date.start_at_date,

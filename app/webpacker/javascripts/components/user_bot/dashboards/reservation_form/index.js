@@ -11,6 +11,7 @@ import { ReservationServices } from "user_bot/api";
 import ProcessingBar from "shared/processing_bar.js"
 import { TopNavigationBar, BottomNavigationBar } from "shared/components"
 import CalendarModal from "./calendar_modal";
+import ScheduleModal from "./schedule_modal";
 import CustomerModal from "./customer_modal";
 import MenuStaffsList from "./menu_staffs_list";
 import ReservationCustomersList from "./customers_list";
@@ -21,6 +22,7 @@ import { GlobalProvider, GlobalContext } from "context/user_bots/reservation_for
 
 const Form = () => {
   moment.locale('ja');
+  const [initial, setInitial] = useState(true)
   const {
     reservation_errors, menu_staffs_list, staff_states, customers_list, props, dispatch, all_staff_ids, all_menu_ids,
     processing, setProcessing,
@@ -30,10 +32,25 @@ const Form = () => {
 
   const { i18n } = props
 
+  useEffect(() => {
+    if (props.book_next_time) {
+      $("#calendar-modal").modal("show");
+    }
+  }, [])
+
   const onSelectStartDate = (date) => {
     setValue("start_time_date_part", date)
 
     $("#calendar-modal").modal("hide");
+    // Only first time onSelectStartDate don't schedule modal
+    if (!initial) {
+      $("#schedule-modal").modal("show");
+    }
+    setInitial(false)
+  }
+
+  const onConfirmSelectStartDate = (date) => {
+    $("#schedule-modal").modal("hide");
   }
 
   useEffect(() => {
@@ -136,7 +153,12 @@ const Form = () => {
     )
 
     if (props.reservation_form.reservation_id) {
-      [error, response] = await ReservationServices.update({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, reservation_id: props.reservation_form.reservation_id, data: params })
+      if (props.book_next_time) {
+        [error, response] = await ReservationServices.create({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, data: params })
+      }
+      else {
+        [error, response] = await ReservationServices.update({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, reservation_id: props.reservation_form.reservation_id, data: params })
+      }
     }
     else {
       [error, response] = await ReservationServices.create({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, data: params })
@@ -189,7 +211,7 @@ const Form = () => {
           <input ref={register({ required: true })} name="start_time_date_part" type="hidden" />
           <span>{i18n.date}</span>
           <span>
-            {moment(start_time_date_part).format("YYYY/MM/DD(dd)")}
+            {moment(start_time_date_part).format("YYYY/MM/DD(dd)")} <i className="fa fa-pencil-alt"></i>
             <span className="errors">
               {dateErrors()}
             </span>
@@ -279,6 +301,11 @@ const Form = () => {
         props={props}
         calendar={props.calendar}
         dateSelectedCallback={onSelectStartDate}
+        selectedDate={start_time_date_part}
+        i18n={i18n}
+      />
+      <ScheduleModal
+        props={props}
         selectedDate={start_time_date_part}
         i18n={i18n}
       />

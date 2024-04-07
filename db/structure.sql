@@ -704,7 +704,8 @@ CREATE TABLE public.booking_pages (
     deleted_at timestamp without time zone,
     specific_booking_start_times character varying[],
     online_payment_enabled boolean DEFAULT false,
-    event_booking boolean DEFAULT false
+    event_booking boolean DEFAULT false,
+    bookable_restriction_months integer DEFAULT 3
 );
 
 
@@ -5545,6 +5546,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240207081157'),
 ('20240221165044'),
 ('20240311145252'),
-('20240314114811');
+('20240314114811'),
+('20240318014002');
 
 

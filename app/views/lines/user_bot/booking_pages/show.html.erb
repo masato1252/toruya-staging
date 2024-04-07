@@ -68,9 +68,9 @@
         <div class="field-header" id="interval"><%= I18n.t("settings.booking_page.form.interval_period_header") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_time), title: @booking_page.specific_booking_start_times.present? ? @booking_page.specific_booking_start_times.join(", ") : "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %>
 
-        <div class="field-group-header" id="booking_limit_day"><%= I18n.t("settings.booking_page.form.booking_limit_day_header") %></div>
-        <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_limit_day_period") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_limit_day), title: "#{@booking_page.booking_limit_day}#{I18n.t("settings.booking_page.form.booking_limit_day_before")}" %>
+        <div class="field-group-header" id="booking_limit_day"><%= I18n.t("settings.booking_page.form.booking_available_period_header") %></div>
+        <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_available_period_label") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_available_period), title: I18n.t("settings.booking_page.form.booking_available_period", bookable_restriction_months: @booking_page.bookable_restriction_months, booking_limit_day: @booking_page.booking_limit_day) %>
 
         <div class="field-header" id="start_at"><%= I18n.t("settings.booking_page.form.sale_start") %></div>
         <%= render "lines/user_bot/field_row",

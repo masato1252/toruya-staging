@@ -2,7 +2,7 @@ import "whatwg-fetch";
 import { Controller } from "stimulus"
 
 export default class ChangeLogNotificationController extends Controller {
-  static version = "2.0.4";
+  static version = "2.0.5";
   static targets = [
     "content"
   ];
