@@ -48,6 +48,7 @@ ja:
       booking_code_message: 携帯電話にお送りした確認コードを入力してください。
       booking_code_failed_message: 確認コードが間違っています
       line_reminder_messages_html: まずはLINEでログインしてください
+      customer_phonetic_name_failed_message: ふりがなを入力してください
     done:
       owner_warning1: 顧客の代わりに予約をされた為、
       owner_warning2: 通知LINEはお客様へは送られません。
