@@ -19,7 +19,7 @@ namespace :analytic do
       # end
 
       user_ids = Subscription.charge_required.unexpired.pluck(:user_id)
-      SlackClient.send(channel: 'sayhi', text: "Charging #{user_ids.size} user_id: #{user_ids.join(", ")}")
+      SlackClient.send(channel: 'reports', text: "Charging #{user_ids.size} user_id: #{user_ids.join(", ")}")
     end
   end
 
@@ -36,7 +36,7 @@ namespace :analytic do
         }
       end
 
-      SlackClient.send(channel: 'sayhi', text: "User count ever had service, \n #{metric.join("\r\n")}")
+      SlackClient.send(channel: 'reports', text: "User count ever had service, \n #{metric.join("\r\n")}")
     end
   end
 
@@ -95,7 +95,7 @@ namespace :analytic do
       end
       google_worksheet.save
 
-      SlackClient.send(channel: 'sayhi', text: "Line settings number: \n#{metric.join("\r\n")}\n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=0")
+      SlackClient.send(channel: 'reports', text: "Line settings number: \n#{metric.join("\r\n")}\n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=0")
     end
   end
 
@@ -120,7 +120,7 @@ namespace :analytic do
 
       google_worksheet.save
 
-      SlackClient.send(channel: 'sayhi', text: "Function usage \n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=846072525")
+      SlackClient.send(channel: 'reports', text: "Function usage \n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=846072525")
     end
   end
 
@@ -145,7 +145,7 @@ namespace :analytic do
 
       google_worksheet.save
 
-      SlackClient.send(channel: 'sayhi', text: "Biweekly usage https://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=1491437126")
+      SlackClient.send(channel: 'reports', text: "Biweekly usage https://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=1491437126")
     end
   end
 
@@ -171,7 +171,7 @@ namespace :analytic do
 
       google_worksheet.save
 
-      SlackClient.send(channel: 'sayhi', text: "Paid user usage \n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=476056491")
+      SlackClient.send(channel: 'reports', text: "Paid user usage \n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=476056491")
     end
   end
 
@@ -464,7 +464,7 @@ namespace :analytic do
         "Last #{week_index} week Free users\nFinished Settings: #{users_finished_settings_message} \nNOT Finished: #{users_not_finished_settings_message}"
       end.join("\n\n")
 
-      SlackClient.send(channel: 'sayhi', text: message)
+      SlackClient.send(channel: 'reports', text: message)
     end
   end
 end
