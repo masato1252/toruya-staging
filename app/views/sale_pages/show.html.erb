@@ -16,10 +16,10 @@
   <% end %>
 <% end %>
 
-<% cache([@sale_page, @main_product, @is_started, @is_ended, @company, @payable, @sale_page.staff, "fix"]) do %>
+<% cache([@sale_page, @main_product, @is_started, @is_ended, @company, @payable, @sale_page.staff, "fix", "v3"]) do %>
   <%= react_component(
     "user_bot/sales/#{@main_product.class.table_name}",
     @sale_page.serializer.attributes_hash.merge(demo: false),
-    { camelize_props: false, prerender: true }
+    { camelize_props: false }
   ) %>
 <% end %>
