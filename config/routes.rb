@@ -632,6 +632,16 @@ Rails.application.routes.draw do
     end
   end
 
+  authenticated :user, -> user { user.super_admin? || user.can_admin_chat? || Rails.env.development? } do
+    namespace :admin do
+      resources :chats, only: [:index, :create, :destroy] do
+        collection do
+          post :ai_reply
+        end
+      end
+    end
+  end
+
   authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
     mount PgHero::Engine, at: "/_pghero"
@@ -643,11 +653,6 @@ Rails.application.routes.draw do
 
       resource :subscription, only: [:destroy]
       resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id
-      resources :chats, only: [:index, :create, :destroy] do
-        collection do
-          post :ai_reply
-        end
-      end
       resource :memo, only: [:create]
       resources :business_applications, only: [:index] do
         member do
