@@ -634,11 +634,17 @@ Rails.application.routes.draw do
 
   authenticated :user, -> user { user.super_admin? || user.can_admin_chat? || Rails.env.development? } do
     namespace :admin do
+      resource :memo, only: [:create]
+      resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id
       resources :chats, only: [:index, :create, :destroy] do
         collection do
           post :ai_reply
         end
       end
+
+      resources :sale_pages, only: [:index]
+      resources :booking_pages, only: [:index]
+      resources :online_service_customer_relations, only: [:index]
     end
   end
 
@@ -652,8 +658,6 @@ Rails.application.routes.draw do
       get "/", to: "dashboards#index"
 
       resource :subscription, only: [:destroy]
-      resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id
-      resource :memo, only: [:create]
       resources :business_applications, only: [:index] do
         member do
           post "approve"
@@ -687,10 +691,6 @@ Rails.application.routes.draw do
           post "scenario/:scenario/demo", action: "demo", as: :demo
         end
       end
-
-      resources :sale_pages, only: [:index]
-      resources :booking_pages, only: [:index]
-      resources :online_service_customer_relations, only: [:index]
     end
   end
 
