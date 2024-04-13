@@ -64,13 +64,16 @@ class AdminChannel < ApplicationCable::Channel
   end
 
   def disconnect_customer(data)
-    social_user = SocialUser.find_by!(social_service_user_id: data["customer_id"])
-    social_user.update!(user_id: nil)
+    user = User.find_by!(id: data["customer_id"])
+    user.social_user.update!(user_id: nil)
   end
 
   def toggle_customer_pin(data)
     social_user = SocialUser.find_by!(social_service_user_id: data["customer_id"])
-    social_user.update!(pinned: !social_user.pinned)
+
+    social_user.same_social_user_scope.each do |s_user|
+      s_user.update!(pinned: !s_user.pinned)
+    end
   end
 
   def staff

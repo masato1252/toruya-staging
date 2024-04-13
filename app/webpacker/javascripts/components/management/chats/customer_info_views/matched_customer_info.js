@@ -12,7 +12,7 @@ import Routes from 'js-routes.js'
 
 export default () => {
   const { selected_customer, dispatch, subscription }= useContext(GlobalContext)
-  const { id, name, address }= selected_customer.shop_customer
+  const { name, address }= selected_customer.shop_customer
   const [memo, setMemo] = useState(selected_customer.memo)
 
   const disconnectCustomer = () => {
@@ -22,7 +22,7 @@ export default () => {
     })
 
     subscription.perform("disconnect_customer", {
-      customer_id: selected_customer.id
+      customer_id: selected_customer.shop_customer.id
     })
   }
 
@@ -32,7 +32,7 @@ export default () => {
     const [error, response] = await CommonServices.create({
       url: Routes.admin_memo_path({format: "json"}),
       data: {
-        customer_id: selected_customer.id, memo: memo
+        social_service_user_id: selected_customer.id, user_id: selected_customer.shop_customer?.id, memo: memo
       }
     })
 
@@ -45,7 +45,7 @@ export default () => {
       const [error, response] = await CommonServices.delete({
         url: Routes.admin_subscription_path({format: "json"}),
         data: {
-          customer_id: selected_customer.id
+          user_id: selected_customer.shop_customer.id
         }
       })
 
@@ -57,6 +57,22 @@ export default () => {
   useEffect(() => {
     setMemo(selected_customer.memo)
   }, [selected_customer.id])
+
+  const userList = () => {
+    return (
+      <p className="margin-around">
+        {
+          selected_customer.shop_customers.map((user) => {
+            return (
+              selected_customer.shop_customer.id == user.id ? <div key={user.id}><strong>{zeroPad(user.id || 0, 7)}  &#10003;</strong></div> : (
+                <div key={user.id}><a href={Routes.admin_chats_path({ user_id: user.id })}>{zeroPad(user.id || 0, 7)}</a></div>
+              )
+            )
+          })
+        }
+      </p>
+    )
+  }
 
   return (
     <>
@@ -80,13 +96,11 @@ export default () => {
         <p>
           {address}
         </p>
-        <p>
-          ({zeroPad(selected_customer.shop_customer.id || 0, 7)})
-        </p>
         </div>
       <button className="btn btn-orange" onClick={disconnectCustomer} >
         Disconnect
       </button>
+      {userList()}
       <TextareaAutosize value={memo || ""} onChange={(e) => setMemo(e.target.value) } className="w-full" />
       <SubmitButton
         handleSubmit={handleSubmit}
@@ -95,7 +109,7 @@ export default () => {
       <ul>
         <li>
           {selected_customer.line_settings_finished ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_settings_finished")}
-          <a href={Routes.edit_admin_social_account_path({ social_service_user_id: selected_customer.id })} target="_blank" className="btn btn-yellow">{I18n.t("admin.chat.set_line_settings")}</a>
+          <a href={Routes.edit_admin_social_account_path({ user_id: selected_customer.shop_customer.id })} target="_blank" className="btn btn-yellow">{I18n.t("admin.chat.set_line_settings")}</a>
         </li>
         <li>
           {selected_customer.login_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} {I18n.t("admin.chat.line_login_verified")}
@@ -151,7 +165,7 @@ export default () => {
         <li>
           <SubmitButton
             handleSubmit={handleUnsubscribe}
-            btnWord={I18n.t("action.unsubscribe")}
+            btnWord={`${I18n.t("action.unsubscribe")} (${selected_customer.shop_customer.id})`}
             disabled={!selected_customer.in_paid_plan}
           />
         </li>

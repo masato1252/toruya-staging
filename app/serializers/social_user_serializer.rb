@@ -12,6 +12,12 @@ class SocialUserSerializer
     social_user.user&.profile ? ProfileSerializer.new(social_user.user.profile).attributes_hash : nil
   end
 
+  attribute :shop_customers do |social_user|
+    social_user.current_users.map do |user|
+      ProfileSerializer.new(user.profile).attributes_hash if user.profile
+    end.compact
+  end
+
   attribute :channel_id do
     AdminChannel::CHANNEL_NAME
   end
