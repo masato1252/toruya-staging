@@ -69,7 +69,7 @@ module ViewHelpers
     @current_user ||=
       begin
         user = current_user_of_owner(business_owner)
-        if !user && social_user.user.super_admin?
+        if !user && social_user&.user&.super_admin?
           user = business_owner
           Current.admin_debug = true
         end
