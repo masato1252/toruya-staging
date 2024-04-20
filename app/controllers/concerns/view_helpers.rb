@@ -69,6 +69,10 @@ module ViewHelpers
     @current_user ||=
       begin
         user = current_user_of_owner(business_owner)
+        if !user && social_user.user.super_admin?
+          user = business_owner
+          Current.admin_debug = true
+        end
         write_user_bot_cookies(:current_user_id, user.id) if user
 
         user
@@ -76,7 +80,11 @@ module ViewHelpers
   end
 
   def current_users
-    social_user&.current_users
+    if Current.admin_debug
+      business_owner.social_user.current_users
+    else
+      social_user&.current_users
+    end
   end
 
   def current_staffs

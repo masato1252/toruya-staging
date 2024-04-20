@@ -88,7 +88,11 @@ class NotificationsPresenter
       if my_calendar
         Current.user.social_user.staffs.map(&:id)
       else
-        [Current.user.current_staff(user).id]
+        if Current.user.current_staff(user)
+          [Current.user.current_staff(user).id]
+        elsif Current.admin_debug
+          [Current.business_owner.current_staff(user).id]
+        end
       end
   end
 
