@@ -363,49 +363,54 @@ namespace :analytic do
     reservation_per_month = user_ids.map do |user_id|
       first_paid_date = SubscriptionCharge.where(user_id: user_id).completed.order("id").first&.created_at&.to_date
       next unless first_paid_date
+      month_period = 3.0
+      first_account_date = (month_period).to_i.months.ago.to_date
+
       user = User.find(user_id)
-      owner_customer_id = user.owner_social_customer.customer_id
+      owner_customer_id = user.owner_social_customer&.customer_id
       customer_ids = user.customer_ids
-      reservation_ids = Reservation.where(user_id: user_id).pluck(:id)
+      reservation_ids = Reservation.where(user_id: user_id).where(created_at: first_account_date..).pluck(:id)
       reservation_customer_scope = ReservationCustomer.where(id: reservation_ids).where.not(customer_id: owner_customer_id).where(state: [:accepted, :pending])
       reservation_count = reservation_customer_scope.count
 
       reservation_amount = reservation_customer_scope.where(booking_option_id: user.booking_option_ids).sum(:booking_amount_cents)
-      service_amount = CustomerPayment.where(customer_id: customer_ids - Array.wrap(owner_customer_id), product_type: "OnlineServiceCustomerRelation").sum(:amount_cents)
-      period = (Date.today - first_paid_date).to_f
-      reservation_per_day = reservation_count / period
-      reservation_revenue_per_day = reservation_amount / period
-      service_revenue_per_day = service_amount / period
+      manual_reservation_ids = reservation_customer_scope.where(booking_option_id: nil).pluck(:reservation_id)
+      manual_reservation_count =  manual_reservation_ids.length
+      manual_reservation_amount = Reservation.where(id: manual_reservation_ids).map do |reservation|
+        booking_option_ids = BookingOptionMenu.where(menu_id: reservation.menu_ids).pluck(:booking_option_id)
+        user.booking_options.where(id: booking_option_ids).sum(:amount_cents) * reservation.customer_ids.length
+      end.sum
+
+      service_amount = CustomerPayment.where(customer_id: customer_ids - Array.wrap(owner_customer_id), product_type: "OnlineServiceCustomerRelation").where(created_at: first_account_date..).sum(:amount_cents)
+      period = (Date.today - first_account_date).to_f
       last_reservation_date = reservation_customer_scope.last&.created_at&.to_s(:date)
       total_customers_count = Customer.where(user_id: user_id).count
-      customer_per_day = total_customers_count / period
+      total_customers_recent_count = Customer.where(user_id: user_id).where(created_at: first_account_date...).count
       total_line_customers_count = SocialCustomer.where(user_id: user.id).count
-      line_customer_per_day = total_line_customers_count / period
-
-      total_sale_page_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "SalePage").count
-      sale_page_visit_per_day = total_sale_page_visit / period
-
-      total_booking_page_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "BookingPage").count
-      booking_page_visit_per_day = total_booking_page_visit / period
+      line_customer_for_recent_period = SocialCustomer.where(user_id: user.id).where(created_at: first_account_date..).count
+      total_sale_page_recent_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "SalePage").where(started_at: first_account_date..).count
+      total_booking_page_recent_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "BookingPage").where(started_at: first_account_date..).count
 
       {
         user_id: user_id,
         first_paid_date: first_paid_date&.to_s(:date),
-        reservation_count_monthly: (reservation_per_day * 30).round(2),
-        reservation_revenue_monthly: (reservation_revenue_per_day * 30).round(2).to_i,
-        service_revenue_monthly: (service_revenue_per_day * 30).round(2).to_i,
-        total_revenue_monthly: ( (reservation_revenue_per_day * 30).round(2) + (service_revenue_per_day * 30).round(2) ).to_i,
+        reservation_count_monthly: (reservation_count / month_period),
+        reservation_revenue_monthly: (reservation_amount / month_period),
+        manual_reservation_count_monthly: (manual_reservation_count / month_period),
+        manual_reservation_revenue_monthly: (manual_reservation_amount / month_period),
+        service_revenue_monthly: (service_amount / month_period),
+        total_revenue_monthly: (reservation_amount + manual_reservation_amount + service_amount) / month_period,
         last_reservation_date: last_reservation_date,
         had_reservation_in_one_month: last_reservation_date ? last_reservation_date > 30.days.ago : false,
         had_reservation_in_three_week: last_reservation_date ? last_reservation_date > 21.days.ago : false,
         had_reservation_in_two_week: last_reservation_date ? last_reservation_date > 14.days.ago : false,
         had_reservation_in_one_week: last_reservation_date ? last_reservation_date > 7.days.ago : false,
         total_customers_count: total_customers_count,
-        new_customer_monthly: (customer_per_day * 30).round(2),
+        new_customer_monthly: (total_customers_recent_count / month_period),
         total_line_customers_count: total_line_customers_count,
-        new_line_customer_monthly: (line_customer_per_day * 30).round(2),
-        sale_page_visit_monthly: (sale_page_visit_per_day * 30).round(2),
-        booking_page_visit_monthly: (booking_page_visit_per_day * 30).round(2)
+        new_line_customer_monthly: (line_customer_for_recent_period / month_period),
+        sale_page_visit_monthly: (total_sale_page_recent_visit / month_period),
+        booking_page_visit_monthly: (total_booking_page_recent_visit / month_period)
       }
     end.compact.sort_by {|r| r[:reservation_count_monthly] }
 
@@ -415,6 +420,8 @@ namespace :analytic do
         %|=HYPERLINK("https://manager.toruya.com/admin/chats?user_id=#{r[:user_id]}", #{r[:user_id]})|,
         r[:reservation_count_monthly],
         r[:reservation_revenue_monthly],
+        r[:manual_reservation_count_monthly],
+        r[:manual_reservation_revenue_monthly],
         r[:service_revenue_monthly],
         r[:total_revenue_monthly],
         r[:total_customers_count],
