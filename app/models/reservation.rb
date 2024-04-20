@@ -38,6 +38,7 @@ class Reservation < ApplicationRecord
   include AASM
   BEFORE_CHECKED_IN_STATES = %w(pending reserved canceled).freeze
   AFTER_CHECKED_IN_STATES = %w(checked_in checked_out noshow).freeze
+  REMINDERABLE_STATES = %w(reserved checked_out checked_in)
 
   validates :start_time, presence: true
   validates :end_time, presence: true
@@ -60,6 +61,7 @@ class Reservation < ApplicationRecord
   scope :future, -> { where("start_time > ?", Time.current) }
   scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)).active }
   scope :active, -> { where(deleted_at: nil) }
+  scope :reminderable, -> { where(aasm_state: REMINDERABLE_STATES) }
 
   aasm :whiny_transitions => false do
     state :pending, initial: true
