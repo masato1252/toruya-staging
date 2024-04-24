@@ -645,6 +645,7 @@ Rails.application.routes.draw do
       resources :sale_pages, only: [:index]
       resources :booking_pages, only: [:index]
       resources :online_service_customer_relations, only: [:index]
+      resource :subscription, only: [:destroy]
     end
   end
 
@@ -657,13 +658,13 @@ Rails.application.routes.draw do
       get "as_user"
       get "/", to: "dashboards#index"
 
-      resource :subscription, only: [:destroy]
       resources :business_applications, only: [:index] do
         member do
           post "approve"
           post "reject"
         end
       end
+
       resources :ai, only: [:index, :create] do
         collection do
           post :correct
