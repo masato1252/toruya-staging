@@ -1,7 +1,6 @@
 "use strict";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import _ from "lodash";
 import moment from "moment-timezone"
 
@@ -32,6 +31,12 @@ const Calendar = ({...props}) => {
       props.dateSelectedCallback(startDate.format("YYYY-MM-DD"))
     }
   }, [])
+
+  useEffect(() => {
+    if (props.calendarChangedCallback) {
+      props.calendarChangedCallback(state)
+    }
+  }, [state])
 
   const previous = () => {
     var month = state.month.clone();

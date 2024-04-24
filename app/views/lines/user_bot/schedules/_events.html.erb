@@ -1,5 +1,11 @@
 <div class="events">
-  <% schedules.each do |schedule| %>
+  <% schedules.each.with_index do |schedule, index| %>
+    <% if index == 0 || schedule[:time].to_date != schedules[index - 1][:time].to_date %>
+      <div class="schedule-date">
+        <%= I18n.l(schedule[:time], format: :month_day_wday) %>
+      </div>
+    <% end %>
+
     <div class="event-row">
       <% if schedule[:type] == :reservation %>
         <%= modal_link_to lines_user_bot_shop_reservation_path(business_owner_id, schedule[:shop], schedule[:id], reservations_approval_flow: reservations_approval_flow, _from: local_assigns[:_from]), class: "modal-link event" do %>

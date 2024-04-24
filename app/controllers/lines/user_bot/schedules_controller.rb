@@ -2,13 +2,26 @@
 
 class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   def mine
-    @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
+    @date =
+      if params[:reservation_date].present?
+        Time.zone.parse(params[:reservation_date]).to_date
+      elsif params[:reservation_id].present?
+        Reservation.where(shop_id: working_shop_ids).find(params[:reservation_id]).start_time.to_date
+      else
+        @month_date = if params[:month_date].present?
+                        Time.zone.parse(params[:month_date]).to_date
+                      end
+
+        Time.zone.now.to_date
+      end
 
     working_shop_ids = current_social_user.shops.map(&:id).uniq
     reservations = Reservation.where(shop_id: working_shop_ids)
-      .uncanceled.in_date(@date)
+      .uncanceled
       .includes(:menus, :customers, :staffs, shop: :user)
       .order("reservations.start_time ASC")
+
+    reservations = @month_date ? reservations.in_month(@month_date) : reservations.in_date(@date)
 
     reservations = reservations.find_all do |r|
       user_ability = ability(r.shop.user, r.shop)
@@ -17,9 +30,12 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
 
     # Mix off custom schedules and reservations
-    off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: current_user.id)
+    off_schedules = CustomSchedule.closed.where(user_id: current_user.id)
+    off_schedules = @month_date ? off_schedules.where("start_time <= ? and end_time >= ?", @month_date.end_of_month, @month_date.beginning_of_month) : off_schedules.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day)
     event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
-    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
+    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids)
+    booking_page_holder_schedules = @month_date ? booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @month_date.beginning_of_month, @month_date.end_of_month)
+    : booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
 
     @schedules = (reservations + booking_page_holder_schedules + off_schedules).each_with_object([]) do |schedule, schedules|
       if schedule.is_a?(Reservation)
@@ -48,21 +64,30 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
       elsif params[:reservation_id].present?
         Reservation.where(shop_id: working_shop_ids).find(params[:reservation_id]).start_time.to_date
       else
+        @month_date = if params[:month_date].present?
+                        Time.zone.parse(params[:month_date]).to_date
+                      end
+
         Time.zone.now.to_date
       end
 
     reservations = Reservation.where(shop_id: working_shop_ids)
-      .uncanceled.in_date(@date)
+      .uncanceled
       .includes(:menus, :customers, :staffs, shop: :user)
       .order("reservations.start_time ASC")
+
+    reservations = @month_date ? reservations.in_month(@month_date) : reservations.in_date(@date)
 
     @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
 
     # Mix off custom schedules and reservations
     event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
-    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
+    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids)
+    booking_page_holder_schedules = @month_date ? booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @month_date.beginning_of_month, @month_date.end_of_month)
+    : booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
 
-    off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: Current.business_owner.owner_staff_accounts.pluck(:user_id)).includes(user: :profile)
+    off_schedules = CustomSchedule.closed.where(user_id: Current.business_owner.owner_staff_accounts.pluck(:user_id)).includes(user: :profile)
+    off_schedules = @month_date ? off_schedules.where("start_time <= ? and end_time >= ?", @month_date.end_of_month, @month_date.beginning_of_month) : off_schedules.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day)
 
     @schedules = (reservations + booking_page_holder_schedules + off_schedules).each_with_object([]) do |schedule, schedules|
       if schedule.is_a?(Reservation)
