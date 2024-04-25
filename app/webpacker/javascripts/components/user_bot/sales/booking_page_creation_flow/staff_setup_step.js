@@ -1,16 +1,13 @@
 "use strict";
 
-import React from "react";
-import ImageUploader from "react-images-upload";
-import ReactSelect from "react-select";
-import TextareaAutosize from 'react-autosize-textarea';
-
+import React, { useState } from "react";
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import StaffEdit from "components/user_bot/sales/staff_edit";
 
 const StaffSetupStep = ({step, next, prev, jump}) => {
-  const { props, selected_staff, dispatch, isStaffSetup, isReadyForPreview } = useGlobalContext()
+  const [submitting, setSubmitting] = useState(false)
+  const { props, selected_staff, dispatch, isStaffSetup, isReadyForPreview, createDraftSalesBookingPage } = useGlobalContext()
 
   const onDrop = (picture, pictureDataUrl) => {
     dispatch({
@@ -68,6 +65,20 @@ const StaffSetupStep = ({step, next, prev, jump}) => {
         <div className="action-block">
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}
+          </button>
+          <button
+            className="btn btn-gray"
+            disabled={submitting}
+            onClick={async () => {
+              if (submitting) return;
+              setSubmitting(true)
+              await createDraftSalesBookingPage()
+            }}>
+            {submitting ? (
+              <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+            ) : (
+              I18n.t("action.save_as_draft")
+            )}
           </button>
           <button onClick={() => {(isReadyForPreview()) ? jump(7) : next()}} className="btn btn-yellow"
             disabled={!isStaffSetup()}

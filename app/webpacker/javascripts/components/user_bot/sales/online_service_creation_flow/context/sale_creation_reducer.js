@@ -1,6 +1,7 @@
 import _ from "lodash";
 
 const initialState = {
+  initial: true,
   selected_online_service: null,
   selected_template: null,
   template_variables: {},

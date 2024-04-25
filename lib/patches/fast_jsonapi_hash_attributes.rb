@@ -2,6 +2,6 @@
 
 module JSONAPI::Serializer
   def attributes_hash
-    serializable_hash[:data][:attributes]
+    serializable_hash.dig(:data, :attributes)
   end
 end

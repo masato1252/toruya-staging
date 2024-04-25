@@ -6,6 +6,7 @@
 #  id                           :bigint           not null, primary key
 #  content                      :json
 #  deleted_at                   :datetime
+#  draft                        :boolean          default(FALSE)
 #  flow                         :json
 #  internal_name                :string
 #  introduction_video_url       :string
@@ -66,7 +67,7 @@ class SalePage < ApplicationRecord
   }.freeze
 
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
-  belongs_to :staff
+  belongs_to :staff, optional: true
   belongs_to :sale_template
   belongs_to :user
 

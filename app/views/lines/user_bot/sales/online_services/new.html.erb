@@ -2,6 +2,10 @@
 
 <%= react_component("user_bot/sales/online_service_creation_flow", {
   props: {
+    sale_page: @sale_page&.merge!(
+      selected_online_service: @selected_online_service,
+      selected_template: @selected_template,
+    ),
     business_owner_id: business_owner_id,
     selected_online_service: @selected_online_service,
     online_services: Current.business_owner.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|

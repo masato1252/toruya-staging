@@ -2137,7 +2137,8 @@ CREATE TABLE public.sale_pages (
     selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[],
     internal_name character varying,
     recurring_prices jsonb DEFAULT '{"default": {}}'::jsonb,
-    published boolean DEFAULT true
+    published boolean DEFAULT true,
+    draft boolean DEFAULT false
 );
 
 

@@ -7,20 +7,25 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit";
 
 const SellingTimeStep = ({step, next, prev, lastStep}) => {
-  const { dispatch, end_time, isEndTimeSetup, isReadyForPreview, selected_online_service } = useGlobalContext()
+  const { initial, dispatch, end_time, isEndTimeSetup, isReadyForPreview, selected_online_service } = useGlobalContext()
 
   const default_end_time_type = () => {
     return selected_online_service.recurring_charge_required ? "never" : "end_at"
   }
 
   useEffect(() => {
-    dispatch({
-      type: "SET_ATTRIBUTE",
-      payload: {
-        attribute: "end_time",
-        value: { end_type: default_end_time_type() }
-      }
-    })
+    if (initial && isEndTimeSetup()) {
+      next()
+    }
+    else if (initial) {
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "end_time",
+          value: { end_type: default_end_time_type() }
+        }
+      })
+    }
   }, [])
 
   return (

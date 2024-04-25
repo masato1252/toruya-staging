@@ -1,14 +1,20 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
-import { Template, HintTitle } from "shared/builders"
+import { Template } from "shared/builders"
 
 const HeaderTemplateSelectionStep = ({step, next, prev}) => {
-  const { props, selected_booking_page, selected_template, dispatch, template_variables, focus_field } = useGlobalContext()
+  const { props, initial, selected_booking_page, selected_template, dispatch } = useGlobalContext()
+
+  useEffect(() => {
+    if (initial && selected_template) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form">
@@ -43,6 +49,11 @@ const HeaderTemplateSelectionStep = ({step, next, prev}) => {
           </SaleTemplateContainer>
         )
       })}
+      <div className="action-block">
+        <button onClick={prev} className="btn btn-tarco">
+          {I18n.t("action.prev_step")}
+        </button>
+      </div>
     </div>
   )
 }

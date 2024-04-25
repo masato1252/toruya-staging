@@ -4,7 +4,6 @@ import React from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
-import { UrlCopyBtn } from "shared/components";
 
 const FinalStep = ({step}) => {
   const { sale_page_id } = useGlobalContext()

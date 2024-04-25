@@ -1,15 +1,21 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 import _ from "lodash";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
-import { Template, HintTitle, WordColorPickers } from "shared/builders"
+import { Template, WordColorPickers } from "shared/builders"
 
 const HeaderColorEditStep= ({step, next, prev, lastStep}) => {
-  const { props, selected_online_service, selected_template, dispatch, template_variables, isReadyForPreview } = useGlobalContext()
+  const { initial, selected_online_service, selected_template, dispatch, template_variables, isReadyForPreview } = useGlobalContext()
+
+  useEffect(() => {
+    if (initial && template_variables) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow">

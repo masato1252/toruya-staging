@@ -1,13 +1,19 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
 const BookingPageSelectionStep = ({next, step}) => {
-  const { props, selected_booking_page, dispatch } = useGlobalContext()
+  const { props, initial, selected_booking_page, dispatch } = useGlobalContext()
+
+  useEffect(() => {
+    if (initial && selected_booking_page) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow">

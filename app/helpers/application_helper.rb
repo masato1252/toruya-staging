@@ -195,6 +195,18 @@ module ApplicationHelper
     image_tag(png.to_data_url)
   end
 
+  def sale_page_path(sale_page)
+    if sale_page.draft
+      if sale_page.is_booking_page?
+        new_lines_user_bot_sales_booking_page_path(business_owner_id: business_owner_id, sale_page_id: sale_page.id)
+      else
+        new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id, sale_page_id: sale_page.id)
+      end
+    else
+      lines_user_bot_sale_path(sale_page, business_owner_id: business_owner_id)
+    end
+  end
+
   private
 
   def wider_device_types

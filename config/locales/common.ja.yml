@@ -127,6 +127,7 @@ ja:
     save_draft_successfully_message: 下書き保存完了
     are_you_sure_message: 完全に削除されますがよろしいですか？
     send: 送信
+    draft: 下書き
     yes_label: 有り
     no_label: 無し
     close: 閉じる
