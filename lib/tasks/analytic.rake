@@ -175,11 +175,12 @@ namespace :analytic do
     end
   end
 
+  # https://www.google.com/maps/d/u/0/edit?hl=zh-TW&hl=zh-TW&mid=1H6wNjpf_z6PYab0tNcV_zI-46oe_0SM&ll=33.18436717659077%2C132.2792760282602&z=6
   task :paid_user_map_data => :environment do
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
       google_worksheet = Google::Drive.spreadsheet(google_sheet_id: "1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4", worksheet: 0)
 
-      row_data = Subscription.charge_required.map{|s| ppp = s.user.profile; [ppp.company_name, ppp.company_address, ppp.phone_number] }
+      row_data = Subscription.charge_required.map{|s| ppp = s.user.profile; [ppp.company_name, ppp.company_address, ppp.phone_number, ppp.website] }
       row_data.each_with_index do |col_data, row_number|
         col_data.each_with_index do |data, col_index|
           google_worksheet[row_number + 2, col_index + 1] = data
