@@ -7,7 +7,7 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
 import { Template, HintTitle } from "shared/builders"
 
-const HeaderTemplateSelectionStep = ({next, step}) => {
+const HeaderTemplateSelectionStep = ({next, prev, step}) => {
   const { props, dispatch, selected_online_service } = useGlobalContext()
 
   return (
