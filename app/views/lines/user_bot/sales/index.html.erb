@@ -16,7 +16,7 @@
                   <% else %>
                     <i class="fa fa-mobile-alt"></i>
                   <% end %>
-                  <%= "[#{I18nt.t("common.draft")}]" if sale_page.draft %><%= sale_page.internal_sale_name %>
+                  <%= "[#{I18n.t("common.draft")}]" if sale_page.draft %><%= sale_page.internal_sale_name %>
                 </h3>
                 <div class="desc">
                   <% if sale_page.is_booking_page? %>

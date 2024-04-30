@@ -21,7 +21,7 @@ RSpec.describe Sales::OnlineServices::Create do
       introduction_video_url: "url",
       monthly_price: monthly_price,
       content: {
-        picture: Tempfile.new,
+        picture: nil,
         desc1: "desc1",
         desc2: "desc2"
       },
@@ -36,18 +36,24 @@ RSpec.describe Sales::OnlineServices::Create do
   describe "#execute" do
     it 'creates a sale page' do
       # I suck, I could not test upload file successfully
-      expect(user.sale_pages).to receive(:create).and_return(FactoryBot.create(:sale_page, :online_service))
 
-      outcome
+      expect {
+        outcome
+      }.to change {
+        user.sale_pages.where(product_type: "OnlineService").count
+      }.by(1)
     end
 
     context "when service is recurring charged (with monthly_price or yearly_price)" do
       let(:monthly_price) { 1_000 }
 
       it "creates a stripe product" do
-        expect(user.sale_pages).to receive(:create).and_return(FactoryBot.create(:sale_page, :online_service))
+        expect {
+          outcome
+        }.to change {
+          user.sale_pages.where(product_type: "OnlineService").count
+        }.by(1)
 
-        outcome
 
         online_service.reload
         expect(
