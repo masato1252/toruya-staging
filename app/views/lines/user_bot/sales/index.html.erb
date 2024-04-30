@@ -8,7 +8,7 @@
         <div class="booking-pages-list">
           <% @sale_pages.each do |sale_page| %>
             <% next unless sale_page.product %>
-            <%= link_to lines_user_bot_sale_path(sale_page, business_owner_id: business_owner_id), class: "field-row with-next-arrow" do %>
+            <%= link_to sale_page_path(sale_page), class: "field-row with-next-arrow" do %>
               <div>
                 <h3>
                   <% if sale_page.is_booking_page? %>
@@ -16,7 +16,7 @@
                   <% else %>
                     <i class="fa fa-mobile-alt"></i>
                   <% end %>
-                  <%= sale_page.internal_sale_name %>
+                  <%= "[#{I18n.t("common.draft")}]" if sale_page.draft %><%= sale_page.internal_sale_name %>
                 </h3>
                 <div class="desc">
                   <% if sale_page.is_booking_page? %>

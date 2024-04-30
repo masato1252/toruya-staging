@@ -1,6 +1,6 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
@@ -42,6 +42,11 @@ const HeaderTemplateSelectionStep = ({next, step}) => {
           </SaleTemplateContainer>
         )
       })}
+      <div className="action-block">
+        <button onClick={prev} className="btn btn-tarco">
+          {I18n.t("action.prev_step")}
+        </button>
+      </div>
     </div>
   )
 

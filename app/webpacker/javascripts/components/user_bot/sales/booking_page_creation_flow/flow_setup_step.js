@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react";
-import TextareaAutosize from 'react-autosize-textarea';
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";

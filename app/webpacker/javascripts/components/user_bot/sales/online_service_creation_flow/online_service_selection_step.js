@@ -1,13 +1,19 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
 const OnlineServiceSelectionStep = ({next, step}) => {
-  const { props, selected_online_service, dispatch } = useGlobalContext()
+  const { initial, props, selected_online_service, dispatch } = useGlobalContext()
+
+  useEffect(() => {
+    if (initial && selected_online_service) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow">

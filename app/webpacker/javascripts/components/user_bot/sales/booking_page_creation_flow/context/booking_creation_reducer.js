@@ -1,6 +1,7 @@
 import _ from "lodash";
 
 const initialState = {
+  initial: true,
   selected_booking_page: null,
   selected_template: null,
   template_variables: {},

@@ -2,9 +2,12 @@
 
 <%= react_component("user_bot/sales/booking_page_creation_flow", {
   props: {
+    sale_page: @sale_page&.merge!(
+      selected_booking_page: @selected_booking_page,
+      selected_template: @selected_template,
+    ),
     business_owner_id: business_owner_id,
     social_account_add_friend_url: Current.business_owner.social_accounts.first&.add_friend_url,
-    selected_booking_page: @selected_booking_page,
     booking_pages: Current.business_owner.booking_pages.select {|page| page.primary_product }.map { |b|
       {
         label: b.name,

@@ -57,6 +57,7 @@ ja:
       schedules:
         calendar_hint: カレンダー
         user_not_available: "%{user_name} 不在"
+        whole_month_schedule: 月間スケジュール
       reservation:
         no_existing_event: 予定なし
         no_ending_time_message: ※終了時刻自動計算

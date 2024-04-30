@@ -4,6 +4,8 @@ module Sales
   module OnlineServices
     class Create < ActiveInteraction::Base
       object :user
+      integer :id, default: nil
+      boolean :draft, default: false
       integer :selected_online_service_id
       integer :selected_template_id
       hash :template_variables, strip: false
@@ -17,22 +19,24 @@ module Sales
       end
       integer :quantity, default: nil
       string :selling_end_at, default: nil
-      hash :content do
-        file :picture
-        string :desc1
-        string :desc2
-      end
-      hash :staff do
-        integer :id
+      hash :content, default: nil do
         file :picture, default: nil
-        string :introduction
+        string :desc1, default: nil
+        string :desc2, default: nil
+      end
+      hash :staff, default: nil do
+        integer :id, default: nil
+        file :picture, default: nil
+        string :introduction, default: nil
       end
 
       def execute
         ApplicationRecord.transaction do
           picture = content.delete(:picture)
 
-          sale_page = user.sale_pages.create(
+          sale_page = id ? user.sale_pages.find(id) : user.sale_pages.build
+          sale_page.picture = picture if picture
+          sale_page.assign_attributes(
             product_id: selected_online_service_id,
             product_type: "OnlineService",
             sale_template_id: selected_template_id,
@@ -43,11 +47,12 @@ module Sales
             selling_multiple_times_price: selling_multiple_times_price,
             quantity: quantity,
             selling_end_at: selling_end_at ? Time.zone.parse(selling_end_at).end_of_day : nil,
-            picture: picture,
             content: content,
             staff: responsible_staff,
-            slug: SecureRandom.alphanumeric(10)
+            slug: SecureRandom.alphanumeric(10),
+            draft: draft
           )
+          sale_page.save
 
           sale_page.product.company.update!(template_variables: template_variables)
 
@@ -56,12 +61,14 @@ module Sales
             return
           end
 
-          if staff[:picture]
-            responsible_staff.picture.purge
-            responsible_staff.picture = staff[:picture]
+          if responsible_staff
+            if staff[:picture]
+              responsible_staff.picture.purge
+              responsible_staff.picture = staff[:picture]
+            end
+            responsible_staff.introduction = staff[:introduction]
+            responsible_staff.save!
           end
-          responsible_staff.introduction = staff[:introduction]
-          responsible_staff.save!
 
           # Because some online_service like bundler only know is recurring charge until sale page creation
           if online_service.stripe_product_id.blank? && (monthly_price || yearly_price)
@@ -80,7 +87,7 @@ module Sales
       private
 
       def responsible_staff
-        @responsible_staff ||= user.staffs.find(staff[:id])
+        @responsible_staff ||= user.staffs.find(staff[:id]) if staff && staff[:id]
       end
 
       def online_service

@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
@@ -8,8 +8,15 @@ import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_
 import { Template, HintTitle } from "shared/builders"
 
 const HeaderSetupStep = ({step, next, prev, jump}) => {
+  const [submitting, setSubmitting] = useState(false)
   const [focus_field, setFocusField] = useState()
-  const { props, selected_online_service, selected_template, dispatch, template_variables, isHeaderSetup } = useGlobalContext()
+  const { initial, selected_online_service, selected_template, dispatch, template_variables, isHeaderSetup, createDraftSalesOnlineServicePage } = useGlobalContext()
+
+  useEffect(() => {
+    if (initial && isHeaderSetup()) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow">
@@ -39,6 +46,20 @@ const HeaderSetupStep = ({step, next, prev, jump}) => {
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
+        </button>
+        <button
+          className="btn btn-gray"
+          disabled={submitting}
+          onClick={async () => {
+            if (submitting) return;
+            setSubmitting(true)
+            await createDraftSalesOnlineServicePage()
+          }}>
+          {submitting ? (
+            <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+          ) : (
+            I18n.t("action.save_as_draft")
+          )}
         </button>
         <button
           onClick={next}
