@@ -76,6 +76,7 @@ class Customer < ApplicationRecord
   has_many :customer_payments
   has_many :online_service_customer_relations, -> { available }
   has_many :online_service_customer_applications, class_name: "OnlineServiceCustomerRelation", foreign_key: :customer_id
+  has_many :customer_tickets
   belongs_to :user, counter_cache: true
   belongs_to :updated_by_user, class_name: "User", required: false
   belongs_to :contact_group, required: false
@@ -90,6 +91,10 @@ class Customer < ApplicationRecord
   scope :active_in, ->(time_ago) { active.where("customers.updated_at > ?", time_ago) }
   scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
   scope :marketable, -> { where(reminder_permission: true) }
+
+  def active_customer_ticket_of_product(product)
+    customer_tickets.active.unexpired.joins(ticket: :ticket_products).where("ticket_products.product": product).take
+  end
 
   def with_google_contact
     @customer_with_google_contact ||=

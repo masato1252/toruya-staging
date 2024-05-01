@@ -110,6 +110,7 @@ class User < ApplicationRecord
   has_many :sale_pages, -> { active }
   has_many :all_sale_pages, class_name: "SalePage"
   has_many :online_services
+  has_many :tickets
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, :company_name, :display_last_name, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, to: :profile, allow_nil: true

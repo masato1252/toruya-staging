@@ -44,7 +44,7 @@
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :menu_restrict_order), title: @booking_option.menu_restrict_order ? I18n.t("settings.booking_option.form.menu_restrict_order") : I18n.t("settings.booking_option.form.menu_restrict_dont_need_order") %>
 
   <div class="field-header" id="price"><%= I18n.t("settings.booking_option.form.price_label") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :price), title: "#{@booking_option.amount.format(:ja_default_format)}(#{t("settings.booking_option.form.#{@booking_option.tax_include ? "tax_include" : "tax_excluded"}")})" %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :price), title: "#{@booking_option.amount.format(:ja_default_format)}(#{t("settings.booking_option.form.#{@booking_option.tax_include ? "tax_include" : "tax_excluded"}")}) #{"#{@booking_option.ticket_quota} 回の総価格" if @booking_option.ticket_quota}" %>
 
   <div class="field-header" id="start_at"><%= I18n.t("settings.booking_option.form.sale_start") %></div>
   <%= render "lines/user_bot/field_row",

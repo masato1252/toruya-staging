@@ -593,7 +593,8 @@ CREATE TABLE public.booking_options (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     menu_restrict_order boolean DEFAULT false NOT NULL,
-    delete_at timestamp without time zone
+    delete_at timestamp without time zone,
+    ticket_quota integer DEFAULT 1 NOT NULL
 );
 
 
@@ -1123,6 +1124,77 @@ CREATE SEQUENCE public.customer_payments_id_seq
 --
 
 ALTER SEQUENCE public.customer_payments_id_seq OWNED BY public.customer_payments.id;
+
+
+--
+-- Name: customer_ticket_consumers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customer_ticket_consumers (
+    id bigint NOT NULL,
+    customer_ticket_id bigint NOT NULL,
+    consumer_type character varying NOT NULL,
+    consumer_id bigint NOT NULL,
+    ticket_quota_consumed integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: customer_ticket_consumers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customer_ticket_consumers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_ticket_consumers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customer_ticket_consumers_id_seq OWNED BY public.customer_ticket_consumers.id;
+
+
+--
+-- Name: customer_tickets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customer_tickets (
+    id bigint NOT NULL,
+    ticket_id bigint NOT NULL,
+    customer_id bigint NOT NULL,
+    total_quota integer NOT NULL,
+    consumed_quota integer DEFAULT 0 NOT NULL,
+    state character varying NOT NULL,
+    code character varying NOT NULL,
+    expire_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: customer_tickets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customer_tickets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_tickets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customer_tickets_id_seq OWNED BY public.customer_tickets.id;
 
 
 --
@@ -1904,7 +1976,9 @@ CREATE TABLE public.reservation_customers (
     booking_at timestamp without time zone,
     details jsonb,
     payment_state integer DEFAULT 0,
-    sale_page_id integer
+    sale_page_id integer,
+    nth_quota integer,
+    customer_ticket_id integer
 );
 
 
@@ -2844,6 +2918,71 @@ CREATE TABLE public.tags (
 
 
 --
+-- Name: ticket_products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ticket_products (
+    id bigint NOT NULL,
+    ticket_id bigint NOT NULL,
+    product_type character varying NOT NULL,
+    product_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ticket_products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ticket_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ticket_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ticket_products_id_seq OWNED BY public.ticket_products.id;
+
+
+--
+-- Name: tickets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tickets (
+    id bigint NOT NULL,
+    user_id bigint,
+    ticket_type character varying DEFAULT 'single'::character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: tickets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tickets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tickets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tickets_id_seq OWNED BY public.tickets.id;
+
+
+--
 -- Name: user_metrics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3229,6 +3368,20 @@ ALTER TABLE ONLY public.customer_payments ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: customer_ticket_consumers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_ticket_consumers ALTER COLUMN id SET DEFAULT nextval('public.customer_ticket_consumers_id_seq'::regclass);
+
+
+--
+-- Name: customer_tickets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_tickets ALTER COLUMN id SET DEFAULT nextval('public.customer_tickets_id_seq'::regclass);
+
+
+--
 -- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3537,6 +3690,20 @@ ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: ticket_products id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ticket_products ALTER COLUMN id SET DEFAULT nextval('public.ticket_products_id_seq'::regclass);
+
+
+--
+-- Name: tickets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tickets ALTER COLUMN id SET DEFAULT nextval('public.tickets_id_seq'::regclass);
+
+
+--
 -- Name: user_metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3809,6 +3976,22 @@ ALTER TABLE ONLY public.custom_schedules
 
 ALTER TABLE ONLY public.customer_payments
     ADD CONSTRAINT customer_payments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customer_ticket_consumers customer_ticket_consumers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_ticket_consumers
+    ADD CONSTRAINT customer_ticket_consumers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customer_tickets customer_tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_tickets
+    ADD CONSTRAINT customer_tickets_pkey PRIMARY KEY (id);
 
 
 --
@@ -4188,6 +4371,22 @@ ALTER TABLE ONLY public.tags
 
 
 --
+-- Name: ticket_products ticket_products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ticket_products
+    ADD CONSTRAINT ticket_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tickets tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tickets
+    ADD CONSTRAINT tickets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_metrics user_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4232,6 +4431,27 @@ ALTER TABLE ONLY public.web_push_subscriptions
 --
 
 CREATE INDEX booking_page_index ON public.booking_pages USING btree (user_id, deleted_at, draft);
+
+
+--
+-- Name: consultant_account_phone_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX consultant_account_phone_index ON public.consultant_accounts USING btree (consultant_user_id, phone_number);
+
+
+--
+-- Name: consultant_account_token_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX consultant_account_token_index ON public.consultant_accounts USING btree (token);
+
+
+--
+-- Name: consumer_ticket_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX consumer_ticket_index ON public.customer_ticket_consumers USING btree (consumer_id, consumer_type);
 
 
 --
@@ -4606,6 +4826,41 @@ CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.cu
 
 
 --
+-- Name: index_customer_ticket_consumers_on_consumer; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_ticket_consumers_on_consumer ON public.customer_ticket_consumers USING btree (consumer_type, consumer_id);
+
+
+--
+-- Name: index_customer_ticket_consumers_on_customer_ticket_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_ticket_consumers_on_customer_ticket_id ON public.customer_ticket_consumers USING btree (customer_ticket_id);
+
+
+--
+-- Name: index_customer_tickets_on_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_tickets_on_code ON public.customer_tickets USING btree (code);
+
+
+--
+-- Name: index_customer_tickets_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_tickets_on_customer_id ON public.customer_tickets USING btree (customer_id);
+
+
+--
+-- Name: index_customer_tickets_on_ticket_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_tickets_on_ticket_id ON public.customer_tickets USING btree (ticket_id);
+
+
+--
 -- Name: index_delayed_jobs_on_signature; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4960,6 +5215,27 @@ CREATE INDEX index_taggings_on_tagger_id_and_tagger_type ON public.taggings USIN
 --
 
 CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
+
+
+--
+-- Name: index_ticket_products_on_product; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ticket_products_on_product ON public.ticket_products USING btree (product_type, product_id);
+
+
+--
+-- Name: index_ticket_products_on_ticket_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ticket_products_on_ticket_id ON public.ticket_products USING btree (ticket_id);
+
+
+--
+-- Name: index_tickets_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tickets_on_user_id ON public.tickets USING btree (user_id);
 
 
 --
@@ -5559,6 +5835,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240418151411'),
 ('20240425113626'),
 ('20240427000601'),
-('20240429031029');
+('20240429031029'),
+('20240501021924');
 
 

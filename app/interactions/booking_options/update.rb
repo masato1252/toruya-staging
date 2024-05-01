@@ -36,12 +36,14 @@ module BookingOptions
       # For changing menu required_time
       integer :menu_id, default: nil
       integer :menu_required_time, default: nil
+
+      integer :ticket_quota, default: nil
     end
 
     def execute
       booking_option.with_lock do
         case update_attribute
-        when "name", "display_name", "menu_restrict_order", "memo"
+        when "name", "display_name", "menu_restrict_order", "memo", "ticket_quota"
           booking_option.update(attrs.slice(update_attribute))
         when "new_pure_menu"
           ApplicationRecord.transaction do

@@ -45,6 +45,10 @@ RSpec.describe BookingOptions::Update do
       it_behaves_like "updates booking option normal attribute", "memo", "foo"
     end
 
+    context "update_attribute is ticket_quota" do
+      it_behaves_like "updates booking option normal attribute", "ticket_quota", 3
+    end
+
     context "update_attribute is new_pure_menu" do
       let!(:staff_account) { FactoryBot.create(:staff_account, owner: user, user: user) }
       let(:update_attribute) { "new_pure_menu" }
