@@ -62,7 +62,8 @@
     booking_date: params[:booking_date],
     booking_at: params[:booking_at],
     social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id,
-    sale_page_id: params[:_from_id]
+    sale_page_id: params[:_from_id],
+    errors: {}
   },
   path: {
     save: booking_reservation_booking_page_path(@booking_page, format: :json),
@@ -81,6 +82,76 @@
     t("booking_page.done").merge!(add_friend_messages_html: I18n.t("booking_page.done.add_friend_messages_html", shop_name: @booking_page.shop.name))
     ].inject(:merge)
  ),
+},
+{ camelize_props: false }
+                   ) %>
+
+<%= react_component("booking/booking_reservation_form_function", {
+  props: {
+    timezone: Time.zone.tzinfo.name,
+    toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
+    social_account_add_friend_url: @social_account&.add_friend_url,
+    social_account_login_url: line_login_url(@social_account, booking_page_url(@booking_page.slug), customer_id: @customer&.id),
+    social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
+    payment_solution: @booking_page.payment_solution,
+    is_shop_owner: @social_customer&.is_owner,
+    booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled").merge!({
+      shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
+      shop_name: @booking_page.shop.name,
+      is_single_option: @is_single_booking_option,
+      is_started: @booking_page.started?,
+      is_ended: @booking_page.ended?,
+      start_at: I18n.l(@booking_page.start_time, format: :date_with_wday),
+      draft: @booking_page.draft,
+      regions: regions
+    }),
+    calendar: {
+      dayNames: I18n.t("date.abbr_day_names"),
+      monthNames: I18n.t("date.abbr_month_names").compact,
+      dateSelectedCallbackPath: booking_times_booking_page_path(@booking_page),
+      schedulePath: calendar_booking_page_path(@booking_page, format: :json),
+      selectedDate: @default_selected_date
+    },
+    booking_reservation_form: {
+      regular: @customer ? "yes" : nil,
+      use_default_customer: !!(@customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number),
+      found_customer: @customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number ? true : nil,
+      booking_flow: @is_single_booking_option || params[:booking_option_id].present? ? "booking_option_first" : nil,
+      remember_me: true,
+      booking_options: custom_options(page_booking_options),
+      customer_first_name: @customer&.first_name,
+      customer_last_name: @customer&.last_name,
+      customer_phonetic_last_name: @customer&.phonetic_last_name,
+      customer_phonetic_first_name: @customer&.phonetic_first_name,
+      customer_phone_number: @customer&.mobile_phone_number,
+      reminder_permission: @customer ? @customer.reminder_permission : true,
+      customer_info: customer_info_hash,
+      present_customer_info: customer_info_hash,
+      last_selected_option_id: @last_selected_option_id,
+      booking_option_id: @is_single_booking_option ? custom_options(page_booking_options)[0][:id] : params[:booking_option_id]&.to_i,
+      booking_date: params[:booking_date],
+      booking_at: params[:booking_at],
+      social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id,
+      sale_page_id: params[:_from_id]
+    },
+    path: {
+      save: booking_reservation_booking_page_path(@booking_page, format: :json),
+      find_customer: find_customer_booking_page_path(@booking_page),
+      ask_confirmation_code: ask_confirmation_code_booking_page_path(@booking_page),
+      confirm_code: confirm_code_booking_page_path(@booking_page)
+    },
+    i18n: {
+      errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),
+    }.merge!([
+      t("settings.booking_page.form"),
+      t("booking_page"),
+      t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time),
+      t("action").slice(:save, :confirm),
+      t("customer").slice(:select_region),
+      t("booking_page.done").merge!(add_friend_messages_html: I18n.t("booking_page.done.add_friend_messages_html", shop_name: @booking_page.shop.name))
+    ].inject(:merge)
+            ),
+  }
 },
 { camelize_props: false }
 ) %>

@@ -13,6 +13,7 @@ module BookingOptions
 
       integer :amount_cents, default: nil
       string :amount_currency, default: "JPY"
+      integer :ticket_quota, default: nil
       boolean :tax_include, default: false
 
       string :start_at_date_part, default: nil
@@ -111,6 +112,7 @@ module BookingOptions
         when "price"
           booking_option.update(
             amount: Money.new(attrs[:amount_cents], attrs[:amount_currency]),
+            ticket_quota: attrs[:ticket_quota],
             tax_include: attrs[:tax_include]
           )
         when "menus_priority"

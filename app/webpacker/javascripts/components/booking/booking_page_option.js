@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react";
-import moment from 'moment-timezone';
 
 const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n, booking_start_at, last_selected_option_id }) => {
   let option_content;
