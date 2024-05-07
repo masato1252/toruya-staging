@@ -8,7 +8,7 @@ import BookingPageOption from "./booking_page_option";
 import BookingDateTime from "./booking_date_time";
 import SelectedBookingOption from "./selected_booking_option";
 
-const AvailableBookingOption = ({booking_reservation_form_values, i18n, sorted_booking_options, selectBookingOption }) => {
+const AvailableBookingOption = ({booking_reservation_form_values, i18n, sorted_booking_options, selectBookingOption, booking_options_quota }) => {
   const {
     booking_options,
     booking_at,
@@ -39,6 +39,7 @@ const AvailableBookingOption = ({booking_reservation_form_values, i18n, sorted_b
           booking_option_value={booking_option_value}
           last_selected_option_id={last_selected_option_id}
           selectBookingOptionCallback={selectBookingOption}
+          ticket={booking_options_quota[booking_option_value.id]}
           i18n={i18n}
         />
       })}
@@ -46,7 +47,7 @@ const AvailableBookingOption = ({booking_reservation_form_values, i18n, sorted_b
   )
 };
 
-const BookingDateFirstFlow = ({booking_reservation_form_values, i18n, calendar, fetchBookingTimes, setBookingTimeAt, timezone, resetValues, selected_booking_option, selectBookingOption, sorted_booking_options}) => {
+const BookingDateFirstFlow = ({booking_reservation_form_values, i18n, calendar, fetchBookingTimes, setBookingTimeAt, timezone, resetValues, selected_booking_option, selectBookingOption, sorted_booking_options, booking_options_quota}) => {
   const { booking_flow, booking_at, booking_option_id } = booking_reservation_form_values;
 
   if (booking_flow !== "booking_date_first") return <></>
@@ -77,6 +78,7 @@ const BookingDateFirstFlow = ({booking_reservation_form_values, i18n, calendar, 
               i18n={i18n}
               sorted_booking_options={sorted_booking_options}
               selectBookingOption={selectBookingOption}
+              booking_options_quota={booking_options_quota}
             />
           )}
         </>
@@ -87,6 +89,7 @@ const BookingDateFirstFlow = ({booking_reservation_form_values, i18n, calendar, 
             i18n={i18n}
             booking_reservation_form_values={booking_reservation_form_values}
             booking_option_value={selected_booking_option}
+            ticket={booking_options_quota[booking_option_id]}
             timezone={timezone}
             resetValuesCallback={() => resetValues(["booking_option_id"])}
           />

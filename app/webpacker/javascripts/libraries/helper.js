@@ -175,6 +175,10 @@ const currencyFormat = (number) => {
   return new Intl.NumberFormat().format(number)
 }
 
+const ticketExpireDate = (start_time, expire_month) => {
+  return expire_month != 6 ? start_time.add(expire_month, "M").format("YYYY-MM-DD") : start_time.add(180, "d").format("YYYY-MM-DD")
+}
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -196,5 +200,6 @@ export {
   isValidHttpUrl,
   isValidLength,
   responseHandler,
-  currencyFormat
+  currencyFormat,
+  ticketExpireDate
 };

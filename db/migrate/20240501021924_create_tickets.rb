@@ -39,6 +39,7 @@ class CreateTickets < ActiveRecord::Migration[7.0]
     end
 
     add_column :booking_options, :ticket_quota, :integer, default: 1, null: false
+    add_column :booking_options, :ticket_expire_month, :integer, default: 1, null: false
     # de-normalize
     add_column :reservation_customers, :nth_quota, :integer
     add_column :reservation_customers, :customer_ticket_id, :integer

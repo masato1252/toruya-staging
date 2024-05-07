@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import moment from 'moment-timezone';
 import axios from "axios";
 import _ from "lodash";
@@ -9,8 +9,8 @@ import arrayMove from "array-move"
 import OwnerWarning from "./owner_warning";
 import DraftWarning from "./draft_warning";
 import BookingHeader from "./booking_header";
-// import CustomerAddressView from "./customer_address_view";
-import BookingDownView from "./booking_down_view";
+import CustomerAddressView from "./customer_address_view";
+import BookingDoneView from "./booking_done_view";
 import ChargingView from "./charging_view";
 import BookingFailedArea from "./booking_failed_area";
 import BookingEndedView from "./booking_ended_view";
@@ -27,19 +27,22 @@ import BookingReservationButton from "./booking_reservation_button";
 import BookingFlowOptions from "./booking_flow_options";
 import BookingOptionFirstFlow from "./booking_option_first_flow";
 import BookingDateFirstFlow from "./booking_date_first_flow";
+import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
+import { CommonServices } from "user_bot/api";
 
 const BookingReservationFormFunction = ({props}) => {
   moment.locale("ja");
   let findCustomerCall;
 
   const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(props.booking_reservation_form)
-  const [booking_reservation_form_errors, set_booking_reservation_form_errors] = useState({})
+  const stripe_token_ref = useRef();
+  const square_token_ref = useRef();
+  const bookingReservationLoading_ref = useRef();
 
   const isCustomerAddressFilled = () => {
-    return true
-    // const { customer_info } = booking_reservation_form_values
-    //
-    // return customer_info.address_details?.zip_code && customer_info.address_details?.region && customer_info.address_details?.city
+    const { customer_info } = booking_reservation_form_values
+
+    return customer_info.address_details?.zip_code && customer_info.address_details?.region && customer_info.address_details?.city
   }
 
   const selected_booking_option = () => {
@@ -76,10 +79,10 @@ const BookingReservationFormFunction = ({props}) => {
           break;
       }
 
-    set_booking_reservation_form_values(prev => ({...prev,  [field]: resetValue}))
+    set_booking_reservation_form_values(prev => ({...prev, [field]: resetValue}))
     })
 
-    set_booking_reservation_form_values(prev => ({...prev,  booking_failed: null}))
+    set_booking_reservation_form_values(prev => ({...prev, booking_failed: null, errors: {}}))
     return {};
   }
 
@@ -116,7 +119,8 @@ const BookingReservationFormFunction = ({props}) => {
       url: props.calendar.dateSelectedCallbackPath,
       params: {
         date: date,
-        booking_option_id: booking_reservation_form_values.booking_option_id
+        booking_option_id: booking_reservation_form_values.booking_option_id,
+        customer_id: booking_reservation_form_values?.customer_info?.id
       },
       responseType: "json"
     })
@@ -292,28 +296,17 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const handleSubmit = async () => {
-    const { is_paying_booking, stripe_token, square_token, bookingReservationLoading } = booking_reservation_form_values
+    const { is_paying_booking,  } = booking_reservation_form_values
 
-    if (bookingReservationLoading) return;
+    if (bookingReservationLoading_ref.current) return;
+
+    const stripe_token = stripe_token_ref.current
+    const square_token = square_token_ref.current
     if (is_paying_booking && !stripe_token && !square_token) return;
 
-    set_booking_reservation_form_values(prev => ({...prev, submitting: true, bookingReservationLoading: true}))
-    // this.bookingReserationLoading = "loading";
-
-    axios.interceptors.response.use(function (response) {
-      // Any status code that lie within the range of 2xx cause this function to trigger
-      // Do something with response data
-      return response;
-    }, function (error) {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
-      console.log(error)
-      return Promise.reject(error);
-    });
-
+    bookingReservationLoading_ref.current = true
     try {
-      const response = await axios({
-        method: "POST",
+      const [_error, response] = await CommonServices.create({
         url: props.path.save,
         data: _.merge(
           _.pick(
@@ -326,8 +319,6 @@ const BookingReservationFormFunction = ({props}) => {
           ),
           _.pick(
             booking_reservation_form_values,
-            "stripe_token",
-            "square_token",
             "booking_option_id",
             "booking_date",
             "booking_at",
@@ -341,12 +332,14 @@ const BookingReservationFormFunction = ({props}) => {
             "social_user_id",
             "sale_page_id"
           ),
-        ),
-        responseType: "json"
+          {
+            stripe_token,
+            square_token
+          }
+        )
       })
 
-      // this.bookingReserationLoading = null;
-      set_booking_reservation_form_values(prev => ({...prev, submitting: false, bookingReservationLoading: false}))
+      bookingReservationLoading_ref.current = false
 
       const { status, errors } = response.data;
 
@@ -366,47 +359,38 @@ const BookingReservationFormFunction = ({props}) => {
       }
     }
     catch(error) {
-      debugger
+      console.error(error)
       location.reload()
     }
   }
 
   const renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = props.booking_page
-    const { is_done, is_paying_booking, is_filling_address } = booking_reservation_form_values
+    const { is_done, is_paying_booking, is_filling_address, booking_option_id } = booking_reservation_form_values
 
-    // if (is_filling_address && isPremiumService() && !isCustomerAddressFilled()) {
-    //   return (
-    //     <CustomerAddressView
-    //       handleAddressCallback={handleAddressCallback}
-    //       address={booking_reservation_form_values.customer_info.address_details}
-    //     />
-    //   )
-    // }
+    if (isPremiumService() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
+      return (
+        <CustomerAddressView
+          handleAddressCallback={handleAddressCallback}
+          address={booking_reservation_form_values.customer_info.address_details}
+        />
+      )
+    }
 
     if (is_done) {
-      // if (isPremiumService() && !isCustomerAddressFilled()) {
-      //   return (
-      //     <CustomerAddressView
-      //       handleAddressCallback={handleAddressCallback}
-      //       address={booking_reservation_form_values.customer_info.address_details}
-      //     />
-      //   )
-      // }
-
-      return <BookingDownView i18n={props.i18n} social_account_add_friend_url={props.social_account_add_friend_url} />
+      return (
+        <BookingDoneView
+          i18n={props.i18n}
+          booking_option_id={booking_reservation_form_values.booking_option_id}
+          booking_date={booking_reservation_form_values.booking_date}
+          social_account_add_friend_url={props.social_account_add_friend_url}
+          booking_page_url={props.booking_page.url}
+          ticket={props.booking_options_quota[booking_option_id]}
+        />
+      )
     }
 
     if (is_paying_booking) {
-      // if (isPremiumService() && !isCustomerAddressFilled()) {
-      //   return (
-      //     <CustomerAddressView
-      //       handleAddressCallback={handleAddressCallback}
-      //       address={booking_reservation_form_values.customer_info.address_details}
-      //     />
-      //   )
-      // }
-
       return (
         <div>
           <ChargingView
@@ -415,8 +399,13 @@ const BookingReservationFormFunction = ({props}) => {
             time_from={props.i18n.time_from}
             payment_solution={props.payment_solution}
             handleTokenCallback={async (token) => {
-              const token_name = payment_solution.solution == "stripe_connect" ? "stripe_token" : "square_token"
-              set_booking_reservation_form_values(prev => ({...prev, [token_name]: token }))
+              if (props.payment_solution.solution == "stripe_connect") {
+                stripe_token_ref.current = token
+              }
+              else {
+                square_token_ref.current = token
+              }
+
               handleSubmit()
             }}
             product_name={selected_booking_option().name}
@@ -449,11 +438,13 @@ const BookingReservationFormFunction = ({props}) => {
             i18n={props.i18n}
             booking_reservation_form_values={booking_reservation_form_values}
             booking_option_value={selected_booking_option()}
+            ticket={props.booking_options_quota[booking_option_id]}
             timezone={props.timezone}
           />
           <BookingCalendar
             i18n={props.i18n}
             booking_reservation_form_values={booking_reservation_form_values}
+            ticket_expire_date={props.booking_options_quota[booking_option_id]?.expire_date}
             calendar={props.calendar}
             fetchBookingTimes={fetchBookingTimes}
             setBookingTimeAt={setBookingTimeAt}
@@ -505,6 +496,7 @@ const BookingReservationFormFunction = ({props}) => {
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}
+              ticket={props.booking_options_quota[booking_option_id]}
               resetBookingFailedValues={resetBookingFailedValues}
             />
           )}
@@ -520,6 +512,7 @@ const BookingReservationFormFunction = ({props}) => {
           />
           <BookingOptionFirstFlow
             booking_reservation_form_values={booking_reservation_form_values}
+            booking_options_quota={props.booking_options_quota}
             i18n={props.i18n}
             sorted_booking_options={sorted_booking_options}
             selectBookingOption={selectBookingOption}
@@ -533,6 +526,7 @@ const BookingReservationFormFunction = ({props}) => {
           />
           <BookingDateFirstFlow
             booking_reservation_form_values={booking_reservation_form_values}
+            booking_options_quota={props.booking_options_quota}
             i18n={props.i18n}
             calendar={props.calendar}
             fetchBookingTimes={fetchBookingTimes}
@@ -582,6 +576,7 @@ const BookingReservationFormFunction = ({props}) => {
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}
+              ticket={props.booking_options_quota[booking_option_id]}
               resetBookingFailedValues={resetBookingFailedValues}
             />
           )}
@@ -592,7 +587,7 @@ const BookingReservationFormFunction = ({props}) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form>
         <OwnerWarning i18n={props.i18n} is_shop_owner={props.is_shop_owner} is_done={booking_reservation_form_values.is_done} />
         <DraftWarning i18n={props.i18n} booking_page={props.booking_page} />
         <BookingHeader booking_page={props.booking_page} is_done={booking_reservation_form_values.is_done} />

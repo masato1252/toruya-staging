@@ -115,7 +115,8 @@ namespace :analytic do
         CustomerPayment.completed.sum(:amount_cents),
         Menu.active.count,
         BookingOption.active.count,
-        BookingPage.active.count
+        BookingPage.active.count,
+        CustomerTicket.count
       ]
       new_row_data.each_with_index do |data, index|
         google_worksheet[new_row_number, index + 1] = data

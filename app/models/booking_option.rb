@@ -16,6 +16,7 @@
 #  name                :string           not null
 #  start_at            :datetime
 #  tax_include         :boolean          not null
+#  ticket_expire_month :integer          default(1), not null
 #  ticket_quota        :integer          default(1), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -70,5 +71,13 @@ class BookingOption < ApplicationRecord
 
   def ticket_enabled?
     ticket_quota > 1
+  end
+
+  def ticket_expire_time(first_start_time)
+    if ticket_expire_month == 6
+      first_start_time.advance(days: 180)
+    else
+      first_start_time.advance(months: ticket_expire_month)
+    end
   end
 end

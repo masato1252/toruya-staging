@@ -500,10 +500,16 @@ ja:
         memo_title: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
         delete_option: 価格を削除
+        from_purchase: 購入から
+        after_month: ヶ月後
+        max_ticket_date: 最長180日
+        how_many_ticket_in_one_book: 何回分をセット販売しますか？
+        when_ticket_expire: いつまで利用可能にしますか？
         form_errors:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
           reached_the_menus_limit: メニューは２つまで設定できます
           no_available_shop: このメニューには利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。
+          ticket_max_price_limit: オンライン決済システムの規定により、5万円を超える回数券は販売できません。
     booking_page:
       title: 予約ページの設定
       info_html: 予約ページを設定します。<br>お客様はここで設定したページからオンライン予約します。
@@ -531,6 +537,7 @@ ja:
         greeting: 挨拶文
         greeting_title: 挨拶文
         greeting_placeholder: 予約ページ上部に表示されるます。
+        booking_price_setting_header: 予約価格を設定
         booking_option_header: 予約価格
         new_option: 予約価格
         new_option_top_bar_header: 予約価格
@@ -538,9 +545,13 @@ ja:
         add_new_option: 価格を追加
         reorder_options: 表示順を変更
         does_require_a_new_option: 新しい価格が必要ですか？
-        create_a_new_option: 新しい価格を作成する
+        create_a_new_option: 新しいメニューで価格を作成
+        create_a_new_option_from_existing_menu: 既存メニューから価格を作成
         new_option_menu_title: 新しい価格を作成する
         new_option_menu_top_bar_header: 予約価格
+        new_option_existing_menu_title: 新しい価格を作成する
+        new_option_existing_menu_top_bar_header: 予約価格
+        new_option_existing_menu_menu_select_header: どのメニューの価格を作成しますか？
         booking_option_hint: あなたのお客様はこの価格で予約をします。
         booking_option_required_time: 所要時間
         shop_header: 予約可能な店舗

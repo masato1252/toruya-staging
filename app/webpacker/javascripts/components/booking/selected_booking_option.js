@@ -5,7 +5,7 @@ import moment from 'moment-timezone';
 
 import BookingPageOption from "./booking_page_option";
 
-const SelectedBookingOption = ({i18n, booking_reservation_form_values, booking_option_value, timezone, resetValuesCallback}) => {
+const SelectedBookingOption = ({i18n, booking_reservation_form_values, booking_option_value, timezone, resetValuesCallback, ticket}) => {
   const {
     booking_option_id,
     booking_date,
@@ -23,6 +23,7 @@ const SelectedBookingOption = ({i18n, booking_reservation_form_values, booking_o
         key={`booking_options-${booking_option_id}`}
         booking_option_value={booking_option_value}
         last_selected_option_id={last_selected_option_id}
+        ticket={ticket}
         i18n={i18n}
         booking_start_at={moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", timezone)}
       />

@@ -92,7 +92,7 @@ class Customer < ApplicationRecord
   scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
   scope :marketable, -> { where(reminder_permission: true) }
 
-  def active_customer_ticket_of_product(product)
+  def active_customer_ticket_of_product(product) # booking_option
     customer_tickets.active.unexpired.joins(ticket: :ticket_products).where("ticket_products.product": product).take
   end
 

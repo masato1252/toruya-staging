@@ -29,4 +29,8 @@ class CustomerTicket < ApplicationRecord
     active: 'active',
     completed: 'completed'
   }
+
+  def remaining_quota
+    total_quota - consumed_quota
+  end
 end

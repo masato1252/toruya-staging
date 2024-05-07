@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import I18n from 'i18n-js/index.js.erb'
 import { Field } from "react-final-form";
 import _ from "lodash";
@@ -408,6 +408,65 @@ const SubscriptionRadio = ({prefix, end_time, set_end_time_type }) => (
   </div>
 )
 
+const TicketPriceDesc = ({ amount, ticket_quota }) => {
+  return <>{Math.trunc(amount / ticket_quota)} {I18n.t("common.unit")} X {ticket_quota} {I18n.t("common.times")}</>
+}
+
+const TicketOptionsFields = ({ setValue, watch, price, register, ticket_expire_date_desc_path }) => {
+  useEffect(() => {
+    if (watch("price_type") == "ticket" && (watch("ticket_quota") == '' || watch("ticket_quota") < 2 )) {
+      setValue("ticket_quota", 2)
+    }
+  }, [watch("price_type")])
+
+  return (
+    <>
+      <div className="field-row">
+        <label>
+          <input name="price_type" type="radio" value="regular" ref={register({ required: true })} />
+          {I18n.t("common.regular_price")}
+        </label>
+      </div>
+      <div className="field-row">
+        <label>
+          <input name="price_type" type="radio" value="ticket" ref={register({ required: true })} />
+          {I18n.t("common.ticket")}
+        </label>
+      </div>
+      {watch("price_type") == "ticket" && (
+        <>
+          <div className="field-header">{I18n.t("settings.booking_option.form.how_many_ticket_in_one_book")}</div>
+          <div className="field-row">
+            <div>
+              <select name="ticket_quota" ref={register()}>
+                {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+                  12, 13, 14, 15, 16, 17, 18, 19, 20].map((num) => <option key={`quota-$${num}`} value={num}>{num}</option>)}
+              </select> {I18n.t("common.times")}
+              <div>
+                <TicketPriceDesc amount={price} ticket_quota={watch("ticket_quota")} />
+              </div>
+            </div>
+          </div>
+          <div className="field-header">{I18n.t("settings.booking_option.form.when_ticket_expire")}</div>
+          <div className="field-row">
+            <span>
+              {I18n.t("settings.booking_option.form.from_purchase")}
+              <select name="ticket_expire_month" ref={register()}>
+                {[1, 2, 3, 4, 5, 6].map((num) => <option key={`month-$${num}`} value={num}>{num}</option>)}
+              </select>
+              {I18n.t("settings.booking_option.form.after_month")}
+              {watch("ticket_expire_month") == 6 && <>（{I18n.t("settings.booking_option.form.max_ticket_date")}）</>}
+            </span>
+          </div>
+          <div className="field-row">
+            <img src={ticket_expire_date_desc_path} className="w-full" />
+          </div>
+        </>
+      )}
+    </>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -436,5 +495,7 @@ export {
   EndAtRadio,
   NeverEndRadio,
   SubscriptionRadio,
-  ChangeLogsNotifications
+  ChangeLogsNotifications,
+  TicketPriceDesc,
+  TicketOptionsFields
 };

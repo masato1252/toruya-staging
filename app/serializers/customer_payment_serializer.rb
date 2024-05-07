@@ -28,4 +28,25 @@ class CustomerPaymentSerializer
   attribute :amount do |object|
     object.amount.format
   end
+
+  attribute :ticket_code do |object|
+    case object.product
+    when ReservationCustomer
+      object.product.customer_ticket&.code
+    end
+  end
+
+  attribute :ticket_total_quota do |object|
+    case object.product
+    when ReservationCustomer
+      object.product.customer_ticket&.total_quota
+    end
+  end
+
+  attribute :remaining_ticket_quota do |object|
+    case object.product
+    when ReservationCustomer
+      object.product.customer_ticket&.remaining_quota
+    end
+  end
 end

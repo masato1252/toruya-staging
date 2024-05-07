@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import _ from "lodash";
 import moment from "moment-timezone";
 
-import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
+import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields  } from "shared/components"
 import { BookingPageServices } from "user_bot/api"
 
 import BookingTimeField from "./booking_time_field";
@@ -22,7 +22,6 @@ import NewMenuField from "components/user_bot/booking_options/new_menu_field";
 
 const BookingPageEdit =({props}) => {
   const i18n = props.i18n;
-  const [a_new_booking_option, setNewBookingOption] = useState(false)
 
   const onSubmit = async (data) => {
     console.log(data)
@@ -60,10 +59,10 @@ const BookingPageEdit =({props}) => {
       draft: String(props.booking_page.draft),
       booking_type: props.booking_page.booking_type,
       had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
+      price_type: "regular",
+      ticket_quota: 1
     }
   });
-
-  const new_option_with_existing_menu = watch("new_option_with_existing_menu")
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
@@ -96,55 +95,73 @@ const BookingPageEdit =({props}) => {
             <ErrorMessage error={errors.shop_id?.message} />
           </>
         )
+      case "new_option_existing_menu":
+        return (
+          <div>
+            <h3 className="header centerize">{I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}</h3>
+            <div className="field-header">{I18n.t("settings.booking_page.form.new_option_existing_menu_menu_select_header")}</div>
+            <NewMenuField
+              i18n={props.i18n} register={register} watch={watch} control={control}
+              menu_group_options={props.menu_group_options}
+              setValue={setValue}
+            />
+
+            <h3 className="header centerize">{I18n.t("settings.booking_page.form.booking_price_setting_header")}</h3>
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
+            <div className="field-row flex-start">
+              <input ref={register({ required: true })} name="new_menu_price" type="tel" />
+              {I18n.t("common.unit")}({I18n.t("common.tax_included")})
+              {watch("price_type") == "ticket" && watch("new_menu_price") > 50000 &&
+                <ErrorMessage error={I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")} />}
+            </div>
+            <TicketOptionsFields
+              setValue={setValue}
+              watch={watch}
+              register={register}
+              ticket_expire_date_desc_path={props.ticket_expire_date_desc_path}
+              price={watch("new_menu_price")}
+            />
+          </div>
+        )
       case "new_option_menu":
         return (
           <div>
             <h3 className="header centerize">{I18n.t("settings.booking_page.form.create_a_new_option")}</h3>
 
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
+            <input autoFocus={true} ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
+
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
             <label className="field-row flex-start">
-              <input name="new_option_with_existing_menu" type="radio" value="existing_menu" ref={register({ required: true })} />
-              {I18n.t("user_bot.dashboards.booking_pages.form.new_option_with_existing_menu.select_from_existing_menu")}
+              <input name="new_menu_online_state" type="radio" value="true" ref={register({ required: true })} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_online`)}
             </label>
-            {new_option_with_existing_menu == "existing_menu" && (
-              <div>
-                <NewMenuField
-                  i18n={props.i18n} register={register} watch={watch} control={control}
-                  menu_group_options={props.menu_group_options}
-                  setValue={setValue}
-                />
-
-                <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
-                <input ref={register({ required: true })} name="new_menu_price" className="extend" type="tel" />
-              </div>
-            )}
-
-            <br />
             <label className="field-row flex-start">
-              <input name="new_option_with_existing_menu" type="radio" value="new_menu" ref={register({ required: true })} />
-              {I18n.t("user_bot.dashboards.booking_pages.form.new_option_with_existing_menu.create_from_a_new_menu")}
+              <input name="new_menu_online_state" type="radio" value="false" ref={register({ required: true })} />
+              {I18n.t(`user_bot.dashboards.booking_page_creation.menu_local`)}
             </label>
-            {new_option_with_existing_menu == "new_menu" && (
-              <>
-                <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
-                <input autoFocus={true} ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
 
-                <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</div>
-                <input ref={register({ required: true })} name="new_menu_minutes" className="extend" type="tel" />
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</div>
+            <div className="field-row flex-start">
+              <input ref={register({ required: true })} name="new_menu_minutes" type="tel" />
+              {I18n.t("common.minute")}
+            </div>
 
-                <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
-                <input ref={register({ required: true })} name="new_menu_price" className="extend" type="tel" />
-
-                <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
-                <label className="field-row flex-start">
-                  <input name="new_menu_online_state" type="radio" value="true" ref={register({ required: true })} />
-                  {I18n.t(`user_bot.dashboards.booking_page_creation.menu_online`)}
-                </label>
-                <label className="field-row flex-start">
-                  <input name="new_menu_online_state" type="radio" value="false" ref={register({ required: true })} />
-                  {I18n.t(`user_bot.dashboards.booking_page_creation.menu_local`)}
-                </label>
-              </>
-            )}
+            <h3 className="header centerize">{I18n.t("settings.booking_page.form.booking_price_setting_header")}</h3>
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
+            <div className="field-row flex-start">
+              <input ref={register({ required: true })} name="new_menu_price" type="tel" />
+              {I18n.t("common.unit")}({I18n.t("common.tax_included")})
+              {watch("price_type") == "ticket" && watch("new_menu_price") > 50000 &&
+                <ErrorMessage error={I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")} />}
+            </div>
+            <TicketOptionsFields
+              setValue={setValue}
+              watch={watch}
+              register={register}
+              ticket_expire_date_desc_path={props.ticket_expire_date_desc_path}
+              price={watch("new_menu_price")}
+            />
           </div>
         )
       case "new_option":
@@ -166,6 +183,11 @@ const BookingPageEdit =({props}) => {
             <hr className="border-gray-300" />
             <div className="margin-around centerize">
               <h3 className="centerize">{I18n.t("settings.booking_page.form.does_require_a_new_option")}</h3>
+              <div className="my-2">
+                <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_existing_menu" })} className="btn btn-orange">
+                  {I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}
+                </a>
+              </div>
               <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_menu" })} className="btn btn-orange">
                 {I18n.t("settings.booking_page.form.create_a_new_option")}
               </a>
@@ -227,6 +249,12 @@ const BookingPageEdit =({props}) => {
     }
   }
 
+  const isSubmitDisabled = () => {
+    return formState.isSubmitting ||
+      (props.attribute == "new_option_existing_menu" && watch("price_type") == "ticket" && watch("new_menu_price") > 50000) ||
+      (props.attribute == "new_option_menu" && watch("price_type") == "ticket" && watch("new_menu_price") > 50000)
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -245,7 +273,7 @@ const BookingPageEdit =({props}) => {
             <BottomNavigationBar klassName="centerize transparent">
               <span></span>
               <CircleButtonWithWord
-                disabled={formState.isSubmitting}
+                disabled={isSubmitDisabled()}
                 onHandle={handleSubmit(onSubmit)}
                 icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
                 word={i18n.save}

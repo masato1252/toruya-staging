@@ -2,7 +2,7 @@
 
 import React from "react";
 import FlowController from "shared/flow_controller";
-import { GlobalProvider, GlobalContext } from "context/user_bots/bookings/global_state"
+import { GlobalProvider } from "context/user_bots/bookings/global_state"
 
 import ShopSelectionStep from "./shop_selection_step";
 import MenuSelectionStep from "./menu_selection_step";

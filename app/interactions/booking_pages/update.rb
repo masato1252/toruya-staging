@@ -38,6 +38,8 @@ module BookingPages
       integer :new_menu_minutes, default: nil
       integer :new_menu_price, default: nil
       boolean :new_menu_online_state, default: false
+      integer :ticket_quota, default: 1
+      integer :ticket_expire_month, default: 1
 
       string :start_at_date_part, default: nil
       string :start_at_time_part, default: nil
@@ -76,7 +78,7 @@ module BookingPages
             end
           end
           booking_page.update(event_booking: booking_type == "event_booking")
-        when "new_option_menu"
+        when "new_option_menu", "new_option_existing_menu"
           ApplicationRecord.transaction do
 
             menu =
@@ -122,6 +124,8 @@ module BookingPages
               display_name: menu.name,
               minutes: attrs[:new_menu_required_time] || menu.minutes,
               amount_cents: attrs[:new_menu_price],
+              ticket_quota: attrs[:ticket_quota],
+              ticket_expire_month: attrs[:ticket_expire_month],
               tax_include: true,
               menus: {
                 "0" => { 'value' => menu.id, "priority" => 0, "required_time" => attrs[:new_menu_required_time] || menu.minutes },

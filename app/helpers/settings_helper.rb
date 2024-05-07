@@ -46,6 +46,7 @@ module SettingsHelper
       name: booking_option.display_name.presence || booking_option.name,
       minutes: booking_option.minutes,
       price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
+      price_amount: booking_option.amount.fractional,
       start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
       end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
       is_free: booking_option.amount.zero?,

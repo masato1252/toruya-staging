@@ -7,7 +7,7 @@ import SelectedBookingOption from "./selected_booking_option";
 import BookingCalendar from "./booking_calendar";
 import BookingDateTime from "./booking_date_time";
 
-const BookingOptionFirstFlow = ({booking_reservation_form_values, i18n, sorted_booking_options, selectBookingOption, timezone, selected_booking_option, resetFlowValues, calendar, fetchBookingTimes, setBookingTimeAt, resetValues }) => {
+const BookingOptionFirstFlow = ({booking_reservation_form_values, i18n, sorted_booking_options, booking_options_quota, selectBookingOption, timezone, selected_booking_option, resetFlowValues, calendar, fetchBookingTimes, setBookingTimeAt, resetValues }) => {
   const {
     booking_options,
     last_selected_option_id,
@@ -32,6 +32,7 @@ const BookingOptionFirstFlow = ({booking_reservation_form_values, i18n, sorted_b
               booking_option_value={booking_option_value}
               last_selected_option_id={last_selected_option_id}
               selectBookingOptionCallback={selectBookingOption}
+              ticket={booking_options_quota[booking_option_value.id]}
               i18n={i18n}
             />
           })}
@@ -46,10 +47,12 @@ const BookingOptionFirstFlow = ({booking_reservation_form_values, i18n, sorted_b
             booking_option_value={selected_booking_option}
             timezone={timezone}
             resetValuesCallback={resetFlowValues}
+            ticket={booking_options_quota[booking_option_id]}
           />
           <BookingCalendar
             i18n={i18n}
             booking_reservation_form_values={booking_reservation_form_values}
+            ticket_expire_date={booking_options_quota[booking_option_id]?.expire_date}
             calendar={calendar}
             fetchBookingTimes={fetchBookingTimes}
             setBookingTimeAt={setBookingTimeAt}

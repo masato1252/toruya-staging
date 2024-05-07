@@ -18,7 +18,11 @@ const PaymentCell = ({payment}) => {
         </div>
       </div>
       <div className="content">
-        {payment.product_name}
+        {payment.product_name} {payment.ticket_code && (
+          <div>
+            <i className="fa fa-ticket-alt text-gray-500"></i> {payment.ticket_code} ({I18n.t("common.left_ticket")}{payment.remaining_ticket_quota}/{payment.ticket_total_quota}{I18n.t("common.times")})
+          </div>
+        )}
       </div>
       <div className="extra">
         {payment.amount}

@@ -48,20 +48,16 @@ const BookingOptionEdit =({props}) => {
             <div className="field-row hint no-border"> {i18n.hint} </div>
           </>
         );
-        break
       case "menu_restrict_order":
         return <MenuRestrictOrderField i18n={i18n} register={register} />
-        break;
       case "price":
-        return <BookingPriceField i18n={i18n} register={register} />
-        break;
+        return <BookingPriceField setValue={setValue} register={register} watch={watch} ticket_expire_date_desc_path={props.ticket_expire_date_desc_path}/>
       case "memo":
         return (
           <div className="field-row column-direction">
             <textarea autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.note_hint} rows="4" colos="40" className="extend" />
           </div>
         );
-        break;
       case "menu_required_time":
         return (
           <div className="field-row flex-start">
@@ -71,7 +67,6 @@ const BookingOptionEdit =({props}) => {
             {i18n.minute}
           </div>
         );
-        break;
       case "new_pure_menu":
         return (
           <div>
@@ -122,13 +117,16 @@ const BookingOptionEdit =({props}) => {
             </div>
           </div>
         )
-        break
       case "start_at":
         return <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />
-        break;
       case "end_at":
         return <BookingEndAtField i18n={i18n} register={register} watch={watch} control={control} />
     }
+  }
+
+  const isSubmitDisabled = () => {
+    return formState.isSubmitting ||
+      (props.attribute == "price" && watch("price_type") == "ticket" && watch("amount_cents") > 50000)
   }
 
   return (
@@ -146,7 +144,7 @@ const BookingOptionEdit =({props}) => {
       <BottomNavigationBar klassName="centerize">
         <span></span>
         <CircleButtonWithWord
-          disabled={formState.isSubmitting}
+          disabled={isSubmitDisabled()}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
           word={i18n.save}

@@ -121,7 +121,12 @@ module OptionsHelper
     reservation_customers.map do |reservation_customer|
       next unless reservation_customer.reservation
 
-      reservation_option(reservation_customer.reservation).merge!(reservation_customer_state: reservation_customer.reservation_state)
+      reservation_option(reservation_customer.reservation).merge!(
+        reservation_customer_state: reservation_customer.reservation_state,
+        nth_quota: reservation_customer.nth_quota,
+        total_quota: reservation_customer.customer_ticket&.total_quota,
+        ticket_code: reservation_customer.customer_ticket&.code,
+      )
     end.compact
   end
 

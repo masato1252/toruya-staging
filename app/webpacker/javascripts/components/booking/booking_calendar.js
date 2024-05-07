@@ -45,7 +45,7 @@ const BookingTimes = ({booking_reservation_form_values, i18n, setBookingTimeAt})
   }
 }
 
-const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetchBookingTimes, setBookingTimeAt}) => {
+const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetchBookingTimes, setBookingTimeAt, ticket_expire_date}) => {
   const {
     booking_date,
     booking_at,
@@ -74,7 +74,8 @@ const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetch
               skip_default_date={true}
               dateSelectedCallback={fetchBookingTimes}
               scheduleParams={{
-                booking_option_id: booking_option_id
+                booking_option_id: booking_option_id,
+                customer_id: booking_reservation_form_values?.customer_info?.id
               }}
             />
             <div className="demo-days">

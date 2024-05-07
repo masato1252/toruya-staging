@@ -29,8 +29,8 @@ const ScheduleModal = ({i18n, selectedDate, props}) => {
           <div className="modal-header">
             {i18n.calendar}
           </div>
-          <div class="schedule-dashboard">
-            <div class="schedule-dates">
+          <div className="schedule-dashboard">
+            <div className="schedule-dates">
               <a href="#" className="btn btn-yellow btn-icon calendar-btn" onClick={() => {
                 $("#calendar-modal").modal("show");
                 $("#schedule-modal").modal("hide");

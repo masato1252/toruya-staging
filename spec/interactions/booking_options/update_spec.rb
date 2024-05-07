@@ -45,10 +45,6 @@ RSpec.describe BookingOptions::Update do
       it_behaves_like "updates booking option normal attribute", "memo", "foo"
     end
 
-    context "update_attribute is ticket_quota" do
-      it_behaves_like "updates booking option normal attribute", "ticket_quota", 3
-    end
-
     context "update_attribute is new_pure_menu" do
       let!(:staff_account) { FactoryBot.create(:staff_account, owner: user, user: user) }
       let(:update_attribute) { "new_pure_menu" }
@@ -132,6 +128,7 @@ RSpec.describe BookingOptions::Update do
         args[:attrs][:amount_cents] = 100
         args[:attrs][:amount_currency] = "JPY"
         args[:attrs][:tax_include] = true
+        args[:attrs][:ticket_quota] = 3
       end
 
       it "updates price" do
@@ -139,6 +136,7 @@ RSpec.describe BookingOptions::Update do
 
         expect(booking_option.amount).to eq(Money.new(100, "JPY"))
         expect(booking_option.tax_include).to eq(true)
+        expect(booking_option.ticket_quota).to eq(3)
       end
     end
 

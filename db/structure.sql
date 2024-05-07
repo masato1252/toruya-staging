@@ -594,7 +594,8 @@ CREATE TABLE public.booking_options (
     updated_at timestamp without time zone NOT NULL,
     menu_restrict_order boolean DEFAULT false NOT NULL,
     delete_at timestamp without time zone,
-    ticket_quota integer DEFAULT 1 NOT NULL
+    ticket_quota integer DEFAULT 1 NOT NULL,
+    ticket_expire_month integer DEFAULT 1 NOT NULL
 );
 
 

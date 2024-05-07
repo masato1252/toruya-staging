@@ -13,7 +13,8 @@ module BookingOptions
 
       integer :amount_cents, default: nil
       string :amount_currency, default: "JPY"
-      integer :ticket_quota, default: nil
+      integer :ticket_quota, default: 1
+      integer :ticket_expire_month, default: 1
       boolean :tax_include, default: false
 
       string :start_at_date_part, default: nil
@@ -37,14 +38,12 @@ module BookingOptions
       # For changing menu required_time
       integer :menu_id, default: nil
       integer :menu_required_time, default: nil
-
-      integer :ticket_quota, default: nil
     end
 
     def execute
       booking_option.with_lock do
         case update_attribute
-        when "name", "display_name", "menu_restrict_order", "memo", "ticket_quota"
+        when "name", "display_name", "menu_restrict_order", "memo"
           booking_option.update(attrs.slice(update_attribute))
         when "new_pure_menu"
           ApplicationRecord.transaction do
@@ -113,6 +112,7 @@ module BookingOptions
           booking_option.update(
             amount: Money.new(attrs[:amount_cents], attrs[:amount_currency]),
             ticket_quota: attrs[:ticket_quota],
+            ticket_expire_month: attrs[:ticket_expire_month],
             tax_include: attrs[:tax_include]
           )
         when "menus_priority"

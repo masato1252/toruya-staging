@@ -19,6 +19,7 @@ module Booking
     boolean :special_date_type, default: false
     integer :interval, default: 30
     boolean :overbooking_restriction, default: true
+    object :customer, default: nil
 
     def execute
       rules = compose(::Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
@@ -29,7 +30,6 @@ module Booking
         BookingOptions::Prioritize,
         booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
       )
-
       if special_date_type || special_dates.present?
         # available_working_dates = special_dates.map do |special_date|
         #   # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
@@ -41,18 +41,26 @@ module Booking
           # Remember to add more connections for activerecord
           # https://www.joshbeckman.org/2020/05/09/cleaning-up-ruby-threads-and-activerecord-connections/
           # if true || Rails.env.test?
-            special_dates.map do |raw_special_date|
+            special_dates.filter_map do |raw_special_date|
               json_parsed_date = JSON.parse(raw_special_date)
               special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
               next if special_date < booking_page.available_booking_start_date || special_date > booking_page.available_booking_end_date
 
               special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
               special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
+              @booking_options.filter_map do |booking_option|
+                if customer && ticket = customer.active_customer_ticket_of_product(booking_option)
+                  next if special_date > ticket.expire_at.to_date
+                end
 
-              Rails.cache.fetch(cache_key(special_date), expires_in: 4.hour) do
-                test_available_booking_date(@booking_options, special_date, special_date_start_at, special_date_end_at)
+                available_date = Rails.cache.fetch(cache_key(special_date), expires_in: 4.hour) do
+                  # use empty string avoid return content is nil
+                  test_available_booking_date(booking_option, special_date, special_date_start_at, special_date_end_at) || ""
+                end
+
+                available_date if available_date.present?
               end
-            end.compact
+            end.flatten.uniq
           # else
           #   # XXX: Parallel doesn't work properly in test mode,
           #   # some data might be stay in transaction of test thread and would lost in test while using Parallel.
@@ -67,11 +75,20 @@ module Booking
         available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
           # if true || Rails.env.test?
-            available_working_dates.map do |date|
-              Rails.cache.fetch(cache_key(date), expires_in: 4.hour) do
-                test_available_booking_date(@booking_options, date)
+            available_working_dates.filter_map do |date|
+              @booking_options.filter_map do |booking_option|
+                if customer && ticket = customer.active_customer_ticket_of_product(booking_option)
+                  next if date > ticket.expire_at.to_date
+                end
+
+                available_date = Rails.cache.fetch(cache_key(date), expires_in: 4.hours) do
+                  # use empty string avoid return content is nil
+                  test_available_booking_date(booking_option, date) || ""
+                end
+
+                available_date if available_date.present?
               end
-            end.compact
+            end.flatten.uniq
           # else
           #   # XXX: Parallel doesn't work properly in test mode,
           #   # some data might be stay in transaction of test thread and would lost in test while using Parallel.
@@ -109,7 +126,7 @@ module Booking
         BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).count,
         BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).order("updated_at").last,
         booking_options_updated_at,
-        booking_option_menus_updated_at
+        booking_option_menus_updated_at,
       ]
     end
 
@@ -117,7 +134,7 @@ module Booking
       @staff_user_ids ||= shop.staff_users.pluck(:id)
     end
 
-    def test_available_booking_date(booking_options, date, booking_available_start_at = nil, booking_available_end_at = nil)
+    def test_available_booking_date(booking_option, date, booking_available_start_at = nil, booking_available_end_at = nil)
       time_range_outcome = Reservable::Time.run(shop: shop, date: date)
       return if time_range_outcome.invalid?
 
@@ -125,42 +142,40 @@ module Booking
       booking_available_end_at ||= shop_close_at = time_range.last
 
       catch :next_working_date do
-        booking_options.each do |booking_option|
-          # booking_option doesn't sell on that date
-          if booking_option.start_time.to_date > date ||
-              booking_option.end_at && booking_option.end_at.to_date < date
-            next
+        # booking_option doesn't sell on that date
+        if booking_option.start_time.to_date > date ||
+            booking_option.end_at && booking_option.end_at.to_date < date
+          next
+        end
+
+        booking_available_start_at ||= shop_open_at = time_range.first
+
+        if booking_page.specific_booking_start_times.present?
+          booking_page.specific_booking_start_times.each do |start_time_time_part|
+            booking_start_at = Time.zone.parse("#{date}-#{start_time_time_part}")
+            booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
+
+            if booking_end_at > booking_available_end_at
+              break
+            end
+
+            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_start_at, overbooking_restriction: overbooking_restriction) do
+              throw :next_working_date, date.to_s
+            end
           end
+        else
+          loop do
+            booking_end_at = booking_available_start_at.advance(minutes: booking_option.minutes)
 
-          booking_available_start_at ||= shop_open_at = time_range.first
-
-          if booking_page.specific_booking_start_times.present?
-            booking_page.specific_booking_start_times.each do |start_time_time_part|
-              booking_start_at = Time.zone.parse("#{date}-#{start_time_time_part}")
-              booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
-
-              if booking_end_at > booking_available_end_at
-                break
-              end
-
-              loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_start_at, overbooking_restriction: overbooking_restriction) do
-                throw :next_working_date, date.to_s
-              end
+            if booking_end_at > booking_available_end_at
+              break
             end
-          else
-            loop do
-              booking_end_at = booking_available_start_at.advance(minutes: booking_option.minutes)
 
-              if booking_end_at > booking_available_end_at
-                break
-              end
-
-              loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
-                throw :next_working_date, date.to_s
-              end
-
-              booking_available_start_at = booking_available_start_at.advance(minutes: interval)
+            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
+              throw :next_working_date, date.to_s
             end
+
+            booking_available_start_at = booking_available_start_at.advance(minutes: interval)
           end
         end
 

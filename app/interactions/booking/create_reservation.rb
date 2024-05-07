@@ -281,10 +281,13 @@ module Booking
 
           if customer.persisted? && reservation
             compose(Users::UpdateCustomerLatestActivityAt, user: user)
+            reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
 
-            if stripe_token
+            # TODO: Only charge the first time
+            compose(Tickets::AutoProcess, customer: customer, product: booking_option, consumer: reservation_customer) if booking_option.ticket_enabled?
+
+            if stripe_token.present?
               compose(Customers::StorePaymentCustomer, customer: customer, authorize_token: stripe_token, payment_provider: user.stripe_provider)
-              reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
               purchase_outcome = CustomerPayments::PayReservation.run(
                 reservation_customer: reservation_customer,
                 payment_provider: user.stripe_provider
@@ -296,9 +299,8 @@ module Booking
                 errors.add(:base, :paying_reservation_something_wrong)
                 raise ActiveRecord::Rollback
               end
-            elsif square_token
+            elsif square_token.present?
               compose(Customers::StorePaymentCustomer, customer: customer, authorize_token: square_token, payment_provider: user.square_provider)
-              reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
               purchase_outcome = CustomerPayments::PayReservation.run(
                 reservation_customer: reservation_customer,
                 payment_provider: user.square_provider,

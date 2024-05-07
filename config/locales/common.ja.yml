@@ -100,7 +100,10 @@ ja:
     day: 曜日
     time: 時間
     times: 回
+    times_number: 回数
     content: 內容
+    regular_price: 通常価格
+    ticket: 回数券
     start_time: 開始時間
     end_time: 終了時間
     updated_time: 更新時間
@@ -162,6 +165,7 @@ ja:
     responsible_employee: 担当者
     responsible_by: 担当
     booking_price: 予約価格
+    left_ticket: 残り
     status: ステータス
     off_schedule: 臨時休暇
     calendar: カレンダー
@@ -245,6 +249,7 @@ ja:
     no_data: 未登録
     reservation_calendar: 予約カレンダー
     not_paid_payment: これは未払いの支払いです。
+    expire_date: 有效期限
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

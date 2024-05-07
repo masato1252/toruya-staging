@@ -25,7 +25,12 @@ module Tickets
         end
 
         customer_ticket = customer.customer_tickets.unexpired.active.where(ticket: ticket).take
-        customer_ticket ||= customer.customer_tickets.active.build(ticket: ticket, total_quota: product.ticket_quota, code: random_code, expire_at: 3.months.from_now)
+        customer_ticket ||= customer.customer_tickets.active.build(
+          ticket: ticket,
+          total_quota: product.ticket_quota,
+          code: random_code,
+          expire_at: product.ticket_expire_time(consumer_start_time)
+        )
 
         customer_ticket.consumed_quota = customer_ticket.consumed_quota + quote_consumed
         customer_ticket.state = :completed if customer_ticket.consumed_quota == customer_ticket.total_quota
@@ -56,6 +61,12 @@ module Tickets
     def validate_consumer
       if consumer.customer != customer
         errors.add(:consumer, :invalid)
+      end
+    end
+
+    def consumer_start_time
+      if consumer.is_a?(ReservationCustomer)
+        consumer.reservation.start_time
       end
     end
   end

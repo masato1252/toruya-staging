@@ -7,7 +7,8 @@ import BookingFailedArea from "./booking_failed_area";
 
 const BookingReservationButton = ({
   set_booking_reservation_form_values, booking_reservation_form_values, i18n, booking_page, payment_solution,
-  isBookingFlowEnd, isEnoughCustomerInfo, isCustomerTrusted, isPremiumService, isCustomerAddressFilled, handleSubmit, is_single_option, resetBookingFailedValues
+  isBookingFlowEnd, isEnoughCustomerInfo, isCustomerTrusted, isPremiumService, isCustomerAddressFilled, handleSubmit, is_single_option, resetBookingFailedValues,
+  ticket
 }) => {
   const { submitting } = booking_reservation_form_values;
   if (!isBookingFlowEnd) return <></>;
@@ -34,7 +35,7 @@ const BookingReservationButton = ({
           if (isAnyErrors()) {
             $("#customer-info-modal").modal("show");
           }
-          else if (isPaymentSolutionReady() && booking_page.online_payment_enabled && isPremiumService) {
+          else if (!ticket?.ticket_code && isPaymentSolutionReady() && booking_page.online_payment_enabled && isPremiumService) {
             set_booking_reservation_form_values(prev => ({...prev, is_paying_booking: true}))
           }
           else if (isPremiumService && !isCustomerAddressFilled) {

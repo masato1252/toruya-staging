@@ -16,7 +16,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
     if @attribute == "new_option"
       @options = ::BookingPages::AvailableBookingOptions.run!(shop: @booking_page.shop)
-    elsif @attribute == "new_option_menu"
+    elsif @attribute == "new_option_existing_menu"
       @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
     end
   end
