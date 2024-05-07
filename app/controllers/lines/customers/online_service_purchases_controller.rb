@@ -21,6 +21,11 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
   end
 
   def create
+    if @sale_page.ended?
+      render json: { status: "failed", redirect_to: sale_page_path(slug: @sale_page.slug) }
+      return
+    end
+
     outcome = Sales::OnlineServices::Purchase.run(
       sale_page: @sale_page,
       customer: current_customer,
