@@ -6,7 +6,7 @@ import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit";
 
-const SellingTimeStep = ({step, next, prev, lastStep}) => {
+const SellingTimeStep = ({jump, step, next, prev, lastStep}) => {
   const { initial, dispatch, end_time, isEndTimeSetup, isReadyForPreview, selected_online_service } = useGlobalContext()
 
   const default_end_time_type = () => {
@@ -48,7 +48,7 @@ const SellingTimeStep = ({step, next, prev, lastStep}) => {
       />
 
       <div className="action-block">
-        <button onClick={prev} className="btn btn-tarco">
+        <button onClick={() => { jump(0) }} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
         <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow"

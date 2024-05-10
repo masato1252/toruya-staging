@@ -16,7 +16,7 @@ const SellingPriceStep = ({step, next, prev}) => {
     if (initial && isPriceReady()) {
       next()
     }
-    else if (initial) {
+    else if (initial || (!initial && !selected_online_service.one_time_charge_required && !selected_online_service.recurring_charge_required)) {
       if (selected_online_service.recurring_charge_required) {
         default_price_type = "month"
       }

@@ -40,7 +40,7 @@ export const GlobalProvider = ({ props, children }) => {
       {
         sales_creation_states: {
           ...props.sale_page,
-          selected_online_service: props.sale_page?.selected_online_service,
+          selected_online_service: props.sale_page?.selected_online_service || props.selected_online_service,
           product_content: props.sale_page?.content,
           selected_staff: props.sale_page?.staff,
           quantity: props.sale_page?.quantity_option

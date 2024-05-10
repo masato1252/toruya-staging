@@ -40,7 +40,7 @@ export const GlobalProvider = ({ props, children }) => {
       {
         sales_creation_states: {
           id: props.sale_page?.id,
-          selected_booking_page: props.sale_page?.selected_booking_page,
+          selected_booking_page: props.sale_page?.selected_booking_page || props.selected_booking_page,
           selected_template: props.sale_page?.selected_template,
           template_variables: props.sale_page?.template_variables,
           product_content: props.sale_page?.content,

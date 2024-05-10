@@ -6,6 +6,7 @@
       selected_booking_page: @selected_booking_page,
       selected_template: @selected_template,
     ),
+    selected_booking_page: @selected_booking_page,
     business_owner_id: business_owner_id,
     social_account_add_friend_url: Current.business_owner.social_accounts.first&.add_friend_url,
     booking_pages: Current.business_owner.booking_pages.select {|page| page.primary_product }.map { |b|
