@@ -181,7 +181,7 @@ module RichMenus
           when "text"
             {
               "type": "message",
-              "label": action[:value],
+              "label": action[:value].first(LineActions::Uri::LABEL_LIMIT),
               "text": action[:value]
             }
           when "uri"
