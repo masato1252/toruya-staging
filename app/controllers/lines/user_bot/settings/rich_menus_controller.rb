@@ -13,6 +13,11 @@ class Lines::UserBot::Settings::RichMenusController < Lines::UserBotDashboardCon
       if rich_menu_id && (social_rich_menu = SocialRichMenu.find_by(social_rich_menu_id: rich_menu_id))
         @current_rich_menu = RichMenus::SetCurrent.run(social_rich_menu: social_rich_menu)
       end
+
+      if !rich_menu_id
+        SocialAccounts::RichMenus::SwitchBackToruya.run(social_account: Current.business_owner.social_account)
+        @current_rich_menu = Current.business_owner.social_account.current_rich_menu
+      end
     end
   end
 

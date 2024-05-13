@@ -72,7 +72,8 @@ module RichMenus
           errors.add(:image, :invalid)
         end
       else
-        # raise response.error
+        Rollbar.error("Create Rich Menu failed", body: response.body, response: response)
+        errors.add(:social_account, :something_wrong)
       end
     end
 
