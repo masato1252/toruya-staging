@@ -194,7 +194,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def subscription?
-    expire_at.nil? && (stripe_subscription_id.present? || price_details.first.interval.present? || bundled_service&.subscription)
+    stripe_subscription_id.present? || price_details.first.interval.present? || bundled_service&.subscription
   end
 
   def forever?
