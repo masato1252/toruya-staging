@@ -14,7 +14,7 @@ import { CommonServices } from "user_bot/api";
 const ActionTypeFields = ({action_type, register, index, errors, props}) => {
   if (_.includes(props.keywords, action_type)) {
     return (
-      <input type="hidden" name={`actions[${index}].value`} defaultValue={action_type} ref={register({ required: true })} />
+      <input style={{ display: 'none' }} type="text" name={`actions[${index}].value`} defaultValue={action_type} ref={register()} />
     )
   }
   else if (action_type == "sale_page") {
@@ -41,7 +41,7 @@ const ActionTypeFields = ({action_type, register, index, errors, props}) => {
     return (
       <>
         <input type="text" name={`actions[${index}].value`} ref={register({ required: true, validate: isValidHttpUrl })} placeholder="URL" />
-        {errors[name] && errors[`actions[${index}].value`].type === "validate" && <div className="field-row warning">{I18n.t("errors.invalid_url")}</div>}
+        {errors && errors?.actions?.length && errors?.actions[index]?.value?.type === "validate" && <div className="field-row warning">{I18n.t("errors.invalid_url")}</div>}
         <input type="text" name={`actions[${index}].desc`} ref={register({ required: true })} placeholder="desc" />
       </>
     )
@@ -62,9 +62,8 @@ const SocialRichMenuUpsert = ({props}) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log("data", data)
     let error, response;
-    let submitteddata;
 
     [error, response] = await CommonServices.create({
       url: Routes.upsert_lines_user_bot_settings_social_account_social_rich_menus_path({format: "json"}),
