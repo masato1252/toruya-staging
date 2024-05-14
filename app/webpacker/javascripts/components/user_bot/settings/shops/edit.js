@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, SwitchButton } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton } from "shared/components"
 import { ShopServices } from "user_bot/api"
 import useAddress from "libraries/use_address";
 import I18n from 'i18n-js/index.js.erb';
@@ -11,7 +11,7 @@ import SaleDemoPage from "user_bot/sales/demo";
 import LineCardPreview from "shared/line_card_preview";
 
 const SocialAccountEdit =({props}) => {
-  const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
+  const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.shop,
     }
@@ -53,7 +53,9 @@ const SocialAccountEdit =({props}) => {
       setValue("logo_url", reader.result)
     }
 
-    reader.readAsDataURL(file)
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
 
   const renderCorrespondField = () => {
@@ -65,7 +67,6 @@ const SocialAccountEdit =({props}) => {
             <input ref={register} name={props.attribute} type="text" className="extend" />
           </div>
         );
-      break;
       case "phone_number":
         return (
           <>
@@ -95,7 +96,6 @@ const SocialAccountEdit =({props}) => {
             </p>
           </>
         )
-        break;
       case "name":
         return (
           <>
@@ -112,7 +112,6 @@ const SocialAccountEdit =({props}) => {
             </p>
           </>
         );
-        break;
       case "address":
         return (
           <>
@@ -162,7 +161,6 @@ const SocialAccountEdit =({props}) => {
             </p>
           </>
         )
-        break
       case "holiday_working":
         return (
           <div className="field-row">
@@ -185,7 +183,6 @@ const SocialAccountEdit =({props}) => {
             />
           </div>
         );
-        break
     }
   }
 
