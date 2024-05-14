@@ -26,6 +26,7 @@ require "user_bot_social_account"
 class SocialUser < ApplicationRecord
   acts_as_taggable_on :memos
   ADMIN_IDS = [
+    "U685b963671382e6c591f71f2346197f4", # Dev
     "U6de618891f1113d0d7c07ce3dd209540",
     "Ud5a6c48f7716e81f8086d1a9467fea42",
     "Ua13ed6ae1390795b84f78eb30efb410e",
