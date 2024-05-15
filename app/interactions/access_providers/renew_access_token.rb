@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: cronjob weekly
 module AccessProviders
   class RenewAccessToken < ActiveInteraction::Base
     object :access_provider
@@ -20,6 +19,7 @@ module AccessProviders
         if result.success?
           access_provider.update(access_token: MessageEncryptor.encrypt(result.data[:access_token]))
         else
+          Rollbar.error("Square renew failed", user_id: owner.id, response: result.body)
           errors.add(:access_provider, :renew_failed)
         end
       else
