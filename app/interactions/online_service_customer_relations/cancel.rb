@@ -3,7 +3,7 @@
 require "slack_client"
 
 # user unsubscribe a customer
-# customer could not use until the end of the period(not immediately, active, but change expire_at)
+# customer could use until the end of the period(not immediately, active, but change expire_at)
 class OnlineServiceCustomerRelations::Cancel < ActiveInteraction::Base
   object :relation, class: OnlineServiceCustomerRelation
   boolean :end_of_period, default: true
