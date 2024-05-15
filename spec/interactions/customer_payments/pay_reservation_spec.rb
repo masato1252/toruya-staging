@@ -8,10 +8,12 @@ RSpec.describe CustomerPayments::PayReservation do
   let(:booking_amount) { 1.to_money }
   let(:customer) { FactoryBot.create(:customer, with_stripe: true) }
   let(:reservation_customer) { FactoryBot.create(:reservation_customer, :booking_option, customer: customer, booking_amount: booking_amount) }
+  let(:payment_provider) { customer.user.stripe_provider }
 
   let(:args) do
     {
-      reservation_customer: reservation_customer
+      reservation_customer: reservation_customer,
+      payment_provider: payment_provider
     }
   end
   let(:outcome) { described_class.run(args) }

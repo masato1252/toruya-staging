@@ -53,4 +53,13 @@ namespace :subscriptions do
 
     SlackClient.send(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
   end
+
+  task :renew_payment_access_token => :environment do
+    # renew on Monday
+    if Time.now.in_time_zone('Tokyo').wday == 1
+      AccessProvider.square.find_each do |square_provider|
+        AccessProviders::RenewAccessToken.perform_later(access_provider: square_provider)
+      end
+    end
+  end
 end

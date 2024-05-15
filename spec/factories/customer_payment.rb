@@ -5,6 +5,7 @@ FactoryBot.define do
     association :customer
     product { FactoryBot.create(:online_service_customer_relation, customer: customer) }
     amount { Money.new(1000) }
+    provider { AccessProvider.providers[:stripe_connect] }
 
     trait :completed do
       state { :completed }

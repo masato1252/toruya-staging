@@ -10,6 +10,7 @@
 #  manual                :boolean          default(FALSE), not null
 #  memo                  :string
 #  product_type          :string
+#  provider              :string           default("stripe_connect")
 #  state                 :integer          default("active"), not null
 #  stripe_charge_details :jsonb
 #  created_at            :datetime         not null
@@ -33,6 +34,7 @@ class CustomerPayment < ApplicationRecord
   monetize :amount_cents
 
   scope :payment_type, -> { where(state: PAYMENT_STATES) }
+  alias_attribute :charge_details, :stripe_charge_details
 
   enum state: {
     active: 0,
@@ -43,6 +45,11 @@ class CustomerPayment < ApplicationRecord
     refund_failed: 5,
     bonus: 6,
     change_expire_at: 7
+  }
+
+  enum provider: {
+    stripe_connect: "stripe_connect",
+    square: "square"
   }
 
   def failed?

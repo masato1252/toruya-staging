@@ -39,9 +39,28 @@ class CallbacksController < Devise::OmniauthCallbacksController
     current_user = User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
     param = request.env["omniauth.params"]
 
-    outcome = Users::FromStripeOmniauth.run(
+    outcome = Users::FromProviderOmniauth.run(
       user: current_user,
-      auth: request.env["omniauth.auth"]
+      auth: request.env["omniauth.auth"],
+      provider: AccessProvider.providers[:stripe_connect]
+    )
+
+    uri = URI.parse(param['oauth_redirect_to_url'])
+    queries = URI.decode_www_form(uri.query || "") << ["status", outcome.valid?]
+    uri.query = URI.encode_www_form(queries)
+
+    flash[:success] = I18n.t("common.update_successfully_message")
+    redirect_to uri.to_s
+  end
+
+  def square
+    current_user = User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
+    param = request.env["omniauth.params"]
+
+    outcome = Users::FromProviderOmniauth.run(
+      user: current_user,
+      auth: request.env["omniauth.auth"],
+      provider: AccessProvider.providers[:square]
     )
 
     uri = URI.parse(param['oauth_redirect_to_url'])

@@ -24,6 +24,7 @@ gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 gem "omniauth-line"
 gem "omniauth-stripe-connect"
+gem 'omniauth-square', :git => 'https://github.com/dja/omniauth-square.git'
 gem "google_drive", "~> 3.0.4"
 gem "react-rails"
 gem "webpacker", "~> 4.2.2"

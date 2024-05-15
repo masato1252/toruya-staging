@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe CustomerPayments::Refund do
   before do
     StripeMock.start
-    CustomerPayments::PayReservation.run(reservation_customer: reservation_customer)
+    CustomerPayments::PayReservation.run(reservation_customer: reservation_customer, payment_provider: user.stripe_provider)
   end
   after { StripeMock.stop }
   let(:booking_amount) { 1.to_money }

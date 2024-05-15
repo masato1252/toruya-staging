@@ -7,6 +7,13 @@ GIT
       activerecord (>= 3.2.0, < 7.1)
 
 GIT
+  remote: https://github.com/dja/omniauth-square.git
+  revision: a0c08c1bb06d3a577de4b224851dd2a26080e8f5
+  specs:
+    omniauth-square (2.0.0)
+      omniauth-oauth2 (>= 1.1.1, < 2.0.0)
+
+GIT
   remote: https://github.com/ilake/jp_prefecture.git
   revision: ef96a2590f4a0cb6acfb018ee9ebfef4fa9c769b
   specs:
@@ -744,6 +751,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-line
   omniauth-rails_csrf_protection
+  omniauth-square!
   omniauth-stripe-connect
   paper_trail
   parallel

@@ -6,6 +6,7 @@
 #  id                           :bigint           not null, primary key
 #  bookable_restriction_months  :integer          default(3)
 #  booking_limit_day            :integer          default(1), not null
+#  default_provider             :string
 #  deleted_at                   :datetime
 #  draft                        :boolean          default(TRUE), not null
 #  end_at                       :datetime
@@ -114,5 +115,23 @@ class BookingPage < ApplicationRecord
       product_name: booking_options.first&.display_name.presence || I18n.t("common.menu"),
       booking_page_url: Rails.application.routes.url_helpers.booking_page_url(slug)
     )
+  end
+
+  def payment_solution
+    case default_provider.presence || user.payment_provider.provider
+    when AccessProvider.providers[:stripe_connect]
+      { solution: user.stripe_provider.provider, stripe_key: user.stripe_provider.publishable_key }
+    when AccessProvider.providers[:square]
+      result = user.square_client.locations.list_locations
+      square_location_id = result.data[:locations].last[:id]
+
+      { solution: user.square_provider.provider, square_app_id: Rails.application.secrets.square_app_id, square_location_id: square_location_id }
+    else
+      {}
+    end
+  end
+
+  def payment_provider
+    default_provider.presence || user.payment_provider&.provider
   end
 end

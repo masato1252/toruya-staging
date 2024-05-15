@@ -8,7 +8,7 @@ RSpec.describe Users::FromOmniauth do
   let(:args) do
     {
       auth: OmniAuth::AuthHash.new({
-        provider: "google",
+        provider: "google_oauth2",
         uid: SecureRandom.uuid,
         info: {
           email: email

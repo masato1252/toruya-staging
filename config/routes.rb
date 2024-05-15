@@ -249,7 +249,8 @@ Rails.application.routes.draw do
             end
           end
 
-          resource :stripe, only: %i[show]
+          resource :stripe, only: %i[show update]
+          resource :square, only: %i[show update]
 
           resource :social_account, only: [:new, :edit, :update] do
             member do

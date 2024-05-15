@@ -58,8 +58,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
 
+  has_many :access_providers
   has_one :access_provider, -> { where(provider: "google_oauth2")}, dependent: :destroy
   has_one :stripe_provider, -> { where(provider: "stripe_connect")}, dependent: :destroy, class_name: "AccessProvider"
+  has_one :square_provider, -> { where(provider: "square")}, dependent: :destroy, class_name: "AccessProvider"
+  has_one :payment_provider, -> { where(provider: AccessProvider::PAYMENT_PROVIDERS).where(default_payment: true) }, dependent: :destroy, class_name: "AccessProvider"
+  has_many :payment_providers, -> { where(provider: AccessProvider::PAYMENT_PROVIDERS) }, dependent: :destroy, class_name: "AccessProvider"
   has_one :profile, dependent: :destroy
   has_one :subscription, dependent: :destroy
   has_many :reservations, -> { active }
@@ -112,6 +116,7 @@ class User < ApplicationRecord
   delegate :current_plan, :trial_expired_date, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
+  delegate :square_client, to: :square_provider
   delegate :line_keyword_booking_page_ids, to: :user_setting
 
   scope :admin, -> { joins(:social_user).where(social_service_user_id: SocialUser::ADMIN_IDS) }
