@@ -118,7 +118,7 @@ class BookingPage < ApplicationRecord
   end
 
   def payment_solution
-    case default_provider.presence || user.payment_provider.provider
+    case payment_provider
     when AccessProvider.providers[:stripe_connect]
       { solution: user.stripe_provider.provider, stripe_key: user.stripe_provider.publishable_key }
     when AccessProvider.providers[:square]
