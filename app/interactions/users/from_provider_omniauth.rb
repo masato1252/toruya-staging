@@ -22,7 +22,7 @@ module Users
         access.refresh_token = MessageEncryptor.encrypt(auth.credentials.refresh_token)
       end
 
-      access.default_provider = true if !user.access_providers.payment.exists?
+      access.default_payment = true if !user.access_providers.payment.exists?
       access.save
       access
     end
