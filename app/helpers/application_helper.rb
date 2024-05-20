@@ -195,7 +195,7 @@ module ApplicationHelper
     image_tag(png.to_data_url)
   end
 
-  def sale_page_path(sale_page)
+  def bot_sale_page_path(sale_page)
     if sale_page.draft
       if sale_page.is_booking_page?
         new_lines_user_bot_sales_booking_page_path(business_owner_id: business_owner_id, sale_page_id: sale_page.id)

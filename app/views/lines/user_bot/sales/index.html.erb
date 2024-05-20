@@ -8,7 +8,7 @@
         <div class="booking-pages-list">
           <% @sale_pages.each do |sale_page| %>
             <% next unless sale_page.product %>
-            <%= link_to sale_page_path(sale_page), class: "field-row with-next-arrow" do %>
+            <%= link_to bot_sale_page_path(sale_page), class: "field-row with-next-arrow" do %>
               <div>
                 <h3>
                   <% if sale_page.is_booking_page? %>
