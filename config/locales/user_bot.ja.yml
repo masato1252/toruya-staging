@@ -275,7 +275,7 @@ ja:
           basic_settings: メニュー基本設定
           name: メニュー名
           short_name: 短縮名
-          minutes: 所要時間
+          minutes: 最低所要時間
           interval: インターバル
           menu_shops: 利用店舗（満席数）
           full_seat_number_title: 満席数
