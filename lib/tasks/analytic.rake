@@ -476,7 +476,7 @@ namespace :analytic do
         "Last #{week_index} week Free users\nFinished Settings: #{users_finished_settings_message} \nNOT Finished: #{users_not_finished_settings_message}"
       end.join("\n\n")
 
-      message = "#{message}\n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=1913363436"
+      message = "Unpaid users\n\n#{message}\n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=1913363436"
 
       SlackClient.send(channel: 'reports', text: message)
     end
