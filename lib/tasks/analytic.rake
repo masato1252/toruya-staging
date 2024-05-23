@@ -112,7 +112,10 @@ namespace :analytic do
         SalePage.select(:user_id).distinct.count,
         Broadcast.select(:user_id).distinct.count,
         CustomerPayment.completed.count,
-        CustomerPayment.completed.sum(:amount_cents)
+        CustomerPayment.completed.sum(:amount_cents),
+        Menu.active.count,
+        BookingOption.active.count,
+        BookingPage.active.count
       ]
       new_row_data.each_with_index do |data, index|
         google_worksheet[new_row_number, index + 1] = data
