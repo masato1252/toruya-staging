@@ -23,7 +23,11 @@ module Notifiers
         end
 
         def deliverable
-          expected_schedule_time && !custom_message.ever_sent_to_user(receiver)
+          if custom_message.scenario == ::CustomMessages::Users::Template::NO_LINE_SETTINGS
+            !receiver.social_account&.line_settings_verified? && expected_schedule_time && !custom_message.ever_sent_to_user(receiver)
+          else
+            expected_schedule_time && !custom_message.ever_sent_to_user(receiver)
+          end
         end
 
         def message_scenario

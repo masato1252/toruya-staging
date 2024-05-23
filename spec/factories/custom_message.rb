@@ -12,6 +12,11 @@ FactoryBot.define do
       scenario { ::CustomMessages::Users::Template::USER_SIGN_UP }
     end
 
+    trait :no_line_settings do
+      service { nil }
+      scenario { ::CustomMessages::Users::Template::NO_LINE_SETTINGS }
+    end
+
     trait :flex do
       content_type { CustomMessage::FLEX_TYPE }
     end

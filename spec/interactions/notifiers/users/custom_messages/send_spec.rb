@@ -34,6 +34,36 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
       }.by(1)
     end
 
+    # ::CustomMessages::Users::Template::NO_LINE_SETTINGS
+    context "when scenario is no_line_settings but user already finished verification" do
+      # For user line_settings_verified START
+      let(:custom_message) { FactoryBot.create(:custom_message, :no_line_settings) }
+      let!(:social_account) { FactoryBot.create(:social_account, user: receiver) }
+      let(:owner_social_customer) { FactoryBot.create(:social_customer, :is_owner, user: receiver, social_account: receiver.social_account) }
+      before do
+        SocialMessages::Create.run(
+          social_customer: owner_social_customer,
+          content: receiver.social_user.social_service_user_id,
+          readed: true, message_type:
+          SocialMessage.message_types[:customer],
+          send_line: false
+        )
+      end
+      # For user line_settings_verified END
+
+      it "does NOT sends line" do
+        expect {
+          outcome
+        }.not_to change {
+          SocialUserMessage.where(
+            social_user: receiver.social_user,
+            scenario: custom_message.scenario,
+            nth_time: custom_message.nth_time
+          ).count
+        }
+      end
+    end
+
     context "when user received the same custom message before" do
       before do
         FactoryBot.create(
