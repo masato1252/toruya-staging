@@ -652,6 +652,9 @@ ja:
       picture_hint: "画像を設定\n 幅800px〜2500px"
       default_desc: 他にメニューが無い場合に表示
       show_it_now: 今すぐ表示
+      url_placeholder: リンクURL
+      url_desc: アクションラベル(音声読み上げ用)
+      label_length_warning: 20文字までしか保存されません
     social_account:
       sider_label: Line
       settings: 設定

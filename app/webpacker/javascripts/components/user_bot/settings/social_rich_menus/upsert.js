@@ -8,10 +8,10 @@ import I18n from 'i18n-js/index.js.erb';
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SelectOptions } from "shared/components"
 import ImageSelect from "shared/image_select"
-import { isValidHttpUrl } from "libraries/helper";
+import { isValidHttpUrl, isValidLength } from "libraries/helper";
 import { CommonServices } from "user_bot/api";
 
-const ActionTypeFields = ({action_type, register, index, errors, props}) => {
+const ActionTypeFields = ({action_type, register, index, props, watch}) => {
   if (_.includes(props.keywords, action_type)) {
     return (
       <input style={{ display: 'none' }} type="text" name={`actions[${index}].value`} defaultValue={action_type} ref={register()} />
@@ -35,14 +35,19 @@ const ActionTypeFields = ({action_type, register, index, errors, props}) => {
   }
   else if (action_type == "text")
     return (
-      <input type="text" name={`actions[${index}].value`} ref={register({ required: true })} placeholder="value" />
+      <input type="text" name={`actions[${index}].value`} ref={register({ required: true })} placeholder={I18n.t("settings.social_rich_menus.action_types.text")} />
     )
   else if (action_type == "uri") {
     return (
       <>
-        <input type="text" name={`actions[${index}].value`} ref={register({ required: true, validate: isValidHttpUrl })} placeholder="URL" />
-        {errors && errors?.actions?.length && errors?.actions[index]?.value?.type === "validate" && <div className="field-row warning">{I18n.t("errors.invalid_url")}</div>}
-        <input type="text" name={`actions[${index}].desc`} ref={register({ required: true })} placeholder="desc" />
+        <div className="my-2">
+          <input type="text" name={`actions[${index}].value`} ref={register({ required: true, validate: isValidHttpUrl })} placeholder={I18n.t("settings.social_rich_menus.url_placeholder")} />
+          {!isValidHttpUrl(watch(`actions[${index}].value`)) && <span className="warning">{I18n.t("errors.invalid_url")}</span>}
+        </div>
+        <div>
+          <input type="text" name={`actions[${index}].desc`} ref={register({ required: true })} placeholder={I18n.t("settings.social_rich_menus.url_desc")} />
+          {!isValidLength(watch(`actions[${index}].desc`), 20) && <span className="warning">{I18n.t("settings.social_rich_menus.label_length_warning")}</span>}
+        </div>
       </>
     )
   }
@@ -150,7 +155,7 @@ const SocialRichMenuUpsert = ({props}) => {
                       <option value="">{I18n.t("common.select")}</option>
                       <SelectOptions options={props.action_types} />
                     </select>
-                    <ActionTypeFields action_type={watch(`actions[${index}].type`)} register={register} index={index} props={props} errors={errors} />
+                    <ActionTypeFields action_type={watch(`actions[${index}].type`)} watch={watch} register={register} index={index} props={props} errors={errors} />
                   </div>
                 )
               }

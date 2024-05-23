@@ -158,6 +158,10 @@ const isValidHttpUrl = (string) => {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
+const isValidLength= (string, length) => {
+  return (string ?? "").length <= length;
+}
+
 const responseHandler = (error, response) => {
   if (error) {
     toastr.error(error.response.data.error_message)
@@ -190,6 +194,7 @@ export {
   Translator,
   zeroPad,
   isValidHttpUrl,
+  isValidLength,
   responseHandler,
   currencyFormat
 };
