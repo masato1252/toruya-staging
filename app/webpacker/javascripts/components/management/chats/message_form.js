@@ -141,7 +141,6 @@ const MessageForm = () => {
           {reply_image_urls.map(imageSrc => <img src={imageSrc} key={imageSrc} className="w-full h-full object-contain" />)}
         </label>
       </div>
-      <button onClick={buildAiFaqSample} className="btn btn-success">{I18n.t("admin.chat.build_ai_faq")}</button>
       <div className="text-left">
         <div className="margin-around m10 mt-0">
           <label>

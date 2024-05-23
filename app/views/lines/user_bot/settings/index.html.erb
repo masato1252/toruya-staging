@@ -121,9 +121,6 @@
         <%= link_to "https://toruya.com/faq/", class: "field-row", target: '_blank' do %>
           <span><%= t("user_bot.dashboards.settings.support.faq") %></span><i class="fa fa-angle-right"></i>
         <% end %>
-        <%= link_to new_lines_ai_support_url(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_service_user_id)), class: "field-row", target: '_blank' do %>
-          <span><%= t("user_bot.dashboards.settings.support.ai_support") %></span><i class="fa fa-angle-right"></i>
-        <% end %>
 
         <div class="bottom-navigation-bar centerize">
           <%= sprintf("%07d", Current.business_owner.id) %>

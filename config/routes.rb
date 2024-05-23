@@ -14,12 +14,6 @@ Rails.application.routes.draw do
     get :ask_identification_code
     put :update_customer_address
 
-    resources :ai_support, only: [:new, :create] do
-      collection do
-        get :response_check
-      end
-    end
-
     scope module: :verification, path: :verification, as: :verification do
       get "/:encrypted_social_service_user_id", action: "show"
       get "/message_api_status/:encrypted_social_service_user_id", action: "message_api_status", as: :message_api_status
@@ -637,12 +631,7 @@ Rails.application.routes.draw do
     namespace :admin do
       resource :memo, only: [:create]
       resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id
-      resources :chats, only: [:index, :create, :destroy] do
-        collection do
-          post :ai_reply
-        end
-      end
-
+      resources :chats, only: [:index, :create, :destroy]
       resources :sale_pages, only: [:index]
       resources :booking_pages, only: [:index]
       resources :online_service_customer_relations, only: [:index]

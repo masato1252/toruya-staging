@@ -1,8 +1,5 @@
 ja:
   notifier:
-    ai_support_flex:
-      title: お急ぎの方はAIサポートをご利用ください
-      button: AIサポートを利用
     user_sign_up:
       message: "ユーザー登録ありがとうございます。\n\n本日から%{trial_end_date}まで無料でご利用いただけます。\n\nパソコンやタブレット端末からToruyaを使用する場合は、WEB版管理画面をご利用ください。\nhttps://manager.toruya.com/userlogin"
     staff_user_sign_up:

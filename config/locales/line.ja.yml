@@ -1,21 +1,4 @@
 ja:
-  ai_support:
-    ai_remind_message_html: AIサポートの返信は完璧ではありません。より正確な情報については<a href="https://toruya.com/help/">ユーザーマニュアル</a> や <a href="https://toruya.com/faq/">よくある質問</a>などの公式ドキュメントをご参照ください。
-    category_label: まずは、ご質問内容をお選びください。
-    categories:
-      - ユーザー登録
-      - Toruya料金プラン
-      - Toruyaの機能
-      - 初期設定
-      - LINE連携
-      - 予約ページ
-      - オンラインサービス
-      - 宣伝用LP
-      - セグメント配信
-      - その他
-    ask_ai: 質問を入力してください
-    send_question_to_ai: AIに質問を送信
-    other_question: 別の質問をする
   line_verification:
     line_login_confirm_title: "LINE連携の確認"
     line_login_confirm_desc_html: "連携が正しくできているか確認するために<br>LINEでログインしてください。"
