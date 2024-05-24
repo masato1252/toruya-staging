@@ -111,4 +111,12 @@ class SocialUserSerializer
   attribute :accounts_count do |social_user|
     social_user&.current_users&.size || 0
   end
+
+  attribute :last_visit_time do |social_user|
+    if social_user.user
+      u = social_user.user
+      last_visit_time = [u.customer_latest_activity_at, u.mixpanel_profile_last_set_at].compact.max
+      I18n.l(last_visit_time) if last_visit_time
+    end
+  end
 end
