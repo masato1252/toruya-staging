@@ -135,7 +135,10 @@ export default () => {
           {selected_customer.member_plan_name}
         </li>
         <li>
-          {I18n.t("admin.chat.next_charge_date", { date: selected_customer.next_charge_date || "" } )} ( {selected_customer.last_visit_time} )
+          {I18n.t("admin.chat.next_charge_date", { date: selected_customer.next_charge_date || "" } )}
+        </li>
+        <li>
+          {I18n.t("admin.chat.last_visit_time", { time: selected_customer.last_visit_time || "" } )}
         </li>
         <hr />
         <li>
