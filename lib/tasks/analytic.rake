@@ -459,21 +459,28 @@ namespace :analytic do
       recent_1_week_users = Subscription.free.where(created_at: current.advance(weeks: -1)..current).includes(:user).map(&:user)
       recent_2_week_users = Subscription.free.where(created_at: current.advance(weeks: -2)..current.advance(weeks: -1)).includes(:user).map(&:user)
       recent_3_week_users = Subscription.free.where(created_at: current.advance(weeks: -3)..current.advance(weeks: -2)).includes(:user).map(&:user)
+      recent_4_week_users = Subscription.free.where(created_at: current.advance(weeks: -4)..current.advance(weeks: -3)).includes(:user).map(&:user)
 
-      message = [recent_1_week_users, recent_2_week_users, recent_3_week_users].map.with_index(1) do |users, week_index|
-        users_finished_settings_message = users.map do |user|
-          next unless user.social_account&.line_settings_finished?
+      message = [recent_1_week_users, recent_2_week_users, recent_3_week_users, recent_4_week_users].map.with_index(1) do |users, week_index|
+        users_finished_settings_message = users.filter_map do |user|
+          if user.social_account&.line_settings_verified?
+            "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
+          end
+        end.join(", ")
 
-          "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
-        end.compact.join(", ")
+        users_start_but_not_finished_settings_message = users.filter_map do |user|
+          if user.social_account&.is_login_available? && !user.social_account&.line_settings_verified?
+            "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
+          end
+        end.join(", ")
 
-        users_not_finished_settings_message = users.map do |user|
-          next if user.social_account&.line_settings_finished?
+        users_not_start_settings_message = users.filter_map do |user|
+          if !user.social_account&.is_login_available?
+            "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
+          end
+        end.join(", ")
 
-          "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
-        end.compact.join(", ")
-
-        "Last #{week_index} week Free users\nFinished Settings: #{users_finished_settings_message} \nNOT Finished: #{users_not_finished_settings_message}"
+        "Last #{week_index} week Free users\nFinished Settings: #{users_finished_settings_message} \nStart But not Finished: #{users_start_but_not_finished_settings_message}\nNOT START: #{users_not_start_settings_message}"
       end.join("\n\n")
 
       message = "Unpaid users\n\n#{message}\n\nhttps://docs.google.com/spreadsheets/d/1okgAXtvc_3pm8fyNUZS0UKO2KkE7NTGw5vPBdTbzlLg/edit#gid=1913363436"
