@@ -80,4 +80,8 @@ class Staff < ApplicationRecord
   def readable_contact_group_ids
     @readable_contact_group_ids ||= (staff_account.owner? || staff_account.admin?) ? user.contact_group_ids.push(nil) : contact_group_relations.pluck(:contact_group_id)
   end
+
+  def related_staffs
+    staff_account.user&.social_user&.staffs
+  end
 end

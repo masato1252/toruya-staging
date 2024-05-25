@@ -175,7 +175,10 @@ module Reservable
     #   valid
     def validate_booking_events
       if booking_page
-        event_booking_page_ids = BookingPage.active.started.where(shop: shop, event_booking: true).pluck(:id)
+        related_staff_ids = Staff.where(id: staff_ids).map {|staff| staff.related_staffs&.map(&:id) }.flatten.compact
+        shop_ids = ShopStaff.where(staff_id: related_staff_ids).pluck(:shop_id).uniq
+        event_booking_page_ids = BookingPage.active.started.where(shop_id: shop_ids, event_booking: true).pluck(:id).presence
+        event_booking_page_ids ||= BookingPage.active.started.where(shop: shop, event_booking: true).pluck(:id)
         scope = BookingPageSpecialDate.where(booking_page_id: event_booking_page_ids)
         overlap_special_date_booking_page_ids = scope.where("start_at < ? and end_at > ?", end_time, start_time).distinct.pluck(:booking_page_id)
         if overlap_special_date_booking_page_ids.exclude?(booking_page.id) && overlap_special_date_booking_page_ids.present?
@@ -273,7 +276,7 @@ module Reservable
 
     def validate_other_shop_reservation(staff)
       # all the staffs connected with this user
-      related_staff_ids = staff.staff_account.user&.social_user&.staffs&.map(&:id) || staff.id
+      related_staff_ids = staff.related_staffs&.map(&:id) || staff.id
 
       scope = ReservationStaff.
         overlap_reservations_scope(staff_ids: related_staff_ids, reservation_id: reservation_id).
