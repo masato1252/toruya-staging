@@ -31,13 +31,16 @@ module Booking
             special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
             special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
 
+            if special_date < booking_page.available_booking_start_date || special_date > booking_page.available_booking_end_date
+              next
+            end
+
             shop.user.booking_options.where(id: booking_option_ids).includes(:menus).order("booking_options.id").each do |booking_option|
               available_booking_times = []
               booking_start_at = special_date_start_at
 
               # booking_option doesn't sell on that date
-              if booking_option.start_time.to_date > special_date ||
-                  booking_option.end_at && booking_option.end_at.to_date < special_date
+              if booking_option.start_time.to_date > special_date || booking_option.end_at && booking_option.end_at.to_date < special_date
                 next
               end
 
