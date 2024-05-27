@@ -20,7 +20,7 @@ const ChapterEdit =({props}) => {
 
     if (props.chapter.id) {
       [error, response] = await CommonServices.update({
-        url: Routes.lines_user_bot_service_chapter_path(pros.business_owner_id, props.chapter.online_service_id, props.chapter.id, {format: "json"}),
+        url: Routes.lines_user_bot_service_chapter_path(props.business_owner_id, props.chapter.online_service_id, props.chapter.id, {format: "json"}),
         data: _.assign(data, {
           business_owner_id: props.business_owner_id
         })
