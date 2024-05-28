@@ -19,6 +19,7 @@ informations = 'informations'
 acccount = 'acccount'
 payed = 'payed'
 mixpanel = 'mixpanel'
+1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4 = '1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4'
 
 [type.typos]
 extend-glob = [".typos.toml"]
