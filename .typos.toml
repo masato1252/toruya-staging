@@ -1,7 +1,7 @@
 # https://github.com/crate-ci/typos/blob/master/docs/reference.md
 
 [files]
-extend-exclude = ["bin", "fixtures", "log", "tmp", "vendor", "png"]
+extend-exclude = ["bin", "fixtures", "log", "tmp", "vendor", "*.png"]
 ignore-hidden = true
 
 [default.extend-identifiers]
@@ -19,7 +19,7 @@ informations = 'informations'
 acccount = 'acccount'
 payed = 'payed'
 mixpanel = 'mixpanel'
-1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4 = '1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4'
+xdescribe = 'xdescribe'
 
 [type.typos]
 extend-glob = [".typos.toml"]
