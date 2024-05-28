@@ -141,7 +141,14 @@ namespace :analytic do
         nil,
         Episode.count,
         nil,
-        Lesson.count
+        Lesson.count,
+        nil,
+        Customer.count,
+        nil,
+        User.count,
+        nil,
+        Subscription.charge_required.count,
+        nil
       ]
       new_row_data.each_with_index do |data, index|
         google_worksheet[new_row_number, index + 1] = data
