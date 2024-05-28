@@ -156,7 +156,8 @@ module BookingPages
           booking_page.update(attrs.slice(update_attribute))
         when "online_payment_enabled"
           booking_page.online_payment_enabled = attrs[:online_payment_enabled]
-          booking_page.default_provider = attrs[:default_provider] if attrs[:online_payment_enabled] && attrs[:default_provider].present?
+          booking_page.default_provider = attrs[:default_provider] if attrs[:online_payment_enabled]
+
           booking_page.save
         when "line_sharing"
           booking_page.update(attrs.slice(update_attribute))
