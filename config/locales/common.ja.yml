@@ -250,6 +250,7 @@ ja:
     reservation_calendar: 予約カレンダー
     not_paid_payment: これは未払いの支払いです。
     expire_date: 有效期限
+    personal_schedule: 個人の予定
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

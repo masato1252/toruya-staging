@@ -124,6 +124,9 @@ export default () => {
         <li>
           {selected_customer.accounts_count} {I18n.t("common.account")}
         </li>
+        <li>
+          {selected_customer.personal_schedule_count} {I18n.t("common.personal_schedule")}
+        </li>
         <hr />
         <li>
           {I18n.t("admin.chat.sign_up_date", { date: selected_customer.sign_up_date })}

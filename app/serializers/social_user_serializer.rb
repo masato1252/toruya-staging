@@ -119,4 +119,10 @@ class SocialUserSerializer
       I18n.l(last_visit_time) if last_visit_time
     end
   end
+
+  attribute :personal_schedule_count do |social_user|
+    if social_user.user
+      CustomSchedule.closed.where(user_id: social_user.current_users.map(&:id)).count
+    end
+  end
 end
