@@ -10,6 +10,7 @@
 #  flow                         :json
 #  internal_name                :string
 #  introduction_video_url       :string
+#  map_public                   :boolean          default(FALSE)
 #  normal_price_amount_cents    :decimal(, )
 #  product_type                 :string           not null
 #  published                    :boolean          default(TRUE)

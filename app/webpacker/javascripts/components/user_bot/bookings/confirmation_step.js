@@ -20,12 +20,14 @@ const ConfirmationStep = ({next, jump, step}) => {
     new_booking_option_tax_include,
     new_menu_name,
     new_menu_minutes,
-    dispatch
+    dispatch,
+    ticket_quota
   } = useGlobalContext()
 
   const option = selected_booking_option.id ? selected_booking_option : {
     name: selected_menu?.label || new_menu_name,
     minutes: selected_menu?.minutes || new_menu_minutes,
+    price_amount: new_booking_option_price,
     price: `${(parseInt(new_booking_option_price || 0)).toLocaleString()}${i18n.unit}(${new_booking_option_tax_include ? i18n.tax_include : i18n.tax_excluded})`
   }
 
@@ -44,6 +46,7 @@ const ConfirmationStep = ({next, jump, step}) => {
             shop={selected_shop}
             booking_page={booking_page}
             booking_option={option}
+            ticket_quota={ticket_quota}
             edit_option={() => {
               dispatch({type: "RESET_OPTION"})
               jump(1)
@@ -56,6 +59,7 @@ const ConfirmationStep = ({next, jump, step}) => {
             shop={selected_shop}
             booking_page={booking_page}
             booking_option={option}
+            ticket_quota={ticket_quota}
             edit_option={() => jump(1)}
           />
         )

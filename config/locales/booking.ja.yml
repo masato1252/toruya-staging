@@ -63,8 +63,11 @@ ja:
       feature3: 各種店舗の予約をカレンダーで確認
       signup_now: 今すぐ登録
       add_friend_messages_html: "LINEでお友だち登録して<br>最新情報を受け取る"
+      ticket_left_message_html: "回数券は残り%{remaining_ticket_quota}回分です。<br />使用期限は%{expire_date}ですので<br />お早めにご予約ください。"
+      no_ticket_left_message_html: "回数券を使いきりました。<br /> 次回ご予約時に回数券の再購入ができます。"
       add_friend_btn: お友だち登録
       check_in_line_btn: LINEで確認
+      back_to_book: 予約ページへ戻る
     start_yet:
       title: 受付開始前です
       message1: このページからのご予約は

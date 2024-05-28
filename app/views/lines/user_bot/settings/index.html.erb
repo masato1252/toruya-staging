@@ -52,6 +52,10 @@
           <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
+        <%= link_to lines_user_bot_settings_consultants_path(business_owner_id: business_owner_id), class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.company.consultants") %></span><i class="fa fa-angle-right"></i>
+        <% end if false && is_owner %>
+
         <div class="field-header"><%= t("settings.plans.plan_info.caption") %></div>
 
         <%= link_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id), class: "field-row" do %>

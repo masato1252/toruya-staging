@@ -9,6 +9,8 @@ module BookingPages
       integer :booking_option_id, default: nil
       integer :new_booking_option_price, default: nil
       boolean :new_booking_option_tax_include, default: nil
+      integer :ticket_quota, default: 1
+      integer :ticket_expire_month, default: 1
       string :new_menu_name, default: nil
       integer :new_menu_minutes, default: nil
       boolean :new_menu_online, default: false
@@ -24,6 +26,8 @@ module BookingPages
             minutes: menu.minutes,
             amount_cents: attrs[:new_booking_option_price],
             tax_include: attrs[:new_booking_option_tax_include],
+            ticket_quota: attrs[:ticket_quota],
+            ticket_expire_month: attrs[:ticket_expire_month],
             menus: {
               "0" => { 'value' => menu.id, "priority" => 0, "required_time" => menu.minutes },
             }

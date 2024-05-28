@@ -32,8 +32,10 @@ https://manager.toruya.com/userlogin"
         message: "%{user_name} 様\n\nあなたの代理店アカウントに、子アカウントが追加されました。\n\n設定画面からご確認ください。\n\nToruya"
       activate_staff_account:
         message: "%{user_name}さんの店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
-      activate_consultant_account:
-        message: "%{consultant_name} %{client_name}の店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
+      consultant_client_registered:
+        message: "%{client_name}さんよりLINE集客システムToruyaの招待をお届けしました。\n\nリンクをクリックしてユーザー登録してください。\n %{url}"
+      invite_consultant_client:
+        message: "%{user_name}Be my client\n %{url}"
       staff_joined:
         message: "%{staff_name} のスタッフ登録が完了しました。"
       assignee_accepted_reservation:
@@ -43,6 +45,9 @@ https://manager.toruya.com/userlogin"
     booking:
       shop_owner_reservation_booked_notification:
         message: "%{user_name} 様\n\n%{booking_page_title}より新しいご予約が入りました。\n\n予約カレンダーよりご確認ください。\n\nToruya"
+    tickets:
+      unused_ticket_left:
+        message: "この度は、回数券『%{product_name}』のご利用ありがとうございます。\n\n回数券は残り%{ticket_remaining_quota}回分、利用期限は%{ticket_expire_date}までとなっております。\n\n 期限日までのご予約でお使いいただけますので、お早めにご予約ください。\n %{booking_page_url}\n\n＜ご予約済みの場合＞\n既に次回ご予約が完了しているのにこのリマインドを受け取った場合、回数券を利用した予約ができてない可能性がございます。\n\n以下の専用予約ページより予約し直すか、LINEでお問い合わせください。\n%{booking_page_url}"
     online_service:
       purchased:
         video:

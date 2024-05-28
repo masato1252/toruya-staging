@@ -1,0 +1,13 @@
+<div class="margin-around">
+  <p class="desc"><%= t("user_bot.dashboards.settings.consultants.invitation_desc") %></p>
+
+  <div class="margin-around centerize">
+    <%= link_to t("user_bot.dashboards.settings.consultants.feature_checking"), "https://toruya.com/official_supporter/", class: "btn btn-tarco" %>
+  </div>
+
+  <img class="w-full" src='<%= asset_pack_path("media/assets/user_bot/consultant_flow_instruction.png") %>' />
+
+  <div class="margin-around centerize">
+    <%= link_to I18n.t("user_bot.dashboards.settings.consultants.apply_support"), new_application_lines_user_bot_settings_consultants_path(business_owner_id: business_owner_id), class: "btn btn-yellow" %>
+  </div>
+</div>

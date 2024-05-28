@@ -141,6 +141,10 @@ $line-margin: 20px;
   width: 50%;
 }
 
+.bg-white {
+  background-color: #ffffff;
+}
+
 .bg-gray {
   background-color: $basic-gray-background;
 }
@@ -159,6 +163,10 @@ $line-margin: 20px;
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.pt-6 {
+  padding-top: 1.5rem;
 }
 
 .pb-6 {

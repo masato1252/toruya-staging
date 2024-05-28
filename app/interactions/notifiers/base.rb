@@ -6,7 +6,7 @@ module Notifiers
   class Base < ActiveInteraction::Base
     class << self
       # @deliver_by_priority would try to use one of the way to notify users base on the priority
-      # Note: Need to proivde the mailer and mailer_method option when delivered by email
+      # Note: Need to provide the mailer and mailer_method option when delivered by email
       #
       # Examples:
       # deliver_by_priority [:sms, :email], mailer: NotificationMailer, mailer_method: :activate_staff_account
@@ -194,6 +194,12 @@ module Notifiers
     def receiver_should_be_staff_account
       unless receiver.is_a?(StaffAccount)
         errors.add(:receiver, :should_be_staff_account)
+      end
+    end
+
+    def receiver_should_be_consultant_account
+      unless receiver.is_a?(ConsultantAccount)
+        errors.add(:receiver, :should_be_consultant_account)
       end
     end
 

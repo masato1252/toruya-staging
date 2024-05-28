@@ -1,0 +1,18 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.consultants.list_page_title") %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.consultants.list_page_header") %></div>
+        <% if Current.social_user.consultant_at %>
+          <%= render "lines/user_bot/settings/consultants/consultant_enabled", staffs: @staffs, consultant_accounts: @consultant_accounts %>
+        <% else %>
+          <%= render "lines/user_bot/settings/consultants/consultant_application" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

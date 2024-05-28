@@ -5,11 +5,14 @@ require "flow_backtracer"
 module Booking
   module SharedMethods
     # date: Date object
-    def loop_for_reserable_spot(shop:, booking_page:, booking_option:, date:, booking_start_at:, overbooking_restriction:, overlap_restriction: true)
+    def loop_for_reserable_spot(shop:, booking_page:, booking_option:, date:, booking_start_at:, overbooking_restriction:, overlap_restriction: true, customer: nil)
       # staffs are unavailable all days
       @unactive_staff_ids ||= {}
 
       return if date < booking_page.available_booking_start_date
+      if customer && ticket = customer.active_customer_ticket_of_product(booking_option)
+        return if date > ticket.expire_at.to_date
+      end
 
       if same_content_reservation = matched_same_content_reservation(shop: shop, booking_page: booking_page, booking_start_at: booking_start_at, booking_option: booking_option)
         # yield menus, staffs, reservation(if it is existing)

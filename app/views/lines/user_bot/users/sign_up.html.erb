@@ -3,6 +3,7 @@
   is_user_logged_in: current_user&.id&.present? && social_user.user_id.present?,
   toruya_logo_url: asset_pack_path("media/assets/user_bot/logo.png"),
   staff_token: params[:staff_token],
+  consultant_token: params[:consultant_token],
   phone_number: @staff_account&.phone_number,
   i18n: {
   }.merge!([

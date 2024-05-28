@@ -207,6 +207,10 @@ module ApplicationHelper
     end
   end
 
+  def booking_price_desc(booking_option)
+    "#{booking_option.amount.format(:ja_default_format)}(#{t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}")}) #{"<i class='fa fa-ticket-alt text-gray-500'></i> #{booking_option.amount / booking_option.ticket_quota} #{I18n.t("common.unit")} X #{booking_option.ticket_quota} #{I18n.t("common.times")}" if booking_option.ticket_enabled?}".html_safe
+  end
+
   private
 
   def wider_device_types

@@ -15,5 +15,9 @@ class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
     if params[:staff_connect_result].present?
       params[:staff_connect_result] == 'true' ? flash.now[:success] = I18n.t("settings.staff_account.staff_connected_successfully") : flash.now[:alert] = I18n.t("settings.staff_account.staff_connected_failed")
     end
+
+    if params[:consultant_connect_result].present?
+      params[:consultant_connect_result] == 'true' ? flash.now[:success] = I18n.t("settings.consultant.consultant_connected_successfully") : flash.now[:alert] = I18n.t("settings.consultant.consultant_connected_failed")
+    end
   end
 end

@@ -8,8 +8,8 @@ import useAddress from "libraries/use_address";
 import { RequiredLabel } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
 
-const AddressView = ({save_btn_text, show_skip_btn, handleSubmitCallback}) => {
-  const { register, handleSubmit, watch, setValue, formState } = useForm();
+const AddressView = ({save_btn_text, show_skip_btn, handleSubmitCallback, address_details}) => {
+  const { register, handleSubmit, watch, setValue, formState } = useForm({ defaultValues: {...address_details} });
   const { isSubmitting } = formState;
   const address = useAddress(watch("zip_code"))
 

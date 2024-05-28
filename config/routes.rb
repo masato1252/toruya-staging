@@ -295,6 +295,12 @@ Rails.application.routes.draw do
               get :resend_activation_sms
             end
           end
+          resources :consultants, only: [:index, :new, :create] do
+            collection do
+              get :new_application
+              post :create_application
+            end
+          end
 
           resources :menus do
             collection do

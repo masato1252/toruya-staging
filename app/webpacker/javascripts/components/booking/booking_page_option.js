@@ -1,9 +1,9 @@
 "use strict";
 
 import React from "react";
-import moment from 'moment-timezone';
+import { TicketPriceDesc } from "shared/components";
 
-const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n, booking_start_at, last_selected_option_id }) => {
+const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n, booking_start_at, last_selected_option_id, ticket }) => {
   let option_content;
   const {
     open_details,
@@ -27,6 +27,25 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
     option_content = `${booking_start_at.format("HH:mm")} ${i18n.booking_end_at}`
   }
 
+  const renderPrice = () => {
+    if (ticket && ticket.ticket_code) {
+      return (
+        <>
+          <i className="fa fa-ticket-alt text-gray-500"></i> {I18n.t("common.left_ticket")}{ticket.total_quota - ticket.consumed_quota}/{ticket.total_quota} {I18n.t("common.times")}
+        </>
+      )
+    }
+    else if (ticket && !ticket.ticket_code)
+      return (
+        <>
+          {booking_option_value.price} <i className="fa fa-ticket-alt text-gray-500"></i> <TicketPriceDesc amount={booking_option_value.price_amount} ticket_quota={ticket.total_quota} />
+        </>
+      )
+    else {
+      return booking_option_value.price
+    }
+  }
+
   return (
     <div className="result-field">
       <div className="booking-option-field" data-controller="collapse" data-collapse-status="closed">
@@ -47,7 +66,7 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
 
         <div className="booking-option-row">
           <span>
-            {booking_option_value.price}
+            {renderPrice()}
           </span>
 
           {booking_option_value.memo && booking_option_value.memo.length &&

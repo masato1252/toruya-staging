@@ -46,10 +46,10 @@ class BookingPagesController < ActionController::Base
 
     if @customer
       Current.customer = @customer
+
     else
       Current.customer = params[:social_user_id] || SecureRandom.uuid
     end
-
 
     active_booking_options_number = @booking_page.booking_options.active.count
     @has_active_booking_option =  !active_booking_options_number.zero?
@@ -60,6 +60,14 @@ class BookingPagesController < ActionController::Base
 
       if first_special_date && first_special_date.start_at > Time.current
         @default_selected_date = first_special_date.start_at.to_fs(:date)
+      end
+    end
+
+    @booking_options_quota = @booking_page.booking_options.active.each_with_object({}) do |booking_option, h|
+      if ticket = @customer&.active_customer_ticket_of_product(booking_option)
+        h[booking_option.id.to_s] = { total_quota: ticket.total_quota, consumed_quota: ticket.consumed_quota, ticket_code: ticket.code, expire_date: I18n.l(ticket.expire_at, format: :date) }
+      elsif booking_option.ticket_enabled?
+        h[booking_option.id.to_s] = { total_quota: booking_option.ticket_quota, consumed_quota: 0, ticket_code: nil, expire_date: nil, expire_month: booking_option.ticket_expire_month }
       end
     end
 
@@ -100,6 +108,8 @@ class BookingPagesController < ActionController::Base
         status: "successful"
       }
     else
+      Rollbar.error("Booking::CreateReservation failed", errors: outcome.errors.details)
+
       render json: {
         status: "failed",
         errors: {
@@ -192,7 +202,8 @@ class BookingPagesController < ActionController::Base
       special_dates: special_dates,
       special_date_type: booking_page.booking_page_special_dates.exists?,
       interval: booking_page.interval,
-      overbooking_restriction: booking_page.overbooking_restriction
+      overbooking_restriction: booking_page.overbooking_restriction,
+      customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil,
     )
 
     if outcome.valid?
@@ -240,7 +251,8 @@ class BookingPagesController < ActionController::Base
       special_dates: booking_dates,
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       interval: booking_page.interval,
-      overbooking_restriction: booking_page.overbooking_restriction
+      overbooking_restriction: booking_page.overbooking_restriction,
+      customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil
     )
 
     available_booking_times = outcome.result.each_with_object({}) { |(time, option_ids), h| h[I18n.l(time, format: :hour_minute)] = option_ids  }

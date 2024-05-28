@@ -15,11 +15,11 @@ const requiredValidation = (key = "") => (component, value) => {
   }
 }
 
-const emailPatten =  /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w{2,}([-.]\w+)*$/u;
+const emailPattern =  /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w{2,}([-.]\w+)*$/u;
 const emailFormatValidator = (component, value) => {
   if (!value) return undefined;
 
-  return emailPatten.test(value) ? undefined : component.props.i18n.errors.invalid_email_format
+  return emailPattern.test(value) ? undefined : component.props.i18n.errors.invalid_email_format
 }
 
 const mustBeNumber = (component, value) => (isNaN(value) ? component.props.i18n.errors.not_a_number : undefined)
@@ -175,6 +175,10 @@ const currencyFormat = (number) => {
   return new Intl.NumberFormat().format(number)
 }
 
+const ticketExpireDate = (start_time, expire_month) => {
+  return expire_month != 6 ? start_time.add(expire_month, "M").format("YYYY-MM-DD") : start_time.add(180, "d").format("YYYY-MM-DD")
+}
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -196,5 +200,6 @@ export {
   isValidHttpUrl,
   isValidLength,
   responseHandler,
-  currencyFormat
+  currencyFormat,
+  ticketExpireDate
 };

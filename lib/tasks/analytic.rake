@@ -115,7 +115,8 @@ namespace :analytic do
         CustomerPayment.completed.sum(:amount_cents),
         Menu.active.count,
         BookingOption.active.count,
-        BookingPage.active.count
+        BookingPage.active.count,
+        CustomerTicket.count
       ]
       new_row_data.each_with_index do |data, index|
         google_worksheet[new_row_number, index + 1] = data
@@ -178,13 +179,24 @@ namespace :analytic do
     end
   end
 
-  # https://www.google.com/maps/d/u/0/edit?hl=zh-TW&hl=zh-TW&mid=1H6wNjpf_z6PYab0tNcV_zI-46oe_0SM&ll=33.18436717659077%2C132.2792760282602&z=6
-  # https://docs.google.com/spreadsheets/d/1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4/edit#gid=0
+  # doc: https://docs.google.com/spreadsheets/d/1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4/edit#gid=0
+  # map: https://www.google.com/maps/d/u/0/edit?hl=zh-TW&hl=zh-TW&mid=1H6wNjpf_z6PYab0tNcV_zI-46oe_0SM&ll=33.18436717659077%2C132.2792760282602&z=6
   task :paid_user_map_data => :environment do
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
       google_worksheet = Google::Drive.spreadsheet(google_sheet_id: "1D5EQ2peahWivcS-NlakXE_zXzDOFo-MbJ14LwnV5_h4", worksheet: 0)
 
-      row_data = Subscription.charge_required.map{|s| ppp = s.user.profile; [ppp.company_name, ppp.company_address, s.user.social_account.add_friend_url] }
+      row_data = Subscription.charge_required.map do |s|
+        profile = s.user.profile
+        sale_page = s.user.sale_pages.where(map_public: true).first
+
+        [
+          profile.company_name,
+          profile.company_address,
+          s.user.social_account.add_friend_url,
+          sale_page ? Rails.application.routes.url_helpers.sale_page_url(sale_page.slug) : nil
+        ]
+      end
+
       row_data.each_with_index do |col_data, row_number|
         col_data.each_with_index do |data, col_index|
           google_worksheet[row_number + 2, col_index + 1] = data

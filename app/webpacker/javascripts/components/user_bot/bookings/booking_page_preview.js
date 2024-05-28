@@ -2,9 +2,9 @@
 
 import React from "react";
 
-import { useGlobalContext } from "context/user_bots/bookings/global_state";
+import { TicketPriceDesc } from "shared/components";
 
-const BookingPagePreview = ({shop, booking_page, booking_option, i18n, edit_option, edit_price}) => {
+const BookingPagePreview = ({shop, booking_page, booking_option, ticket_quota, i18n, edit_option, edit_price}) => {
   return (
     <div className="booking-page-preview">
       <div className="header">
@@ -32,7 +32,13 @@ const BookingPagePreview = ({shop, booking_page, booking_option, i18n, edit_opti
           <div>{i18n.booking_option_required_time}{booking_option.minutes}{i18n.minute}</div>
         </div>
         <div className="booking-option-row">
-          <span>{booking_option.price}</span>
+          <span>{booking_option.price}
+            {ticket_quota && ticket_quota > 1 && (
+              <>
+                <i className="fa fa-ticket-alt text-gray-500"></i> <TicketPriceDesc amount={booking_option.price_amount} ticket_quota={ticket_quota} />
+              </>
+            )}
+          </span>
 
           {edit_price != undefined && (
             <span className="btn btn-yellow edit-mark" onClick={edit_price}>

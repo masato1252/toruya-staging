@@ -9,6 +9,7 @@
 #  booking_amount_currency :string
 #  booking_at              :datetime
 #  details                 :jsonb
+#  nth_quota               :integer
 #  payment_state           :integer          default("pending")
 #  state                   :integer          default("pending")
 #  tax_include             :boolean
@@ -17,6 +18,7 @@
 #  booking_option_id       :integer
 #  booking_page_id         :integer
 #  customer_id             :integer          not null
+#  customer_ticket_id      :integer
 #  reservation_id          :integer          not null
 #  sale_page_id            :integer
 #
@@ -37,6 +39,8 @@ class ReservationCustomer < ApplicationRecord
   belongs_to :customer, touch: true
   belongs_to :booking_page, required: false
   belongs_to :booking_option, required: false
+  belongs_to :customer_ticket, required: false
+  has_one :customer_ticket_consumer, as: :consumer
   serialize :details, HashieSerializer
 
   enum state: {

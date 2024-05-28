@@ -3,8 +3,10 @@
     business_owner_id: business_owner_id,
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes),
     editing_menu: @editing_menu,
+    ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
     booking_option: @booking_option.attributes.merge!(
       amount_cents: @booking_option.amount&.fractional,
+      price_type: @booking_option.ticket_enabled? ? "ticket" : "regular",
       start_at_type: @booking_option.start_at ? "date" : "now",
       start_at_date_part: @booking_option.start_at_date || Date.current.to_s,
       start_at_time_part: @booking_option.start_at_time,

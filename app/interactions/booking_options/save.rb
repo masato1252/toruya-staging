@@ -12,6 +12,8 @@ module BookingOptions
       string :amount_currency, default: "JPY"
       boolean :menu_restrict_order, default: false
       boolean :tax_include, default: false
+      integer :ticket_quota, default: 1
+      integer :ticket_expire_month, default: 1
       string :start_at_date_part, default: nil
       string :start_at_time_part, default: nil
       string :end_at_date_part, default: nil

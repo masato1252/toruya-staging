@@ -76,7 +76,9 @@ const UserBotCustomerReservations = () =>{
               data-action="click->modal#popup"
               data-modal-path={reservation.type === "Reservation" ? Routes.lines_user_bot_shop_reservation_path(reservation.userId, reservation.shopId, reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id }) : Routes.lines_user_bot_online_service_customer_relation_path(reservation.userId, reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
               <div className={`state ${reservation.reservation_customer_state}`}></div>
-              <dd className="date">{reservation.monthDate}</dd>
+              <dd className="date">
+                {reservation.monthDate}
+              </dd>
               <div className="time">
                 <div className="start-time">
                   {reservation.startTime}
@@ -88,6 +90,11 @@ const UserBotCustomerReservations = () =>{
               <div className="content">
                 <div className="top">
                   {reservation.menu}
+                  {reservation.ticket_code && (
+                    <>
+                      <i className="fa fa-ticket-alt text-gray-500"></i> {reservation.ticket_code} ({reservation.nth_quota}/{reservation.total_quota}{I18n.t("common.times")})
+                    </>
+                  )}
                 </div>
               </div>
               <div className="info">

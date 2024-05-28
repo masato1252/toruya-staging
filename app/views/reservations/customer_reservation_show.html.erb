@@ -25,7 +25,8 @@
         <% end %>
       </div>
       <%= render "reservations/show_modal/reservation_info", reservation: @reservation, sentences: @sentences, user_ability: @user_ability %>
-      <%= render "reservations/show_modal/booking_price", reservation_customer: @reservation_customer if @reservation_customer %>
+      <%= render "reservations/show_modal/ticket", reservation_customer: @reservation_customer if @reservation_customer && @reservation_customer.customer_ticket %>
+      <%= render "reservations/show_modal/booking_price", reservation_customer: @reservation_customer if @reservation_customer && !@reservation_customer.customer_ticket  %>
       <%= render "reservations/show_modal/customer_info_changed", reservation_customer: @reservation_customer if @reservation_customer %>
       <%= render "reservations/show_modal/booking_from", reservation_customer: @reservation_customer, reservation: @reservation if @reservation_customer %>
     </div>
