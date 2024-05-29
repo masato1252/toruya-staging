@@ -33,9 +33,9 @@ https://manager.toruya.com/userlogin"
       activate_staff_account:
         message: "%{user_name}さんの店舗スタッフとして登録する場合はリンクをクリックしてください\n %{url}"
       consultant_client_registered:
-        message: "%{client_name}さんよりLINE集客システムToruyaの招待をお届けしました。\n\nリンクをクリックしてユーザー登録してください。\n %{url}"
+        message: "%{client_name}さんのToruya登録が完了しました。"
       invite_consultant_client:
-        message: "%{user_name}Be my client\n %{url}"
+        message: "%{consultant_name}さんよりLINE集客システムToruyaの招待をお届けしました。\n\nリンクをクリックしてユーザー登録してください。\n%{url}"
       staff_joined:
         message: "%{staff_name} のスタッフ登録が完了しました。"
       assignee_accepted_reservation:

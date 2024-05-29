@@ -11,7 +11,7 @@ module Consultants
       consultant_account.save
 
       # Send SMS to invitee to tell them come to be a staff
-      Notifiers::Users::Notifications::InviteConsultantClient.run(receiver: consultant_account, consultant_user: consultant_user)
+      Notifiers::Users::Notifications::InviteConsultantClient.run(receiver: consultant_account)
     end
   end
 end
