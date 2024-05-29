@@ -8,7 +8,7 @@ import FlowStepIndicator from "./flow_step_indicator";
 import LineVerificationWarning from 'shared/line_verification_warning';
 
 const FiltersSelectionStep = ({next, step}) => {
-  const { props, query_type, dispatch } = useGlobalContext()
+  const { props, dispatch } = useGlobalContext()
 
   useEffect(() => {
     if (props.broadcast.query_type) next()
