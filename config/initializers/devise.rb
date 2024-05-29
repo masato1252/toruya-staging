@@ -296,8 +296,8 @@ Devise.setup do |config|
     {
       :scope => "MERCHANT_PROFILE_READ,CUSTOMERS_WRITE,CUSTOMERS_READ,PAYMENTS_READ,PAYMENTS_WRITE,SUBSCRIPTIONS_WRITE,ITEMS_READ,ORDERS_WRITE,INVOICES_WRITE,SUBSCRIPTIONS_READ,ITEMS_WRITE",
       :client_options => {
-        :connect_site => Rails.configuration.x.env.production? ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com',
-        :site => Rails.configuration.x.env.production? ? 'https://squareup.com' : 'https://squareupsandbox.com'
+        :connect_site => 'https://connect.squareup.com',
+        :site => 'https://squareup.com'
       }
     }
 end
