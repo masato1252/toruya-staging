@@ -44,8 +44,10 @@ const PriceSetupStep = ({next, step}) => {
           }
         } />
         {i18n.unit}({I18n.t("common.tax_included")})
-        {price_type == "ticket" && new_booking_option_price > 50000 &&
+        {price_type == "ticket" && new_booking_option_price && new_booking_option_price > 50000 &&
           <ErrorMessage error={I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")} />}
+        {new_booking_option_price && new_booking_option_price < 100 &&
+          <ErrorMessage error={I18n.t("errors.selling_price_too_low")} />}
       </div>
       <div className="my-2">
         <label className="mx-2">
@@ -142,7 +144,7 @@ const PriceSetupStep = ({next, step}) => {
       <div className="action-block">
         <button
           className="btn btn-yellow"
-          disabled={price_type == "ticket" && new_booking_option_price > 50000}
+          disabled={(price_type == "ticket" && new_booking_option_price > 50000) || (new_booking_option_price && new_booking_option_price < 100)}
           onClick={next}>
           {I18n.t("action.next_step")}
         </button>

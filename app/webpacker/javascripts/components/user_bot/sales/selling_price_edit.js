@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 
 import I18n from 'i18n-js/index.js.erb';
-import { SelectOptions } from "shared/components"
+import { SelectOptions, ErrorMessage } from "shared/components"
 
 const SellingPriceEdit = ({price, handlePriceChange}) => (
   <>
@@ -51,6 +51,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
                 ({I18n.t("common.tax_included")})
               </>
           )}
+          {price.price_amounts?.one_time?.amount && price.price_amounts?.one_time?.amount < 100 && <ErrorMessage error={I18n.t("errors.selling_price_too_low")}/>}
           </div>
         </label>
       </div>
@@ -100,6 +101,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
                     }} />
                   {I18n.t("common.unit")}
                   ({I18n.t("common.tax_included")})
+                  {price.price_amounts?.multiple_times?.amount && price.price_amounts.multiple_times.amount < 100 && <ErrorMessage error={I18n.t("errors.selling_price_too_low")}/>}
                 </div>
                 <div>
                   X&nbsp;

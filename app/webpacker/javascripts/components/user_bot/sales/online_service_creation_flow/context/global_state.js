@@ -165,7 +165,10 @@ export const GlobalProvider = ({ props, children }) => {
       (price.price_types.includes("one_time") && !price.price_amounts?.one_time?.amount) ||
       (price.price_types.includes("multiple_times") && (!price.price_amounts?.multiple_times?.amount || !price.price_amounts?.multiple_times?.times)) ||
       (price.price_types.includes("month") && !price.price_amounts?.month?.amount) ||
-      (price.price_types.includes("year") && !price.price_amounts?.year?.amount))
+      (price.price_types.includes("year") && !price.price_amounts?.year?.amount) ||
+      (price.price_amounts?.one_time?.amount && price.price_amounts.one_time.amount < 100) ||
+      (price.price_amounts?.multiple_times?.amount && price.price_amounts.multiple_times.amount < 100)
+    )
   }
 
   return (
