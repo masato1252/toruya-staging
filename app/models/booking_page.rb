@@ -19,6 +19,7 @@
 #  online_payment_enabled       :boolean          default(FALSE)
 #  overbooking_restriction      :boolean          default(TRUE)
 #  slug                         :string
+#  social_account_skippable     :boolean          default(FALSE), not null
 #  specific_booking_start_times :string           is an Array
 #  start_at                     :datetime
 #  title                        :string

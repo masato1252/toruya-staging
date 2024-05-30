@@ -36,7 +36,7 @@ ja:
     please_select_a_menu: メニューをお選びください
     reset_button: 始めからやり直す
     last_selected_option: 前回ご利用のメニュー
-    i_dont_use_line: LINEは使っていません
+    i_dont_use_line: LINEは持っていません
     owner_personal_schedule_warning: 予約不可にしたい場合は『Myカレンダー』より個人の予定を作成してください。
     booking_code:
       code: 確認コード
@@ -55,6 +55,8 @@ ja:
       title: 仮予約が完了しました
       message1: LINEログインされたアカウントに
       message2: ご予約内容を送信しました
+      no_line_message1_html: 入力された携帯電話に<br />ご予約内容を送信しました
+      no_line_message2_html: LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます
       desc1: の予約情報を
       desc2: あなたの予定と一緒に管理できる
       desc3: 無料カレンダーアプリ

@@ -20,6 +20,7 @@ acccount = 'acccount'
 payed = 'payed'
 mixpanel = 'mixpanel'
 xdescribe = 'xdescribe'
+skippable = 'skippable'
 
 [type.typos]
 extend-glob = [".typos.toml"]
