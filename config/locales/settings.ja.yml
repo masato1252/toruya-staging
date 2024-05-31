@@ -512,7 +512,7 @@ ja:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
           reached_the_menus_limit: メニューは２つまで設定できます
           no_available_shop: このメニューには利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。
-          ticket_max_price_limit: オンライン決済システムの規定により、5万円を超える回数券は販売できません。
+          ticket_max_price_limit: 5万円を超える回数券は販売できません。
     booking_page:
       title: 予約ページの設定
       info_html: 予約ページを設定します。<br>お客様はここで設定したページからオンライン予約します。
