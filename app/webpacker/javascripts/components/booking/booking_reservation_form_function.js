@@ -37,6 +37,7 @@ const BookingReservationFormFunction = ({props}) => {
   const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(props.booking_reservation_form)
   const stripe_token_ref = useRef();
   const square_token_ref = useRef();
+  const address_ref = useRef();
   const bookingReservationLoading_ref = useRef();
 
   const isCustomerAddressFilled = () => {
@@ -60,6 +61,7 @@ const BookingReservationFormFunction = ({props}) => {
   const handleAddressCallback = (address) => {
     const { is_filling_address } = booking_reservation_form_values
     set_booking_reservation_form_values(prev => ({...prev, customer_info: {...prev.customer_info, address_details: address }}))
+    address_ref.current = address
 
     if (is_filling_address) {
       handleSubmit()
@@ -296,7 +298,7 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const handleSubmit = async () => {
-    const { is_paying_booking,  } = booking_reservation_form_values
+    const { is_paying_booking } = booking_reservation_form_values
 
     if (bookingReservationLoading_ref.current) return;
 
@@ -305,38 +307,48 @@ const BookingReservationFormFunction = ({props}) => {
     if (is_paying_booking && !stripe_token && !square_token) return;
 
     bookingReservationLoading_ref.current = true
+    let data = _.merge(
+      _.pick(
+        props.payment_solution,
+        "square_location_id"
+      ),
+      _.pick(
+        booking_reservation_form_values.booking_code,
+        "uuid",
+      ),
+      _.pick(
+        booking_reservation_form_values,
+        "booking_option_id",
+        "booking_date",
+        "booking_at",
+        "customer_first_name",
+        "customer_last_name",
+        "customer_phonetic_last_name",
+        "customer_phonetic_first_name",
+        "customer_phone_number",
+        "customer_info",
+        "present_customer_info",
+        "social_user_id",
+        "sale_page_id"
+      ),
+      {
+        stripe_token,
+        square_token
+      }
+    )
+
+    if (address_ref.current) {
+      data["customer_info"]["address_details"] = address_ref.current
+    }
+
+    if (!data["customer_info"]["original_address_details"]) {
+      data["customer_info"]["original_address_details"] = {}
+    }
+
     try {
       const [_error, response] = await CommonServices.create({
         url: props.path.save,
-        data: _.merge(
-          _.pick(
-            props.payment_solution,
-            "square_location_id"
-          ),
-          _.pick(
-            booking_reservation_form_values.booking_code,
-            "uuid",
-          ),
-          _.pick(
-            booking_reservation_form_values,
-            "booking_option_id",
-            "booking_date",
-            "booking_at",
-            "customer_first_name",
-            "customer_last_name",
-            "customer_phonetic_last_name",
-            "customer_phonetic_first_name",
-            "customer_phone_number",
-            "customer_info",
-            "present_customer_info",
-            "social_user_id",
-            "sale_page_id"
-          ),
-          {
-            stripe_token,
-            square_token
-          }
-        )
+        data: data
       })
 
       bookingReservationLoading_ref.current = false
