@@ -36,16 +36,18 @@ module Reservable
 
       # validate_time_range
       if time_outcome.valid?
-        shop_start_at = time_outcome.result.first
-        shop_close_at = time_outcome.result.last
-        reservation_start_at = start_time
-        reservation_end_at = end_time
+        shop_start_at = time_outcome.result.first.first
+        shop_close_at = time_outcome.result.last.last
 
-        if reservation_start_at < shop_start_at
-          errors.add(:start_time, :invalid_time)
+        if (time_outcome.result.none? { |working_time_range| start_time >= working_time_range.first && end_time <= working_time_range.last })
+          if start_time < shop_start_at
+            errors.add(:start_time, :invalid_time)
+          else
+            errors.add(:end_time, :invalid_time)
+          end
         end
 
-        if reservation_end_at > shop_close_at || reservation_start_at > reservation_end_at
+        if start_time > end_time
           errors.add(:end_time, :invalid_time)
         end
       end

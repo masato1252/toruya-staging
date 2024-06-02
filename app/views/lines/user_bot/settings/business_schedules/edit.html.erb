@@ -4,7 +4,10 @@
       <%= react_component("user_bot/settings/business_schedules/edit", {
         props: {
           business_owner_id: business_owner_id,
-          business_schedule: BusinessScheduleSerializer.new(@business_schedule).attributes_hash,
+          shop_id: @shop.id,
+          wday: params[:wday],
+          business_state: @business_schedules.exists? ? "opened" : "closed",
+          business_schedules: @business_schedules.map { |business_schedule| BusinessScheduleSerializer.new(business_schedule).attributes_hash },
         }
       },
       { camelize_props: false }

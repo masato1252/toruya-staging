@@ -3,20 +3,30 @@
 module BusinessSchedules
   class Update < ActiveInteraction::Base
     object :shop
-    hash :attrs do
-      string :id
-      string :business_state
-      string :start_time, default: nil
-      string :end_time, default: nil
+    string :business_state
+    integer :day_of_week
+    array :business_schedules, default: [] do
+      hash do
+        string :start_time
+        string :end_time
+      end
     end
 
     def execute
-      schedule = shop.business_schedules.find(attrs[:id])
+      shop.with_lock do
+        shop.business_schedules.for_shop.where(day_of_week: day_of_week).destroy_all
 
-      schedule.update(attrs.except(:id))
-
-      errors.merge!(schedule.errors) if schedule.errors.present?
-      schedule
+        if business_state == "opened"
+          business_schedules.each do |business_schedule|
+            shop.business_schedules.for_shop.create!(
+              business_state: business_state,
+              day_of_week: day_of_week,
+              start_time: business_schedule[:start_time],
+              end_time: business_schedule[:end_time]
+            )
+          end
+        end
+      end
     end
   end
 end

@@ -14,56 +14,56 @@ module Booking
     array :special_dates
 
     def execute
-      invalid_special_dates = []
-      not_enough_time_special_dates = []
-
-      longest_option = shop.user.booking_options.where(id: booking_option_ids).sort_by { |option| option.minutes }.last
-      longest_interval_time = longest_option.menus.order("interval").last.interval
-
-      special_dates.each do |raw_special_date|
-        json_parsed_date = JSON.parse(raw_special_date)
-        special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
-        time_outcome = Reservable::Time.run(shop: shop, date: special_date)
-
-        if time_outcome.valid?
-          shop_start_at = time_outcome.result.first
-          shop_closed_at = time_outcome.result.last
-          special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
-          special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
-          special_date_time_length = special_date_end_at - special_date_start_at
-          basic_required_minutes = longest_option.minutes
-          special_time_range = "#{I18n.l(special_date_start_at)} ~ #{I18n.l(special_date_end_at, format: :hour_minute)}"
-
-          if special_date_start_at < shop_start_at ||
-              special_date_end_at > shop_closed_at ||
-              special_date_start_at > special_date_end_at
-            invalid_special_dates << special_date
-          elsif special_date_start_at.advance(minutes: basic_required_minutes) > shop_closed_at
-            not_enough_time_special_dates << {
-              time_range: special_time_range,
-              required_time: basic_required_minutes
-            }
-          elsif special_date_time_length < basic_required_minutes.minutes
-            not_enough_time_special_dates << {
-              time_range: special_time_range,
-              required_time: basic_required_minutes
-            }
-          end
-        else
-          invalid_special_dates << special_date
-        end
-      end
-
-      if invalid_special_dates.present?
-        errors.add(:special_dates, :on_unworking_dates, invalid_dates: invalid_special_dates.map { |date| I18n.l(date, format: :year_month_date) }.join(", "))
-      end
-
-      if not_enough_time_special_dates.present?
-        not_enough_time_dates = not_enough_time_special_dates.map do |not_enough_time_special_date|
-          "#{not_enough_time_special_date[:time_range]} #{not_enough_time_special_date[:required_time]}"
-        end.join(", ")
-        errors.add(:special_dates, :not_enough_time_dates, not_enough_time_dates: not_enough_time_dates)
-      end
+      # invalid_special_dates = []
+      # not_enough_time_special_dates = []
+      #
+      # longest_option = shop.user.booking_options.where(id: booking_option_ids).sort_by { |option| option.minutes }.last
+      # longest_interval_time = longest_option.menus.order("interval").last.interval
+      #
+      # special_dates.each do |raw_special_date|
+      #   json_parsed_date = JSON.parse(raw_special_date)
+      #   special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
+      #   time_outcome = Reservable::Time.run(shop: shop, date: special_date)
+      #
+      #   if time_outcome.valid?
+      #     shop_start_at = time_outcome.result.first
+      #     shop_closed_at = time_outcome.result.last
+      #     special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
+      #     special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
+      #     special_date_time_length = special_date_end_at - special_date_start_at
+      #     basic_required_minutes = longest_option.minutes
+      #     special_time_range = "#{I18n.l(special_date_start_at)} ~ #{I18n.l(special_date_end_at, format: :hour_minute)}"
+      #
+      #     if special_date_start_at < shop_start_at ||
+      #         special_date_end_at > shop_closed_at ||
+      #         special_date_start_at > special_date_end_at
+      #       invalid_special_dates << special_date
+      #     elsif special_date_start_at.advance(minutes: basic_required_minutes) > shop_closed_at
+      #       not_enough_time_special_dates << {
+      #         time_range: special_time_range,
+      #         required_time: basic_required_minutes
+      #       }
+      #     elsif special_date_time_length < basic_required_minutes.minutes
+      #       not_enough_time_special_dates << {
+      #         time_range: special_time_range,
+      #         required_time: basic_required_minutes
+      #       }
+      #     end
+      #   else
+      #     invalid_special_dates << special_date
+      #   end
+      # end
+      #
+      # if invalid_special_dates.present?
+      #   errors.add(:special_dates, :on_unworking_dates, invalid_dates: invalid_special_dates.map { |date| I18n.l(date, format: :year_month_date) }.join(", "))
+      # end
+      #
+      # if not_enough_time_special_dates.present?
+      #   not_enough_time_dates = not_enough_time_special_dates.map do |not_enough_time_special_date|
+      #     "#{not_enough_time_special_date[:time_range]} #{not_enough_time_special_date[:required_time]}"
+      #   end.join(", ")
+      #   errors.add(:special_dates, :not_enough_time_dates, not_enough_time_dates: not_enough_time_dates)
+      # end
     end
   end
 end

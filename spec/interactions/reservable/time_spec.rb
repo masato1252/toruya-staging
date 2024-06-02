@@ -34,7 +34,7 @@ RSpec.describe Reservable::Time do
                                                         start_time: (now.beginning_of_day + 7.hours).advance(weeks: 1),
                                                         end_time: (now.beginning_of_day + 18.hours).advance(weeks: 1)) }
           it "returns available time range" do
-            expect(Reservable::Time.run!(shop: shop, date: date)).to eq(custom_schedule.end_time..business_schedule.end_time)
+            expect(Reservable::Time.run!(shop: shop, date: date)).to eq([ custom_schedule.end_time..business_schedule.end_time ])
           end
         end
       end
@@ -57,7 +57,7 @@ RSpec.describe Reservable::Time do
 
 
         it "returns available time range" do
-          expect(Reservable::Time.run!(shop: shop, date: date)).to eq(business_schedule.start_time_on(date)..business_schedule.end_time_on(date))
+          expect(Reservable::Time.run!(shop: shop, date: date)).to eq([ business_schedule.start_time_on(date)..business_schedule.end_time_on(date) ])
         end
       end
 

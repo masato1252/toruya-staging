@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton } from "shared/components"
 import { BusinessScheduleServices } from "user_bot/api"
@@ -10,13 +10,16 @@ import I18n from 'i18n-js/index.js.erb';
 const BusinessScheduleEdit =({props}) => {
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
-      ...props.business_schedule,
+      business_schedules: props.business_schedules,
+      business_state: props.business_state
     }
+  });
+  const business_schedule_fields = useFieldArray({
+    control: control,
+    name: "business_schedules"
   });
 
   const business_state = watch("business_state")
-  const start_time = watch("start_time")
-  const end_time = watch("end_time")
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
@@ -24,27 +27,26 @@ const BusinessScheduleEdit =({props}) => {
     let error, response;
 
     [error, response] = await BusinessScheduleServices.update({
-      data: _.assign( data, { business_owner_id: props.business_owner_id })
+      data: _.assign( data, { business_owner_id: props.business_owner_id, shop_id: props.shop_id, wday: props.wday })
     })
 
     window.location = response.data.redirect_to
   }
 
   useEffect(() => {
-    if (business_state === 'opened') {
-      if (!start_time) setValue('start_time', '09:00')
-      if (!end_time) setValue('end_time', '17:00')
+    if (business_state === 'opened' && business_schedule_fields.fields.length == 0) {
+      business_schedule_fields.append({
+        start_time: "09:00",
+        end_time: "17:00"
+      })
     }
   }, [business_state])
 
   return (
     <div className="form with-top-bar">
-      <input type="hidden" name="id" ref={register({ required: true })} />
-      <input type="hidden" name="shop_id" ref={register({ required: true })} />
-
       <TopNavigationBar
         leading={
-          <a href={Routes.index_lines_user_bot_settings_business_schedules_path(props.business_owner_id, {shop_id: props.business_schedule.shop_id})}>
+          <a href={Routes.index_lines_user_bot_settings_business_schedules_path(props.business_owner_id, { shop_id: props.shop_id })}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
@@ -52,7 +54,7 @@ const BusinessScheduleEdit =({props}) => {
       />
       <div className="field-header">{I18n.t("common.day")}</div>
       <div className="field-row">
-        {I18n.t("date.day_names")[props.business_schedule.day_of_week]}
+        {I18n.t("date.day_names")[props.day_of_week]}
         <Controller
           control={control}
           name='business_state'
@@ -73,13 +75,29 @@ const BusinessScheduleEdit =({props}) => {
       {business_state === 'opened' && (
         <>
           <div className="field-header">{I18n.t("user_bot.dashboards.settings.business_schedules.business_time")}</div>
-          <div className="field-row">
-            {I18n.t("user_bot.dashboards.settings.business_schedules.open_shop_time")}
-            <input type="time" name="start_time" ref={register({ required: true })} />
-          </div>
-          <div className="field-row">
-            {I18n.t("user_bot.dashboards.settings.business_schedules.close_shop_time")}
-            <input type="time" name="end_time" ref={register({ required: true })} />
+          {business_schedule_fields.fields.map((field, index) => {
+            return (
+              <div key={index} className="field-row flex-start">
+                <input type="time" name={`business_schedules[${index}].start_time`} defaultValue={field.start_time} ref={register({ required: true })} /> 〜 <input type="time" name={`business_schedules[${index}].end_time`} defaultValue={field.end_time} ref={register({ required: true })} />
+                {business_schedule_fields.fields.length > 1 && (
+                  <button className="btn btn-orange" onClick={() => business_schedule_fields.remove(index)}>
+                    <i className="fa fa-minus"></i>
+                    <span>{I18n.t("action.delete")}</span>
+                  </button>
+                )}
+              </div>
+            )
+          })}
+          <div className="field-row flex-start">
+            <button className="btn btn-yellow" onClick={() => {
+              business_schedule_fields.append({
+                start_time: "09:00",
+                end_time: "17:00"
+              })
+            }}>
+              <i className="fa fa-plus"></i>
+              <span>{I18n.t('action.add_more')}</span>
+            </button>
           </div>
           <div className="margin-around centerize">
             <div className="break-line-content">

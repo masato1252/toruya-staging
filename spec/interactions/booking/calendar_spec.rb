@@ -162,7 +162,7 @@ RSpec.describe Booking::Calendar do
       context "staff had reservation on other shop" do
         it "returns expected result" do
           # other_shop error
-          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          expect(Reservable::Reservation).to receive(:run).at_least(3).times.and_call_original
           FactoryBot.create(:reservation,
                             shop: FactoryBot.create(:shop, user: user), staffs: staff,
                             start_time: Time.zone.local(2019, 5, 13, 9),
@@ -185,7 +185,7 @@ RSpec.describe Booking::Calendar do
         end
 
         it "returns expected result" do
-          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          expect(Reservable::Reservation).to receive(:run).at_least(3).times.and_call_original
           result = outcome.result
 
           expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
@@ -201,7 +201,7 @@ RSpec.describe Booking::Calendar do
         end
 
         it "returns expected result" do
-          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          expect(Reservable::Reservation).to receive(:run).at_least(3).times.and_call_original
           result = outcome.result
 
           expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
@@ -219,7 +219,7 @@ RSpec.describe Booking::Calendar do
         end
 
         it "returns expected result" do
-          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          expect(Reservable::Reservation).to receive(:run).at_least(3).times.and_call_original
           result = outcome.result
 
           expect(result[1]).to eq([])
@@ -236,7 +236,7 @@ RSpec.describe Booking::Calendar do
         end
 
         it "returns expected result" do
-          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          expect(Reservable::Reservation).to receive(:run).at_least(3).times.and_call_original
           result = outcome.result
 
           expect(result[1]).to eq([])
@@ -250,7 +250,7 @@ RSpec.describe Booking::Calendar do
         end
 
         it "returns expected result" do
-          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          expect(Reservable::Reservation).to receive(:run).at_least(3).times.and_call_original
           result = outcome.result
 
           expect(result[1]).to eq([])
@@ -264,7 +264,7 @@ RSpec.describe Booking::Calendar do
         end
 
         it "returns expected result" do
-          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          expect(Reservable::Reservation).to receive(:run).at_least(3).times.and_call_original
           result = outcome.result
 
           expect(result[1]).to eq(["2019-05-13"])

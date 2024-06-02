@@ -139,7 +139,7 @@ module Booking
       return if time_range_outcome.invalid?
 
       time_range = time_range_outcome.result
-      booking_available_end_at ||= shop_close_at = time_range.last
+      booking_available_end_at ||= shop_close_at = time_range.last.last
 
       catch :next_working_date do
         # booking_option doesn't sell on that date
@@ -148,7 +148,7 @@ module Booking
           next
         end
 
-        booking_available_start_at ||= shop_open_at = time_range.first
+        booking_available_start_at ||= shop_open_at = time_range.first.first
 
         if booking_page.specific_booking_start_times.present?
           booking_page.specific_booking_start_times.each do |start_time_time_part|

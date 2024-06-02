@@ -6,15 +6,21 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
   end
 
   def index
-    @wdays_business_schedules = shop.business_schedules.for_shop.order(:day_of_week)
+    @wdays_business_schedules_mapping = shop.business_schedules.opened.for_shop.group_by(&:day_of_week)
   end
 
   def edit
-    @business_schedule = shop.business_schedules.find(params[:id])
+    @business_schedules = shop.business_schedules.opened.for_shop.where(day_of_week: params[:wday])
   end
 
   def update
-    outcome = BusinessSchedules::Update.run(shop: shop, attrs: params.permit!.to_h)
+    permit_hash = params.permit!.to_h
+    outcome = BusinessSchedules::Update.run(
+      shop: shop,
+      business_state: params[:business_state],
+      day_of_week: params[:wday],
+      business_schedules: permit_hash[:business_schedules]
+    )
 
     render json: json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: params[:shop_id], business_owner_id: business_owner_id) })
   end

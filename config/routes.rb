@@ -270,11 +270,12 @@ Rails.application.routes.draw do
             end
           end
 
-          resources :business_schedules, only: [:update] do
+          resources :business_schedules, only: [] do
             collection do
+              put "/shop/:shop_id/update/:wday", action: :update, as: :update
               get :shops
               get "/shop/:shop_id", action: :index, as: :index
-              get "/shop/:shop_id/edit/:id", action: :edit, as: :edit
+              get "/shop/:shop_id/edit/:wday", action: :edit, as: :edit
             end
           end
 
