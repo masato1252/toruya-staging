@@ -128,9 +128,14 @@ class BookingPage < ApplicationRecord
     when AccessProvider.providers[:square]
       if user.square_provider
         result = user.square_client.locations.list_locations
-        square_location_id = result.data[:locations].last[:id]
 
-        { solution: user.square_provider.provider, square_app_id: Rails.application.secrets.square_app_id, square_location_id: square_location_id }
+        if result.data
+          square_location_id = result.data[:locations].last[:id]
+
+          { solution: user.square_provider.provider, square_app_id: Rails.application.secrets.square_app_id, square_location_id: square_location_id }
+        else
+          {}
+        end
       else
         {}
       end
