@@ -101,7 +101,7 @@
       shop_name: @booking_page.shop.name,
       is_single_option: @is_single_booking_option,
       is_started: @booking_page.started?,
-      is_ended: @booking_page.ended?,
+      is_ended: @booking_page.ended? || @customer&.in_blacklist?,
       start_at: I18n.l(@booking_page.start_time, format: :date_with_wday),
       draft: @booking_page.draft,
       regions: regions,

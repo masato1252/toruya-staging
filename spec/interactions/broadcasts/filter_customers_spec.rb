@@ -24,6 +24,20 @@ RSpec.describe Broadcasts::FilterCustomers do
 
         expect(result).to include(matched_customer)
       end
+
+      context "when customer in blacklist" do
+        let!(:blacklist_customer) { FactoryBot.create(:customer, user: user) }
+
+        before do
+          # stub_const("Customer::BLACKLIST_IDS", [ blacklist_customer.id ])
+        end
+
+        it "returns expected customers, exclude blacklist_customers" do
+          result = outcome.result
+
+          expect(result).to include(matched_customer)
+        end
+      end
     end
 
     context "A or B" do

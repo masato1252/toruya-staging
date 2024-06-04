@@ -58,6 +58,7 @@
 # }
 
 class Customer < ApplicationRecord
+  BLACKLIST_IDS = [6388]
   include NormalizeName
   include SayHi
 
@@ -387,6 +388,10 @@ class Customer < ApplicationRecord
 
   def had_address?
     Address.new(address_details).exists?
+  end
+
+  def in_blacklist?
+    BLACKLIST_IDS.include?(id)
   end
 
   private
