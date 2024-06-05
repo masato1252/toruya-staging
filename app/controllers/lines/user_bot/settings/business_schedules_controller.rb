@@ -7,6 +7,7 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
 
   def index
     @wdays_business_schedules_mapping = shop.business_schedules.opened.for_shop.group_by(&:day_of_week)
+    @holiday_working_schedules = shop.business_schedules.opened.for_shop.holiday_working
   end
 
   def edit

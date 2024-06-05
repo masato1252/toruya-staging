@@ -24,6 +24,7 @@ module Shops
 
     def execute
       logo_params = params.delete(:logo)
+      business_schedules = params.delete(:business_schedules)
 
       shop.transaction do
         if params.present? && shop.update(params)
@@ -36,6 +37,24 @@ module Shops
           else
             errors.add(:shop, :photo_invalid)
           end
+        end
+
+        if shop.holiday_working
+          compose(
+            BusinessSchedules::Update,
+            shop: shop,
+            business_state: "opened",
+            day_of_week: BusinessSchedule::HOLIDAY_WORKING_WDAY,
+            business_schedules: business_schedules
+          )
+        else
+          compose(
+            BusinessSchedules::Update,
+            shop: shop,
+            business_state: "closed",
+            day_of_week: BusinessSchedule::HOLIDAY_WORKING_WDAY,
+            business_schedules: []
+          )
         end
       end
 

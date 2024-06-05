@@ -25,7 +25,7 @@ module Reservable
       # XXX: Japan dependency
       if date.holiday?(:jp)
         if shop.holiday_working
-          return business_working_schedules
+          return holiday_working_schedules
         else
           errors.add(:date, :shop_closed)
         end
@@ -40,6 +40,12 @@ module Reservable
     def business_schedules
       @business_schedules ||= {}
       @business_schedules[date.wday] ||= shop.business_schedules.for_shop.where(day_of_week: date.wday).order(:start_time).opened.all
+    end
+
+    def holiday_working_schedules
+      shop.business_schedules.for_shop.opened.holiday_working.map do |schedule|
+        schedule.start_time_on(date)..schedule.end_time_on(date)
+      end
     end
 
     def business_working_schedules

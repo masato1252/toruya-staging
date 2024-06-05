@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton } from "shared/components"
 import { ShopServices } from "user_bot/api"
@@ -14,8 +14,25 @@ const SocialAccountEdit =({props}) => {
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.shop,
+      business_schedules: props.business_schedules
     }
   });
+
+  const business_schedule_fields = useFieldArray({
+    control: control,
+    name: "business_schedules"
+  });
+
+  const holiday_working = watch("holiday_working")
+
+  useEffect(() => {
+    if (holiday_working && business_schedule_fields.fields.length == 0) {
+      business_schedule_fields.append({
+        start_time: "09:00",
+        end_time: "17:00"
+      })
+    }
+  }, [holiday_working])
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
@@ -163,25 +180,65 @@ const SocialAccountEdit =({props}) => {
         )
       case "holiday_working":
         return (
-          <div className="field-row">
-            {I18n.t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label")}
-            <Controller
-              control={control}
-              name='holiday_working'
-              defaultValue={watch("holiday_working")}
-              render={({ onChange, value }) => (
-                <SwitchButton
-                  offWord="CLOSED"
-                  onWord="OPEN"
-                  name="holiday_working"
-                  checked={value}
-                  onChange={() => {
-                    onChange(!value)
-                  }}
-                />
-              )}
-            />
-          </div>
+          <>
+            <div className="field-row">
+              {I18n.t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label")}
+              <Controller
+                control={control}
+                name='holiday_working'
+                defaultValue={holiday_working}
+                render={({ onChange, value }) => (
+                  <SwitchButton
+                    offWord="CLOSED"
+                    onWord="OPEN"
+                    name="holiday_working"
+                    checked={value}
+                    onChange={() => {
+                      onChange(!value)
+                    }}
+                  />
+                )}
+              />
+            </div>
+            {holiday_working && (
+              <>
+                <div className="field-header">{I18n.t("user_bot.dashboards.settings.business_schedules.business_time")}</div>
+                {business_schedule_fields.fields.map((field, index) => {
+                  return (
+                    <div key={index} className="field-row flex-start">
+                      <input type="time" name={`business_schedules[${index}].start_time`} defaultValue={field.start_time} ref={register({ required: true })} /> 〜 <input type="time" name={`business_schedules[${index}].end_time`} defaultValue={field.end_time} ref={register({ required: true })} />
+                      {business_schedule_fields.fields.length > 1 && (
+                        <button className="btn btn-orange" onClick={() => business_schedule_fields.remove(index)}>
+                          <i className="fa fa-minus"></i>
+                          <span>{I18n.t("action.delete")}</span>
+                        </button>
+                      )}
+                    </div>
+                  )
+                })}
+                <div className="field-row flex-start">
+                  <button className="btn btn-yellow" onClick={() => {
+                    business_schedule_fields.append({
+                      start_time: "09:00",
+                      end_time: "17:00"
+                    })
+                  }}>
+                    <i className="fa fa-plus"></i>
+                    <span>{I18n.t('action.add_more')}</span>
+                  </button>
+                </div>
+                <div className="margin-around centerize">
+                  <div className="break-line-content">
+                    {I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction1")}
+                  </div>
+                  <br />
+                  <div className="break-line-content">
+                    {I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction2")}
+                  </div>
+                </div>
+              </>
+            )}
+          </>
         );
     }
   }

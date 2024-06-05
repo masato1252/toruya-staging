@@ -28,10 +28,9 @@ class BusinessSchedule < ApplicationRecord
 
   WDAYS = [1, 2, 3, 4, 5, 6, 0].freeze
   BUSINESS_STATE = %w(opened closed).freeze
+  HOLIDAY_WORKING_WDAY = 999 # used to represent the business for holiday working
 
   validates :shop_id, presence: true
-  # validates :day_of_week, uniqueness: { scope: [:shop_id, :staff_id, :day_of_week] }
-  validates :day_of_week, inclusion: { in: 0..6 }, if: -> { day_of_week.present? }
   validates :business_state, inclusion: { in: BUSINESS_STATE }, allow_nil: true
   validates :start_time, presence: true, if: -> { business_state == "opened" }
   validates :end_time, presence: true, if: -> { business_state == "opened" }
@@ -44,6 +43,7 @@ class BusinessSchedule < ApplicationRecord
   scope :opened, -> { where(business_state: "opened") }
   scope :full_time, -> { where(full_time: true) }
   scope :part_time, -> { where(full_time: nil) }
+  scope :holiday_working, -> { where(day_of_week: HOLIDAY_WORKING_WDAY) }
 
   def start_time_on(date)
     start_time.change(year: date.year, month: date.month, day: date.day)

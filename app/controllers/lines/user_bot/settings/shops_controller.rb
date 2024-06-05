@@ -11,29 +11,17 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
 
   def edit
     @shop = Current.business_owner.shops.find(params[:id])
-    @title =
-      case params[:attribute]
-      when "holiday_working"
-        I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
-      else
-        I18n.t("user_bot.dashboards.settings.shop.shop_info_label")
-      end
 
-    @previous_path =
-      case params[:attribute]
-      when "holiday_working"
-        index_lines_user_bot_settings_business_schedules_path(business_owner_id, shop_id: params[:id])
-      else
-        lines_user_bot_settings_shop_path(business_owner_id, params[:id])
-      end
-
-    @header =
-      case params[:attribute]
-      when "holiday_working"
-        I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
-      when "name", "address", "phone_number", "email", "website", "logo"
-        I18n.t("user_bot.dashboards.settings.shop.#{params[:attribute]}_label")
-      end
+    if params[:attribute] == "holiday_working"
+      @business_schedules = shop.business_schedules.opened.for_shop.holiday_working
+      @title = I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
+      @previous_path = index_lines_user_bot_settings_business_schedules_path(business_owner_id, shop_id: params[:id])
+      @header = I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
+    else
+      @title = I18n.t("user_bot.dashboards.settings.shop.shop_info_label")
+      @previous_path = lines_user_bot_settings_shop_path(business_owner_id, params[:id])
+      @header = I18n.t("user_bot.dashboards.settings.shop.#{params[:attribute]}_label")
+    end
   end
 
   def update
@@ -54,6 +42,6 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
   private
 
   def shop_params
-    params.permit(:holiday_working, :name, :short_name, :phone_number, :website, :email, :logo, address_details: [:zip_code, :region, :city, :street1, :street2])
+    params.permit(:holiday_working, :name, :short_name, :phone_number, :website, :email, :logo, business_schedules: [:start_time, :end_time], address_details: [:zip_code, :region, :city, :street1, :street2])
   end
 end
