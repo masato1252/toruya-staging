@@ -536,4 +536,29 @@ namespace :analytic do
       SlackClient.send(channel: 'reports', text: message)
     end
   end
+
+  task :retention_months => :environment do
+    current = Time.now.in_time_zone('Tokyo')
+
+    # Only reports on Monday
+    if current.wday == 1
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 12)
+      paid_user_ids = SubscriptionCharge.distinct(:user_id).pluck(:user_id)
+
+      new_row_number = 2
+      paid_user_ids.each do |user_id|
+        [
+          user_id,
+          SubscriptionCharge.where(user_id: user_id).completed.count,
+          SubscriptionCharge.where(user_id: user_id).completed.where("created_at > ?", 1.month.ago).count
+        ].each_with_index do |value, column_index|
+          google_worksheet[new_row_number, column_index + 1] = value
+        end
+
+        new_row_number = new_row_number + 1
+      end
+
+      google_worksheet.save
+    end
+  end
 end
