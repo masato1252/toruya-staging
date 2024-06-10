@@ -55,7 +55,12 @@ module Subscriptions
           charge.completed!
 
           if Rails.configuration.x.env.production?
-            SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Subscription Stripe charge user: #{user.id} 💰")
+            if user.subscription_charges.finished.count == 1
+              text = "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} new Paid user"
+              SlackClient.send(channel: 'new_paid_users', text: text)
+            else
+              SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Subscription Stripe charge user: #{user.id} 💰")
+            end
           end
         rescue Stripe::CardError => error
           charge.stripe_charge_details = error.json_body[:error]
