@@ -68,6 +68,7 @@ const RegularCustomersOption = ({set_booking_reservation_form_values, booking_re
             set_booking_reservation_form_values(prev => ({...prev, customer_phonetic_last_name: event.target?.value}))
           }}
         />
+        <p></p>
         <input
           id="customer_phonetic_first_name"
           name="booking_reservation_form[customer_phonetic_first_name]"
