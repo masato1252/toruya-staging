@@ -319,6 +319,11 @@ module Booking
             ::RichMenus::BusinessSwitchRichMenu.run(owner: user)
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
           else
+            Rollbar.errors("Booking::CreateReservation Failed", errors: {
+              customer_errors: customer.errors&.details,
+              reservation_errors: reservation.errors&.details
+            })
+
             errors.add(:base, :reservation_something_wrong)
             raise ActiveRecord::Rollback
           end
