@@ -170,6 +170,7 @@ ja:
     off_schedule: 臨時休暇
     calendar: カレンダー
     others: その他
+    other_n_number: "他%{number}枠"
     unsave: 未保存
     full_working_time: 全営業日時
     category_default_name: デフォルト

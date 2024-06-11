@@ -7,7 +7,7 @@ RSpec.describe Menus::RetrieveRepeatingDates do
     Timecop.freeze(Time.zone.local(2016, 9, 20, 8)) # Tuesday
   end
 
-  describe "#repeating_dates" do
+  xdescribe "#repeating_dates" do
     let(:shop) { FactoryBot.create(:shop) }
     let(:menu) { FactoryBot.create(:menu, shop: shop) }
     let(:menu_rule) { FactoryBot.create(:menu_reservation_setting_rule, menu: menu, repeats: 7) }

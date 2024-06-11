@@ -196,27 +196,27 @@ class ReservationsController < DashboardController
     end
   end
 
-  def validate
-    outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:reservation_form][:start_time_date_part]).to_date)
-    @time_ranges = outcome.valid? ? outcome.result : nil
-
-    @customer_max_load_capability = Array.wrap(reservation_params_hash[:menu_staffs_list]).map do |menu_staffs_list|
-      # XXX: When there is the same menu, the second staffs would merge into first menu, then second menu's staff would disappear, unlikely case
-      staff_ids = Array.wrap(menu_staffs_list[:staff_ids]).map { |hh| hh[:staff_id] }.compact
-
-      if staff_ids.blank?
-        0
-      else
-        Reservable::CalculateCapabilityForCustomers.run!(
-          shop: shop,
-          menu_id: menu_staffs_list[:menu_id],
-          staff_ids: staff_ids.uniq
-        )
-      end
-    end.min
-
-    reservation_errors
-  end
+  # def validate
+  #   outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:reservation_form][:start_time_date_part]).to_date)
+  #   @time_ranges = outcome.valid? ? outcome.result : nil
+  #
+  #   @customer_max_load_capability = Array.wrap(reservation_params_hash[:menu_staffs_list]).map do |menu_staffs_list|
+  #     # XXX: When there is the same menu, the second staffs would merge into first menu, then second menu's staff would disappear, unlikely case
+  #     staff_ids = Array.wrap(menu_staffs_list[:staff_ids]).map { |hh| hh[:staff_id] }.compact
+  #
+  #     if staff_ids.blank?
+  #       0
+  #     else
+  #       Reservable::CalculateCapabilityForCustomers.run!(
+  #         shop: shop,
+  #         menu_id: menu_staffs_list[:menu_id],
+  #         staff_ids: staff_ids.uniq
+  #       )
+  #     end
+  #   end.min
+  #
+  #   reservation_errors
+  # end
 
   def add_customer
     Rails.cache.write(reservation_params_hash_cache_key, reservation_params_hash.to_json)

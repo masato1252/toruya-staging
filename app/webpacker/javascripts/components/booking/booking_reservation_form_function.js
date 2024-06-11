@@ -170,9 +170,9 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const isSocialLoginChecked = () => {
-    const { social_user_id, customer_without_social_account } = booking_reservation_form_values
+    const { social_user_id, customer_without_social_account, skip_social_customer } = booking_reservation_form_values
 
-    return !props.social_account_login_required || social_user_id || customer_without_social_account
+    return !props.social_account_login_required || social_user_id || customer_without_social_account || skip_social_customer
   }
 
   const isEnoughCustomerInfo = () => {
@@ -378,7 +378,7 @@ const BookingReservationFormFunction = ({props}) => {
 
   const renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = props.booking_page
-    const { is_done, is_paying_booking, is_filling_address, booking_option_id } = booking_reservation_form_values
+    const { is_done, is_paying_booking, is_filling_address, booking_option_id, skip_social_customer } = booking_reservation_form_values
 
     if (isPremiumService() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
       return (
@@ -396,8 +396,10 @@ const BookingReservationFormFunction = ({props}) => {
           booking_option_id={booking_reservation_form_values.booking_option_id}
           booking_date={booking_reservation_form_values.booking_date}
           social_account_add_friend_url={props.social_account_add_friend_url}
+          social_account_login_url={props.social_account_login_url}
           booking_page_url={props.booking_page.url}
           ticket={props.booking_options_quota[booking_option_id]}
+          skip_social_customer={skip_social_customer}
         />
       )
     }
@@ -471,8 +473,10 @@ const BookingReservationFormFunction = ({props}) => {
           )}
           {isBookingFlowEnd() && !isSocialLoginChecked() && (
             <SocialCustomerLogin
+              set_booking_reservation_form_values={set_booking_reservation_form_values}
               booking_reservation_form_values={booking_reservation_form_values}
               social_account_login_url={props.social_account_login_url}
+              social_account_skippable={props.social_account_skippable}
             />
           )}
           {isBookingFlowEnd() && isSocialLoginChecked() && (
@@ -551,8 +555,10 @@ const BookingReservationFormFunction = ({props}) => {
           />
           {isBookingFlowEnd() && !isSocialLoginChecked() && (
             <SocialCustomerLogin
+              set_booking_reservation_form_values={set_booking_reservation_form_values}
               booking_reservation_form_values={booking_reservation_form_values}
               social_account_login_url={props.social_account_login_url}
+              social_account_skippable={props.social_account_skippable}
             />
           )}
           {isBookingFlowEnd() && isSocialLoginChecked() && (

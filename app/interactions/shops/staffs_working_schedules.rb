@@ -7,20 +7,20 @@ module Shops
 
     def execute
       h = {}
-      if full_working_time_range = compose(Reservable::Time, shop: shop, date: date)
+      if full_working_time_range_array = compose(Reservable::Time, shop: shop, date: date)
         # Full time
         shop.business_schedules.for_staff.full_time.includes(:staff).each do |schedule|
-          h[schedule.staff] = { time: full_working_time_range }
+          h[schedule.staff] = { time: full_working_time_range_array }
         end
 
         # weekly part time
         shop.business_schedules.for_staff.part_time.opened.where(day_of_week: date.wday).includes(:staff).each do |schedule|
-          h[schedule.staff] = { time: schedule.start_time_on(date)..schedule.end_time_on(date) }
+          h[schedule.staff] = { time: [ schedule.start_time_on(date)..schedule.end_time_on(date) ] }
         end
 
         # custom open part time
         shop.custom_schedules.for_staff.opened.where("start_time >= ? and end_time <= ?", date.beginning_of_day, date.end_of_day).includes(:staff).each do |schedule|
-          h[schedule.staff] = { time: schedule.start_time..schedule.end_time }
+          h[schedule.staff] = { time: [ schedule.start_time..schedule.end_time ] }
         end
 
         working_staffs = h.keys
@@ -36,16 +36,18 @@ module Shops
 
           schedule_staff = schedule.staff || active_staff_accounts.find { |staff_account| staff_account.user_id == schedule.user_id }.staff
 
-          working_schedule_time = h[schedule_staff][:time]
+          working_schedule_times = h[schedule_staff][:time]
 
-          if working_schedule_time && schedule.start_time > working_schedule_time.first
-            # working time -> leaving time
-            h[schedule_staff] = { time: working_schedule_time.first..schedule.start_time, reason: schedule.reason.presence || "臨時休暇" }
-          elsif working_schedule_time && schedule.end_time < working_schedule_time.last
-            # leaving time -> working time
-            h[schedule_staff] = { time: schedule.end_time..working_schedule_time.last, reason: schedule.reason.presence || "臨時休暇" }
-          else
-            h[schedule_staff] = { time: nil, reason: schedule.reason.presence || "臨時休暇" }
+          working_schedule_times.each do |working_schedule_time|
+            if working_schedule_time && schedule.start_time > working_schedule_time.first
+              # working time -> leaving time
+              h[schedule_staff] = { time: working_schedule_time.first..schedule.start_time, reason: schedule.reason.presence || "臨時休暇" }
+            elsif working_schedule_time && schedule.end_time < working_schedule_time.last
+              # leaving time -> working time
+              h[schedule_staff] = { time: schedule.end_time..working_schedule_time.last, reason: schedule.reason.presence || "臨時休暇" }
+            else
+              h[schedule_staff] = { time: nil, reason: schedule.reason.presence || "臨時休暇" }
+            end
           end
         end
 

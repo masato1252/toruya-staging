@@ -93,6 +93,7 @@
     social_account_add_friend_url: @social_account&.add_friend_url,
     social_account_login_url: line_login_url(@social_account, booking_page_url(@booking_page.slug), customer_id: @customer&.id),
     social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
+    social_account_skippable: @booking_page.social_account_skippable,
     payment_solution: @booking_page.payment_solution,
     is_shop_owner: @social_customer&.is_owner,
     booking_options_quota: @booking_options_quota,

@@ -17,7 +17,7 @@ const CurrentCustomerInfo = ({booking_reservation_form_values, i18n, isCustomerT
         </div>
         <div>
           <div className="simple-address">
-            {simple_address}{of}
+            {simple_address}{simple_address && of}
           </div>
           <div className="customer-full-name">
             {last_name} {first_name} {sir}

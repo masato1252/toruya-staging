@@ -3,13 +3,18 @@
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.base_business_time") %></div>
   <% (1..7).each do |wday| %>
-    <% business_schedule = @wdays_business_schedules.find {|schedule| schedule.day_of_week == wday % 7} %>
+    <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: @shop.id, wday: wday, business_owner_id: business_owner_id), class: "field-row" do %>
+      <% business_schedules = @wdays_business_schedules_mapping[wday] %>
 
-    <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: business_schedule.shop_id, id: business_schedule.id, business_owner_id: business_owner_id), class: "field-row" do %>
       <span><%= I18n.t("date.day_names").at(wday % 7) %></span>
       <span>
-        <% if business_schedule.start_time || business_schedule.end_time %>
-          <%= I18n.l(business_schedule.start_time, format: :time_only) if business_schedule.start_time %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) if business_schedule.end_time %>
+        <% if business_schedules.present? %>
+          <% business_schedule = business_schedules.first %>
+          <%= I18n.l(business_schedule.start_time, format: :time_only) %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) %>
+
+          <% if business_schedules.length > 1 %>
+            <%= I18n.t("common.other_n_number", number: business_schedules.length - 1)%>
+          <% end %>
         <% else %>
           <span class="danger">CLOSE</span>
         <% end %>
@@ -22,7 +27,16 @@
   <%= link_to edit_lines_user_bot_settings_shop_path(id: @shop.id, business_owner_id: business_owner_id, attribute: "holiday_working"), class: "field-row" do %>
     <span><%= t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label") %></span>
     <span>
-      <%= @shop.holiday_working ? content_tag(:span, "OPEN", class: 'successful') : content_tag(:span, "CLOSE", class: 'danger') %>
+      <% if @holiday_working_schedules.present? %>
+          <% business_schedule = @holiday_working_schedules.first %>
+          <%= I18n.l(business_schedule.start_time, format: :time_only) %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) %>
+
+          <% if @holiday_working_schedules.length > 1 %>
+            <%= I18n.t("common.other_n_number", number: @holiday_working_schedules.length - 1)%>
+          <% end %>
+      <% else %>
+        <span class="danger">CLOSE</span>
+      <% end %>
       <i class="fa fa-angle-right"></i>
     </span>
   <% end %>

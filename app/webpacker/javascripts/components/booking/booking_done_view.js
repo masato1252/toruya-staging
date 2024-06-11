@@ -3,10 +3,11 @@
 import React from "react";
 import moment from 'moment-timezone';
 
-import { CheckInLineBtn } from "shared/booking";
+import I18n from 'i18n-js/index.js.erb';
+import { CheckInLineBtn, LineLoginBtn } from "shared/booking";
 import { ticketExpireDate } from 'libraries/helper'
 
-const BookingDoneView = ({i18n, social_account_add_friend_url, ticket, booking_date, booking_page_url, booking_option_id}) => {
+const BookingDoneView = ({i18n, social_account_add_friend_url, social_account_login_url, ticket, booking_date, booking_page_url, booking_option_id, skip_social_customer}) => {
   const {
     title,
     message1,
@@ -19,13 +20,24 @@ const BookingDoneView = ({i18n, social_account_add_friend_url, ticket, booking_d
       <h3 className="title">
         {title}
       </h3>
-      <div className="message">
-        {message1}
-        <br />
-        {message2}
-      </div>
-
-      <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} />
+      {
+        skip_social_customer ? (
+          <>
+            <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_line_message1_html") }} />
+            <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_line_message2_html") }} />
+            <LineLoginBtn social_account_login_url={social_account_login_url} />
+          </>
+        ) : (
+          <>
+            <div className="message">
+              {message1}
+              <br />
+              {message2}
+            </div>
+            <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} />
+          </>
+        )
+      }
 
       {ticket && ticket.consumed_quota + 1 == ticket.total_quota && (
         <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_ticket_left_message_html") }} />

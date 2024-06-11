@@ -26,7 +26,7 @@ RSpec.describe Shops::StaffsWorkingSchedules do
 
         it "returns expect result" do
           expect(described_class.run!(shop: shop, date: date)).to eq({
-            staff => { time: start_time..end_time }
+            staff => { time: [ start_time..end_time ] }
           })
         end
       end
@@ -36,7 +36,7 @@ RSpec.describe Shops::StaffsWorkingSchedules do
 
         it "returns expect result" do
           expect(described_class.run!(shop: shop, date: date)).to eq({
-            staff => { time: start_time2..end_time2 }
+            staff => { time: [ start_time2..end_time2 ] }
           })
         end
       end
@@ -46,7 +46,7 @@ RSpec.describe Shops::StaffsWorkingSchedules do
 
         it "returns expect result" do
           expect(described_class.run!(shop: shop, date: date)).to eq({
-            staff => { time: start_time2..end_time2 }
+            staff => { time: [ start_time2..end_time2 ] }
           })
         end
       end

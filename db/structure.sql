@@ -709,7 +709,8 @@ CREATE TABLE public.booking_pages (
     online_payment_enabled boolean DEFAULT false,
     event_booking boolean DEFAULT false,
     bookable_restriction_months integer DEFAULT 3,
-    default_provider character varying
+    default_provider character varying,
+    social_account_skippable boolean DEFAULT false NOT NULL
 );
 
 
@@ -5902,6 +5903,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240425113626'),
 ('20240427000601'),
 ('20240429031029'),
-('20240501021924');
+('20240501021924'),
+('20240530162619'),
+('20240605123036');
 
 

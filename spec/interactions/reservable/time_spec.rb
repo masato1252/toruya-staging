@@ -34,7 +34,7 @@ RSpec.describe Reservable::Time do
                                                         start_time: (now.beginning_of_day + 7.hours).advance(weeks: 1),
                                                         end_time: (now.beginning_of_day + 18.hours).advance(weeks: 1)) }
           it "returns available time range" do
-            expect(Reservable::Time.run!(shop: shop, date: date)).to eq(custom_schedule.end_time..business_schedule.end_time)
+            expect(Reservable::Time.run!(shop: shop, date: date)).to eq([ custom_schedule.end_time..business_schedule.end_time ])
           end
         end
       end
@@ -51,13 +51,13 @@ RSpec.describe Reservable::Time do
 
       context "when shop needs to work" do
         let(:shop) { FactoryBot.create(:shop, holiday_working: true) }
-        let!(:business_schedule) { FactoryBot.create(:business_schedule, shop: shop,
+        let!(:business_schedule) { FactoryBot.create(:business_schedule, :holiday_working, shop: shop,
                                                       start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
                                                       end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
 
 
         it "returns available time range" do
-          expect(Reservable::Time.run!(shop: shop, date: date)).to eq(business_schedule.start_time_on(date)..business_schedule.end_time_on(date))
+          expect(Reservable::Time.run!(shop: shop, date: date)).to eq([ business_schedule.start_time_on(date)..business_schedule.end_time_on(date) ])
         end
       end
 

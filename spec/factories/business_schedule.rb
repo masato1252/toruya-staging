@@ -16,5 +16,9 @@ FactoryBot.define do
     trait :opened do
       business_state { "opened" }
     end
+
+    trait :holiday_working do
+      day_of_week { BusinessSchedule::HOLIDAY_WORKING_WDAY }
+    end
   end
 end

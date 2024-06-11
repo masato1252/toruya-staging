@@ -566,7 +566,7 @@ const BusinessScheduleServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_settings_business_schedule_path(data.business_owner_id, data['id'], {format: "json"}),
+      url: Routes.update_lines_user_bot_settings_business_schedules_path(data.business_owner_id, data.shop_id, data.wday, {format: "json"}),
       data: data,
       responseType: "json"
     })

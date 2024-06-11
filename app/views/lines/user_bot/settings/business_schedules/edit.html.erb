@@ -4,7 +4,12 @@
       <%= react_component("user_bot/settings/business_schedules/edit", {
         props: {
           business_owner_id: business_owner_id,
-          business_schedule: BusinessScheduleSerializer.new(@business_schedule).attributes_hash,
+          shop_id: @shop.id,
+          wday: params[:wday],
+          wday_name: I18n.t("date.day_names").at(params[:wday].to_i % 7),
+          business_state: @business_schedules.exists? ? "opened" : "closed",
+          business_schedules: @business_schedules.map { |business_schedule| BusinessScheduleSerializer.new(business_schedule).attributes_hash },
+          business_schedule_desc_path: asset_pack_path("media/assets/user_bot/business_schedule_desc.png"),
         }
       },
       { camelize_props: false }

@@ -91,16 +91,22 @@
       title: @booking_page.overbooking_restriction ? I18n.t("settings.booking_page.form.not_allow_overbooking_label") : I18n.t("settings.booking_page.form.allow_overbooking_label")
     %>
 
-  <div class="field-group-header" id="line_sharing"><%= I18n.t("settings.booking_page.form.line_sharing") %></div>
+    <div class="field-group-header" id="line_sharing"><%= I18n.t("settings.booking_page.form.line_sharing") %></div>
+    <%= render "lines/user_bot/field_row",
+      path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :line_sharing),
+      title: @booking_page.line_sharing ? I18n.t("settings.booking_page.form.share_in_bot") : I18n.t("settings.booking_page.form.not_share_in_bot")
+    %>
+
+    <div class="field-group-header" id="social_account_skippable"><%= I18n.t("settings.booking_page.form.social_account_skippable") %></div>
+    <%= render "lines/user_bot/field_row",
+      path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :social_account_skippable),
+      title: @booking_page.social_account_skippable ? I18n.t("settings.booking_page.form.social_account_skippable_label") : I18n.t("settings.booking_page.form.not_social_account_skippable_label")
+    %>
+
+  <div class="field-group-header" id="online_payment_enabled"><%= I18n.t("settings.booking_page.form.online_payment_enabled") %></div>
   <%= render "lines/user_bot/field_row",
-    path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :line_sharing),
-    title: @booking_page.line_sharing ? I18n.t("settings.booking_page.form.share_in_bot") : I18n.t("settings.booking_page.form.not_share_in_bot")
-  %>
-<div class="field-group-header" id="online_payment_enabled"><%= "オンライン精算" %></div>
-<%= render "lines/user_bot/field_row",
-  path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :online_payment_enabled),
-  title: @booking_page.online_payment_enabled ? "利用する" : "利用しない"
-%>
+    path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :online_payment_enabled),
+    title: @booking_page.online_payment_enabled ? I18n.t("settings.booking_page.form.online_payment_options.enabled") : I18n.t("settings.booking_page.form.online_payment_options.disabled") %>
 
   <div class="field-group-header" id="note"><%= I18n.t("settings.booking_page.form.note_label") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :note), title: @booking_page.note %>

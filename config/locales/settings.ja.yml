@@ -607,6 +607,10 @@ ja:
         overbooking_restriction_title: 重複予約
         not_allow_overbooking_label: 満席数に達した時点で予約を締め切る(推奨)
         allow_overbooking_label: 満席数に関わらず予約を受け付ける
+        social_account_skippable_title:  LINEログインせず予約
+        social_account_skippable: LINEログインせず予約
+        social_account_skippable_label: 許可する
+        not_social_account_skippable_label: 許可しない
         note_label: 説明・注意事項
         note: 説明・注意事項
         note_title: 説明・注意事項

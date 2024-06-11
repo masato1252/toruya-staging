@@ -138,8 +138,7 @@ ja:
           business_time_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
           open_shop_time: 開店時間
           close_shop_time: 閉店時間
-          shop_open_introduction1: 設定された営業時間内で オンライン予約ページから 予約を受け付けることができます。
-          shop_open_introduction2: 予約カレンダーからは 休業時間外でも予約を作成できます。
+          shop_open_introduction_html: 設定された営業時間内で<br />オンライン予約ページから<br />予約を受け付けることができます。<br /><br />予約カレンダーからは 休業時間外でも予約を作成できます。
           shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
         company:

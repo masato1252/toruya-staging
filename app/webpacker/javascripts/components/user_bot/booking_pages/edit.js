@@ -13,6 +13,7 @@ import OverbookingRestrictionField from "./overbooking_restriction_field";
 import LineSharingField from "./line_sharing_field";
 import OnlinePaymentEnabledField from "./online_payment_enabled_field";
 import DraftField from "./draft_field";
+import SocialAccountSkippableField from "./social_account_skippable_field";
 import AvailableBookingDatesField from "./available_booking_dates_field";
 import BookingStartAtField from "./booking_start_at_field";
 import BookingEndAtField from "./booking_end_at_field";
@@ -57,6 +58,7 @@ const BookingPageEdit =({props}) => {
       line_sharing: String(props.booking_page.line_sharing),
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
       draft: String(props.booking_page.draft),
+      social_account_skippable: String(props.booking_page.social_account_skippable),
       booking_type: props.booking_page.booking_type,
       had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
       price_type: "regular",
@@ -244,6 +246,8 @@ const BookingPageEdit =({props}) => {
         return <LineSharingField i18n={i18n} register={register} />
       case "online_payment_enabled":
         return <OnlinePaymentEnabledField i18n={i18n} register={register} watch={watch} payment_provider_options={props.payment_provider_options} />
+      case "social_account_skippable":
+        return <SocialAccountSkippableField i18n={i18n} register={register} />
       case "draft":
         return <DraftField i18n={i18n} register={register} />
     }

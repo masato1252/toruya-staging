@@ -57,31 +57,31 @@ class Settings::BookingPagesController < SettingsController
     render layout: false
   end
 
-  def validate_special_dates
-    outcome = Booking::ValidateSpecialDates.run(
-      shop: super_user.shops.find(params[:shop_id]),
-      special_dates: params[:special_dates],
-      booking_option_ids: params[:booking_option_ids]
-    )
+  # def validate_special_dates
+  #   outcome = Booking::ValidateSpecialDates.run(
+  #     shop: super_user.shops.find(params[:shop_id]),
+  #     special_dates: params[:special_dates],
+  #     booking_option_ids: params[:booking_option_ids]
+  #   )
+  #
+  #   render json: { message: outcome.errors.full_messages.join(", ") }
+  # end
 
-    render json: { message: outcome.errors.full_messages.join(", ") }
-  end
-
-  def business_time
-    time_outcome = Reservable::Time.run(shop: super_user.shops.find(params[:shop_id]), date: params[:date])
-
-    if time_outcome.valid?
-      render json: {
-        start_at_time_part: I18n.l(time_outcome.result.first, format: :hour_minute),
-        end_at_time_part: I18n.l(time_outcome.result.last, format: :hour_minute)
-      }
-    else
-      render json: {
-        start_at_time_part: nil,
-        end_at_time_part: nil
-      }
-    end
-  end
+  # def business_time
+  #   time_outcome = Reservable::Time.run(shop: super_user.shops.find(params[:shop_id]), date: params[:date])
+  #
+  #   if time_outcome.valid?
+  #     render json: {
+  #       start_at_time_part: I18n.l(time_outcome.result.first, format: :hour_minute),
+  #       end_at_time_part: I18n.l(time_outcome.result.last, format: :hour_minute)
+  #     }
+  #   else
+  #     render json: {
+  #       start_at_time_part: nil,
+  #       end_at_time_part: nil
+  #     }
+  #   end
+  # end
 
   def booking_options
     options = BookingPages::AvailableBookingOptions.run!(

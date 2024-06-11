@@ -4,7 +4,7 @@ module Notifiers
   module Customers
     module Tickets
       class UnusedTicketLeft < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms]
 
         object :customer_ticket
         object :reservation_customer

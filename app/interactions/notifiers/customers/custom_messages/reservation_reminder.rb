@@ -6,7 +6,7 @@ module Notifiers
   module Customers
     module CustomMessages
       class ReservationReminder < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms]
 
         object :custom_message
         object :reservation
