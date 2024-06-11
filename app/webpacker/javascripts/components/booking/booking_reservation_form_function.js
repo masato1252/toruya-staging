@@ -63,6 +63,7 @@ const BookingReservationFormFunction = ({props}) => {
     set_booking_reservation_form_values(prev => ({...prev, customer_info: {...prev.customer_info, address_details: address }}))
     address_ref.current = address
 
+    if (!address) return;
     if (is_filling_address) {
       handleSubmit()
     }
