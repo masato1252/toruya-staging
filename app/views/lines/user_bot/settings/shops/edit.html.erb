@@ -6,7 +6,8 @@
     business_schedules: @business_schedules&.map { |business_schedule| BusinessScheduleSerializer.new(business_schedule).attributes_hash },
     previous_path: @previous_path,
     title: @title,
-    header: @header
+    header: @header,
+    business_schedule_desc_path: asset_pack_path("media/assets/user_bot/business_schedule_desc.png")
   }
 },
 { camelize_props: false }

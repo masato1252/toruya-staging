@@ -228,12 +228,9 @@ const SocialAccountEdit =({props}) => {
                   </button>
                 </div>
                 <div className="margin-around centerize">
-                  <div className="break-line-content">
-                    {I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction1")}
-                  </div>
-                  <br />
-                  <div className="break-line-content">
-                    {I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction2")}
+                  <div className="break-line-content" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction_html") }} />
+                  <div>
+                    <img src={props.business_schedule_desc_path} className="w-full" />
                   </div>
                 </div>
               </>

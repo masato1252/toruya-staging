@@ -54,7 +54,7 @@ const BusinessScheduleEdit =({props}) => {
       />
       <div className="field-header">{I18n.t("common.day")}</div>
       <div className="field-row">
-        {I18n.t("date.day_names")[props.day_of_week]}
+        {props.wday_name}
         <Controller
           control={control}
           name='business_state'
@@ -100,12 +100,9 @@ const BusinessScheduleEdit =({props}) => {
             </button>
           </div>
           <div className="margin-around centerize">
-            <div className="break-line-content">
-              {I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction1")}
-            </div>
-            <br />
-            <div className="break-line-content">
-              {I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction2")}
+            <div className="break-line-content" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.business_schedules.shop_open_introduction_html") }} />
+            <div>
+              <img src={props.business_schedule_desc_path} className="w-full" />
             </div>
           </div>
         </>

@@ -9,8 +9,11 @@
       <span><%= I18n.t("date.day_names").at(wday % 7) %></span>
       <span>
         <% if business_schedules.present? %>
-          <% business_schedules.each do |business_schedule| %>
-            <%= I18n.l(business_schedule.start_time, format: :time_only) %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) %>
+          <% business_schedule = business_schedules.first %>
+          <%= I18n.l(business_schedule.start_time, format: :time_only) %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) %>
+
+          <% if business_schedules.length > 1 %>
+            <%= I18n.t("common.other_n_number", number: business_schedules.length - 1)%>
           <% end %>
         <% else %>
           <span class="danger">CLOSE</span>
@@ -25,9 +28,12 @@
     <span><%= t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label") %></span>
     <span>
       <% if @holiday_working_schedules.present? %>
-        <% @holiday_working_schedules.each do |business_schedule| %>
+          <% business_schedule = @holiday_working_schedules.first %>
           <%= I18n.l(business_schedule.start_time, format: :time_only) %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) %>
-        <% end %>
+
+          <% if @holiday_working_schedules.length > 1 %>
+            <%= I18n.t("common.other_n_number", number: @holiday_working_schedules.length - 1)%>
+          <% end %>
       <% else %>
         <span class="danger">CLOSE</span>
       <% end %>
