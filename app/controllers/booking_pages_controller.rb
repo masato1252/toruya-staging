@@ -108,8 +108,6 @@ class BookingPagesController < ActionController::Base
         status: "successful"
       }
     else
-      Rollbar.error("Booking::CreateReservation failed", errors: outcome.errors.details)
-
       render json: {
         status: "failed",
         errors: {
