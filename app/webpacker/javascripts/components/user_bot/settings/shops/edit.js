@@ -14,7 +14,7 @@ const SocialAccountEdit =({props}) => {
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.shop,
-      business_schedules: props.business_schedules
+      business_schedules: props.business_schedules || []
     }
   });
 
