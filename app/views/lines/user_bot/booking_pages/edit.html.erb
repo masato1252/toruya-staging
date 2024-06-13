@@ -27,6 +27,7 @@
         end_at_time_part: @booking_page.end_at_time,
         bookable_restriction_months_type: @booking_page.bookable_restriction_months ? "months" : "never",
         default_provider: @booking_page.payment_provider,
+        business_schedules: @booking_page.business_schedules.map { |business_schedule| BusinessScheduleSerializer.new(business_schedule).attributes_hash },
         special_dates: @booking_page.booking_page_special_dates.future.map do |special_date|
           {
             start_at_date_part: special_date.start_at_date,

@@ -572,6 +572,8 @@ ja:
         only_special_dates_booking_label: 指定日のみ受付ける
         event_booking_label: イベント開催時のみ(優先的に枠を確保)
         event_booking_hint: ※この日時で空予約をカレンダー上に自動作成し、他の予約ページでは予約不可になります。
+        business_schedules_booking_label: 特定の曜日のみ受け付ける
+        business_schedules_booking_add_button: 受付時間を追加
         booking_time_interval_label: 全ての予約可能時間から自動的に表示する(推奨)
         specific_booking_start_times_label: 指定の開始時間のみ表示する
         specific_booking_start_times_desc_html: 設定された開始時間の中から<br>予約価格に必要な所要時間の空きがある<br>開始時間のみが表示されます。

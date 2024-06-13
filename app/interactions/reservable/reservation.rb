@@ -21,7 +21,7 @@ module Reservable
     object :booking_page, default: nil
 
     def execute
-      time_outcome = Reservable::Time.run(shop: shop, date: date)
+      time_outcome = Reservable::Time.run(shop: shop, booking_page: booking_page, date: date)
 
       if time_outcome.invalid?
         time_outcome.errors.details.each do |error_attr, time_errors|

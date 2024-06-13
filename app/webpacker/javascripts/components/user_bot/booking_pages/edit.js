@@ -62,7 +62,8 @@ const BookingPageEdit =({props}) => {
       booking_type: props.booking_page.booking_type,
       had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
       price_type: "regular",
-      ticket_quota: 1
+      ticket_quota: 1,
+      business_schedules: props.booking_page.business_schedules
     }
   });
 

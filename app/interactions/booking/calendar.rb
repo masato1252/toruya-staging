@@ -22,7 +22,7 @@ module Booking
     object :customer, default: nil
 
     def execute
-      rules = compose(::Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
+      rules = compose(::Shops::WorkingCalendarRules, shop: shop, booking_page: booking_page, date_range: date_range)
       schedules = compose(CalendarSchedules::Create, rules: rules, date_range: date_range)
       available_booking_dates = []
 
@@ -135,7 +135,7 @@ module Booking
     end
 
     def test_available_booking_date(booking_option, date, booking_available_start_at = nil, booking_available_end_at = nil)
-      time_range_outcome = Reservable::Time.run(shop: shop, date: date)
+      time_range_outcome = Reservable::Time.run(shop: shop, booking_page: booking_page, date: date)
       return if time_range_outcome.invalid?
 
       time_range = time_range_outcome.result

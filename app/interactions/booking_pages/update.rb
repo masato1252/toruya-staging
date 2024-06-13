@@ -51,7 +51,14 @@ module BookingPages
       #   {"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"},
       #   {"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"}
       # [
-      string :booking_type, default: nil # event_booking, only_special_dates_booking, and any
+      string :booking_type, default: nil # event_booking, only_special_dates_booking, business_schedules_booking, and any
+      array :business_schedules, default: [] do
+        hash do
+          integer :day_of_week
+          string :start_time
+          string :end_time
+        end
+      end
       array :special_dates, default: nil do
         hash do
           string :start_at_date_part
@@ -67,17 +74,32 @@ module BookingPages
       booking_options = attrs.delete(:options)
       new_option_id = attrs.delete(:new_option_id)
       special_dates = attrs.delete(:special_dates)
+      business_schedules = attrs.delete(:business_schedules)
 
       booking_page.transaction do
         case update_attribute
         when "booking_type"
           booking_page.booking_page_special_dates.destroy_all
+          booking_page.business_schedules.destroy_all
 
-          if special_dates
+          if special_dates.present?
             special_dates.each do |date_times|
               booking_page.booking_page_special_dates.create(date_times)
             end
           end
+
+          if business_schedules.present?
+            business_schedules.each do |business_schedule|
+              booking_page.business_schedules.create!(
+                business_state: "opened",
+                shop: booking_page.shop,
+                day_of_week: business_schedule[:day_of_week],
+                start_time: business_schedule[:start_time],
+                end_time: business_schedule[:end_time]
+              )
+            end
+          end
+
           booking_page.update(event_booking: booking_type == "event_booking")
         when "new_option_menu", "new_option_existing_menu"
           ApplicationRecord.transaction do

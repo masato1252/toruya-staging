@@ -67,5 +67,26 @@ RSpec.describe Reservable::Time do
         end
       end
     end
+
+    context "when booking_page had business_schedule" do
+      let(:booking_page) { FactoryBot.create(:booking_page, shop: shop) }
+      let!(:business_schedule) { FactoryBot.create(:business_schedule,
+                                                   shop: shop,
+                                                   booking_page: booking_page,
+                                                   day_of_week: now.wday,
+                                                   start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
+                                                   end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
+      let!(:other_business_schedule) { FactoryBot.create(:business_schedule,
+                                                         shop: shop,
+                                                         booking_page: booking_page,
+                                                         day_of_week: now.wday + 1,
+                                                         start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
+                                                         end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
+
+
+      it "returns available time range" do
+        expect(Reservable::Time.run!(shop: shop, booking_page: booking_page, date: date)).to eq([ business_schedule.start_time_on(date)..business_schedule.end_time_on(date) ])
+      end
+    end
   end
 end
