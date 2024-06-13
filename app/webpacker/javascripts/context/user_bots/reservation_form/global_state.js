@@ -47,7 +47,7 @@ export const GlobalProvider = ({ props, children }) => {
       _.compact(
         _.flatMap(
           menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids
-        ).map((staff_element) => String(staff_element.staff_id))
+        ).map((staff_element) => String(staff_element?.staff_id))
       )
     )
   }
