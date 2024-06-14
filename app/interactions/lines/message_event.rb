@@ -60,7 +60,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
 
           Lines::Actions::Contact.run(social_customer: social_customer)
         else
-          if !social_customer.customer
+          if !social_customer.customer && !social_customer.is_owner
             compose(
               SocialMessages::Create,
               social_customer: social_customer,
