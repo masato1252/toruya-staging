@@ -84,14 +84,14 @@ class Lines::MessageEvent < ActiveInteraction::Base
       else
         # Rollbar.warning("Line chat room don't support message type", event: event)
 
-        compose(
-          SocialMessages::Create,
-          social_customer: social_customer,
-          content: I18n.t("line.bot.please_use_contact_feature"),
-          readed: true,
-          message_type: SocialMessage.message_types[:bot]
-        )
-        Lines::Actions::Contact.run(social_customer: social_customer)
+        # compose(
+        #   SocialMessages::Create,
+        #   social_customer: social_customer,
+        #   content: I18n.t("line.bot.please_use_contact_feature"),
+        #   readed: true,
+        #   message_type: SocialMessage.message_types[:bot]
+        # )
+        # Lines::Actions::Contact.run(social_customer: social_customer)
       end
     end
   end
