@@ -24,7 +24,7 @@ module Reservable
       # Holiday
       # XXX: Japan dependency
       if date.holiday?(:jp)
-        if shop.holiday_working
+        if shop.holiday_working && holiday_working_schedules.present?
           return holiday_working_schedules
         else
           errors.add(:date, :shop_closed)
