@@ -653,6 +653,7 @@ Rails.application.routes.draw do
 
     namespace :admin do
       get "as_user"
+      get "logs"
       get "/", to: "dashboards#index"
 
       resources :business_applications, only: [:index] do

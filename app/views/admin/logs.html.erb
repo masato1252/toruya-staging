@@ -1,0 +1,5 @@
+<ol>
+  <% @logs.each do |log| %>
+    <li><%= I18n.l(log[:time], format: :long_date_with_wday)%> <%= log[:label] %></li>
+  <% end %>
+</ol>

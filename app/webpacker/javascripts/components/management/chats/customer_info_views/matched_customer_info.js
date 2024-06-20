@@ -64,8 +64,14 @@ export default () => {
         {
           selected_customer.shop_customers.map((user) => {
             return (
-              selected_customer.shop_customer.id == user.id ? <div key={user.id}><strong>{zeroPad(user.id || 0, 7)}  &#10003;</strong></div> : (
-                <div key={user.id}><a href={Routes.admin_chats_path({ user_id: user.id })}>{zeroPad(user.id || 0, 7)}</a></div>
+              selected_customer.shop_customer.id == user.id ? (
+                <div key={user.id}>
+                  <strong>{zeroPad(user.id || 0, 7)}  &#10003;</strong> <a href={Routes.admin_logs_path({ user_id: user.id })} target="_blank">logs</a>
+                </div>
+              ) : (
+                <div key={user.id}>
+                  <a href={Routes.admin_chats_path({ user_id: user.id })}>{zeroPad(user.id || 0, 7)}</a> <a href={Routes.admin_logs_path({ user_id: user.id })} target="_blank">logs</a>
+                </div>
               )
             )
           })
