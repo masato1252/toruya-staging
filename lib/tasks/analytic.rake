@@ -127,7 +127,7 @@ namespace :analytic do
         nil,
         SalePage.active.count,
         nil,
-        SalePage.active.where(selling_price_amount_cents: nil).count,
+        SalePage.active.where(selling_price_amount_cents: nil, product_type: "OnlineService").count,
         nil,
         CustomerTicket.count,
         nil,
