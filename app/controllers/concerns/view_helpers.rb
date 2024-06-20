@@ -99,8 +99,8 @@ module ViewHelpers
     @super_user ||=
       if params[:encrypted_user_id]
         User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
-      elsif params[:business_owner_id]
-        User.find_by(id: params[:business_owner_id])
+      elsif params[:business_owner_id] || params[:user_id]
+        User.find_by(id: params[:business_owner_id] || params[:user_id])
       else
         root_user
       end
