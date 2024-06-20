@@ -19,7 +19,7 @@
                 modal_target: "#dummyModal2"
               ) %>
             <% else %>
-              <%= link_to customer.name, SiteRouting.new(self).customer_show_path(user_id: @shop_user.id, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
+              <%= link_to customer.name, SiteRouting.new(self).customer_show_path(business_owner_id: @shop_user.id, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
             <% end %>
           <% end %>
         <% end %>
