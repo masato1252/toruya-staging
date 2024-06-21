@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def index
-    @broadcasts = Current.business_owner.broadcasts.ordered.normal
+    @broadcasts = Current.business_owner.broadcasts.ordered.normal.where("created_at > ?", 6.months.ago)
   end
 
   def show
