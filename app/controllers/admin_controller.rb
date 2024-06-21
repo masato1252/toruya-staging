@@ -68,7 +68,7 @@ class AdminController < ApplicationController
       }
     end
 
-    customer_messages = SocialMessage.where(social_account: social_account).where(message_type: [:customer, :customer_reply_bot]).where("created_at > ?", 1.months.ago).map do |message|
+    customer_messages = SocialMessage.where(social_account: social_account).where(message_type: [:customer]).where("created_at > ?", 1.months.ago).map do |message|
       {
         label: "Customer Message created",
         time: message.created_at
