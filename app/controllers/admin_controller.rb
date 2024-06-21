@@ -67,7 +67,12 @@ class AdminController < ApplicationController
         time: custom_schedule.created_at
       }
     end
-
+    menus = Menu.where(user_id: user.id).where("created_at > ?", 1.months.ago).map do |menu|
+      {
+        label: "Menu created",
+        time: menu.created_at
+      }
+    end
     customer_messages = SocialMessage.where(social_account: social_account).where(message_type: [:customer]).where("created_at > ?", 1.months.ago).map do |message|
       {
         label: "Customer Message created",
@@ -90,7 +95,9 @@ class AdminController < ApplicationController
       customers,
       services,
       broadcasts,
-      booking_options
+      booking_options,
+      personal_schedules,
+      menus
     ].flatten.compact.sort_by {|event| event[:time] }
   end
 end
