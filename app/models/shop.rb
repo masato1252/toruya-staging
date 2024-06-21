@@ -64,7 +64,7 @@ class Shop < ApplicationRecord
   end
 
   def logo_url
-    ApplicationController.helpers.shop_logo_url(self, "260")
+    @logo_url ||= ApplicationController.helpers.shop_logo_url(self, "260")
   end
 
   # XXX: only used for demo

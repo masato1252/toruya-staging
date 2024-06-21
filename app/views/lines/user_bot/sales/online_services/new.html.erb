@@ -11,7 +11,7 @@
     online_services: Current.business_owner.online_services.order("updated_at DESC").includes(:company, sale_page: [:product, :sale_template]).map { |service|
       {
         label: service.internal_name.presence || service.name,
-        value: OnlineServiceSerializer.new(service).attributes_hash
+        value: OnlineServiceOptionSerializer.new(service).attributes_hash
       }
     },
     staffs: Current.business_owner.staffs.includes(picture_attachment: :blob).map { |staff|
