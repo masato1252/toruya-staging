@@ -68,6 +68,6 @@ class Profile < ApplicationRecord
   end
 
   def logo_url
-    @logo_url ||= ApplicationController.helpers.shop_logo_url(self, "260")
+    ApplicationController.helpers.shop_logo_url(self, "260")
   end
 end

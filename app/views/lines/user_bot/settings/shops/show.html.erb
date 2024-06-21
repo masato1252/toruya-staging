@@ -36,7 +36,7 @@
       <div class="fake-mobile-layout">
         <%= react_component(
           "user_bot/sales/demo",
-          { shop: CompanyInfoSerializer.new(@shop).attributes_hash },
+          { shop: CompanyInfoSerializer.new(@shop).attributes_hash.merge!(logo_url: shop_logo_url(@shop, "260", true)) },
           { camelize_props: false }
         ) %>
       </div>

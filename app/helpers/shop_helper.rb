@@ -19,8 +19,14 @@ module ShopHelper
   end
 
   def shop_logo_url(shop, size, latest = false)
+    @shop_logo_urls ||= {}
+
     if shop.logo.attached?
-      Images::Process.run!(image: shop.logo, resize: "#{size}")
+      if latest
+        Images::Process.run!(image: shop.logo, resize: "#{size}")
+      else
+        @shop_logo_urls[shop.id] ||= Images::Process.run!(image: shop.logo, resize: "#{size}")
+      end
     end
   end
 
