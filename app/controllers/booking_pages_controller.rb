@@ -224,10 +224,9 @@ class BookingPagesController < ActionController::Base
         }.to_json
       end
     else
-      time_outcome = Reservable::Time.run(shop: booking_page.shop, date: params[:date])
+      time_outcome = Reservable::Time.run(shop: booking_page.shop, booking_page: booking_page, date: params[:date])
 
       if time_outcome.valid?
-
         time_outcome.result.map do |working_time|
           work_start_at = working_time.first
           work_end_at = working_time.last

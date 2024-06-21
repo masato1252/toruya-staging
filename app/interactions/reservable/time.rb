@@ -5,10 +5,11 @@ module Reservable
     include SharedMethods
 
     object :shop
+    object :booking_page, default: nil
     date :date
 
     def execute
-      # Custom -> Holiday -> Business
+      # Custom -> Holiday -> Booking Page schedule -> Business
 
       # Custom
       if custom_close_schedule = shop.custom_schedules.for_shop.where(start_time: date.beginning_of_day..date.end_of_day).order("end_time").last
@@ -31,6 +32,10 @@ module Reservable
         end
       end
 
+      if booking_page && booking_page.business_schedules.exists?
+        return booking_page_schedules
+      end
+
       # normal business day
       business_working_schedules
     end
@@ -40,6 +45,12 @@ module Reservable
     def business_schedules
       @business_schedules ||= {}
       @business_schedules[date.wday] ||= shop.business_schedules.for_shop.where(day_of_week: date.wday).order(:start_time).opened.all
+    end
+
+    def booking_page_schedules
+      booking_page.business_schedules.where(day_of_week: date.wday).map do |schedule|
+        schedule.start_time_on(date)..schedule.end_time_on(date)
+      end
     end
 
     def holiday_working_schedules

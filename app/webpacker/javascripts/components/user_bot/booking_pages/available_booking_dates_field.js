@@ -1,6 +1,6 @@
 "use strict"
 
-import React from "react";
+import React, { Fragment } from "react";
 import { useFieldArray, Controller } from "react-hook-form";
 import moment from "moment-timezone";
 
@@ -38,10 +38,53 @@ const SpecialDatesFields = ({special_dates_fields, register, control, setValue, 
   )
 }
 
+const WeekdayBusinessSchedules = ({register, weekday, business_schedule_fields}) => {
+  const weekday_business_schedule_fields = business_schedule_fields.fields
+
+  return (
+    <>
+      <div className="p-3">{I18n.t("date.day_names")[weekday]}</div>
+      {weekday_business_schedule_fields.map((field, index) => {
+        if (field.day_of_week != weekday) return <Fragment key={field.id}></Fragment>
+
+        return (
+          <div key={field.id} className="field-row flex-start">
+            <input type="hidden" name={`business_schedules[${index}].day_of_week`} defaultValue={field.day_of_week} ref={register({ required: true })} />
+            <input type="time" name={`business_schedules[${index}].start_time`} defaultValue={field.start_time} ref={register({ required: true })} /> 〜 <input type="time" name={`business_schedules[${index}].end_time`} defaultValue={field.end_time} ref={register({ required: true })} />
+            {weekday_business_schedule_fields.filter((field) => field.day_of_week == weekday).length > 0 && (
+              <button className="btn btn-orange" onClick={() => business_schedule_fields.remove(index)}>
+                <i className="fa fa-minus"></i>
+                <span>{I18n.t("action.delete")}</span>
+              </button>
+            )}
+          </div>
+        )
+      })}
+      <div className="field-row flex-start">
+        <button className="btn btn-yellow" onClick={() => {
+          business_schedule_fields.append({
+            day_of_week: weekday,
+            start_time: "09:00",
+            end_time: "17:00"
+          })
+        }}>
+          <i className="fa fa-plus"></i>
+          <span>{I18n.t('settings.booking_page.form.business_schedules_booking_add_button')}</span>
+        </button>
+      </div>
+    </>
+  )
+}
+
 const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) => {
   const special_dates_fields = useFieldArray({
     control: control,
     name: "special_dates"
+  });
+
+  const business_schedule_fields = useFieldArray({
+    control: control,
+    name: "business_schedules"
   });
 
   return (
@@ -67,7 +110,23 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
           <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} i18n={i18n} />
         </>
       }
-      <label className="field-row flex-start no-border">
+      <label className="field-row flex-start">
+        <input name="booking_type" type="radio" value="business_schedules_booking" ref={register({ required: true })} />
+        {i18n.business_schedules_booking_label}
+      </label>
+      {_.includes(["business_schedules_booking"], watch("booking_type")) &&
+      <>
+        {[1, 2, 3, 4, 5, 6, 0].map((weekday) => {
+          return (
+            <WeekdayBusinessSchedules
+              key={weekday}
+              register={register}
+              weekday={weekday}
+              business_schedule_fields={business_schedule_fields} />
+          )
+        })}
+      </>}
+      <label className="field-row flex-start">
         <input name="booking_type" type="radio" value="event_booking" ref={register({ required: true })} />
         {i18n.event_booking_label}
       </label>

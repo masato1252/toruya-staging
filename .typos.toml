@@ -21,6 +21,7 @@ payed = 'payed'
 mixpanel = 'mixpanel'
 xdescribe = 'xdescribe'
 skippable = 'skippable'
+wday= 'wday'
 
 [type.typos]
 extend-glob = [".typos.toml"]

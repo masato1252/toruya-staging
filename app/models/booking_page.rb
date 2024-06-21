@@ -45,6 +45,7 @@ class BookingPage < ApplicationRecord
   has_many :booking_options, -> { undeleted }, through: :booking_page_options
   has_many :booking_codes
   has_many :booking_page_special_dates, -> { order(:start_at) }
+  has_many :business_schedules
 
   belongs_to :user
   belongs_to :shop
@@ -100,6 +101,8 @@ class BookingPage < ApplicationRecord
         "event_booking"
       elsif booking_page_special_dates.exists?
         "only_special_dates_booking"
+      elsif business_schedules.exists?
+        "business_schedules_booking"
       else
         "any"
       end

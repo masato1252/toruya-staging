@@ -851,7 +851,8 @@ CREATE TABLE public.business_schedules (
     start_time timestamp without time zone,
     end_time timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    booking_page_id integer
 );
 
 
@@ -4829,6 +4830,13 @@ CREATE INDEX index_business_applications_on_user_id ON public.business_applicati
 
 
 --
+-- Name: index_business_schedules_on_booking_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_business_schedules_on_booking_page_id ON public.business_schedules USING btree (booking_page_id);
+
+
+--
 -- Name: index_categories_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5905,6 +5913,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240429031029'),
 ('20240501021924'),
 ('20240530162619'),
-('20240605123036');
+('20240605123036'),
+('20240613092742');
 
 
