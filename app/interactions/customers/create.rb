@@ -50,10 +50,7 @@ class Customers::Create < ActiveInteraction::Base
       # errors.add(:base, :google_down)
     end
 
-    if user.contact_groups.count == 1
-      customer.contact_group_id = user.contact_groups.first.id
-    end
-
+    customer.contact_group_id = user.contact_groups.first&.id if customer.contact_group_id.nil?
     customer.save
 
     if customer.new_record?

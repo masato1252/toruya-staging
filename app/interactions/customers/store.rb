@@ -35,6 +35,8 @@ class Customers::Store < ActiveInteraction::Base
       customer = user.customers.new(params.merge(updated_by_user_id: current_user.id))
     end
 
+    customer.contact_group_id = user.contact_groups.first.id if customer.contact_group_id.nil?
+
     unless customer.save
       errors.merge!(customer.errors)
     end
