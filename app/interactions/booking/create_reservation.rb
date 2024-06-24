@@ -322,7 +322,9 @@ module Booking
             Rollbar.error("Booking::CreateReservation Failed", errors: {
               customer_errors: customer&.errors&.details,
               reservation_errors: reservation&.errors&.details,
-              errors: errors.details
+              errors: errors.details,
+              reservation: reservation&.attributes,
+              customer: customer&.attributes
             })
 
             errors.add(:base, :reservation_something_wrong)
