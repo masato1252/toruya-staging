@@ -11,7 +11,7 @@ module CustomMessages
         when nil, 0
           # For customers purchased/booked, so do nothing when this custom message was created
         else
-          message.service.available_customers.find_each do |customer|
+          message.service.customers.find_each do |customer|
             ::CustomMessages::Customers::Next.perform_later(
               custom_message: message,
               receiver: customer,
