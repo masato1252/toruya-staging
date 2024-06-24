@@ -643,6 +643,19 @@ Rails.application.routes.draw do
       resources :booking_pages, only: [:index]
       resources :online_service_customer_relations, only: [:index]
       resource :subscription, only: [:destroy]
+      get "logs"
+
+      resources :custom_messages, only: [] do
+        collection do
+          get "scenario/:scenario", action: "scenario", as: :scenario
+          get "scenario/:scenario/new", action: "new", as: :new
+          get "scenario/:scenario/edit/:id", action: "edit", as: :edit
+          post "scenario/:scenario", action: "create", as: :create
+          put "scenario/:scenario/:id", action: "update", as: :update
+          get "scenarios", action: "scenarios"
+          post "scenario/:scenario/demo", action: "demo", as: :demo
+        end
+      end
     end
   end
 
@@ -653,7 +666,6 @@ Rails.application.routes.draw do
 
     namespace :admin do
       get "as_user"
-      get "logs"
       get "/", to: "dashboards#index"
 
       resources :business_applications, only: [:index] do
@@ -676,18 +688,6 @@ Rails.application.routes.draw do
         member do
           post "mark_paid"
           get "receipt"
-        end
-      end
-
-      resources :custom_messages, only: [] do
-        collection do
-          get "scenario/:scenario", action: "scenario", as: :scenario
-          get "scenario/:scenario/new", action: "new", as: :new
-          get "scenario/:scenario/edit/:id", action: "edit", as: :edit
-          post "scenario/:scenario", action: "create", as: :create
-          put "scenario/:scenario/:id", action: "update", as: :update
-          get "scenarios", action: "scenarios"
-          post "scenario/:scenario/demo", action: "demo", as: :demo
         end
       end
     end
