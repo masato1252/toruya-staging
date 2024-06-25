@@ -3,8 +3,8 @@
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.base_business_time") %></div>
   <% (1..7).each do |wday| %>
-    <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: @shop.id, wday: wday, business_owner_id: business_owner_id), class: "field-row" do %>
-      <% business_schedules = @wdays_business_schedules_mapping[wday] %>
+    <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: @shop.id, wday: wday % 7, business_owner_id: business_owner_id), class: "field-row" do %>
+      <% business_schedules = @wdays_business_schedules_mapping[wday % 7] %>
 
       <span><%= I18n.t("date.day_names").at(wday % 7) %></span>
       <span>
