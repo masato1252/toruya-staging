@@ -51,7 +51,7 @@ module Reservations
 
       if menu_staffs_list.present?
         reservation.prepare_time = reservation.start_time - menu_staffs_list.first[:menu_interval_time].minutes
-        reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes
+        reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes if reservation.end_time
 
         menu_staffs_list.each.with_index do |h, position|
           time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.reservation_menus, position)
