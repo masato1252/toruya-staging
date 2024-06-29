@@ -51,6 +51,7 @@ class Broadcast < ApplicationRecord
   def target
     return I18n.t("broadcast.targets.all_customers") if query.blank?
     return I18n.t("broadcast.targets.vip_customers") if vip_customers?
+    return I18n.t("broadcast.targets.all_customers") if query["filters"].blank?
 
     filter = query["filters"][0]
     product_name =
@@ -67,6 +68,7 @@ class Broadcast < ApplicationRecord
   def targets
     return [I18n.t("broadcast.targets.all_customers")] if query.blank?
     return [I18n.t("broadcast.targets.vip_customers")] if vip_customers?
+    return [I18n.t("broadcast.targets.all_customers")] if query["filters"].blank?
 
     query["filters"].map do |filter|
       case filter["field"]
@@ -79,6 +81,8 @@ class Broadcast < ApplicationRecord
   end
 
   def target_ids
+    return [] if query["filters"].blank?
+
     query["filters"].map do |filter|
       filter["value"]
     end

@@ -16,6 +16,7 @@ module Broadcasts
     def execute
       scoped = user.customers
       return scoped if query.blank?
+      return scoped if query["filters"].blank?
 
       filter = query["filters"][0]
 
