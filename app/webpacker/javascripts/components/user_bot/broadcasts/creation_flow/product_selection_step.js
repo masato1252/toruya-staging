@@ -165,7 +165,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
-        <button onClick={next} className="btn btn-yellow" disabled={!selected_online_service && !selected_menu}>
+        <button onClick={next} className="btn btn-yellow" disabled={!query?.filters?.length}>
           {I18n.t("action.next_step")}
         </button>
       </div>
