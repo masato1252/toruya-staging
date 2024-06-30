@@ -51,7 +51,7 @@ module ViewHelpers
         _social_user = User.find_by(id: user_id).social_user
         write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
         _social_user
-      elsif user_bot_cookies(:social_service_user_id)
+      elsif respond_to?(:user_bot_cookies) && user_bot_cookies(:social_service_user_id)
         SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
       end
   end
