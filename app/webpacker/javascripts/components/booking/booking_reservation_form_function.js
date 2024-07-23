@@ -54,8 +54,8 @@ const BookingReservationFormFunction = ({props}) => {
     })
   }
 
-  const isPremiumService = () => {
-    return !selected_booking_option()?.is_free
+  const isCashPayRequired = () => {
+    return selected_booking_option()?.cash_pay_required
   }
 
   const handleAddressCallback = (address) => {
@@ -381,7 +381,7 @@ const BookingReservationFormFunction = ({props}) => {
     const { is_single_option, is_started, is_ended } = props.booking_page
     const { is_done, is_paying_booking, is_filling_address, booking_option_id, skip_social_customer } = booking_reservation_form_values
 
-    if (isPremiumService() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
+    if (isCashPayRequired() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
       return (
         <CustomerAddressView
           handleAddressCallback={handleAddressCallback}
@@ -509,7 +509,7 @@ const BookingReservationFormFunction = ({props}) => {
               isBookingFlowEnd={isBookingFlowEnd()}
               isEnoughCustomerInfo={isEnoughCustomerInfo()}
               isCustomerTrusted={isCustomerTrusted()}
-              isPremiumService={isPremiumService()}
+              isCashPayRequired={isCashPayRequired()}
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}
@@ -591,7 +591,7 @@ const BookingReservationFormFunction = ({props}) => {
               isBookingFlowEnd={isBookingFlowEnd()}
               isEnoughCustomerInfo={isEnoughCustomerInfo()}
               isCustomerTrusted={isCustomerTrusted()}
-              isPremiumService={isPremiumService()}
+              isCashPayRequired={isCashPayRequired()}
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}

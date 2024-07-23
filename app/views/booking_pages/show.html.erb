@@ -97,6 +97,7 @@
     payment_solution: @booking_page.payment_solution,
     is_shop_owner: @social_customer&.is_owner,
     booking_options_quota: @booking_options_quota,
+    lowest_online_charge_required_amount: BookingOption::LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT,
     booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled").merge!({
       shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
       shop_name: @booking_page.shop.name,

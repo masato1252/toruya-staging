@@ -144,7 +144,7 @@ const PriceSetupStep = ({next, step}) => {
       <div className="action-block">
         <button
           className="btn btn-yellow"
-          disabled={(price_type == "ticket" && new_booking_option_price > 50000) || (new_booking_option_price && new_booking_option_price < 100)}
+          disabled={(price_type == "ticket" && new_booking_option_price > 50000)}
           onClick={next}>
           {I18n.t("action.next_step")}
         </button>

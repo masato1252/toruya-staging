@@ -28,6 +28,11 @@
                 <%= booking_option.menus.pluck(:name).join(", ") %><br />
                 <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %>・<%= booking_price_desc(booking_option) %>
 
+                <% if @booking_page.online_payment_enabled && booking_option.cash_pay_required? %>
+                  <div class="warning">
+                    <%= I18n.t("errors.selling_price_too_low") %>
+                  </div>
+                <% end %>
                 <% booking_option.menus.each do |menu| %>
                   <% if menu.shop_menus.map(&:shop_id).exclude?(@booking_page.shop_id) %>
                     <div class="warning">

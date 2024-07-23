@@ -50,6 +50,7 @@ module SettingsHelper
       start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
       end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
       is_free: booking_option.amount.zero?,
+      cash_pay_required: booking_option.cash_pay_required?,
       memo: booking_option.memo,
       menu_ids: booking_option.menu_relations.pluck(:menu_id)
     )

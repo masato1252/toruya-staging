@@ -26,6 +26,7 @@ const OnlinePaymentEnabledField = ({i18n, register, watch, payment_provider_opti
         {i18n.online_payment_options.disabled}
       </label>
       <div className="margin-around centerize">
+        <div className="warning">{I18n.t("errors.selling_price_too_low")}</div>
         <div dangerouslySetInnerHTML={{ __html: i18n.online_payment_enabled_desc_html }} />
       </div>
     </>
