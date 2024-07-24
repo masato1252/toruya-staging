@@ -26,7 +26,7 @@
 
 # payment_state pending, and permission_state active might be purchased from bundler
 class OnlineServiceCustomerRelation < ApplicationRecord
-  ACTIVE_STATES = %w[pending free paid partial_paid].freeze
+  ACTIVE_STATES = %w[pending free paid partial_paid canceled].freeze
   SOLD_STATES = %w[paid partial_paid]
 
   include SayHi

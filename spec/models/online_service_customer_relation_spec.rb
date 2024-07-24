@@ -29,7 +29,8 @@ RSpec.describe OnlineServiceCustomerRelation do
         { payment_state: :free, permission_state: :pending, state: "pending" },
         { payment_state: :failed, permission_state: :pending, state: "inactive" },
         { payment_state: :refunded, permission_state: :pending, state: "inactive" },
-        { payment_state: :canceled, permission_state: :pending, state: "inactive" },
+        { payment_state: :canceled, permission_state: :pending, state: "pending" },
+        { payment_state: :canceled, permission_state: :active, state: "accessible" },
         { payment_state: :partial_paid, permission_state: :pending, state: "pending" },
         { payment_state: :paid, permission_state: :pending, state: "pending" },
 
@@ -57,6 +58,7 @@ RSpec.describe OnlineServiceCustomerRelation do
         { payment_state: :failed, permission_state: :pending, state: "inactive" },
         { payment_state: :refunded, permission_state: :pending, state: "inactive" },
         { payment_state: :canceled, permission_state: :pending, state: "inactive" },
+        { payment_state: :canceled, permission_state: :active, state: "inactive" },
         { payment_state: :partial_paid, permission_state: :pending, state: "inactive" },
         { payment_state: :paid, permission_state: :pending, state: "inactive" },
 
@@ -85,7 +87,8 @@ RSpec.describe OnlineServiceCustomerRelation do
         { payment_state: :free, permission_state: :pending, state: "pending" },
         { payment_state: :failed, permission_state: :pending, state: "inactive" },
         { payment_state: :refunded, permission_state: :pending, state: "inactive" },
-        { payment_state: :canceled, permission_state: :pending, state: "inactive" },
+        { payment_state: :canceled, permission_state: :pending, state: "pending" },
+        { payment_state: :canceled, permission_state: :active, state: "available" },
         { payment_state: :partial_paid, permission_state: :pending, state: "pending" },
         { payment_state: :paid, permission_state: :pending, state: "pending" },
 

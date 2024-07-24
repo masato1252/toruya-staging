@@ -134,7 +134,7 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
         end
 
         context 'when customer does NOT purchase yet' do
-          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled, customer: customer) }
+          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled, :expired, customer: customer) }
 
           it "create a free relation" do
             expect {
