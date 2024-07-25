@@ -335,6 +335,7 @@ ja:
             auth_failed: 失敗
             processor_failed: 失敗
             change_expire_at: 利用期限変更
+            canceled: 中止
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携

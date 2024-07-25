@@ -21,6 +21,8 @@ module Sales
           relation.canceled_payment_state!
         end
 
+        CustomerPayments::Cancel.run(online_service_customer_relation: relation)
+
         relation
       end
 
