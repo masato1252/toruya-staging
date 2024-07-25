@@ -23,7 +23,13 @@ class OnlineServiceCustomerRelations::ReconnectBestContract < ActiveInteraction:
         new_best_available_contract_relation
       end
     else
-      relation.pending!
+      if relation.bundler_relation&.expire_at?
+        relation.expire_at = relation.bundler_relation.expire_at
+        relation.save!
+      else
+        relation.pending!
+      end
+
       relation
     end
   end

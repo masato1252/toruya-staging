@@ -22,7 +22,11 @@ RSpec.describe Sales::OnlineServices::Cancel do
 
       context "when online_service is a regular subscription" do
         it "still active but expire at is end of period" do
-          outcome
+          expect {
+            outcome
+          }.to change {
+            CustomerPayment.where(product: relation).count
+          }.by(1)
 
           expect(outcome.result).to be_active
           expect(outcome.result.expire_at).to be_present
@@ -35,7 +39,7 @@ RSpec.describe Sales::OnlineServices::Cancel do
         let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, customer: customer, online_service: bundler_service, permission_state: :active, sale_page: sale_page) }
         let(:sale_page) { FactoryBot.create(:sale_page, :recurring_payment, product: bundler_service, user: user) }
 
-        it "still active but expire at is end of period and pend bundled services" do
+        it "still active but expire at is end of period and expires bundled services" do
           bundled_service_with_end_at = FactoryBot.create(:bundled_service, bundler_service: bundler_service, end_at: Time.current.tomorrow)
           bundled_service_with_forever = FactoryBot.create(:bundled_service, bundler_service: bundler_service)
           bundled_service_with_subscription = FactoryBot.create(:bundled_service, bundler_service: bundler_service, subscription: true)
@@ -49,9 +53,12 @@ RSpec.describe Sales::OnlineServices::Cancel do
           expect(relation).to be_active
           expect(relation.expire_at).to be_present
           expect(relation.stripe_subscription_id).to be_nil
-          expect(relation_with_end_at_service.reload).to be_pending
-          expect(relation_with_forever_service.reload).to be_pending
-          expect(relation_with_subscription_service.reload).to be_pending
+          expect(relation_with_end_at_service.reload).to be_active
+          expect(relation_with_end_at_service.expire_at).to eq(relation.expire_at)
+          expect(relation_with_forever_service.reload).to be_active
+          expect(relation_with_forever_service.expire_at).to eq(relation.expire_at)
+          expect(relation_with_subscription_service.reload).to be_active
+          expect(relation_with_subscription_service.expire_at).to eq(relation.expire_at)
         end
       end
     end
