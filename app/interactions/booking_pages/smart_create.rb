@@ -20,7 +20,7 @@ module BookingPages
 
     def execute
       ApplicationRecord.transaction do
-        if !attrs[:booking_option_id]
+        if !attrs[:booking_option_id] && menu
           default_booking_option_attrs = {
             name: menu.name,
             display_name: menu.name,
@@ -42,17 +42,20 @@ module BookingPages
         end
 
         default_booking_page_attrs = {
-          name: I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: menu&.short_name || booking_option.name),
-          title: I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: menu&.short_name || booking_option.name),
-          greeting: I18n.t("user_bot.dashboards.booking_page_creation.default_greeting", menu_name: menu&.short_name || booking_option.name),
+          name: I18n.t("user_bot.dashboards.booking_page_creation.default_label", name: booking_page_name),
+          title: I18n.t("user_bot.dashboards.booking_page_creation.default_label", name: booking_page_name),
+          greeting: I18n.t("user_bot.dashboards.booking_page_creation.default_greeting", name: booking_page_name),
           shop_id: shop.id,
           note: attrs[:note],
-          options: {
-            "0" => { 'value' => attrs[:booking_option_id] || new_booking_option.id },
-          },
           draft: false,
           rich_menu_only: attrs[:rich_menu_only]
         }
+
+        if attrs[:booking_option_id] || new_booking_option
+          default_booking_page_attrs[:options] = {
+            "0" => { 'value' => attrs[:booking_option_id] || new_booking_option.id },
+          }
+        end
 
         booking_page = compose(
           BookingPages::Save,

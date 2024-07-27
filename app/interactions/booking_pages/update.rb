@@ -31,6 +31,7 @@ module BookingPages
       end
       boolean :overbooking_restriction, default: true
 
+      # for adding a new option from existing option
       integer :new_option_id, default: nil
 
       # For adding a new option with existing menu

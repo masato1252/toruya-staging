@@ -20,7 +20,7 @@ import AvailableBookingDatesField from "./available_booking_dates_field";
 import BookingStartAtField from "./booking_start_at_field";
 import BookingEndAtField from "./booking_end_at_field";
 import ShopField from "./shop_field";
-import NewMenuField from "components/user_bot/booking_options/new_menu_field";
+import ExistingMenuField from "components/user_bot/booking_options/existing_menu_field";
 
 const BookingPageEdit =({props}) => {
   const i18n = props.i18n;
@@ -153,7 +153,7 @@ const BookingPageEdit =({props}) => {
           <div>
             <h3 className="header centerize">{I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}</h3>
             <div className="field-header">{I18n.t("settings.booking_page.form.new_option_existing_menu_menu_select_header")}</div>
-            <NewMenuField
+            <ExistingMenuField
               i18n={props.i18n} register={register} watch={watch} control={control}
               menu_group_options={props.menu_group_options}
               setValue={setValue}
@@ -236,7 +236,7 @@ const BookingPageEdit =({props}) => {
             <hr className="border-gray-300" />
             <div className="margin-around centerize">
               <h3 className="centerize">{I18n.t("settings.booking_page.form.does_require_a_new_option")}</h3>
-              <div className="my-2">
+              <div className="my-1">
                 <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_existing_menu" })} className="btn btn-orange">
                   {I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}
                 </a>

@@ -583,13 +583,15 @@ tw:
         create_sale_page_later_warning_html: 服務已創建，但由於<br>宣傳頁面尚未創建，<br>客戶無法註冊服務
         remember_create_sale_page: 請記得創建宣傳頁面
         create_sale_page_later_btn: 稍後創建
+        confirm_booking_page_message: 即使新的預約頁面已創建，在設定您的預約服務之前，客戶仍無法使用該頁面。
+        create_booking_page_successfully: 預約頁面已成功創建。請在此處編輯您提供的服務，並與客戶分享預約頁面。
       booking:
-        booking_option_creation:
-          label: 創建預約價格
-          description: 創建您想銷售的服務
         booking_page_creation:
-          label: 創建預約頁面
-          description: 創建預約頁面以組織/營銷不同的預約價格
+          label: 建立預約頁面
+          description: 建立一個預約頁面，來讓客戶可以線上預約您的服務。
+        booking_option_creation:
+          label: 建立銷售服務
+          description: 建立是您所要銷售的服務內容。
       sales:
         modal:
           title: 確認宣傳頁面

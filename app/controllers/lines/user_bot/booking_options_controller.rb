@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardController
+  def new
+    @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
+    @options = ::BookingPages::AvailableBookingOptions.run!(shop: Current.business_owner.shops.first)
+  end
+
+  def create
+    outcome = ::BookingOptions::Create.run(params.permit!.to_h.merge(user: Current.business_owner))
+
+    flash[:success] = I18n.t("common.create_successfully_message")
+
+    if outcome.valid? && outcome.result&.id
+      render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(outcome.result.id, business_owner_id: business_owner_id) })
+    else
+      render json: json_response(outcome, { redirect_to: lines_user_bot_booking_options_path(business_owner_id: business_owner_id) })
+    end
+  end
+
   def index
     @booking_options = Current.business_owner.booking_options.includes(:menus).order("updated_at DESC")
   end

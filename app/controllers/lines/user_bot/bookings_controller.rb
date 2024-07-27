@@ -2,15 +2,17 @@
 
 class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   def new
-    @booking_shop = Current.business_owner.shops.count == 1 ? Current.business_owner.shops.first : nil
   end
 
   def page
     authorize! :create, BookingPage
 
-    outcome = ::BookingPages::SmartCreate.run(attrs: params[:booking].permit!.to_h)
+    outcome = ::BookingPages::SmartCreate.run(attrs: {
+      super_user_id: Current.business_owner.id,
+      shop_id: Current.business_owner.shops.first.id,
+    })
 
-    render json: json_response(outcome, { booking_page_id: outcome.result&.slug })
+    redirect_to lines_user_bot_booking_page_path(business_owner_id: business_owner_id, id: outcome.result.id), notice: I18n.t("user_bot.dashboards.booking_page_creation.create_booking_page_successfully")
   end
 
   def available_options

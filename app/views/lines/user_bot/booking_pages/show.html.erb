@@ -14,9 +14,6 @@
         <div class="field-header" id="greeting"><%= I18n.t("settings.booking_page.form.greeting") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :greeting), title: @booking_page.greeting %>
 
-        <div class="field-header" id="shop_id"><%= I18n.t("settings.booking_page.form.shop_header") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :shop_id), title: @booking_page.shop.name %>
-
         <div class="field-group-header" id="new_option">
           <%= I18n.t("settings.booking_page.form.booking_option_header") %>
         </div>
@@ -69,7 +66,16 @@
           <%= link_to edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :new_option), class: "btn btn-yellow" do %>
             <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_page.form.add_new_option") %></span>
           <% end %>
-          <%= link_to t("settings.booking_page.form.reorder_options"), edit_booking_options_order_lines_user_bot_booking_page_path(business_owner_id, @booking_page), class: "btn btn-tarco" %>
+
+          <% if @booking_page.booking_page_options.count == 0 %>
+            <div class="danger margin-around">
+              <%= I18n.t("settings.booking_page.form.form_errors.no_booking_option") %>
+            </div>
+          <% end %>
+
+          <% if @booking_page.booking_page_options.count > 1 %>
+            <%= link_to t("settings.booking_page.form.reorder_options"), edit_booking_options_order_lines_user_bot_booking_page_path(business_owner_id, @booking_page), class: "btn btn-tarco" %>
+          <% end %>
         </div>
 
         <div class="field-group-header" id="special_dates"><%= I18n.t("settings.booking_page.form.booking_dates_available_booking_datetime") %></div>
@@ -111,7 +117,8 @@
       <% else %>
         <%= render "lines/user_bot/field_row" do %>
           <span class="warning">
-            <%= I18n.t("settings.booking_page.form.no_membership_services") %> <%= link_to I18n.t("action.create_new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id) %>
+            <%= I18n.t("settings.booking_page.form.no_membership_services") %>
+            <%= link_to I18n.t("action.create_new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id), class: "btn btn-tarco" %>
           </span>
         <% end %>
       <% end %>

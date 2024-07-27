@@ -35,7 +35,7 @@ module BookingPages
     end
 
     def execute
-      booking_options = attrs.delete(:options)
+      booking_options = attrs.delete(:options) || []
       special_dates = attrs.delete(:special_dates)
 
       booking_page.slug ||= SecureRandom.alphanumeric(10)
