@@ -197,7 +197,7 @@ ja:
     normal_price_label: 通常
     today_price_label: 今なら
     thanks: ご利用ありがとうございます
-    line_login_btn_word: LINEログイン
+    line_login_btn_word: LINE連携
     only_for_login_user: 登録者専用ページです
     read_required_login_user_html: このページの閲覧には <br /> サービスへの登録が必要です
     login_add_friend_to_follow_information_html: 登録をご希望の方は <br />LINEでお問合せください
