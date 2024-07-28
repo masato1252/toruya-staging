@@ -18,6 +18,11 @@ module SalePages
         end
 
         unless amount.zero?
+          if sale_page.product.stripe_product_id.blank?
+            stripe_product = compose(::OnlineServices::CreateStripeProduct, online_service: sale_page.product)
+            sale_page.product.update!(stripe_product_id: stripe_product.id)
+          end
+
           recurring_price = RecurringPrice.new(
             interval: interval,
             amount: amount,
