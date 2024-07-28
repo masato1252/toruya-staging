@@ -18,6 +18,24 @@ RSpec.describe SalePages::UpdateRecurringPrice do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    let(:sale_page) { FactoryBot.create(:sale_page, user: online_service.user, product: online_service) }
+    let(:online_service) { FactoryBot.create(:online_service, user: user) }
+    context "when product without stripe product id" do
+      it "creates a new price" do
+        allow(Stripe::Price).to receive(:create).and_return(double(id: "price_789"))
+        expect {
+          outcome
+        }.to change {
+          sale_page.all_recurring_prices.size
+        }.by(1).and change {
+          online_service.stripe_product_id
+        }
+
+        expect(outcome.result.recurring_prices.length).to eq(1)
+        expect(outcome.result.monthly_price.amount).to eq(1_000)
+      end
+    end
+
     context 'when price is the same(interval and amount)' do
       it "does nothing" do
         expect {
