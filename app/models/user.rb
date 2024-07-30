@@ -119,6 +119,7 @@ class User < ApplicationRecord
   delegate :client, to: UserBotSocialAccount
   delegate :square_client, to: :square_provider
   delegate :line_keyword_booking_page_ids, to: :user_setting
+  delegate :line_keyword_booking_option_ids, to: :user_setting
 
   scope :admin, -> { joins(:social_user).where(social_service_user_id: SocialUser::ADMIN_IDS) }
   scope :not_admin, -> { where.not.admin }
@@ -274,6 +275,16 @@ class User < ApplicationRecord
 
   def all_staff_related_users
     owner_staff_accounts.active.map(&:user).map(&:related_users).flatten.compact.uniq
+  end
+
+  def line_keyword_booking_options
+    booking_options.where(id: line_keyword_booking_option_ids).sort_by { |option| line_keyword_booking_option_ids.index(option.id.to_s) }
+  end
+
+  def line_keyword_booking_options_page
+    booking_pages.active.where(rich_menu_only: true).includes(:booking_page_options).sort_by do |page|
+      line_keyword_booking_option_ids.index(page.booking_page_options.first.booking_option_id.to_s)
+    end
   end
 
   private

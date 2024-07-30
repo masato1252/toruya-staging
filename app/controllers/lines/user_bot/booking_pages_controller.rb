@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   def index
-    @booking_pages = Current.business_owner.booking_pages.includes(:booking_options, :shop).order("updated_at DESC")
+    @booking_pages = Current.business_owner.booking_pages.where(rich_menu_only: false).includes(:booking_options, :shop).order("updated_at DESC")
   end
 
   def show

@@ -32,7 +32,7 @@ RSpec.describe SocialRichMenu do
       expect(social_rich_menu.actions).to eq(
         [
           { type: :incoming_reservations, value: :incoming_reservations },
-          { type: :booking_pages, value: :booking_pages },
+          { type: 'text', value: '新たに予約する', desc: '新たに予約する' },
           { type: :contacts, value: :contacts },
           { type: 'sale_page', value: 'https://toruya-staging.herokuapp.com/sale_pages/44' },
           { type: 'text', value: 'foo', desc: 'foo' },

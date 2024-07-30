@@ -14,6 +14,10 @@ FactoryBot.define do
     overbooking_restriction { true }
     slug { SecureRandom.alphanumeric(10) }
 
+    trait :rich_menu_only do
+      rich_menu_only { true }
+    end
+
     before(:create) do |booking_page, evaluator|
       if booking_page.start_at
         booking_page.start_at_date_part = booking_page.start_at.to_fs(:date)

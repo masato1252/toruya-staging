@@ -15,11 +15,12 @@ module BookingPages
       integer :new_menu_minutes, default: nil
       boolean :new_menu_online, default: false
       string :note, default: nil
+      boolean :rich_menu_only, default: false
     end
 
     def execute
       ApplicationRecord.transaction do
-        unless attrs[:booking_option_id]
+        if !attrs[:booking_option_id]
           default_booking_option_attrs = {
             name: menu.name,
             display_name: menu.name,
@@ -49,7 +50,8 @@ module BookingPages
           options: {
             "0" => { 'value' => attrs[:booking_option_id] || new_booking_option.id },
           },
-          draft: false
+          draft: false,
+          rich_menu_only: attrs[:rich_menu_only]
         }
 
         booking_page = compose(
@@ -133,6 +135,16 @@ module BookingPages
 
     def super_user
       @user ||= User.find(attrs[:super_user_id])
+    end
+
+    def booking_page_name
+      if attrs[:rich_menu_only]
+        BookingOption.find(attrs[:booking_option_id]).name
+      elsif super_user.booking_pages.exists?
+        "#{shop.name}(#{super_user.booking_pages.count})"
+      else
+        shop.name
+      end
     end
   end
 end

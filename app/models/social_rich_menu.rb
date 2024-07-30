@@ -30,6 +30,7 @@ require "user_bot_social_account"
 class SocialRichMenu < ApplicationRecord
   LINE_OFFICIAL_RICH_MENU_KEY = "line_official"
   KEYWORDS = I18n.t("line.bot.keywords").keys.map(&:to_s) # "incoming_reservations", "booking_pages", "contacts", "services"
+  LINE_KEYWORDS = I18n.t("line.bot.keywords").values.map(&:to_s)
   store_accessor :context, %i[image_errors]
 
   belongs_to :social_account, required: false
@@ -78,7 +79,7 @@ class SocialRichMenu < ApplicationRecord
     # ja support only
     # I18n.available_locales
     body_actions.map do |action|
-      if ["全ての予約", "新たに予約する", "お問い合わせ", "利用中サービス"].include?(action["text"])
+      if LINE_KEYWORDS.include?(action["text"])
         {
           type: label_key_mapping.dig(action["text"]),
           value: label_key_mapping.dig(action["text"])

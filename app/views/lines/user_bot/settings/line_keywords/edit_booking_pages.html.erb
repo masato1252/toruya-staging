@@ -1,9 +1,12 @@
-<%= react_component("user_bot/settings/line_keywords/booking_pages", {
-  props: {
-    business_owner_id: business_owner_id,
-    booking_pages: @booking_pages,
-    booking_page_options: @booking_page_options,
-  }
-},
-{ camelize_props: false }
-)  %>
+<div class="form with-top-bar settings-flow centerize">
+  <%= react_component("user_bot/settings/line_keywords/booking_pages", {
+    props: {
+      business_owner_id: business_owner_id,
+      booking_pages: @booking_pages,
+      booking_page_options: @booking_page_options,
+      line_columns_number_limit: Lines::Actions::BookingPages::LINE_COLUMNS_NUMBER_LIMIT
+    }
+  },
+      { camelize_props: false }
+    )  %>
+</div>

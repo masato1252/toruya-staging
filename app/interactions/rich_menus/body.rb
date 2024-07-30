@@ -167,6 +167,7 @@ module RichMenus
 
         action =
           case action[:type]
+            # TODO: booking_page for show all booking prices
           when *SocialRichMenu::KEYWORDS
             {
               "type": "message",

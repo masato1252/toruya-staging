@@ -659,7 +659,8 @@ ja:
     social_rich_menus:
       action_types:
         incoming_reservations: 全ての予約
-        booking_pages: 新たに予約する
+        booking_pages: 予約ページで受付
+        booking_options: 予約価格で受付
         contacts: お問い合わせ
         services: 利用中サービス
         sale_page: 宣伝用LP
@@ -685,6 +686,8 @@ ja:
       url_placeholder: リンクURL
       url_desc: アクションラベル(音声読み上げ用)
       label_length_warning: 20文字までしか保存されません
+      line_send_booking_pages: LINE送信する予約ページ
+      line_send_booking_options: LINE送信する予約価格
     social_account:
       sider_label: Line
       settings: 設定

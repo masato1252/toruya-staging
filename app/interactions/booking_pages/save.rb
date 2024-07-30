@@ -31,6 +31,7 @@ module BookingPages
       # }
       hash :special_dates, default: nil, strip: false
       boolean :overbooking_restriction, default: true
+      boolean :rich_menu_only, default: false
     end
 
     def execute

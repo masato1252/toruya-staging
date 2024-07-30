@@ -43,6 +43,24 @@ RSpec.describe BookingOptions::Update do
 
     context "update_attribute is memo" do
       it_behaves_like "updates booking option normal attribute", "memo", "foo"
+
+      context "when booking_option is line_keyword_booking_option" do
+        let(:booking_page) { FactoryBot.create(:booking_page, rich_menu_only: true, user: user) }
+        let(:update_attribute) { "memo" }
+        before do
+          user.user_setting.update(line_keyword_booking_option_ids: [booking_option.id])
+          booking_page.booking_options << booking_option
+          args[:attrs][:memo] = "foo"
+        end
+
+        it "updates booking_page name and greeting" do
+          outcome
+
+          booking_page.reload
+          expect(booking_page.name).to eq(booking_option.display_name.presence || booking_option.name)
+          expect(booking_page.greeting).to eq("foo")
+        end
+      end
     end
 
     context "update_attribute is new_pure_menu" do

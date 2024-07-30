@@ -13,6 +13,12 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
     @rich_menu = Current.business_owner.social_account.social_rich_menus.new
     @sale_pages = Current.business_owner.sale_pages.includes(:product).order("updated_at DESC")
     @booking_pages = Current.business_owner.booking_pages.started.order("updated_at DESC")
+    @keyword_booking_pages = Current.business_owner.line_keyword_booking_pages.map { |booking_page| { label: booking_page.name, value: booking_page.id, id: booking_page.id } }
+    @keyword_booking_page_options = Current.business_owner.booking_pages.where(draft: false).started.map { |booking_page| { label: booking_page.name, value: booking_page.id, id: booking_page.id } }
+    @keyword_options = Current.business_owner.line_keyword_booking_options.map { |booking_option| { label: booking_option.name, value: booking_option.id, id: booking_option.id } }
+    @booking_options = Current.business_owner.booking_options.active.map do |booking_option|
+      { label: booking_option.name, value: booking_option.id, id: booking_option.id }
+    end
 
     render :edit
   end
@@ -21,6 +27,12 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
     @rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
     @sale_pages = Current.business_owner.sale_pages.includes(:product).order("updated_at DESC")
     @booking_pages = Current.business_owner.booking_pages.started.order("updated_at DESC")
+    @keyword_booking_pages = Current.business_owner.line_keyword_booking_pages.map { |booking_page| { label: booking_page.name, value: booking_page.id, id: booking_page.id } }
+    @keyword_booking_page_options = Current.business_owner.booking_pages.where(draft: false).started.map { |booking_page| { label: booking_page.name, value: booking_page.id, id: booking_page.id } }
+    @keyword_options = Current.business_owner.line_keyword_booking_options.map { |booking_option| { label: booking_option.name, value: booking_option.id, id: booking_option.id } }
+    @booking_options = Current.business_owner.booking_options.active.map do |booking_option|
+      { label: booking_option.name, value: booking_option.id, id: booking_option.id }
+    end
   end
 
   def upsert
@@ -55,5 +67,15 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
     HiEventJob.perform_later(rich_menu.social_account, "rich_menu_switch")
 
     redirect_to lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: business_owner_id)
+  end
+
+  def keyword_rich_menu_size
+    keyword_booking_pages_size = Current.business_owner.line_keyword_booking_pages.count
+    keyword_booking_options_size = Current.business_owner.line_keyword_booking_options.count
+
+    render json: {
+      keyword_booking_pages_size: keyword_booking_pages_size,
+      keyword_booking_options_size: keyword_booking_options_size
+    }
   end
 end
