@@ -18,9 +18,10 @@ RSpec.describe SalePages::UpdateRecurringPrice do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    let(:sale_page) { FactoryBot.create(:sale_page, user: online_service.user, product: online_service) }
-    let(:online_service) { FactoryBot.create(:online_service, user: user) }
     context "when product without stripe product id" do
+      let(:sale_page) { FactoryBot.create(:sale_page, user: online_service.user, product: online_service) }
+      let(:online_service) { FactoryBot.create(:online_service, user: user) }
+
       it "creates a new price" do
         allow(Stripe::Price).to receive(:create).and_return(double(id: "price_789"))
         expect {
