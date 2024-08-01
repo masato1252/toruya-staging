@@ -8,9 +8,11 @@
 #  booking_amount_cents    :decimal(, )
 #  booking_amount_currency :string
 #  booking_at              :datetime
+#  cancel_reason           :string
 #  details                 :jsonb
 #  nth_quota               :integer
 #  payment_state           :integer          default("pending")
+#  slug                    :string
 #  state                   :integer          default("pending")
 #  tax_include             :boolean
 #  created_at              :datetime         not null
@@ -26,11 +28,13 @@
 #
 #  index_reservation_customers_on_reservation_id_and_customer_id  (reservation_id,customer_id) UNIQUE
 #  index_reservation_customers_on_sale_page_id_and_created_at     (sale_page_id,created_at)
+#  index_reservation_customers_on_slug                            (slug) UNIQUE
 #
 
 require "hashie_serializer"
 
 class ReservationCustomer < ApplicationRecord
+  CANCEL_REASONS = %w[other_placeholder reschedule_reason no_longer_needed_reason].freeze
   ACTIVE_STATES = %w[pending accepted].freeze
   include SayHi
   hi_track_event "reservation_booked"
@@ -47,7 +51,8 @@ class ReservationCustomer < ApplicationRecord
     pending: 0,
     accepted: 1,
     canceled: 2,
-    deleted: 3
+    deleted: 3,
+    customer_canceled: 4
   }
 
   enum payment_state: {
@@ -63,9 +68,15 @@ class ReservationCustomer < ApplicationRecord
   def reservation_state
     if accepted?
       reservation.aasm_state
+    elsif customer_canceled?
+      "canceled"
     else
       state
     end
+  end
+
+  def allow_customer_cancel?
+    (reservation.start_time.to_date > Time.current.to_date) && (pending? || accepted? && (reservation.pending? || reservation.reserved?))
   end
 
   def customer_data_changed?
@@ -127,5 +138,16 @@ class ReservationCustomer < ApplicationRecord
 
   def hi_message
     "🗓 New reservation updated, reservation_id: #{reservation_id}, customer_id: #{customer_id}, sale_page_id: #{sale_page_id}, booking_page_id: #{booking_page_id}, booking_option_id: #{booking_option_id}, user_id: #{customer.user_id}, state: #{state}, booking_at: #{booking_at ? I18n.l(booking_at, format: :long_date_with_wday) : ""} reservation_start_time: #{I18n.l(reservation.start_time, format: :long_date_with_wday)}"
+  end
+
+  # keywords: other_placeholder, reschedule_reason, no_longer_needed_reason
+  def cancel_reasons
+    cancel_reason.split(",").map do |reason|
+      if CANCEL_REASONS.include?(reason)
+        I18n.t("booking.cancel_modal.cancel_reasons.#{reason}")
+      else
+        reason
+      end
+    end
   end
 end

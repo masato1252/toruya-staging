@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO
+# handle ticket
+# cancel, deleted, refund
 module ReservationCustomers
   class Cancel < ActiveInteraction::Base
     integer :reservation_id

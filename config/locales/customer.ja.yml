@@ -4,9 +4,9 @@ ja:
     notifications:
       noreply: "※返信不可"
       sms:
-        booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。"
-        confirmation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。"
-        reminder: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています。"
+        booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。\n\n%{booking_info_url}"
+        confirmation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。\n\n%{booking_info_url}"
+        reminder: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています。\n\n%{booking_info_url}"
         change_from_phone_number: "変更は%{shop_phone_number}まで。"
         confirmation_code: "確認コード: %{code}"
     reminder_permissions:

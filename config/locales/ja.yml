@@ -123,6 +123,7 @@ ja:
     customer_cancel: 予約キャンセル
     cancel_confirmation_message: キャンセルされた予約は顧客台帳からご確認いただけます。
     pending: 承認待ち
+    accepted: 承認済
     accepted_state: 承認済
     pending_state: 未承認
     noshow: 未来店

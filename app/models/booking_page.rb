@@ -6,6 +6,7 @@
 #  id                           :bigint           not null, primary key
 #  bookable_restriction_months  :integer          default(3)
 #  booking_limit_day            :integer          default(1), not null
+#  customer_cancel_request      :boolean          default(FALSE)
 #  default_provider             :string
 #  deleted_at                   :datetime
 #  draft                        :boolean          default(TRUE), not null
@@ -117,7 +118,8 @@ class BookingPage < ApplicationRecord
       end_time: Time.current.advance(hours: 1),
       meeting_url: 'https://toruya.com/',
       product_name: booking_options.first&.display_name.presence || I18n.t("common.menu"),
-      booking_page_url: Rails.application.routes.url_helpers.booking_page_url(slug)
+      booking_page_url: Rails.application.routes.url_helpers.booking_page_url(slug),
+      booking_info_url: 'https://toruya.com/'
     )
   end
 

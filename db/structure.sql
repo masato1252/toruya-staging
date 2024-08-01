@@ -710,7 +710,9 @@ CREATE TABLE public.booking_pages (
     event_booking boolean DEFAULT false,
     bookable_restriction_months integer DEFAULT 3,
     default_provider character varying,
-    social_account_skippable boolean DEFAULT false NOT NULL
+    social_account_skippable boolean DEFAULT false NOT NULL,
+    rich_menu_only boolean DEFAULT false,
+    customer_cancel_request boolean DEFAULT false
 );
 
 
@@ -2015,7 +2017,9 @@ CREATE TABLE public.reservation_customers (
     payment_state integer DEFAULT 0,
     sale_page_id integer,
     nth_quota integer,
-    customer_ticket_id integer
+    customer_ticket_id integer,
+    slug character varying,
+    cancel_reason character varying
 );
 
 
@@ -5047,6 +5051,13 @@ CREATE INDEX index_reservation_customers_on_sale_page_id_and_created_at ON publi
 
 
 --
+-- Name: index_reservation_customers_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reservation_customers_on_slug ON public.reservation_customers USING btree (slug);
+
+
+--
 -- Name: index_reservation_menus_on_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5916,6 +5927,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240605123036'),
 ('20240613092742'),
 ('20240625093510'),
-('20240817114718');
+('20240729135500'),
+('20240731051119'),
+('20240806134248'),
+('20240810133901'),
+('20240812140019'),
+('20240817114718'),
+('20240823204505'),
+('20240823213428');
 
 

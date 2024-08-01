@@ -11,6 +11,7 @@ import { BookingPageServices } from "user_bot/api"
 import BookingTimeField from "./booking_time_field";
 import OverbookingRestrictionField from "./overbooking_restriction_field";
 import LineSharingField from "./line_sharing_field";
+import CustomerCancelRequestField from "./customer_cancel_request_field";
 import OnlinePaymentEnabledField from "./online_payment_enabled_field";
 import DraftField from "./draft_field";
 import SocialAccountSkippableField from "./social_account_skippable_field";
@@ -56,6 +57,7 @@ const BookingPageEdit =({props}) => {
       ...props.booking_page,
       overbooking_restriction: String(props.booking_page.overbooking_restriction),
       line_sharing: String(props.booking_page.line_sharing),
+      customer_cancel_request: String(props.booking_page.customer_cancel_request),
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
       draft: String(props.booking_page.draft),
       social_account_skippable: String(props.booking_page.social_account_skippable),
@@ -245,6 +247,8 @@ const BookingPageEdit =({props}) => {
         return <OverbookingRestrictionField i18n={i18n} register={register} />
       case "line_sharing":
         return <LineSharingField i18n={i18n} register={register} />
+      case "customer_cancel_request":
+        return <CustomerCancelRequestField i18n={i18n} register={register} />
       case "online_payment_enabled":
         return <OnlinePaymentEnabledField i18n={i18n} register={register} watch={watch} payment_provider_options={props.payment_provider_options} />
       case "social_account_skippable":

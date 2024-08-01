@@ -625,6 +625,14 @@ ja:
         booking_available_period_title:  予約の受付可能期間
         booking_available_period: "%{bookable_restriction_months} ヶ月前〜 %{booking_limit_day} 日前まで"
         booking_available_period_sample: "もし今日予約ページを開くと %{booking_limit_day_date} から %{bookable_restriction_months_date} が予約可能になります。"
+        customer_cancel_request: お客様によるキャンセル依頼を許可
+        customer_cancel_request_title: お客様によるキャンセル依頼を許可
+        customer_cancel_request_hint: お客様がキャンセル依頼をすることができます。
+        customer_cancel_request_label: 許可する
+        not_customer_cancel_request_label: 許可しない
+        requirements: 会員限定予約
+        requirements_title: 会員限定予約
+        no_membership_services: 会員限定予約が設定されていません。
         line_sharing: LINEオンライン予約
         line_sharing_title: LINEオンライン予約
         online_payment_enabled: オンライン精算

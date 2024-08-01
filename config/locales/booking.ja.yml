@@ -83,6 +83,15 @@ ja:
         title: "%{shop_name}の仮予約が完了しました"
       shop_owner_reservation_booked_notification:
         title: 新しいオンライン予約があります
+  booking:
+    cancel_modal:
+      title: 予約をキャンセルしますか？
+      message: キャンセルすると予約情報は復元できません。
+      cancel_reasons:
+        other_placeholder: 他の予定が入った
+        reschedule_reason: 予約日時が変更したい
+        no_longer_needed_reason: 必要なくなった
+        other_reason: その他
   online_service_page:
     special_price_time: 特別価格の購入期限まで
     register_now: 今すぐ登録する

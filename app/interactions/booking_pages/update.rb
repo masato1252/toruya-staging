@@ -13,6 +13,7 @@ module BookingPages
       boolean :draft, default: true
       boolean :social_account_skippable, default: false
       boolean :line_sharing, default: true
+      boolean :customer_cancel_request, default: true
       boolean :online_payment_enabled, default: false
       string :default_provider, default: nil
       integer :shop_id, default: nil
@@ -179,7 +180,7 @@ module BookingPages
             booking_limit_day: attrs[:booking_limit_day],
             bookable_restriction_months: attrs[:bookable_restriction_months]
           )
-        when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable"
+        when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable", "customer_cancel_request"
           booking_page.update(attrs.slice(update_attribute))
         when "online_payment_enabled"
           booking_page.online_payment_enabled = attrs[:online_payment_enabled]

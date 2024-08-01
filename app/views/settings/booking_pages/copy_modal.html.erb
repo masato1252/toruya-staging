@@ -16,12 +16,12 @@
             data: {
               controller: "clipboard",
               action: "click->clipboard#copy",
-              clipboard_text: booking_url(@booking_page),
+              clipboard_text: booking_page_url(@booking_page.slug),
               clipboard_popup_text: t("common.copied")
             } %>
         </div>
         <div>
-          <%= text_field_tag nil, booking_url(@booking_page), data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_url(@booking_page), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
+          <%= text_field_tag nil, booking_page_url(@booking_page.slug), data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_page_url(@booking_page.slug), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
         </div>
       </div>
       <div class="page-booking-button-row">
