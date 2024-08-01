@@ -128,7 +128,14 @@ module BookingOptions
 
         if booking_option.errors.present?
           errors.merge!(booking_option.errors)
+        else
+          booking_page_ids = BookingPageOption.where(booking_option: booking_option).pluck(:booking_page_id)
+          BookingPage.where(id: booking_page_ids).find_each do |booking_page|
+            ::BookingPageCacheJob.perform_later(booking_page)
+          end
         end
+
+        booking_option
       end
     end
 

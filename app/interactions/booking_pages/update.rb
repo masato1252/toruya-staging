@@ -194,6 +194,8 @@ module BookingPages
 
         if booking_page.errors.present?
           errors.merge!(booking_page.errors)
+        else
+          ::BookingPageCacheJob.perform_later(booking_page)
         end
 
         booking_page
