@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BookingPageCacheJob < ApplicationJob
-  queue_as :default
+  queue_as :low_priority
 
   def perform(booking_page)
     (Date.today..Date.today.next_month.next_month).each do |date|
