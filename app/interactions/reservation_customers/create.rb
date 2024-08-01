@@ -11,7 +11,7 @@ module ReservationCustomers
           ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer) if customer_data[:state] == 'accepted'
           # for cache
           if booking_page = reservation_customer.booking_page
-            ::Booking::Cache.run(booking_page: booking_page, date: reservation.start_time.to_date)
+            ::Booking::Cache.perform_later(booking_page: booking_page, date: reservation.start_time.to_date)
           end
         end
       end
