@@ -11,6 +11,10 @@ module ReservationCustomers
           ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer) if customer_data[:state] == 'accepted'
         end
       end
+
+      if reservation_customer.booking_page
+        ::BookingPageCacheJob.perform_later(reservation_customer.booking_page)
+      end
     end
   end
 end
