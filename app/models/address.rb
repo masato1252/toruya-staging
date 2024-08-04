@@ -7,10 +7,8 @@ class Address
   attribute :street1
   attribute :street2
 
-  validates :zip_code, :region, :city, :presence => true
-
   def exists?
-    zip_code.present? && region.present? && city.present?
+    zip_code.present? || region.present? || city.present? || street1.present? || street2.present?
   end
 
   def display_address
