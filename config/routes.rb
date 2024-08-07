@@ -231,6 +231,7 @@ Rails.application.routes.draw do
               put :upsert_booking_options
             end
           end
+          resource :user_setting, only: [:edit, :update]
 
           resource :profile, only: %i[show edit update] do
             collection do

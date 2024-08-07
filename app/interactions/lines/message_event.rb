@@ -65,8 +65,12 @@ class Lines::MessageEvent < ActiveInteraction::Base
           is_keyword = true
 
           Lines::Actions::Contact.run(social_customer: social_customer)
-        else
-          if !social_customer.customer && !social_customer.is_owner
+        end
+
+        is_toruya_customer_message = !is_keyword
+
+        if !social_customer.customer && is_toruya_customer_message
+          if social_customer.user.line_contact_customer_name_required
             compose(
               SocialMessages::Create,
               social_customer: social_customer,
@@ -75,18 +79,29 @@ class Lines::MessageEvent < ActiveInteraction::Base
               message_type: SocialMessage.message_types[:bot]
             )
             Lines::Actions::Contact.run(social_customer: social_customer)
+          else
+            # avoid social_user_name is nil cause customer created failed 
+            if social_customer.social_user_name.blank?
+              LineProfileJob.perform_now(social_customer)
+            end
+
+            compose(
+              SocialCustomers::Contact,
+              social_customer: social_customer,
+              content: event["message"]["text"],
+              last_name: "",
+              first_name: social_customer.social_user_name
+            )
           end
+        else
+          compose(
+            SocialMessages::Create,
+            social_customer: social_customer,
+            content: event["message"]["text"],
+            readed: !is_toruya_customer_message,
+            message_type: is_toruya_customer_message ? SocialMessage.message_types[:customer] : SocialMessage.message_types[:customer_reply_bot]
+          )
         end
-
-        is_toruya_customer_message = social_customer.customer && !is_keyword
-
-        compose(
-          SocialMessages::Create,
-          social_customer: social_customer,
-          content: event["message"]["text"],
-          readed: !is_toruya_customer_message,
-          message_type: is_toruya_customer_message ? SocialMessage.message_types[:customer] : SocialMessage.message_types[:customer_reply_bot]
-        )
       else
         # Rollbar.warning("Line chat room don't support message type", event: event)
 

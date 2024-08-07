@@ -18,7 +18,7 @@ module NormalizeName
   end
 
   def display_last_name
-    last_name.presence || phonetic_last_name
+    last_name.presence || phonetic_last_name.presence || name
   end
 
   def phonetic_name

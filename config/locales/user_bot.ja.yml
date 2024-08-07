@@ -85,6 +85,12 @@ ja:
         reply_later: 後で通知
         line_info: LINE名
       settings:
+        user_settings:
+          line_contact_customer_name_required:
+            title: LINE連絡時の顧客名入力必須
+            options:
+              require_contact_customer_name: お客様に名前の入力を求める（忙しい方におすすめ）
+              not_require_contact_customer_name: お客様に名前の入力を求めない
         support:
           user_support: ユーザーサポート
           documents: ヘルプマニュアル

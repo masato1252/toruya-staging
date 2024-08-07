@@ -9,7 +9,7 @@ module SocialCustomers
     string :last_name, default: nil
     string :first_name, default: nil
 
-    validate :valiate_new_customer
+    validate :validate_new_customer
 
     def execute
       unless social_customer.customer_id
@@ -38,8 +38,8 @@ module SocialCustomers
 
     private
 
-    def valiate_new_customer
-      if !social_customer.customer_id && (last_name.blank? || first_name.blank?)
+    def validate_new_customer
+      if !social_customer.customer_id && first_name.blank?
         errors.add(:base, :name_required)
       end
     end

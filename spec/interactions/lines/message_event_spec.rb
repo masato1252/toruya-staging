@@ -21,6 +21,7 @@ RSpec.describe Lines::MessageEvent, :with_line do
     }
   end
   let(:social_customer) { FactoryBot.create(:social_customer) }
+  let(:user) { social_customer.user }
   let(:text) { I18n.t("line.bot.keywords").values.sample }
 
   let(:args) do
@@ -99,6 +100,36 @@ RSpec.describe Lines::MessageEvent, :with_line do
         it "extracts out the bundler_service_id" do
           expect(Lines::Actions::ActiveOnlineServices).to receive(:run).with(social_customer: social_customer, last_relation_id: last_relation_id, bundler_service_id: bundler_service_id)
           outcome
+        end
+      end
+    end
+
+    context "when event text does NOT match keyword" do
+      let(:text) { "Hello" }
+
+      context "when line customer does NOT have customer" do
+        let(:social_customer) { FactoryBot.create(:social_customer, customer: nil) }
+
+        context "when line_contact_customer_name_required is false" do
+          it "creates a customer automatically" do
+            expect {
+              outcome
+            }.to change {
+              user.customers.count
+            }.by(1)
+          end
+        end
+
+        context "when line_contact_customer_name_required is true" do
+          before { user.user_setting.update!(line_contact_customer_name_required: true) }
+
+          it "does NOT creates a customer automatically" do
+            expect {
+              outcome
+            }.not_to change {
+              user.customers.count
+            }
+          end
         end
       end
     end

@@ -88,6 +88,9 @@ tw:
         user_settings:
           line_contact_customer_name_required:
             title: 需要LINE聯絡人客戶名稱
+            options:
+              require_contact_customer_name: 要求客戶提供姓名（推薦給忙碌的你）
+              not_require_contact_customer_name: 不要求客戶提供姓名
         support:
           user_support: 用戶支援
           documents: 幫助手冊

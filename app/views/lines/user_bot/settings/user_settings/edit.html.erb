@@ -1,0 +1,9 @@
+<%= react_component("user_bot/user_settings/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    attribute: params[:attribute],
+    user_settings: Current.business_owner.user_setting.content
+  }
+},
+{ camelize_props: false }
+) %>

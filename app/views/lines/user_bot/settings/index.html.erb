@@ -118,6 +118,10 @@
           <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
+        <%= link_to edit_lines_user_bot_settings_user_setting_path(business_owner_id: business_owner_id, attribute: "line_contact_customer_name_required"), class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.user_settings.line_contact_customer_name_required.title") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
         <div class="field-header"><%= t("user_bot.dashboards.settings.support.user_support") %></div>
         <%= link_to "https://toruya.com/help/", class: "field-row", target: '_blank' do %>
           <span><%= t("user_bot.dashboards.settings.support.documents") %></span><i class="fa fa-angle-right"></i>
