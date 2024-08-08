@@ -637,7 +637,11 @@ Rails.application.routes.draw do
   authenticated :user, -> user { user.super_admin? || user.can_admin_chat? || Rails.env.development? } do
     namespace :admin do
       resource :memo, only: [:create]
-      resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id
+      resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id do
+        member do
+          post :line_finished_message
+        end
+      end
       resources :chats, only: [:index, :create, :destroy]
       resources :sale_pages, only: [:index]
       resources :booking_pages, only: [:index]
