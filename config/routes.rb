@@ -667,6 +667,7 @@ Rails.application.routes.draw do
     mount Delayed::Web::Engine, at: "/_jobs"
     mount PgHero::Engine, at: "/_pghero"
     mount Blazer::Engine, at: "_blazer"
+    mount DelayedJobWeb, at: "/_delayed_job"
 
     namespace :admin do
       get "as_user"
