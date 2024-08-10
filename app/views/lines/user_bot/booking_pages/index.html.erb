@@ -11,7 +11,10 @@
               <div>
                 <h3><%= booking_page.title %></h3>
                 <div class="desc"><%= booking_page.booking_options.pluck(:name).join(", ")%></div>
-                <div class="desc"><%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %><%= booking_page.line_sharing ? "ON" : "OFF" %></div>
+                <div class="desc">
+                  <%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %><%= booking_page.line_sharing ? "ON" : "OFF" %>
+                </div>
+                <div class="desc"><%= booking_page.requirement_online_service&.name %></div>
               </div>
               <i class="fa fa-angle-right"></i>
             <% end %>

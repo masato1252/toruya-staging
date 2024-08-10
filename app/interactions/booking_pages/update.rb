@@ -68,6 +68,9 @@ module BookingPages
           string :end_at_time_part
         end
       end
+
+      integer :requirement_sale_page_id, default: nil
+      integer :requirement_online_service_id, default: nil
     end
 
     def execute
@@ -79,6 +82,16 @@ module BookingPages
 
       booking_page.transaction do
         case update_attribute
+        when "requirements"
+          booking_page.product_requirement&.destroy
+          if !attrs[:requirement_online_service_id].zero?
+            compose(
+              ProductRequirements::Create,
+              requirer: booking_page,
+              sale_page_id: attrs[:requirement_sale_page_id],
+              requirement: OnlineService.find(attrs[:requirement_online_service_id])
+            )
+          end
         when "booking_type"
           booking_page.booking_page_special_dates.destroy_all
           booking_page.business_schedules.destroy_all

@@ -12,6 +12,7 @@
       menu_group_options: @menu_result && menu_group_options(@menu_result[:category_with_menu_options], :minutes),
       payment_provider_options: Current.business_owner.payment_providers.map { |payment_provider| { label: payment_provider_label(payment_provider.provider), value: payment_provider.provider } },
       ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
+      requirements: @requirements,
       booking_page: @booking_page.attributes.merge!(
         shop_id: @booking_page.shop_id.to_s,
         available_booking_options: @options ? custom_options(@options.map { |option| booking_option_item(option) }) : [],
@@ -35,7 +36,8 @@
             end_at_date_part:   special_date.end_at_date,
             end_at_time_part:   special_date.end_at_time
           }
-        end
+        end,
+        requirement_online_service: @booking_page.requirement_online_service ? OnlineServiceOptionSerializer.new(@booking_page.requirement_online_service).attributes_hash : nil
       ),
       attribute: @attribute,
       shop_options: shop_options(Current.business_owner.shops.order("id")),

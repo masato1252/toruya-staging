@@ -1815,6 +1815,41 @@ ALTER SEQUENCE public.plans_id_seq OWNED BY public.plans.id;
 
 
 --
+-- Name: product_requirements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.product_requirements (
+    id bigint NOT NULL,
+    requirer_type character varying NOT NULL,
+    requirer_id bigint NOT NULL,
+    requirement_type character varying NOT NULL,
+    requirement_id bigint NOT NULL,
+    sale_page_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: product_requirements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.product_requirements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_requirements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.product_requirements_id_seq OWNED BY public.product_requirements.id;
+
+
+--
 -- Name: profiles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3536,6 +3571,13 @@ ALTER TABLE ONLY public.plans ALTER COLUMN id SET DEFAULT nextval('public.plans_
 
 
 --
+-- Name: product_requirements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_requirements ALTER COLUMN id SET DEFAULT nextval('public.product_requirements_id_seq'::regclass);
+
+
+--
 -- Name: profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4169,6 +4211,14 @@ ALTER TABLE ONLY public.pghero_query_stats
 
 ALTER TABLE ONLY public.plans
     ADD CONSTRAINT plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_requirements product_requirements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_requirements
+    ADD CONSTRAINT product_requirements_pkey PRIMARY KEY (id);
 
 
 --
@@ -4992,6 +5042,27 @@ CREATE INDEX index_online_services_on_user_id ON public.online_services USING bt
 --
 
 CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghero_query_stats USING btree (database, captured_at);
+
+
+--
+-- Name: index_product_requirements_on_requirement; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_requirements_on_requirement ON public.product_requirements USING btree (requirement_type, requirement_id);
+
+
+--
+-- Name: index_product_requirements_on_requirer; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_requirements_on_requirer ON public.product_requirements USING btree (requirer_type, requirer_id);
+
+
+--
+-- Name: index_product_requirements_on_sale_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_requirements_on_sale_page_id ON public.product_requirements USING btree (sale_page_id);
 
 
 --
@@ -5935,5 +6006,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240817114718'),
 ('20240823204505'),
 ('20240823213428');
-
-

@@ -27,6 +27,7 @@ import BookingReservationButton from "./booking_reservation_button";
 import BookingFlowOptions from "./booking_flow_options";
 import BookingOptionFirstFlow from "./booking_option_first_flow";
 import BookingDateFirstFlow from "./booking_date_first_flow";
+import ProductRequirementView from "./product_requirement_view";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { CommonServices } from "user_bot/api";
 
@@ -380,6 +381,17 @@ const BookingReservationFormFunction = ({props}) => {
   const renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = props.booking_page
     const { is_done, is_paying_booking, is_filling_address, booking_option_id, skip_social_customer } = booking_reservation_form_values
+
+    if (props.product_requirement) {
+      return (
+        <ProductRequirementView
+          product_name={props.product_requirement.product_name}
+          social_account_login_url={props.social_account_login_url}
+          social_account_add_friend_url={props.social_account_add_friend_url}
+          social_customer_exists={props.social_customer_exists}
+        />
+      )
+    }
 
     if (isCashPayRequired() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
       return (

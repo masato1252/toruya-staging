@@ -47,12 +47,14 @@ class BookingPage < ApplicationRecord
   has_many :booking_codes
   has_many :booking_page_special_dates, -> { order(:start_at) }
   has_many :business_schedules
+  has_one :product_requirement, as: :requirer
 
   belongs_to :user
   belongs_to :shop
 
   scope :active, -> { where(deleted_at: nil) }
   scope :started, -> { active.where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
+  scope :end_yet, -> { where("end_at is NULL or end_at > ?", Time.current) }
   validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
 
   def primary_product
@@ -152,5 +154,13 @@ class BookingPage < ApplicationRecord
 
   def payment_provider
     default_provider.presence || user.payment_provider&.provider
+  end
+
+  def requirement_customers
+    product_requirement.requirement&.available_customers || []
+  end
+
+  def requirement_online_service
+    product_requirement&.requirement
   end
 end

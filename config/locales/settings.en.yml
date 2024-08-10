@@ -380,6 +380,9 @@ en:
         interval_option: Time choice spacing
         per_minute: Per minute
         interval_example_html: 'For example, if the available time is 9:00-12:00 and time choice spacing is set to <strong>"every 30 minutes"</strong>, the choice of reservation start time is "9: 00, 9: 30, 10: 00, 10: 30 ... " will be shown to your customer'
+        requirements: Membership reservation
+        requirements_title: Membership reservation
+        no_membership_services: Don't have any membership services, create one
         open_details: Detail
         close_details: Close
         sale_period: Reservation acceptance period

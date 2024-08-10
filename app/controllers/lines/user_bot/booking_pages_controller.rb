@@ -8,6 +8,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   def show
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @booking_option = @booking_page.booking_options.first
+    @membership_online_services_exists = Current.business_owner.online_services.membership.exists?
   end
 
   def edit
@@ -18,6 +19,13 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
       @options = ::BookingPages::AvailableBookingOptions.run!(shop: @booking_page.shop)
     elsif @attribute == "new_option_existing_menu"
       @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
+    elsif @attribute == "requirements"
+      @requirements = Current.business_owner.online_services.membership.map do |online_service|
+      {
+        label: online_service.internal_name.presence || online_service.name,
+        value: OnlineServiceOptionSerializer.new(online_service).attributes_hash
+      }
+      end.compact
     end
   end
 

@@ -22,6 +22,7 @@ mixpanel = 'mixpanel'
 xdescribe = 'xdescribe'
 skippable = 'skippable'
 wday= 'wday'
+requirer='requirer'
 
 [type.typos]
 extend-glob = [".typos.toml"]

@@ -46,7 +46,6 @@ class BookingPagesController < ActionController::Base
 
     if @customer
       Current.customer = @customer
-
     else
       Current.customer = params[:social_user_id] || SecureRandom.uuid
     end
@@ -72,6 +71,12 @@ class BookingPagesController < ActionController::Base
     end
 
     @social_account = @booking_page.user.social_accounts.first
+
+    if @booking_page.product_requirement
+      if !@customer || @booking_page.requirement_customers.exclude?(@customer)
+        @product_requirement = @booking_page.product_requirement
+      end
+    end
   end
 
   def booking_reservation

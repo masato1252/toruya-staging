@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 import moment from "moment-timezone";
+import ReactSelect from "react-select";
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields  } from "shared/components"
 import { BookingPageServices } from "user_bot/api"
@@ -21,9 +22,9 @@ import BookingEndAtField from "./booking_end_at_field";
 import ShopField from "./shop_field";
 import NewMenuField from "components/user_bot/booking_options/new_menu_field";
 
-
 const BookingPageEdit =({props}) => {
   const i18n = props.i18n;
+  const [requirement_online_service, setRequirementOnlineService] = useState(props.booking_page.requirement_online_service)
 
   const onSubmit = async (data) => {
     console.log(data)
@@ -37,6 +38,7 @@ const BookingPageEdit =({props}) => {
       booking_page_id: props.booking_page.id,
       data: _.assign(
         data,
+        { requirement_online_service_id: requirement_online_service?.id},
         { business_owner_id: props.business_owner_id },
         { special_dates: _.includes(["event_booking", "only_special_dates_booking"], data.booking_type) ? data.special_dates : [] },
         { booking_type: data.booking_type },
@@ -99,6 +101,51 @@ const BookingPageEdit =({props}) => {
             <ShopField shop_options={props.shop_options} i18n={i18n} register={register} />
             <ErrorMessage error={errors.shop_id?.message} />
           </>
+        )
+      case "requirements":
+        return (
+          <div className="margin-around">
+            <label className="text-align-left">
+              <ReactSelect
+                placeholder={I18n.t("common.select_a_service")}
+                value={ _.isEmpty(requirement_online_service) ? "" : { label: requirement_online_service.name }}
+                options={props.requirements}
+                onChange={
+                  (page) => {
+                    setRequirementOnlineService(page.value)
+                  }
+                }
+              />
+            </label>
+
+            {
+              props.booking_page.requirement_online_service && (
+                <div className="margin-around centerize">
+                  <div className="field-row">
+                    <strong>{props.booking_page.requirement_online_service.name}</strong>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      const [error, response] = await BookingPageServices.update({
+                        booking_page_id: props.booking_page.id,
+                        data: _.assign( {
+                          id: props.booking_page.id,
+                          requirement_online_service_id: 0,
+                          business_owner_id: props.business_owner_id
+                        }, { attribute: props.attribute })
+                      })
+
+                      window.location = response.data.redirect_to
+                    }}
+                    className="btn btn-orange btn-tall margin-around m10"
+                  >
+                    {I18n.t("action.delete2")}
+                  </button>
+                </div>
+              )
+            }
+
+          </div>
         )
       case "new_option_existing_menu":
         return (

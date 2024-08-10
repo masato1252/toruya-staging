@@ -23,6 +23,14 @@ class SalePageOptionSerializer
     start_at ? I18n.l(start_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_now")
   end
 
+  attribute :is_started do |object|
+    object.started?
+  end
+
+  attribute :is_ended do |sale_page|
+    sale_page.ended? || sale_page.sold_out?
+  end
+
   attribute :end_time do |sale_page|
     end_at = sale_page.product.is_a?(BookingPage) ? sale_page.product.end_at : sale_page.selling_end_at
 

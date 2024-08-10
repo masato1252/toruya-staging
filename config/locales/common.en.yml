@@ -7,6 +7,7 @@ en:
     cancel: Cancel
     log_out: Log out
     save: Save
+    create_new: Create new
     save_pending: Save as pending
     save_as_draft: Save as draft
     save_and_publish: Save and publish

@@ -328,6 +328,9 @@ const OnlineServiceEdit =({props}) => {
                           price={sale_page.price}
                           normal_price={sale_page.normal_price}
                           no_action={true}
+                          is_started={sale_page.is_started}
+                          start_at={sale_page.start_time}
+                          is_ended={sale_page.is_ended}
                         />
                       )
                     }
