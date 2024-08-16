@@ -29,7 +29,7 @@ module Notifiers
       end
 
       def deliverable
-        receiver.reminder_permission
+        true || receiver.reminder_permission
       end
     end
   end
