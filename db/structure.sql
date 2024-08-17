@@ -1259,7 +1259,7 @@ CREATE TABLE public.customers (
     updated_by_user_id integer,
     email_types character varying,
     deleted_at timestamp without time zone,
-    reminder_permission boolean DEFAULT false,
+    reminder_permission boolean DEFAULT true,
     phone_numbers_details jsonb DEFAULT '[]'::jsonb,
     emails_details jsonb DEFAULT '[]'::jsonb,
     address_details jsonb DEFAULT '{}'::jsonb,
@@ -5915,6 +5915,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240530162619'),
 ('20240605123036'),
 ('20240613092742'),
-('20240625093510');
+('20240625093510'),
+('20240817114718');
 
 

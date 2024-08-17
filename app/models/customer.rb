@@ -21,7 +21,7 @@
 #  phone_numbers_details        :jsonb
 #  phonetic_first_name          :string
 #  phonetic_last_name           :string
-#  reminder_permission          :boolean          default(FALSE)
+#  reminder_permission          :boolean          default(TRUE)
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  contact_group_id             :integer
