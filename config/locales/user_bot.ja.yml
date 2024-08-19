@@ -495,6 +495,12 @@ ja:
         when_do_you_want_to_send: いつ配信しますか？
         broadcast_services: 一斉配信するサービス
         broadcast_help_tips: 思ったより多い/少ないですか？
+        age_range_desc: "%{age_start}歳以上%{age_end}歳以下"
+        birthday_month_desc: "%{month}月の誕生日"
+        customers_permission_warning_description: セグメント配信がOFFになっている顧客は除外しています。
+        customers_permission_modal:
+          title: セグメント配信OFFの顧客
+          warning_description: セグメント配信に含めたい顧客は「ONにする」をタップ
       service_creation:
         goal_step: 目的
         content_step: コンテンツ

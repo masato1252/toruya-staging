@@ -11,6 +11,9 @@
                 <h3><%= broadcast_deliver_at(broadcast) %></h3>
                 <div class="desc"><%= I18n.t("user_bot.dashboards.broadcast_creation.#{broadcast.query_type}") %></div>
                 <div class="desc"><%= broadcast.targets.join(", ") %></div>
+                <% if broadcast.customers_permission_warning %>
+                  <div class="desc warning"><%= I18n.t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description") %></div>
+                <% end %>
               </div>
             <% end %>
           <% end %>

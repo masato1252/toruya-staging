@@ -3,17 +3,18 @@
 #
 # Table name: broadcasts
 #
-#  id               :bigint           not null, primary key
-#  content          :text             not null
-#  query            :jsonb
-#  query_type       :string
-#  recipients_count :integer          default(0)
-#  schedule_at      :datetime
-#  sent_at          :datetime
-#  state            :integer          default("active")
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  user_id          :bigint           not null
+#  id                           :bigint           not null, primary key
+#  content                      :text             not null
+#  customers_permission_warning :boolean          default(FALSE)
+#  query                        :jsonb
+#  query_type                   :string
+#  recipients_count             :integer          default(0)
+#  schedule_at                  :datetime
+#  sent_at                      :datetime
+#  state                        :integer          default("active")
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  user_id                      :bigint           not null
 #
 # Indexes
 #

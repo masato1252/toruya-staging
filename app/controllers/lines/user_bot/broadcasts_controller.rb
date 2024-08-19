@@ -7,6 +7,8 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
 
   def show
     @broadcast = Current.business_owner.broadcasts.find(params[:id])
+    @customers = Broadcasts::FilterCustomers.run!(broadcast: @broadcast)
+    @broadcast.update(customers_permission_warning: @customers.any? { |customer| !customer.reminder_permission })
   end
 
   def new
@@ -42,7 +44,8 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def create
     outcome = Broadcasts::Create.run(user: Current.business_owner, params: params.permit!.to_h)
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) })
+    flash[:notice] = I18n.t("common.create_successfully_message")
+    return_json_response(outcome, { redirect_to: lines_user_bot_broadcast_path(outcome.result, business_owner_id: business_owner_id) })
   end
 
   def update
@@ -71,7 +74,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
 
   def clone
     broadcast = Current.business_owner.broadcasts.find(params[:id])
-    new_broadcast = Broadcasts::Clone.run!(broadcast: broadcast)
+    Broadcasts::Clone.run!(broadcast: broadcast)
 
     redirect_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id), notice: I18n.t("user_bot.dashboards.broadcasts.clone_successfully")
   end

@@ -297,8 +297,8 @@ ja:
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
     google_contact_missing_message_html: "Toruyaサーバー上の顧客データのみ表示しています。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
     customer_info_changed_message: 顧客データ要変更
-    reminder_confirmation_message: 本当にリマインダをOFFにしますか？
-    reminder_changed_message: リマインダ
+    reminder_confirmation_message: 本当にセグメント配信をOFFにしますか？
+    reminder_changed_message: セグメント配信
     filter:
       no_shop_warning: "利用履歴で顧客を高度検索するには、店舗の設定が必要です。"
       empty_content: "該当する予約データが見つかりません。"

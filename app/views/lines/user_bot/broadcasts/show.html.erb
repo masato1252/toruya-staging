@@ -18,7 +18,28 @@
         <% end %>
 
         <div class="field-header"><%= t("user_bot.dashboards.broadcasts.recipients_count") %></div>
-        <%= render "lines/user_bot/field_row", title: @broadcast.recipients_count %>
+        <%= render "lines/user_bot/field_row" do %>
+          <div>
+            <%= @broadcast.recipients_count - @customers.select { |customer| !customer.reminder_permission }.count %>
+          </div>
+          <% if @customers.any? { |customer| !customer.reminder_permission } %>
+            <div class="warning">
+              <div>
+                <%= I18n.t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description") %>
+                <a
+                  href="#" 
+                  data-toggle="modal"
+                  data-target="#customers_permission_modal"
+                  data-controller="modal"
+                  data-modal-target="#customers_permission_modal"
+                  data-modal-close-reload="true"
+                  class="btn btn-tarco">
+                  <%= I18n.t("action.check_it_out") %>
+                </a>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
 
         <div class="field-header"><%= t("user_bot.dashboards.broadcasts.state") %></div>
         <%= render "lines/user_bot/field_row", title: t("broadcast.states.#{@broadcast.state}") %>
@@ -60,5 +81,31 @@
     </div>
 
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>
+
+<div class="modal fade" id="customers_permission_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <%= I18n.t("user_bot.dashboards.broadcast_creation.customers_permission_modal.title") %>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="warning margin-around centerize">
+          <%= I18n.t("user_bot.dashboards.broadcast_creation.customers_permission_modal.warning_description") %>
+        </div>
+        <%= react_component("user_bot/broadcasts/customers_permissions", {
+          props: {
+            business_owner_id: business_owner_id,
+            customers: @customers.select { |customer| !customer.reminder_permission }.map { |customer| CustomerSerializer.new(customer).attributes_hash },
+          }
+        },
+        { camelize_props: false }
+        ) %>
+      </div>
+    </div>
   </div>
 </div>

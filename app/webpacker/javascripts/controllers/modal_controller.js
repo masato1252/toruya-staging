@@ -29,7 +29,9 @@ export default class Modal extends Controller {
 
   popup() {
     this.popupModal.modal("show");
-    this.loadModal();
+    if (this.path) {
+      this.loadModal();
+    }
   }
 
   loadModal() {

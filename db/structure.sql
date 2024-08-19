@@ -751,7 +751,8 @@ CREATE TABLE public.broadcasts (
     recipients_count integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    query_type character varying
+    query_type character varying,
+    customers_permission_warning boolean DEFAULT false
 );
 
 
