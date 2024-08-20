@@ -108,6 +108,7 @@ class BookingPagesController < ActionController::Base
         status: "successful"
       }
     else
+      Rollbar.error("#{outcome.class} service failed", { errors: outcome.errors.details })
       render json: {
         status: "failed",
         errors: {
@@ -206,6 +207,8 @@ class BookingPagesController < ActionController::Base
 
     if outcome.valid?
       @schedules, @available_booking_dates = outcome.result
+    else
+      Rollbar.error("#{outcome.class} service failed", { errors: outcome.errors.details })
     end
 
     render template: "calendars/working_schedule"
@@ -258,6 +261,7 @@ class BookingPagesController < ActionController::Base
     if outcome.valid?
       render json: { booking_times: available_booking_times, debug: ::FlowBacktracer.backtrace(:debug_booking_page) }
     else
+      Rollbar.error("#{outcome.class} service failed", { errors: outcome.errors.details })
       render json: { booking_times: {} }
     end
   end
