@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "seeders/plan"
+require 'fileutils'
 
 namespace :db do
   desc "Backs up heroku database and restores it locally."
@@ -15,7 +16,8 @@ namespace :db do
       puts "[2/6] Capturing backup on Heroku"
       `heroku pg:backups capture DATABASE_URL#{heroku_app_flag}`
       puts "[3/6] Downloading backup onto disk"
-      `curl -o #{dump_file_name} \`heroku pg:backups public-url #{heroku_app_flag} | cat\``
+      system("heroku pg:backups:download #{heroku_app_flag}", exception: true)
+      FileUtils.mv('latest.dump', dump_file_name)
       puts "[4/6] Mounting backup on local database"
       `pg_restore --clean --verbose --no-acl --no-owner -h localhost -d #{c["database"]} #{dump_file_name}`
       puts "[5/6] Migrating local migrations"
