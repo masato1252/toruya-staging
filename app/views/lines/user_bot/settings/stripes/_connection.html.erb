@@ -23,6 +23,6 @@
 <% if Current.business_owner.stripe_provider %>
   <hr />
   <div class="margin-around centerize">
-    <%= button_to t("user_bot.dashboards.settings.stripe.default_payment_button"), lines_user_bot_settings_stripe_path, class: "btn btn-tarco", disabled: Current.business_owner.stripe_provider&.default_payment?, method: :patch %>
+    <%= button_to t("user_bot.dashboards.settings.stripe.default_payment_button"), lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "btn btn-tarco", disabled: Current.business_owner.stripe_provider&.default_payment?, method: :patch %>
   </div>
 <% end %>
