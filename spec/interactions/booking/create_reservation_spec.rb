@@ -608,6 +608,25 @@ RSpec.describe Booking::CreateReservation do
         reservation_customer = ReservationCustomer.find_by!(reservation: result[:reservation], customer: result[:customer])
         expect(reservation_customer).to be_payment_paid
       end
+
+      context "when something wrong on stripe" do
+        it "doesn't charge customer when there's a Stripe card error" do
+          args[:customer_info] = { "id": customer.id }
+          args[:present_customer_info] = { "id": customer.id }
+          args[:stripe_token] = stripe_token
+
+          StripeMock.prepare_card_error(:card_declined)
+
+          expect {
+            outcome
+          }.to not_change {
+            customer.customer_payments.count
+          }
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors[:base]).to include(I18n.t("active_interaction.errors.models.booking/create_reservation.attributes.base.paying_reservation_something_wrong"))
+        end
+      end
     end
 
     context "when sale_page_id exists" do

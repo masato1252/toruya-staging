@@ -125,7 +125,7 @@ module Booking
             # regular customer come
             if customer ||= social_customer&.customer
               if customer_phonetic_last_name && customer_phonetic_first_name
-                customer_outcome = Customers::Store.run(
+                customer = compose(Customers::Store,
                   user: user,
                   current_user: user,
                   params: {
@@ -138,10 +138,6 @@ module Booking
                     emails_details: [{ type: "mobile", value: customer_email }],
                   }.compact
                 )
-
-                if customer_outcome.valid?
-                  customer = customer_outcome.result
-                end
               end
             else
               # new customer
@@ -297,6 +293,7 @@ module Booking
                 reservation_customer.payment_paid!
               else
                 errors.add(:base, :paying_reservation_something_wrong)
+                errors.merge!(purchase_outcome.errors)
                 raise ActiveRecord::Rollback
               end
             elsif square_token.present?
@@ -311,6 +308,7 @@ module Booking
               if purchase_outcome.valid?
                 reservation_customer.payment_paid!
               else
+                errors.merge!(purchase_outcome.errors)
                 errors.add(:base, :paying_reservation_something_wrong)
                 raise ActiveRecord::Rollback
               end

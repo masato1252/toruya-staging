@@ -621,6 +621,11 @@ ja:
   active_interaction:
     errors:
       models:
+        booking/create_reservation:
+          attributes:
+            base:
+              something_wrong: "^支払いに失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              paying_reservation_something_wrong: "^予約に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
         identification_codes/verify_user:
           attributes:
             phone_number:
