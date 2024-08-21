@@ -338,8 +338,8 @@ const BookingReservationFormFunction = ({props}) => {
       }
     )
 
-    if (address_ref.current) {
-      data["customer_info"]["address_details"] = address_ref.current
+    if (address_ref.current || !data["customer_info"]["address_details"]) {
+      data["customer_info"]["address_details"] = address_ref.current || {}
     }
 
     if (!data["customer_info"]["original_address_details"]) {
