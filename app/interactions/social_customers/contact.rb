@@ -31,7 +31,9 @@ module SocialCustomers
         message_type: SocialMessage.message_types[:customer]
       )
 
-      LineClient.send(social_customer, I18n.t("contact_page.message_sent.line_content")) unless Rails.env.development?
+      if !Rails.env.development? && social_customer.social_account&.line_settings_verified?
+        LineClient.send(social_customer, I18n.t("contact_page.message_sent.line_content")) 
+      end
     end
 
     private
