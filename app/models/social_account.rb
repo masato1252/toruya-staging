@@ -31,10 +31,12 @@ class SocialAccount < ApplicationRecord
   belongs_to :user
 
   def client
-    @client ||= Line::Bot::Client.new { |config|
-      config.channel_token = raw_channel_token
-      config.channel_secret = raw_channel_secret
-    }
+    if raw_channel_token && raw_channel_secret
+      @client ||= Line::Bot::Client.new { |config|
+        config.channel_token = raw_channel_token
+        config.channel_secret = raw_channel_secret
+      }
+    end
   end
 
   def line_settings_finished?
