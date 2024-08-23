@@ -110,7 +110,7 @@ module Booking
                           @unactive_staff_ids[date] << error[:staff_id]
                         end
                       when :ask_for_leave
-                        # Staff(User) ask for leave whole day
+                        # Staff(User) ask for leave whole day, for performance doesn't need to check others
                         if CustomSchedule.closed.where(
                             user_id: Staff.find(error[:staff_id]).staff_account.user.staff_accounts.pluck(:user_id)
                         ).where("start_time = ? and end_time = ?", date.beginning_of_day, date.end_of_day.change(sec: 0)).exists?

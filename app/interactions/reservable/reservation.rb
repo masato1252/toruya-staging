@@ -72,14 +72,17 @@ module Reservable
       working_day_staff_ids = working_day_staffs.map(&:id)
       staffs.includes(:staff_menus, staff_account: :user).each do |staff|
         if working_day_staff_ids.exclude?(staff.id)
-          if closed_custom_schedules_staff_ids.include?(staff.id)
-            errors.add(:staff_ids, :ask_for_leave, staff_id: staff.id, menu_id: menu_id)
-          elsif staff.freelancer?(shop)
+          if staff.freelancer?(shop)
             errors.add(:staff_ids, :freelancer, staff_id: staff.id, menu_id: menu_id)
           else
             # XXX: part time but had business schedule
             errors.add(:staff_ids, :unworking_staff, staff_id: staff.id, menu_id: menu_id)
           end
+        end
+
+        # validate personal schedule
+        if closed_custom_schedules_staff_ids.include?(staff.id)
+          errors.add(:staff_ids, :ask_for_leave, staff_id: staff.id, menu_id: menu_id)
         end
 
         validate_staffs_ability_for_customers(staff) if overbooking_restriction

@@ -557,6 +557,31 @@ RSpec.describe Reservable::Reservation do
           end
         end
 
+        context "when staff another account had a personal schedule(off schedule) during the period" do
+          before do
+            social_user = FactoryBot.create(:social_user, user: staff1.staff_account.user)
+            social_user2 = FactoryBot.create(:social_user, social_service_user_id: social_user.social_service_user_id)
+            user2 = social_user2.user
+            FactoryBot.create(:custom_schedule, :closed, user: user2, start_time: time_range.first, end_time: time_range.last)
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu1.id,
+              menu_required_time: menu1.minutes,
+              start_time: start_time,
+              end_time: end_time,
+              staff_ids: [staff1.id]
+            )
+
+            expect(outcome).to be_invalid
+            unworking_staff_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :ask_for_leave }
+
+            expect(unworking_staff_error).to eq(error: :ask_for_leave, staff_id: staff1.id, menu_id: menu1.id)
+          end
+        end
+
         context "when staff is a part time staff, doesn't work on that day" do
           let(:staff2) { FactoryBot.create(:staff, user: user, shop: shop) }
           before do
