@@ -3,7 +3,7 @@
 module BookingPages
   class LineSharingOrder < ActiveInteraction::Base
     object :user
-    array :booking_page_ids do
+    array :booking_page_ids, default: [] do
       integer
     end
 
