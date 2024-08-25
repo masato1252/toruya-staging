@@ -566,6 +566,7 @@ ja:
           internal_name: 管理用タイトル
           normal_price: 通常価格
           selling_number: 販売個数
+          sold_out: 販売終了
           page_content: 宣伝用LPコンテンツ
           content_header: ヘッドライン
           content_video: ヘッダー動画

@@ -60,7 +60,18 @@
 
         <% if !@sale_page.is_booking_page? %>
           <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_number") %></div>
-          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, business_owner_id: business_owner_id, attribute: :quantity), title: @sale_page.quantity_text %>
+          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, business_owner_id: business_owner_id, attribute: :quantity) do %>
+            <span class="dotdotdot">
+              <%= @sale_page.quantity_text %>
+
+              <% if @sale_page.sold_out? %>
+                <span class="warning">
+                  <i class="fa fa-exclamation-triangle"></i>
+                  <%= I18n.t("user_bot.dashboards.sales.edit.sold_out") %>
+                </span>
+              <% end %>
+            </span>
+          <% end %>
         <% end %>
 
         <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.page_content") %></div>
