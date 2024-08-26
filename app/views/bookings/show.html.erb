@@ -11,18 +11,26 @@
 </div>
 
 <div class="done-view">
-  <h2 class="mb-8"><%= t("reservation.#{@reservation_customer.reservation_state}") %></h2>
+  <div class="mb-8">
+    <h2 class="mb-6px"><%= t("common.reservation_details") %></h2>
+
+    <% if @reservation_customer.reservation_state == "canceled" %>
+      <div class="reminder-mark desc my-4"><%= t("booking.cancel_modal.reservation_was_canceled") %></div>
+    <% else %>
+      <div class="mb-6px"><%= t("reservation.#{@reservation_customer.reservation_state}") %></div>
+    <% end %>
+  </div>
   <hr class="bg-gray-300 border-0 h-px" />
   <h3 class="title"><%= @reservation.booking_time %></h3>
   <div class="message mb-8">
-    <%= @customer.name %><br />
+    <%= @customer.name %> <%= t("common.sir") %><br />
     <%= @reservation.menus_sentence %><br />
   </div>
 
   <% if @reservation_customer.booking_page %>
     <hr class="mb-8 bg-gray-300 border-0 h-px" />
     <% if @reservation_customer.allow_customer_cancel? && @reservation_customer.booking_page.customer_cancel_request %>
-      <%= link_to t("action.cancel"), "#", data: { toggle: "modal", target: "#cancelModal" }, class: "btn btn-danger" %>
+      <%= link_to t("action.cancel_reservation"), "#", data: { toggle: "modal", target: "#cancelModal" }, class: "btn btn-danger" %>
     <% end %>
 
     <% if @reservation_customer.booking_page.deleted_at.nil? %>
@@ -44,11 +52,11 @@
       <div class="modal-header">
         <h5 class="modal-title"><%= t("booking.cancel_modal.title") %></h5>
       </div>
-        <%= form_with url: booking_path(slug: @reservation_customer.slug), method: :delete, local: true do |f| %>
-          <div class="modal-body">
-            <h4 class="warning">
-              <%= t("booking.cancel_modal.message") %>
-            </h4>
+      <%= form_with url: booking_path(slug: @reservation_customer.slug), method: :delete, local: true do |f| %>
+        <div class="modal-body">
+      <div class="description">
+        <%= t("booking.cancel_modal.description") %>
+      </div>
             <% ReservationCustomer::CANCEL_REASONS.each do |reason| %>
               <%= f.check_box :cancel_reason, { multiple: true, id: "cancel_reason_#{reason}" }, reason, nil %>
               <%= f.label :cancel_reason, t("booking.cancel_modal.cancel_reasons.#{reason}"), for: "cancel_reason_#{reason}" %><br>

@@ -11,7 +11,7 @@ module ReservationCustomers
     def execute
       reservation_customer.canceled!
 
-      if reservation.customers.count == 1
+      if reservation.customers.count.zero?
         compose(Reservations::Cancel, reservation: reservation)
       end
     end

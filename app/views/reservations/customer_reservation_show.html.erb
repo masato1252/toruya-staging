@@ -55,13 +55,13 @@
             </dd>
           <% end %>
 
-          <% if !@reservation_customer.canceled? %>
+          <% if !(@reservation_customer.canceled? || @reservation_customer.customer_canceled?) %>
             <dd>
               <% if @user_ability.can?(:edit, @reservation) %>
                 <%= link_to t("reservation.customer_cancel"), site_routing_helper.cancel_customer_user_reservations_path(@reservation, @customer), class: "btn enhanced BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
-            <% else %>
-              <%= link_to t("reservation.customer_cancel"), "#", class: "btn enhanced BTNorange disabled" %>
-            <% end %>
+              <% else %>
+                <%= link_to t("reservation.customer_cancel"), "#", class: "btn enhanced BTNorange disabled" %>
+              <% end %>
             </dd>
           <% end %>
 

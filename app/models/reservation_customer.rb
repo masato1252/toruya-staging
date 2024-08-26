@@ -76,7 +76,11 @@ class ReservationCustomer < ApplicationRecord
   end
 
   def allow_customer_cancel?
-    (reservation.start_time.to_date > Time.current.to_date) && (pending? || accepted? && (reservation.pending? || reservation.reserved?))
+    if booking_page&.customer_cancel_request
+      (reservation.start_time.to_date >= Time.current.advance(days: booking_page.customer_cancel_request_before_day).to_date) && (pending? || accepted? && (reservation.pending? || reservation.reserved?))
+    else
+      false
+    end
   end
 
   def customer_data_changed?

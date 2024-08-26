@@ -8,13 +8,14 @@ module Notifiers
         deliver_by :line
 
         string :customer_name
-        string :booking_info_url
-
+        string :booking_customer_popup_url
+        string :booking_time
         def message
           I18n.t("notifier.customer_cancel_reservation.message",
                  user_name: receiver.name,
                  customer_name: customer_name,
-                 booking_info_url: booking_info_url
+                 booking_time: booking_time,
+                 booking_customer_popup_url: booking_customer_popup_url
                 )
         end
       end

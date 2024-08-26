@@ -123,7 +123,7 @@
     <div class="field-group-header" id="customer_cancel_request"><%= I18n.t("settings.booking_page.form.customer_cancel_request") %></div>
     <%= render "lines/user_bot/field_row",
       path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_cancel_request),
-      title: @booking_page.customer_cancel_request ? I18n.t("settings.booking_page.form.customer_cancel_request_label") : I18n.t("settings.booking_page.form.not_customer_cancel_request_label")
+      title: @booking_page.customer_cancel_request ? "#{I18n.t("settings.booking_page.form.customer_cancel_request_label")} (#{@booking_page.customer_cancel_request_before_day} #{I18n.t("common.before_day_word")})" : I18n.t("settings.booking_page.form.not_customer_cancel_request_label")
     %>
 
   <div class="field-group-header" id="online_payment_enabled"><%= I18n.t("settings.booking_page.form.online_payment_enabled") %></div>

@@ -90,12 +90,13 @@ ja:
         title: 新しいオンライン予約があります
   booking:
     cancel_modal:
-      title: 予約をキャンセルしますか？
-      message: キャンセルすると予約情報は復元できません。
+      title:  予約をキャンセルする
+      description: キャンセル理由をお聞かせください。
+      reservation_was_canceled: 予約は解約されました 
       cancel_reasons:
         other_placeholder: 他の予定が入った
         reschedule_reason: 予約日時が変更したい
-        no_longer_needed_reason: 必要なくなった
+        no_longer_needed_reason: 必要がなくなった
         other_reason: その他
   online_service_page:
     special_price_time: 特別価格の購入期限まで

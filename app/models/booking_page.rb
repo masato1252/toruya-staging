@@ -3,31 +3,33 @@
 #
 # Table name: booking_pages
 #
-#  id                           :bigint           not null, primary key
-#  bookable_restriction_months  :integer          default(3)
-#  booking_limit_day            :integer          default(1), not null
-#  customer_cancel_request      :boolean          default(FALSE)
-#  default_provider             :string
-#  deleted_at                   :datetime
-#  draft                        :boolean          default(TRUE), not null
-#  end_at                       :datetime
-#  event_booking                :boolean          default(FALSE)
-#  greeting                     :text
-#  interval                     :integer
-#  line_sharing                 :boolean          default(TRUE)
-#  name                         :string           not null
-#  note                         :text
-#  online_payment_enabled       :boolean          default(FALSE)
-#  overbooking_restriction      :boolean          default(TRUE)
-#  slug                         :string
-#  social_account_skippable     :boolean          default(FALSE), not null
-#  specific_booking_start_times :string           is an Array
-#  start_at                     :datetime
-#  title                        :string
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  shop_id                      :bigint           not null
-#  user_id                      :bigint           not null
+#  id                                 :bigint           not null, primary key
+#  bookable_restriction_months        :integer          default(3)
+#  booking_limit_day                  :integer          default(1), not null
+#  customer_cancel_request            :boolean          default(FALSE)
+#  customer_cancel_request_before_day :integer          default(1), not null
+#  default_provider                   :string
+#  deleted_at                         :datetime
+#  draft                              :boolean          default(TRUE), not null
+#  end_at                             :datetime
+#  event_booking                      :boolean          default(FALSE)
+#  greeting                           :text
+#  interval                           :integer
+#  line_sharing                       :boolean          default(TRUE)
+#  name                               :string           not null
+#  note                               :text
+#  online_payment_enabled             :boolean          default(FALSE)
+#  overbooking_restriction            :boolean          default(TRUE)
+#  rich_menu_only                     :boolean          default(FALSE)
+#  slug                               :string
+#  social_account_skippable           :boolean          default(FALSE), not null
+#  specific_booking_start_times       :string           is an Array
+#  start_at                           :datetime
+#  title                              :string
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  shop_id                            :bigint           not null
+#  user_id                            :bigint           not null
 #
 # Indexes
 #

@@ -712,7 +712,8 @@ CREATE TABLE public.booking_pages (
     default_provider character varying,
     social_account_skippable boolean DEFAULT false NOT NULL,
     rich_menu_only boolean DEFAULT false,
-    customer_cancel_request boolean DEFAULT false
+    customer_cancel_request boolean DEFAULT false,
+    customer_cancel_request_before_day integer DEFAULT 1 NOT NULL
 );
 
 
@@ -6005,4 +6006,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240812140019'),
 ('20240817114718'),
 ('20240823204505'),
-('20240823213428');
+('20240823213428'),
+('20240826145415');
+
+

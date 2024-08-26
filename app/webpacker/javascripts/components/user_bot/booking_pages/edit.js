@@ -295,7 +295,7 @@ const BookingPageEdit =({props}) => {
       case "line_sharing":
         return <LineSharingField i18n={i18n} register={register} />
       case "customer_cancel_request":
-        return <CustomerCancelRequestField i18n={i18n} register={register} />
+        return <CustomerCancelRequestField i18n={i18n} register={register} watch={watch} />
       case "online_payment_enabled":
         return <OnlinePaymentEnabledField i18n={i18n} register={register} watch={watch} payment_provider_options={props.payment_provider_options} />
       case "social_account_skippable":

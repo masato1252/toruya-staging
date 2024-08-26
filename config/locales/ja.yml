@@ -150,6 +150,7 @@ ja:
     reservation_content: 予約內容
     new_reservation: 新規予約
     edit_reservation: 予約編集
+    customer_cancel_reservation: 顧客による予約キャンセル
     modal:
       cancel_warning_for_paid_customers:
         title: 支払済の顧客がいます

@@ -26,7 +26,7 @@ https://manager.toruya.com/userlogin"
     withdrawal_monthly_report:
       message:  "%{user_name} 様\n\n直近の紹介料の確定いたしました。\n\n詳細は設定画面からご確認ください。\n\nToruya"
     customer_cancel_reservation:
-      message: "%{user_name} 様\n\n%{customer_name}様からキャンセルリクエストが届きました。\n\n%{booking_info_url} \n\nToruya"
+      message: "%{booking_time}の%{customer_name}様の予約がキャンセルされました\n\n%{booking_customer_popup_url}"
     extra_new_line_account:
       successful_message: "新しいアカウントが追加されました。\n\nユーザーメニューはアカウント毎で切り替えることで設定可能ですので、追加されたアカウントについて以下の内容を設定してください。\n\n✅店舗設定\n✅LINE連携設定\n\n📝LINE連携マニュアル\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1\n\nパソコンやタブレット端末からも、WEB版管理画面にアクセスすることで、アカウント切り替えを行うことが可能です。\nhttps://manager.toruya.com/userlogin\n ※以前からご利用いただいている場合は、ブラウザのリフレッシュボタンを押すと、アカウント切り替えが表示されます。\n\n 一日も早くLINE連携設定まで完了して、追加アカウントにてToruyaのご利用をスタートしてください。"
     notifications:

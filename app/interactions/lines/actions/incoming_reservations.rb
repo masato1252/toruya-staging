@@ -18,11 +18,12 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
     reservations = customer.reservations.where(aasm_state: %w(pending reserved)).includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::COLUMNS_NUMBER_LIMIT) || []
 
     contents = reservations.map do |reservation|
+      reservation_customer = reservation.reservation_customers.find_by(customer: customer)
       shop = reservation.shop
       action_templates = [
         LineActions::Uri.new(
-          label: I18n.t("action.send_message"),
-          url: Rails.application.routes.url_helpers.lines_contacts_url(encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
+          label: I18n.t("line.actions.label.reservation_info"),
+          url: Rails.application.routes.url_helpers.booking_url(reservation_customer.slug),
           btn: "secondary"
         ).template,
       ]

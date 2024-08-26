@@ -15,14 +15,21 @@ module ReservationCustomers
         reservation_customer.cancel_reason = cancel_reason
         reservation_customer.customer_canceled!
 
-        if reservation.customers.count == 1
-          compose(Reservations::Cancel, reservation: reservation)
+        if reservation.customers.count.zero?
+          reservation.cancel!
         end
 
         Notifiers::Users::Reservations::CustomerCancel.perform_later(
           receiver: reservation_customer.customer.user,
           customer_name: reservation_customer.customer.name,
-          booking_info_url: Utils.url_with_external_browser(Rails.application.routes.url_helpers.booking_url(reservation_customer.slug))
+          booking_time: reservation.booking_time,
+          booking_customer_popup_url: Rails.application.routes.url_helpers.lines_user_bot_customers_url(
+            business_owner_id: reservation_customer.customer.user_id,
+            reservation_id: reservation_customer.reservation_id,
+            customer_id: reservation_customer.customer_id,
+            target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations],
+            encrypted_user_id: MessageEncryptor.encrypt(reservation_customer.customer.user_id)
+          )
         )
       end
     end

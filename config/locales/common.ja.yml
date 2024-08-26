@@ -9,6 +9,7 @@ ja:
     create_new: 新規作成
     details: 詳細
     cancel: キャンセル
+    cancel_reservation: 予約をキャンセルする
     stop_usage: 利用中止
     log_out: ログアウト
     save: 保存
@@ -137,6 +138,7 @@ ja:
     are_you_sure_cancel_message: キャンセルしますがよろしいですか？
     send: 送信
     draft: 下書き
+    reservation_details: 予約詳細
     yes_label: 有り
     no_label: 無し
     close: 閉じる
@@ -192,6 +194,7 @@ ja:
     company_info: 企業情報
     shop_info: 店舗情報
     day_word: 日
+    before_day_word: 日前
     hour_word: 時間
     minute_word: 分
     second_word: 秒
