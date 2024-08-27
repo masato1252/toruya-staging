@@ -268,6 +268,14 @@ class User < ApplicationRecord
     booking_pages.where(id: line_keyword_booking_page_ids).sort_by { |page| line_keyword_booking_page_ids.index(page.id.to_s) }
   end
 
+  def related_users
+    social_user&.current_users
+  end
+
+  def all_staff_related_users
+    owner_staff_accounts.active.map(&:user).map(&:related_users).flatten.compact.uniq
+  end
+
   private
 
   def today_reservations

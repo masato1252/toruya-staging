@@ -38,9 +38,7 @@ module Reservable
     end
 
     def closed_personal_custom_schedules_staff_ids
-      active_staff_accounts = shop.user.owner_staff_accounts.active.to_a
-
-      all_staffs_related_user_ids = active_staff_accounts.map { |staff_account| staff_account.user.social_user&.current_users }.flatten.compact.map(&:id).uniq
+      all_staffs_related_user_ids = shop.user.all_staff_related_users.map(&:id)
       closed_schedule_user_ids = closed_custom_schedules.
         where(user_id: all_staffs_related_user_ids).
         pluck(Arel.sql("DISTINCT custom_schedules.user_id"))
