@@ -199,6 +199,7 @@ ja:
       full_time_permission: スタッフによる常勤／非常勤の設定変更を許可
       regular_working_time_permission: スタッフによる固定勤務の設定変更を許可
       temporary_working_time_permission: スタッフによる臨時出勤の設定変更を許可
+      block_schedule: 予約ページをブロック
     staff_holiday_time:
       setting_title: 休暇の設定権限
       holiday_permission: スタッフによる休暇の設定を許可
