@@ -258,8 +258,7 @@ module Reservable
                LEFT OUTER JOIN custom_schedules opened_custom_schedules ON opened_custom_schedules.staff_id = staffs.id AND
                                                                            opened_custom_schedules.shop_id = #{shop.id} AND
                                                                            opened_custom_schedules.open = true
-              ").
-        where.not("staffs.id" => (closed_custom_schedules_staff_ids).uniq)
+              ")
 
       @working_staffs = scoped.where("business_schedules.full_time = ?", true).
         or(

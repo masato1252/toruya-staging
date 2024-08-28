@@ -110,10 +110,12 @@ module Booking
                           @unactive_staff_ids[date] << error[:staff_id]
                         end
                       when :ask_for_leave
+                        ::FlowBacktracer.track(:debug_booking_page) { { "ask_for_leave #{date}": { error: error, date: date }} }
                         # Staff(User) ask for leave whole day, for performance doesn't need to check others
                         if CustomSchedule.closed.where(
                             user_id: Staff.find(error[:staff_id]).staff_account.user.staff_accounts.pluck(:user_id)
                         ).where("start_time = ? and end_time = ?", date.beginning_of_day, date.end_of_day.change(sec: 0)).exists?
+                          ::FlowBacktracer.track(:debug_booking_page) { { "#{date} ask_for_leave": { leave_whole_day: true, date: date, staff: error[:staff_id] } } }
                           @unactive_staff_ids[date] ||= []
                           @unactive_staff_ids[date] << error[:staff_id]
                         end
@@ -143,7 +145,7 @@ module Booking
 
                   Rails.logger.debug("==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}")
 
-                  ::FlowBacktracer.track(:debug_booking_page) { { 'final_error': "==date: #{date}, #{menu_book_start_at.to_fs(:time)}~#{menu_book_end_at.to_fs(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}" } }
+                  ::FlowBacktracer.track(:debug_booking_page) { { "final_error #{date}": "==date: #{date}, #{menu_book_start_at.to_fs(:time)}~#{menu_book_end_at.to_fs(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}" } }
 
 
                   if all_possible_active_staff_ids_groups.length - 1 == candidate_staff_index

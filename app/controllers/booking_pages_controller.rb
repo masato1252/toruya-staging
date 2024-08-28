@@ -184,6 +184,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def calendar
+    ::FlowBacktracer.enable(:debug_booking_page)
     special_dates = booking_page.booking_page_special_dates.where(start_at: month_dates).map do |special_date|
       {
         start_at_date_part: special_date.start_at_date,
@@ -216,7 +217,7 @@ class BookingPagesController < ActionController::Base
 
   def booking_times
     ::FlowBacktracer.enable(:debug_booking_page)
-
+ 
     booking_dates = if booking_page.booking_page_special_dates.exists?
       booking_page.booking_page_special_dates.where(start_at: date.all_day).map do |matched_special_date|
         {
