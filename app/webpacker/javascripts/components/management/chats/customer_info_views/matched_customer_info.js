@@ -178,7 +178,6 @@ export default () => {
           <SubmitButton
             handleSubmit={handleUnsubscribe}
             btnWord={`${I18n.t("action.unsubscribe")} (${selected_customer.shop_customer.id})`}
-            disabled={!selected_customer.in_paid_plan}
           />
         </li>
         <li>
