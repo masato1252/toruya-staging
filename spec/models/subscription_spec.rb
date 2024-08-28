@@ -76,14 +76,38 @@ RSpec.describe Subscription do
   end
 
   describe "#next_period" do
-    it "returns expected period" do
-      [
-        [Date.new(2018, 1, 1), Date.new(2018, 2, 1)],
-        [Date.new(2018, 1, 31), Date.new(2018, 2, 28)],
-      ].each do |expired_date, expected_next_end_date|
-        subscription = FactoryBot.create(:subscription, expired_date: expired_date, recurring_day: expired_date.day)
+    context "when expired_date was passed" do
+      let(:today) { Date.new(2019, 1, 1) }
+      let(:expired_period_end_date) { Date.new(2019, 2, 1) }
+      before do
+        Time.zone = "Tokyo"
+        Timecop.freeze(today)
+      end
+      it "uses Today's date to returns expected period" do
+        [
+          [Date.new(2018, 1, 1), Date.new(2018, 2, 1)],
+        ].each do |expired_date, expected_next_end_date|
+          subscription = FactoryBot.create(:subscription, expired_date: expired_date, recurring_day: expired_date.day)
 
-        expect(subscription.next_period).to eq(expired_date..expected_next_end_date)
+          expect(subscription.next_period).to eq(today..expired_period_end_date)
+        end
+      end
+    end
+    context "when expired_date is in the future" do
+      before do
+        Time.zone = "Tokyo"
+        Timecop.freeze(Date.new(2017, 1, 1))
+      end
+
+      it "returns expected period" do
+        [
+          [Date.new(2018, 1, 1), Date.new(2018, 2, 1)],
+          [Date.new(2018, 1, 31), Date.new(2018, 2, 28)],
+        ].each do |expired_date, expected_next_end_date|
+          subscription = FactoryBot.create(:subscription, expired_date: expired_date, recurring_day: expired_date.day)
+
+          expect(subscription.next_period).to eq(expired_date..expected_next_end_date)
+        end
       end
     end
   end

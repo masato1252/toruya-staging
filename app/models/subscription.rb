@@ -98,7 +98,11 @@ class Subscription < ApplicationRecord
   end
 
   def next_period
-    expired_date..recurring_date(expired_date.year, expired_date.next_month.month)
+    if expired_date < self.class.today
+      self.class.today..recurring_date(self.class.today.year, self.class.today.next_month.month)
+    else
+      expired_date..recurring_date(expired_date.year, expired_date.next_month.month)
+    end
   end
 
   def set_trial_expired_date(expired_date)
