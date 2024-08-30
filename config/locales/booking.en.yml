@@ -34,6 +34,10 @@ ja:
     booking_code:
       code: Confirmation code
       resend: Resend code
+    requirement:
+      message: "You have to be '%{product_name}' member to book"
+      contact_shop_owner: If you are not a member, please contact to the shop owner.
+      login_message: "If you are the member of '%{product_name}' please login"
     message:
       unfound_customer_html: No customer data was found that matches both name and mobile number. <br>Please contact shop staff.
       booking_failed_message_html: Time and menu you chose is full.<br>Please try another option.

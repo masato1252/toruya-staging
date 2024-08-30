@@ -199,6 +199,7 @@ ja:
       full_time_permission: スタッフによる常勤／非常勤の設定変更を許可
       regular_working_time_permission: スタッフによる固定勤務の設定変更を許可
       temporary_working_time_permission: スタッフによる臨時出勤の設定変更を許可
+      block_schedule: 予約ページをブロック
     staff_holiday_time:
       setting_title: 休暇の設定権限
       holiday_permission: スタッフによる休暇の設定を許可
@@ -625,6 +626,15 @@ ja:
         booking_available_period_title:  予約の受付可能期間
         booking_available_period: "%{bookable_restriction_months} ヶ月前〜 %{booking_limit_day} 日前まで"
         booking_available_period_sample: "もし今日予約ページを開くと %{booking_limit_day_date} から %{bookable_restriction_months_date} が予約可能になります。"
+        customer_cancel_request: 顧客によるキャンセル
+        customer_cancel_request_title: 顧客によるキャンセル
+        customer_cancel_request_hint: お客様がキャンセル依頼をすることができます。
+        customer_cancel_request_label: 許可する
+        not_customer_cancel_request_label: 許可しない
+        customer_cancel_request_before_day_label: までキャンセルを許可
+        requirements: 会員限定予約
+        requirements_title: 会員限定予約
+        no_membership_services: 会員限定予約が設定されていません。
         line_sharing: LINEオンライン予約
         line_sharing_title: LINEオンライン予約
         online_payment_enabled: オンライン精算

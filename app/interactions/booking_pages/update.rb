@@ -13,6 +13,8 @@ module BookingPages
       boolean :draft, default: true
       boolean :social_account_skippable, default: false
       boolean :line_sharing, default: true
+      boolean :customer_cancel_request, default: true
+      integer :customer_cancel_request_before_day, default: 1
       boolean :online_payment_enabled, default: false
       string :default_provider, default: nil
       integer :shop_id, default: nil
@@ -67,6 +69,9 @@ module BookingPages
           string :end_at_time_part
         end
       end
+
+      integer :requirement_sale_page_id, default: nil
+      integer :requirement_online_service_id, default: nil
     end
 
     def execute
@@ -78,6 +83,16 @@ module BookingPages
 
       booking_page.transaction do
         case update_attribute
+        when "requirements"
+          booking_page.product_requirement&.destroy
+          if !attrs[:requirement_online_service_id].zero?
+            compose(
+              ProductRequirements::Create,
+              requirer: booking_page,
+              sale_page_id: attrs[:requirement_sale_page_id],
+              requirement: OnlineService.find(attrs[:requirement_online_service_id])
+            )
+          end
         when "booking_type"
           booking_page.booking_page_special_dates.destroy_all
           booking_page.business_schedules.destroy_all
@@ -181,6 +196,11 @@ module BookingPages
           )
         when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable"
           booking_page.update(attrs.slice(update_attribute))
+        when "customer_cancel_request"
+          booking_page.update(
+            customer_cancel_request: attrs[:customer_cancel_request],
+            customer_cancel_request_before_day: attrs[:customer_cancel_request_before_day]
+          )
         when "online_payment_enabled"
           booking_page.online_payment_enabled = attrs[:online_payment_enabled]
           booking_page.default_provider = attrs[:default_provider] if attrs[:online_payment_enabled]

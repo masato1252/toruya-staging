@@ -74,6 +74,7 @@ const CustomMessageEdit =({props}) => {
             <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_time}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.reservation_time")} </button>
             <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{meeting_url}") }}> {I18n.t("common.meeting_url")} </button>
             <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{product_name}") }}> {I18n.t("common.menu")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_info_url}") }}> {I18n.t("common.booking_info_url")} </button>
           </div>
         )
       case "booking_page_booked":
@@ -88,6 +89,7 @@ const CustomMessageEdit =({props}) => {
             <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{meeting_url}") }}> {I18n.t("common.meeting_url")} </button>
             <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{product_name}") }}> {I18n.t("common.menu")} </button>
             <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_page_url}") }}> {I18n.t("common.booking_page_url")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_info_url}") }}> {I18n.t("common.booking_info_url")} </button>
           </div>
         )
     }

@@ -3,30 +3,33 @@
 #
 # Table name: booking_pages
 #
-#  id                           :bigint           not null, primary key
-#  bookable_restriction_months  :integer          default(3)
-#  booking_limit_day            :integer          default(1), not null
-#  default_provider             :string
-#  deleted_at                   :datetime
-#  draft                        :boolean          default(TRUE), not null
-#  end_at                       :datetime
-#  event_booking                :boolean          default(FALSE)
-#  greeting                     :text
-#  interval                     :integer
-#  line_sharing                 :boolean          default(TRUE)
-#  name                         :string           not null
-#  note                         :text
-#  online_payment_enabled       :boolean          default(FALSE)
-#  overbooking_restriction      :boolean          default(TRUE)
-#  slug                         :string
-#  social_account_skippable     :boolean          default(FALSE), not null
-#  specific_booking_start_times :string           is an Array
-#  start_at                     :datetime
-#  title                        :string
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  shop_id                      :bigint           not null
-#  user_id                      :bigint           not null
+#  id                                 :bigint           not null, primary key
+#  bookable_restriction_months        :integer          default(3)
+#  booking_limit_day                  :integer          default(1), not null
+#  customer_cancel_request            :boolean          default(FALSE)
+#  customer_cancel_request_before_day :integer          default(1), not null
+#  default_provider                   :string
+#  deleted_at                         :datetime
+#  draft                              :boolean          default(TRUE), not null
+#  end_at                             :datetime
+#  event_booking                      :boolean          default(FALSE)
+#  greeting                           :text
+#  interval                           :integer
+#  line_sharing                       :boolean          default(TRUE)
+#  name                               :string           not null
+#  note                               :text
+#  online_payment_enabled             :boolean          default(FALSE)
+#  overbooking_restriction            :boolean          default(TRUE)
+#  rich_menu_only                     :boolean          default(FALSE)
+#  slug                               :string
+#  social_account_skippable           :boolean          default(FALSE), not null
+#  specific_booking_start_times       :string           is an Array
+#  start_at                           :datetime
+#  title                              :string
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  shop_id                            :bigint           not null
+#  user_id                            :bigint           not null
 #
 # Indexes
 #
@@ -46,12 +49,14 @@ class BookingPage < ApplicationRecord
   has_many :booking_codes
   has_many :booking_page_special_dates, -> { order(:start_at) }
   has_many :business_schedules
+  has_one :product_requirement, as: :requirer
 
   belongs_to :user
   belongs_to :shop
 
   scope :active, -> { where(deleted_at: nil) }
   scope :started, -> { active.where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
+  scope :end_yet, -> { where("end_at is NULL or end_at > ?", Time.current) }
   validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
 
   def primary_product
@@ -117,7 +122,8 @@ class BookingPage < ApplicationRecord
       end_time: Time.current.advance(hours: 1),
       meeting_url: 'https://toruya.com/',
       product_name: booking_options.first&.display_name.presence || I18n.t("common.menu"),
-      booking_page_url: Rails.application.routes.url_helpers.booking_page_url(slug)
+      booking_page_url: Rails.application.routes.url_helpers.booking_page_url(slug),
+      booking_info_url: 'https://toruya.com/'
     )
   end
 
@@ -150,5 +156,13 @@ class BookingPage < ApplicationRecord
 
   def payment_provider
     default_provider.presence || user.payment_provider&.provider
+  end
+
+  def requirement_customers
+    product_requirement.requirement&.available_customers || []
+  end
+
+  def requirement_online_service
+    product_requirement&.requirement
   end
 end

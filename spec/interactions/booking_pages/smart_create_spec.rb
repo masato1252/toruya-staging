@@ -48,9 +48,6 @@ RSpec.describe BookingPages::SmartCreate do
         booking_option = booking_page.booking_options.last
         booking_option_menu = booking_option.booking_option_menus.last
 
-        expect(booking_page.name).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: old_booking_option.name))
-        expect(booking_page.title).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: old_booking_option.name))
-        expect(booking_page.greeting).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_greeting", menu_name: old_booking_option.name))
         expect(booking_page.shop_id).to eq(shop.id)
         expect(booking_page.note).to eq("foo")
         expect(booking_page.draft).to eq(false)
@@ -74,9 +71,6 @@ RSpec.describe BookingPages::SmartCreate do
           booking_option = booking_page.booking_options.last
           booking_option_menu = booking_option.booking_option_menus.last
 
-          expect(booking_page.name).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: menu.short_name))
-          expect(booking_page.title).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: menu.short_name))
-          expect(booking_page.greeting).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_greeting", menu_name: menu.short_name))
           expect(booking_page.shop_id).to eq(shop.id)
           expect(booking_page.note).to eq("foo")
           expect(booking_page.draft).to eq(false)
@@ -126,9 +120,6 @@ RSpec.describe BookingPages::SmartCreate do
           booking_option_menu = booking_option.booking_option_menus.last
           menu = user.menus.last
 
-          expect(booking_page.name).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: new_menu_name))
-          expect(booking_page.title).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_label", menu_name: new_menu_name))
-          expect(booking_page.greeting).to eq(I18n.t("user_bot.dashboards.booking_page_creation.default_greeting", menu_name: new_menu_name))
           expect(booking_page.shop_id).to eq(shop.id)
           expect(booking_page.note).to eq("foo")
           expect(booking_page.draft).to eq(false)

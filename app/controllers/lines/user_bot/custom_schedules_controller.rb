@@ -3,7 +3,10 @@
 class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardController
   def create
     # create from personal schedule
-    CustomSchedules::PersonalCreate.run!(user: current_user, attrs: custom_schedules_params[:custom_schedules].first.to_h)
+    CustomSchedules::PersonalCreate.run!(
+      user: current_user,
+      attrs: custom_schedules_params[:custom_schedules].first.to_h.merge(open: !params[:custom_schedules_closed])
+    )
 
     redirect_back(fallback_location: SiteRouting.new(view_context).member_path)
   end
@@ -13,7 +16,10 @@ class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardControl
     custom_schedule = current_user.custom_schedules.find(params[:id])
 
     if custom_schedule_permission(custom_schedule)
-      CustomSchedules::Update.run(custom_schedule: custom_schedule, attrs: custom_schedules_params[:custom_schedules].first.to_h)
+      CustomSchedules::Update.run(
+        custom_schedule: custom_schedule,
+        attrs: custom_schedules_params[:custom_schedules].first.to_h.merge(open: !params[:custom_schedules_closed])
+      )
 
       redirect_back(fallback_location: SiteRouting.new(view_context).member_path)
     else

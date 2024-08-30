@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO
+# handle ticket
+# cancel, deleted, refund
 module ReservationCustomers
   class Cancel < ActiveInteraction::Base
     integer :reservation_id
@@ -8,7 +11,7 @@ module ReservationCustomers
     def execute
       reservation_customer.canceled!
 
-      if reservation.customers.count == 1
+      if reservation.customers.count.zero?
         compose(Reservations::Cancel, reservation: reservation)
       end
     end

@@ -6,8 +6,10 @@ ja:
     delete2: "削　除"
     delete_reservation: 予約を削除
     edit: 編集
+    create_new: 新規作成
     details: 詳細
     cancel: キャンセル
+    cancel_reservation: 予約をキャンセルする
     stop_usage: 利用中止
     log_out: ログアウト
     save: 保存
@@ -133,8 +135,10 @@ ja:
     delete_successfully_message: 削除完了
     save_draft_successfully_message: 下書き保存完了
     are_you_sure_message: 完全に削除されますがよろしいですか？
+    are_you_sure_cancel_message: キャンセルしますがよろしいですか？
     send: 送信
     draft: 下書き
+    reservation_details: 予約詳細
     yes_label: 有り
     no_label: 無し
     close: 閉じる
@@ -190,6 +194,7 @@ ja:
     company_info: 企業情報
     shop_info: 店舗情報
     day_word: 日
+    before_day_word: 日前
     hour_word: 時間
     minute_word: 分
     second_word: 秒
@@ -198,6 +203,7 @@ ja:
     today_price_label: 今なら
     thanks: ご利用ありがとうございます
     line_login_btn_word: LINE連携
+    line_user_login_btn_word: LINEログイン
     only_for_login_user: 登録者専用ページです
     read_required_login_user_html: このページの閲覧には <br /> サービスへの登録が必要です
     login_add_friend_to_follow_information_html: 登録をご希望の方は <br />LINEでお問合せください
@@ -205,6 +211,7 @@ ja:
     add_friend_to_follow_information_html:  LINEでお友だち登録して<br /> 次回募集のお知らせを受け取る
     shop_label: 店舗
     no_setup: 設定なし
+    no_restriction: 限定しない
     template: テンプレート
     tax_included: 税込
     support_reply_html: ありがとうございます。<br>サポートチームよりできるだけ早くご連絡差し上げます。

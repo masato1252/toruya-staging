@@ -74,7 +74,7 @@
   <% end %>
 </div>
 <% #event used css table design, the off_date_modal used, either, that causes some conflict %>
-<% schedules.select{|s| s[:type] == :off_schedule }.each do |schedule| %>
+<% schedules.select{|s| s[:type] == :off_schedule || s[:type] == :open_schedule}.each do |schedule| %>
   <%= render "reservations/off_date_modal",
     modal_id: "off-date-modal-#{schedule[:id]}",
     custom_schedule_id: schedule[:id],
@@ -84,7 +84,8 @@
     end_time_date_part: schedule[:end_time_date_part],
     end_time_time_part: schedule[:end_time_time_part],
     calendarfield_prefix: "temp_leaving_schedule_#{schedule[:id]}",
-    reason: schedule[:reason]
+    reason: schedule[:reason],
+    open: schedule[:open]
   %>
 <% end %>
 

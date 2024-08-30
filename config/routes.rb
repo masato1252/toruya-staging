@@ -710,6 +710,7 @@ Rails.application.routes.draw do
       get "booking_times"
     end
   end
+  resources :bookings, param: :slug, only: [:show, :destroy]
   resources :sale_pages, param: :slug, only: [:show]
   resources :online_services, param: :slug, only: [:show] do
     member do

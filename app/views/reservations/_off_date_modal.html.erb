@@ -30,7 +30,13 @@
                 placeholder=<%= t("settings.staff_working_time.closing_reason") %>
                 size="20"
                 value="<%= local_assigns[:reason] %>"
-               />
+              />
+            </div>
+            <div class="my-2">
+              <%= label_tag do %>
+                <%= check_box_tag "custom_schedules_closed", true, local_assigns[:open].present? ? !local_assigns[:open] : true %>
+                <%= t("settings.staff_working_time.block_schedule") %>
+              <% end %>
             </div>
           </dl>
         </div>

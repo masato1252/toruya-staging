@@ -76,6 +76,8 @@ class SalePage < ApplicationRecord
   has_many_attached :customer_pictures
 
   scope :active, -> { where(deleted_at: nil) }
+  scope :end_yet, -> { where("selling_end_at is NULL or selling_end_at > ?", Time.current) }
+  scope :for_online_service, -> { where(product_type: "OnlineService") }
   validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
 
   monetize :selling_price_amount_cents, allow_nil: true

@@ -60,6 +60,7 @@ ja:
         call: 電話をかける
         book: 予約ページを表示
         switch_rich_menu: Switch
+        reservation_info: 予約詳細を確認する
     bot:
       keywords:
         incoming_reservations: 全ての予約

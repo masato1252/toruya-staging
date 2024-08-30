@@ -53,13 +53,13 @@ export const ServiceEndInfo = () => (
 )
 
 
-export const CheckInLineBtn = ({social_account_add_friend_url, children}) => (
+export const CheckInLineBtn = ({social_account_add_friend_url, btn_text, children}) => (
   social_account_add_friend_url ? (
     <div className="message centerize">
       {children}
       <a href={social_account_add_friend_url} className="btn line-button with-wording with-logo">
         <img src={LineIconBaseImg} />
-        {I18n.t("booking_page.done.check_in_line_btn")}
+        {btn_text || I18n.t("booking_page.done.check_in_line_btn")}
       </a>
     </div>
   ) : <></>
@@ -77,13 +77,13 @@ export const AddLineFriendInfo = ({social_account_add_friend_url, children}) => 
   ) : <></>
 )
 
-export const LineLoginBtn = ({social_account_login_url, children}) => (
+export const LineLoginBtn = ({social_account_login_url, btn_text, children}) => (
   social_account_login_url ? (
     <div className="message centerize">
       {children}
       <a href={social_account_login_url} className="btn line-button with-wording with-logo" data-method="post">
         <img src={LineIconBaseImg} />
-        {I18n.t("common.line_login_btn_word")}
+        {btn_text || I18n.t("common.line_login_btn_word")}
       </a>
     </div>
   ) : <></>

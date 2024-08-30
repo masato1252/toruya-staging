@@ -96,6 +96,19 @@
       title: @booking_page.overbooking_restriction ? I18n.t("settings.booking_page.form.not_allow_overbooking_label") : I18n.t("settings.booking_page.form.allow_overbooking_label")
     %>
 
+    <div class="field-header"><%= I18n.t("settings.booking_page.form.requirements") %></div>
+      <% if @membership_online_services_exists %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :requirements) do %>
+          <span><%= @booking_page.requirement_online_service&.name || I18n.t("common.no_restriction") %></span>
+        <% end %>
+      <% else %>
+        <%= render "lines/user_bot/field_row" do %>
+          <span class="warning">
+            <%= I18n.t("settings.booking_page.form.no_membership_services") %> <%= link_to I18n.t("action.create_new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id) %>
+          </span>
+        <% end %>
+      <% end %>
+
     <div class="field-group-header" id="line_sharing"><%= I18n.t("settings.booking_page.form.line_sharing") %></div>
     <%= render "lines/user_bot/field_row",
       path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :line_sharing),
@@ -106,6 +119,11 @@
     <%= render "lines/user_bot/field_row",
       path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :social_account_skippable),
       title: @booking_page.social_account_skippable ? I18n.t("settings.booking_page.form.social_account_skippable_label") : I18n.t("settings.booking_page.form.not_social_account_skippable_label")
+    %>
+    <div class="field-group-header" id="customer_cancel_request"><%= I18n.t("settings.booking_page.form.customer_cancel_request") %></div>
+    <%= render "lines/user_bot/field_row",
+      path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_cancel_request),
+      title: @booking_page.customer_cancel_request ? "#{I18n.t("settings.booking_page.form.customer_cancel_request_label")} (#{@booking_page.customer_cancel_request_before_day} #{I18n.t("common.before_day_word")})" : I18n.t("settings.booking_page.form.not_customer_cancel_request_label")
     %>
 
   <div class="field-group-header" id="online_payment_enabled"><%= I18n.t("settings.booking_page.form.online_payment_enabled") %></div>
@@ -145,11 +163,11 @@
     </div>
 
     <div class="col-sm-6 px-0 hidden-xs preview-view">
-      <%= text_field_tag :booking_url, booking_url(@booking_page), read_only: true, class: 'extend',
+      <%= text_field_tag :booking_url, booking_page_url(@booking_page.slug), read_only: true, class: 'extend',
         data: {
           controller: "clipboard",
           action: "click->clipboard#copy",
-          clipboard_text: booking_url(@booking_page),
+          clipboard_text: booking_page_url(@booking_page.slug),
           clipboard_popup_text: t("common.copied")
         }
       %>
@@ -158,7 +176,7 @@
       <%= button_tag t("action.copy_code"), class: "btn btn-tarco", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") } %>
       </div>
       <div class="centerize margin-around">
-        <%= qrcode_img(booking_url(@booking_page)) %>
+        <%= qrcode_img(booking_page_url(@booking_page.slug)) %>
       </div>
       <div class="fake-mobile-layout">
         <%= render "lines/user_bot/booking_pages/booking_page_preview", booking_page: @booking_page, booking_option: @booking_option %>

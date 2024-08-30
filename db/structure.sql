@@ -710,7 +710,10 @@ CREATE TABLE public.booking_pages (
     event_booking boolean DEFAULT false,
     bookable_restriction_months integer DEFAULT 3,
     default_provider character varying,
-    social_account_skippable boolean DEFAULT false NOT NULL
+    social_account_skippable boolean DEFAULT false NOT NULL,
+    rich_menu_only boolean DEFAULT false,
+    customer_cancel_request boolean DEFAULT false,
+    customer_cancel_request_before_day integer DEFAULT 1 NOT NULL
 );
 
 
@@ -1813,6 +1816,41 @@ ALTER SEQUENCE public.plans_id_seq OWNED BY public.plans.id;
 
 
 --
+-- Name: product_requirements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.product_requirements (
+    id bigint NOT NULL,
+    requirer_type character varying NOT NULL,
+    requirer_id bigint NOT NULL,
+    requirement_type character varying NOT NULL,
+    requirement_id bigint NOT NULL,
+    sale_page_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: product_requirements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.product_requirements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_requirements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.product_requirements_id_seq OWNED BY public.product_requirements.id;
+
+
+--
 -- Name: profiles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2015,7 +2053,9 @@ CREATE TABLE public.reservation_customers (
     payment_state integer DEFAULT 0,
     sale_page_id integer,
     nth_quota integer,
-    customer_ticket_id integer
+    customer_ticket_id integer,
+    slug character varying,
+    cancel_reason character varying
 );
 
 
@@ -3532,6 +3572,13 @@ ALTER TABLE ONLY public.plans ALTER COLUMN id SET DEFAULT nextval('public.plans_
 
 
 --
+-- Name: product_requirements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_requirements ALTER COLUMN id SET DEFAULT nextval('public.product_requirements_id_seq'::regclass);
+
+
+--
 -- Name: profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4165,6 +4212,14 @@ ALTER TABLE ONLY public.pghero_query_stats
 
 ALTER TABLE ONLY public.plans
     ADD CONSTRAINT plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_requirements product_requirements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_requirements
+    ADD CONSTRAINT product_requirements_pkey PRIMARY KEY (id);
 
 
 --
@@ -4991,6 +5046,27 @@ CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghe
 
 
 --
+-- Name: index_product_requirements_on_requirement; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_requirements_on_requirement ON public.product_requirements USING btree (requirement_type, requirement_id);
+
+
+--
+-- Name: index_product_requirements_on_requirer; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_requirements_on_requirer ON public.product_requirements USING btree (requirer_type, requirer_id);
+
+
+--
+-- Name: index_product_requirements_on_sale_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_requirements_on_sale_page_id ON public.product_requirements USING btree (sale_page_id);
+
+
+--
 -- Name: index_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5044,6 +5120,13 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 --
 
 CREATE INDEX index_reservation_customers_on_sale_page_id_and_created_at ON public.reservation_customers USING btree (sale_page_id, created_at);
+
+
+--
+-- Name: index_reservation_customers_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reservation_customers_on_slug ON public.reservation_customers USING btree (slug);
 
 
 --
@@ -5916,6 +5999,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240605123036'),
 ('20240613092742'),
 ('20240625093510'),
-('20240817114718');
+('20240729135500'),
+('20240731051119'),
+('20240806134248'),
+('20240810133901'),
+('20240812140019'),
+('20240817114718'),
+('20240823204505'),
+('20240823213428'),
+('20240826145415');
 
 

@@ -9,12 +9,8 @@ module SettingsHelper
     content_tag(:i, nil, class: "fa fa-check-circle #{completed && "done"}")
   end
 
-  def booking_url(page)
-    booking_page_url(page.slug)
-  end
-
   def booking_page_share_button_link(page)
-    share_button_link(t("settings.booking_page.share_button_text"), booking_url(page))
+    share_button_link(t("settings.booking_page.share_button_text"), booking_page_url(page.slug))
   end
 
   def share_button_link(btn_text, url)

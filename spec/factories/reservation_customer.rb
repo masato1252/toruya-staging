@@ -5,6 +5,7 @@ FactoryBot.define do
     association :reservation
     association :customer
     state { :pending }
+    slug { SecureRandom.alphanumeric(10) }
 
     trait :pending do
       state { :pending }

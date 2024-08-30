@@ -12,13 +12,13 @@
 
     <div class="modal-footer centerize">
       <div>
-        <input type="text" value=<%= booking_url(@booking_page) %> readOnly class="extend"/>
+        <input type="text" value=<%= booking_page_url(@booking_page.slug) %> readOnly class="extend"/>
       </div>
       <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
         data: {
         controller: "clipboard",
         action: "click->clipboard#copy",
-        clipboard_text: booking_url(@booking_page),
+        clipboard_text: booking_page_url(@booking_page.slug),
         clipboard_popup_text: t("common.copied")
       } %>
     <%= button_tag t("action.copy_code"), class: "btn btn-tarco", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") } %>

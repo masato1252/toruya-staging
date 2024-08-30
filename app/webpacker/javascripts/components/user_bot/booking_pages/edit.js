@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 import moment from "moment-timezone";
+import ReactSelect from "react-select";
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields  } from "shared/components"
 import { BookingPageServices } from "user_bot/api"
@@ -11,6 +12,7 @@ import { BookingPageServices } from "user_bot/api"
 import BookingTimeField from "./booking_time_field";
 import OverbookingRestrictionField from "./overbooking_restriction_field";
 import LineSharingField from "./line_sharing_field";
+import CustomerCancelRequestField from "./customer_cancel_request_field";
 import OnlinePaymentEnabledField from "./online_payment_enabled_field";
 import DraftField from "./draft_field";
 import SocialAccountSkippableField from "./social_account_skippable_field";
@@ -20,9 +22,9 @@ import BookingEndAtField from "./booking_end_at_field";
 import ShopField from "./shop_field";
 import NewMenuField from "components/user_bot/booking_options/new_menu_field";
 
-
 const BookingPageEdit =({props}) => {
   const i18n = props.i18n;
+  const [requirement_online_service, setRequirementOnlineService] = useState(props.booking_page.requirement_online_service)
 
   const onSubmit = async (data) => {
     console.log(data)
@@ -36,6 +38,7 @@ const BookingPageEdit =({props}) => {
       booking_page_id: props.booking_page.id,
       data: _.assign(
         data,
+        { requirement_online_service_id: requirement_online_service?.id},
         { business_owner_id: props.business_owner_id },
         { special_dates: _.includes(["event_booking", "only_special_dates_booking"], data.booking_type) ? data.special_dates : [] },
         { booking_type: data.booking_type },
@@ -56,6 +59,7 @@ const BookingPageEdit =({props}) => {
       ...props.booking_page,
       overbooking_restriction: String(props.booking_page.overbooking_restriction),
       line_sharing: String(props.booking_page.line_sharing),
+      customer_cancel_request: String(props.booking_page.customer_cancel_request),
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
       draft: String(props.booking_page.draft),
       social_account_skippable: String(props.booking_page.social_account_skippable),
@@ -97,6 +101,51 @@ const BookingPageEdit =({props}) => {
             <ShopField shop_options={props.shop_options} i18n={i18n} register={register} />
             <ErrorMessage error={errors.shop_id?.message} />
           </>
+        )
+      case "requirements":
+        return (
+          <div className="margin-around">
+            <label className="text-align-left">
+              <ReactSelect
+                placeholder={I18n.t("common.select_a_service")}
+                value={ _.isEmpty(requirement_online_service) ? "" : { label: requirement_online_service.name }}
+                options={props.requirements}
+                onChange={
+                  (page) => {
+                    setRequirementOnlineService(page.value)
+                  }
+                }
+              />
+            </label>
+
+            {
+              props.booking_page.requirement_online_service && (
+                <div className="margin-around centerize">
+                  <div className="field-row">
+                    <strong>{props.booking_page.requirement_online_service.name}</strong>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      const [error, response] = await BookingPageServices.update({
+                        booking_page_id: props.booking_page.id,
+                        data: _.assign( {
+                          id: props.booking_page.id,
+                          requirement_online_service_id: 0,
+                          business_owner_id: props.business_owner_id
+                        }, { attribute: props.attribute })
+                      })
+
+                      window.location = response.data.redirect_to
+                    }}
+                    className="btn btn-orange btn-tall margin-around m10"
+                  >
+                    {I18n.t("action.delete2")}
+                  </button>
+                </div>
+              )
+            }
+
+          </div>
         )
       case "new_option_existing_menu":
         return (
@@ -245,6 +294,8 @@ const BookingPageEdit =({props}) => {
         return <OverbookingRestrictionField i18n={i18n} register={register} />
       case "line_sharing":
         return <LineSharingField i18n={i18n} register={register} />
+      case "customer_cancel_request":
+        return <CustomerCancelRequestField i18n={i18n} register={register} watch={watch} />
       case "online_payment_enabled":
         return <OnlinePaymentEnabledField i18n={i18n} register={register} watch={watch} payment_provider_options={props.payment_provider_options} />
       case "social_account_skippable":

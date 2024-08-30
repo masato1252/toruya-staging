@@ -1,0 +1,3 @@
+<div class="reservation-info-row">
+  <i class="fa fa-pencil-alt"></i><span><%= t("reservation.customer_cancel_reservation") %> <%= I18n.l(reservation_customer.updated_at) %>(<%= reservation_customer.cancel_reasons.join(", ") %>)</span>
+</div>
