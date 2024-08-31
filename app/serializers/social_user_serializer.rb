@@ -79,9 +79,13 @@ class SocialUserSerializer
   end
 
   attribute :next_charge_date do |social_user|
-    if (expired_date = social_user.user&.subscription&.expired_date) && expired_date > Time.current
+    if social_user.user&.subscription&.charge_required && (expired_date = social_user.user&.subscription&.expired_date) && expired_date > Time.current
       I18n.l(social_user.user&.subscription&.expired_date, format: :year_month_date)
     end
+  end
+
+  attribute :charge_required do |social_user|
+    !!social_user.user&.subscription&.charge_required
   end
 
   attribute :in_paid_plan do |social_user|
