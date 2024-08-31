@@ -126,7 +126,7 @@ module OptionsHelper
         nth_quota: reservation_customer.nth_quota,
         total_quota: reservation_customer.customer_ticket&.total_quota,
         ticket_code: reservation_customer.customer_ticket&.code,
-        ticket_expire_date: I18n.l(reservation_customer.customer_ticket&.expire_date)
+        ticket_expire_date: I18n.l(reservation_customer.customer_ticket&.expire_at&.to_date)
       )
     end.compact
   end
