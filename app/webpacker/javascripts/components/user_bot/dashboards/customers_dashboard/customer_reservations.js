@@ -92,7 +92,7 @@ const UserBotCustomerReservations = () =>{
                   {reservation.menu}
                   {reservation.ticket_code && (
                     <>
-                      <i className="fa fa-ticket-alt text-gray-500"></i> {reservation.ticket_code} ({reservation.nth_quota}/{reservation.total_quota}{I18n.t("common.times")})
+                      <i className="fa fa-ticket-alt text-gray-500"></i> {reservation.ticket_code} ({reservation.nth_quota}/{reservation.total_quota}{I18n.t("common.times")} {I18n.t("common.expire_date")}: {reservation.ticket_expire_date})
                     </>
                   )}
                 </div>
