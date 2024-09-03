@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "flow_backtracer"
 class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
   def personal_working_schedule
     shop_options = working_shop_options(shops: Current.business_owner.shops)

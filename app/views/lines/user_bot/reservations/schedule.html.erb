@@ -4,7 +4,7 @@
   </div>
 
   <% if @schedules.present? %>
-    <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: false, date: @date, my_calendar: false, _from: Lines::UserBot::ReservationsController::SCHEDULE_CHECKING %>
+    <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: false, date: @date, my_calendar: false, _from: Lines::UserBot::ReservationsController::SCHEDULE_CHECKING, related_user_ids: @related_user_ids %>
   <% else %>
     <h3 class="centerize margin-around"><%= I18n.t("user_bot.dashboards.reservation.no_existing_event") %></h3>
   <% end %>

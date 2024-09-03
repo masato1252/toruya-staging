@@ -230,9 +230,11 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
     booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids).where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
 
-    off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: Current.business_owner.owner_staff_accounts.pluck(:user_id)).includes(user: :profile)
+    off_schedules = CustomSchedule.closed.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: Current.business_owner.all_staff_related_users.pluck(:id)).includes(user: :profile)
 
-    @schedules = (reservations + booking_page_holder_schedules + off_schedules).each_with_object([]) do |schedule, schedules|
+    open_schedules = CustomSchedule.opened.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day).where(user_id: Current.business_owner.all_staff_related_users.pluck(:id)).includes(user: :profile)
+
+    @schedules = (reservations + booking_page_holder_schedules + off_schedules + open_schedules).each_with_object([]) do |schedule, schedules|
       if schedule.is_a?(Reservation)
         schedules << ReservationSerializer.new(schedule).attributes_hash
       elsif schedule.is_a?(BookingPageSpecialDate)
@@ -241,6 +243,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
         schedules << OffScheduleSerializer.new(schedule).attributes_hash
       end
     end.sort_by! { |option| option[:time] }
+    @related_user_ids = Current.business_owner.related_users.map(&:id)
 
     render layout: false
   end
