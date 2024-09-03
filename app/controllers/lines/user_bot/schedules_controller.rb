@@ -102,6 +102,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
         schedules << OffScheduleSerializer.new(schedule).attributes_hash
       end
     end.sort_by! { |option| option[:time] }
+    @related_user_ids = Current.business_owner.related_users.map(&:id)
 
     notification_presenter = NotificationsPresenter.new(view_context, Current.business_owner, params)
     @notification_messages = notification_presenter.data
