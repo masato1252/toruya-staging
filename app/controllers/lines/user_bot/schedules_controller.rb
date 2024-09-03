@@ -1,53 +1,25 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
+  include SchedulesHelper
+
   def mine
     working_shop_ids = current_social_user.shops.map(&:id).uniq
-    @date =
-      if params[:reservation_date].present?
-        Time.zone.parse(params[:reservation_date]).to_date
-      elsif params[:reservation_id].present?
-        Reservation.where(shop_id: working_shop_ids).find(params[:reservation_id]).start_time.to_date
-      else
-        @month_date = if params[:month_date].present?
-                        Time.zone.parse(params[:month_date]).to_date
-                      end
+    get_date(working_shop_ids)
 
-        Time.zone.now.to_date
-      end
+    schedules = Schedules::Events.run!(
+      working_shop_ids: working_shop_ids,
+      user_ids: current_social_user.current_users.pluck(:id),
+      date: @date,
+      month_date: @month_date
+    ) 
 
-    reservations = Reservation.where(shop_id: working_shop_ids)
-      .uncanceled
-      .includes(:menus, :customers, :staffs, shop: :user)
-      .order("reservations.start_time ASC")
-
-    reservations = @month_date ? reservations.in_month(@month_date) : reservations.in_date(@date)
-
-    reservations = reservations.find_all do |r|
+    schedules[:reservations] = schedules[:reservations].find_all do |r|
       user_ability = ability(r.shop.user, r.shop)
       user_ability.responsible_for_reservation(r)
     end
-    @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
-
-    # Mix off custom schedules and reservations
-    off_schedules = CustomSchedule.closed.where(user_id: current_social_user.current_users.pluck(:id))
-    off_schedules = @month_date ? off_schedules.where("start_time <= ? and end_time >= ?", @month_date.end_of_month, @month_date.beginning_of_month) : off_schedules.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day)
-    open_schedules = CustomSchedule.opened.where(user_id: current_social_user.current_users.pluck(:id))
-    open_schedules = @month_date ? open_schedules.where("start_time <= ? and end_time >= ?", @month_date.end_of_month, @month_date.beginning_of_month) : open_schedules.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day)
-    event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
-    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids)
-    booking_page_holder_schedules = @month_date ? booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @month_date.beginning_of_month, @month_date.end_of_month)
-    : booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
-
-    @schedules = (reservations + booking_page_holder_schedules + off_schedules + open_schedules).each_with_object([]) do |schedule, schedules|
-      if schedule.is_a?(Reservation)
-        schedules << ReservationSerializer.new(schedule).attributes_hash
-      elsif schedule.is_a?(BookingPageSpecialDate)
-        schedules << BookingPageSpecialDateSerializer.new(schedule).attributes_hash
-      else
-        schedules << OffScheduleSerializer.new(schedule).attributes_hash
-      end
-    end.sort_by! { |option| option[:time] }
+    @schedules = schedules_events(schedules)
+    @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
 
     notification_presenter = NotificationsPresenter.new(view_context, Current.user, params.merge(my_calendar: true))
     @notification_messages = notification_presenter.data
@@ -59,7 +31,26 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
 
   def index
     working_shop_ids = Current.business_owner.shop_ids
+    get_date(working_shop_ids)
 
+    schedules = Schedules::Events.run!(
+      working_shop_ids: working_shop_ids,
+      user_ids: Current.business_owner.all_staff_related_users.pluck(:id),
+      date: @date,
+      month_date: @month_date
+    ) 
+
+    @schedules = schedules_events(schedules)
+    @related_user_ids = Current.business_owner.related_users.map(&:id)
+    @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
+    notification_presenter = NotificationsPresenter.new(view_context, Current.business_owner, params)
+    @notification_messages = notification_presenter.data
+    @reservations_approval_flow = notification_presenter.reservations_approval_flow
+  end
+
+  private
+
+  def get_date(working_shop_ids)
     @date =
       if params[:reservation_date].present?
         Time.zone.parse(params[:reservation_date]).to_date
@@ -72,40 +63,5 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
 
         Time.zone.now.to_date
       end
-
-    reservations = Reservation.where(shop_id: working_shop_ids)
-      .uncanceled
-      .includes(:menus, :customers, :staffs, shop: :user)
-      .order("reservations.start_time ASC")
-
-    reservations = @month_date ? reservations.in_month(@month_date) : reservations.in_date(@date)
-
-    @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
-
-    # Mix off custom schedules and reservations
-    event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
-    booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids)
-    booking_page_holder_schedules = @month_date ? booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @month_date.beginning_of_month, @month_date.end_of_month)
-    : booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", @date.beginning_of_day, @date.end_of_day)
-
-    off_schedules = CustomSchedule.closed.where(user_id: Current.business_owner.all_staff_related_users.pluck(:id)).includes(user: :profile)
-    off_schedules = @month_date ? off_schedules.where("start_time <= ? and end_time >= ?", @month_date.end_of_month, @month_date.beginning_of_month) : off_schedules.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day)
-    open_schedules = CustomSchedule.opened.where(user_id: Current.business_owner.all_staff_related_users.pluck(:id)).includes(user: :profile)
-    open_schedules = @month_date ? open_schedules.where("start_time <= ? and end_time >= ?", @month_date.end_of_month, @month_date.beginning_of_month) : open_schedules.where("start_time <= ? and end_time >= ?", @date.end_of_day, @date.beginning_of_day)
-
-    @schedules = (reservations + booking_page_holder_schedules + off_schedules + open_schedules).each_with_object([]) do |schedule, schedules|
-      if schedule.is_a?(Reservation)
-        schedules << ReservationSerializer.new(schedule).attributes_hash
-      elsif schedule.is_a?(BookingPageSpecialDate)
-        schedules << BookingPageSpecialDateSerializer.new(schedule).attributes_hash
-      else
-        schedules << OffScheduleSerializer.new(schedule).attributes_hash
-      end
-    end.sort_by! { |option| option[:time] }
-    @related_user_ids = Current.business_owner.related_users.map(&:id)
-
-    notification_presenter = NotificationsPresenter.new(view_context, Current.business_owner, params)
-    @notification_messages = notification_presenter.data
-    @reservations_approval_flow = notification_presenter.reservations_approval_flow
   end
 end
