@@ -245,6 +245,7 @@ ja:
     right_away_after_purchased: 購入後すぐ
     meeting_url: ミーティングURL
     booking_page_url: 予約ページURL
+    booking_info_url: 予約詳細ページリンク
     event: イベント
     manual: マニュアル
     item:
