@@ -125,8 +125,7 @@ const BookingOptionEdit =({props}) => {
   }
 
   const isSubmitDisabled = () => {
-    return formState.isSubmitting ||
-      (props.attribute == "price" && watch("price_type") == "ticket" && watch("amount_cents") > 50000)
+    return formState.isSubmitting
   }
 
   return (
