@@ -1,0 +1,13 @@
+<div class="flex justify-around mb-8">
+  <%= link_to reservations_lines_customers_dashboard_path(current_owner.public_id, social_service_user_id: params[:social_service_user_id]), class: "w-6-12 no-underline #{local_assigns[:active] == :reservations ? 'border border-b-0 border-solid border-gray-500' : 'border-0 border-b border-solid border-gray-500 bg-gray-300'} " do %>
+    <div class="centerize text-sm text-gray-500 p-6">
+      <%= t("customer_dashboard.reservations") %>
+    </div>
+  <% end %>
+
+  <%= link_to online_services_lines_customers_dashboard_path(current_owner.public_id, social_service_user_id: params[:social_service_user_id]), class: "w-6-12 no-underline #{local_assigns[:active] == :online_services ? 'border border-b-0 border-solid border-gray-500' : 'border-0 border-b border-solid border-gray-500 bg-gray-300'} " do %>
+    <div class="centerize text-sm text-gray-500 p-6">
+      <%= t("customer_dashboard.online_services") %>
+    </div>
+  <% end %>
+</div>

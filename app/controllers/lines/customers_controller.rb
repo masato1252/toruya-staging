@@ -24,9 +24,11 @@ class Lines::CustomersController < ActionController::Base
         cookies.permanent[:line_social_user_id_of_customer] = _id
       elsif params[:temp_encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:temp_encrypted_social_service_user_id])
-        
+
         cookies[:temp_line_social_user_id_of_customer] = { value: _id, expires: 5.minutes}
         _id
+      elsif params[:social_service_user_id].present?
+        params[:social_service_user_id]
       else
         if cookies[:temp_line_social_user_id_of_customer].present?
           cookies[:temp_line_social_user_id_of_customer][:value]
@@ -63,7 +65,7 @@ class Lines::CustomersController < ActionController::Base
   helper_method :business_owner_id
 
   def set_locale
-    I18n.locale = current_social_customer&.locale || current_toruya_social_user&.locale || I18n.default_locale
+    I18n.locale = current_owner.locale
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
 end

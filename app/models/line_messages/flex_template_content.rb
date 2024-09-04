@@ -196,7 +196,7 @@ module LineMessages
       }
     end
 
-    def self.next_card(line_keyword:)
+    def self.next_card(action_template:)
       {
         "type": "bubble",
         "body": {
@@ -206,11 +206,7 @@ module LineMessages
           "contents": [
             {
               "type": "button",
-              "action": {
-                "type": "message",
-                "label": "More",
-                "text": "#{I18n.t("common.more")} - #{line_keyword}"
-              },
+              "action": action_template,
               "flex": 1,
               "gravity": "center"
             }

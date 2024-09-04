@@ -100,6 +100,11 @@ ja:
         reschedule_reason: 予約日時が変更したい
         no_longer_needed_reason: 必要がなくなった
         other_reason: その他
+  customer_dashboard:
+    no_reservations: 予約がありません
+    no_online_services: オンラインサービスがありません
+    reservations: 予約
+    online_services: オンラインサービス
   online_service_page:
     special_price_time: 特別価格の購入期限まで
     register_now: 今すぐ登録する

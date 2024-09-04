@@ -47,7 +47,11 @@ module Notifiers
 
                 limited_relations.map do |relation|
                   compose(Templates::OnlineService, online_service_customer_relation: relation)
-                end.push(LineMessages::FlexTemplateContent.next_card(line_keyword: line_keyword))
+                end.push(LineMessages::FlexTemplateContent.next_card(
+                  action_template: LineActions::Message.template(
+                    text: "#{I18n.t("common.more")} - #{line_keyword}",
+                    label: "More"
+                  )))
               else
                 relations.map do |relation|
                   compose(Templates::OnlineService, online_service_customer_relation: relation)

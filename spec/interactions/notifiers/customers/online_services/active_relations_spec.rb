@@ -31,7 +31,12 @@ RSpec.describe Notifiers::Customers::OnlineServices::ActiveRelations, :with_line
 
       it "adds next card" do
         stub_const("LineClient::COLUMNS_NUMBER_LIMIT", 2)
-        expect(LineMessages::FlexTemplateContent).to receive(:next_card).with(line_keyword: "#{I18n.t("line.bot.keywords.services")} #{third_relation.id}").once.and_call_original
+        expect(LineMessages::FlexTemplateContent).to receive(:next_card).with(
+          action_template: LineActions::Message.template(
+            text: "#{I18n.t("common.more")} - #{I18n.t("line.bot.keywords.services")} #{third_relation.id}",
+            label: "More"
+          )
+        ).once.and_call_original
 
         outcome
       end

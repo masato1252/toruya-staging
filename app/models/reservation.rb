@@ -60,6 +60,7 @@ class Reservation < ApplicationRecord
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :in_month, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_month, date.end_of_month) }
   scope :future, -> { where("start_time > ?", Time.current) }
+  scope :past, -> { where("start_time <= ?", Time.current) }
   scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)).active }
   scope :active, -> { where(deleted_at: nil) }
   scope :reminderable, -> { where(aasm_state: REMINDERABLE_STATES) }

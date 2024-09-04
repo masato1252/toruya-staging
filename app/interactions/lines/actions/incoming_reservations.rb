@@ -44,14 +44,31 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
     end
 
     if contents.blank?
-      compose(
-        SocialMessages::Create,
-        social_customer: social_customer,
-        content: I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"),
-        readed: true,
-        message_type: SocialMessage.message_types[:bot]
-      )
+      if customer.reservations.exists?
+        Lines::Actions::CustomerDashboard.run(social_customer: social_customer)
+      else
+        compose(
+          SocialMessages::Create,
+          social_customer: social_customer,
+          content: I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"),
+          readed: true,
+          message_type: SocialMessage.message_types[:bot]
+        )
+      end
     else
+      contents.push(
+        LineMessages::FlexTemplateContent.next_card(
+          action_template: LineActions::Uri.template(
+            label: I18n.t("line.actions.label.incoming_reservations"),
+            url: Rails.application.routes.url_helpers.reservations_lines_customers_dashboard_url(
+              public_id: user.public_id,
+              social_service_user_id: social_customer.social_user_id
+            ),
+            key: social_customer.social_rich_menu_key
+          )
+        )
+      )
+
       line_response = LineClient.flex(
         social_customer,
         LineMessages::FlexTemplateContainer.carousel_template(
@@ -77,5 +94,9 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
 
   def customer
     @customer ||= social_customer.customer
+  end
+
+  def user
+    @user ||= social_customer.social_account.user
   end
 end

@@ -95,3 +95,6 @@ ja:
         contact:
           contact_us: お問い合わせ
           contact_us_with_text_or_phone: メッセージ送信、またはお電話にてお問い合わせください。
+        customer_dashboard:
+          message: 過去の予約を確認できます
+          details: 詳細

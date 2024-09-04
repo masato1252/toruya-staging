@@ -1,0 +1,9 @@
+<%= render "lines/customers/dashboards/nav", active: :online_services %>
+
+<% if @online_service_relations.present? %>
+  <%= render "lines/customers/dashboards/online_services", online_service_relations: @online_service_relations %>
+<% else %>
+  <div class="margin-around centerize text-gray-500 border border-solid border-gray-500 rounded-md py-3">
+    <%= t("customer_dashboard.no_online_services") %>
+  </div>
+<% end %>

@@ -98,7 +98,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def inactive?
-    state == "inactive" # equal !legal_to_access?
+    state == "inactive"
   end
 
   # available means you are legal to use, but the service doesn't start yet

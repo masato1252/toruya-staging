@@ -1,0 +1,9 @@
+<%= render "lines/customers/dashboards/nav", active: :reservations %>
+
+<% if @reservation_customers.present? %>
+  <%= render "lines/customers/dashboards/reservation_customers", reservation_customers: @reservation_customers %>
+<% else %>
+  <div class="margin-around centerize text-gray-500 border border-solid border-gray-500 rounded-md py-3">
+    <%= t("customer_dashboard.no_reservations") %>
+  </div>
+<% end %>

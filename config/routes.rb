@@ -27,6 +27,13 @@ Rails.application.routes.draw do
           get "/:slug/new", action: "new", as: :new
         end
       end
+
+      resource :dashboard, only: [] do
+        collection do
+          get "/:public_id/reservations(/:social_service_user_id)", action: "reservations", as: :reservations
+          get "/:public_id/online_services(/:social_service_user_id)", action: "online_services", as: :online_services
+        end
+      end
     end
 
     scope module: :liff, path: :liff, as: :liff do
