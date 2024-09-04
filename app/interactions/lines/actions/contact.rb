@@ -24,7 +24,7 @@ class Lines::Actions::Contact < ActiveInteraction::Base
         end
       else
         user.shops.map do |shop|
-          if shop.phone_number.present?
+          if shop.phone_number.gsub(/\D/, '').present?
             LineActions::Uri.new(
               label: "#{shop.short_name}#{I18n.t("action.call")}",
               url: "tel:#{shop.phone_number.gsub(/\D/, '')}",
