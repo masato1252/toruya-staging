@@ -7,6 +7,8 @@ class CustomerPayments::StripePayReservation < ActiveInteraction::Base
   object :payment, class: CustomerPayment
 
   def execute
+    customer.reload
+
     begin
       stripe_charge = Stripe::Charge.create(
         {

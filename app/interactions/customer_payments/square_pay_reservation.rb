@@ -9,6 +9,8 @@ class CustomerPayments::SquarePayReservation < ActiveInteraction::Base
   string :location_id
 
   def execute
+    customer.reload
+
     begin
       square_payment_response = owner.square_client.payments.create_payment(
         body: {
