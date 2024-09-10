@@ -100,6 +100,7 @@ class Reservation < ApplicationRecord
   end
 
   def responsible_by_staff?(staff)
+    return false if !staff
     reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id } : for_staff(staff)
   end
 
