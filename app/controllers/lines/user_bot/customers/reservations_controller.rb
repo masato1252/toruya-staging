@@ -108,6 +108,25 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     end
   end
 
+  def edit_ticket_modal
+    @reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+    render layout: false
+  end
+
+  def update_ticket
+    reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+    outcome = CustomerTickets::Update.run(customer_ticket: reservation_customer.customer_ticket, expire_at: params[:expire_at])
+
+    if outcome.invalid?
+      Rollbar.error(
+        "Unexpected CustomerTickets::Update",
+        errors: outcome.errors.details
+      )
+    end
+
+    redirect_to lines_user_bot_customers_path(business_owner_id: reservation_customer.reservation.user_id, customer_id: params[:customer_id], reservation_id: params[:reservation_id], user_id: Current.business_owner.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations])
+  end
+
   private
 
   def set_customer
