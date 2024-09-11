@@ -3,7 +3,7 @@
 module Admin
   class ChatsController < AdminController
     def index
-      @selected_social_user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id]) || User.find_by(id: params[:user_id])&.social_user
+      @selected_social_user = SocialUser.where.not(user_id: nil).find_by(social_service_user_id: params[:social_service_user_id]) || User.find_by(id: params[:user_id])&.social_user || SocialUser.find_by(social_service_user_id: params[:social_service_user_id])
     end
 
     def create
