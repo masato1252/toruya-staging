@@ -17,6 +17,7 @@
     ranks: rank_options,
     total_customers_number: @total_customers_number,
     draft_message_content: @draft_message_content,
+    customer_tags: current_user.user_setting.customer_tags,
     i18n: {
     }.merge!([
       t("reservation"),

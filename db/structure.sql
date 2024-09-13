@@ -1271,7 +1271,8 @@ CREATE TABLE public.customers (
     menu_ids character varying[] DEFAULT '{}'::character varying[],
     online_service_ids character varying[] DEFAULT '{}'::character varying[],
     mixpanel_profile_last_set_at timestamp without time zone,
-    square_customer_id character varying
+    square_customer_id character varying,
+    tags character varying[] DEFAULT '{}'::character varying[]
 );
 
 

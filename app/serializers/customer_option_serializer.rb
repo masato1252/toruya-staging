@@ -4,7 +4,7 @@ class CustomerOptionSerializer
   include JSONAPI::Serializer
   set_key_transform :camel_lower
 
-  attribute :id, :memo, :address, :birthday
+  attribute :id, :memo, :address, :birthday, :tags
   attribute :user_id, :contact_group_id, :rank_id, :last_name, :first_name,
     :phonetic_last_name, :phonetic_first_name, :custom_id, :updated_at, :reminder_permission,
     :phone_numbers_details, :emails_details, :address_details, :rank, :simple_address

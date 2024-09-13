@@ -4,6 +4,7 @@ import { Field } from "react-final-form";
 import _ from "lodash";
 import { sortableHandle } from "react-sortable-hoc";
 import Routes from 'js-routes.js'
+import { WithContext as ReactTags } from "react-tag-input";
 
 const ErrorMessage = ({ error }) => (
   <p className="field-error-message" dangerouslySetInnerHTML={{ __html: error }} />
@@ -467,6 +468,71 @@ const TicketOptionsFields = ({ setValue, watch, price, register, ticket_expire_d
   )
 }
 
+const CheckboxSearchFields = ({ register, options, field_name, search_placeholder}) => {
+  const [checkbox_options, setCheckboxOptions] = useState(options);
+  const [query_text, setQueryText] = useState("");
+
+  return (
+    <>
+      <div className="field-row">
+        <input
+          type="text"
+          onChange={(event) => {
+            setQueryText(event.target.value)
+            let re = new RegExp(event.target.value, "gi");
+            setCheckboxOptions(options.filter((option) => option.label.match(re) ))
+          }}
+          value={query_text}
+          name="queryText"
+          placeholder={search_placeholder}
+        />
+      </div>
+      {checkbox_options.map((option, index) => {
+        return (
+          <div
+            className="field-row flex-start dotdotdot"
+            key={`option-${option.value}`}
+          >
+            <input
+              type="checkbox"
+              name={field_name}
+              id={`option-${option.value}`}
+              ref={register()}
+              value={option.value}
+              defaultChecked={options.length && index == 0}
+            />
+            <label htmlFor={`option-${option.value}`}>{option.label}</label>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
+const TagsInput = ({ suggestions, tags, setTags }) => {
+  const handleDelete = (index) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
+
+  const handleAddition = (tag) => {
+    setTags((prevTags) => {
+      return [...prevTags, tag];
+    });
+  };
+
+  return (
+    <ReactTags
+      tags={tags}
+      inputFieldPosition="top"
+      suggestions={suggestions}
+      handleDelete={handleDelete}
+      handleAddition={handleAddition}
+      placeholder={I18n.t("common.press_enter_to_add_tag")}
+      allowAdditionFromPaste
+    />
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -497,5 +563,7 @@ export {
   SubscriptionRadio,
   ChangeLogsNotifications,
   TicketPriceDesc,
-  TicketOptionsFields
+  TicketOptionsFields,
+  CheckboxSearchFields,
+  TagsInput
 };

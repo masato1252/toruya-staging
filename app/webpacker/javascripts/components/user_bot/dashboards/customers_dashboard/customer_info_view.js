@@ -118,6 +118,10 @@ const UserBotCustomerInfoView = () => {
           <dt>{i18n.memo}</dt>
           <dd>{selected_customer.memo}</dd>
         </dl>
+        <dl className="tags">
+          <dt>{I18n.t("user_bot.dashboards.settings.membership.episodes.tag_input_placeholder")}</dt>
+          <dd>{(selected_customer.tags || []).join(", ")}</dd>
+        </dl>
       </div>
 
       <BottomBar />
