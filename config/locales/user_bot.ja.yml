@@ -487,6 +487,8 @@ ja:
         specific_available_service_customers: 特定サービスを利用中の顧客
         online_service_for_active_customers: 特定サービスを利用中の顧客
         specific_available_service_customers_desc: 特定のオンラインサービスをご利用中の顧客に一斉配信する
+        customers_with_tags: 特定タグの顧客
+        customers_with_tags_desc: 特定のタグを持つ顧客に一斉配信するV
         approximate_customers_count: 配信予定数
         what_menu_do_you_want: どのメニューの利用客に配信しますか？
         what_service_do_you_want: どのサービスの利用客に配信しますか？

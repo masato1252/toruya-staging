@@ -23,8 +23,8 @@
 
 class Broadcast < ApplicationRecord
   belongs_to :user
-  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers"]
-  NORMAL_TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers"]
+  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers", "customers_with_tags"]
+  NORMAL_TYPES = TYPES - ["reservation_customers"]
 
   scope :ordered, -> { order(Arel.sql("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC"))  }
   scope :normal, -> { where(query_type: NORMAL_TYPES) }
@@ -42,7 +42,8 @@ class Broadcast < ApplicationRecord
     online_service_for_active_customers: "online_service_for_active_customers",
     vip_customers: "vip_customers",
     reservation_staffs: "reservation_staffs",
-    reservation_customers: "reservation_customers"
+    reservation_customers: "reservation_customers",
+    customers_with_tags: "customers_with_tags"
   }
 
   def broadcast_at
@@ -61,6 +62,8 @@ class Broadcast < ApplicationRecord
         user.menus.find(id: filter["value"])&.name
       when "online_service_ids"
         user.online_services.find(id: filter["value"])&.name
+      when "tags"
+        filter["value"]
       end
 
     I18n.t("broadcast.target.specific_product", product_name: product_name)
@@ -77,6 +80,8 @@ class Broadcast < ApplicationRecord
         user.menus.find_by(id: filter["value"])&.name
       when "online_service_ids"
         user.online_services.find_by(id: filter["value"]).name
+      when "tags"
+        filter["value"]
       end
     end.compact
   end

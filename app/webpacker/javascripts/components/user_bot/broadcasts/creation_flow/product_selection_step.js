@@ -18,6 +18,80 @@ const ProductSelectionStep = ({next, step, prev}) => {
 
   const renderProductDropDown = () => {
     switch (query_type) {
+      case "customers_with_tags":
+        return (
+          <>
+            <div className="margin-around">
+              <h3>
+                {I18n.t("user_bot.dashboards.settings.membership.episodes.tag_history")}
+              </h3>
+
+              {props.customer_tags.map(tag => (
+                <button
+                  key={tag}
+                  className="btn btn-gray mx-2 my-2"
+                  onClick={() => {
+                    dispatch({
+                      type: "SET_ATTRIBUTE",
+                      payload: {
+                        attribute: "query",
+                        value:  {
+                          operator: "and",
+                          filters: _.uniqBy([
+                            ...(query?.filters || []),
+                            {
+                              field: "tags",
+                              condition: "contains",
+                              value: tag
+                            }
+                          ], 'value')
+                        }
+                      }
+                    })
+                  }}>
+                  {tag}
+                </button>
+              ))}
+            </div>
+
+            <hr />
+            <div className="margin-around">
+              {query?.filters?.map(condition => (
+                <button
+                  key={condition.value}
+                  className="btn btn-gray mx-2 my-2"
+                  onClick={() => 
+                    {
+                      dispatch({
+                        type: "SET_ATTRIBUTE",
+                        payload: {
+                          attribute: "query",
+                          value:  {
+                            operator: "and",
+                            filters: query.filters.filter(item => item.value !== condition.value)
+                          }
+                        }
+                      })
+                    }
+                  }>
+                  {condition.value}
+                </button>
+              ))}
+
+              {query?.filters && query.filters.length !== 0 && (
+                <div className="centerize">
+                  <div className="flex justify-evenly my-4">
+                    <span>{I18n.t("user_bot.dashboards.broadcast_creation.approximate_customers_count")}</span>
+                    <span className="item-data">{customers_count}</span>
+                  </div>
+                </div>
+              )}
+              <a href='https://toruya.com/faq/broadcast_count-zero'>
+                <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
+              </a>
+            </div>
+          </>
+        )
       case "menu":
         return (
           <>
