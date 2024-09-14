@@ -19,10 +19,10 @@ RSpec.describe Broadcasts::QueryActiveServiceCustomers do
     context "A or B" do
       let!(:matched_customer) { FactoryBot.create(:customer, user: user, online_service_ids: [online_service1.id]) }
       let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, online_service_ids: [online_service3.id]) }
-      let!(:unmatched_customer2) { FactoryBot.create(:customer, user: user, online_service_ids: [online_service1.id], updated_at: Time.current.advance(years: -1, days: -1)) }
+      let!(:matched_customer2) { FactoryBot.create(:customer, user: user, online_service_ids: [online_service1.id], updated_at: Time.current.advance(years: -1, days: -1)) }
       let!(:online_service_customer_relation1) { FactoryBot.create(:online_service_customer_relation, :free, customer: matched_customer, online_service: online_service1) }
       let!(:online_service_customer_relation2) { FactoryBot.create(:online_service_customer_relation, :free, customer: unmatched_customer, online_service: online_service2) }
-      let!(:online_service_customer_relation3) { FactoryBot.create(:online_service_customer_relation, :free, customer: unmatched_customer2, online_service: online_service1) }
+      let!(:online_service_customer_relation3) { FactoryBot.create(:online_service_customer_relation, :free, customer: matched_customer2, online_service: online_service1) }
 
       let(:query) do
         {
@@ -47,7 +47,7 @@ RSpec.describe Broadcasts::QueryActiveServiceCustomers do
 
         expect(result).to include(matched_customer)
         expect(result).not_to include(unmatched_customer)
-        expect(result).not_to include(unmatched_customer2)
+        expect(result).to include(matched_customer2)
       end
     end
 

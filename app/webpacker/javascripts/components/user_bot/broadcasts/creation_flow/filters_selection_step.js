@@ -14,6 +14,18 @@ const FiltersSelectionStep = ({next, step}) => {
     if (props.broadcast.query_type) next()
   }, [])
 
+  useEffect(() => {
+    dispatch({
+      type: "SET_ATTRIBUTE",
+      payload: {
+        attribute: "query",
+        value:  {
+          filters: []
+        }
+      }
+    })
+  }, [])
+
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
@@ -109,6 +121,25 @@ const FiltersSelectionStep = ({next, step}) => {
         <h4>{I18n.t("user_bot.dashboards.broadcast_creation.vip_customers")}</h4>
         <p className="break-line-content">
           {I18n.t("user_bot.dashboards.broadcast_creation.vip_customers_desc")}
+        </p>
+      </button>
+      <button
+        onClick={() => {
+          dispatch({
+            type: "SET_ATTRIBUTE",
+            payload: {
+              attribute: "query_type",
+              value: "customers_with_birthday"
+            }
+          })
+
+          next()
+        }}
+        className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
+        >
+        <h4>{I18n.t("user_bot.dashboards.broadcast_creation.customers_with_birthday")}</h4>
+        <p className="break-line-content">
+          {I18n.t("user_bot.dashboards.broadcast_creation.customers_with_birthday_desc")}
         </p>
       </button>
       <button

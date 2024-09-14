@@ -28,6 +28,10 @@ module Broadcasts
           not_contains_scoped(filter)
         when "eq"
           eq_scoped(filter)
+        when "age_range"
+          age_range_scoped(filter)
+        when "date_month_eq"
+          date_month_eq_scoped(filter)
         end
 
       query["filters"][1..-1].each do |filter|
@@ -39,6 +43,10 @@ module Broadcasts
             not_contains_scoped(filter)
           when "eq"
             eq_scoped(filter)
+          when "age_range"
+            age_range_scoped(filter)
+          when "date_month_eq"
+            date_month_eq_scoped(filter)
           end
 
         if query["operator"] == "or"
@@ -48,7 +56,7 @@ module Broadcasts
         end
       end
 
-      scoped.active_in(1.year.ago)
+      scoped#.active_in(1.year.ago)
     end
 
     private
@@ -63,6 +71,32 @@ module Broadcasts
 
     def eq_scoped(filter)
       user.customers.joins(:rank).where("#{filter["field"]} = ?", filter["value"])
+    end
+
+    # {
+    #   "filters" => [
+    #     {
+    #       "field" => "birthday",
+    #       "value" => [18, 25],
+    #       "condition" => "age_range"
+    #     },
+    #     {
+    #       "field" => "birthday",
+    #       "value" => 3,
+    #       "condition" => "date_month_eq"
+    #     }
+    #   ],
+    #   "operator" => "and"
+    # }
+    def age_range_scoped(filter)
+      year_end = Time.zone.now.year - filter["value"][0].to_i
+      year_start = Time.zone.now.year - filter["value"][1].to_i
+
+      user.customers.where("EXTRACT(YEAR FROM #{filter["field"]}) >= ?", year_start).where("EXTRACT(YEAR FROM #{filter["field"]}) <= ?", year_end)
+    end
+
+    def date_month_eq_scoped(filter)
+      user.customers.where("EXTRACT(MONTH FROM #{filter["field"]}) = ?", filter["value"].to_i)
     end
   end
 end

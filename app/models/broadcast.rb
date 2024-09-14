@@ -23,7 +23,7 @@
 
 class Broadcast < ApplicationRecord
   belongs_to :user
-  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers", "customers_with_tags"]
+  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers", "customers_with_tags", "customers_with_birthday"]
   NORMAL_TYPES = TYPES - ["reservation_customers"]
 
   scope :ordered, -> { order(Arel.sql("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC"))  }
@@ -43,7 +43,8 @@ class Broadcast < ApplicationRecord
     vip_customers: "vip_customers",
     reservation_staffs: "reservation_staffs",
     reservation_customers: "reservation_customers",
-    customers_with_tags: "customers_with_tags"
+    customers_with_tags: "customers_with_tags",
+    customers_with_birthday: "customers_with_birthday"
   }
 
   def broadcast_at
@@ -64,6 +65,14 @@ class Broadcast < ApplicationRecord
         user.online_services.find(id: filter["value"])&.name
       when "tags"
         filter["value"]
+      when "birthday"
+        if filter["condition"] == "age_range"
+          age_start = filter["value"][0].to_i
+          age_end = filter["value"][1].to_i
+          I18n.t("user_bot.dashboards.broadcast_creation.age_range_desc", age_start: age_start, age_end: age_end)
+        else
+          I18n.t("user_bot.dashboards.broadcast_creation.birthday_month_desc", month: filter["value"])
+        end
       end
 
     I18n.t("broadcast.target.specific_product", product_name: product_name)
@@ -82,6 +91,14 @@ class Broadcast < ApplicationRecord
         user.online_services.find_by(id: filter["value"]).name
       when "tags"
         filter["value"]
+      when "birthday"
+        if filter["condition"] == "age_range"
+          age_start = filter["value"][0].to_i
+          age_end = filter["value"][1].to_i
+          I18n.t("user_bot.dashboards.broadcast_creation.age_range_desc", age_start: age_start, age_end: age_end)
+        else
+          I18n.t("user_bot.dashboards.broadcast_creation.birthday_month_desc", month: filter["value"])
+        end
       end
     end.compact
   end

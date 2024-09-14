@@ -96,6 +96,8 @@ ja:
     load_more: もっと見る
     no_more_message: メッセージ終了
   common:
+    age: 年齢
+    years_old: 歳
     default: デフォルト
     no_service_warning_html: <h1>利用店舗様の都合によりご利用いただけません。<br>店舗責任者にお問い合わせください。</h1>
     processing: 送信中
@@ -161,6 +163,7 @@ ja:
     done: 完了
     required_label: 必須項目
     minute: 分
+    month: 月
     total: 合計
     copied: コピー完了
     of: の
@@ -235,6 +238,7 @@ ja:
     one_time_pay: １回払い
     multiple_times_pay: 分割払い
     month_pay: 月額プラン
+    birthday_month: 誕生月別
     year_pay: 年額プラン
     contact_owner_directly: 店舗に直接ご確認ください
     usage_status: ご利用状況
