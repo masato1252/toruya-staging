@@ -6,8 +6,8 @@
       </h4>
     </div>
     <div class="modal-body">
-      <%= t("reservation.modal.refund.message") %>
-      <%= render "refund_reservation_form", reservation_customer: @reservation_customer %>
+      <%= t("reservation.modal.refund.message", provider: payment_provider_label(@paid_payment.provider)) %>
+      <%= render "refund_reservation_form", reservation_customer: @reservation_customer, paid_payment: @paid_payment %>
     </div>
   </div>
 </div>

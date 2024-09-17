@@ -7,12 +7,12 @@
     </div>
     <%= form_with url: refund_lines_user_bot_customer_payment_path(@payment.customer.user_id, @payment), local: true do |form| %>
       <div class="modal-body">
-        <%= t("reservation.modal.refund.message") %><br />
+        <%= t("reservation.modal.refund.message", provider: payment_provider_label(@payment.provider)) %><br />
         <%= t("common.price") %><%= text_field_tag :amount, @payment.amount.fractional %><%= t("common.unit") %>
       </div>
       <div class="modal-footer centerize">
         <button type="button" class="btn btn-yellow" data-dismiss="modal"><%= t("common.close") %></button>
-        <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message")  } %>
+        <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message", provider: payment_provider_label(@payment.provider))  } %>
       </div>
     <% end %>
   </div>

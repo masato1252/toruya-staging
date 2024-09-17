@@ -158,9 +158,9 @@ ja:
         paid_customers_title: 支払済の顧客
       refund:
         title: 返金する
-        message: 返金は Stripe を通して行われます。返済のタイミングや手数料については Stripe へお問合せください。
+        message: "返金は %{provider} を通して行われます。返済のタイミングや手数料については %{provider} へお問合せください。"
         submit_btn: 返　金
-        confirmation_message: このままStripeから返金を実行しますか？
+        confirmation_message: "このまま %{provider} から返金を実行しますか？"
       staff_states:
         title: 予約を承認
         message: "%{total_staffs_number}人中%{accepted_staffs_number}人のスタッフがこの予約を承認しています。"

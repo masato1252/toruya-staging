@@ -65,6 +65,10 @@ class ReservationCustomer < ApplicationRecord
 
   scope :active, -> { where(state: ACTIVE_STATES) }
 
+  def paid_payment
+    @paid_payment ||= customer.customer_payments.completed.where(product: self).first
+  end
+
   def reservation_state
     if accepted?
       reservation.aasm_state

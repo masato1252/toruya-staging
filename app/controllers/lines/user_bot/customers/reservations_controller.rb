@@ -79,6 +79,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
 
   def refund_modal
     @reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+    @paid_payment = @reservation_customer.paid_payment
     render layout: false
   end
 

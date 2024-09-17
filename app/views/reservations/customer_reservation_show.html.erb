@@ -65,7 +65,7 @@
             </dd>
           <% end %>
 
-          <% if @reservation_customer.payment_paid? && @user_ability.can?(:refund, @reservation) %>
+          <% if @paid_payment && @reservation_customer.payment_paid? && @user_ability.can?(:refund, @reservation) %>
             <dd>
               <%= modal_link_to(
                 t("reservation.refund"),
