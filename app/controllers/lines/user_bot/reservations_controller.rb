@@ -19,7 +19,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @user_ability = ability(@shop_user, @reservation.shop)
     @customer = Customer.find_by(id: params[:customer_id])
     @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:customer_id])
-    @paid_payment = @reservation_customer.paid_payment
+    @paid_payment = @reservation_customer&.paid_payment
 
     template = params[:from] == "customer_dashboard" ? "reservations/customer_reservation_show" : "reservations/show"
 
