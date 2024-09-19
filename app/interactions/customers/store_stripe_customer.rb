@@ -19,8 +19,8 @@ module Customers
           return stripe_customer_id
         rescue => e
           Rollbar.error(e)
-          errors.add(:authorize_token, :something_wrong)
-          return
+          # errors.add(:authorize_token, :something_wrong)
+          # return
           # raise e if e.code != "resource_missing"
         end
       end
