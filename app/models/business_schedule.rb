@@ -54,6 +54,13 @@ class BusinessSchedule < ApplicationRecord
   end
 
   def end_time_on(date)
-    end_time.change(year: date.year, month: date.month, day: date.day)
+    date_start_time = start_time.change(year: date.year, month: date.month, day: date.day)
+    date_end_time = end_time.change(year: date.year, month: date.month, day: date.day)
+
+    if date_end_time > date_start_time
+      date_end_time
+    else
+      date_end_time.tomorrow
+    end
   end
 end
