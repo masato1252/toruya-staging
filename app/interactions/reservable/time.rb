@@ -36,6 +36,12 @@ module Reservable
         return booking_page_schedules
       end
 
+      if booking_page && booking_page.booking_page_special_dates.exists?
+        return booking_page.booking_page_special_dates.where(start_at: date.all_day).map do |matched_special_date|
+          matched_special_date.start_at..matched_special_date.end_at
+        end
+      end
+
       # normal business day
       business_working_schedules
     end
