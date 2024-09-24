@@ -11,7 +11,7 @@ class Lines::Actions::Contact < ActiveInteraction::Base
 
     actions =
       if user.shops.count == 1 || user.shops.pluck(:phone_number).uniq.count == 1
-        if user.shops.first.phone_number.present?
+        if user.shops.first.phone_number&.gsub(/\D/, '').present?
           [
             LineActions::Uri.new(
               label: I18n.t("action.call"),
