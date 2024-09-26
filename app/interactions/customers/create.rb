@@ -8,7 +8,7 @@ class Customers::Create < ActiveInteraction::Base
   string :customer_phonetic_first_name, default: nil
   string :customer_phone_number, default: nil
   string :customer_email, default: nil
-  boolean :customer_reminder_permission, default: false
+  boolean :customer_reminder_permission, default: true
 
   def execute
     begin
