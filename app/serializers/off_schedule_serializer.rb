@@ -3,7 +3,7 @@
 class OffScheduleSerializer
   include JSONAPI::Serializer
 
-  attributes :id, :reason, :start_time_date_part, :start_time_time_part, :end_time_date_part, :end_time_time_part, :user_id, :open
+  attributes :id, :reason, :start_time_date_part, :start_time_time_part, :end_time_date_part, :end_time_time_part, :user_id, :open, :start_time, :end_time
   attribute :start_time_date_part, &:start_time_date
   attribute :start_time_time_part, &:start_time_time
   attribute :end_time_date_part, &:end_time_date
