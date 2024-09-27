@@ -38,6 +38,8 @@ module BookingOptions
       # For changing menu required_time
       integer :menu_id, default: nil
       integer :menu_required_time, default: nil
+
+      array :booking_page_ids, default: []
     end
 
     def execute
@@ -51,6 +53,8 @@ module BookingOptions
           end
         when "menu_restrict_order"
           booking_option.update(attrs.slice(update_attribute))
+        when "booking_page_ids"
+          booking_option.update(booking_page_ids: attrs[:booking_page_ids])
         when "new_pure_menu"
           ApplicationRecord.transaction do
             category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))

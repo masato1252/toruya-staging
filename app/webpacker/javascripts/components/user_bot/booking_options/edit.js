@@ -7,7 +7,7 @@ import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
-import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, CheckboxSearchFields } from "shared/components"
 import { BookingOptionServices } from "user_bot/api"
 import MenuRestrictOrderField from "./menu_restrict_order_field";
 import BookingStartAtField from "components/user_bot/booking_pages/booking_start_at_field";
@@ -154,6 +154,18 @@ const BookingOptionEdit =({props}) => {
         );
       case "menu_restrict_order":
         return <MenuRestrictOrderField i18n={i18n} register={register} />
+      case "booking_page_ids":
+        return (
+          <CheckboxSearchFields
+            setValue={setValue}
+            watch={watch}
+            register={register}
+            field_name="booking_page_ids[]"
+            options={props.booking_page_options}
+            checked_option_ids={props.booking_page_ids}
+            search_placeholder={I18n.t("settings.booking_page.form.search_placeholder")}
+          />
+        )
       case "price":
         return <BookingPriceField setValue={setValue} register={register} watch={watch} ticket_expire_date_desc_path={props.ticket_expire_date_desc_path}/>
       case "memo":

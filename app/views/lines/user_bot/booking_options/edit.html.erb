@@ -2,6 +2,8 @@
   props: {
     business_owner_id: business_owner_id,
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes),
+    booking_page_options: custom_options(@booking_pages),
+    booking_page_ids: @booking_option.booking_page_ids,
     editing_menu: @editing_menu,
     ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
     booking_option: @booking_option.attributes.merge!(

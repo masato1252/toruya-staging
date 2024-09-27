@@ -468,7 +468,7 @@ const TicketOptionsFields = ({ setValue, watch, price, register, ticket_expire_d
   )
 }
 
-const CheckboxSearchFields = ({ register, options, field_name, search_placeholder}) => {
+const CheckboxSearchFields = ({ register, options, checked_option_ids, field_name, search_placeholder}) => {
   const [checkbox_options, setCheckboxOptions] = useState(options);
   const [query_text, setQueryText] = useState("");
 
@@ -499,7 +499,7 @@ const CheckboxSearchFields = ({ register, options, field_name, search_placeholde
               id={`option-${option.value}`}
               ref={register()}
               value={option.value}
-              defaultChecked={options.length && index == 0}
+              defaultChecked={checked_option_ids ? checked_option_ids.includes(option.value) : (options.length && index == 0)}
             />
             <label htmlFor={`option-${option.value}`}>{option.label}</label>
           </div>

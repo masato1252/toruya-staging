@@ -4,6 +4,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   def new
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
     @options = ::BookingPages::AvailableBookingOptions.run!(shop: Current.business_owner.shops.first)
+    @booking_pages = Current.business_owner.booking_pages.order("updated_at DESC").end_yet.filter_map { |booking_page| booking_page if !booking_page.ended? }
   end
 
   def create
@@ -36,6 +37,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     @booking_option = Current.business_owner.booking_options.find(params[:id])
     @attribute = params[:attribute]
     option_menu = @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])
+    @booking_pages = Current.business_owner.booking_pages.order("updated_at DESC").end_yet.filter_map { |booking_page| booking_page if !booking_page.ended? }
 
     if option_menu
       @editing_menu = option_menu.attributes.slice("priority", "required_time", "menu_id").merge!(label: option_menu.menu.name)
