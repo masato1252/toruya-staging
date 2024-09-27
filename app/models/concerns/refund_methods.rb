@@ -10,7 +10,8 @@ module RefundMethods
       payment = customer.customer_payments.create!(
         product: product,
         amount: -amount,
-        manual: true
+        manual: true,
+        provider: customer_payment.provider
       )
 
       payment.charge_details = payment_refund_response
