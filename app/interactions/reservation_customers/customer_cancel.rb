@@ -15,6 +15,10 @@ module ReservationCustomers
         reservation_customer.cancel_reason = cancel_reason
         reservation_customer.customer_canceled!
 
+        if customer_ticket = reservation_customer.customer_ticket
+          compose(Tickets::Revert, consumer: reservation_customer, customer_ticket: customer_ticket)
+        end
+
         if reservation.customers.count.zero?
           reservation.cancel!
         end

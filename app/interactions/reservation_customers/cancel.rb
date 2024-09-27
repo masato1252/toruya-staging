@@ -9,10 +9,16 @@ module ReservationCustomers
     integer :customer_id
 
     def execute
-      reservation_customer.canceled!
+      reservation_customer.with_lock do
+        reservation_customer.canceled!
 
-      if reservation.customers.count.zero?
-        compose(Reservations::Cancel, reservation: reservation)
+        if customer_ticket = reservation_customer.customer_ticket
+          compose(Tickets::Revert, consumer: reservation_customer, customer_ticket: customer_ticket)
+        end
+
+        if reservation.customers.count.zero?
+          compose(Reservations::Cancel, reservation: reservation)
+        end
       end
     end
 
