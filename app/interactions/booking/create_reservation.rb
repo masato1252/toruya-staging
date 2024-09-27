@@ -322,7 +322,10 @@ module Booking
               reservation_errors: reservation&.errors&.details,
               errors: errors.details,
               reservation: reservation&.attributes,
-              customer: customer&.attributes
+              customer: customer&.attributes,
+              booking_page_id: booking_page_id,
+              booking_option_id: booking_option_id,
+              booking_start_at: booking_start_at
             })
 
             errors.add(:base, :reservation_something_wrong)
