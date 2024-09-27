@@ -442,6 +442,7 @@ const BookingReservationFormFunction = ({props}) => {
           <BookingFailedArea
             booking_failed={booking_reservation_form_values.booking_failed}
             booking_failed_message={booking_reservation_form_values.errors?.booking_failed_message}
+            booking_page_url={props.booking_page.url}
             i18n={props.i18n}
             is_single_option={is_single_option}
             resetBookingFailedValues={resetBookingFailedValues}
