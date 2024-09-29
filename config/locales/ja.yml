@@ -1,4 +1,29 @@
 ja:
+  broadcast:
+    states:
+      active: 配信待ち
+      draft: 下書き
+      final: 送信済み
+    target:
+      specific_product: "%{product_name} 利用のあるアクティブ客"
+    targets:
+      all_customers: "全ての顧客"
+      vip_customers: "VIP顧客"
+      conditions:
+        contains: 是
+  customer:
+    notifications:
+      noreply: "※返信不可"
+      sms:
+        booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。\n\n%{booking_info_url}"
+        confirmation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。\n\n%{booking_info_url}"
+        reminder: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています。\n\n%{booking_info_url}"
+        change_from_phone_number: "変更は%{shop_phone_number}まで。"
+        confirmation_code: "確認コード: %{code}"
+    reminder_permissions:
+      approved:
+        title: リマインダ設定完了
+        desc_html: "%{shop_name}の予約通知がオンになりました。<br>ご予約の前に通知をお送りします。"
   requirement:
     contact_redirect_message: 顧客台帳に同期するGmail連絡先を設定してください。
     contact_warning_message: 顧客台帳設定ページにて%{link}をしてください。
@@ -22,6 +47,26 @@ ja:
     reservation_setting_redirect_message: 受付枠を設定します。
     reservation_setting_warning_message: "%{link}にて予約の受付枠を設定してください。"
     reservation_setting_warning_link_title: 予約枠設定ページ
+  sales:
+    expire_after_n_days: "購入後%{days}日後まで"
+    start_from_after_n_days: "購入後%{days}日後から"
+    expire_after_n_months: "購入後%{months}月後まで"
+    expire_by_subscription: "月額・年額の支払い期限まで"
+    never_expire: ずっと利用可能
+    sale_now: 今すぐ
+    start_at: 決まった日時から
+  sidebar:
+    calendar:
+      mine: Myカレンダー
+    broadcast:
+      title: セグメント配信
+    booking_pages:
+      title: 予約ページ
+    metrics:
+      title: アクセス解析
+      dashboard_title: ダッシュボード
+      sale_page_title: 宣伝用LP
+      service_title: オンラインサービス
   invitation:
     business_member_canceled:
       title: 利用が中止されました
@@ -101,6 +146,9 @@ ja:
       no_shop:
         title: 店舗を設定してください
         content: 利用履歴で顧客を高度検索するには、店舗を設定する必要があります。
+  tours:
+    line_settings_required_for_online_service_html: "オンラインサービス機能を利用するには、あなたのLINE公式アカウントを連携する必要があります。<br /><br />設定メニューから連携設定をしてください。<br /><br />▶︎連携方法<br />"
+    line_settings_required_for_booking_page_html: "オンライン予約機能を利用するには、あなたのLINE公式アカウントを連携する必要があります。<br /><br />設定メニューから連携設定をしてください。<br /><br />▶︎連携方法<br />"
   reservation:
     business_time_suggestion: "※営業時間"
     no_valid_menu_alert: メニューを入力してください。

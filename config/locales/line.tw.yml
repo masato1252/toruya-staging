@@ -1,0 +1,100 @@
+tw:
+  line_verification:
+    line_login_confirm_title: "確認LINE連結"
+    line_login_confirm_desc_html: "為了確認連結是否正確完成<br>請您使用LINE登入。"
+    message_api_confirm_title: "您收到訊息了嗎？"
+    message_api_confirm_desc_html: "<p>您已經加入與Toruya連結的LINE官方帳號為好友，並且在Toruya上建立了您的客戶資訊。</p><p>如果LINE登入設定正確，您應該會收到來自Toruya的以下類似訊息。</p><iframe src='https://player.vimeo.com/video/710582368?h=577d1f0941' frameborder='0' allow='autoplay; fullscreen' allowfullscreen></iframe><p>如果您沒有收到訊息，很可能是LINE開發者側的設定有誤。</p><p>✅LINE登入是否與Messaging API在同一個提供者上？<br>✅LINE登入的「已連結的LINE官方帳號」中顯示的以「＠」開頭的字符，是否與連結Toruya的Messaging API的基本ID相同？</p><p>如果您在LINE開發者中重新設定後，請在Toruya的設定畫面中點擊「執行測試」按鈕，再次進行測試。</p>"
+    done_page_title: 已確認LINE連結
+    done_page_html: "<p>LINE連結似乎已正確完成。</p><p>然而，即使經過這次的確認作業，仍有可能發生無法避免的問題。</p><p>如果您遇到任何問題，請透過Toruya官方LINE聯繫我們的支援團隊。</p>"
+    confirmation_message:
+      title1: Messaging API測試
+      title2: 我們已根據您的用戶資訊建立了客戶資料。請點擊「執行測試」按鈕來進行Messaging API的運作測試。
+      action: 執行測試
+    unverified_warning_message: 請完成LINE連結的運作測試，以便能夠向客戶發送LINE訊息。在完成運作測試之前，我們無法確定此功能是否能如預期運作。
+    message_api_notification_message: "您已加入與Toruya連結的LINE官方帳號為好友，並且在Toruya上建立了您的客戶資訊。\n\n如果LINE登入設定正確，您應該會收到來自Toruya的以下類似訊息。"
+    channel_secret_incorrect_message: "我們發現LINE登入的頻道密鑰設定有誤。\n\n即使設定項目名稱相同，Messaging API和LINE登入的設定也不可能完全相同。\n\n請再次確認設定內容。\n\nhttps://toruya.com/help/line_sync/#setting03_02"
+  new_line_account:
+    successful_message: 已成功建立額外帳號。請設定店舖資訊和要連結的LINE官方帳號的API資訊。
+  toruya_line:
+    keywords:
+      settings: 設定
+    bot:
+      thanks_follow: "感謝您加入好友。\n\n從今天開始，您可以免費使用%{trial_days}天的預約管理和客戶管理服務。\n\n讓我們從店舖設定開始吧。"
+      auto_reply_for_user_message: "感謝您的詢問！\n\n此帳號由支援人員個別手動回覆，請稍候片刻。\n\n另外，如果您要詢問關於故障的問題，請一併提供發生故障的預約頁面、服務頁面或宣傳用LP的URL，以及故障發生時的螢幕截圖。"
+    actions:
+      label:
+        sign_in: "登入"
+        sign_up: "註冊"
+        reservations: "預約"
+        customers: "客戶"
+        settings: "設定"
+        booking_pages: "預約頁面"
+        notifications: "通知"
+        sales: "銷售"
+        online_service: "線上服務"
+        menus: "菜單"
+        broadcasts: "廣播"
+    page:
+      user_sign_up:
+        shop_info:
+          postcode: 郵遞區號
+          region: 縣市
+          city: 鄉鎮市區
+          street1: 街道地址
+          street2: 大樓名稱／房間號碼
+          location: 地址
+          save_btn: 儲存店舖資訊
+  line:
+    customer_identifications:
+      successful_message_html: 非常感謝您！<br/ ><br />客戶資訊連結已完成。
+      title_html: 連結客戶資訊<br />開始使用LINE進行線上預約
+      create_customer_info: 儲存並與LINE連結
+    actions:
+      label:
+        booking_pages: 新增預約
+        shop_phone: 店舖電話
+        one_on_one: 一對一
+        identify_shop_customer: 連結客戶資訊
+        incoming_reservations: 所有預約
+        online_booking: 線上預約
+        call: 撥打電話
+        book: 顯示預約頁面
+        switch_rich_menu: 切換
+        reservation_info: 確認預約詳情
+    bot:
+      keywords:
+        incoming_reservations: 所有預約
+        booking_pages: 透過預約頁面接受
+        booking_options: 透過預約價格接受
+        contacts: 聯絡我們
+        services: 使用中的服務
+      legacy_keyowords:
+        booking_pages: 新增預約
+      thanks_follow: "感謝您加入好友。\n\n 您可以使用此LINE帳號進行預約確認、變更等線上預約服務。"
+      connected_successfully: "非常感謝您！\n\n 客戶資訊連結已完成。"
+      please_use_contact_feature: 請使用此訊息發送功能。
+      features:
+        connect_customer:
+          title: 連結客戶資訊
+          desc: 請連結客戶資訊以顯示現有預約。
+        online_booking:
+          title: 線上預約
+          desc: 請從以下選項中選擇。
+          rich_menu:
+            bar_text: "預約↓"
+      messages:
+        incoming_reservations:
+          desc: "如需變更或取消預約，請直接與我們聯繫。"
+          no_incoming_messages: 未找到可顯示的預約。
+        booking_pages:
+          no_available_pages: 很抱歉，目前沒有可顯示的預約頁面。
+          available_pages: 我們將為您發送可使用的預約頁面。
+        online_services:
+          available_episodes: 我們將為您發送可使用的內容。
+          no_services: 未找到可顯示的服務。
+        contact:
+          contact_us: 聯絡我們
+          contact_us_with_text_or_phone: 請透過發送訊息或撥打電話與我們聯繫。
+        customer_dashboard:
+          message: 您可以在此確認未來的預約
+          details: 詳細資訊

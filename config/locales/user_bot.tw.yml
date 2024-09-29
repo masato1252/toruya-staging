@@ -1,0 +1,856 @@
+tw:
+  user_bot:
+    guest:
+      rich_menu_bar: 使用者選單
+      user_sign_up:
+        reminder_message: 使用者註冊已完成！
+        page_title: 使用者註冊
+        trial_info_html: 從使用者註冊起30天內<br />可免費使用
+        name: 姓名
+        last_name: 姓
+        first_name: 名
+        phonetic_name: 拼音
+        phonetic_last_name: 姓氏拼音
+        phonetic_first_name: 名字拼音
+        email: 電子郵件
+        phone_number: 手機號碼
+        referral_code_title: 推薦碼
+        referral_code_placeholder: 如有請輸入
+        confirm_customer_info: 發送確認碼
+        create_customer_info: 儲存並完成使用者註冊
+        sms_faq: 沒收到驗證碼簡訊嗎？
+        know_more_about_you: 請告訴我們更多關於您的資訊
+        where_u_find_toruya: 您是如何得知Toruya的？
+        what_you_expect_toruya_solve: 您希望透過Toruya解決什麼問題？
+        booking_code:
+          code: 確認碼
+          resend: 重新發送驗證碼
+        message:
+          successful_message_html: <div><p>感謝您完成使用者註冊！</p><p>請從LINE的使用者選單開始<br>使用onLINE研討會集客功能。</p><br><p>如果您想在電腦或平板上使用Toruya，請使用網頁版管理介面。</p><br>
+            https://manager.toruya.com/userlogin</div>
+          unmatch_phone_number: 找不到與此號碼相關的使用者。
+          booking_code_message: 請輸入我們發送到您手機的確認碼。
+          booking_code_failed_message: 確認碼錯誤
+          redirect_to_schedule_page: 正在載入預約日曆。
+      user_connect:
+        page_title: 使用者登入
+        message:
+          unmatch_phone_number: 找不到與此號碼相關的使用者。
+          successful_message_html: <p>感謝您完成使用者註冊！</p><p>請從LINE的使用者選單開始<br>使用onLINE研討會集客功能。</p>
+        line:
+          successful_message: 登入成功
+      shop_info:
+        postcode: 郵遞區號
+        region: 縣市
+        city: 鄉鎮市區
+        street1: 街道地址
+        street2: 大樓名稱／房號
+        location: 地址
+        page_title: 初始設定
+        save_btn: 儲存
+    dashboards:
+      change_logs:
+        notification_message_html: "<div class='notification alert alert-info' data-controller='change-log-notification' data-target='change-log-notification.content' data-change-log-notification-path=%{change_log_path}>
+          <button class='close' data-action='click->change-log-notification#close'>x</button>
+          功能已更新。<a class='text-black underline' href='https://toruya.com/updates' data-action='click->change-log-notification#close' target='_blank'>點此查看詳情</a>
+          </div>"
+      schedules:
+        calendar_hint: 日曆
+        user_not_available: "%{user_name} 不在"
+        whole_month_schedule: 月度行程
+        end_time_earlier_schedule_warning: 結束時間早於開始時間。
+      reservation:
+        no_existing_event: 無預定行程
+        no_ending_time_message: ※自動計算結束時間
+        schedule_modal_title: 新增預約或行程
+        reservation_customers_title: 預約客戶
+        delete_a_menu: 刪除項目
+        add_a_staff: 新增員工
+        staff_states_title: 狀態
+        book_this_date: 預約此日期
+        messages:
+          broadcast_to_customer: 向預約客戶群發訊息
+          broadcast_total_delivery: 預計發送數量
+      customer:
+        title: 客戶資料庫
+        search_placeholder: 以名稱搜尋
+        count: 共計
+        unit: 筆
+        decide_customer: 確認選擇此客戶
+        updated_date: 更新日期
+        form_title: 編輯客戶資料
+        customer_message_reply_title: 發送回覆內容
+        delete_confirmation_message: 刪除客戶資料後將無法復原。
+        unread_confirmation_message: 是否將此標記為未讀訊息以便稍後通知？
+        reply_later: 稍後通知
+        line_info: LINE名稱
+      settings:
+        user_settings:
+          line_contact_customer_name_required:
+            title: 需要LINE聯絡人客戶名稱
+        support:
+          user_support: 用戶支援
+          documents: 幫助手冊
+          faq: 常見問題
+        dashboard:
+          title: 設定頁面
+          info_label: 帳戶註冊資訊
+          payments_label: 使用記錄
+          line_label: 行銷用LINE
+          line_message_api_label: Messaging API設定
+          line_login_api_label: LINE登入設定
+          line_rich_menu: 圖文選單
+          now_state: 您目前
+          customer_info_state: 擁有客戶資料
+          sale_page_state: 擁有宣傳頁面
+          last_thirty_customers_payment: 過去30天的銷售額
+          web_details_page: 詳細資訊請查看網頁版管理介面
+          line_page_warning: 即將前往LINE官方網站。關於LINE Developers的使用方式，請向LINE公司諮詢。
+        plans:
+          save: 選擇
+          save_and_pay: 選擇並付款
+        social_account:
+          new: 新增帳號
+          description_html: 新增Toruya帳號後，<br>您可以將其他LINE官方帳號<br>連結到Toruya。
+          warning_html: 每個帳號都需要<br>單獨訂閱使用方案。
+          new_btn: 新增帳號
+          line_developer: LINE Developers
+          copy_url_btn: 複製URL
+          verification_hint_message: 在開始使用Toruya之前，請完成LINE連結的操作測試。
+          same_secret_key_warning_message_html: "<i class='fa fa-exclamation danger' aria-hidden='true'></i><i class='fa fa-exclamation danger' aria-hidden='true'></i> Messaging API和LINE登入的設定不應相同。請再次確認您的設定內容。 <a href='https://toruya.com/help/line_sync/#setting03_02' target='_blank'>使用手冊</a>"
+        rich_menu:
+          auto: 自動
+          manual: 手動
+          title: 行銷用LINE
+          manual_description_html: "切換到手動模式後，<br />將顯示在LINE官方帳號管理頁面中<br />設定的圖文選單。"
+          manual_switch_btn: 切換到手動模式
+          auto_description_html: "切換到自動模式後，<br />您可以使用與Toruya功能連動的圖文選單，<br />以及活動選單等，<br />讓圖文選單管理更加便利。"
+          auto_switch_btn: 切換到自動模式
+          help_link: Toruya圖文選單使用技巧
+        line_keywords:
+          booking_pages:
+            title: 透過LINE發送的預約頁面
+            desc: 請設定從客戶圖文選單自動發送的預約頁面。
+            list_desc: 透過LINE發送的預約頁面
+            limit_desc: 最多可設定10個。
+          booking_options:
+            title: 透過LINE發送的預約價格
+            desc: 請設定從客戶圖文選單自動發送的預約價格。
+            list_desc: 透過LINE發送的預約價格
+            limit_desc: 最多可設定10個。
+        business_schedules:
+          reservation_management: 預約管理
+          business_time: 營業時間
+          base_business_time: 基本營業時間
+          holiday_label: 假日
+          japanese_holiday_label: 日本假日
+          business_time_introduction1: 此設定是用於線上預約頁面的預約接受時間設定。
+          business_time_introduction2: 從預約日曆中，即使是休息日也可以建立預約。
+          open_shop_time: 開店時間
+          close_shop_time: 關店時間
+          shop_open_introduction_html: 在設定的營業時間內<br />可以從線上預約頁面<br />接受預約。<br /><br />從預約日曆中，即使是非營業時間也可以建立預約。
+          shop_close_introduction1: 設定為CLOSE的日子會在線上預約頁面顯示為休息日。
+          shop_close_introduction2: 從預約日曆中，即使是休息日也可以建立預約。
+        company:
+          info_hint: 主要顯示在宣傳頁面上。
+          staffs: 員工
+          consultants: 官方支持者
+        shop:
+          shop_management: 店舖管理
+          shop_info_label: 店舖資訊
+          name_label: 店名
+          address_label: 店舖地址
+          phone_number_label: 電話號碼
+          email_label: 電子郵件
+          website_label: 網站
+          logo_label: 店舖標誌
+          logo_limit_description: 390×135像素以內，30KB以下的PNG或GIF格式圖片
+          info_hint: 顯示在宣傳頁面、預約頁面和線上服務中
+          phone_number_hint_html: "如果留空，「聯絡我們」選單中的<br>「撥打電話」按鈕將不會顯示。"
+        custom_messages:
+          auto_message: 提醒發送（預設）
+        custom_message:
+          auto_message_label: 自動發送訊息
+          line_message_title: LINE訊息設定
+          auto_message_booking_label: 提醒發送
+          auto_message_service_label: 階段發送
+          send_message_label: 發送訊息
+          content: 訊息內容
+          preview: 預覽
+          buttons:
+            customer_name: 客戶姓名
+            shop_name: 店舖名稱
+            shop_phone_number: 店舖電話號碼
+            reservation_time: 預約時間
+            service_title: 服務名稱
+            send_me_mock_message: 發送測試訊息給自己
+            service_start_date: 服務開始日期
+            service_end_date: 服務結束日期
+            episode_end_date: 內容公開結束日期
+            lesson_name: 課程名稱
+            episode_name: 內容名稱
+            meeting_url: 會議URL
+            booking_time: 預約時間
+          booking_page:
+            online_booking: 線上預約
+            page_label: 預約頁面
+            booking_page_booked: 建立臨時預約
+            reservation_confirmed: 預約確認時
+            booking_page_one_day_reminder: 24小時前提醒
+            reservation_one_day_reminder: 24小時前提醒
+            before_minutes_title: 何時發送此訊息？
+            before_reservation: 預約前
+            before_minutes_word: 分鐘
+            before_minutes_reminder: "%{before_minutes} 分鐘前提醒"
+          online_service:
+            section_title: 線上服務
+            service_page_title: 服務頁面
+            online_service_purchased: 服務註冊
+            after_days: 服務開始%{after_days}天後
+            after_days_title: 服務開始後幾天發送？
+          lesson:
+            lesson_watched: "%{lesson_name}完成時"
+          episode:
+            episode_watched: "%{episode_name}完成時"
+        membership:
+          episodes:
+            title: 提供內容
+            subtitle: 內容列表
+            tag_for_the_content: 為此內容設置標籤
+            tag_input_placeholder: 標籤短語
+            tag_history: 從歷史記錄中設置
+        episodes:
+          new:
+            what_is_episode_name: 內容名稱是什麼？
+            what_is_your_solution: 這個內容提供什麼？
+            do_you_have_any_note: 是否在內容頁面顯示備註？
+            below_is_what_you_want: 確定要創建以下內容嗎？
+            create_by_this_setting: 使用這些設置創建內容
+          show:
+            title: 提供內容
+            content_label: 內容詳情
+            content_url_label: 內容
+            start_time_label: 內容提供期間
+          form:
+            tags_subtitle: 為此內容設置標籤
+            start_time_subtitle: 使用開始
+            end_time_subtitle: 使用結束
+            content_url_title: 內容URL
+            content_url_subtitle: 提供內容
+            note_title: 文字
+            note_subtitle: 文字
+            name_title: 內容名稱
+            name_subtitle: 選單名稱
+            search_by_name: 按標題搜索
+            start_time_title: 開始提供
+        course:
+          title: 提供內容
+          content_label: 內容目錄
+          add_a_chapter: 添加章節
+          add_a_lesson: 添加課程
+          no_content: 未設置提供內容
+          chapter_word: 章
+          chapters:
+            title: 提供內容
+            form:
+              name_title: 提供內容
+              name_content_label: 目錄
+          lessons:
+            new:
+              below_is_what_you_want: 確定要創建以下課程嗎？
+              create_by_this_setting: 使用這些設置創建課程
+              start_time_step: 開始提供
+              what_is_lesson_name: 課程名稱是什麼？
+              what_is_your_solution: 這個課程提供什麼內容？
+              do_you_have_any_note: 是否在課程頁面顯示備註？
+              when_lesson_start: 這個課程何時開始提供？
+              right_after_service_start: 服務開始後立即
+              after_start_x_days: 服務開始後X天
+              after_x_days: 天後
+              start_on_specific_day: 從特定日期開始
+            show:
+              title: 提供內容
+              content_label: 課程詳情
+              content_url_label: 課程內容
+              start_time_label: 課程提供期間
+            form:
+              title: 課程詳情
+              name_title: 課程名稱
+              chapter_id_title: 章節
+              content_url_title: 內容URL
+              note_title: 文字
+              start_time_title: 開始提供
+        menu:
+          basic_settings: 菜單基本設定
+          name: 菜單名稱
+          short_name: 簡稱
+          minutes: 最短所需時間
+          interval: 間隔
+          menu_shops: 可使用店鋪（滿座數）
+          full_seat_number_title: 滿座數
+          menus_list: 菜單列表
+          method: 舉辦方式
+          staffs: 負責員工
+          methods:
+            local: 在店內
+            online: 線上
+          form:
+            name_title: 菜單基本設定
+            short_name_title: 菜單基本設定
+            minutes_title: 菜單基本設定
+            interval_title: 菜單基本設定
+            menu_shops_title: 可使用店鋪
+            menu_staffs_title: 負責員工
+            menu_staffs_subtitle: 負責員工
+            menu_staffs_max_customers: 同時可服務的人數
+            online_title: 舉辦方式
+            name_subtitle: 菜單名稱
+            short_name_subtitle: 簡稱
+            minutes_subtitle: 所需時間
+            interval_subtitle: 間隔
+            menu_shops_subtitle: 可使用店鋪（滿座數）
+            online_subtitle: 舉辦方式
+            hint: 在線上預約頁面中<br>此處設定的座位數量<br>將可供預約。
+        service_customer_relation:
+          service_register: 服務使用者
+          register: 使用者
+          register_info: 使用者資訊
+          permission_state: 使用狀況
+          payment_state: 使用狀況
+          payment_plan: 使用方案
+          signup_date: 服務註冊日
+          expire_date: 服務使用期限
+          cancel_confirmation: 您確定要取消此客戶的註冊嗎？
+          stop_usage_confirmation: 無論付款狀態如何，將立即停止提供服務。
+          free_bonus: "購買%{service_name}可獲得%{free_bonus_month}個月免費使用"
+          no_undo_for_changes: ※一旦更改就無法復原！
+          change_expire_at: 更改使用期限
+          change_expire_at_title: 更改使用期限
+          expire_change_reason: 更改原因
+          change_expire_at_time_label: 新的使用期限（如果要設為永久使用，請留空並保存）
+          permission_states:
+            accessible: 可使用
+            available: 可使用
+            pending: 待處理
+            inactive: 無法使用
+          payment_states:
+            pending: 待付款
+            free: 免費
+            paid: 已付款
+            failed: 失敗
+            refunded: 已退款
+            canceled: 已取消
+          customer_payment_states:
+            completed: 已付款
+            auth_failed: 失敗
+            processor_failed: 失敗
+            change_expire_at: 更改使用期限
+            canceled: 已取消
+        stripe:
+          title: 線上付款
+          connection_title: Stripe帳戶連結
+          stripe_desc1_html: 連結Stripe帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的線上服務。
+          stripe_desc2_html: 如果您還沒有Stripe帳戶，<br />請先註冊一個帳戶。
+          owner_warning: 員工帳戶無法連結Stripe。請聯繫帳戶擁有者進行連結設定。
+          default_payment_button: 將此付款方式設為預設
+          stripe_disconnect_confirm: 您確定要斷開Stripe帳戶連結嗎？
+        square:
+          title: 線上結算
+          connection_title: Square帳戶連結
+          square_desc1_html: 連結Square帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的線上服務。
+          square_desc2_html: 如果您還沒有Square帳戶，<br />請先註冊一個帳戶。
+          owner_warning: 員工帳戶無法連結Square。請聯繫帳戶擁有者進行連結設定。
+          default_payment_button: 將此付款方式設為預設
+          square_disconnect_confirm: 您確定要斷開Square帳戶連結嗎？
+        consultants:
+          list_page_title: 官方支持者
+          list_page_header: 支持用戶
+          invitation_link: 邀請連結
+          invitation_desc: 當您邀請的支持用戶在Toruya註冊後，您將被註冊為該用戶帳戶的管理員員工。
+          pending_client: 等待用戶註冊
+          new_page_title: 邀請支持用戶
+          new_page_header: 您想邀請的人的手機號碼
+          new_page_invite_desc_html: 我們將通過簡訊發送邀請連結<br>給您想支持的人
+          invitation_flow_desc_html: <b>【支持用戶邀請方法】</b><br> ①通過簡訊發送邀請連結給您想支持的人<br> ②被邀請的人自行通過邀請連結在Toruya註冊<br> ③您將被註冊為被邀請人帳戶的管理員員工，請從螢幕右上角的『切換帳戶』選單切換到被邀請人的帳戶使用
+          feature_checking: 詳細了解功能
+          apply_support: 提交註冊申請
+          thanks_application: 感謝您的申請。我們將在近期內與您聯繫。
+        staffs:
+          list_page_title: 員工
+          list_page_header: 已註冊員工
+          delete: 刪除員工
+          authority: 權限
+          introduction: 介紹
+          authorities:
+            admin: 管理員
+            owner: 擁有者
+            employee: 員工
+          new_page_title: 新增員工
+          new_page_header: 手機號碼
+          new_page_desc: 我們將通過簡訊發送員工註冊頁面
+          cellphone_input_placeholder: 員工的手機號碼
+          new_page_methods_html: <b>【員工註冊方法】</b><br /> ①通過簡訊發送員工註冊頁面<br /> ②員工自行從註冊頁面完成員工註冊<br /> ③以員工身份使用Toruya
+      broadcasts:
+        broadcast_title: 發送條件
+        broadcast_conditions: 發送條件列表
+        content: 訊息內容
+        audiences: 發送對象
+        recipients_count: 發送數量
+        state: 發送狀態
+        time: 發送時間
+        stop_desc: 要編輯發送內容，請點擊【停止發送】按鈕。
+        active_desc: 要按計劃發送，請編輯後點擊【啟用】
+        stop_send: 停止發送
+        are_you_sure_to_stop: 您確定要停止發送嗎？
+        clone_successfully: 已複製
+        tags_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
+        no_broadcasts_title: 沒有發送條件
+        no_broadcasts_desc: 請創建發送條件
+        form: 
+          query_title: 發送對象
+          query_subtitle: 發送對象
+          content_title: 訊息內容
+          content_subtitle: 訊息內容
+          schedule_at_title: 發送時間
+          schedule_at_subtitle: 發送時間
+      services:
+        online_service: 線上服務
+        service_page: 服務頁面
+        service_about: 服務概要
+        service_item: 服務
+        name: 服務名稱
+        shop: 提供店鋪
+        content: 服務內容
+        provided_content: 提供內容
+        upsell: 追加銷售
+        available_period: 服務使用期間
+        internal_name: 管理用標題
+        start_time: 使用開始
+        end_time: 使用結束
+        tags: 設置此內容的標籤
+        show_the_service: 顯示頁面
+        preview_the_service: 確認服務頁面
+        card_image: 縮圖
+        default_card_image: 預設圖片
+        form:
+          name_title: 服務名稱
+          company_title: 提供店鋪
+          content_url_title: 提供內容
+          note_title: 文字
+          note_subtitle: 文字
+          internal_name_title: 管理用標題
+          internal_name_subtitle: 管理用標題
+          internal_name_desc_html: 此設置內容僅用於管理目的，<br>不會顯示給客戶
+          upsell_sale_page_title: 追加銷售
+          start_time_title: 使用開始
+          end_time_title: 使用結束
+          external_purchase_url_title: 購買URL
+          demo_button: 操作按鈕
+          name_subtitle: 服務名稱
+          company_subtitle: 提供店鋪
+          content_url_subtitle: 提供內容
+          upsell_sale_page_subtitle: 追加銷售
+          start_time_subtitle: 使用開始
+          end_time_subtitle: 使用結束
+          external_purchase_url_subtitle: 客戶購買的地方
+          demo_button: 操作按鈕
+          message_template_title: 服務概要
+          message_template_subtitle: 縮圖
+          bundled_services_title: 提供內容
+          bundled_services_subtitle: 提供內容
+          bundled_services_expiration: 各服務的使用期限
+          broadcast_to_customers: 向使用中的客戶群發訊息
+      booking_pages:
+        index:
+          title: 線上預約頁面
+          field_header: 預約頁面
+          line_status: LINE預約
+        form:
+          add_a_new_option: 新增此價格
+          new_option_with_existing_menu:
+            select_from_existing_menu: 從現有菜單建立價格
+            create_from_a_new_menu: 用新菜單建立價格
+          booking_options_order_title: 價格順序
+      booking_options:
+        form:
+          add_this_new_menu: 新增此菜單
+          add_a_new_menu: 新增菜單
+      broadcast_creation:
+        filters_step: 發送對象
+        content_step: 發送內容
+        schedule_step: 發送時間
+        what_is_your_audiences: 此訊息要發送給誰？
+        all_customers: 所有客戶
+        all_customers_desc: 所有已連結客戶資訊的LINE好友
+        vip_customers: VIP客戶
+        vip_customers_desc: 向所有VIP客戶群發訊息
+        specific_menu_customers: 特定菜單的使用客戶
+        menu: 特定菜單的使用客戶
+        specific_menu_customers_desc: 向有特定菜單使用記錄（已結帳）的活躍客戶群發訊息
+        specific_service_customers: 特定服務的使用客戶
+        online_service: 特定服務的使用客戶
+        specific_service_customers_desc: 向有特定線上服務使用記錄的活躍客戶群發訊息
+        specific_available_service_customers: 特定服務的使用中客戶
+        online_service_for_active_customers: 特定服務的使用中客戶
+        specific_available_service_customers_desc: 向正在使用特定線上服務的客戶群發訊息
+        customers_with_tags: 特定標籤的客戶
+        customers_with_tags_desc: 向擁有特定標籤的客戶群發訊息
+        customers_with_tags_no_data_desc: 目前還沒有客戶標籤。您可以在客戶編輯頁面創建標籤。
+        customers_with_birthday: 生日的客戶
+        customers_with_birthday_desc: 向生日的客戶群發訊息
+        approximate_customers_count: 預計發送數量
+        what_menu_do_you_want: 您想向哪個菜單的使用客戶發送訊息？
+        what_service_do_you_want: 您想向哪個服務的使用客戶發送訊息？
+        what_content_do_you_want: 您想發送什麼內容？
+        preview: 預覽
+        when_do_you_want_to_send: 您想何時發送？
+        broadcast_services: 群發的服務
+        broadcast_help_tips: 數量比您預期的多/少嗎？
+        age_range_desc: "%{age_start}歲以上%{age_end}歲以下"
+        birthday_month_desc: "%{month}月的生日"
+        customers_permission_warning_description: 已排除群發訊息設置為關閉的客戶。
+        customers_permission_modal:
+          title: 群發訊息設置為關閉的客戶
+          warning_description: 如果您想將客戶包含在群發訊息中，請點擊「開啟」
+      service_creation:
+        goal_step: 目的
+        content_step: 內容
+        time_step: 使用期限
+        upsell_step: 追加銷售
+        check_step: 預覽
+      metrics:
+        title: 訪問分析
+        sale_page: 宣傳頁面
+        visit_count: 瀏覽次數
+        purchased_count: 註冊數
+        conversion_rate: 轉換率
+        total_revenue: 總收入
+        weekly_sale_page_visit_count: 分析資訊：宣傳用LP
+        weekly_service_sale_page_visit_count: "分析資訊：%{service_name}"
+        no_data: 沒有可顯示的數據
+        active_customers_rate: 活躍客戶比率
+        new_customers: 新客戶
+        last_year: 過去1年
+        last_three_months: 過去30天
+        new_reservations: 新預約
+        total_revenue: 總銷售額
+        sale_page_ranking: 熱門服務
+        product_name: 服務名稱
+        other_services: 其他服務
+      booking_page_creation:
+        default_label: "%{name}預約頁面"
+        default_greeting: "接受%{name}的預約。"
+        default_category_name: "線上預約"
+        default_note: "取消政策\n --------------------\n 如果您需要取消預約，將根據取消政策收取取消費用。請在預約前務必確認。\n \n ■取消費用■\n ・未通知取消：100%\n ・預約當天取消：100%\n ・前一天之前通知取消：免費\n"
+        booking_shop: 預約店鋪
+        booking_options: 預約選項
+        booking_price: 預約價格
+        booking_note: 注意事項
+        book_which_shop: 您要接受哪家店鋪的預約？
+        book_for_this_shop: 將為以下店鋪創建預約接受頁面
+        company_info: 公司資訊
+        shop_info: 店鋪資訊
+        shop_logo: 店鋪標誌
+        shop_without_logo: 沒有店鋪標誌
+        create_page_from_this_shop: 使用此店鋪創建
+        choose_which_option: 您要接受哪些選項的預約？
+        what_is_menu_name: 選項名稱是什麼？
+        input_menu_name: 輸入選項名稱
+        what_is_menu_time: 此選項需要多少分鐘？
+        is_menu_online: 這是線上選項嗎？
+        menu_online: 是的，這是線上選項
+        menu_local: 否，客戶需要到店
+        current_booking_options_label: 從現有預約價格中選擇
+        create_new_booking_option: 創建新價格
+        how_much_of_this_price: 您想以多少價格銷售？
+        enter_price: 輸入價格
+        sell_this_price: 以此價格繼續
+        note_for_this_option: 預約時有什麼注意事項嗎？
+        enter_note_policy: 輸入取消政策等
+        use_this_page_note: 使用此注意事項繼續
+        use_these_settings_create_this_page: 使用這些設置創建預約頁面
+        share_your_booking_page: 分享您創建的預約頁面
+        check_this_page: 預覽
+        want_to_create_a_new_menu: 需要創建新菜單嗎？
+        create_a_new_menu: 創建新菜單
+        create_a_sale_page: 使用宣傳頁面可以在網上招攬預約
+        create_a_sale_page_btn: 創建宣傳頁面
+        create_sale_page_later_warning_html: 服務已創建，但由於<br>宣傳頁面尚未創建，<br>客戶無法註冊服務
+        remember_create_sale_page: 請記得創建宣傳頁面
+        create_sale_page_later_btn: 稍後創建
+      booking:
+        booking_option_creation:
+          label: 創建預約價格
+          description: 創建您想銷售的服務
+        booking_page_creation:
+          label: 創建預約頁面
+          description: 創建預約頁面以組織/營銷不同的預約價格
+      sales:
+        modal:
+          title: 確認宣傳頁面
+        edit:
+          sale_pages: 宣傳頁面
+          sales_about: 頁面概覽
+          selling_product: 銷售產品
+          selling_start_at: 銷售開始
+          selling_end_at: 銷售結束
+          selling_solutions: 銷售方式
+          selling_price: 銷售價格
+          internal_name: 管理用標題
+          normal_price: 原價
+          selling_number: 銷售數量
+          sold_out: 已售完
+          page_content: 宣傳頁面內容
+          content_header: 標題
+          content_video: 頭部影片
+          why_content: 購買理由
+          benefits: 優點
+          staff: 負責員工
+          faq: 常見問題
+          flow: 服務流程
+          reviews: 客戶評價
+          delete_sale_page: 刪除宣傳頁面
+          flow_steps: "%{flow_number}步驟"
+          benefit_items: "%{benefit_number}項"
+          question_items: "%{question_number}個問題"
+          review_items: "%{review_number}位客戶的評價"
+          purchase_link_btn: 複製註冊連結
+          publish: 發布狀態
+          publish_status:
+            published: 已發布
+            private: 限定發布
+        form:
+          start_time_title: 頁面概覽
+          start_time_subtitle: "銷售開始"
+          internal_name_title: 頁面概覽
+          internal_name_subtitle: 管理用標題
+          internal_name_desc_html: 此設置內容僅用於管理目的，<br>不會顯示給客戶
+          end_time_title: 頁面概覽
+          end_time_subtitle: 銷售結束
+          selling_price_title: 銷售方式
+          selling_price_subtitle: 銷售價格
+          selling_price_change_warning: 編輯後的新價格不會適用於變更前已註冊的客戶。
+          normal_price_title: 銷售方式
+          normal_price_subtitle: 原價
+          quantity_title: 銷售方式
+          quantity_subtitle: 銷售數量
+          sale_template_variables_title: 宣傳頁面內容
+          sale_template_variables_subtitle: 標題
+          introduction_video_url_title: 宣傳頁面內容
+          introduction_video_url_subtitle: 頭部影片
+          why_content_title: 宣傳頁面內容
+          why_content_subtitle: 購買理由
+          published_title: 發布狀態
+          published_subtitle: 發布狀態
+          benefits_title: 宣傳頁面內容
+          benefits_subtitle: 優點
+          benefits_header: 請具體列出購買此產品的優點和好處。
+          benefits_content_header:
+            video: 這個影片講座能做到的事
+            pdf: 這份PDF能做到的事
+            audio: 這個音頻講座能做到的事
+            menu: 這個菜單能做到的事
+            external: 這項服務能做到的事
+            free_course: 這項服務能做到的事
+            course: 這項服務能做到的事
+            membership: 這項服務能做到的事
+            bundler: 這項服務能做到的事
+          add_benefit: 新增項目
+          staff_title: 宣傳頁面內容
+          staff_subtitle: 負責員工
+          flow_title: 宣傳頁面內容
+          flow_subtitle: 服務流程
+          flow_header: 請說明從預約到使用服務的流程。
+          faq_title: 宣傳頁面內容
+          faq_subtitle: 常見問題
+          faq_header: 請具體列出購買此產品的優點和好處。
+          faq_content_header: 常見問題
+          faq_question_placeholder: 輸入問題
+          faq_answer_placeholder: 輸入問題的答案
+          reviews_title: 宣傳頁面內容
+          reviews_subtitle: 客戶評價
+          reviews_header: 請輸入客戶評價。
+          review_content_header: 客戶評價
+          review_content_placeholder: 輸入客戶評價
+          review_customer_name_placeholder: 客戶姓名
+          add_faq: 新增問題
+          add_review: 新增客戶評價
+          customer_picture_requirement_tip: 客戶照片
+        new:
+          what_to_sale: 這個宣傳頁面的目的是什麼？
+          online_booking: 線上預約招募
+          add_sale_page_to_sell_more: 創建宣傳頁面以增加線上預約頁面的預約量
+          online_service: 線上服務用戶招募
+          online_service_to_sell_more: 創建宣傳頁面以增加線上服務的用戶量
+        online_service_creation:
+          service_step: 商品
+          price_step: 銷售價格
+          limitation_step: 限量銷售
+          content_step: 內容
+          preview_step: 預覽
+          sell_what_service: 您要銷售哪種服務？
+          service_start: 使用開始
+          service_end: 使用結束
+          sell_what_price: 在這個宣傳頁面中，您要以多少價格銷售？
+          sell_free_price: 免費提供
+          what_normal_price: 這項服務有正常價格嗎？
+          normal_price_cost: 是的，有
+          normal_price_free: 不，沒有
+          what_selling_end_at: 您要銷售到什麼時候？
+          selling_end_on: 銷售到指定日期
+          selling_forever: 持續銷售
+          sell_what_number: 您要限制銷售數量嗎？
+          sell_limit_number: 限量銷售（推薦）
+          until_people_number: 人為止
+          sell_unlimit_number: 不限量銷售
+          what_introduction_video: 在標題使用影片可以提高線上課程的銷售量。
+          introduction_video_hint: 如果使用YouTube，請將影片設為「公開」。
+          end_time_changes_warning: 更改此設定不會影響已註冊客戶的使用期限。
+        booking_page_creation:
+          booking_step: 預約頁面
+          content_step: 內容
+          preview_step: 預覽
+          select_booking_page: 選擇預約頁面
+          sell_what_page: 您要銷售哪個預約頁面？
+          select_header_template: 您要使用什麼樣的標題？
+          select_color_html: "更改文字大小和顏色<br />可以讓標題更吸引人。"
+          color_tip: ※此資訊將反映在店鋪設定中。
+          why_user_buy_html: "這個預約菜單的購買理由<br />或購買者的未來願景是什麼？"
+          what_user_get: 輸入標語
+          what_user_get_tip: ※建議每行約15個字，最多3行
+          what_buyer_future: 以文字輸入預約菜單的賣點或購買者的未來願景
+          what_buyer_future_tip: ※單次換行為行間距，連續兩次換行為段落間距
+          staff_introduction: 主要負責員工的簡介
+          staff_change_tip: ※此資訊將反映在所有宣傳頁面中。
+          introduce_who_do_this: 請介紹主要負責的員工
+          content_picture_requirement_tip: "設置圖片\n 寬度335像素以上，高度185像素以上"
+          staff_picture_requirement_tip: "設置圖片\n 寬度180像素以上 高度180像素以上"
+          flow_introduction_html: "請說明從預約到使用服務的<br />流程。"
+          flow_header: 服務流程
+          flow_tips:
+            tip1: 首先，請從預約日曆中選擇您希望的日期和時間進行臨時預約。
+            tip2: 請說明從預約到使用服務的第一個步驟。
+          flow_default_steps:
+            step1: "從預約日曆中選擇\n希望的日期和時間進行臨時預約"
+            step2: "預約獲得確認後即完成預約"
+            step3: "預約當天請提前\n預留充足時間到店"
+          sale_page_like_this: 宣傳頁面將如下所示
+          sale_page_confirm_title_html: "已完成最基本的設置<br />請確認設置內容"
+          create_this_sale_page: 使用此設置創建宣傳頁面
+          share_sale_page: 分享您創建的宣傳頁面
+      online_service_creation:
+        goals:
+          collection:
+            title: 收集好友
+            line_title: PDF下載
+            description: 創建PDF下載服務以收集官方LINE好友
+          free_lesson:
+            title: 免費課程
+            line_title: 免費課程
+            description: 創建使用單個視頻的免費課程
+          paid_lesson:
+            title: 付費課程
+            line_title: 付費課程
+            description: 創建使用單個視頻的付費課程
+          free_course:
+            title: 免費線上課程
+            line_title: 免費線上課程
+            description: 創建按順序提供多個視頻課程和PDF工作簿的線上課程
+          course:
+            title: 線上課程
+            line_title: 線上課程
+            description: 創建按順序提供多個視頻課程和PDF工作簿的線上課程
+          membership:
+            title: 會員制服務
+            line_title: 會員制服務
+            description: 創建持續購買多個視頻課程和PDF工作簿的會員制服務
+          external:
+            title: 外部服務
+            line_title: 外部服務
+            description: 為外部服務用戶創建LINE營銷服務
+          bundler:
+            title: 服務套餐
+            line_title: 服務套餐
+            description: 創建將多個服務打包銷售的服務
+        solutions:
+          video:
+            title: 影片講座
+            lesson: 影片課程
+            description: 通過購買或註冊服務，可以觀看影片講座
+          audio:
+            title: 音頻播放
+            description: 通過購買或註冊服務，可以收聽音頻播客
+          pdf:
+            title: PDF下載
+            lesson: PDF工作簿
+            description: 通過購買或註冊服務，可以下載PDF文件
+          questionnaire:
+            title: 問卷調查
+            description: 利用自動訊息進行問卷調查回答，藉此促進LINE好友註冊的服務
+          diagnosis:
+            title: 診斷
+            description: 利用LINE自動訊息進行診斷回答，從結果中促進追加服務購買的服務
+          external:
+            title: 外部服務
+            description: 為外部服務用戶創建LINE營銷服務
+          free_course:
+            title: 免費線上課程
+            description: 創建按順序提供多個影片課程和PDF工作簿的服務
+          course:
+            title: 線上課程
+            description: 創建按順序提供多個影片課程和PDF工作簿的服務
+          membership:
+            title: 會員制服務
+            description: 創建為註冊會員提供多個影片和PDF的限定服務
+          bundler:
+            title: 服務套餐
+            description: 創建將多個服務打包銷售的服務
+        what_is_your_goal: 這個服務的目的是什麼？
+        what_is_your_solution: 這個服務提供什麼內容？
+        what_is_this_video_provide: 您要提供哪個影片作為服務？
+        what_is_video_url: 請輸入YouTube等的URL
+        video_hint: 請輸入設置為「非公開」的YouTube或Vimeo影片URL。
+        what_is_pdf_url: 您要提供哪個PDF作為服務？
+        pdf_hint: 如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
+        what_is_external_url: 服務提供的目標網站是哪裡？
+        external_input_placeholder: 輸入服務提供目標URL
+        external_hint: 註冊此服務的客戶將收到此URL
+        what_is_external_purchase_url: 客戶在哪裡購買服務？
+        external_purchase_url_input_placeholder: 輸入購買頁面的URL
+        external_purchase_url_hint: 當客戶註冊此服務時，在輸入客戶資訊後將顯示此URL。
+        what_is_service_name: 服務名稱是什麼？
+        this_is_company_info: 將作為以下商店的服務創建
+        edit_shop_in_setting_page: 請在管理頁面編輯商店資訊。
+        edit_company_in_setting_page: 請在管理頁面編輯公司資訊。
+        what_company_info: 您要以哪個商店的名義提供服務？
+        what_is_end_time: 此服務是否有使用期限？
+        expire_after_n_days: 購買後X天內
+        expire_after_n_months: 購買後X個月內
+        expire_by_subscription: 直到月費或年費的付款期限
+        expire_at: 直到特定日期
+        never_expire: 永久可用
+        after_bought: 購買後
+        after_n_days: 天內
+        after_n_months: 個月內
+        what_want_to_upsell: 在使用此服務後，您是否有想推薦購買的追加銷售宣傳頁面？
+        select_upsell_product: 選擇宣傳頁面
+        below_is_what_you_want: 您確定要創建以下服務嗎？
+        create_by_this_setting: 使用此設置創建服務
+        create_a_sale_page: 要使用創建的服務，需要宣傳頁面
+        stripe_required_warning: 要銷售付費服務，需要設置Stripe帳戶連接。
+        sale_page_like_this: 服務頁面將如下所示
+        setup_line_bot_for_customers: "設置「使用中服務列表」\n 的顯示內容"
+        content_picture_requirement_tip: "設置圖片\n 寬度1024像素，高度1024像素以下"
+        message_description: 服務描述（60字以內）
+        fake_action_button: 操作按鈕
+        what_want_to_sell_as_bundler: 您想將哪些服務打包銷售？
+        select_bundler_product: 添加服務
+        bundled_services: 打包銷售的服務
+        bundled_service_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
+        when_bundled_service_expire: 各個服務是否有使用期限？
+      notifications:
+        title: 以下有新的數據
+        unread_message_label: 未讀訊息
+        pending_reservations_label: 需要確認的預約
+        missing_sale_page_service_label: 未創建宣傳頁面的服務
+        pending_customer_services_label: 需要確認的服務

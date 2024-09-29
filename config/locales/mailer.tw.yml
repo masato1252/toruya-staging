@@ -1,0 +1,50 @@
+tw:
+  admin_mailer:
+    new_business_application:
+      title: 代理商新註冊申請
+  notification_mailer:
+    duplicate_customers:
+      title: 發現重複的客戶資料
+    new_referrer:
+      title: 新增子帳戶
+  subscription_mailer:
+    charge_successfully:
+      title: 收費完成通知
+    charge_failed:
+      title: 信用卡授權未通過
+    charge_shop_fee:
+      title: 付費新增店舖通知
+    charge_reminder:
+      title: 收費通知
+  reminder_mailer:
+    trial_member_months_ago_reminder:
+      title: 試用期即將結束通知
+    trial_member_week_ago_reminder:
+      title: 試用期即將結束提醒
+    trial_member_day_ago_reminder:
+      title: 試用期結束通知
+    daily_reservations_limit_by_admin_reminder:
+      title: 今日預約已達上限通知
+    daily_reservations_limit_by_staff_reminder:
+      title: 今日預約超過上限通知
+    total_reservations_limit_by_admin_reminder:
+      title: 累計預約已達上限通知
+    total_reservations_limit_by_staff_reminder:
+      title: 累計預約超過上限通知
+  withdrawal_mailer:
+    monthly_report:
+      title: 介紹費確認通知
+  business_application_mailer:
+    applicant_applied:
+      title: 代理商註冊申請已完成
+    applicant_approved:
+      title: 代理商註冊申請已通過
+    applicant_rejected:
+      title: 代理商註冊申請未通過
+    applicant_paid:
+      title: 已確認代理商註冊費用付款
+  customer_mailer:
+    reservation_confirmation:
+      title: "已完成%{shop_name}的預約"
+    reservation_reminder:
+      title: "%{shop_name}下次預約提醒"

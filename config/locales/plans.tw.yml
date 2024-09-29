@@ -1,0 +1,77 @@
+tw:
+  plans:
+    actions:
+      change_card: 更改信用卡
+    headers:
+      customer_management: 客戶管理
+      reservation_management: 預約管理
+      online_booking: 線上預約
+      online_service: 線上服務
+      sale_promotion: 銷售促銷
+      support: 支援服務
+    labels:
+      shop_can_set: 可設置店鋪數
+      staff_in_charge: 負責員工數
+      reservation_restriction: 預約限制
+      customer_number: 客戶資料數
+      booking_page_number: 預約頁面數
+      get_more_friends: 獲取更多好友
+      free_lesson: 免費課程
+      premium_lesson: 付費課程
+      online_course: 線上課程
+      membership: 會員制服務
+      external_service: 外部服務連接
+      sale_page_number: 宣傳頁面數
+      message_template: 訊息範本
+      support: 個人支援
+    free:
+      title: 免費版
+      period: ""
+      shop_can_set: 1間
+      staff_in_charge: 1位（店主）
+      reservation_restriction: 無限制
+      customer_number: "最多%{customer_limit}位"
+      booking_page_number: 無限制
+      get_more_friends: ⃝
+      free_lesson: ⃝
+      premium_lesson: ⃝
+      online_course: X
+      membership: X
+      external_service: ⃝
+      sale_page_number: "%{sale_page_limit}頁"
+      message_template: 純文字
+      support: 無
+    basic:
+      title: 基本版
+      period: 月費
+      shop_can_set: 1間
+      staff_in_charge: 1位（店主）
+      reservation_restriction: 無限制
+      customer_number: "最多%{customer_limit}位"
+      booking_page_number: 無限制
+      get_more_friends: ⃝
+      free_lesson: ⃝
+      premium_lesson: ⃝
+      online_course: X
+      membership: X
+      external_service: ⃝
+      sale_page_number: 無限制
+      message_template: 純文字
+      support: 有
+    premium:
+      title: 高級版
+      period: 月費
+      shop_can_set: 1間
+      staff_in_charge: 1位（店主）
+      reservation_restriction: 無限制
+      customer_number: 無限制
+      booking_page_number: 無限制
+      get_more_friends: ⃝
+      free_lesson: ⃝
+      premium_lesson: ⃝
+      online_course: ⃝
+      membership: ⃝
+      external_service: ⃝
+      sale_page_number: 無限制
+      message_template: 文字及卡片
+      support: 有

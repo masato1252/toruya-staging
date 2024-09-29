@@ -1,0 +1,138 @@
+tw:
+  booking_page:
+    showing_preview: 預覽顯示中
+    time_from: "起"
+    name: 姓名
+    last_name: 姓
+    first_name: 名
+    phonetic_name: 拼音
+    phonetic_last_name: 姓氏拼音
+    phonetic_first_name: 名字拼音
+    email: 電子郵件
+    phone_number: 手機號碼
+    remember_me: 下次自動填寫
+    reminder_desc: 接收預約提醒
+    confirm_customer_info: 發送確認碼
+    next_step: 下一步
+    confirm_reservation: 確認臨時預約
+    not_me: 如果不是您，請點擊這裡
+    edit_info: 修改地址或電話號碼
+    edit: 修改
+    address: 地址
+    address_details:
+      zipcode: 郵遞區號
+      living_state: 縣市
+      city: 鄉鎮市區
+      street1: 街道地址
+      street2: 大樓名稱／房間號碼
+    save_change: 儲存修改請求
+    invalid_to_change: 輸入資料無效
+    info_change_title: 客戶資訊修改請求
+    flow_label: 請選擇您想先選擇的項目
+    date_flow_first: 從預約日期時間開始選擇
+    option_flow_first: 從預約項目開始選擇
+    booking_end_at: 預計結束時間
+    thanks_for_come_back: 感謝您再次使用我們的服務
+    please_select_a_menu: 請選擇項目
+    reset_button: 重新開始
+    last_selected_option: 上次使用的項目
+    i_dont_use_line: 我沒有使用LINE
+    owner_personal_schedule_warning: 如果您想設定為不可預約，請在『我的日曆』中創建個人行程。
+    booking_code:
+      code: 確認碼
+      resend: 重新發送確認碼
+    requirement:
+      message: "這是『%{product_name}』會員專用的預約頁面。"
+      contact_shop_owner: 如需詳細資訊，請聯繫我們。
+      ask_in_line: 在LINE上詢問
+      login_message: "如果您已經是會員，請使用LINE登入。"
+    message:
+      unfound_customer_html: 找不到與輸入的姓名和手機號碼都相符的客戶資料。<br>請聯繫店家人員。
+      booking_failed_message_html: 該時間段和項目已滿。<br>請重新嘗試。
+      booking_unexpected_failed_message: 預約因某些原因失敗。請重新嘗試。
+      booking_code_message: 請輸入我們發送到您手機的確認碼。
+      booking_code_failed_message: 確認碼錯誤
+      line_reminder_messages_html: 請先使用LINE登入
+      customer_phonetic_name_failed_message: 請輸入拼音
+    done:
+      owner_warning1: 由於您代替客戶進行預約，
+      owner_warning2: 通知不會發送給客戶的LINE。
+      title: 臨時預約已完成
+      message1: 預約內容已發送至
+      message2: 您登入的LINE帳號
+      no_line_message1_html: 預約內容已發送至<br />您輸入的手機號碼
+      no_line_message2_html: 如果您連結LINE帳號，<br />可以透過LINE接收預約內容<br />和前一天的提醒
+      desc1: 的預約資訊
+      desc2: 可以與您的行程一起管理的
+      desc3: 免費日曆應用程式
+      feature1: 管理個人行程
+      feature2: 管理與朋友的約定和任務
+      feature3: 在日曆中確認各種店家的預約
+      signup_now: 立即註冊
+      add_friend_messages_html: "在LINE上加為好友<br>接收最新資訊"
+      ticket_left_message_html: "您的次數券還剩下%{remaining_ticket_quota}次。<br />使用期限為%{expire_date}，<br />請儘早預約。"
+      no_ticket_left_message_html: "您的次數券已用完。<br /> 下次預約時可以重新購買次數券。"
+      add_friend_btn: 加為好友
+      check_in_line_btn: 在LINE上確認
+      back_to_book: 返回預約頁面
+    start_yet:
+      title: 尚未開始接受預約
+      message1: 本頁面的預約將於
+      message2: 開始接受。
+    ended:
+      title: 已結束接受預約
+      message1: 本頁面的預約已於
+      message2: 結束接受。
+    booking_mailer:
+      customer_reservation_notification:
+        title: "您已完成%{shop_name}的臨時預約"
+      shop_owner_reservation_booked_notification:
+        title: 有新的線上預約
+  booking:
+    cancel_modal:
+      title: 取消預約
+      description: 請告訴我們取消的原因。
+      reservation_was_canceled: 預約已取消
+      cancel_reasons:
+        other_placeholder: 有其他安排
+        reschedule_reason: 想更改預約日期時間
+        no_longer_needed_reason: 不再需要
+        other_reason: 其他原因
+  customer_dashboard:
+    no_reservations: 沒有預約
+    no_online_services: 沒有線上服務
+    reservations: 預約
+    online_services: 線上服務
+  online_service_page:
+    special_price_time: 特價購買期限剩餘
+    register_now: 立即註冊
+    under_construction: 正在準備付費銷售。詳情請聯繫銷售方。
+    please_download_pdf_here: 請從這裡下載PDF。
+    download: 下載
+    coming_soon: 即將推出
+    start_time_reminder_html: "此服務將於%{start_date}公開。<br />請耐心等待公開。"
+    service_unavailable: 目前無法使用
+    service_unavailable_description_html: 此服務目前無法使用。
+  online_service_purchases:
+    service_content: 服務內容
+    please_check_in_line: 已透過LINE發送給您<br>請查看
+  membership:
+    all_tag: 全部
+    no_episode_yet: 內容正在準備中。
+  course:
+    lesson_start_on: 課程開始日期
+    mark_lesson_done: 標記為完成
+    lesson_public: 公開
+    no_lesson_yet: 沒有可顯示的課程
+  free_course:
+    lesson_start_on: 課程開始日期
+    mark_lesson_done: 標記為完成
+    lesson_public: 公開
+    no_lesson_yet: 沒有可顯示的課程
+  contact_page:
+    message_form:
+      title: 請輸入您的諮詢內容並發送
+    message_sent:
+      title: 已發送
+      content_html: 您的訊息已發送。<br>請等待負責人的回覆。
+      line_content: "您的訊息已發送。\n\n請等待負責人的回覆。"

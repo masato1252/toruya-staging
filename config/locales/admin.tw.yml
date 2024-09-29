@@ -1,0 +1,30 @@
+tw:
+  admin:
+    dashboard:
+      all: 全部
+    pending_business_applications:
+      title: 待審核的代理商申請
+    all_business_applications:
+      title: 所有代理商申請
+    pending_withdrawals:
+      title: 待處理的介紹費提款
+    chat:
+      clean_line_settings: 重置設定
+      set_line_settings: 確認設定
+      line_settings_finished: LINE 連接設定
+      line_login_verified: LINE 登入設定確認
+      message_api_verified: Messaging API 設定確認
+      booking_pages: "預約頁面 %{count}"
+      online_services: "服務 %{count}"
+      sale_pages: "宣傳用落地頁 %{count}"
+      customers: "客戶資料 %{count}"
+      reservations: "預約資料 %{count}"
+      service_relations: "服務關係 %{count}"
+      next_charge_date: "下次付款日期 %{date}"
+      last_visit_time: "最後登入時間 %{time}"
+      sign_up_date: "註冊日期 %{date}"
+      trial_end_date: "試用期限 ~ %{date}"
+      ai_processing: 正在生成 AI 回覆
+      reply_placeholder: 請輸入回覆內容
+      build_ai_faq: 儲存為 AI 常見問題
+      build_ai_reply: 使用 AI 生成回覆

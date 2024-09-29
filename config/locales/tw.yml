@@ -1,0 +1,835 @@
+tw:
+  broadcast:
+    states:
+      active: 待發送
+      draft: 草稿
+      final: 已發送
+    target:
+      specific_product: "使用過 %{product_name} 的活躍客戶"
+    targets:
+      all_customers: "所有客戶"
+      vip_customers: "VIP客戶"
+      conditions:
+        contains: 包含
+  customer:
+    notifications:
+      noreply: "※請勿回覆"
+      sms:
+        booking: "%{customer_name}您好，\n已為您在%{shop_name}預約%{booking_time}。\n\n%{booking_info_url}"
+        confirmation: "%{customer_name}您好，\n已為您在%{shop_name}確認%{booking_time}的預約。\n\n%{booking_info_url}"
+        reminder: "%{customer_name}您好，\n%{shop_name}期待您於%{booking_time}蒞臨。\n\n%{booking_info_url}"
+        change_from_phone_number: "如需變更，請致電%{shop_phone_number}。"
+        confirmation_code: "確認碼：%{code}"
+    reminder_permissions:
+      approved:
+        title: 提醒設定完成
+        desc_html: "已開啟%{shop_name}的預約通知。<br>我們將在您預約前發送通知。"
+  requirement:
+    contact_redirect_message: 請設定要同步到客戶資料庫的Gmail聯絡人。
+    contact_warning_message: 請在客戶資料庫設定頁面進行%{link}。
+    contact_warning_link_title: Google同步設定
+    business_schedule_redirect_message: 設定營業時間
+    business_schedule_warning_message: "請在%{link}設定營業時間。"
+    business_schedule_warning_link_title: 營業時間設定頁面
+    staff_redirect_message: 新增員工。
+    staff_warning_message: "請在%{link}設定員工資訊。"
+    staff_warning_link_title: 員工設定頁面
+    staff_working_schedule_redirect_message: 設定工作排程。
+    staff_working_schedule_warning_message: "請在%{link}設定工作排程。"
+    staff_working_schedule_warning_link_title: 工作排程設定頁面
+    menu_redirect_message: 建立菜單。
+    menu_warning_message: "請在%{link}設定可預約的菜單項目。"
+    menu_warning_link_title: 菜單設定頁面
+    profile_redirect_message: 請完成Toruya的用戶註冊。
+    shop_redirect_message: 建立店舖。
+    shop_warning_message: "請在%{link}建立店舖。"
+    shop_warning_link_title: 店舖資訊設定頁面
+    reservation_setting_redirect_message: 設定預約時段。
+    reservation_setting_warning_message: "請在%{link}設定預約的可接受時段。"
+    reservation_setting_warning_link_title: 預約時段設定頁面
+  sales:
+    expire_after_n_days: "購買後%{days}天內有效"
+    start_from_after_n_days: "購買後%{days}天後開始"
+    expire_after_n_months: "購買後%{months}個月內有效"
+    expire_by_subscription: "有效期至月費或年費的付款期限"
+    never_expire: 永久有效
+    sale_now: 立即銷售
+    start_at: 從指定日期開始
+  sidebar:
+    calendar:
+      mine: 我的日曆
+    broadcast:
+      title: 分眾傳播
+    booking_pages:
+      title: 預約頁面
+    metrics:
+      title: 訪問分析
+      dashboard_title: 儀表板
+      sale_page_title: 宣傳用落地頁
+      service_title: 線上服務
+  invitation:
+    business_member_canceled:
+      title: 使用已被中止
+      desc_html: 由於代理商的原因，此頁面的使用已被中止。<br>請聯繫您的推薦人。
+    existing_user_warning_html: 此頁面僅供首次註冊的用戶使用。<br>如需詳細資訊，請聯繫代理商會員。
+  dashboard:
+    shops: 店舖
+    my_shop: 我的店舖
+    shop_you_work_for: 您工作的店舖
+    sign_in_as: "以 %{name} 的身份登入"
+    my_shop_setting: 我的店舖設定
+    search_data: 進階搜尋
+    someone_shop: "%{name} 的店舖"
+    someone_customer: "%{name} 的客戶"
+    show_all_reservations: "顯示所有預約"
+    no_shop_reminder:
+      shop_dashboard_html: 若要使用店舖儀表板，<br />請<a href=%{url}>點擊此處</a>建立店舖。
+    no_contact_group:
+      customer_btn_html: 若要開始管理客戶，請<a href=%{settings_path}>點擊此處</a><br />建立客戶資料庫。
+      filter_btn_html: 若要使用進階搜尋，請<a href=%{settings_path}>點擊此處</a><br />建立客戶資料庫。
+    modal:
+      shop_dashboard:
+        admin:
+          upgrade_title: 升級帳戶
+          upgrade_content_html: 使用店舖儀表板需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 即可使用店舖儀表板。<br /><br />您可以隨時降級帳戶。
+        staff:
+          upgrade_title: 無法使用店舖儀表板
+          upgrade_content: "%{shop_name} 無法使用店舖儀表板。請聯繫店舖管理員。"
+      customer_dashboard:
+        staff:
+          upgrade_title: 無法使用客戶資料庫
+          upgrade_content: "%{owner_name} 的店舖無法使用客戶資料庫。請聯繫店舖管理員。"
+      filter:
+        admin:
+          upgrade_title: 升級帳戶
+          upgrade_content_html: 使用進階搜尋需要升級帳戶。<br /><br />每月支付 %{basic_plan_price} 升級至基本版，即可使用預設的搜尋條件進行進階搜尋。<br /><br />每月支付 %{premium_plan_price} 升級至高級版，即可無限制地建立自己的搜尋條件。<br /><br />您可以隨時降級帳戶。
+        staff:
+          upgrade_title: 無法使用進階搜尋
+          upgrade_content: "%{owner_name} 的店舖無法使用進階搜尋。請聯繫店舖管理員。"
+      settings:
+        staff:
+          upgrade_title: 無法使用設定
+          upgrade_content: "%{shop_name} 無法使用設定。請聯繫店舖管理員。"
+      customer:
+        data_changed_title: 客戶資料變更請求
+        customer_change_request_desc: "收到來自 %{customer_name} 的客戶資料變更請求。"
+        current_info: 目前資料
+        change_request_info: 變更請求
+        check_change_requests: 檢查變更內容
+        overwrite_complete: 覆寫完成
+  plan:
+    level:
+      free: 免費
+      basic: 基本版
+      premium: 進階版
+      trial: 試用期間
+      business: 代理商
+      child_basic: 基本版
+      child_premium: 進階版
+  notifications:
+    pending_reservation_need_confirm: "有 %{number} 個預約需要確認。"
+    pending_reservation_confirm: 確認預約
+    pending_customer_reservation_need_confirm: "有 %{number} 位客戶已被加入預約。"
+    pending_customer_reservation_confirm: 確認預約客戶
+    non_group_customers: "發現 %{number} 筆未設定客戶資料庫的客戶資訊。"
+    next_non_group_customer: "設定資料庫"
+    non_group_customers_alert_message: 請為此客戶設定客戶資料庫。
+  filter:
+    modal:
+      saved_filter:
+        admin:
+          upgrade_title: 升級帳戶
+          upgrade_content_html: 儲存搜尋條件需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 升級至基本版，即可無限制地建立自己的搜尋條件。<br /><br />您可以隨時降級帳戶。
+        staff:
+          upgrade_title: 無法使用進階搜尋
+          upgrade_content: 無法使用進階搜尋。請聯繫店舖管理員。
+      no_shop:
+        title: 請設定店舖
+        content: 若要使用客戶使用記錄進行進階搜尋，需要先設定店舖。
+  tours:
+    line_settings_required_for_online_service_html: "若要使用線上服務功能，您需要連結您的 LINE 官方帳號。<br /><br />請從設定選單中進行連結設定。<br /><br />▶︎連結方法<br />"
+    line_settings_required_for_booking_page_html: "若要使用線上預約功能，您需要連結您的 LINE 官方帳號。<br /><br />請從設定選單中進行連結設定。<br /><br />▶︎連結方法<br />"
+  reservation:
+    business_time_suggestion: "※營業時間"
+    no_valid_menu_alert: 請輸入服務項目。
+    no_menu_message: 無搜尋結果
+    create_successfully_message: 預約已儲存。
+    update_successfully_message: 預約已更新。
+    delete_successfully_message: 預約已刪除。
+    canceled_successfully_message: 預約已取消。
+    delete_confirmation_message: 確定要刪除嗎？按下「確定」後，將無法恢復預約資料。
+    recheck_in: 重新報到
+    check_in: 報到
+    check_out: 結帳
+    accept: 確認預約
+    accept_customer: 確認預約客戶
+    pend: 未確認
+    accept_in_canceled: 恢復預約
+    shop_closed: 非營業時間
+    cancel: 全員取消
+    refund: 退　款
+    customer_cancel: 取消預約
+    cancel_confirmation_message: 您可以在客戶資料庫中查看已取消的預約。
+    pending: 待確認
+    accepted: 已確認
+    accepted_state: 已確認
+    pending_state: 未確認
+    noshow: 未到店
+    checked_in: 已報到
+    checked_out: 已結帳
+    reserved: 已預約
+    canceled: 已取消
+    memo: 備註內容
+    contain_some_warnings: 此預約包含注意事項
+    deleted_staffs_sentence: "%{staff_names_sentence} 已從員工名單中刪除"
+    confirm_with_warnings: 儘管有錯誤，仍儲存此預約
+    customers_list_label: 客戶
+    details: 預約詳情
+    become_overbooking: 將會超出預約人數上限！
+    overbooking: 目前超出預約人數上限！
+    reserved: 已預約
+    full_seat: 客滿
+    add_customer_btn: 新增客戶
+    no_manpower_tip: 最少需要0位員工
+    add_working_schedule: 將此時段設為上班時間
+    other_customers: "其他%{other_customers_number}位"
+    no_ending_time_message: ※結束時間無法編輯。預約的結束時間會根據服務項目的所需時間自動計算。
+    reservation_time: 預約時間
+    reservation_content: 預約內容
+    new_reservation: 新增預約
+    edit_reservation: 編輯預約
+    customer_cancel_reservation: 客戶取消預約
+    change_ticket_expire_at: 更改有效期限
+    modal:
+      cancel_warning_for_paid_customers:
+        title: 有已付款的客戶
+        message: 在取消預約之前，請先退款給已付款的客戶。
+        paid_customers_title: 已付款的客戶
+      refund:
+        title: 退款
+        message: "退款將透過 %{provider} 進行。關於退款時間和手續費，請向 %{provider} 詢問。"
+        submit_btn: 退　款
+        confirmation_message: "確定要透過 %{provider} 進行退款嗎？"
+      staff_states:
+        title: 確認預約
+        message: "共%{total_staffs_number}位員工中，有%{accepted_staffs_number}位已確認此預約。"
+        approve_btn: 確認此預約
+        unapprove_btn: 將此預約設為未確認
+      invalid_shops_exist_message:
+        manage_shop_reservations_no_permission: ※根據您/店舖擁有者的使用方案，有些店舖無法新增預約。
+        manage_self_shop_reservations_no_permission: ※根據您的使用方案，有些店舖無法新增預約。
+        manage_boss_shop_reservations_no_permission: ※根據店舖擁有者的使用方案，有些店舖無法新增預約。
+        create_reservation_with_settings_no_permission: ※由於未設定預約時段，有些店舖無效。請設定預約時段或聯絡店舖管理員。
+        create_reservations_with_menu_no_permission: ※由於未設定服務項目，有些店舖無效。請設定服務項目或聯絡店舖管理員。
+      admin:
+        disable_edit_when_user_membership_no_permission: ※根據您的使用方案，此預約無法更改狀態。
+        daily_reservations_limit:
+          upgrade_title: 升級帳戶
+          upgrade_content_html: 您今天已經建立了總共%{reservations_daily_limit}個預約。<br /><br />如需建立更多預約，請升級您的帳戶。<br /><br />每月只需%{premium_plan_price}，升級至基本方案即可無限制建立預約。<br /><br />您可以隨時降級您的帳戶。
+        total_reservations_limit:
+          upgrade_title: 升級帳戶
+          free_upgrade_content_html: 您已經建立了總共%{free_plan_reservations_total_limit}個預約。<br /><br />如需建立更多預約，請升級您的帳戶。<br /><br />每月只需%{basic_plan_price}，升級至基本方案即可再建立%{basic_plan_reservations_total_limit}個預約。<br /><br />每月%{premium_plan_price}，升級至高級方案即可無限制建立預約。<br /><br />您可以隨時降級您的帳戶。
+          basic_upgrade_content_html: 您已經建立了總共%{basic_plan_reservations_total_limit}個預約。<br /><br />如需建立更多預約，請升級您的帳戶。<br /><br />每月只需%{premium_plan_price}，升級至基本方案即可無限制建立預約。<br /><br />您可以隨時降級您的帳戶。
+        empty_reservation_setting_user:
+          title: 未找到預約時段
+          content: 此店舖尚未設定預約時段。請先設定預約時段。
+          button_text: 設定預約時段
+        empty_menu_shop:
+          title: 未找到服務項目
+          content: 此店舖尚未設定服務項目。請先設定服務項目。
+          button_text: 設定服務項目
+      staff:
+        disable_edit_when_user_membership_no_permission: ※根據店舖擁有者的使用方案，此預約無法編輯。
+        daily_reservations_limit:
+          upgrade_title: 無法新增預約
+          upgrade_content: 已超過今日預約上限。請聯絡店舖管理員。
+        total_reservations_limit:
+          upgrade_title: 無法新增預約
+          upgrade_content: 已超過預約總數上限。請聯絡店舖管理員。
+        empty_reservation_setting_user:
+          title: 未找到預約時段
+          content: 此店舖尚未設定預約時段。請聯絡店舖管理員。
+        empty_menu_shop:
+          title: 未找到服務項目
+          content: 此店舖尚未設定服務項目。請聯絡店舖管理員。
+  customer:
+    back_without_save: 不儲存並返回
+    save: 儲存
+    delete: 刪除客戶資料
+    delete_confirmation_message: 刪除客戶資料後，同步到Google的聯絡人也會被刪除。您確定要繼續嗎？
+    select_region: 縣市
+    customer_id: 客戶ID
+    select_year: 年
+    select_month: 月
+    select_day: 日
+    home: 住家
+    work: 公司
+    mobile: 手機
+    city: 鄉鎮市區
+    region: 縣市
+    street: 街道地址
+    postcode: 郵遞區號
+    address1: 街道地址
+    address2: 大樓名稱/房號
+    street1: 街道地址
+    street2: 大樓名稱/房號
+    no_customer: 無相關資料
+    no_more_customer: 已顯示所有相關資料
+    group_blank_option: 無客戶名單
+    tab:
+      customer_info: 客戶資料
+      customer_reservations: 消費紀錄
+      customer_payments: 購買紀錄
+    printing_page_size:
+      paper_size: 紙張大小
+      a4: A4
+      postcard_a: 明信片（直式）
+      postcard_b: 明信片（橫式）
+      envelope: 信封（長3）
+    info: 客戶資料
+    group: 客戶名單
+    living_place: 居住地
+    living_state: 縣市
+    email_types: 電子郵件類型
+    reservation_records: 消費紀錄
+    reservation_day: 預約日期
+    level_label: 客戶等級
+    tip_before_new_customer: 在新增客戶之前，請先搜尋是否已有現有資料。
+    living_state: 縣市
+    email_types: 電子郵件類型
+    reservation_records: 消費紀錄
+    reservation_day: 預約日期
+    level_label: 客戶等級
+    tip_before_new_customer: 在新增客戶之前，請先搜尋是否已有現有資料。
+    google_contact_missing_message_html: "目前僅顯示Toruya伺服器上的客戶資料。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
+    customer_info_changed_message: 客戶資料需要更改
+    reminder_confirmation_message: 您確定要關閉分群發送嗎？
+    reminder_changed_message: 分群發送
+    filter:
+      no_shop_warning: "若要使用進階搜尋功能來搜尋客戶的消費紀錄，請先設定店舖。"
+      empty_content: "找不到符合條件的預約資料。"
+      confirm_message: 您即將離開搜尋結果頁面以顯示客戶資訊。
+      empty_saved_filter_sentence_one: 尚未儲存任何搜尋條件
+      empty_saved_filter_sentence_two_for_premium_user: ""
+      empty_saved_filter_sentence_two_for_trial_user: ""
+      empty_saved_filter_sentence_two_for_basic_user: "升級為高級會員後，您就能建立和儲存專屬的搜尋條件。"
+      empty_saved_filter_sentence_two_for_free_user: "請升級以使用篩選功能。升級為高級會員後，您就能建立和儲存專屬的搜尋條件。"
+      custom_id_confirm_warning: ※輸入客戶ID後，請點擊黃色加號按鈕
+      shop_confirm_warning: ※選擇店舖後，請點擊黃色加號按鈕
+      menu_confirm_warning: ※選擇服務項目後，請點擊黃色加號按鈕
+      staff_confirm_warning: ※選擇員工後，請點擊黃色加號按鈕
+      saved_filter_header: 使用已儲存的條件搜尋
+      customer_conditions_header: 依客戶資訊搜尋
+      reservation_conditions_header: 依消費紀錄搜尋
+      save_filter_title: 儲存搜尋條件
+      printing_result_title: 列印搜尋結果
+      email_title: 電子郵件地址
+      shop: 店舖
+      menu: 服務項目
+      multiple_choices: 可多選
+      staff: 員工
+      error: 錯誤
+      reservation_status_title: 預約狀態
+      reservation_status_info: 請選擇狀態
+      check_in_status_title: 到店狀態
+      check_in_status_info: 請選擇到店狀態
+      printing_info: 列印清單
+      printing_address: 列印地址
+      living_inside: 選擇地區
+      living_outside: 選擇地區外
+      letter_or_number: 英文或數字
+      born: 出生日期為
+      from: 從
+      to: 至
+      have: 有
+      not_have: 沒有
+      reservations: 的預約
+      save_filter_title: 儲存搜尋條件
+      printing_result_title: 列印搜尋結果
+      file_for_print: 列印用檔案
+      no_file_for_print: 無列印用檔案
+      printing_message: "正在製作列印用檔案... 檔案準備就緒後，我們將透過電子郵件通知您。請稍候。"
+      printing_header_filter_name: 篩選器名稱
+      printing_header_file_type: 類型
+      printing_header_created_date: 建立日期
+      printing_header_expired_date: 列印期限
+      printing_types:
+        infos: 清單
+        addresses: 地址
+      date_query:
+        on_date: "指定日期"
+        on_month: 指定月份
+        before: 指定日期之前
+        after: 指定日期之後
+        between: 期間內
+      preset:
+        dob_in_current_month: 本月生日
+        dob_in_next_month: 下月生日
+        checkout_in_a_year: 一年內到店
+  business:
+    title: 代理商註冊頁面
+    apply: 申請註冊
+    waiting_review: 等待審核
+    pay_to_be_business_member: 支付代理商註冊費
+    congratulation_html: 恭喜您！<br>代理商註冊已完成。
+  constants:
+    rank:
+      regular: "一般"
+  helpers:
+    placeholder:
+      shop:
+        name: "店舖名稱"
+        short_name: "簡稱"
+        address: "地址"
+        phone_number: "電話"
+        email: "電子郵件"
+        website: "http://"
+      staff:
+        name: "姓名"
+      menu:
+        name: "項目名稱"
+        short_name: "簡稱"
+        minutes: "所需時間（分鐘）"
+        min_staffs_number: "最少服務人員數"
+      staff_menus:
+        max_customers: "最多客戶數"
+    select:
+      prompt: 請選擇
+    submit:
+      create: 註冊
+      submit: 儲存
+      update: 更新
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "驗證失敗：%{errors}"
+        restrict_dependent_destroy:
+          has_one: "無法刪除，因為存在相關的%{record}"
+          has_many: "無法刪除，因為存在相關的%{record}"
+      models:
+        booking_option_menu:
+          attributes:
+            required_time:
+              short_than_menu_minutes: "^此價格需要至少%{required_minutes}分鐘的服務時間。"
+        staff_account:
+          attributes:
+            user_id:
+              taken: "^此用戶已存在"
+        contact_group:
+          attributes:
+            bind_all:
+              taken: "^您只能有一個群組用於匯入所有聯絡人群組"
+    models:
+      user: 用戶
+      staff: 員工
+    attributes:
+      user:
+        password: "密碼"
+        email: "電子郵件"
+        password: "密碼"
+        password_confirmation: "請再次輸入密碼"
+      shop:
+        name: "店舖名稱"
+        short_name: "店舖簡稱"
+        address: "地址"
+        phone_number: "電話"
+        email: "電子郵件"
+        website: "網站"
+      staff:
+        name: "姓名"
+        full_time: "全職"
+      menu:
+        name: "服務項目名稱"
+        short_name: "簡稱"
+        minutes: "所需時間"
+        min_staffs_number: "最少服務人員數"
+        interval: "間隔時間"
+        max_customers: "最大客戶數"
+      customer:
+        last_name: "姓氏"
+        first_name: "名字"
+        phonetic_last_name: "姓氏拼音"
+        phonetic_first_name: "名字拼音"
+        phone_number: "電話號碼"
+        email: "電子郵件"
+        address: "地址"
+      staff_menu:
+        max_customers: "最多客戶數"
+      profile:
+        last_name: "姓氏"
+        first_name: "名字"
+        phonetic_last_name: "姓氏拼音"
+        phonetic_first_name: "名字拼音"
+        company_name: "公司名稱"
+        zip_code: "郵遞區號"
+        address: "地址"
+        phone_number: "電話號碼"
+        website: "網站"
+      staff_account:
+        user: "使用者"
+        user_id: "使用者"
+        owner_id: "使用者"
+      social_account:
+        channel_id: "頻道ID"
+        channel_token: "頻道存取權杖"
+        channel_secret: "頻道密鑰"
+        label: "頻道名稱"
+        basic_id: "機器人基本ID"
+  date:
+    abbr_day_names:
+    - 日
+    - 一
+    - 二
+    - 三
+    - 四
+    - 五
+    - 六
+    abbr_month_names:
+    -
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
+    day_names:
+    - 星期日
+    - 星期一
+    - 星期二
+    - 星期三
+    - 星期四
+    - 星期五
+    - 星期六
+    formats:
+      default: "%Y/%m/%d"
+      long: "%Y年%m月%d日(%a)"
+      year_month_date: "%Y年%m月%d日"
+      year_month: "%Y年%m月"
+      short: "%m/%d"
+    month_names:
+    -
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
+    order:
+    - :year
+    - :month
+    - :day
+  time:
+    am: AM
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      date_with_wday: "%Y/%m/%d(%a) %H:%M"
+      long_date_with_wday: "%Y年%m月%d日(%a) %H:%M"
+      short_date_with_wday: "%-m月%-d日(%a)%H:%M"
+      time_only: "%H:%M"
+      standard: "%Y-%m-%d %H:%M"
+      long: "%Y年%m月%d日(%a) %H點%M分%S秒 %z"
+      short: "%y/%m/%d %H:%M"
+      date: "%Y/%m/%d(%a)"
+      long_date: "%Y年%m月%d日(%a)"
+      hour_minute: "%H:%M"
+      month_day_wday: "%m/%d(%a)"
+      local_time: "%Y-%m-%dT%H:%M:%S"
+      short_date: "'%y/%m/%d"
+    pm: PM
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: 大約1小時
+        other: 大約%{count}小時
+      about_x_months:
+        one: 大約1個月
+        other: 大約%{count}個月
+      about_x_years:
+        one: 大約1年
+        other: 大約%{count}年
+      almost_x_years:
+        one: 接近1年
+        other: 接近%{count}年
+      half_a_minute: 約30秒
+      less_than_x_minutes:
+        one: 不到1分鐘
+        other: 不到%{count}分鐘
+      less_than_x_seconds:
+        one: 不到1秒
+        other: 不到%{count}秒
+      over_x_years:
+        one: 超過1年
+        other: 超過%{count}年
+      x_days:
+        one: 1天
+        other: "%{count}天"
+      x_minutes:
+        one: 1分鐘
+        other: "%{count}分鐘"
+      x_months:
+        one: 1個月
+        other: "%{count}個月"
+      x_seconds:
+        one: 1秒
+        other: "%{count}秒"
+    prompts:
+      day: 日
+      hour: 時
+      minute: 分
+      month: 月
+      second: 秒
+      year: 年
+  errors:
+    format: "%{attribute}%{message}"
+    messages:
+      accepted: 請接受
+      blank: 不能為空白
+      present: 必須留空
+      confirmation: 與%{attribute}不符
+      empty: 不能留空
+      equal_to: 必須等於%{value}
+      even: 必須為偶數
+      exclusion: 是被保留的關鍵字
+      greater_than: 必須大於%{value}
+      greater_than_or_equal_to: 必須大於或等於%{value}
+      inclusion: 不在清單中
+      invalid: 是無效的
+      less_than: 必須小於%{value}
+      less_than_or_equal_to: 必須小於或等於%{value}
+      model_invalid: "驗證失敗：%{errors}"
+      not_a_number: 不是數字
+      not_an_integer: 必須是整數
+      odd: 必須為奇數
+      required: 必須存在
+      taken: 已經被使用
+      too_long: 過長（最長為%{count}個字）
+      too_short: 過短（最短為%{count}個字）
+      wrong_length: 字數錯誤（必須為%{count}個字）
+      other_than: 不可以是%{count}個字
+      invalid_email_format: 不是有效的電子郵件地址
+    template:
+      body: 請確認以下項目
+      header:
+        one: "%{model}發生了一個錯誤"
+        other: "%{model}發生了%{count}個錯誤"
+  number:
+    currency:
+      format:
+        delimiter: ","
+        format: "%n%u"
+        precision: 0
+        separator: "."
+        significant: false
+        strip_insignificant_zeros: false
+        unit: 元
+    format:
+      delimiter: ","
+      precision: 3
+      separator: "."
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: "%n %u"
+        units:
+          billion: 十億
+          million: 百萬
+          quadrillion: 千兆
+          thousand: 千
+          trillion: 兆
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: "%n%u"
+        units:
+          byte: 位元組
+          gb: GB
+          kb: KB
+          mb: MB
+          tb: TB
+    percentage:
+      format:
+        delimiter: ''
+        format: "%n%"
+    precision:
+      format:
+        delimiter: ''
+  support:
+    array:
+      last_word_connector: 和
+      two_words_connector: 和
+      words_connector: 、
+  active_interaction:
+    errors:
+      models:
+        booking/create_reservation:
+          attributes:
+            base:
+              something_wrong: "^付款失敗。請確認您的信用卡號碼是否有效，然後再試一次。"
+              paying_reservation_something_wrong: "^預約失敗。請確認您的信用卡號碼是否有效，然後再試一次。"
+        identification_codes/verify_user:
+          attributes:
+            phone_number:
+              present: "^請勿輸入電話號碼"
+        social_messages/send:
+          attributes:
+            social_message:
+              sent_failed: "^發送失敗！由於LINE的問題，無法發送訊息。請稍後再試。"
+              sent_failed_line_settings_wrong: "^由於Messaging API的問題，訊息發送失敗。請完成API的運作測試。"
+              sent_failed_line_limit: "^由於已達到LINE訊息數量上限，無法向客戶發送訊息。"
+        online_services/update:
+          attributes:
+            attrs:
+              bundle_services_subscription_required: "^由於存在訂閱銷售的宣傳用登陸頁面，請至少將一項服務設定為「直到月費/年費支付期限」。"
+              bundle_services_all_end_time_required: "^由於存在非訂閱銷售的宣傳用登陸頁面，無法設定「直到月費/年費支付期限」。"
+        chapters/delete:
+          attributes:
+            chapter:
+              lessons_exists: "^無法刪除已設定課程的章節。"
+        booking_options/update:
+          attributes:
+            update_attribute:
+              new_menu_id_not_exist: "^請選擇服務項目"
+        booking_options/delete:
+          attributes:
+            booking_option:
+              be_used_by_booking_page: "^此預約價格正在預約頁面上使用，無法刪除。"
+        menus/delete:
+          attributes:
+            menu:
+              be_used_by_booking_page: "此服務項目正被預約頁面上的預約價格使用，無法刪除。"
+        menus/update_attribute:
+          attributes:
+            menu:
+              be_used_by_booking_page: "^此服務項目正在預約頁面上展示。請至少設定一家可用的店舖。"
+        staff_accounts/create:
+          attributes:
+            staff:
+              email_uniqueness_required: "^此電子郵件已被其他員工使用"
+        customers/delete:
+          attributes:
+            customer:
+              delete_google_contact_failed: "^無法刪除Google聯絡人。請稍後再試。"
+        plans/subscribe:
+          attributes:
+            plan:
+              already_subscribe_the_same_plan: "^您已訂閱此方案。"
+              auth_failed: "^可能無法獲得卡片授權的原因是您輸入的卡片可能已失效"
+              processor_failed: "^可能無法獲得卡片授權的原因是您輸入的卡片可能已失效"
+        shops/staffs_working_schedules:
+          attributes:
+            date:
+              shop_closed: "^休息日"
+        shops/update:
+          attributes:
+            shop:
+              photo_invalid: "^店舖標誌圖片必須小於50KB，格式為PNG、JPG或GIF"
+        reservable/time:
+          attributes:
+            date:
+              shop_closed: "^休息日"
+        booking/validate_special_dates:
+          attributes:
+            special_dates:
+              on_unworking_dates: "^%{invalid_dates} 可預約時間必須在營業時間內"
+              not_enough_time_dates: "^根據上述設定，%{not_enough_time_dates}需要更多時間"
+        subscriptions/charge:
+          attributes:
+            plan:
+              auth_failed: "^可能無法獲得卡片授權的原因是您輸入的卡片可能已失效"
+              processor_failed: "^可能無法獲得卡片授權的原因是您輸入的卡片可能已失效"
+        reservations/save:
+          attributes:
+            params:
+              invalid_nested: " 無效的巢狀結構"
+        reservations/validate:
+          attributes:
+            menu_staffs_list:
+              duplicate: "無法新增相同的服務項目。如果您想更改預約時間，請編輯所需時間。"
+        customers/store_stripe_customer:
+          attributes:
+            authorize_token:
+              something_wrong: "^付款失敗。請確認您輸入的是有效的信用卡號碼，然後再試一次。"
+        customer_payments/purchase_online_service:
+          attributes:
+            customer:
+              auth_failed: "^付款失敗。請確認您輸入的是有效的信用卡號碼，然後再試一次。"
+              processor_failed: "^付款失敗。請確認您輸入的是有效的信用卡號碼，然後再試一次。"
+              something_wrong: "^付款失敗。請確認您輸入的是有效的信用卡號碼，然後再試一次。"
+        reservable/reservation:
+          attributes:
+            date:
+              shop_closed: "^休息日"
+            start_time:
+              interval_too_short: "^間隔時間不足"
+              invalid_time: "^預約時間不正確。"
+            end_time:
+              interval_too_short: "^間隔時間不足"
+              invalid_time: "^預約時間不正確。"
+            staff_ids:
+              unworking_staff: "^休假中"
+              ask_for_leave: "^休假中"
+              freelancer: "^尚未設定工作時間"
+              other_shop: "^正在其他店舖工作"
+              overlap_reservations: "^有重疊的預約"
+              incapacity_menu: "^不適用的服務項目"
+              not_enough_ability: "^超過可服務人數"
+            menu_id:
+              time_not_enough: "^所需時間不足"
+              not_enough_seat: "^座位不足"
+              unschedule_menu: "^超出預約時段"
+              start_yet: "^開始接受預約時間：%{start_at}"
+              is_over: "^預約已結束"
+              shop_or_staff_not_enough_ability: "^目前超出預約人數上限！"
+              lack_staffs: "^可服務的員工不足"
+        broadcasts/update:
+          attributes:
+            broadcast:
+              service_is_required: "^請至少設定一項服務。"
+              menu_is_required: "^請至少設定一個菜單項目。"
+        booking_pages/update:
+          attributes:
+            attrs:
+              unavailable_booking_option_exists: "^此店舖設定了無法使用的預約價格。"
+        profiles/update_attribute:
+          attributes:
+            profile:
+              logo_invalid: "^店舖標誌圖片必須為50KB以下的PNG、JPG或GIF格式"
+            attrs:
+              address_invalid: "^無效地址"
+        social_accounts/update:
+          attributes:
+            attrs:
+              has_full_width_characters: "^請使用半形字元輸入"
+              invalid_settings: "^無效的值"
+        rich_menus/create:
+          attributes:
+            image:
+              invalid: "^圖片無效"
+            social_account:
+              something_wrong: "^請再試一次"
+        customer_payments/refund:
+          attributes:
+            customer_payment:
+              charge_already_refunded: ^已經退款
+              charge_disputed: ^已申請不正當收費的付款
+              charge_not_refundable: ^無法退款的付款
+              refund_disputed_payment: ^已申請不正當收費的退款
+              return_intent_already_processed: ^退款程序已在進行中
+              else: ^因某些原因退款失敗

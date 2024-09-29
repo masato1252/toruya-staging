@@ -1,0 +1,732 @@
+tw:
+  settings:
+    dashboard:
+      info_title: 您的店鋪設定
+      info_desc_html: 您可以在此進行店鋪相關設定。<br />Toruya將根據這些設定接受預約。
+      current_plan_is: 您目前使用的方案是
+      check_plan: 查看方案
+      today_had_created: 您今天已經
+      total_had_created: 您目前共有
+      do_reservations_created: 次，創建了預約
+      reservations_created: 筆預約
+      no_limit: 無限制
+      booking_tour:
+        title: 線上預約
+        booking_option_setup: 創建預約價格
+        booking_page_setup: 創建預約頁面
+      basic_tour:
+        title: 基本設定
+        start_btn: 開始設定導覽
+        private_schedule_management: "私人行程管理"
+        account_info_settings: 設定帳戶資訊
+        customers_management: 客戶管理
+        customers_settings: 設定客戶資料庫
+        reservations_management: 預約管理
+        shops_settings: 設定店鋪
+        business_hours_settings: 設定營業時間
+        working_time_settings: 設定工作時間
+        reservations_blocks_settings: 設定預約時段
+        menus_settings: 設定菜單
+        notifications:
+          customer_html: "要開始客戶管理，請從<a href='%{url}'>這裡</a>創建客戶資料庫。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          shop_html: "要開始預約管理，請從<a href='%{url}'>這裡</a>創建店鋪。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          business_schedule_html: "%{user_name}的店鋪尚未設定營業時間。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          working_time_html: "%{user_name}的店鋪尚未設定工作時間。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          reservation_setting_html: "%{user_name}的店鋪尚未設定預約時段。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          menu_html: "%{user_name}的店鋪尚未設定菜單。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
+    modal:
+      tour:
+        welcome_title: 感謝您註冊Toruya！
+        by_myself: 我將自行設定
+        basic_setting_start: 開始基本設定導覽
+        end_tour: 結束導覽
+        setup_contact_group: 設定客戶資料庫
+        contact_group_title: 客戶資料庫設定（同步Google聯絡人）
+        shop_title: 管理您的店鋪
+        no_need: 不需要
+        setup_shop: 設定店鋪
+        business_schedule_title: 營業時間設定
+        setup_business_schedule: 設定營業時間
+        working_time_title: 工作時間設定
+        setup_working_time: 設定工作時間
+        reservation_setting_title: 預約時段設定
+        setup_reservation_setting: 設定預約時段
+        menu_title: 菜單設定
+        setup_menu: 設定菜單
+    shop:
+      info_title: 店鋪資訊
+      new_title: 創建新店鋪資訊
+      new_button: 創建新店鋪
+      info_1: 這是已設定的店鋪列表。
+      info_2: Toruya將根據這些設定接受預約。
+      new_info_1: 設定店鋪資訊。
+      new_info_2: Toruya將根據這些設定接受預約。
+      name: 店鋪名稱
+      create_successfully_message: 已成功儲存店鋪資訊。
+      update_successfully_message: 已成功更新店鋪資訊。
+      delete_successfully_message: 已成功刪除店鋪資訊。
+      logo_area:
+        title: 店鋪標誌
+        description_about_logo: 在線預約時會顯示在預約頁面上。
+        description_about_image: 390×135像素以內，30KB以下的PNG或GIF格式圖片
+        upload_button_text: 上傳
+        no_image: 尚無檔案
+      modal:
+        upgrade_title: 升級帳戶
+        upgrade_content_html: 您已經建立了一間店舖。<br />若要新增更多店舖，需要升級帳戶。<br /><br />每月支付%{premium_plan_price}即可新增多間店舖。<br /><br />您可以隨時降級帳戶。
+        premium:
+          upgrade_content_html: 您已經建立了%{shop_number}間店舖。<br />若要新增更多店舖，需要支付額外費用。<br /><br />每月支付%{per_shop_fee_price}元即可新增一間店舖。<br /><br />您可以隨時刪除店舖。
+          cancel_button: 不用了，謝謝
+          upgrade_button: "支付%{per_shop_fee_price}元新增一間店舖"
+    business_hours:
+      info_title: 營業日期與時間
+      info_1: 請設定營業時間。
+      info_2: Toruya將根據此設定接受預約。
+      japan_holidays: 日本國定假日
+      japan_holidays_close_tip: 如果日本國定假日休息，請設為【休息】。
+      reason_of_closing: 休息原因
+      new_closing_btn: 新增
+      closing_reason: 休息原因（選填）
+      open_time: 開店時間
+      close_time: 關店時間
+    reservation_setting:
+      new_title: 新建
+      new_button: 新建預約時段
+      info_1: 這是已設定的預約時段列表。
+      info_2: Toruya將根據此設定接受預約。
+      new_info_1: 設定預約時段。
+      new_info_2: Toruya將根據此設定接受預約。
+      name: 預約時段名稱
+      name_label: 時段名稱
+      short_name: 簡稱
+      info_label: 基本資訊
+      all_business_days: 所有營業日
+      weekly: 每週
+      monthly: 每月
+      weekly_setting: 每週接受預約設定
+      monthly_setting: 每月接受預約設定
+      number_of_day: 日期
+      number_of_week: 週數
+      all_business_hours: 所有營業時間
+      custom_time: 自訂設定
+      notification_message_html: "%{user_name}的店舖尚未設定預約時段。請從<a href='%{url}'>這裡</a>進行設定。"
+    menu:
+      info_title: 菜單
+      info_label: 菜單基本設定
+      new_title: 新建菜單
+      new_button: 新建菜單
+      info_1: 這是已設定的菜單列表。
+      info_2: Toruya將根據此設定接受預約。
+      new_info_1: 設定菜單。
+      new_info_2: Toruya將根據此設定接受預約。
+      name: 菜單名稱
+      staff: 負責員工
+      reservation_setting_name: 預約時段
+      add_new_reservation_setting_btn: 新增
+      reservation_ending_rule_none: 不結束
+      reservation_ending_rule_repeating: 重複後
+      reservation_ending_rule_repeating_setting: 重複設定
+      reservation_ending_rule_repeating_times: 次
+      reservation_ending_rule_end_date_setting: 結束日期
+      category_label: 類別
+      new_category_btn: 新增
+      notification_message_html: "%{shop_name}尚未設定菜單。請從<a href='%{url}'>這裡</a>進行設定。"
+      in_shop_dashboard_notification_message_html: "此店舖尚未設定菜單。請從<a href='%{url}'>這裡</a>進行設定。"
+    category:
+      info_title: 菜單類別
+      info_label: 基本設定
+      new_title: 新增菜單類別
+      new_button: 新增類別
+      info_1: 這是已設定的菜單類別列表。
+      info_2: Toruya 將根據此設定接受預約。
+      new_info_1: 請設定菜單類別。
+      new_info_2: Toruya 將根據此設定接受預約。
+      name: 類別名稱
+    staff:
+      sider_label: 員工管理
+      info_title: 員工帳戶
+      new_title: 新增員工
+      new_button: 新增員工
+      info_label: 顯示名稱
+      info_1: 這是已設定的員工列表。
+      info_2: Toruya 將根據此設定接受預約。
+      new_info_1: 請設定員工資訊。
+      new_info_2: Toruya 將根據此設定接受預約。
+      name: 姓名
+      shop_label: 工作店舖
+      contact_groups_label: 客戶資料庫查閱權限
+      group_reservations_only_readable_label: 僅可查看使用記錄
+      group_details_readable_label: 可查看全部資訊
+      delete_confirmation_message: ‼︎ 確定要刪除員工嗎？ !! 刪除 %{staff_name} 後，其過去負責的預約記錄中的員工姓名將會保留。
+      work_time: 工作時間
+      all_work_time: 員工工作時間
+      holiday_time: 休假
+      modal:
+        upgrade_title: 升級帳戶
+        upgrade_content_html: 若要新增員工，需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 即可新增多位員工。<br /><br />您可以隨時降級帳戶。
+        upgrade_edit_content_html: 若要使用員工帳戶功能，需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 即可新增多位員工。<br /><br />您可以隨時降級帳戶。
+    staff_account:
+      info_title: 員工帳戶
+      using_staff_account: 使用員工帳戶
+      email: 電子郵件地址
+      capability: 權限
+      staff_capability: 員工
+      manager_capability: 管理員
+      gmail_hint: 使用 Gmail 設定員工帳戶，可讓員工自行管理您的店舖和自己的行程。
+      resend_email: 重新發送驗證郵件
+      sent_message: 已將員工註冊連結發送至設定的員工手機。請讓員工透過收到的郵件進行註冊。
+      new_staff_active: 有新核准的員工帳戶。您可以設定員工的詳細權限。
+      staff_setting: 員工設定
+      connected_your_account: 員工帳戶設定已完成。
+      staff_connected_successfully: 員工註冊完成
+      staff_connected_failed: 此 LINE 帳戶已註冊為員工。請與店舖管理員確認。
+    consultant:
+      consultant_connected_successfully: 註冊完成
+      consultant_connected_failed: 註冊失敗。請與店舖管理員確認。
+    staff_working_time:
+      title:
+        working_schedules: 工作模式
+        owner_working_schedule: 預約管理 - 工作時間
+      info_1:
+        working_schedules: 請設定您的工作時間。
+      info_2: Toruya 將根據此設定接受預約。
+      in_out_label: 上班／休息
+      start_label: 預計上班時間
+      end_label: 預計下班時間
+      reason_of_closing: 休假原因
+      closing_reason: 休假原因／行程內容
+      setting_title: 工作時間設定權限
+      full_time_permission: 允許員工變更全職／兼職設定
+      regular_working_time_permission: 允許員工變更固定工作時間設定
+      temporary_working_time_permission: 允許員工變更臨時上班設定
+      block_schedule: 封鎖預約頁面
+    staff_holiday_time:
+      setting_title: 休假設定權限
+      holiday_permission: 允許員工設定休假
+    contact:
+      info_title: 客戶管理
+      info_sub_title: 客戶資料庫
+      new_title: 建立新資料庫
+      new_button: 建立新群組
+      info_1: 請在此設定要與 Toruya 同步的 Gmail 聯絡人群組。
+      info_2: 使用 Toruya 客戶資料庫需要同步 Gmail 聯絡人。
+      new_info_1: 設定新客戶資料庫的基本設定。
+      new_info_2: Toruya 將根據此設定接受預約。
+      info_label: 資料庫資訊
+      name: 資料庫名稱
+      sync_google: Google 同步設定
+      connect_google: 設定 Google 帳戶
+      reconnect_google: "重新設定 %{email} Google 帳戶"
+      reconnect_google_confirmation_message: "【！注意！】已存在同步的 Gmail 聯絡人，按下「確定」按鈕後，現有的 Toruya 客戶資料將被刪除。您確定要重新設定嗎？"
+      connected_google_group_title: Google 聯絡人群組
+      connect: 設定同步
+      sync: 重新同步
+      google_account_synchronization: 同步客戶資料庫
+      google_account_synchronization_instructions1: 請選擇要匯入的 Google 聯絡人群組，或是
+      google_account_synchronization_instructions2: 按下『不匯入，完成同步設定』按鈕。
+      connection_binding_desc: 從現有 Google 聯絡人群組匯入。
+      google_group_name: 現有 Google 聯絡人群組
+      import_all_title: 從 Google 匯入所有聯絡人
+      bind_all_btn: 匯入所有資料
+      import_all_warning_message: "* 為避免在 Toruya 中重複，只能為第一個客戶資料庫匯入所有聯絡人。"
+      bind_btn: 匯入
+      binding_confirmation_message: 您確定要將 Google 聯絡人群組（%{google_group_name}）中的聯絡人資料匯入 Toruya 客戶資料庫（%{contact_group_name}）嗎？
+      delete_confirmation_message: 刪除客戶資料庫也會刪除從 Google 聯絡人同步的群組（標籤）。您確定要繼續嗎？
+      importing_message: 正在將 Google 聯絡人資料匯入 Toruya。匯入完成後，我們會透過電子郵件通知您。
+      dont_want_connect_google: 如果沒有想要匯入的 Google 群組，請
+      only_use_toruya_group: 不匯入，完成同步設定
+      only_use_toruya_group_confirmation: "將完成同步設定，但不從 Google 聯絡人匯入資料。"
+    account:
+      info_title: 帳戶
+      info_title2: 帳戶資訊
+    profile:
+      user_info: 管理員資訊
+      company_info: 公司資訊
+      info_title: 首先設定帳戶
+      info_1: 這是您的 Toruya 帳戶註冊資訊。
+      info_2: 您需要完成此設定才能使用 Toruya。
+      new_info_1: 首先請註冊管理員資訊。
+      new_info_2: 請設定管理 Toruya 註冊資訊的個人或法人，包括各種設定和使用費用支付等。
+    subscription:
+      status:
+        active: 使用中
+        expired: 已過期
+      receipt:
+        label: 收據
+        desc_html: 感謝您的使用。<br>如有任何問題或疑問，請透過 Toruya 管理員的聯絡表單與我們聯繫。
+        desc2_html: 茲收到上述金額，作為 Toruya 網路服務使用費。
+        date: 付款日期
+        transaction_id: 交易 ID
+        account: 使用帳戶
+        plan: 使用方案
+        total: 付款總額
+        shop: 店鋪
+        content: 內容
+        price: 金額
+        refund:
+          label: 退款明細
+          plan: 退款方案
+          amount_tip: 退款總額
+    referrers:
+      info_title: 子帳戶
+      info_desc_html: 這裡是您邀請的子帳戶資訊。<br>要收到推薦費用，子帳戶需要完成付款。
+      sider_label: 代理商
+      referrer_label: 子帳戶
+      invite_button: 新增邀請
+      last_charged_on: 最後付款日
+      state:
+        pending: 註冊
+        referrer_canceled: 解除
+      copy_modal:
+        title: 推薦連結
+        desc: 透過此推薦連結註冊的新會員將成為您的子帳戶。
+    withdrawals:
+      withdrawal_label: 推薦費用
+      info_desc_html: 您可以在此確認您的推薦費用明細。<br />要收到推薦費用，子帳戶需要完成付款。
+      transfer_date: 發行日期
+      amount: 總金額
+      print: 列印明細
+      receipt:
+        issue_date: 發生日期
+    plans:
+      info_title: 您的使用方案
+      info_title1: 您的使用方案與付款資訊
+      info_1: 這是您的 Toruya 帳戶使用方案與付款資訊。
+      info_2: 根據您的使用方案，您可以使用 Toruya 的各種功能。
+      save: 儲存變更
+      save_and_pay: 儲存變更並付款
+      how_many_customers_do_you_have: 您大約有多少位顧客？
+      up_to_customers_limit: 人以內
+      unsubscribe_modal_content: 在處理您的取消訂閱之前，請告訴我們您目前在使用 Toruya 服務時遇到的問題。
+      unsubscribe_modal_button: 提交取消訂閱申請
+      unsubscribe_modal_reply_html: 感謝您提交取消訂閱申請。<br>我們的支援團隊將盡快與您聯繫。
+      plan_info:
+        caption: 您的使用方案
+        current_plan: 目前使用中
+        unselectable: 無法選擇
+        plan_member: "%{plan_name} 會員"
+        change_plan: 變更方案
+        join_date: 註冊日期
+        status: 狀態
+        next_billing_date: 下次付款期限
+      payment:
+        sign_up: 用戶註冊
+        trial_end: 試用期結束
+        date: 結算日
+        amount: 總金額
+        plan: 方案
+        receipt: 收據
+        failed_title: 付款失敗！
+        failed_desc1: 由於付款未能完成，我們無法變更您的使用方案。
+        failed_desc2: 請再試一次。
+        refund: 退款
+        refund_successfully_message: 退款程序完成
+        refund_failed_message: 退款程序失敗。請再試一次。
+        extra_shop: 額外店鋪
+      upgrade:
+        caption_title: 升級選項
+        caption_desc: 您有兩種升級選擇。
+        immediately: 立即升級
+        immediately_desc: 立即使用進階/基本會員專屬功能。
+        later: 下次更新時升級
+        later_desc: 從 %{expired_date} 開始使用進階/基本會員專屬功能。
+      extra_staff:
+        caption_title: "%{staff_number} 個額外員工帳戶也將恢復使用"
+        caption_desc: 額外員工將能夠新增/編輯其負責的預約。如果您不需要其他員工帳戶，請事先在店鋪設定頁面中刪除。
+      shop_fee:
+        caption_title: "%{shop_number} 個額外店鋪也將恢復使用"
+        caption_desc: 您將能夠新增/編輯額外店鋪的預約。如果您不需要額外店鋪，請事先在店鋪設定頁面中刪除。若未刪除，每個額外店鋪將額外收取每月 %{per_shop_fee_price} 元的使用費。
+        confirmation: 是的，我也要恢復使用額外店鋪
+      downgrade:
+        modal_title: 即將降級！
+        desc: 您選擇的方案將從目前的方案降級。
+        label1: 將在下次更新時降級
+        desc1: "您的方案將在下次更新時降級。您可以繼續使用進階/基本會員專屬功能直到 %{expired_date}。"
+        label2: 部分功能將無法使用
+        desc2: "從 %{after_expired_date} 開始，部分功能將無法使用。降級後，您可能無法建立新的預約。"
+        cancel_btn: 不要降級
+        confirm_btn: 確認降級
+        child:
+          modal_title: 您將無法再享有特別優惠價格！
+          desc: 如果您切換到免費方案，您將無法再享有特別優惠價格（年費）。您確定要這麼做嗎？
+        business:
+          modal_title: 您的代理商資格將被取消！
+          desc: 如果您切換到免費或基本方案，您將失去代理商資格。您確定要這麼做嗎？
+      refund:
+        modal_title: 即將降級！
+        desc: 您正在申請退款的是您目前使用的會員資格。
+        label1: 您將降級為免費會員
+        desc1: 由於您正在申請退款的是目前使用的會員資格，退款後您將立即降級為免費會員。
+        label2: 部分功能將無法使用
+        desc2: 由於您將降級為免費會員，退款後您可能無法建立新的預約。
+        cancel_btn: 不要退款
+        confirm_btn: 確認退款
+      labels:
+        shop_can_set: 可設定的店鋪數量
+        staff_in_charge: 負責人設定
+        max_customer_per_reservation: 每次預約可接受的人數（容量）
+        reservation_restriction: 預約限制
+        private_schedule: 新增和編輯個人行程
+        customer_info: 輸入和編輯客戶資訊
+        customer_group_limit: 可設定的客戶資料庫數量
+        customer_filter: 客戶資料搜尋
+        print_address: 列印地址
+        add_staff: 新增員工
+      free:
+        title: 免費版
+        period: ""
+        shop_can_set: "1間店鋪"
+        staff_in_charge: "1位"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 每天10筆（累計1,200筆）
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 1個
+        customer_filter: 姓名搜尋
+        print_address: 個別
+        add_staff: ✕
+      basic:
+        title: 基本版
+        period: 月費
+        shop_can_set: "1間店鋪"
+        staff_in_charge: "1位"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 每天10筆（累計3,600筆）
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2個
+        customer_filter: 預設條件搜尋
+        print_address: 個別
+        add_staff: ✕
+      child_basic:
+        title: 基本版
+        period: 一年
+        shop_can_set: "1間店鋪"
+        staff_in_charge: "1位"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 每天10筆（累計3,600筆）
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2個
+        customer_filter: 預設條件搜尋
+        print_address: 個別
+        add_staff: ✕
+      premium:
+        title: 高級版
+        period: 月費
+        shop_can_set: "無限制（需額外費用）"
+        staff_in_charge: "無限制"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 無限制
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 無限制
+        customer_filter: 可儲存搜尋條件
+        print_address: 批量
+        add_staff: ⃝
+      child_premium:
+        title: 高級版
+        period: 一年
+        shop_can_set: "無限制（需額外費用）"
+        staff_in_charge: "無限制"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 無限制
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 無限制
+        customer_filter: 可儲存搜尋條件
+        print_address: 批量
+        add_staff: ⃝
+      business:
+        title: 代理商
+        period: 一年
+        shop_can_set: "無限制（需額外費用）"
+        staff_in_charge: "無限制"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 無限制
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 無限制
+        customer_filter: 可儲存搜尋條件
+        print_address: 批量
+        add_staff: ⃝
+    booking_option:
+      sider_label: 線上預約
+      booking_option_label: 預約價格
+      title: 預約價格設定
+      info_html: 請設定預約價格。<br />客戶將根據您在此設定的價格進行線上預約。
+      name: 價格名稱
+      menu_for_sale: 菜單
+      start_at: 開始銷售
+      end_at: 結束銷售
+      new_button: 新增
+      form:
+        price_name: 價格名稱
+        name_title: 價格名稱
+        price_name_hint: 這是您用來管理預約價格的名稱。
+        name_hint: 這是您用來管理預約價格的名稱。
+        display_name: 顯示名稱
+        display_name_title: 顯示名稱
+        display_name_hint: 這是客戶預約時看到的菜單名稱。
+        menu_for_sale_label: 銷售菜單
+        menu_restrict_order_label: 菜單順序
+        menu_restrict_order_title: 菜單順序
+        menu_restrict_dont_need_order: 分配可以不按特定順序提供服務的員工。（建議）
+        menu_restrict_order: 分配可以按設定順序提供服務的員工。
+        new_menu: 新增菜單
+        new_menu_top_bar_header: 新增菜單
+        new_menu_title: 從現有菜單中選擇
+        does_require_a_new_menu: 需要新的菜單嗎？
+        create_a_new_menu: 建立新菜單
+        new_pure_menu_top_bar_header: 新增菜單
+        new_pure_menu_title: 建立新菜單
+        menu_required_time_title: 所需時間
+        menu_required_time_top_bar_header: 銷售菜單
+        booking_page_ids_title: 預約頁面
+        booking_page_ids_top_bar_header: 預約頁面
+        booking_options_total_time_tip: 從銷售菜單自動計算
+        time_span_label: 預約時間
+        total_time: 總時間
+        reservation_interval: 預約前後
+        price_label: 預定銷售價格
+        price_title: 預定銷售價格
+        price: 定價
+        tax_label: 稅金顯示
+        tax_include: 含稅
+        tax_excluded: 不含稅
+        sale_period: 銷售期間
+        sale_now: 立即
+        sale_on: 指定日期
+        sale_forever: 不設結束日期
+        sale_start: 開始銷售
+        start_at_title: 開始銷售
+        sale_end: 結束銷售
+        end_at_title: 結束銷售
+        note_label: 說明及注意事項
+        memo_title: 說明及注意事項
+        note_hint: 顯示給客戶有關此價格預約的注意事項。
+        delete_option: 刪除價格
+        from_purchase: 購買後
+        after_month: 個月後
+        max_ticket_date: 最長180天
+        how_many_ticket_in_one_book: 您想要設定幾次的套票銷售？
+        when_ticket_expire: 您希望套票可使用到何時？
+        booking_pages: 預約頁面
+        form_errors:
+          enough_time_for_menu: 請為設定的菜單設定足夠的時間長度。
+          reached_the_menus_limit: 最多只能設定兩個菜單。
+          no_available_shop: 由於此菜單未設定可使用的店舖，預約頁面可能無法正確顯示。
+          ticket_max_price_limit: 超過5萬元的情況下無法使用線上結帳。
+    booking_page:
+      title: 預約頁面設定
+      info_html: 設定預約頁面。<br>客戶將透過您在此設定的頁面進行線上預約。
+      booking_page_label: 預約頁面
+      name: 頁面名稱
+      start_at: 開始接受預約
+      end_at: 結束接受預約
+      new_button: 新增
+      share_modal_title: 複製嵌入代碼
+      share_button_label: 預約按鈕
+      share_button_text: 預約
+      preview_title: 分享預約頁面
+      others_options: "其他%{others_number}個價格"
+      form:
+        name_header: 頁面標題
+        page_name: 頁面名稱
+        name_title: 頁面名稱
+        name_top_bar_header: 頁面標題
+        page_name_hint: 這是您用來管理預約頁面的名稱。
+        name_hint: 這是您用來管理預約頁面的名稱。
+        title: 頁面標題
+        title_title: 頁面標題
+        title_top_bar_header: 頁面標題
+        title_hint: 這將顯示為預約頁面的標題。
+        greeting: 問候語
+        greeting_title: 問候語
+        greeting_placeholder: 將顯示在預約頁面的頂部。
+        booking_price_setting_header: 設定預約價格
+        booking_option_header: 預約價格
+        booking_page_setting_header: 是否也要在預約頁面上刊登？
+        search_placeholder: 請選擇您想刊登的頁面
+        new_option: 預約價格
+        new_option_top_bar_header: 預約價格
+        new_option_title: 從現有預約價格中選擇
+        add_new_option: 新增價格
+        reorder_options: 變更顯示順序
+        does_require_a_new_option: 需要新的價格嗎？
+        create_a_new_option: 使用新菜單創建價格
+        create_a_new_option_from_existing_menu: 從現有菜單創建價格
+        create_a_new_option_from_existing_option: 從現有預約價格中選擇
+        new_option_menu_title: 創建新價格
+        new_option_menu_top_bar_header: 預約價格
+        new_option_existing_menu_title: 創建新價格
+        new_option_existing_menu_top_bar_header: 預約價格
+        new_option_existing_menu_menu_select_header: 您想為哪個菜單創建價格？
+        booking_option_hint: 您的客戶將以此價格進行預約。
+        booking_option_required_time: 所需時間
+        shop_header: 可預約的店舖
+        shop_id_title: 可預約的店舖
+        booking_dates_header: 預約日曆
+        booking_dates_hint: 根據目前的設定內容和空位情況顯示日曆。
+        booking_dates_calendar_hint: 根據目前的設定內容和空位情況顯示日曆。
+        booking_dates_working_date: 營業日
+        booking_dates_available_booking_date: 可預約日期
+        special_dates: 可預約日期
+        booking_type_title: 可預約日期
+        booking_dates_available_booking_datetime: 可預約的日期和時間
+        any_label: 接受所有可預約日期（建議）
+        add_special_dates_btn: 新增指定日期
+        only_special_dates_booking_label: 僅接受指定日期
+        event_booking_label: 僅在舉辦活動時（優先保留時段）
+        event_booking_hint: ※將在日曆上自動創建此日期和時間的空白預約，其他預約頁面將無法預約。
+        business_schedules_booking_label: 僅接受特定星期幾
+        business_schedules_booking_add_button: 新增接受時間
+        booking_time_interval_label: 自動顯示所有可預約時間（建議）
+        specific_booking_start_times_label: 僅顯示指定的開始時間
+        specific_booking_start_times_desc_html: 在設定的開始時間中，<br>僅顯示預約價格所需時間有空檔的<br>開始時間。
+        add_booking_time_btn: 新增開始時間
+        interval_header: 預約的開始時間
+        interval_period_header: 預約時間的選項
+        interval: 預約時間的選項
+        interval_title: 預約時間的選項
+        booking_time_title: 預約時間的選項
+        interval_real_booking_time_explanation: 根據目前的設定內容和空位情況，顯示前4個選項。
+        interval_real_booking_time_warning: 實際顯示可能會因預約狀況或員工的空閒時間而有所不同
+        interval_explanation: 顯示9:00至12:00之間的前4個選項。
+        interval_start_time: 開始時間
+        interval_option: 選項間隔
+        no_available_booking_times: 沒有可預約的時間
+        per_minute: 分鐘間隔
+        interval_example_html: 例如，如果可預約時間為9:00至12:00，選項間隔設定為<strong>「30分鐘」</strong>，則預約開始時間的選項將為「9:00、9:30、10:00、10:30...」
+        open_details: 詳細資訊
+        close_details: 關閉
+        sale_period: 預約接受期間
+        sale_now: 立即
+        sale_on: 指定日期
+        sale_forever: 不設結束日期
+        sale_start: 開始銷售
+        start_at: 開始銷售
+        start_at_title: 開始銷售
+        sale_end: 結束銷售
+        sale_end_title: 結束銷售
+        end_at: 結束銷售
+        end_at_title: 結束銷售
+        overbooking: 重複預約
+        overbooking_restriction: 重複預約限制
+        overbooking_restriction_title: 重複預約限制
+        not_allow_overbooking_label: 達到滿座人數時停止接受預約（建議）
+        allow_overbooking_label: 不論滿座與否都接受預約
+        social_account_skippable_title: 無需LINE登入即可預約
+        social_account_skippable: 無需LINE登入即可預約
+        social_account_skippable_label: 允許
+        not_social_account_skippable_label: 不允許
+        note_label: 說明與注意事項
+        note: 說明與注意事項
+        note_title: 說明與注意事項
+        note_hint: 請在此處填寫客戶預約此價格時需要注意的事項，將會顯示給客戶。
+        booking_available_period_header: 預約接受期間
+        booking_limit_day_before: 天前
+        bookable_restriction_months_before: 個月前
+        booking_available_period_label: 可接受預約的期間
+        booking_available_period_top_bar_header: 可接受預約的期間
+        booking_available_period_title: 可接受預約的期間
+        booking_available_period: "從%{bookable_restriction_months}個月前至%{booking_limit_day}天前"
+        booking_available_period_sample: "若今天開啟預約頁面，則可預約的日期為%{booking_limit_day_date}至%{bookable_restriction_months_date}。"
+        customer_cancel_request: 客戶取消請求
+        customer_cancel_request_title: 客戶取消請求
+        customer_cancel_request_hint: 允許客戶提出取消預約的請求。
+        customer_cancel_request_label: 允許
+        not_customer_cancel_request_label: 不允許
+        customer_cancel_request_before_day_label: 允許取消的期限
+        requirements: 會員限定預約
+        requirements_title: 會員限定預約
+        no_membership_services: 尚未設定會員限定預約。
+        line_sharing: LINE線上預約
+        line_sharing_title: LINE線上預約
+        online_payment_enabled: 線上付款
+        online_payment_enabled_title: 線上付款
+        online_payment_options:
+          enabled: 使用
+          disabled: 不使用
+        online_payment_enabled_desc_html: 啟用線上付款後，<br>客戶需要支付費用才能<br>完成預約。
+        share_in_bot: 顯示
+        not_share_in_bot: 不顯示
+        privacy_status: 頁面狀態
+        draft: 頁面狀態
+        draft_title: 頁面狀態
+        public: 公開
+        private: 不公開
+        delete_page: 刪除頁面
+        form_errors:
+          start_at_too_late: 根據上述設定，您只能設定{datetime}之前的日期和時間
+          end_at_too_early: 根據上述設定，您只能設定{datetime}之後的日期和時間
+          unavailable_booking_option: "{shop_name}包含無法銷售的菜單項目。"
+          invalid_menu_html: "此預約價格中設定的菜單項目可能無法在%{shop_name}正確顯示，因為該店舖尚未被設定為可使用的店舖。請前往<a href=%{url}>菜單設定</a>頁面，將%{shop_name}設定為可使用的店舖。"
+    social_rich_menus:
+      action_types:
+        incoming_reservations: 所有預約
+        booking_pages: 透過預約頁面接受
+        booking_options: 透過預約價格接受
+        contacts: 聯絡我們
+        services: 使用中的服務
+        sale_page: 宣傳用登陸頁面
+        booking_page: 預約頁面
+        text: 文字
+        uri: 連結
+      edit_title: 編輯圖文選單
+      index_title: 圖文選單
+      edit_button: 編輯圖文選單
+      current: 顯示中
+      pending: 等待中
+      current_rich_menu: 目前顯示
+      internal_name: 管理用標題
+      bar_label: 選單列文字
+      layout_type: 範本
+      picture: 圖片
+      actions: 動作
+      sale_page: 宣傳用登陸頁面
+      booking_page: 預約頁面
+      picture_hint: "設定圖片\n 寬度800px〜2500px"
+      default_desc: 當沒有其他選單時顯示
+      show_it_now: 立即顯示
+      url_placeholder: 連結網址
+      url_desc: 動作標籤（用於語音閱讀）
+      label_length_warning: 只能保存20個字元
+      line_send_booking_pages: 透過LINE發送的預約頁面
+      line_send_booking_options: 透過LINE發送的預約價格
+    social_account:
+      sider_label: LINE
+      settings: 設定
+      info_title: LINE官方帳號
+      info_html: 您可以透過LINE接受線上預約。<br>請設定<a href='https://developers.line.biz/zh-hant/' target='_blank'>LINE官方帳號</a>，並在LINE中設定Webhook URL。
+      name: 名稱
+      new_button: 設定帳號
+      info1_label: LINE頻道基本設定
+      info2_label: Messaging API設定
+      webhook_desc: 請複製下方URL並貼到LINE開發者的Webhook設定中。
+      copy_webhook_btn: 複製Webhook URL
+      callback_desc: 請複製下方URL並貼到LINE開發者的回調URL設定中。
+      copy_callback_btn: 複製回調URL
+      form:
+        channel_basic_id: 機器人的基本ID
+        basic_id_title: 機器人的基本ID
+        channel_basic_id_tip: 請從LINE開發者複製機器人的基本ID並貼上
+        basic_id_hint: 請從LINE開發者複製機器人的基本ID並貼上
+        channel_token: 頻道存取權杖
+        channel_token_title: 頻道存取權杖
+        channel_token_tip: 請從LINE開發者複製頻道存取權杖（長期）並貼上
+        channel_token_hint: 請從LINE開發者複製頻道存取權杖（長期）並貼上
+        channel_id: 頻道ID
+        channel_id_title: 頻道ID
+        channel_id_tip: 請從LINE開發者複製頻道ID並貼上
+        channel_id_hint: 請從LINE開發者複製頻道ID並貼上
+        channel_name: 頻道名稱
+        label_title: 頻道名稱
+        channel_name_tip: 請輸入在Toruya上管理用的標籤
+        label_hint: 請輸入在Toruya上管理用的標籤
+        channel_secret: 頻道密鑰
+        channel_secret_title: 頻道密鑰
+        channel_secret_tip: 請從LINE開發者複製頻道密鑰並貼上
+        channel_secret_hint: 請從LINE開發者複製頻道密鑰並貼上
+        login_channel_id_title: 頻道ID
+        login_channel_secret_title: 頻道密鑰
