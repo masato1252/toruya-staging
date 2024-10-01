@@ -29,7 +29,7 @@ module Booking
 
       available_booking_time_mapping = {}
 
-      Rails.cache.fetch(cache_key(special_date), expires_in: 12.hours) do
+      Rails.cache.fetch(cache_key(special_date), expires_in: 2.hours) do
         # use empty string avoid return content is nil
 
         catch :enough_booking_time do

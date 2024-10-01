@@ -53,7 +53,7 @@ module Booking
                   next if special_date > ticket.expire_at.to_date
                 end
 
-                available_date = Rails.cache.fetch(cache_key(special_date), expires_in: 12.hours) do
+                available_date = Rails.cache.fetch(cache_key(special_date), expires_in: 2.hours) do
                   # use empty string avoid return content is nil
                   test_available_booking_date(booking_option, special_date, special_date_start_at, special_date_end_at) || ""
                 end
@@ -81,7 +81,7 @@ module Booking
                   next if date > ticket.expire_at.to_date
                 end
 
-                available_date = Rails.cache.fetch(cache_key(date), expires_in: 12.hours) do
+                available_date = Rails.cache.fetch(cache_key(date), expires_in: 2.hours) do
                   # use empty string avoid return content is nil
                   test_available_booking_date(booking_option, date) || ""
                 end
