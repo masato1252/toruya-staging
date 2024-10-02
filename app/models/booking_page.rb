@@ -33,9 +33,10 @@
 #
 # Indexes
 #
-#  booking_page_index              (user_id,deleted_at,draft)
-#  index_booking_pages_on_shop_id  (shop_id)
-#  index_booking_pages_on_slug     (slug) UNIQUE
+#  booking_page_index                     (user_id,deleted_at,draft)
+#  index_booking_pages_on_rich_menu_only  (rich_menu_only)
+#  index_booking_pages_on_shop_id         (shop_id)
+#  index_booking_pages_on_slug            (slug) UNIQUE
 #
 
 # When booking page limit day is 1, that means you couldn't book today, you have to book one day before the reservation day

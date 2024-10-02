@@ -1,0 +1,17 @@
+<div class="form with-top-bar settings-flow centerize">
+  <%= react_component("user_bot/settings/line_keywords/options", {
+    props: {
+      business_owner_id: business_owner_id,
+      keyword_options: @keyword_options,
+      options: @booking_options,
+      upsert_path: upsert_booking_options_lines_user_bot_settings_line_keyword_path(business_owner_id, format: :json),
+      previous_path: lines_user_bot_booking_options_path(business_owner_id),
+      title: I18n.t("user_bot.dashboards.settings.line_keywords.booking_options.title"),
+      desc: I18n.t("user_bot.dashboards.settings.line_keywords.booking_options.desc"),
+      select_placeholder: I18n.t("user_bot.dashboards.settings.line_keywords.booking_options.list_desc"),
+      line_columns_number_limit: Lines::Actions::BookingOptions::LINE_COLUMNS_NUMBER_LIMIT
+    }
+  },
+  { camelize_props: false }
+  )  %>
+</div>

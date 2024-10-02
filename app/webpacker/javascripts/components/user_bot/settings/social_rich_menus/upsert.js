@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 import ImageUploader from "react-images-upload";
@@ -11,11 +11,49 @@ import ImageSelect from "shared/image_select"
 import { isValidHttpUrl, isValidLength } from "libraries/helper";
 import { CommonServices } from "user_bot/api";
 
-const ActionTypeFields = ({action_type, register, index, props, watch}) => {
+const ActionTypeFields = ({action_type, register, index, props, watch, keyword_booking_pages_size, keyword_booking_options_size}) => {
   if (_.includes(props.keywords, action_type)) {
-    return (
-      <input style={{ display: 'none' }} type="text" name={`actions[${index}].value`} defaultValue={action_type} ref={register()} />
-    )
+    if (action_type == "booking_pages") {
+      return (
+        <div className="my-2">
+          {I18n.t("settings.social_rich_menus.line_send_booking_pages")}： {keyword_booking_pages_size} {I18n.t("common.object_unit")}
+          <a
+            href="#" 
+            data-toggle="modal"
+            data-target="#booking_pages_keyword_modal"
+            data-controller="modal"
+            data-modal-target="#booking_pages_keyword_modal"
+            data-modal-trigger-event="RichMenuKeywordModalClosed"
+            className="btn btn-tarco">
+            <span>{I18n.t("action.edit")}</span>
+          </a>
+          <input style={{ display: 'none' }} type="text" name={`actions[${index}].value`} defaultValue={action_type} ref={register()} />
+        </div>
+      )
+    }
+    else if (action_type == "booking_options") {
+      return (
+        <div className="my-2">
+          {I18n.t("settings.social_rich_menus.line_send_booking_options")}： {keyword_booking_options_size} {I18n.t("common.object_unit")}
+          <a
+            href="#" 
+            data-toggle="modal"
+            data-target="#booking_options_keyword_modal"
+            data-controller="second-modal"
+            data-second-modal-target="#booking_options_keyword_modal"
+            data-second-modal-trigger-event="RichMenuKeywordModalClosed"
+            className="btn btn-tarco">
+            <span>{I18n.t("action.edit")}</span>
+          </a>
+          <input style={{ display: 'none' }} type="text" name={`actions[${index}].value`} defaultValue={action_type} ref={register()} />
+        </div>
+      )
+    }
+    else {
+      return (
+        <input style={{ display: 'none' }} type="text" name={`actions[${index}].value`} defaultValue={action_type} ref={register()} />
+      )
+    }
   }
   else if (action_type == "sale_page") {
     return (
@@ -59,7 +97,29 @@ const ActionTypeFields = ({action_type, register, index, props, watch}) => {
 }
 
 const SocialRichMenuUpsert = ({props}) => {
+  useEffect(() => {
+    const handleRichMenuKeywordModalClosed = async () => {
+      const [_error, response] = await CommonServices.get({
+        url: Routes.keyword_rich_menu_size_lines_user_bot_settings_social_account_social_rich_menus_path({format: "json"}),
+        data: {
+          business_owner_id: props.business_owner_id
+        }
+      })
+
+      setKeywordBookingPagesSize(response.data.keyword_booking_pages_size)
+      setKeywordBookingOptionsSize(response.data.keyword_booking_options_size)
+    };
+
+    document.addEventListener('RichMenuKeywordModalClosed', handleRichMenuKeywordModalClosed);
+
+    return () => {
+      document.removeEventListener('RichMenuKeywordModalClosed', handleRichMenuKeywordModalClosed);
+    };
+  }, []);
+
   const [image, setImage] = useState()
+  const [keyword_booking_pages_size, setKeywordBookingPagesSize] = useState(props.keyword_booking_pages_size)
+  const [keyword_booking_options_size, setKeywordBookingOptionsSize] = useState(props.keyword_booking_options_size)
   const { register, watch, handleSubmit, formState, errors, setValue } = useForm({
     defaultValues: {
       ...props.rich_menu
@@ -155,7 +215,16 @@ const SocialRichMenuUpsert = ({props}) => {
                       <option value="">{I18n.t("common.select")}</option>
                       <SelectOptions options={props.action_types} />
                     </select>
-                    <ActionTypeFields action_type={watch(`actions[${index}].type`)} watch={watch} register={register} index={index} props={props} errors={errors} />
+                    <ActionTypeFields
+                      action_type={watch(`actions[${index}].type`)}
+                      watch={watch}
+                      register={register}
+                      index={index}
+                      props={props}
+                      errors={errors}
+                      keyword_booking_pages_size={keyword_booking_pages_size}
+                      keyword_booking_options_size={keyword_booking_options_size}
+                    />
                   </div>
                 )
               }

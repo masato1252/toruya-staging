@@ -11,6 +11,33 @@ class Lines::UserBot::Settings::LineKeywordsController < Lines::UserBotDashboard
 
 
     flash[:success] = I18n.t("common.update_successfully_message")
-    return_json_response(outcome, { redirect_to: lines_user_bot_booking_pages_path(business_owner_id: business_owner_id) })
+
+    if params[:async]
+      return_json_response(outcome)
+    else
+      return_json_response(outcome, { redirect_to: lines_user_bot_booking_pages_path(business_owner_id: business_owner_id) })
+    end
+  end
+
+  def edit_booking_options
+    @keyword_options = Current.business_owner.line_keyword_booking_options.map { |booking_option| { label: booking_option.name, value: booking_option.id, id: booking_option.id } }
+    # @option_mapping_page_ids = BookingPageOption.where("booking_page_options.booking_option_id": Current.business_owner.line_keyword_booking_option_ids).joins(:booking_page).where("booking_pages.rich_menu_only": true, "booking_pages.deleted_at": nil).each_with_object({}) do |booking_page_option, h|
+    #   h[booking_page_option.booking_option_id] = booking_page_option.booking_page_id
+    # end
+    @booking_options = Current.business_owner.booking_options.active.map do |booking_option|
+      { label: booking_option.name, value: booking_option.id, id: booking_option.id }
+    end
+  end
+
+  def upsert_booking_options
+    outcome = BookingOptions::LineSharingOrder.run(user: Current.business_owner, booking_option_ids: params[:option_ids])
+
+    flash[:success] = I18n.t("common.update_successfully_message")
+
+    if params[:async]
+      return_json_response(outcome)
+    else
+      return_json_response(outcome, { redirect_to: lines_user_bot_booking_options_path(business_owner_id: business_owner_id) })
+    end
   end
 end

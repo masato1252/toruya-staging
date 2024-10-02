@@ -4857,6 +4857,13 @@ CREATE INDEX index_booking_page_special_dates_on_booking_page_id ON public.booki
 
 
 --
+-- Name: index_booking_pages_on_rich_menu_only; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_pages_on_rich_menu_only ON public.booking_pages USING btree (rich_menu_only);
+
+
+--
 -- Name: index_booking_pages_on_shop_id; Type: INDEX; Schema: public; Owner: -
 --
 

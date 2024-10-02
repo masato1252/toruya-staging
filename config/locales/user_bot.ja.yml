@@ -126,9 +126,15 @@ ja:
           help_link: Toruyaのリッチメニュー活用法
         line_keywords:
           booking_pages:
-            title: LINE予約
+            title: LINE送信する予約ページ
             desc: 顧客リッチメニューから自動送信する予約ページを設定してください。
             list_desc: LINE送信する予約ページ
+            limit_desc: 10個まで設定可能です。
+          booking_options:
+            title: LINE送信する予約価格
+            desc: 顧客リッチメニューから自動送信する予約価格を設定してください。
+            list_desc: LINE送信する予約価格
+            limit_desc: 10個まで設定可能です。
         business_schedules:
           reservation_management: 予約管理
           business_time: 営業日時

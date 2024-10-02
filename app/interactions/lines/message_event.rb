@@ -33,7 +33,11 @@ class Lines::MessageEvent < ActiveInteraction::Base
         # Rollbar.info("Line text message", event: event)
 
         case event["message"]["text"].strip
-        when I18n.t("line.bot.keywords.booking_pages")
+        when I18n.t("line.bot.keywords.booking_options")
+          is_keyword = true
+
+          Lines::Actions::BookingOptions.run(social_customer: social_customer)
+        when I18n.t("line.bot.keywords.booking_pages"), I18n.t("line.bot.legacy_keyowords.booking_pages")
           is_keyword = true
 
           Lines::Actions::BookingPages.run(social_customer: social_customer)

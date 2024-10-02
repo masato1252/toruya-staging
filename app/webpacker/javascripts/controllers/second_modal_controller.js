@@ -1,7 +1,7 @@
 import "whatwg-fetch";
 import { Controller } from "stimulus"
 
-export default class Modal extends Controller {
+export default class SecondModal extends Controller {
   connect() {
     this.popupModal = $(`${this.modalTarget}`);
 
@@ -29,7 +29,9 @@ export default class Modal extends Controller {
 
   popup() {
     this.popupModal.modal("show");
-    this.loadModal();
+    if (this.path) {
+      this.loadModal();
+    }
   }
 
   loadModal() {
@@ -45,6 +47,7 @@ export default class Modal extends Controller {
   }
 
   modalHideHandler = () => {
+    console.log("modalHideHandler")
     this.popupModal.html("");
   }
 

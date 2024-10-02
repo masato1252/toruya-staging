@@ -221,6 +221,8 @@ Rails.application.routes.draw do
             member do
               get :edit_booking_pages
               put :upsert_booking_pages
+              get :edit_booking_options
+              put :upsert_booking_options
             end
           end
 
@@ -262,6 +264,7 @@ Rails.application.routes.draw do
             resources :social_rich_menus, only: [:index, :new, :edit] do
               collection do
                 post :upsert
+                get :keyword_rich_menu_size
               end
 
               member do

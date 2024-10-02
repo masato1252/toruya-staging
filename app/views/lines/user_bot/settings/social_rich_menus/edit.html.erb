@@ -7,6 +7,8 @@
     action_labels: ("A".."K").to_a,
     action_types: I18n.t("settings.social_rich_menus.action_types").map { |type, label| { label: label, value: type } },
     keywords: SocialRichMenu::KEYWORDS,
+    keyword_booking_pages_size: @keyword_booking_pages.size,
+    keyword_booking_options_size: @keyword_options.size,
     sale_pages: @sale_pages.map do |sale_page|
       next unless sale_page.product
 
@@ -27,3 +29,60 @@
 },
 { camelize_props: false }
 ) %>
+
+<div class="modal fade" id="booking_pages_keyword_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <%= I18n.t("user_bot.dashboards.settings.line_keywords.booking_pages.title") %>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pb-0 form settings-flow centerize">
+        <%= react_component("user_bot/settings/line_keywords/booking_pages", {
+          props: {
+            business_owner_id: business_owner_id,
+            booking_pages: @keyword_booking_pages,
+            booking_page_options: @keyword_booking_page_options,
+            modal_id: "booking_pages_keyword_modal",
+            async: true,
+            line_columns_number_limit: Lines::Actions::BookingPages::LINE_COLUMNS_NUMBER_LIMIT
+          }
+        },
+        { camelize_props: false }
+                           ) %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="booking_options_keyword_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <%= I18n.t("user_bot.dashboards.settings.line_keywords.booking_options.title") %>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body form pb-0 settings-flow centerize">
+        <%= react_component("user_bot/settings/line_keywords/options", {
+          props: {
+            business_owner_id: business_owner_id,
+            keyword_options: @keyword_options,
+            options: @booking_options,
+            upsert_path: upsert_booking_options_lines_user_bot_settings_line_keyword_path(business_owner_id: business_owner_id, async: true, format: :json),
+            desc: I18n.t("user_bot.dashboards.settings.line_keywords.booking_options.desc"),
+            select_placeholder: I18n.t("user_bot.dashboards.settings.line_keywords.booking_options.list_desc"),
+            modal_id: "booking_options_keyword_modal",
+            async: true,
+            line_columns_number_limit: Lines::Actions::BookingOptions::LINE_COLUMNS_NUMBER_LIMIT
+          }
+        },
+        { camelize_props: false }
+                           )  %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -43,7 +43,13 @@ module BookingOptions
     def execute
       booking_option.with_lock do
         case update_attribute
-        when "name", "display_name", "menu_restrict_order", "memo"
+        when "name", "display_name", "memo"
+          booking_option.update(attrs.slice(update_attribute))
+
+          if user.line_keyword_booking_option_ids.include?(booking_option.id.to_s)
+            compose(BookingOptions::SyncBookingPage, booking_option: booking_option)
+          end
+        when "menu_restrict_order"
           booking_option.update(attrs.slice(update_attribute))
         when "new_pure_menu"
           ApplicationRecord.transaction do
