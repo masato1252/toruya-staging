@@ -11,19 +11,6 @@ tw:
       vip_customers: "VIP客戶"
       conditions:
         contains: 包含
-  customer:
-    notifications:
-      noreply: "※請勿回覆"
-      sms:
-        booking: "%{customer_name}您好，\n已為您在%{shop_name}預約%{booking_time}。\n\n%{booking_info_url}"
-        confirmation: "%{customer_name}您好，\n已為您在%{shop_name}確認%{booking_time}的預約。\n\n%{booking_info_url}"
-        reminder: "%{customer_name}您好，\n%{shop_name}期待您於%{booking_time}蒞臨。\n\n%{booking_info_url}"
-        change_from_phone_number: "如需變更，請致電%{shop_phone_number}。"
-        confirmation_code: "確認碼：%{code}"
-    reminder_permissions:
-      approved:
-        title: 提醒設定完成
-        desc_html: "已開啟%{shop_name}的預約通知。<br>我們將在您預約前發送通知。"
   requirement:
     contact_redirect_message: 請設定要同步到客戶資料庫的Gmail聯絡人。
     contact_warning_message: 請在客戶資料庫設定頁面進行%{link}。
@@ -253,6 +240,18 @@ tw:
           title: 未找到服務項目
           content: 此店舖尚未設定服務項目。請聯絡店舖管理員。
   customer:
+    notifications:
+      noreply: "※請勿回覆"
+      sms:
+        booking: "%{customer_name}您好，\n已為您在%{shop_name}預約%{booking_time}。\n\n%{booking_info_url}"
+        confirmation: "%{customer_name}您好，\n已為您在%{shop_name}確認%{booking_time}的預約。\n\n%{booking_info_url}"
+        reminder: "%{customer_name}您好，\n%{shop_name}期待您於%{booking_time}蒞臨。\n\n%{booking_info_url}"
+        change_from_phone_number: "如需變更，請致電%{shop_phone_number}。"
+        confirmation_code: "確認碼：%{code}"
+    reminder_permissions:
+      approved:
+        title: 提醒設定完成
+        desc_html: "已開啟%{shop_name}的預約通知。<br>我們將在您預約前發送通知。"
     back_without_save: 不儲存並返回
     save: 儲存
     delete: 刪除客戶資料

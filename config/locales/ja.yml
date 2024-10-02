@@ -11,19 +11,6 @@ ja:
       vip_customers: "VIP顧客"
       conditions:
         contains: 是
-  customer:
-    notifications:
-      noreply: "※返信不可"
-      sms:
-        booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。\n\n%{booking_info_url}"
-        confirmation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。\n\n%{booking_info_url}"
-        reminder: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています。\n\n%{booking_info_url}"
-        change_from_phone_number: "変更は%{shop_phone_number}まで。"
-        confirmation_code: "確認コード: %{code}"
-    reminder_permissions:
-      approved:
-        title: リマインダ設定完了
-        desc_html: "%{shop_name}の予約通知がオンになりました。<br>ご予約の前に通知をお送りします。"
   requirement:
     contact_redirect_message: 顧客台帳に同期するGmail連絡先を設定してください。
     contact_warning_message: 顧客台帳設定ページにて%{link}をしてください。
@@ -252,6 +239,18 @@ ja:
           title: メニューが見つかりません
           content: この店舗はメニューが未設定です。店舗管理者にご連絡ください。
   customer:
+    notifications:
+      noreply: "※返信不可"
+      sms:
+        booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。\n\n%{booking_info_url}"
+        confirmation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。\n\n%{booking_info_url}"
+        reminder: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています。\n\n%{booking_info_url}"
+        change_from_phone_number: "変更は%{shop_phone_number}まで。"
+        confirmation_code: "確認コード: %{code}"
+    reminder_permissions:
+      approved:
+        title: リマインダ設定完了
+        desc_html: "%{shop_name}の予約通知がオンになりました。<br>ご予約の前に通知をお送りします。"
     back_without_save: 保存せずに戻る
     save: 上書き保存
     delete: 顧客情報を削除
