@@ -53,6 +53,7 @@ class BookingOption < ApplicationRecord
   def present_name
     display_name.presence || name
   end
+  alias_method :show_name, :present_name
 
   def cash_pay_required?
     amount_cents < LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT || (ticket_enabled? && amount_cents > MAXIMUM_TICKET_REQUIRED_AMOUNT)

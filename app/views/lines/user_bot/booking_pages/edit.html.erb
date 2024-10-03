@@ -1,9 +1,9 @@
-<% if @attribute == "online_payment_enabled" && !Current.business_owner.payment_providers.exists? %>
+<% if @attribute == "payment_option" && !Current.business_owner.payment_providers.exists? %>
   <div class="settings-dashboard form with-top-bar">
     <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id), title: t("settings.booking_page.form.online_payment_enabled_title") %>
-    <%= render "lines/user_bot/settings/stripes/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, @booking_page, attribute: :online_payment_enabled) %>
+    <%= render "lines/user_bot/settings/stripes/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, @booking_page, attribute: :payment_option) %>
     <hr />
-    <%= render "lines/user_bot/settings/squares/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, @booking_page, attribute: :online_payment_enabled) %>
+    <%= render "lines/user_bot/settings/squares/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, @booking_page, attribute: :payment_option) %>
   </div>
 <% else %>
   <%= react_component("user_bot/booking_pages/edit", {
@@ -16,6 +16,8 @@
       requirements: @requirements,
       support_feature_flags: support_feature_flags,
       booking_option_introduction_asset_path: asset_pack_path("media/assets/user_bot/booking_option_introduction.png"),
+      booking_options_payment_options: @booking_page.booking_page_options.map { |booking_page_option| { label: booking_page_option.booking_option.show_name, value: booking_page_option.id } },
+      booking_page_online_payment_options_ids: @booking_page.booking_page_online_payment_options.pluck(:id),
       booking_page: @booking_page.attributes.merge!(
         shop_id: @booking_page.shop_id.to_s,
         available_booking_options: @options ? custom_options(@options.map { |option| booking_option_item(option) }) : [],
@@ -40,7 +42,7 @@
             end_at_time_part:   special_date.end_at_time
           }
         end,
-        requirement_online_service: @booking_page.requirement_online_service ? OnlineServiceOptionSerializer.new(@booking_page.requirement_online_service).attributes_hash : nil
+        requirement_online_service: @booking_page.requirement_online_service ? OnlineServiceOptionSerializer.new(@booking_page.requirement_online_service).attributes_hash : nil,
       ),
       attribute: @attribute,
       shop_options: shop_options(Current.business_owner.shops.order("id")),

@@ -21,6 +21,7 @@
 #  note                               :text
 #  online_payment_enabled             :boolean          default(FALSE)
 #  overbooking_restriction            :boolean          default(TRUE)
+#  payment_option                     :string           default("offline")
 #  rich_menu_only                     :boolean          default(FALSE)
 #  slug                               :string
 #  social_account_skippable           :boolean          default(FALSE), not null
@@ -47,6 +48,7 @@ class BookingPage < ApplicationRecord
   date_time_accessor :start_at, :end_at, accessor_only: true
 
   has_many :booking_page_options, -> { order("booking_page_options.position") }
+  has_many :booking_page_online_payment_options, -> { where(online_payment_enabled: true).order("booking_page_options.position") }, class_name: "BookingPageOption"
   has_many :booking_options, -> { undeleted }, through: :booking_page_options
   has_many :booking_codes
   has_many :booking_page_special_dates, -> { order(:start_at) }
@@ -60,6 +62,12 @@ class BookingPage < ApplicationRecord
   scope :started, -> { active.where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
   scope :end_yet, -> { where("end_at is NULL or end_at > ?", Time.current) }
   validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
+
+  enum payment_option: {
+    offline: "offline",
+    online: "online",
+    custom: "custom"
+  }
 
   def primary_product
     @primary_product ||= booking_options.order(amount_cents: :asc).first
@@ -146,30 +154,7 @@ class BookingPage < ApplicationRecord
   end
 
   def payment_solution
-    case payment_provider
-    when AccessProvider.providers[:stripe_connect]
-      if user.stripe_provider
-        { solution: user.stripe_provider.provider, stripe_key: user.stripe_provider.publishable_key }
-      else
-        {}
-      end
-    when AccessProvider.providers[:square]
-      if user.square_provider
-        result = user.square_client.locations.list_locations
-
-        if result.data
-          square_location_id = result.data[:locations].last[:id]
-
-          { solution: user.square_provider.provider, square_app_id: Rails.application.secrets.square_app_id, square_location_id: square_location_id }
-        else
-          {}
-        end
-      else
-        {}
-      end
-    else
-      {}
-    end
+    Users::PaymentSolution.run!(user: user, provider: payment_provider)
   end
 
   def payment_provider

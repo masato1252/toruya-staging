@@ -15,8 +15,6 @@ module BookingPages
       boolean :line_sharing, default: true
       boolean :customer_cancel_request, default: true
       integer :customer_cancel_request_before_day, default: 1
-      boolean :online_payment_enabled, default: false
-      string :default_provider, default: nil
       integer :shop_id, default: nil
       integer :booking_limit_day, default: 0
       integer :booking_limit_hours, default: 0
@@ -30,6 +28,9 @@ module BookingPages
         end
       end
       boolean :overbooking_restriction, default: true
+
+      string :payment_option, default: "offline"
+      array :booking_page_online_payment_options_ids, default: []
 
       # for adding a new option from existing option
       integer :new_option_id, default: nil
@@ -83,6 +84,7 @@ module BookingPages
       new_option_id = attrs.delete(:new_option_id)
       special_dates = attrs.delete(:special_dates)
       business_schedules = attrs.delete(:business_schedules)
+      payment_option_type = attrs.delete(:payment_option_type)
 
       booking_page.transaction do
         case update_attribute
@@ -205,11 +207,19 @@ module BookingPages
             customer_cancel_request: attrs[:customer_cancel_request],
             customer_cancel_request_before_day: attrs[:customer_cancel_request_before_day]
           )
-        when "online_payment_enabled"
-          booking_page.online_payment_enabled = attrs[:online_payment_enabled]
-          booking_page.default_provider = attrs[:default_provider] if attrs[:online_payment_enabled]
-
+        when "payment_option"
+          case attrs[:payment_option]
+          when "online"
+            booking_page.booking_page_options.update_all(online_payment_enabled: true)
+          when "offline"
+            booking_page.booking_page_options.update_all(online_payment_enabled: false)
+          when "custom"
+            booking_page.booking_page_options.where(id: attrs[:booking_page_online_payment_options_ids]).update_all(online_payment_enabled: true)
+            booking_page.booking_page_options.where.not(id: attrs[:booking_page_online_payment_options_ids]).update_all(online_payment_enabled: false)
+          end
+          booking_page.payment_option = attrs[:payment_option]
           booking_page.save
+
         when "line_sharing"
           booking_page.update(attrs.slice(update_attribute))
 

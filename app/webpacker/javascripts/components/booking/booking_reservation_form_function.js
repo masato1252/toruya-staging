@@ -55,8 +55,8 @@ const BookingReservationFormFunction = ({props}) => {
     })
   }
 
-  const isCashPayRequired = () => {
-    return selected_booking_option()?.cash_pay_required
+  const isOnlinePayment= () => {
+    return selected_booking_option()?.is_online_payment
   }
 
   const handleAddressCallback = (address) => {
@@ -414,7 +414,7 @@ const BookingReservationFormFunction = ({props}) => {
       )
     }
 
-    if (isCashPayRequired() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
+    if (!isOnlinePayment() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
       return (
         <CustomerAddressView
           handleAddressCallback={handleAddressCallback}
@@ -544,7 +544,7 @@ const BookingReservationFormFunction = ({props}) => {
               isBookingFlowEnd={isBookingFlowEnd()}
               isEnoughCustomerInfo={isEnoughCustomerInfo()}
               isCustomerTrusted={isCustomerTrusted()}
-              isCashPayRequired={isCashPayRequired()}
+              isOnlinePayment={isOnlinePayment()}
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}
@@ -609,7 +609,7 @@ const BookingReservationFormFunction = ({props}) => {
               isBookingFlowEnd={isBookingFlowEnd()}
               isEnoughCustomerInfo={isEnoughCustomerInfo()}
               isCustomerTrusted={isCustomerTrusted()}
-              isCashPayRequired={isCashPayRequired()}
+              isOnlinePayment={isOnlinePayment()}
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}

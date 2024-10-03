@@ -647,12 +647,13 @@ tw:
         no_membership_services: 尚未設定會員限定預約。
         line_sharing: LINE線上預約
         line_sharing_title: LINE線上預約
-        online_payment_enabled: 線上付款
-        online_payment_enabled_title: 線上付款
-        online_payment_options:
-          enabled: 使用
-          disabled: 不使用
-        online_payment_enabled_desc_html: 啟用線上付款後，<br>客戶需要支付費用才能<br>完成預約。
+        payment_option: 線上付款
+        payment_option_title: 付款方法
+        payment_option_options:
+          custom: 自訂
+          online: 線上
+          offline: 線下
+        payment_option_desc_html: 啟用線上付款後，<br>客戶需要支付費用才能<br>完成預約。
         share_in_bot: 顯示
         not_share_in_bot: 不顯示
         privacy_status: 頁面狀態

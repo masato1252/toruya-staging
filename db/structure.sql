@@ -626,7 +626,8 @@ CREATE TABLE public.booking_page_options (
     id bigint NOT NULL,
     booking_page_id bigint NOT NULL,
     booking_option_id bigint NOT NULL,
-    "position" integer DEFAULT 0
+    "position" integer DEFAULT 0,
+    online_payment_enabled boolean DEFAULT false
 );
 
 

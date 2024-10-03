@@ -25,7 +25,7 @@ import ExistingMenuField from "components/user_bot/booking_options/existing_menu
 const BookingPageEdit =({props}) => {
   const i18n = props.i18n;
   const [requirement_online_service, setRequirementOnlineService] = useState(props.booking_page.requirement_online_service)
-
+  const [booking_page_online_payment_options_ids, setBookingPageOnlinePaymentOptionsIds] = useState(props.booking_page_online_payment_options_ids)
   const onSubmit = async (data) => {
     console.log(data)
 
@@ -43,7 +43,8 @@ const BookingPageEdit =({props}) => {
         { special_dates: _.includes(["event_booking", "only_special_dates_booking"], data.booking_type) ? data.special_dates : [] },
         { booking_type: data.booking_type },
         { attribute: props.attribute },
-        { booking_start_times: data.had_specific_booking_start_times === "true" ? data.booking_start_times : [] }
+        { booking_start_times: data.had_specific_booking_start_times === "true" ? data.booking_start_times : [] },
+        { booking_page_online_payment_options_ids: data.payment_option === "custom" ? booking_page_online_payment_options_ids : [] },
       )
     })
 
@@ -327,8 +328,18 @@ const BookingPageEdit =({props}) => {
         return <LineSharingField i18n={i18n} register={register} />
       case "customer_cancel_request":
         return <CustomerCancelRequestField i18n={i18n} register={register} watch={watch} />
-      case "online_payment_enabled":
-        return <OnlinePaymentEnabledField i18n={i18n} register={register} watch={watch} payment_provider_options={props.payment_provider_options} />
+      case "payment_option":
+        return (
+          <OnlinePaymentEnabledField
+            i18n={i18n}
+            register={register}
+            watch={watch}
+            payment_provider_options={props.payment_provider_options}
+            booking_options_payment_options={props.booking_options_payment_options}
+            booking_page_online_payment_options_ids={booking_page_online_payment_options_ids}
+            setBookingPageOnlinePaymentOptionsIds={setBookingPageOnlinePaymentOptionsIds}
+          />
+        )
       case "social_account_skippable":
         return <SocialAccountSkippableField i18n={i18n} register={register} />
       case "draft":
