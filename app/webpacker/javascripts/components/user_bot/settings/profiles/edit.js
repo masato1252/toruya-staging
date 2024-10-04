@@ -125,7 +125,7 @@ const ProfileEdit =({props}) => {
             <div className="field-header">{I18n.t("common.phone_number")}</div>
             <div className="field-row">
               <input
-                ref={register({ required: true })}
+                ref={register}
                 name="company_phone_number"
                 type="tel"
               />
@@ -185,9 +185,9 @@ const ProfileEdit =({props}) => {
   }
 
   return (
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-6 px-0 settings-view">
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
@@ -211,22 +211,29 @@ const ProfileEdit =({props}) => {
         </div>
 
         <div className="col-sm-6 px-0 hidden-xs preview-view">
-          {['company_name', 'company_phone_number'].includes(props.attribute) && (
-            <div class="fake-mobile-layout">
+          {['company_name'].includes(props.attribute) && (
+            <div className="fake-mobile-layout">
               <SaleDemoPage
                 shop={{...props.profile, [props.attribute]: watch(props.attribute)}}
               />
             </div>
           )}
+          {['company_phone_number'].includes(props.attribute) && (
+            <div className="fake-mobile-layout">
+              <SaleDemoPage
+                shop={{...props.profile, company_phone_number: watch(props.attribute), phone_number: watch(props.attribute)}}
+              />
+            </div>
+          )}
           {['logo'].includes(props.attribute) && (
-            <div class="fake-mobile-layout">
+            <div className="fake-mobile-layout">
               <SaleDemoPage
                 shop={{...props.profile, logo_url: watch("logo_url")}}
               />
             </div>
           )}
           {['company_address_details'].includes(props.attribute) && (
-            <div class="fake-mobile-layout">
+            <div className="fake-mobile-layout">
               <SaleDemoPage
                 shop={{...props.profile, address: `〒${watch('company_address_details[zip_code]')}${watch('company_address_details[region]')}${watch('company_address_details[city]')}${watch('company_address_details[street1]')}${watch('company_address_details[street2]')}`}}
               />
