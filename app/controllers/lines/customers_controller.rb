@@ -15,6 +15,7 @@ class Lines::CustomersController < ActionController::Base
     current_social_customer&.customer
   end
   helper_method :current_customer
+  before_action :set_locale
 
   def current_social_customer
     social_user_id =
@@ -60,4 +61,8 @@ class Lines::CustomersController < ActionController::Base
     params[:business_owner_id].presence || Current.business_owner&.id
   end
   helper_method :business_owner_id
+
+  def set_locale
+    I18n.locale = current_social_customer&.locale || current_toruya_social_user&.locale || I18n.default_locale
+  end
 end

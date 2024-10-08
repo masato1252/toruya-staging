@@ -2558,7 +2558,8 @@ CREATE TABLE public.social_customers (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     social_rich_menu_key character varying,
-    is_owner boolean DEFAULT false
+    is_owner boolean DEFAULT false,
+    locale character varying DEFAULT 'ja'::character varying
 );
 
 
@@ -2719,7 +2720,8 @@ CREATE TABLE public.social_users (
     social_rich_menu_key character varying,
     pinned boolean DEFAULT false NOT NULL,
     release_version character varying,
-    consultant_at timestamp(6) without time zone
+    consultant_at timestamp(6) without time zone,
+    locale character varying DEFAULT 'ja'::character varying
 );
 
 
@@ -6015,6 +6017,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240817114718'),
 ('20240823204505'),
 ('20240823213428'),
+('20240826145415'),
+('20240913015314'),
+('20240926154657'),
+('20241002201733'),
+('20241008143048'),
 ('20241013003439');
 
 

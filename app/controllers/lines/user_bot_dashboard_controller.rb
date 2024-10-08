@@ -19,6 +19,7 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   skip_before_action :track_ahoy_visit
   before_action :redirect_from_rich_menu
+  before_action :set_locale
 
   def from_line_bot
     true
@@ -60,5 +61,9 @@ class Lines::UserBotDashboardController < ActionController::Base
       render template: "lines/user_bot/business_owners"
       return
     end
+  end
+
+  def set_locale
+    I18n.locale = current_social_user&.locale || I18n.default_locale
   end
 end

@@ -13,6 +13,7 @@ class Lines::UserBotController < ActionController::Base
 
   before_action :authenticate_social_user!
   skip_before_action :track_ahoy_visit
+  before_action :set_locale
 
   def authenticate_social_user!
     if params[:social_service_user_id]
@@ -36,4 +37,8 @@ class Lines::UserBotController < ActionController::Base
     @current_user ||= social_user&.root_user
   end
   helper_method :current_user
+
+  def set_locale
+    I18n.locale = current_social_user&.locale || I18n.default_locale
+  end
 end

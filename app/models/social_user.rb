@@ -5,6 +5,7 @@
 #
 #  id                      :bigint           not null, primary key
 #  consultant_at           :datetime
+#  locale                  :string           default("ja")
 #  pinned                  :boolean          default(FALSE), not null
 #  release_version         :string
 #  social_rich_menu_key    :string
