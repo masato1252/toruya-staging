@@ -54,6 +54,8 @@ ja:
       dashboard_title: ダッシュボード
       sale_page_title: 宣伝用LP
       service_title: オンラインサービス
+  top_navigation_bar:
+    menu: ユーザーメニュー
   invitation:
     business_member_canceled:
       title: 利用が中止されました

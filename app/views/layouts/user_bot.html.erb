@@ -152,7 +152,9 @@
 
       <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">
         <div class="top-navigation-function-bar">
-          <%= content_tag(:i, nil, data: { action: "click->collapse#toggle", target: "collapse.closeToggler" }, class: "fa fa-bars text-white") %>
+          <%= content_tag(:i, data: { action: "click->collapse#toggle", target: "collapse.closeToggler" }, class: "fa fa-bars text-white") do %>
+            <span class="font-normal"><%= t("top_navigation_bar.menu") %></span>
+          <% end %>
           <%= content_tag(:span, nil, data: { target: "collapse.openToggler" }) %>
 
           <div class="dropdown open" data-controller="collapse" data-collapse-status="closed" data-action="click->collapse#toggle" >

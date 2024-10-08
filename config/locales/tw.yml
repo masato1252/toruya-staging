@@ -54,6 +54,8 @@ tw:
       dashboard_title: 儀表板
       sale_page_title: 宣傳用落地頁
       service_title: 線上服務
+  top_navigation_bar:
+    menu: ""
   invitation:
     business_member_canceled:
       title: 使用已被中止
