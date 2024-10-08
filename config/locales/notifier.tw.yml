@@ -94,7 +94,7 @@ https://manager.toruya.com/userlogin"
         message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n我們將在%{charge_date}向您收取使用費用。\n\n您可以從設置畫面確認詳細的使用費用以及更改付款方式。\n\nToruya"
     customer_payments:
       charge_failed_to_owner:
-        message: "⚠️線上結算失敗通知⚠️\n\n我們代表%{user_name}向客戶收費時，未能獲得客戶卡片的使用授權，特此通知。\n\n您可以在服務設置的服務使用者頁面確認線上結算失敗的客戶信息。\n\n關於後續流程，請參考以下內容：\n\n❶我們已經通過您的官方LINE向該客戶發送了收費失敗的通知。\n\n❷Toruya不會重新收費，請客戶自行通過①中訊息發送的URL更改付款方法或正確修改卡片信息。\n\n❸根據客戶購買的方案，結算失敗後的服務使用狀況會有所不同。詳情請參閱手冊。"
+        message: "⚠️線上結算失敗通知⚠️\n\n我們代表%{user_name}向客戶收費時，未能獲得客戶%{customer_name}卡片的使用授權，特此通知。\n\n您可以在服務設置的服務使用者頁面確認線上結算失敗的客戶信息。\n\n關於後續流程，請參考以下內容：\n\n❶我們已經通過您的官方LINE向該客戶發送了收費失敗的通知。\n\n❷Toruya不會重新收費，請客戶自行通過①中訊息發送的URL更改付款方法或正確修改卡片信息。\n\n❸根據客戶購買的方案，結算失敗後的服務使用狀況會有所不同。詳情請參閱手冊。"
       charge_failed_to_customer:
         message: "%{customer_name} 您好\n\n感謝您一直以來使用%{shop_name}。\n\n今天，我們嘗試向您的信用卡收取%{service_title}的使用費用，但未能獲得您指定用於付款的卡片的使用授權，特此通知。\n\n在完成付款之前，我們將暫時停止您使用%{service_title}。\n\n如果您希望繼續使用%{service_title}，請在以下頁面更改付款方式或正確修改卡片信息：\n\n
           %{customer_status_online_service_url}\n\n如果更改後的付款方式沒有問題，您可以從結算完成日重新開始使用。在這種情況下，使用期間將從付款完成日開始計算。\n\n※無法獲得卡片授權的原因可能是您輸入的卡片已失效。\n\n如果您有任何問題，請聯繫%{shop_phone}。"

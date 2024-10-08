@@ -11,7 +11,7 @@ module Notifiers
         validate :receiver_should_be_user
 
         def message
-          I18n.t("notifier.customer_payments.charge_failed_to_owner.message", user_name: receiver.name)
+          I18n.t("notifier.customer_payments.charge_failed_to_owner.message", user_name: receiver.name, customer_name: customer_payment.customer.name)
         end
       end
     end
