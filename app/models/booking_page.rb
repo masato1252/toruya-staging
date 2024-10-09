@@ -85,12 +85,28 @@ class BookingPage < ApplicationRecord
   end
 
   def available_booking_start_date
-    Subscription.today.advance(days: booking_limit_day)
+    default_start_date = Subscription.today.advance(days: booking_limit_day)
+
+    if start_at
+      [start_at.to_date, default_start_date].max
+    elsif booking_page_special_dates.exists?
+      [booking_page_special_dates.first.start_at.to_date, default_start_date].max
+    else
+      default_start_date
+    end
   end
 
   def available_booking_end_date
     # No bookable_restriction_months nil means no restriction, use 100 months to represent
-    Subscription.today.advance(months: bookable_restriction_months || 100)
+    default_booking_end_date = Subscription.today.advance(months: bookable_restriction_months || 100)
+
+    if end_at
+      [end_at.to_date, default_booking_end_date].min
+    elsif booking_page_special_dates.exists?
+      [booking_page_special_dates.last.start_at.to_date, default_booking_end_date].min
+    else
+      default_booking_end_date
+    end
   end
 
   def started?

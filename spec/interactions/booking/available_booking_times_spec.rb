@@ -13,7 +13,7 @@ RSpec.describe Booking::AvailableBookingTimes do
   let(:shop) { business_schedule.shop }
   let(:user) { shop.user }
   let(:staff) { FactoryBot.create(:staff, :full_time, :owner, shop: shop, user: user) }
-  let(:booking_page) { FactoryBot.create(:booking_page, user: user, shop: shop, overbooking_restriction: overbooking_restriction) }
+  let(:booking_page) { FactoryBot.create(:booking_page, user: user, shop: shop, overbooking_restriction: overbooking_restriction, end_at: nil) }
   let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, user: user) }
   let(:booking_option2) { FactoryBot.create(:booking_option, :single_menu, user: user) }
   let(:special_dates) {[
@@ -66,7 +66,7 @@ RSpec.describe Booking::AvailableBookingTimes do
   end
 
   context "when booking page got special booking start time" do
-    let(:booking_page) { FactoryBot.create(:booking_page, specific_booking_start_times: ["09:00", "13:00"], user: user, shop: shop, overbooking_restriction: overbooking_restriction) }
+    let(:booking_page) { FactoryBot.create(:booking_page, end_at: nil, specific_booking_start_times: ["09:00", "13:00"], user: user, shop: shop, overbooking_restriction: overbooking_restriction) }
 
     it "returns expected result, returns all available booking time" do
       result = outcome.result

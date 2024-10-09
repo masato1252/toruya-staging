@@ -11,7 +11,7 @@ RSpec.describe Booking::Calendar do
 
   let(:today) { Time.zone.local(2019, 5, 12) }
   let(:business_schedule) { FactoryBot.create(:business_schedule) }
-  let(:booking_page) { FactoryBot.create(:booking_page) }
+  let(:booking_page) { FactoryBot.create(:booking_page, end_at: nil) }
   let(:shop) { business_schedule.shop }
   let(:user) { shop.user }
   let(:date_range) { Date.current.beginning_of_month..Date.current.end_of_month  }
@@ -53,7 +53,7 @@ RSpec.describe Booking::Calendar do
     end
 
     context "when booking page got special booking start time" do
-      let(:booking_page) { FactoryBot.create(:booking_page, specific_booking_start_times: ["09:01"]) }
+      let(:booking_page) { FactoryBot.create(:booking_page, end_at: nil, specific_booking_start_times: ["09:01"]) }
 
       it "returns expected result, returns all available booking time" do
         special_dates = [
