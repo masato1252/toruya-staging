@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SmsClient
-  HARUKO_PHONE = "08036238534".freeze
+  HARUKO_PHONE = "09088158538".freeze
 
   def self.send(phone_number, message)
     return if Rails.env.test? || Rails.env.development?
