@@ -27,5 +27,36 @@ RSpec.describe Notifiers::Customers::Broadcast, :with_line do
         ).count
       }.by(1)
     end
+
+    context "when broadcast is reservation_customers" do
+      let(:reservation_customer) { FactoryBot.create(:reservation_customer, customer: receiver) }
+      let(:broadcast) do
+        FactoryBot.create(:broadcast, user: receiver.user, query_type: "reservation_customers", query: {
+          filters: [
+            {
+              field: "reservation_id",
+              value: reservation_customer.reservation_id,
+              condition: "eq"
+            }
+          ],
+          operator: "or"
+        })
+      end
+      before { receiver.update_columns(reminder_permission: false) }
+
+      it "sends line with social_message had broadcast id even the receiver has not enabled reminder permission" do
+        expect(LineClient).to receive(:send).with(receiver.social_customer, broadcast.content)
+
+        expect {
+          outcome
+        }.to change {
+          SocialMessage.where(
+            social_customer: receiver.social_customer,
+            raw_content: broadcast.content,
+            broadcast: broadcast
+          ).count
+        }.by(1)
+      end
+    end
   end
 end

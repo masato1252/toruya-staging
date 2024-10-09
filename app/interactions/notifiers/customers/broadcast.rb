@@ -29,7 +29,12 @@ module Notifiers
       end
 
       def deliverable
-        receiver.reminder_permission
+        # It is a broadcast to all the customers in the reservations, not regular marketing broadcast.
+        if broadcast.query_type == "reservation_customers"
+          true
+        else
+          receiver.reminder_permission
+        end
       end
     end
   end
