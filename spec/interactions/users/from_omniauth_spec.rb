@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Users::FromOmniauth do
-  let(:email) { Faker::Internet.email }
+  let(:email) { "foo@gmail.com" }
   let(:referral_token) {}
   let(:args) do
     {

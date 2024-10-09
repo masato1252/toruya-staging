@@ -66,7 +66,7 @@ RSpec.describe Staffs::Update do
           allow(NotificationMailer).to receive(:activate_staff_account).and_return(spy)
           shop = FactoryBot.create(:shop, user: staff.user)
           contact_group = FactoryBot.create(:contact_group, user: staff.user)
-          email = Faker::Internet.email
+          email = "foo@email.com"
 
           args.merge!(
             user_level: "admin",
@@ -131,7 +131,7 @@ RSpec.describe Staffs::Update do
           allow(NotificationMailer).to receive(:activate_staff_account).and_return(spy)
           shop = FactoryBot.create(:shop, user: staff.user)
           contact_group = FactoryBot.create(:contact_group, user: staff.user)
-          email = Faker::Internet.email
+          email = "foo@email.com"
 
           args.merge!(
             user_level: "manager",
@@ -197,7 +197,7 @@ RSpec.describe Staffs::Update do
         it "only changes first_name, last_name, phonetic_first_name, phonetic_last_name attributes" do
           shop = FactoryBot.create(:shop, user: staff.user)
           contact_group = FactoryBot.create(:contact_group, user: staff.user)
-          email = Faker::Internet.email
+          email = "foo@email.com"
 
           args.merge!(
             user_level: "staff",
@@ -254,7 +254,7 @@ RSpec.describe Staffs::Update do
         shop = FactoryBot.create(:shop, user: staff.user)
         previous_shop = FactoryBot.create(:shop, user: staff.user)
         contact_group = FactoryBot.create(:contact_group, user: staff.user)
-        email = Faker::Internet.email
+        email = "foo@email.com"
         FactoryBot.create(:shop_staff, staff: staff, shop: previous_shop)
         FactoryBot.create(:custom_schedule, :opened, shop: previous_shop, staff: staff)
         FactoryBot.create(:business_schedule, :opened, shop: previous_shop, staff: staff)

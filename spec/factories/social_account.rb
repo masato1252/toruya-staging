@@ -9,6 +9,6 @@ FactoryBot.define do
     channel_token {  MessageEncryptor.encrypt(SecureRandom.hex) }
     channel_secret {  MessageEncryptor.encrypt(SecureRandom.hex) }
     label { Faker::Lorem.word }
-    basic_id { "@#{Faker::IDNumber.valid}" }
+    sequence(:basic_id) { |n| "@#{n}123" }
   end
 end

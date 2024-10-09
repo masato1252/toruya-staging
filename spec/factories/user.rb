@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :user do
     sequence(:email) { |n| "foo#{n}@gmail.com" }
-    phone_number { Phonelib.parse(Faker::PhoneNumber.phone_number, :jp).international(false) }
+    sequence(:phone_number) { |n| Phonelib.parse("0803623853#{n}", :jp).international(false) }
     password { "foobar78" }
     confirmed_at { Time.zone.now }
     referral_token { Devise.friendly_token[0,10] }

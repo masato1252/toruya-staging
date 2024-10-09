@@ -48,7 +48,7 @@ RSpec.describe Notifiers::Users::Notifications::NewReferrer, :with_line do
     end
 
     context "when referee got email" do
-      before { referee.update_columns(email: Faker::Internet.email, phone_number: nil) }
+      before { referee.update_columns(email: "foo@email.com", phone_number: nil) }
 
       it "sends email" do
         expect(NotificationMailer).to receive(:new_referrer).with(referee).and_return(double(deliver_now: true))
@@ -59,7 +59,7 @@ RSpec.describe Notifiers::Users::Notifications::NewReferrer, :with_line do
 
     context "when referee got both sms and email" do
       before do
-        referee.update_columns(phone_number: Faker::PhoneNumber.phone_number, email: Faker::Internet.email)
+        referee.update_columns(phone_number: Faker::PhoneNumber.phone_number, email: "foo@email.com")
       end
 
       it "only sends sms" do

@@ -53,7 +53,7 @@ RSpec.describe Reservations::Notifications::Booking do
     end
 
     context "when there is email argument" do
-      before { args.merge!(email: Faker::Internet.email) }
+      before { args.merge!(email: "foo@email.com") }
 
       it "calls BookingMailer.customer_reservation_notification" do
         expect(BookingMailer).to receive(:with).and_return(double(customer_reservation_notification: double(deliver_later: true)))
