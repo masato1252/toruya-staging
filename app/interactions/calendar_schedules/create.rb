@@ -29,7 +29,7 @@ module CalendarSchedules
       end
 
       {
-        working_dates: working_dates,
+        working_dates: working_dates.uniq,
         holiday_dates: holidays
       }
     end
@@ -42,7 +42,7 @@ module CalendarSchedules
       end
 
       if rules[:full_time]
-        rules[:shop_working_wdays].include?(date.wday)
+        rules[:shop_working_wdays].include?(date.wday) || (is_holiday_date?(date) && rules[:shop_working_on_holiday])
       else
         rules[:staff_working_wdays].include?(date.wday) || rules[:working_dates].include?(date)
       end
