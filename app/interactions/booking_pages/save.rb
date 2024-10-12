@@ -8,7 +8,7 @@ module BookingPages
       boolean :draft, default: true
       boolean :line_sharing, default: true
       integer :shop_id
-      integer :booking_limit_day, default: 1
+      integer :booking_limit_day, default: 0
       string :name
       string :title, default: nil
       string :greeting, default: nil

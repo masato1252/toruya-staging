@@ -18,7 +18,7 @@ module BookingPages
       boolean :online_payment_enabled, default: false
       string :default_provider, default: nil
       integer :shop_id, default: nil
-      integer :booking_limit_day, default: 1
+      integer :booking_limit_day, default: 0
       integer :bookable_restriction_months, default: nil
       string :greeting, default: nil
       string :note, default: nil
