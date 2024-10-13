@@ -328,6 +328,8 @@ tw:
           change_expire_at_title: 更改使用期限
           expire_change_reason: 更改原因
           change_expire_at_time_label: 新的使用期限（如果要設為永久使用，請留空並保存）
+          check_product_as_customer: 查看服務頁面
+          check_product_as_customer_desc: 5分鐘內，您可以以客戶身份查看內容
           permission_states:
             accessible: 可使用
             available: 可使用

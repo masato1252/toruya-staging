@@ -21,8 +21,17 @@ class Lines::CustomersController < ActionController::Base
       if params[:encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:encrypted_social_service_user_id])
         cookies.permanent[:line_social_user_id_of_customer] = _id
+      elsif params[:temp_encrypted_social_service_user_id].present?
+        _id = MessageEncryptor.decrypt(params[:temp_encrypted_social_service_user_id])
+        
+        cookies[:temp_line_social_user_id_of_customer] = { value: _id, expires: 5.minutes}
+        _id
       else
-        cookies[:line_social_user_id_of_customer]
+        if cookies[:temp_line_social_user_id_of_customer].present?
+          cookies[:temp_line_social_user_id_of_customer][:value]
+        else
+          cookies[:line_social_user_id_of_customer]
+        end
       end
 
     @current_social_customer ||= current_owner.social_customers.find_by(social_user_id: social_user_id)
