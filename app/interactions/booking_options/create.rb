@@ -11,6 +11,7 @@ module BookingOptions
     integer :new_menu_minutes, default: nil
     integer :new_menu_price, default: nil
     boolean :new_menu_online_state, default: false
+    integer :new_menu_max_seat_number, default: 1
 
     # For adding a new option with existing menu
     integer :new_menu_id, default: nil
@@ -42,7 +43,7 @@ module BookingOptions
                 interval: 0,
                 min_staffs_number: 1,
                 category_ids: [category.id],
-                shop_menus_attributes: [ { shop_id: shop.id, max_seat_number: 1 } ],
+                shop_menus_attributes: [ { shop_id: shop.id, max_seat_number: new_menu_max_seat_number } ],
                 staff_menus_attributes: [ { staff_id: user.current_staff(user).id, priority: 0, max_customers: 1 } ]
               },
               reservation_setting_id: reservation_setting.id,

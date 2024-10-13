@@ -23,7 +23,7 @@
               <%= link_to booking_option.display_name, lines_user_bot_booking_option_path(business_owner_id, booking_option) %><br />
               <div class="desc">
                 <%= booking_option.menus.pluck(:name).join(", ") %><br />
-                <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %>・<%= booking_price_desc(booking_option) %>
+                <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %>・<%= booking_price_desc(booking_option) %>・<%= booking_option.menus.map {|menu| menu.shop_menus.map(&:max_seat_number).join(", ") }.join(", ") %><%= I18n.t("common.seat_number") %>
 
                 <% if @booking_page.online_payment_enabled && booking_option.cash_pay_required? %>
                   <% if booking_option.ticket_enabled?%>

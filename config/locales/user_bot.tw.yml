@@ -562,6 +562,7 @@ tw:
         what_is_menu_name: 選項名稱是什麼？
         input_menu_name: 輸入選項名稱
         what_is_menu_time: 此選項需要多少分鐘？
+        what_is_menu_max_seat_number: 此服務同時間最多可預約人數？
         is_menu_online: 這是線上選項嗎？
         menu_online: 是的，這是線上選項
         menu_local: 否，客戶需要到店

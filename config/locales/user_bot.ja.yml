@@ -557,6 +557,7 @@ ja:
         what_is_menu_name: メニュー名は何ですか？
         input_menu_name: メニュー名を入力
         what_is_menu_time: メニューの所用時間は何分ですか？
+        what_is_menu_max_seat_number: 同時に予約可能な最大座席数はいくつですか？
         is_menu_online: このメニューはオンライン開催ですか？
         menu_online: はい、オンライン開催です
         menu_local: いいえ、店舗に来店されます

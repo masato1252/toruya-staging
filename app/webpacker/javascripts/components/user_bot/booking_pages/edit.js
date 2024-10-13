@@ -200,6 +200,12 @@ const BookingPageEdit =({props}) => {
               {I18n.t("common.minute")}
             </div>
 
+            <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_max_seat_number")}</div>
+            <div className="field-row flex-start">
+              <input ref={register({ required: true })} name="new_menu_max_seat_number" type="tel" defaultValue={1} />
+              {I18n.t("common.seat_number")}
+            </div>
+
             <h3 className="header centerize">{I18n.t("settings.booking_page.form.booking_price_setting_header")}</h3>
             <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
             <div className="field-row flex-start">
