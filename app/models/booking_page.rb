@@ -89,8 +89,6 @@ class BookingPage < ApplicationRecord
 
     if start_at
       [start_at.to_date, default_start_date].max
-    elsif booking_page_special_dates.exists?
-      [booking_page_special_dates.first.start_at.to_date, default_start_date].max
     else
       default_start_date
     end
@@ -102,8 +100,6 @@ class BookingPage < ApplicationRecord
 
     if end_at
       [end_at.to_date, default_booking_end_date].min
-    elsif booking_page_special_dates.exists?
-      [booking_page_special_dates.last.start_at.to_date, default_booking_end_date].min
     else
       default_booking_end_date
     end
