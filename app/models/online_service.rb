@@ -7,6 +7,7 @@
 #  company_type          :string           not null
 #  content               :json
 #  content_url           :string
+#  deleted_at            :datetime
 #  end_at                :datetime
 #  end_on_days           :integer
 #  external_purchase_url :string
@@ -192,6 +193,7 @@ class OnlineService < ApplicationRecord
   # solution_type pdf, video, external, membership, course
 
 
+  scope :not_deleted, -> { where(deleted_at: nil) }
   scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'free_course', 'course', 'membership']) }
 
   def self.goals

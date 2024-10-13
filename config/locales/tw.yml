@@ -825,6 +825,10 @@ tw:
               invalid: "^圖片無效"
             social_account:
               something_wrong: "^請再試一次"
+        online_services/delete:
+          attributes:
+            online_service:
+              has_customer_relation: "^此線上服務已有顧客使用，無法刪除。"
         customer_payments/refund:
           attributes:
             customer_payment:

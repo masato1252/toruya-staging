@@ -23,7 +23,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def index
-    @online_services = Current.business_owner.online_services.order("updated_at DESC")
+    @online_services = Current.business_owner.online_services.not_deleted.order("updated_at DESC")
   end
 
   def show
@@ -54,4 +54,16 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_path(service.id, business_owner_id: service.user_id, anchor: params[:attribute]) })
   end
+
+  def destroy
+    service = Current.business_owner.online_services.find(params[:id])
+    outcome = OnlineServices::Delete.run(online_service: service)
+
+    if outcome.valid?
+      redirect_to lines_user_bot_services_path(business_owner_id: Current.business_owner.id)
+    else
+      flash[:alert] = outcome.errors.full_messages.join(", ")
+      redirect_back(fallback_location: lines_user_bot_service_path(business_owner_id: service.user_id, id: service.id))
+    end
+  end 
 end

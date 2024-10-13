@@ -105,7 +105,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :services, only: [:new, :create, :index, :show, :edit, :update] do
+        resources :services, only: [:new, :create, :index, :show, :edit, :update, :destroy] do
           collection do
             get "/new/social_service_user_id/:social_service_user_id", action: "new"
             get "/social_service_user_id/:social_service_user_id", action: "index"

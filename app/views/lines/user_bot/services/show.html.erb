@@ -101,6 +101,12 @@
           </div>
         <% end %>
 
+        <div class="action-block">
+          <%= link_to lines_user_bot_service_path(@service, business_owner_id: business_owner_id), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
+            <i class="fa fa-minus"></i> <span><%= I18n.t("action.delete") %></span>
+          <% end %>
+        </div>
+
         <% mobile_only do %>
           <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
             <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>

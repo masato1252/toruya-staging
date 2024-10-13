@@ -1654,7 +1654,8 @@ CREATE TABLE public.online_services (
     stripe_product_id character varying,
     note text,
     external_purchase_url character varying,
-    internal_name character varying
+    internal_name character varying,
+    deleted_at timestamp(6) without time zone
 );
 
 
@@ -6014,6 +6015,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240817114718'),
 ('20240823204505'),
 ('20240823213428'),
-('20240826145415');
+('20241013003439');
 
 
