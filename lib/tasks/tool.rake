@@ -32,11 +32,14 @@ namespace :tools do
   end
 
   task :cache_booking_pages => :environment do
-    user_ids = Subscription.charge_required.pluck(:user_id)
+    # Every 2 hours
+    if Time.current.hour % 2 == 0
+      user_ids = Subscription.charge_required.pluck(:user_id)
 
-    User.where(id: user_ids).find_each do |user|
-      user.booking_pages.each do |booking_page|
-        ::BookingPageCacheJob.perform_later(booking_page)
+      User.where(id: user_ids).find_each do |user|
+        user.booking_pages.started.end_yet.each do |booking_page|
+          ::BookingPageCacheJob.perform_later(booking_page)
+        end
       end
     end
   end
