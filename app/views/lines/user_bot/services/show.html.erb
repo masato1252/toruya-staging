@@ -110,11 +110,17 @@
         <% mobile_only do %>
           <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
             <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
-
             <% if @service.has_preview? %>
-              <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+              <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word btn-bottom-left" do %>
                 <i class="fa fa-share-square fa-2x"></i>
                 <div class="word"><%= I18n.t("action.preview") %></div>
+              <% end %>
+            <% end %>
+
+            <% if @sale_page %>
+              <%= link_to "#", data: { toggle: "modal", target: "#previewModal2" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+                <i class="fa fa-share-square fa-2x"></i>
+                <div class="word"><%= I18n.t("action.share") %></div>
               <% end %>
             <% end %>
           <% end %>
@@ -124,17 +130,45 @@
 
     <% non_mobile do %>
       <div class="col-sm-6 px-0 hidden-xs preview-view">
-        <%= text_field_tag :service_url, online_service_url(slug: @service.slug), read_only: true, class: 'extend',
-          data: {
-            controller: "clipboard",
-            action: "click->clipboard#copy",
-            clipboard_text: online_service_url(slug: @service.slug),
-            clipboard_popup_text: t("common.copied")
-          }
-        %>
-      <div class="centerize margin-around">
-        <%= qrcode_img(online_service_url(slug: @service.slug)) %>
-      </div>
+        <% if @sale_page %>
+          <div class="margin-around">
+              <h4><%= t("user_bot.dashboards.sales.edit.sale_pages") %></h4>
+              <%= text_field_tag :sale_page_url, sale_page_url(slug: @sale_page.slug), read_only: true, class: 'extend',
+                data: {
+                  controller: "clipboard",
+                  action: "click->clipboard#copy",
+                  clipboard_text: sale_page_url(slug: @sale_page.slug),
+                  clipboard_popup_text: t("common.copied")
+                }
+              %>
+
+            <div class="centerize margin-around purchase-buttons">
+              <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
+                data: {
+                  controller: "clipboard",
+                  action: "click->clipboard#copy",
+                  clipboard_text: sale_page_url(slug: @sale_page.slug),
+                  clipboard_popup_text: t("common.copied")
+                } %>
+              <%= render 'lines/user_bot/sales/copy_buttons', sale_page: @sale_page %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="margin-around">
+          <h3><%= t("user_bot.dashboards.services.online_service") %></h3>
+          <%= text_field_tag :service_url, online_service_url(slug: @service.slug), read_only: true, class: 'extend',
+            data: {
+              controller: "clipboard",
+              action: "click->clipboard#copy",
+              clipboard_text: online_service_url(slug: @service.slug),
+              clipboard_popup_text: t("common.copied")
+            }
+          %>
+          <div class="centerize margin-around">
+            <%= qrcode_img(online_service_url(slug: @service.slug)) %>
+          </div>
+        </div>
 
         <% if @service.course_like? %>
           <div class="fake-mobile-layout">
@@ -151,5 +185,5 @@
 
   <% mobile_only do %>
     <%= render "lines/user_bot/services/preview_modal", service: @service if @service.has_preview? %>
+    <%= render 'lines/user_bot/sales/preview_modal', sale_page: @sale_page, id: "previewModal2" if @sale_page %>
   <% end %>
-

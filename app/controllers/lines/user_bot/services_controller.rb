@@ -40,6 +40,8 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
     else
       @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
     end
+
+    @sale_page = SalePage.active.where(product: @service).order(:updated_at).last
   end
 
   def edit

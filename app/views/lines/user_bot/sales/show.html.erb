@@ -173,43 +173,5 @@
 </div>
 
 <% mobile_only do %>
-  <div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog booking-preview-modal" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">
-            <%= t("user_bot.dashboards.sales.modal.title") %>
-          </h4>
-        </div>
-        <div class="modal-body">
-          <div class="text-right">
-            <span class="preview-mark">
-              <%= I18n.t("common.preview") %>
-            </span>
-          </div>
-          <% if @sale_page.product %>
-            <%= react_component(
-              "user_bot/sales/#{@sale_page.product.class.table_name}",
-              @sale_page.serializer.attributes_hash.merge(demo: false, preview: true),
-              { camelize_props: false }
-            ) %>
-          <% end %>
-        </div>
-        <div class="modal-footer centerize">
-          <div>
-            <input type="text" value=<%= sale_page_url(slug: @sale_page.slug) %> readOnly class="extend"/>
-          </div>
-          <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
-            data: {
-              controller: "clipboard",
-              action: "click->clipboard#copy",
-              clipboard_text: sale_page_url(slug: @sale_page.slug),
-              clipboard_popup_text: t("common.copied")
-            } %>
-          <%= render 'lines/user_bot/sales/copy_buttons', sale_page: @sale_page %>
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= render 'lines/user_bot/sales/preview_modal', sale_page: @sale_page %>
 <% end %>
