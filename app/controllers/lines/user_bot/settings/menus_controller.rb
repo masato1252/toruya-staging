@@ -2,7 +2,7 @@
 
 class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardController
   def index
-    @menus = Current.business_owner.menus.order("id")
+    @menus = Current.business_owner.menus.order("updated_at DESC")
   end
 
   def show
