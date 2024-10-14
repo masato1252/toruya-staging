@@ -46,10 +46,11 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
   private
 
   def sale_page
-    @sale_page = SalePage.find_by!(slug: params[:slug])
+    @sale_page ||= SalePage.find_by!(slug: params[:slug])
   end
 
   def current_owner
+    @sale_page ||= SalePage.find_by!(slug: params[:slug])
     @sale_page.user
   end
 end
