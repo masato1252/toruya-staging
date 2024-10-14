@@ -27,3 +27,9 @@ STRIPE_DESCRIPTION_LIMIT = 20
 FROM = {
   service_customer_show: "service_customer_show"
 }
+
+LOCALE_TIME_ZONE = {
+  ja: "Asia/Tokyo",
+  tw: "Asia/Taipei",
+  tl: "Asia/Bangkok"
+}

@@ -64,5 +64,6 @@ class Lines::CustomersController < ActionController::Base
 
   def set_locale
     I18n.locale = current_social_customer&.locale || current_toruya_social_user&.locale || I18n.default_locale
+    Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
 end

@@ -13,7 +13,6 @@ class Lines::UserBotDashboardController < ActionController::Base
   include UserBotAuthorization
   include ViewHelpers
   include ParameterConverters
-  include Locale
   include UserBotExceptionHandler
   include ControllerHelpers
 
@@ -65,5 +64,6 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   def set_locale
     I18n.locale = current_social_user&.locale || I18n.default_locale
+    Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
 end
