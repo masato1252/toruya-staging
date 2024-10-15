@@ -5,6 +5,7 @@
   props: {
     business_owner_id: business_owner_id,
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
+    customer_tags: Current.business_owner.customer_tags,
     line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
     line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id)),
     online_services: @online_services,

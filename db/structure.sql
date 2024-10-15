@@ -751,7 +751,8 @@ CREATE TABLE public.broadcasts (
     recipients_count integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    query_type character varying
+    query_type character varying,
+    customers_permission_warning boolean DEFAULT false
 );
 
 
@@ -1270,7 +1271,8 @@ CREATE TABLE public.customers (
     menu_ids character varying[] DEFAULT '{}'::character varying[],
     online_service_ids character varying[] DEFAULT '{}'::character varying[],
     mixpanel_profile_last_set_at timestamp without time zone,
-    square_customer_id character varying
+    square_customer_id character varying,
+    tags character varying[] DEFAULT '{}'::character varying[]
 );
 
 

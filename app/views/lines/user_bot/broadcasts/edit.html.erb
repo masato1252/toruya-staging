@@ -2,6 +2,7 @@
   props: {
     business_owner_id: business_owner_id,
     broadcast: BroadcastSerializer.new(@broadcast).attributes_hash,
+    customer_tags: Current.business_owner.customer_tags,
     attribute: @attribute,
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     online_services: @online_services,

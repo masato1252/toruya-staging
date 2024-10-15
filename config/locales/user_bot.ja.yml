@@ -400,6 +400,9 @@ ja:
         stop_send: 配信中止
         are_you_sure_to_stop: 本当に配信を中止しますか？
         clone_successfully: 複製されました
+        tags_usage_desc: 選択を解除するには、設定されたサービス名をタップしてください。
+        no_broadcasts_title: 配信条件がありません
+        no_broadcasts_desc: 配信条件を作成してください
         form: 
           query_title: 配信相手
           query_subtitle: 配信相手
@@ -487,6 +490,11 @@ ja:
         specific_available_service_customers: 特定サービスを利用中の顧客
         online_service_for_active_customers: 特定サービスを利用中の顧客
         specific_available_service_customers_desc: 特定のオンラインサービスをご利用中の顧客に一斉配信する
+        customers_with_tags: 特定タグの顧客
+        customers_with_tags_desc: 顧客台帳で特定のタグが設定された顧客に一斉配信する
+        customers_with_tags_no_data_desc: まだ顧客タグがありません。顧客編集ページでタグを作成できます。
+        customers_with_birthday: お誕生日の顧客
+        customers_with_birthday_desc: お誕生日を元に一部の顧客に一斉配信する
         approximate_customers_count: 配信予定数
         what_menu_do_you_want: どのメニューの利用客に配信しますか？
         what_service_do_you_want: どのサービスの利用客に配信しますか？
@@ -495,6 +503,12 @@ ja:
         when_do_you_want_to_send: いつ配信しますか？
         broadcast_services: 一斉配信するサービス
         broadcast_help_tips: 思ったより多い/少ないですか？
+        age_range_desc: "%{age_start}歳以上%{age_end}歳以下"
+        birthday_month_desc: "%{month}月の誕生日"
+        customers_permission_warning_description: セグメント配信がOFFになっている顧客は除外しています。
+        customers_permission_modal:
+          title: セグメント配信OFFの顧客
+          warning_description: セグメント配信に含めたい顧客は「ONにする」をタップ
       service_creation:
         goal_step: 目的
         content_step: コンテンツ

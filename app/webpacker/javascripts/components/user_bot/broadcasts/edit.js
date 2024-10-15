@@ -9,6 +9,8 @@ import _ from "lodash";
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 import { Translator } from "libraries/helper";
 import { CommonServices } from "user_bot/api"
+import CustomerWithTagsQuery from "user_bot/broadcasts/creation_flow/customer_with_tags_query";
+import CustomerWithBirthdayQuery from "user_bot/broadcasts/creation_flow/customer_with_birthday_query";
 
 let personalizeKeyword = "";
 
@@ -176,6 +178,27 @@ const BroadcastEdit =({props}) => {
       case "query":
         {
           switch (props.broadcast.query_type) {
+            case "customers_with_birthday":
+              return (
+                <CustomerWithBirthdayQuery
+                  customers_count={customers_count}
+                  query={query}
+                  setQuery={(query_payload) => {
+                    setQuery(query_payload)
+                  }}
+                />
+              )
+            case "customers_with_tags":
+              return (
+                <CustomerWithTagsQuery
+                  customer_tags={props.customer_tags}
+                  customers_count={customers_count}
+                  query={query}
+                  setQuery={(query_payload) => {
+                    setQuery(query_payload)
+                  }}
+                /> 
+              )
             case "menu":
               return (
                 <>

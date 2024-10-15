@@ -11,6 +11,8 @@ import { BottomNavigationBar, TopNavigationBar, SelectOptions } from "shared/com
 import { CustomerServices } from "user_bot/api"
 import useAddress from "libraries/use_address";
 import ProcessingBar from "shared/processing_bar.js"
+import EditTagsInput from "user_bot/services/episodes/shared/edit_tags_input";
+import { TagsInput } from "shared/components";
 
 const TopBar = () => {
   const { dispatch, props, selected_customer } = useGlobalContext()
@@ -93,6 +95,12 @@ const UserBotCustomerInfoForm = () => {
   const [similarCustomers, setSimilarCustomers] = useState([])
   let history = useHistory();
 
+  const [tags, setTags] = useState((selected_customer.tags || []).map((tag) => ({
+    id: tag,
+    text: tag,
+    className: "tag"
+  })) || [])
+
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
       id: selected_customer.id,
@@ -107,7 +115,7 @@ const UserBotCustomerInfoForm = () => {
       emails_details: selected_customer.emailsDetails || [],
       custom_id: selected_customer.customId,
       birthday: selected_customer.birthday,
-      memo: selected_customer.memo
+      memo: selected_customer.memo,
     }
   });
 
@@ -167,7 +175,7 @@ const UserBotCustomerInfoForm = () => {
 
     let error, response;
 
-    [error, response] = await CustomerServices.save({ business_owner_id: props.business_owner_id, data: data })
+    [error, response] = await CustomerServices.save({ business_owner_id: props.business_owner_id, data: { ...data, tags } })
 
     window.location = response.data.redirect_to
   }
@@ -371,6 +379,18 @@ const UserBotCustomerInfoForm = () => {
           />
         </div>
         <div className="field-row">
+          <span>{I18n.t("user_bot.dashboards.settings.membership.episodes.tag_input_placeholder")}</span>
+          <TagsInput
+            suggestions={props.customer_tags.map((tag) => ({
+              id: tag,
+              text: tag,
+              className: "tag"
+            }))}
+            tags={tags}
+            setTags={setTags}
+          />
+        </div>
+        <div className="field-row">
           <span>{i18n.memo}</span>
           <textarea
             ref={register}
@@ -380,7 +400,6 @@ const UserBotCustomerInfoForm = () => {
             colos="40"
           />
         </div>
-
       </div>
 
       <BottomBar

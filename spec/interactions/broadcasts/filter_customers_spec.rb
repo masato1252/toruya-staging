@@ -43,7 +43,7 @@ RSpec.describe Broadcasts::FilterCustomers do
     context "A or B" do
       let!(:matched_customer) { FactoryBot.create(:customer, user: user, menu_ids: [1]) }
       let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, menu_ids: [3]) }
-      let!(:unmatched_customer2) { FactoryBot.create(:customer, user: user, menu_ids: [1], updated_at: Time.current.advance(years: -1, days: -1)) }
+      let!(:matched_customer2) { FactoryBot.create(:customer, user: user, menu_ids: [1], updated_at: Time.current.advance(years: -1, days: -1)) }
 
       let(:query) do
         {
@@ -68,7 +68,7 @@ RSpec.describe Broadcasts::FilterCustomers do
 
         expect(result).to include(matched_customer)
         expect(result).not_to include(unmatched_customer)
-        expect(result).not_to include(unmatched_customer2)
+        expect(result).to include(matched_customer2)
       end
     end
 
@@ -159,6 +159,81 @@ RSpec.describe Broadcasts::FilterCustomers do
 
         expect(result).to include(matched_customer)
         expect(result).not_to include(unmatched_customer)
+      end
+    end
+
+    context "birthday query" do
+      Timecop.freeze(Time.zone.local(2024, 9, 14)) do
+        let!(:matched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.new(2004, 3, 1)) }
+        let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.new(1994, 4, 1)) }
+      end
+
+      context "age & month" do
+        let(:query) do
+          {
+          "filters" => [
+            {
+              "field" => "birthday",
+              "value" => [18, 25],
+              "condition" => "age_range"
+            },
+            {
+              "field" => "birthday",
+              "value" => 3,
+              "condition" => "date_month_eq"
+            }
+          ],
+            "operator" => "and"
+          }
+        end
+        it "returns expected customers" do
+          result = outcome.result
+
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
+      end
+
+      context "age" do
+        let(:query) do
+          {
+            "filters" => [
+              {
+                "field" => "birthday",
+                "value" => [18, 25],
+                "condition" => "age_range"
+              }
+            ], 
+            "operator" => "and"
+          }
+        end
+        it "returns expected customers" do
+          result = outcome.result
+
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
+      end
+
+      context "month" do
+        let(:query) do
+          {
+            "filters" => [
+              {
+                "field" => "birthday",
+                "value" => 3,
+              "condition" => "date_month_eq"
+              }
+            ],
+            "operator" => "and"
+          }
+        end
+        it "returns expected customers" do
+          result = outcome.result
+
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
       end
     end
   end

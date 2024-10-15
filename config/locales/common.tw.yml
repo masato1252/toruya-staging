@@ -271,7 +271,7 @@ tw:
     not_paid_payment: 這是未付款的項目。
     expire_date: 有效期限
     personal_schedule: 個人行程
-    press_enter_to_add_tag: 請按 Enter 鍵新增標籤
+    press_enter_to_add_tag: 輸入標籤
   errors:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。

@@ -30,6 +30,8 @@ module ParameterConverters
         obj[k] = nil if v.blank?
       end
       obj
+    else
+      obj
     end
   end
 end

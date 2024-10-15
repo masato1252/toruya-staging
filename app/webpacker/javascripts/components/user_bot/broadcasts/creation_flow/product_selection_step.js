@@ -4,12 +4,39 @@ import ReactSelect from "react-select";
 import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
+import CustomerWithTagsQuery from "./customer_with_tags_query";
+import CustomerWithBirthdayQuery from "./customer_with_birthday_query";
+
+var moment = require('moment-timezone');
 
 const ProductSelectionStep = ({next, step, prev}) => {
   const { props, dispatch, query, query_type, selected_menu, selected_online_service, customers_count, fetchCustomersCount } = useGlobalContext()
 
   useEffect(() => {
     if (query_type === "all" || query_type === "vip_customers") next()
+      if (query_type === "customers_with_birthday") {
+        dispatch({
+          type: "SET_ATTRIBUTE",
+          payload: {
+          attribute: "query",
+          value:  {
+            operator: "and",
+            filters: [
+              {
+                field: "birthday",
+                condition: "age_range",
+                value: [30, 35]
+              },
+              {
+                field: "birthday",
+                condition: "date_month_eq",
+                value: moment().month() + 1
+              }
+            ]
+          }
+        }
+      })
+      } 
   }, [])
 
   useEffect(() => {
@@ -18,6 +45,39 @@ const ProductSelectionStep = ({next, step, prev}) => {
 
   const renderProductDropDown = () => {
     switch (query_type) {
+      case "customers_with_birthday":
+        return (
+          <CustomerWithBirthdayQuery
+            customers_count={customers_count}
+            query={query}
+            setQuery={(query_payload) => {
+              dispatch({
+                type: "SET_ATTRIBUTE",
+                payload: {
+                  attribute: "query",
+                  value: query_payload 
+                }
+              })
+            }}
+          />
+        )
+      case "customers_with_tags":
+        return (
+          <CustomerWithTagsQuery
+            customer_tags={props.customer_tags}
+            customers_count={customers_count}
+            query={query}
+            setQuery={(query_payload) => {
+              dispatch({
+                type: "SET_ATTRIBUTE",
+                payload: {
+                  attribute: "query",
+                  value: query_payload
+                }
+              })
+            }}
+           />
+        )
       case "menu":
         return (
           <>
@@ -136,7 +196,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
                 {props.online_services.find(service => service.value.id == condition.value)?.label }
               </button>
             ))}
-            <hr />
+            <hr className="my-4"/>
 
             {query?.filters && query.filters.length !== 0 && (
               <div className="centerize">

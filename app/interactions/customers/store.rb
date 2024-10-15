@@ -25,21 +25,22 @@ class Customers::Store < ActiveInteraction::Base
     date :birthday, default: nil
     string :custom_id, default: nil
     string :memo, default: nil
+    array :tags, default: []
   end
 
   def execute
     if params[:id].present?
       customer = user.customers.find(params[:id])
-      customer.attributes = params.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)
+      customer.attributes = params.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id, tags: params[:tags].map { |tag| tag[:text] })
     else
       customer = user.customers.new(params.merge(updated_by_user_id: current_user.id))
     end
 
     customer.contact_group_id = user.contact_groups.first&.id if customer.contact_group_id.nil?
-
     unless customer.save
       errors.merge!(customer.errors)
     end
+    user.user_setting&.update(customer_tags: Array.wrap(user.user_setting&.customer_tags || []).concat(params[:tags].map { |tag| tag[:text] }).uniq.compact)
 
     # first time create customer manually
     if user.customers.left_outer_joins(:social_customer).where("social_customers.id is NULL").count == 1

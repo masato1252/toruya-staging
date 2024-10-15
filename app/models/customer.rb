@@ -22,6 +22,7 @@
 #  phonetic_first_name          :string
 #  phonetic_last_name           :string
 #  reminder_permission          :boolean          default(TRUE)
+#  tags                         :string           default([]), is an Array
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  contact_group_id             :integer
