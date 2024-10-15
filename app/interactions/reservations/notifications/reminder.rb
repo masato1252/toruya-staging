@@ -7,7 +7,7 @@ module Reservations
         return unless reservation.remind_customer?(customer)
 
         if customer.email.present?
-          CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email).reservation_reminder.deliver_now
+          CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_reminder.deliver_now
         end
 
         super
@@ -16,21 +16,23 @@ module Reservations
       private
 
       def message
-        booking_page = ReservationCustomer.find_by!(customer: customer, reservation: reservation).booking_page
-        template = compose(
-          ::CustomMessages::Customers::Template,
-          product: booking_page,
-          scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
-          custom_message_only: true
-        )
-
-        template ||= compose(
-          ::CustomMessages::Customers::Template,
-          product: reservation.shop,
-          scenario: ::CustomMessages::Customers::Template::RESERVATION_ONE_DAY_REMINDER
-        )
-
-        Translator.perform(template, reservation.message_template_variables(customer))
+        @message ||= begin
+          booking_page = ReservationCustomer.find_by!(customer: customer, reservation: reservation).booking_page
+          template = compose(
+            ::CustomMessages::Customers::Template,
+            product: booking_page,
+            scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
+            custom_message_only: true
+          )
+  
+          template ||= compose(
+            ::CustomMessages::Customers::Template,
+            product: reservation.shop,
+            scenario: ::CustomMessages::Customers::Template::RESERVATION_ONE_DAY_REMINDER
+          )
+  
+          Translator.perform(template, reservation.message_template_variables(customer))
+        end
       end
     end
   end

@@ -10,11 +10,12 @@ class CustomerMailer < ApplicationMailer
     @shop = @reservation.shop
     @customer = params[:customer]
     @encrypted_data = MessageEncryptor.encrypt({shop_id: @shop.id, customer_id: @customer.id })
+    @content = params[:content]
 
     mail(
       to: customer_email,
       subject: I18n.t("customer_mailer.reservation_confirmation.title", shop_name: @shop.display_name),
-      locale: I18n.default_locale
+      body: @content
     )
   end
 
@@ -22,11 +23,12 @@ class CustomerMailer < ApplicationMailer
     @reservation = params[:reservation]
     @shop = @reservation.shop
     @customer = params[:customer]
+    @content = params[:content]
 
     mail(
       to: customer_email,
       subject: I18n.t("customer_mailer.reservation_reminder.title", shop_name: @shop.display_name),
-      locale: I18n.default_locale
+      body: @content
     )
   end
 end
