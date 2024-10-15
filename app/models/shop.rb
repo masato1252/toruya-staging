@@ -3,21 +3,22 @@
 #
 # Table name: shops
 #
-#  id                 :integer          not null, primary key
-#  user_id            :integer
-#  name               :string           not null
-#  short_name         :string           not null
-#  zip_code           :string           not null
-#  phone_number       :string
-#  email              :string
-#  address            :string           not null
-#  website            :string
-#  holiday_working    :boolean
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  deleted_at         :datetime
-#  template_variables :json
-#  address_details    :jsonb
+#  id                     :integer          not null, primary key
+#  address                :string           not null
+#  address_details        :jsonb
+#  deleted_at             :datetime
+#  email                  :string
+#  holiday_working        :boolean
+#  holiday_working_option :string           default("holiday_schedule_without_business_schedule")
+#  name                   :string           not null
+#  phone_number           :string
+#  short_name             :string           not null
+#  template_variables     :json
+#  website                :string
+#  zip_code               :string           not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  user_id                :integer
 #
 # Indexes
 #
@@ -46,6 +47,11 @@ class Shop < ApplicationRecord
   belongs_to :user
 
   scope :active, -> { where(deleted_at: nil) }
+
+  enum holiday_working_option: {
+    business_schedule_overlap_holiday_using_holiday_schedule: "business_schedule_overlap_holiday_using_holiday_schedule",
+    holiday_schedule_without_business_schedule: "holiday_schedule_without_business_schedule" 
+  }
 
   def staff_users
     staffs.includes(staff_account: :user).map { |staff| staff.staff_account.user.social_user&.current_users }.compact.flatten

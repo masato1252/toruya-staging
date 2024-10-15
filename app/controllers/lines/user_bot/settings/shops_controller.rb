@@ -42,6 +42,6 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
   private
 
   def shop_params
-    params.permit(:holiday_working, :name, :short_name, :phone_number, :website, :email, :logo, business_schedules: [:start_time, :end_time], address_details: [:zip_code, :region, :city, :street1, :street2])
+    params.permit(:holiday_working, :name, :short_name, :phone_number, :website, :email, :logo, :holiday_working_option, business_schedules: [:start_time, :end_time], address_details: [:zip_code, :region, :city, :street1, :street2])
   end
 end

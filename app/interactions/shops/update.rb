@@ -20,6 +20,7 @@ module Shops
       #   string :street1, default: nil
       #   string :street2, default: nil
       # end
+      # string :holiday_working_option, default: nil
     end
 
     def execute
@@ -39,6 +40,7 @@ module Shops
             day_of_week: BusinessSchedule::HOLIDAY_WORKING_WDAY,
             business_schedules: business_schedules
           )
+          shop.update(holiday_working_option: params[:holiday_working_option])
         else
           compose(
             BusinessSchedules::Update,

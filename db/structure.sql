@@ -2483,7 +2483,8 @@ CREATE TABLE public.shops (
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
     template_variables json,
-    address_details jsonb
+    address_details jsonb,
+    holiday_working_option character varying DEFAULT 'holiday_schedule_without_business_schedule'::character varying
 );
 
 
@@ -6024,6 +6025,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240926154657'),
 ('20241002201733'),
 ('20241008143048'),
-('20241013003439');
+('20241013003439'),
+('20241015000936');
 
 

@@ -9,6 +9,7 @@ module CalendarSchedules
     # off_dates: off_dates.flatten, # for staff and shop
     # staff_working_wdays: staff_working_wdays || [],
     # working_dates: working_dates.flatten # for staff
+    # holiday_working_option: shop.holiday_working_option
     hash :rules, strip: false
     object :date_range, class: Range
 
@@ -42,7 +43,11 @@ module CalendarSchedules
       end
 
       if rules[:full_time]
-        rules[:shop_working_wdays].include?(date.wday) || (is_holiday_date?(date) && rules[:shop_working_on_holiday])
+        rules[:shop_working_wdays].include?(date.wday) || (
+          is_holiday_date?(date) &&
+          rules[:shop_working_on_holiday] &&
+          rules[:holiday_working_option] == Shop.holiday_working_options[:holiday_schedule_without_business_schedule]
+        )
       else
         rules[:staff_working_wdays].include?(date.wday) || rules[:working_dates].include?(date)
       end

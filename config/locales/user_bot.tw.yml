@@ -151,6 +151,9 @@ tw:
           shop_open_introduction_html: 在設定的營業時間內<br />可以從線上預約頁面<br />接受預約。<br /><br />從預約日曆中，即使是非營業時間也可以建立預約。
           shop_close_introduction1: 設定為CLOSE的日子會在線上預約頁面顯示為休息日。
           shop_close_introduction2: 從預約日曆中，即使是休息日也可以建立預約。
+          holiday_working_option: 假日營業
+          business_schedule_overlap_holiday_using_holiday_schedule: 如果假日是營業日，則營業並使用假日時間表
+          holiday_schedule_without_business_schedule: 即使假日不是營業日，也營業
         company:
           info_hint: 主要顯示在宣傳頁面上。
           staffs: 員工

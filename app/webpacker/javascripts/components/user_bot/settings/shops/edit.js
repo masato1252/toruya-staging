@@ -202,6 +202,15 @@ const SocialAccountEdit =({props}) => {
             </div>
             {holiday_working && (
               <>
+                <div className="field-header">{I18n.t("user_bot.dashboards.settings.business_schedules.holiday_working_option")}</div>
+                <label className="field-row flex-start">
+                  <input name="holiday_working_option" type="radio" value="business_schedule_overlap_holiday_using_holiday_schedule" ref={register({ required: true })} />
+                  {I18n.t("user_bot.dashboards.settings.business_schedules.business_schedule_overlap_holiday_using_holiday_schedule")}
+                </label>
+                <label className="field-row flex-start">
+                  <input name="holiday_working_option" type="radio" value="holiday_schedule_without_business_schedule" ref={register({ required: true })} />
+                  {I18n.t("user_bot.dashboards.settings.business_schedules.holiday_schedule_without_business_schedule")}
+                </label>
                 <div className="field-header">{I18n.t("user_bot.dashboards.settings.business_schedules.business_time")}</div>
                 {business_schedule_fields.fields.map((field, index) => {
                   return (

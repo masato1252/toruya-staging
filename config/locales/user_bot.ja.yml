@@ -148,6 +148,9 @@ ja:
           shop_open_introduction_html: 設定された営業時間内で<br />オンライン予約ページから<br />予約を受け付けることができます。<br /><br />予約カレンダーからは 休業時間外でも予約を作成できます。
           shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
+          holiday_working_option: 祝日営業
+          business_schedule_overlap_holiday_using_holiday_schedule: 祝日は各曜日の設定に合わせる：祝日に拘わらず、定休日設定がそのまま活かされます
+          holiday_schedule_without_business_schedule: 祝日は予約を受け付ける：祝日は本来定休日の曜日であっても予約受付をします
         company:
           info_hint: 主に宣伝用LPに表示されます。
           staffs: スタッフ
