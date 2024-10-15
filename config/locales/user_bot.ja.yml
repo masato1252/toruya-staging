@@ -581,6 +581,8 @@ ja:
       sales:
         modal:
           title: 宣伝用LPを確認
+          description: 顧客はサービス毎に宣伝用LPからの利用登録が必要です。（LINE友だち追加だけではサービス利用できません）
+          create_sale_page: 宣伝用LPを作成
         edit:
           sale_pages: 宣伝用LP
           sales_about: LP概要
