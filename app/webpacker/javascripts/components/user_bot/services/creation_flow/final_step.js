@@ -6,7 +6,7 @@ import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 
 const FinalStep = ({step, step_key}) => {
-  const { online_service_slug } = useGlobalContext()
+  const { online_service_slug, props } = useGlobalContext()
   const [sale_page_later, build_sale_page_later] = useState(false)
 
   return (
@@ -37,6 +37,9 @@ const FinalStep = ({step, step_key}) => {
           </>
         )
       }
+      <div className="centerize margin-around">
+        <img src={props.sale_page_introduction_path} className="w-full" />
+      </div>
     </div>
   )
 }
