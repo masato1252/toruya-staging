@@ -81,8 +81,8 @@ gem 'deep_cloneable', '~> 3.2.0'
 gem 'redis', '4.1.3'
 gem 'request_store'
 gem "barnes"
-gem "rails-autoscale-web"
-gem "rails-autoscale-delayed_job"
+# gem "rails-autoscale-web"
+# gem "rails-autoscale-delayed_job"
 gem 'rack-cors'
 gem 'psych', '< 4' # https://stackoverflow.com/questions/71191685/visit-psych-nodes-alias-unknown-alias-default-psychbadalias
 gem 'marginalia'
