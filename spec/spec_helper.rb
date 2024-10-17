@@ -105,6 +105,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     Timecop.return
+    I18n.locale = :ja
   end
 
   config.after(:each) do

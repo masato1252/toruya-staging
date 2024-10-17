@@ -18,7 +18,7 @@ module Shops
         full_time: true,
         shop_working_on_holiday: !!shop.holiday_working,
         shop_working_wdays: booking_page&.business_schedules&.exists? ? booking_page.business_schedules.pluck(:day_of_week).uniq : shop.business_schedules.for_shop.opened.pluck(:day_of_week).uniq,
-        holidays: Holidays.between(start_date, end_date, :jp).map { |holiday| holiday[:date] },
+        holidays: holidays,
         off_dates: shop_closed_dates,
         holiday_working_option: shop.holiday_working_option
       }
@@ -32,6 +32,14 @@ module Shops
 
     def end_date
       date_range.last
+    end
+
+    def holidays
+      if I18n.locale == :tw
+        TW_HOLIDAYS.select { |date| date.between?(start_date, end_date) }
+      else
+        Holidays.between(start_date, end_date, :jp).map { |holiday| holiday[:date] }
+      end
     end
   end
 end

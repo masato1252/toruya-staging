@@ -68,6 +68,30 @@ RSpec.describe Reservable::Time do
       end
     end
 
+    context "when date is Taiwan national holiday" do
+      before do
+        I18n.locale = :tw
+        Timecop.freeze(Date.new(2024, 10, 10))
+      end
+
+      context "when shop needs to work" do
+        let(:shop) { FactoryBot.create(:shop, holiday_working: true) }
+        let!(:business_schedule) { FactoryBot.create(:business_schedule, :holiday_working, shop: shop,
+                                                      start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
+                                                      end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
+
+        it "returns available time range" do
+          expect(Reservable::Time.run!(shop: shop, date: date)).to eq([ business_schedule.start_time_on(date)..business_schedule.end_time_on(date) ])
+        end
+      end
+
+      context "when shop does not need to work" do
+        it "is invalid" do
+          expect(Reservable::Time.run(shop: shop, date: date)).to be_invalid
+        end
+      end
+    end
+
     context "when booking_page had business_schedule" do
       let(:booking_page) { FactoryBot.create(:booking_page, shop: shop) }
       let!(:business_schedule) { FactoryBot.create(:business_schedule,

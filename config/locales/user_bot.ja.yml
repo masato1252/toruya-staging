@@ -140,7 +140,7 @@ ja:
           business_time: 営業日時
           base_business_time: 基本営業日時
           holiday_label: 祝日
-          japanese_holiday_label: 日本の祝日
+          national_holiday_label: 日本の祝日
           business_time_introduction1: この設定は、オンライン予約ページでの 予約受付時間の設定です。
           business_time_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
           open_shop_time: 開店時間

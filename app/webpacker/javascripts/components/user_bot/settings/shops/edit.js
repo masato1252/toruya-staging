@@ -182,7 +182,7 @@ const SocialAccountEdit =({props}) => {
         return (
           <>
             <div className="field-row">
-              {I18n.t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label")}
+              {I18n.t("user_bot.dashboards.settings.business_schedules.national_holiday_label")}
               <Controller
                 control={control}
                 name='holiday_working'

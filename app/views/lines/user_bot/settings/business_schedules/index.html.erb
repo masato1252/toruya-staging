@@ -25,7 +25,7 @@
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.holiday_label") %></div>
   <%= link_to edit_lines_user_bot_settings_shop_path(id: @shop.id, business_owner_id: business_owner_id, attribute: "holiday_working"), class: "field-row" do %>
-    <span><%= t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label") %></span>
+    <span><%= t("user_bot.dashboards.settings.business_schedules.national_holiday_label") %></span>
     <span>
       <% if @holiday_working_schedules.present? %>
           <% business_schedule = @holiday_working_schedules.first %>
