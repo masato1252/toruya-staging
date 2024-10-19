@@ -517,6 +517,7 @@ tw:
           reached_the_menus_limit: 最多只能設定兩個菜單。
           no_available_shop: 由於此菜單未設定可使用的店舖，預約頁面可能無法正確顯示。
           ticket_max_price_limit: 超過5萬元的情況下無法使用線上結帳。
+          no_menu: 使用此預約價格時，至少需要建立一個菜單。
     booking_page:
       title: 預約頁面設定
       info_html: 設定預約頁面。<br>客戶將透過您在此設定的頁面進行線上預約。
