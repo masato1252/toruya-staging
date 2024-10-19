@@ -73,7 +73,7 @@ export const UserShopInfo = ({props, finalView}) => {
         </div>
       </div>
       <AddressView
-        show_skip_btn={!!props.staff_token}
+        show_skip_btn={!!props.staff_token || props.support_feature_flags.support_skip_required_shop_info}
         save_btn_text={save_btn}
         handleSubmitCallback={onSubmit}
       />

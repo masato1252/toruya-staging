@@ -16,12 +16,12 @@ class Lines::UserBot::UsersController < Lines::UserBotController
 
   # user sign up
   def sign_up
-    @staff_account = StaffAccount.find_by(token: params[:staff_token])
+    @staff_account = StaffAccount.find_by(token: params[:staff_token]) if params[:staff_token].present?
     render layout: 'booking'
   end
 
   def generate_code
-    if Phonelib.invalid_for_country?(params[:phone_number], 'JP') && Phonelib.invalid?(params[:phone_number])
+    if I18n.locale == 'ja' && (Phonelib.invalid_for_country?(params[:phone_number], 'JP') || Phonelib.invalid?(params[:phone_number]))
       render json: {
         user_id: nil,
         errors: {
@@ -39,7 +39,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       uuid: identification_code.uuid,
       user_id: User.find_by(phone_number: Phonelib.parse(params[:phone_number]).international(false))&.id,
       errors: {
-        message: I18n.t("user_bot.guest.user_connect.message.unmatch_phone_number")
+        message: params[:login_type] == 'sign_in' ? I18n.t("user_bot.guest.user_connect.message.unmatch_phone_number") : nil
       }
     }
   end

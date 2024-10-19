@@ -8,6 +8,7 @@ import PhoneInput from 'react-phone-input-2'
 import { ErrorMessage, RequiredLabel } from "shared/components";
 
 export const UserConnect = ({props, next}) => {
+  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']
   const {
     confirm_customer_info, booking_code, message
   } = props.i18n.user_sign_up;
@@ -39,6 +40,7 @@ export const UserConnect = ({props, next}) => {
     setValue("uuid", "");
     setValue("code", "");
     clearErrors(["code"]);
+    data.login_type = "sign_in"
 
     const [error, response] = await IdentificationCodesServices.create(data);
 
@@ -78,8 +80,8 @@ export const UserConnect = ({props, next}) => {
           <RequiredLabel label={props.i18n.user_sign_up.phone_number} required_label={required_label} />
         </h4>
         <PhoneInput
-          country={'jp'}
-          onlyCountries={['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']}
+          country={phone_countries.includes(props.locale) ? props.locale : 'jp'}
+          onlyCountries={phone_countries}
           value={phone_number}
           onChange={ (phone) => setValue("phone_number", phone) }
           autoFormat={false}

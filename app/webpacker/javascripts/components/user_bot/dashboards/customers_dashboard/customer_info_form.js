@@ -239,28 +239,32 @@ const UserBotCustomerInfoForm = () => {
             })}
           </div>
         )}
-        <div className="field-row" >
-          <span>{i18n.phonetic_last_name}</span>
-          <span>
-            <input
-              ref={register}
-              name="phonetic_last_name"
-              placeholder={i18n.phonetic_last_name}
-              type="text"
-            />
-          </span>
-        </div>
-        <div className="field-row" >
-          <span>{i18n.phonetic_first_name}</span>
-          <span>
-            <input
-              ref={register}
-              name="phonetic_first_name"
-              placeholder={i18n.phonetic_first_name}
-              type="text"
-            />
-          </span>
-        </div>
+        {props.support_feature_flags.support_phonetic_name && (
+          <>
+            <div className="field-row" >
+              <span>{i18n.phonetic_last_name}</span>
+              <span>
+                <input
+                  ref={register}
+                  name="phonetic_last_name"
+                  placeholder={i18n.phonetic_last_name}
+                  type="text"
+                />
+              </span>
+            </div>
+            <div className="field-row" >
+              <span>{i18n.phonetic_first_name}</span>
+              <span>
+                <input
+                  ref={register}
+                  name="phonetic_first_name"
+                  placeholder={i18n.phonetic_first_name}
+                    type="text"
+                />
+              </span>
+            </div>
+          </>
+        )}
 
         <div className="field-header">{i18n.address}</div>
         <div className="field-row" >

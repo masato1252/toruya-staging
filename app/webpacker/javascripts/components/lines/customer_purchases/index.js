@@ -137,6 +137,7 @@ export const CustomerPurchases = ({props}) => {
           social_user_id={social_user_id}
           customer_id={customer_id}
           i18n={props.i18n}
+          support_phonetic_name={props.support_feature_flags.support_phonetic_name}
           identifiedCallback={
             (customer) => {
               setIdentifiedCustomer(customer.customer_id)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class OnlineServicesController < Lines::CustomersController
+  include ProductLocale
   layout "booking"
 
   before_action :online_service
@@ -66,5 +67,9 @@ class OnlineServicesController < Lines::CustomersController
 
   def current_owner
     online_service.user
+  end
+
+  def product_social_user
+    online_service.user.social_user
   end
 end

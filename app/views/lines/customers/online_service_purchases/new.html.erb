@@ -7,6 +7,7 @@
     sale_page: @sale_page.serializer(params).attributes_hash,
     stripe_key: current_owner.stripe_provider&.publishable_key,
     customer_subscribed: @relation&.legal_to_access?,
+    support_feature_flags: support_feature_flags,
     i18n: {
     }.merge!([
       t("booking_page"),

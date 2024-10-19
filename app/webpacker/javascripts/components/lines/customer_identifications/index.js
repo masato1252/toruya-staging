@@ -21,6 +21,7 @@ export const CustomerIdentification = (props) => {
     <CustomerIdentificationView
       social_user_id={social_user_id}
       customer_id={customer_id}
+      support_phonetic_name={props.support_feature_flags.support_phonetic_name}
       i18n={props.i18n}
       identifiedCallback={
         (customer) => {

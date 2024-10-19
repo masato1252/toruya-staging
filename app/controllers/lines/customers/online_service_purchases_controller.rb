@@ -2,6 +2,7 @@
 
 class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersController
   include MixpanelHelper
+  include ProductLocale
   before_action :sale_page
   skip_before_action :track_ahoy_visit, only: [:create]
   skip_before_action :verify_authenticity_token, only: [:create]
@@ -52,5 +53,9 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
   def current_owner
     @sale_page ||= SalePage.find_by!(slug: params[:slug])
     @sale_page.user
+  end
+
+  def product_social_user
+    sale_page.user.social_user
   end
 end

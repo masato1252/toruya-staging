@@ -7,8 +7,8 @@ module SocialCustomers
     object :social_customer
     string :customer_last_name
     string :customer_first_name
-    string :customer_phonetic_last_name
-    string :customer_phonetic_first_name
+    string :customer_phonetic_last_name, default: nil
+    string :customer_phonetic_first_name, default: nil
     string :customer_phone_number
 
     def execute

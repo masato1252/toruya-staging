@@ -2,7 +2,9 @@
 
 import React from "react";
 
-const CustomerInfoModal = ({set_booking_reservation_form_values, booking_reservation_form_values, i18n}) => {
+const CustomerInfoModal = ({
+  set_booking_reservation_form_values, booking_reservation_form_values, i18n, support_phonetic_name
+}) => {
   const { last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, email, address_details } = booking_reservation_form_values.customer_info;
 
   const customerInfoFieldModalHideHandler = () => {
@@ -39,13 +41,17 @@ const CustomerInfoModal = ({set_booking_reservation_form_values, booking_reserva
             <div className="info">
               {last_name} {first_name}
             </div>
-            <h4>
-              {i18n.phonetic_name}
-              <a href="#" className="edit" onClick={() => openCustomerInfoFieldModel("phonetic_full_name")}>{i18n.edit}</a>
-            </h4>
-            <div className="info">
-              {phonetic_last_name} {phonetic_first_name}
-            </div>
+            {support_phonetic_name && (
+              <>
+                <h4>
+                  {i18n.phonetic_name}
+                  <a href="#" className="edit" onClick={() => openCustomerInfoFieldModel("phonetic_full_name")}>{i18n.edit}</a>
+                </h4>
+                <div className="info">
+                  {phonetic_last_name} {phonetic_first_name}
+                </div>
+              </>
+            )}
             <h4>
               {i18n.phone_number}
               <a href="#" className="edit" onClick={() => openCustomerInfoFieldModel("phone_number")}>{i18n.edit}</a>

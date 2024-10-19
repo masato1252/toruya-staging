@@ -4,7 +4,14 @@ import React from "react";
 
 import { ErrorMessage } from "shared/components";
 
-const RegularCustomersOption = ({set_booking_reservation_form_values, booking_reservation_form_values, isCustomerTrusted, i18n, findCustomer}) => {
+const RegularCustomersOption = ({
+  set_booking_reservation_form_values,
+  booking_reservation_form_values,
+  isCustomerTrusted,
+  i18n,
+  findCustomer,
+  support_phonetic_name
+}) => {
   const {
     found_customer,
     is_finding_customer,
@@ -55,33 +62,37 @@ const RegularCustomersOption = ({set_booking_reservation_form_values, booking_re
         />
         <ErrorMessage error={customer_first_name_failed_message} />
       </div>
-      <br />
-      <div>
-        <input
-          id="customer_phonetic_last_name"
-          name="booking_reservation_form[customer_phonetic_last_name]"
-          type="text"
-          placeholder={phonetic_last_name}
-          value={customer_phonetic_last_name || ""}
-          onChange={(event) => {
-            event.persist();
-            set_booking_reservation_form_values(prev => ({...prev, customer_phonetic_last_name: event.target?.value}))
-          }}
-        />
-        <p></p>
-        <input
-          id="customer_phonetic_first_name"
-          name="booking_reservation_form[customer_phonetic_first_name]"
-          type="text"
-          placeholder={phonetic_first_name}
-          value={customer_phonetic_first_name || ""}
-          onChange={(event) => {
-            event.persist();
-            set_booking_reservation_form_values(prev => ({...prev, customer_phonetic_first_name: event.target?.value}))
-          }}
-        />
-        <ErrorMessage error={customer_phonetic_name_failed_message} />
-      </div>
+      {support_phonetic_name && (
+        <>
+          <br />
+          <div>
+          <input
+            id="customer_phonetic_last_name"
+            name="booking_reservation_form[customer_phonetic_last_name]"
+            type="text"
+            placeholder={phonetic_last_name}
+            value={customer_phonetic_last_name || ""}
+            onChange={(event) => {
+              event.persist();
+              set_booking_reservation_form_values(prev => ({...prev, customer_phonetic_last_name: event.target?.value}))
+            }}
+          />
+          <p></p>
+          <input
+            id="customer_phonetic_first_name"
+            name="booking_reservation_form[customer_phonetic_first_name]"
+            type="text"
+            placeholder={phonetic_first_name}
+            value={customer_phonetic_first_name || ""}
+            onChange={(event) => {
+              event.persist();
+              set_booking_reservation_form_values(prev => ({...prev, customer_phonetic_first_name: event.target?.value}))
+            }}
+          />
+            <ErrorMessage error={customer_phonetic_name_failed_message} />
+          </div>
+        </>
+      )}
       <h4>
         {phone_number}
       </h4>

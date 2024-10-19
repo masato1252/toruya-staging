@@ -10,7 +10,8 @@ const IdentificationCodesServices = {
       method: "GET",
       url: Routes.lines_user_bot_generate_code_path({format: "json"}),
       params: {
-        phone_number: data.phone_number
+        phone_number: data.phone_number,
+        login_type: data.login_type
       },
       responseType: "json"
     })

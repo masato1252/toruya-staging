@@ -67,14 +67,17 @@ const CustomerBasicInfo = () => {
             }
           </div>
           <div className="names">
-            <div className="phonetic-name">
-              <span>
+            {props.support_feature_flags.support_phonetic_name && (
+              <div className="phonetic-name">
+                <span>
                 {selected_customer.phoneticLastName}
               </span>
               <span>
                 {selected_customer.phoneticFirstName}
               </span>
-            </div>
+              </div>
+            )}
+            
             <div className="name">
               <span>
                 {selected_customer.lastName}

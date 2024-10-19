@@ -271,6 +271,13 @@ ja:
     personal_schedule: 個人の予定
     press_enter_to_add_tag: タグフレーズを入力
     seat_number: 座席数
+    toruya_user_login_html: Toruyaのユーザー登録がお済の方は、こちらからログインしてください。
+    login: ログイン
+    line_verification:
+      login_first_message: まずはLINEでログインしてください
+      service_content_message_html: サービスコンテンツは
+        <br />
+        LINEメッセージでお送りします
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

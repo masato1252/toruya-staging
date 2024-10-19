@@ -11,6 +11,7 @@ import I18n from 'i18n-js/index.js.erb';
 import { ErrorMessage, RequiredLabel } from "shared/components";
 
 export const UserIdentificationFlow = ({props, finalView, next}) => {
+  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']
   const {
     page_title, trial_info_html, name, last_name, first_name, confirm_customer_info, booking_code, message,
     phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info, referral_code_title, referral_code_placeholder, sms_faq
@@ -126,8 +127,8 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           <RequiredLabel label={props.i18n.user_sign_up.phone_number} required_label={required_label} />
         </h4>
         <PhoneInput
-          country={'jp'}
-          onlyCountries={['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']}
+          country={phone_countries.includes(props.locale) ? props.locale : 'jp'}
+          onlyCountries={phone_countries}
           value={phone_number}
           onChange={ (phone) => setValue("phone_number", phone) }
           autoFormat={false}
@@ -190,23 +191,27 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
 
     return (
       <div className="customer-type-options">
-        <h4>
-          <RequiredLabel label={phonetic_name} required_label={required_label} />
-        </h4>
-        <div className="field">
-          <input
-            ref={register({ required: true })}
-            placeholder={phonetic_last_name}
-            type="text"
-            name="phonetic_last_name"
-          />
-          <input
-            ref={register({ required: true })}
-            placeholder={phonetic_first_name}
-            type="text"
-            name="phonetic_first_name"
-          />
-        </div>
+        {props.support_feature_flags.support_phonetic_name && (
+          <>
+            <h4>
+              <RequiredLabel label={phonetic_name} required_label={required_label} />
+            </h4>
+            <div className="field">
+              <input
+              ref={register({ required: true })}
+              placeholder={phonetic_last_name}
+              type="text"
+              name="phonetic_last_name"
+            />
+            <input
+              ref={register({ required: true })}
+              placeholder={phonetic_first_name}
+              type="text"
+              name="phonetic_first_name"
+              />
+            </div>
+          </>
+        )}
         <h4>{I18n.t("user_bot.guest.user_sign_up.know_more_about_you")}</h4>
         <div className="field">
           <input

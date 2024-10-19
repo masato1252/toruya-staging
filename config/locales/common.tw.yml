@@ -51,7 +51,7 @@ tw:
     next_step: 下一步
     skip_step: 跳過此步驟
     prev_step: 上一步
-    no_need_setup: 無需設定
+    no_need_setup: 略過
     add_step: 新增步驟
     book_now: 立即預約
     sales:
@@ -213,7 +213,7 @@ tw:
     normal_price_label: 一般價格
     today_price_label: 今日特價
     thanks: 感謝您的使用
-    line_login_btn_word: LINE 連結
+    line_login_btn_word: LINE 登入
     line_user_login_btn_word: LINE 登入
     only_for_login_user: 此為註冊用戶專用頁面
     read_required_login_user_html: 瀏覽此頁面需要 <br /> 註冊服務
@@ -274,6 +274,13 @@ tw:
     personal_schedule: 個人行程
     press_enter_to_add_tag: 輸入標籤
     seat_number: 座位數
+    toruya_user_login_html: 請用Line 帳號登入
+    login: 登入
+    line_verification:
+      login_first_message: 請先使用LINE帳號登入
+      service_content_message_html: 服務內容將
+        <br />
+        透過LINE訊息發送
   errors:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。

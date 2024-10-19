@@ -4,6 +4,7 @@ require "message_encryptor"
 
 class LinesController < ActionController::Base
   include ControllerHelpers
+  include ProductLocale
 
   protect_from_forgery with: :exception, prepend: true
   before_action :social_customer, only: %w(identify_shop_customer find_customer create_customer identify_code ask_identification_code)
@@ -11,6 +12,7 @@ class LinesController < ActionController::Base
 
   layout "booking"
 
+  # customer sign up page
   def identify_shop_customer; end
 
   def customer_sign_in
@@ -122,10 +124,15 @@ class LinesController < ActionController::Base
   private
 
   def social_customer
-    @social_customer ||= SocialCustomer.find_by!(social_user_id: params[:social_service_user_id] || MessageEncryptor.decrypt(params[:encrypted_social_service_user_id]))
+    @social_customer ||= SocialCustomer.find_by(social_user_id: params[:social_service_user_id] || MessageEncryptor.decrypt(params[:encrypted_social_service_user_id]))
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
   end
 
   def customer
     @customer ||= Customer.find_by(id: params[:customer_id])
+  end
+
+  def product_social_user
+    social_customer&.user&.social_user
   end
 end

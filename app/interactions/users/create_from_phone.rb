@@ -5,8 +5,8 @@ module Users
     object :social_user
     string :last_name
     string :first_name
-    string :phonetic_last_name
-    string :phonetic_first_name
+    string :phonetic_last_name, default: nil
+    string :phonetic_first_name, default: nil
     string :phone_number
     string :referral_token, default: nil
     string :email, default: nil

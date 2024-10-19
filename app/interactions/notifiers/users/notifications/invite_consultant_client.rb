@@ -12,7 +12,7 @@ module Notifiers
           I18n.t(
             "notifier.notifications.invite_consultant_client.message",
             consultant_name: receiver.consultant_user.name,
-            url: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(consultant_token: receiver.token)
+            url: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(consultant_token: receiver.token, locale: receiver.consultant_user.social_user.locale)
           )
         end
       end

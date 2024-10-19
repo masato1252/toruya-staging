@@ -124,21 +124,19 @@ module Booking
           else
             # regular customer come
             if customer ||= social_customer&.customer
-              if customer_phonetic_last_name && customer_phonetic_first_name
-                customer = compose(Customers::Store,
-                  user: user,
-                  current_user: user,
-                  params: {
-                    id: customer.id.to_s,
-                    last_name: customer_last_name,
-                    first_name: customer_first_name,
-                    phonetic_last_name: customer_phonetic_last_name,
-                    phonetic_first_name: customer_phonetic_first_name,
-                    phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
-                    emails_details: [{ type: "mobile", value: customer_email }],
-                  }.compact
-                )
-              end
+              customer = compose(Customers::Store,
+                user: user,
+                current_user: user,
+                params: {
+                  id: customer.id.to_s,
+                  last_name: customer_last_name,
+                  first_name: customer_first_name,
+                  phonetic_last_name: customer_phonetic_last_name,
+                  phonetic_first_name: customer_phonetic_first_name,
+                  phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+                  emails_details: [{ type: "mobile", value: customer_email }],
+                }.compact
+              )
             else
               # new customer
               customer = create_new_customer

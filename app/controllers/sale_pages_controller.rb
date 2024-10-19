@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
 class SalePagesController < ActionController::Base
+  include ProductLocale
+
   layout "booking"
 
   def show
-    @sale_page ||= SalePage.active.find_by(slug: params[:slug]) || SalePage.active.find(params[:slug])
-
-    if !@sale_page.user.subscription.active?
+    if !sale_page.user.subscription.active?
       render inline: t("common.no_service_warning_html")
       return
     end
 
-    @main_product = @sale_page.product
+    @main_product = sale_page.product
 
     case @main_product
     when BookingPage
       product = @main_product.primary_product
-      @product_name = @sale_page.product_name
+      @product_name = sale_page.product_name
 
       @keywords =
         [
@@ -43,10 +43,20 @@ class SalePagesController < ActionController::Base
         company_info["address"]
       ].compact
 
-      @is_started = @sale_page.started?
-      @is_ended = @sale_page.ended?
+      @is_started = sale_page.started?
+      @is_ended = sale_page.ended?
       @company = @main_product.company
-      @payable = @sale_page.payable?
+      @payable = sale_page.payable?
     end
+  end
+
+  private
+
+  def sale_page
+    @sale_page ||= SalePage.active.find_by(slug: params[:slug]) || SalePage.active.find(params[:slug])
+  end
+
+  def product_social_user
+    sale_page.user.social_user
   end
 end

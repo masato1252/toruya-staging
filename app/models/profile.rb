@@ -48,8 +48,8 @@ class Profile < ApplicationRecord
 
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates :phonetic_first_name, presence: true
-  validates :phonetic_last_name, presence: true
+  validates :phonetic_first_name, presence: false
+  validates :phonetic_last_name, presence: false
 
   def personal_full_address
     if personal_address_details.present?

@@ -6,8 +6,8 @@ module Profiles
     hash :params do
       string :last_name
       string :first_name
-      string :phonetic_last_name
-      string :phonetic_first_name
+      string :phonetic_last_name, default: nil
+      string :phonetic_first_name, default: nil
       string :address, default: nil
       string :phone_number, default: nil
       string :email, default: nil

@@ -2,7 +2,8 @@
 
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
-  get :userlogin, to: "lines#user_login", as: :user_login
+  get "(/:locale)/userlogin", to: "lines#user_login", as: :user_login
+
   scope module: :lines, path: :lines, as: :lines do
     # customer sesson new
     get "/identify_shop_customer/(:social_service_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
@@ -35,9 +36,9 @@ Rails.application.routes.draw do
       resource :change_log, only: [:update, :show]
 
       scope module: :users do
-        get "/connect(/social_service_user_id/:social_service_user_id)", as: :connect_user, action: "connect"
-        get "/sign_up(/social_service_user_id/:social_service_user_id)", as: :sign_up, action: "sign_up"
-        get "/line_sign_up", as: :line_sign_up, action: "line_sign_up"
+        get "/connect(/social_service_user_id/:social_service_user_id)", as: :connect_user, action: "connect" # user sign in
+        get "/sign_up(/social_service_user_id/:social_service_user_id)", as: :sign_up, action: "sign_up" # user sign up
+        get "(/:locale)/line_sign_up", as: :line_sign_up, action: "line_sign_up" # social user sign up
         get :generate_code
         get :identify_code
         post :create_user

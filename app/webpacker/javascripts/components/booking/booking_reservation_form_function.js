@@ -188,13 +188,20 @@ const BookingReservationFormFunction = ({props}) => {
       found_customer
     } = booking_reservation_form_values;
 
-    return (found_customer && customer_info && customer_info.id) || (
-      customer_last_name &&
-      customer_first_name &&
-      customer_phonetic_last_name &&
-      customer_phonetic_first_name &&
-      customer_phone_number
-    )
+    if (props.support_feature_flags.support_phonetic_name) {
+      return (found_customer && customer_info && customer_info.id) || (
+        customer_last_name &&
+        customer_first_name &&
+        customer_phonetic_last_name &&
+        customer_phonetic_first_name &&
+        customer_phone_number
+      )
+    }
+    else {
+      return (found_customer && customer_info && customer_info.id) || (
+        customer_last_name && customer_first_name && customer_phone_number
+      )
+    }
   }
 
   const isCustomerTrusted = () => {
@@ -234,12 +241,19 @@ const BookingReservationFormFunction = ({props}) => {
       set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, customer_phone_number_failed_message: `${props.i18n.phone_number}${props.i18n.errors.required}`}}))
     }
 
-    if (!customer_phonetic_first_name || !customer_phonetic_last_name) {
+    if (props.support_feature_flags.support_phonetic_name && (!customer_phonetic_first_name || !customer_phonetic_last_name)) {
       set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, customer_phonetic_name_failed_message: props.i18n.message.customer_phonetic_name_failed_message}}))
     }
 
-    if (customer_first_name && customer_last_name && customer_phonetic_last_name && customer_phonetic_first_name && customer_phone_number) {
-      set_booking_reservation_form_values(prev => ({...prev, errors: {}}))
+    if (props.support_feature_flags.support_phonetic_name) {
+      if (customer_first_name && customer_last_name && customer_phonetic_last_name && customer_phonetic_first_name) {
+        set_booking_reservation_form_values(prev => ({...prev, errors: {}}))
+      }
+    }
+    else {
+      if (customer_first_name && customer_last_name && customer_phone_number) {
+        set_booking_reservation_form_values(prev => ({...prev, errors: {}}))
+      }
     }
   }
 
@@ -248,8 +262,15 @@ const BookingReservationFormFunction = ({props}) => {
     await validateData()
     const { customer_first_name, customer_last_name, customer_phonetic_last_name, customer_phonetic_first_name, customer_phone_number } = booking_reservation_form_values;
 
-    if (!(customer_first_name && customer_last_name && customer_phone_number && customer_phonetic_last_name && customer_phonetic_first_name)) {
-      return;
+    if (props.support_feature_flags.support_phonetic_name) {
+      if (!(customer_first_name && customer_last_name && customer_phonetic_last_name && customer_phonetic_first_name)) {
+        return;
+      }
+    }
+    else {
+      if (!(customer_first_name && customer_last_name && customer_phone_number)) {
+        return;
+      }
     }
 
     if (findCustomerCall) {
@@ -500,6 +521,7 @@ const BookingReservationFormFunction = ({props}) => {
               isCustomerTrusted={isCustomerTrusted()}
               i18n={props.i18n}
               findCustomer={findCustomer}
+              support_phonetic_name={props.support_feature_flags.support_phonetic_name}
             />
           )}
           {isBookingFlowEnd() && isSocialLoginChecked() && (
@@ -582,6 +604,7 @@ const BookingReservationFormFunction = ({props}) => {
               isCustomerTrusted={isCustomerTrusted()}
               i18n={props.i18n}
               findCustomer={findCustomer}
+              support_phonetic_name={props.support_feature_flags.support_phonetic_name}
             />
           )}
           {isBookingFlowEnd() && isSocialLoginChecked() && (
@@ -630,6 +653,7 @@ const BookingReservationFormFunction = ({props}) => {
         set_booking_reservation_form_values={set_booking_reservation_form_values}
         booking_reservation_form_values={booking_reservation_form_values}
         i18n={props.i18n}
+        support_phonetic_name={props.support_feature_flags.support_phonetic_name}
       />
       <CustomerInfoFieldModel
         set_booking_reservation_form_values={set_booking_reservation_form_values}

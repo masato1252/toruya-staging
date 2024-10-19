@@ -6,7 +6,7 @@ import axios from "axios";
 
 import { ErrorMessage } from "shared/components";
 
-export const CustomerIdentificationView = ({social_user_id, customer_id, identifiedCallback, i18n}) => {
+export const CustomerIdentificationView = ({social_user_id, customer_id, identifiedCallback, i18n, support_phonetic_name}) => {
   const { name, last_name, first_name, phone_number, next_step, booking_code, message, confirm,
     title_html, phonetic_name, phonetic_last_name, phonetic_first_name, email, create_customer_info } = i18n;
 
@@ -30,8 +30,13 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
   }
 
   const _is_all_fields_filled = () => {
-    return customer_first_name && customer_last_name && customer_phone_number
-      && customer_phonetic_last_name && customer_phonetic_first_name;
+    if (support_phonetic_name) {
+      return customer_first_name && customer_last_name && customer_phone_number
+        && customer_phonetic_last_name && customer_phonetic_first_name;
+    }
+    else {
+      return customer_first_name && customer_last_name && customer_phone_number;
+    }
   }
 
   const signIn = async (event) => {
@@ -217,9 +222,11 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
             onChange={(e) => setCustomerFirstName(e.target.value)}
           />
         </div>
-        <br />
-        <div>
-          <input
+        {support_phonetic_name ? (
+          <>
+            <br />
+            <div>
+              <input
             placeholder={phonetic_last_name}
             type="text"
             value={customer_phonetic_last_name}
@@ -228,10 +235,12 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
           <input
             placeholder={phonetic_first_name}
             type="text"
-            value={customer_phonetic_first_name}
-            onChange={(e) => setCustomerPhoneticFirstName(e.target.value)}
-          />
-        </div>
+              value={customer_phonetic_first_name}
+              onChange={(e) => setCustomerPhoneticFirstName(e.target.value)}
+            />
+          </div>
+          </>
+        ) : null}
         <h4>
           {phone_number}
         </h4>

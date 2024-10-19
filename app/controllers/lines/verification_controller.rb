@@ -4,9 +4,10 @@ require "message_encryptor"
 require "line_client"
 
 class Lines::VerificationController < ActionController::Base
-  layout "booking"
   before_action :current_user
   before_action :line_settings_required
+  include ProductLocale
+  layout "booking"
 
   def show
     @login_api_ready = current_user.social_account&.login_api_verified?
@@ -83,14 +84,18 @@ class Lines::VerificationController < ActionController::Base
   private
 
   def line_settings_required
-    if !current_user.social_account&.is_login_available?
+    if !current_user&.social_account&.is_login_available?
       redirect_to login_api_lines_user_bot_settings_social_account_path(business_owner_id: current_user&.id)
       return
     end
 
-    if !current_user.social_account&.bot_data_finished?
+    if !current_user&.social_account&.bot_data_finished?
       redirect_to message_api_lines_user_bot_settings_social_account_path(business_owner_id: current_user&.id)
       return
     end
+  end
+
+  def product_social_user
+    current_user.social_user
   end
 end

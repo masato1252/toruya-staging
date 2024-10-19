@@ -5,11 +5,12 @@ require "flow_backtracer"
 
 class BookingPagesController < ActionController::Base
   include MixpanelHelper
+  include ProductLocale
+
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
   protect_from_forgery with: :exception, prepend: true
   skip_before_action :verify_authenticity_token, only: [:booking_reservation]
   before_action :tracking_from, only: [:show]
-
   layout "booking"
 
   def show
@@ -289,5 +290,9 @@ class BookingPagesController < ActionController::Base
   def redirect_to_booking_show_page(exception)
     Rollbar.error(exception)
     render json: { status: "invalid_authenticity_token" }
+  end
+
+  def product_social_user
+    booking_page.user.social_user
   end
 end

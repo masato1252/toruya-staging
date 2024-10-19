@@ -20,11 +20,11 @@
 <% end %>
 <div class="margin-around">
   <h3><%= t("user_bot.dashboards.settings.consultants.invitation_link") %></h3>
-  <%= text_field_tag :consultant_url, Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(consultant_token: Current.business_owner.referral_token), read_only: true, class: 'extend',
+  <%= text_field_tag :consultant_url, Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(locale: I18n.locale, consultant_token: Current.business_owner.referral_token), read_only: true, class: 'extend',
     data: {
       controller: "clipboard",
       action: "click->clipboard#copy",
-      clipboard_text: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(consultant_token: Current.business_owner.referral_token),
+      clipboard_text: Rails.application.routes.url_helpers.lines_user_bot_line_sign_up_url(locale: I18n.locale, consultant_token: Current.business_owner.referral_token),
       clipboard_popup_text: t("common.copied")
     }
   %>

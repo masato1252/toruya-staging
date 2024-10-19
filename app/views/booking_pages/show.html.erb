@@ -34,6 +34,7 @@
     lowest_online_charge_required_amount: BookingOption::LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT,
     product_requirement: @product_requirement ? { product_name: @product_requirement.requirement.name } : nil,
     social_customer_exists: @social_customer.present?,
+    support_feature_flags: support_feature_flags,
     booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled").merge!({
       shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
       shop_name: @booking_page.shop.name,

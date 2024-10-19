@@ -5,6 +5,8 @@
   staff_token: params[:staff_token],
   consultant_token: params[:consultant_token],
   phone_number: @staff_account&.phone_number,
+  locale: I18n.locale,
+  support_feature_flags: support_feature_flags,
   i18n: {
   }.merge!([
     t("user_bot.guest"),
