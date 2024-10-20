@@ -164,7 +164,7 @@ const BookingPageEdit =({props}) => {
               <input ref={register({ required: true })} name="new_menu_price" type="tel" />
               {I18n.t("common.unit")}({I18n.t("common.tax_included")})
               {watch("price_type") == "ticket" && watch("new_menu_price") > 50000 &&
-                <ErrorMessage error={I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")} />}
+                <div className="warning">{I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")}</div>}
             </div>
             <TicketOptionsFields
               setValue={setValue}
@@ -205,7 +205,7 @@ const BookingPageEdit =({props}) => {
               <input ref={register({ required: true })} name="new_menu_price" type="tel" />
               {I18n.t("common.unit")}({I18n.t("common.tax_included")})
               {watch("price_type") == "ticket" && watch("new_menu_price") > 50000 &&
-                <ErrorMessage error={I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")} />}
+                <div className="warning">{I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")}</div>}
             </div>
             <TicketOptionsFields
               setValue={setValue}
@@ -306,9 +306,7 @@ const BookingPageEdit =({props}) => {
   }
 
   const isSubmitDisabled = () => {
-    return formState.isSubmitting ||
-      (props.attribute == "new_option_existing_menu" && watch("price_type") == "ticket" && watch("new_menu_price") > 50000) ||
-      (props.attribute == "new_option_menu" && watch("price_type") == "ticket" && watch("new_menu_price") > 50000)
+    return formState.isSubmitting
   }
 
   return (

@@ -342,6 +342,8 @@ Rails.application.routes.draw do
               get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
               get "/:reservation_id/refund_modal/:customer_id", action: :refund_modal, as: :refund_modal
               post "/:reservation_id/refund/:customer_id", action: :refund, as: :refund
+              get "/:reservation_id/edit_ticket_modal/:customer_id", action: :edit_ticket_modal, as: :edit_ticket_modal
+              post "/:reservation_id/update_ticket/:customer_id", action: :update_ticket, as: :update_ticket
             end
           end
           resources :messages, only: [:index]

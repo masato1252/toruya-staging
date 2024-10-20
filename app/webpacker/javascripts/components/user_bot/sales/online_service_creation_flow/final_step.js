@@ -7,7 +7,7 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import { UrlCopyBtn } from "shared/components";
 
 const FinalStep = ({next, step}) => {
-  const { sale_page_id } = useGlobalContext()
+  const { sale_page_id, props } = useGlobalContext()
 
   return (
     <div className="form">
@@ -20,6 +20,9 @@ const FinalStep = ({next, step}) => {
           href={Routes.sale_page_url(sale_page_id || 0)}>
           {I18n.t("action.open_sale_page")}
         </a>
+      </div>
+      <div className="centerize margin-around">
+        <img src={props.sale_page_introduction_path} className="w-full" />
       </div>
     </div>
   )

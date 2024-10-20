@@ -13,7 +13,7 @@ const BookingPriceField = ({setValue, register, watch, ticket_expire_date_desc_p
           <input name="amount_cents" type="tel" ref={register({ required: true })} />
           {I18n.t("common.unit")}({I18n.t("common.tax_included")})
           {watch("price_type") == "ticket" && watch("amount_cents") > 50000 &&
-            <ErrorMessage error={I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")} />}
+            <div className="warning">{I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")}</div>}
           {watch("amount_cents") && watch("amount_cents") < 100 &&
             <div className="warning">{I18n.t("errors.selling_price_too_low")}</div>}
         </span>

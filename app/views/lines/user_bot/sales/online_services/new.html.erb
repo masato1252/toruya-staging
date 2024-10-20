@@ -25,6 +25,7 @@
     companies: Current.business_owner.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
       CompanyInfoSerializer.new(Current.business_owner.profile).attributes_hash
     ),
+    sale_page_introduction_path: asset_pack_path("media/assets/user_bot/sale_page_introduction.png")
   }
 },
 { camelize_props: false }

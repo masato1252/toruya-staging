@@ -32,6 +32,7 @@ ja:
     ignore: 無視する
     save_changes: 変更を上書き保存
     change_and_save: 変更を保存
+    change: 変更
     add_more: 追加
     approve: 承認
     reject: 拒否

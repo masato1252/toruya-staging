@@ -110,19 +110,17 @@
         <% mobile_only do %>
           <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
             <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
-            <% if @service.has_preview? %>
-              <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word btn-bottom-left" do %>
-                <i class="fa fa-share-square fa-2x"></i>
-                <div class="word"><%= I18n.t("action.preview") %></div>
+              <% if @service.has_preview? %>
+                <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word btn-bottom-left" do %>
+                  <i class="fa fa-share-square fa-2x"></i>
+                  <div class="word"><%= I18n.t("action.preview") %></div>
+                <% end %>
               <% end %>
-            <% end %>
 
-            <% if @sale_page %>
-              <%= link_to "#", data: { toggle: "modal", target: "#previewModal2" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+              <%= link_to "#", data: { toggle: "modal", target: "#salePagesModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
                 <i class="fa fa-share-square fa-2x"></i>
                 <div class="word"><%= I18n.t("action.share") %></div>
               <% end %>
-            <% end %>
           <% end %>
         <% end %>
       </div>
@@ -130,6 +128,12 @@
 
     <% non_mobile do %>
       <div class="col-sm-6 px-0 hidden-xs preview-view">
+        <div class="margin-around centerize">
+          <%= link_to "#", data: { toggle: "modal", target: "#salePagesModal" }, class: "btn btn-tarco" do %>
+            <%= I18n.t("action.share") %>
+          <% end %>
+        </div>
+
         <% if @sale_page %>
           <div class="margin-around">
               <h4><%= t("user_bot.dashboards.sales.edit.sale_pages") %></h4>
@@ -185,5 +189,36 @@
 
   <% mobile_only do %>
     <%= render "lines/user_bot/services/preview_modal", service: @service if @service.has_preview? %>
-    <%= render 'lines/user_bot/sales/preview_modal', sale_page: @sale_page, id: "previewModal2" if @sale_page %>
+    
   <% end %>
+  <div class="modal fade" id="salePagesModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog booking-preview-modal" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <%= t("user_bot.dashboards.sales.modal.title") %>
+          </h4>
+        </div>
+        <div class="form">
+          <div class="margin-around">
+            <%= t("user_bot.dashboards.sales.modal.description") %>
+          </div>
+            <%= image_pack_tag "media/assets/user_bot/sale_page_introduction.png", class: "w-full" %>
+
+          <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
+          <div class="booking-pages-list">
+            <% @sale_pages.each do |sale_page| %>
+              <% next unless sale_page.product %>
+              <%= render 'lines/user_bot/sales/row', sale_page: sale_page %>
+            <% end %>
+          </div>
+          <div class="margin-around centerize">
+            <%= link_to new_lines_user_bot_sale_path(business_owner_id: business_owner_id), class: "btn btn-yellow" do %>
+              <%= t("user_bot.dashboards.sales.modal.create_sale_page") %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>

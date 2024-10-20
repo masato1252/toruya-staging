@@ -32,6 +32,7 @@ class BookingOption < ApplicationRecord
   date_time_accessor :start_at, :end_at, accessor_only: true
 # attr_accessor :start_at_date_part, :start_at_time_part
   LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT = 100 # 100 yen. amount < 100, always go cash
+  MAXIMUM_TICKET_REQUIRED_AMOUNT = 50000 # 50,000 yen. amount > 50,000, always go cash
 
   belongs_to :user
 
@@ -49,7 +50,7 @@ class BookingOption < ApplicationRecord
   scope :undeleted, -> { where(delete_at: nil) }
 
   def cash_pay_required?
-    amount_cents < LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT
+    amount_cents < LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT || (ticket_enabled? && amount_cents > MAXIMUM_TICKET_REQUIRED_AMOUNT)
   end
 
   def start_time
