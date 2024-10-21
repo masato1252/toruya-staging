@@ -38,7 +38,7 @@ const WhyContentEdit = ({product_content, handleContentChange, handlePictureChan
       <TextareaAutosize
         className="extend with-border"
         value={product_content.desc2}
-        placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.what_buyer_future")}
+        placeholder={I18n.t("user_bot.dashboards.sales.online_service_creation.what_buyer_future")}
         onFocus={(name) => setFocusField("what_buyer_future_tip")}
         onChange={(event) => {
           handleContentChange("desc2", event.target.value)

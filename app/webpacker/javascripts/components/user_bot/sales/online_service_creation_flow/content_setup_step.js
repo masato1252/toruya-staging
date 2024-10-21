@@ -40,7 +40,7 @@ const ContentSetupStep = ({step, next, prev, lastStep}) => {
     <div className="form">
       <SalesFlowStepIndicator step={step} />
       <h4 className="header centerize"
-        dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.booking_page_creation.why_user_buy_html") }} />
+        dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.online_service_creation.why_user_buy_html") }} />
         <div className="product-content-deails">
           <WhyContentEdit
             product_content={product_content}
