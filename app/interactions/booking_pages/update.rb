@@ -19,6 +19,7 @@ module BookingPages
       string :default_provider, default: nil
       integer :shop_id, default: nil
       integer :booking_limit_day, default: 0
+      integer :booking_limit_hours, default: 0
       integer :bookable_restriction_months, default: nil
       string :greeting, default: nil
       string :note, default: nil
@@ -192,6 +193,7 @@ module BookingPages
         when "booking_available_period"
           booking_page.update(
             booking_limit_day: attrs[:booking_limit_day],
+            booking_limit_hours: attrs[:booking_limit_hours],
             bookable_restriction_months: attrs[:bookable_restriction_months]
           )
         when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable"

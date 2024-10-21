@@ -713,7 +713,9 @@ CREATE TABLE public.booking_pages (
     social_account_skippable boolean DEFAULT false NOT NULL,
     rich_menu_only boolean DEFAULT false,
     customer_cancel_request boolean DEFAULT false,
-    customer_cancel_request_before_day integer DEFAULT 1 NOT NULL
+    customer_cancel_request_before_day integer DEFAULT 1 NOT NULL,
+    payment_option character varying DEFAULT 'offline'::character varying,
+    booking_limit_hours integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6026,6 +6028,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241002201733'),
 ('20241008143048'),
 ('20241013003439'),
-('20241015000936');
+('20241015000936'),
+('20241020232855');
 
 

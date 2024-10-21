@@ -621,6 +621,7 @@ ja:
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
         booking_available_period_header: 予約の受付
         booking_limit_day_before: 日前まで
+        booking_limit_hours_before: 時間前まで
         bookable_restriction_months_before: ヶ月前
         booking_available_period_label: 受付可能期間
         booking_available_period_top_bar_header: 予約の受付可能期間

@@ -6,6 +6,7 @@
 #  id                                 :bigint           not null, primary key
 #  bookable_restriction_months        :integer          default(3)
 #  booking_limit_day                  :integer          default(1), not null
+#  booking_limit_hours                :integer          default(0), not null
 #  customer_cancel_request            :boolean          default(FALSE)
 #  customer_cancel_request_before_day :integer          default(1), not null
 #  default_provider                   :string

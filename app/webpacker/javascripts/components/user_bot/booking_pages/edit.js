@@ -63,6 +63,7 @@ const BookingPageEdit =({props}) => {
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
       draft: String(props.booking_page.draft),
       social_account_skippable: String(props.booking_page.social_account_skippable),
+      booking_limit_day: String(props.booking_page.booking_limit_day),
       booking_type: props.booking_page.booking_type,
       had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
       price_type: "regular",
@@ -280,6 +281,21 @@ const BookingPageEdit =({props}) => {
                 <option value="7">7</option>
               </select>
               {i18n.booking_limit_day_before}
+
+              {watch("booking_limit_day") === "0" && (
+                <>
+                  <select name="booking_limit_hours" ref={register({ required: true })}>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                  </select>
+                  {i18n.booking_limit_hours_before}
+                </>
+              )}
             </div>
             <div className="field-row">
               {I18n.t("settings.booking_page.form.booking_available_period_sample", { bookable_restriction_months_date: moment().add(watch("bookable_restriction_months"), "M").format("YYYY-MM-DD"), booking_limit_day_date: moment().add(watch("booking_limit_day"), "d").format("YYYY-MM-DD") })}

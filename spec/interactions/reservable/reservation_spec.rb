@@ -1043,6 +1043,24 @@ RSpec.describe Reservable::Reservation do
           expect(outcome.errors.details[:end_time].first[:error]).to eq(:invalid_time)
         end
       end
+
+      context "when start time is earlier than booking limit hours" do
+        it "is invalid" do
+          booking_page = FactoryBot.create(:booking_page, shop: shop, booking_limit_day: 0, booking_limit_hours: 1)
+          outcome = Reservable::Reservation.run(
+            shop: shop,
+            date: date,
+            booking_page: booking_page,
+            menu_id: menu1.id,
+            menu_required_time: menu1.minutes,
+            start_time: start_time,
+            end_time: end_time
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:start_time].first[:error]).to eq(:invalid_time)
+        end
+      end
     end
   end
 end

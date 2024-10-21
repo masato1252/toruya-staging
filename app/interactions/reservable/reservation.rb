@@ -50,6 +50,10 @@ module Reservable
         if start_time > end_time
           errors.add(:end_time, :invalid_time)
         end
+
+        if date.today? && booking_page && booking_page.booking_limit_day == 0 && start_time < ::Time.current.advance(hours: booking_page.booking_limit_hours)
+          errors.add(:start_time, :invalid_time)
+        end
       end
 
       # XXX: menu is required for the below validation

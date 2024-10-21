@@ -627,6 +627,7 @@ tw:
         note_hint: 請在此處填寫客戶預約此價格時需要注意的事項，將會顯示給客戶。
         booking_available_period_header: 預約接受期間
         booking_limit_day_before: 天前
+        booking_limit_hours_before: 小時前
         bookable_restriction_months_before: 個月前
         booking_available_period_label: 可接受預約的期間
         booking_available_period_top_bar_header: 可接受預約的期間
