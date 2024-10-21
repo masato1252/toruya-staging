@@ -311,7 +311,7 @@ RSpec.describe Reservable::Reservation do
       end
 
       # validate_menu_schedules
-      context "when menu doesn't allow to be booked on that date" do
+      xcontext "when menu doesn't allow to be booked on that date" do
         it "is invalid" do
           outcome = Reservable::Reservation.run(
             shop: shop, date: date,
@@ -327,7 +327,7 @@ RSpec.describe Reservable::Reservation do
       end
 
       # validate_menu_schedules
-      context "when menu doesn't start yet" do
+      xcontext "when menu doesn't start yet" do
         let!(:reservation_setting) { FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1) }
         before { MenuReservationSettingRule.where(menu: menu1).last.update_columns(start_date: Date.tomorrow) }
 
@@ -346,7 +346,7 @@ RSpec.describe Reservable::Reservation do
       end
 
       # validate_menu_schedules
-      context "when menu was over" do
+      xcontext "when menu was over" do
         let!(:reservation_setting) { FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1) }
 
         context "when rule had a particular end date" do

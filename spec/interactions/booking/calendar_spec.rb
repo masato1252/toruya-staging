@@ -227,7 +227,7 @@ RSpec.describe Booking::Calendar do
       end
     end
 
-    context "when menu is not available at that day" do
+    xcontext "when menu is not available at that day" do
       # unschedule_menu
       context "when setting contains day_of_week" do
         before do

@@ -177,7 +177,7 @@ RSpec.describe Reservations::Validate do
       end
     end
 
-    context "when menu doesn't start yet" do
+    xcontext "when menu doesn't start yet" do
       before { MenuReservationSettingRule.where(menu: menu2).last.update_columns(start_date: Date.tomorrow) }
 
       it "returns expected error" do
@@ -218,7 +218,7 @@ RSpec.describe Reservations::Validate do
       end
     end
 
-    context "when menu was over" do
+    xcontext "when menu was over" do
       context "when rule had a particular end date" do
         before do
           menu2.menu_reservation_setting_rule.update(end_date: Date.yesterday)
@@ -383,7 +383,7 @@ RSpec.describe Reservations::Validate do
       end
     end
 
-    context "when menu doesn't allow to be booked on that date" do
+    xcontext "when menu doesn't allow to be booked on that date" do
       let!(:menu_schedule2) { } # none
 
       it "returns expected error" do

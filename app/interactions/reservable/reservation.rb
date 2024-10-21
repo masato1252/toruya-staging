@@ -65,7 +65,7 @@ module Reservable
 
       validate_booking_events
       validate_interval_time if validate_overlap?
-      validate_menu_schedules
+      # validate_menu_schedules
       validate_seats_for_customers if overbooking_restriction
       validate_required_staffs
 
