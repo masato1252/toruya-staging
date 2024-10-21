@@ -816,7 +816,7 @@ ja:
         rich_menus/create:
           attributes:
             image:
-              invalid: "^画像無效"
+              invalid: "^画像サイズがリッチメニューの正しいサイズではありません"
             social_account:
               something_wrong: "^もう一度お試しください"
         online_services/delete:
