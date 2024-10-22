@@ -316,6 +316,16 @@ module Booking
 
             ::RichMenus::BusinessSwitchRichMenu.run(owner: user)
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
+
+            # notify pending reservations summary immediately for today's reservation
+            if reservation.start_time.to_date == Time.current.to_date
+              Notifiers::Users::PendingReservationsSummary.perform_later(
+                start_time: Time.current.beginning_of_day,
+                end_time: Time.current.end_of_day,
+                receiver: user,
+                user: user
+              )
+            end
           else
             Rollbar.error("Booking::CreateReservation Failed", errors: {
               customer_errors: customer&.errors&.details,

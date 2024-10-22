@@ -644,5 +644,18 @@ RSpec.describe Booking::CreateReservation do
         expect(reservation_customer.sale_page_id).to eq(sale_page_id)
       end
     end
+
+    context "when today's reservation" do
+      let(:today) { Time.zone.local(2019, 5, 13) }
+      let(:booking_page) { FactoryBot.create(:booking_page, user: user, shop: shop, booking_limit_hours: 0, booking_limit_day: 0) }
+
+      it "notifies pending reservations summary" do
+        args[:customer_info] = { "id": customer.id }
+        args[:present_customer_info] = { "id": customer.id }
+
+        expect(Notifiers::Users::PendingReservationsSummary).to receive(:perform_later)
+        outcome
+      end
+    end
   end
 end

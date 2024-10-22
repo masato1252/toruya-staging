@@ -24,6 +24,10 @@ module Notifiers
         ReservationMailer.pending_summary(reservations, user).deliver_now
       end
 
+      def deliverable?
+        reservations.any?
+      end
+
       private
 
       def reservations
