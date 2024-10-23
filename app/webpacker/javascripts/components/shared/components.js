@@ -521,15 +521,32 @@ const TagsInput = ({ suggestions, tags, setTags }) => {
   };
 
   return (
-    <ReactTags
-      tags={tags}
-      inputFieldPosition="top"
-      suggestions={suggestions}
-      handleDelete={handleDelete}
-      handleAddition={handleAddition}
-      placeholder={I18n.t("common.press_enter_to_add_tag")}
-      allowAdditionFromPaste
-    />
+    <div className="tags-input">
+      <ReactTags
+        autoFocus={false}
+        tags={tags}
+        inputFieldPosition="bottom"
+        separators={[]}
+        suggestions={suggestions}
+        handleDelete={handleDelete}
+        handleAddition={handleAddition}
+        placeholder={I18n.t("common.press_enter_to_add_tag")}
+        allowAdditionFromPaste
+      />
+
+      <button
+        className="btn btn-yellow"
+        onClick={() => {
+        const inputElement = document.querySelector('.ReactTags__tagInputField');
+        if (inputElement && inputElement.value) {
+          const newTag = { id: inputElement.value, text: inputElement.value };
+          handleAddition(newTag);
+          inputElement.value = '';
+        }
+      }}>
+        <i className="fa fa-plus"></i>
+      </button>
+    </div>
   )
 }
 
