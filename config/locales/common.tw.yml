@@ -195,6 +195,7 @@ tw:
     person_unit: 人
     object_unit: 個
     message_content_placholder: 請輸入您的詢問內容
+    delivery_content_placeholder: 請輸入您的送信內容
     tax: 稅
     apply_now: 立即申請
     preparing: 準備中

@@ -109,7 +109,7 @@ const CustomerMessageForm = () => {
   return (
     <div className="centerize message-form">
       <h4>{I18n.t("user_bot.dashboards.customer.customer_message_reply_title")}</h4>
-      <textarea ref={ref} defaultValue={draftMessageContent()} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")} />
+      <textarea ref={ref} defaultValue={draftMessageContent()} className="extend with-border" placeholder={I18n.t("common.delivery_content_placeholder")} />
       <div>
         <label className="flex flex-col">
           <i className='fas fa-image fa-2x'></i>

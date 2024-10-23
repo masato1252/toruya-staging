@@ -192,6 +192,7 @@ ja:
     person_unit: 人
     object_unit: 個
     message_content_placholder: お問合せ内容を入力
+    delivery_content_placeholder: 送信内容を入力
     tax: 税
     apply_now: お申し込みは今すぐ
     preparing: 準備中
