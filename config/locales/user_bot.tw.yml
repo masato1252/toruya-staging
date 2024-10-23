@@ -713,6 +713,8 @@ tw:
           what_introduction_video: 在標題使用影片可以提高線上課程的銷售量。
           introduction_video_hint: 如果使用YouTube，請將影片設為「公開」。
           end_time_changes_warning: 更改此設定不會影響已註冊客戶的使用期限。
+          why_user_buy_html: "這個服務的購買理由<br>或購買者的未來願景是什麼？"
+          what_buyer_future: 以文字輸入預約菜單的賣點或購買者的未來願景
         booking_page_creation:
           booking_step: 預約頁面
           content_step: 內容
