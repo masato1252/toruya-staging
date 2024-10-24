@@ -19,6 +19,7 @@ import SocialAccountSkippableField from "./social_account_skippable_field";
 import AvailableBookingDatesField from "./available_booking_dates_field";
 import BookingStartAtField from "./booking_start_at_field";
 import BookingEndAtField from "./booking_end_at_field";
+import BookingCutOffTimeField from "./booking_cut_off_time_field";
 import ShopField from "./shop_field";
 import ExistingMenuField from "components/user_bot/booking_options/existing_menu_field";
 
@@ -52,6 +53,52 @@ const BookingPageEdit =({props}) => {
       window.location = response.data.redirect_to
     } else {
       toastr.error(response.data.error_message)
+    }
+  }
+
+  const sample_booking_available_period_sample = ({
+    start_at_type, start_at_date_part, start_at_time_part,
+    cut_off_time_type, cut_off_time_date_part, cut_off_time_time_part,
+    end_at_type, end_at_date_part, end_at_time_part,
+    bookable_restriction_months, booking_limit_day
+  }) => {
+    if (start_at_type !== "now" && moment().isBefore(start_at_date_part + " " + start_at_time_part)) {
+      return <>{I18n.t("settings.booking_page.form.not_sale_yet")}</>
+    }
+    else if (cut_off_time_type == "date" && moment().isAfter(cut_off_time_date_part + " " + cut_off_time_time_part)) {
+      return <>{I18n.t("settings.booking_page.form.sale_end")}</>
+    }
+    else if (end_at_type == "date" && moment().isAfter(end_at_date_part + " " + end_at_time_part)) {
+      return <>{I18n.t("settings.booking_page.form.ended")}</>
+    }
+    else if (end_at_type == "date") {
+      const endAtMoment = moment(end_at_date_part + " " + end_at_time_part);
+      const bookableRestrictionDate = moment().add(bookable_restriction_months, "M");
+      const bookableRestrictionMonthsDate = bookableRestrictionDate.isAfter(endAtMoment) ? endAtMoment.format("YYYY-MM-DD") : bookableRestrictionDate.format("YYYY-MM-DD");
+      const bookingLimitDayDate = moment().add(booking_limit_day, "d").format("YYYY-MM-DD");
+
+      return <>{I18n.t("settings.booking_page.form.booking_available_period_sample", { bookable_restriction_months_date: bookableRestrictionMonthsDate, booking_limit_day_date: bookingLimitDayDate })}</>
+    }
+    else {
+      return <>{I18n.t("settings.booking_page.form.booking_available_period_sample", { bookable_restriction_months_date: moment().add(bookable_restriction_months, "M").format("YYYY-MM-DD"), booking_limit_day_date: moment().add(booking_limit_day, "d").format("YYYY-MM-DD") })}</>
+    }
+  }
+
+  const sample_booking_page_available_period_sample = ({
+    start_at_type, start_at_date_part, start_at_time_part,
+    cut_off_time_type, cut_off_time_date_part, cut_off_time_time_part
+  }) => {
+    if (start_at_date_part && start_at_time_part && cut_off_time_date_part && cut_off_time_time_part) {
+      return <>{I18n.t("settings.booking_page.form.booking_page_period_sample", { start_at_date: moment(start_at_date_part + " " + start_at_time_part).format("YYYY-MM-DD HH:mm"), end_at_date: moment(cut_off_time_date_part + " " + cut_off_time_time_part).format("YYYY-MM-DD HH:mm") })}</>
+    }
+    else if (start_at_type == "now" && cut_off_time_type == "never") {
+      return <>{I18n.t("settings.booking_page.form.booking_page_period_no_end_date_sample", { start_at_date: moment().format("YYYY-MM-DD") })}</>
+    }
+    else if (start_at_type == "date" && start_at_date_part && start_at_time_part) {
+      return <>{I18n.t("settings.booking_page.form.booking_page_period_no_end_date_sample", { start_at_date: moment(start_at_date_part + " " + start_at_time_part).format("YYYY-MM-DD") })}</>
+    }
+    else if (start_at_type == "now" && cut_off_time_type == "date" && cut_off_time_date_part && cut_off_time_time_part) {
+      return <>{I18n.t("settings.booking_page.form.booking_page_period_sample", { start_at_date: moment().format("YYYY-MM-DD"), end_at_date: moment(cut_off_time_date_part + " " + cut_off_time_time_part).format("YYYY-MM-DD HH:mm") })}</>
     }
   }
 
@@ -322,8 +369,45 @@ const BookingPageEdit =({props}) => {
                 </>
               )}
             </div>
+            <div className="field-header">{I18n.t("settings.booking_page.form.end_at")}</div>
+            <BookingEndAtField i18n={i18n} register={register} watch={watch} control={control} />
+
             <div className="field-row">
-              {I18n.t("settings.booking_page.form.booking_available_period_sample", { bookable_restriction_months_date: moment().add(watch("bookable_restriction_months"), "M").format("YYYY-MM-DD"), booking_limit_day_date: moment().add(watch("booking_limit_day"), "d").format("YYYY-MM-DD") })}
+              {sample_booking_available_period_sample({
+                start_at_type: watch("start_at_type"),
+                start_at_date_part: watch("start_at_date_part"),
+                start_at_time_part: watch("start_at_time_part"),
+                end_at_type: watch("end_at_type"),
+                end_at_date_part: watch("end_at_date_part"),
+                end_at_time_part: watch("end_at_time_part"),
+                cut_off_time_type: watch("cut_off_time_type"),
+                cut_off_time_date_part: watch("cut_off_time_date_part"),
+                cut_off_time_time_part: watch("cut_off_time_time_part"),
+                bookable_restriction_months: watch("bookable_restriction_months"),
+                booking_limit_day: watch("booking_limit_day")
+              })}
+            </div>
+
+            <h3 className="header centerize">{I18n.t("settings.booking_page.form.booking_page_display_period")}</h3>
+            <div className="field-header">{I18n.t("settings.booking_page.form.start_at")}</div>
+            <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />
+            <div className="field-header">{I18n.t("settings.booking_page.form.cut_off_time")}</div>
+            <BookingCutOffTimeField i18n={i18n} register={register} watch={watch} control={control} />
+
+            <div className="field-row">
+              {sample_booking_page_available_period_sample({
+                start_at_type: watch("start_at_type"),
+                start_at_date_part: watch("start_at_date_part"),
+                start_at_time_part: watch("start_at_time_part"),
+                end_at_type: watch("end_at_type"),
+                end_at_date_part: watch("end_at_date_part"),
+                end_at_time_part: watch("end_at_time_part"),
+                cut_off_time_type: watch("cut_off_time_type"),
+                cut_off_time_date_part: watch("cut_off_time_date_part"),
+                cut_off_time_time_part: watch("cut_off_time_time_part"),
+                bookable_restriction_months: watch("bookable_restriction_months"),
+                booking_limit_day: watch("booking_limit_day")
+              })}
             </div>
           </>
         )
@@ -399,6 +483,11 @@ const BookingPageEdit =({props}) => {
               }
               title={i18n.top_bar_header || i18n.page_title}
             />
+            {
+              props.attribute === "booking_available_period" && (
+                <h3 className="header centerize margin-around">{I18n.t("settings.booking_page.form.booking_calendar_display_period")}</h3>
+              )
+            }
             <div className="field-header">{i18n.page_title}</div>
             {renderCorrespondField()}
             <BottomNavigationBar klassName="centerize transparent">

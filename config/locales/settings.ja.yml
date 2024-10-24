@@ -605,15 +605,20 @@ ja:
         close_details: 閉じる
         sale_period: 予約受付期間
         sale_now: 今すぐ
+        booking_end_on: 指定日で終了する
         sale_on: 指定日
-        sale_forever: 終了しない
+        sale_forever: 設定しない
         sale_start: 販売開始
-        start_at: 販売開始
+        not_sale_yet: 販売開始前
+        ended: 予約終了
+        start_at: 受付開始
         start_at_title: 販売開始
         sale_end: 販売終了
         sale_end_title: 販売終了
-        end_at: 販売終了
-        end_at_title: 販売終了
+        end_at: 予約終了
+        end_at_title: 予約終了
+        cut_off_time: 受付終了
+        cut_off_time_title: 受付終了
         overbooking: 重複予約
         overbooking_restriction: 重複予約
         overbooking_restriction_title: 重複予約
@@ -633,9 +638,13 @@ ja:
         bookable_restriction_months_before: ヶ月前
         booking_available_period_label: 受付可能期間
         booking_available_period_top_bar_header: 予約の受付可能期間
-        booking_available_period_title:  予約の受付可能期間
+        booking_available_period_title:  予約可能にする期間
         booking_available_period: "%{bookable_restriction_months} ヶ月前〜 %{booking_limit_day} 日前まで"
-        booking_available_period_sample: "もし今日予約ページを開くと %{booking_limit_day_date} から %{bookable_restriction_months_date} が予約可能になります。"
+        booking_available_period_sample: "もし今日予約ページを開くと %{booking_limit_day_date} から %{bookable_restriction_months_date} がカレンダー上で予約可能になります。"
+        booking_page_period_sample: "この予約ページは%{start_at_date}から%{end_at_date}まで表示されます。"
+        booking_page_period_no_end_date_sample: "この予約ページは%{start_at_date}から表示されます。"
+        booking_calendar_display_period: カレンダーの表示時間を設定
+        booking_page_display_period: 予約ページの表示期間を設定
         customer_cancel_request: 顧客によるキャンセル
         customer_cancel_request_title: 顧客によるキャンセル
         customer_cancel_request_hint: お客様がキャンセル依頼をすることができます。

@@ -606,15 +606,20 @@ tw:
         close_details: 關閉
         sale_period: 預約接受期間
         sale_now: 立即
+        booking_end_on: 結束日期
         sale_on: 指定日期
         sale_forever: 不設結束日期
         sale_start: 開始銷售
-        start_at: 開始銷售
+        not_sale_yet: 開始銷售前
+        ended: 預約結束
+        start_at: 開始預約
         start_at_title: 開始銷售
         sale_end: 結束銷售
         sale_end_title: 結束銷售
-        end_at: 結束銷售
-        end_at_title: 結束銷售
+        end_at: 預約結束
+        end_at_title: 預約結束
+        cut_off_time: 預約截止時間
+        cut_off_time_title: 預約截止時間
         overbooking: 重複預約
         overbooking_restriction: 重複預約限制
         overbooking_restriction_title: 重複預約限制
@@ -637,6 +642,10 @@ tw:
         booking_available_period_title: 可接受預約的期間
         booking_available_period: "從%{bookable_restriction_months}個月前至%{booking_limit_day}天前"
         booking_available_period_sample: "若今天開啟預約頁面，則可預約的日期為%{booking_limit_day_date}至%{bookable_restriction_months_date}。"
+        booking_page_period_sample: "此預約頁面將從%{start_at_date}至%{end_at_date}開始顯示。"
+        booking_page_period_no_end_date_sample: "此預約頁面將從%{start_at_date}開始顯示。"
+        booking_calendar_display_period: 日曆的預約時間
+        booking_page_display_period: 預約頁面的顯示時間
         customer_cancel_request: 客戶取消請求
         customer_cancel_request_title: 客戶取消請求
         customer_cancel_request_hint: 允許客戶提出取消預約的請求。

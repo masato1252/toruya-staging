@@ -6,23 +6,23 @@ import moment from "moment-timezone";
 
 import DatePickerField from "shared/date_picker_field"
 
-const BookingEndAtField = ({i18n, register, watch, control}) => {
+const BookingCutOffTimeField = ({i18n, register, watch, control}) => {
   return (
     <>
       <label className="field-row flex-start">
-        <input name="end_at_type" type="radio" value="never" ref={register({ required: true })} />
+        <input name="cut_off_time_type" type="radio" value="never" ref={register({ required: true })} />
         {i18n.sale_forever}
       </label>
       <label className="field-row flex-start">
-        <input name="end_at_type" type="radio" value="date" ref={register({ required: true })} />
-        {i18n.booking_end_on}
+        <input name="cut_off_time_type" type="radio" value="date" ref={register({ required: true })} />
+        {i18n.sale_on}
       </label>
-      {watch("end_at_type") == "date" &&
+      {watch("cut_off_time_type") == "date" &&
         <div className="field-row flex-start">
           <Controller
             control={control}
-            name="end_at_date_part"
-            defaultValue={watch("end_at_date_part")}
+            name="cut_off_time_date_part"
+            defaultValue={watch("cut_off_time_date_part")}
             render={({ onChange, value }) => (
               <DatePickerField
                 date={value && moment(value, [ "YYYY/M/D", "YYYY-M-D" ]).format("YYYY/M/D")}
@@ -32,11 +32,11 @@ const BookingEndAtField = ({i18n, register, watch, control}) => {
               />
             )}
           />
-          <input type="time" name={`end_at_time_part`} ref={register} />
+          <input type="time" name={`cut_off_time_time_part`} ref={register} />
         </div>
       }
     </>
   )
 }
 
-export default BookingEndAtField;
+export default BookingCutOffTimeField;

@@ -9,6 +9,7 @@
 #  booking_limit_hours                :integer          default(0), not null
 #  customer_cancel_request            :boolean          default(FALSE)
 #  customer_cancel_request_before_day :integer          default(1), not null
+#  cut_off_time                       :datetime
 #  default_provider                   :string
 #  deleted_at                         :datetime
 #  draft                              :boolean          default(TRUE), not null
@@ -47,7 +48,7 @@
 # When booking page limit day is 0, that means you could book today
 class BookingPage < ApplicationRecord
   include DateTimeAccessor
-  date_time_accessor :start_at, :end_at, accessor_only: true
+  date_time_accessor :start_at, :end_at, :cut_off_time, accessor_only: true
 
   has_many :booking_page_options, -> { order("booking_page_options.position") }
   has_many :booking_page_online_payment_options, -> { where(online_payment_enabled: true).order("booking_page_options.position") }, class_name: "BookingPageOption"
@@ -129,7 +130,7 @@ class BookingPage < ApplicationRecord
   end
 
   def ended?
-    (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at) || deleted_at.present?
+    (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at) || deleted_at.present? || (cut_off_time && Time.current > cut_off_time)
   end
 
   def booking_type

@@ -54,6 +54,8 @@ module BookingPages
       string :start_at_time_part, default: nil
       string :end_at_date_part, default: nil
       string :end_at_time_part, default: nil
+      string :cut_off_time_date_part, default: nil
+      string :cut_off_time_time_part, default: nil
       # special_dates array
       # [
       #   {"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"},
@@ -193,6 +195,8 @@ module BookingPages
           booking_page.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "end_at"
           booking_page.update(end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil)
+        when "cut_off_time"
+          booking_page.update(cut_off_time: attrs[:cut_off_time_date_part] ? Time.zone.parse("#{attrs[:cut_off_time_date_part]}-#{attrs[:cut_off_time_time_part]}") : nil)
         when "booking_time"
           booking_page.update(
             interval: attrs[:interval],
@@ -202,7 +206,10 @@ module BookingPages
           booking_page.update(
             booking_limit_day: attrs[:booking_limit_day],
             booking_limit_hours: attrs[:booking_limit_hours],
-            bookable_restriction_months: attrs[:bookable_restriction_months]
+            bookable_restriction_months: attrs[:bookable_restriction_months],
+            end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil,
+            start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil,
+            cut_off_time: attrs[:cut_off_time_date_part] ? Time.zone.parse("#{attrs[:cut_off_time_date_part]}-#{attrs[:cut_off_time_time_part]}") : nil
           )
         when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable", "multiple_selection"
           booking_page.update(attrs.slice(update_attribute))
