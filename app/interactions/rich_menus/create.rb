@@ -25,12 +25,8 @@ module RichMenus
           bar_label: bar_label
         )
         rich_menu.image.attach(io: image, filename: File.basename(image.path)) if image
-        RichMenus::SetDefault.run(social_rich_menu: rich_menu)
-        RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
+        set_default_and_current(rich_menu)
 
-        social_account.social_rich_menus.where(social_name: key).where.not(id: rich_menu.id).each do |rich_menu|
-          compose(RichMenus::Delete, social_rich_menu: rich_menu)
-        end
         return
       end
       return unless Rails.env.production?
@@ -52,22 +48,25 @@ module RichMenus
         )
 
         rich_menu.image.attach(io: image, filename: File.basename(image.path)) if image
-
         image_response = compose(::RichMenus::LinkImage, social_account: social_account, social_rich_menu: rich_menu)
 
         if image_response.is_a?(Net::HTTPOK)
-          if default_menu || single_rich_menu
-            RichMenus::SetDefault.run(social_rich_menu: rich_menu)
-          end
-
-          if current || single_rich_menu
-            RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
-          end
-
-          social_account.social_rich_menus.where(social_name: key).where.not(id: rich_menu.id).each do |rich_menu|
-            compose(RichMenus::Delete, social_rich_menu: rich_menu)
-          end
+          set_default_and_current(rich_menu)
         else
+          if image
+            width = RichMenus::Body::LAYOUT_TYPES.dig(rich_menu.layout_type, :size, :width)
+            height = RichMenus::Body::LAYOUT_TYPES.dig(rich_menu.layout_type, :size, :height)
+
+            resized_image = ImageProcessing::MiniMagick.source(image).resize_to_fit(width, height).call
+            rich_menu.image.attach(io: resized_image, filename: File.basename(image.path))
+            resize_image_response = compose(::RichMenus::LinkImage, social_account: social_account, social_rich_menu: rich_menu)
+
+            if resize_image_response.is_a?(Net::HTTPOK)
+              set_default_and_current(rich_menu)
+              return
+            end
+          end
+
           compose(RichMenus::Delete, social_rich_menu: rich_menu)
           errors.add(:image, :invalid)
         end
@@ -83,6 +82,20 @@ module RichMenus
       return @single_rich_menu if defined?(@single_rich_menu)
 
       @single_rich_menu = !social_account.social_rich_menus.where.not(social_name: key).exists?
+    end
+
+    def set_default_and_current(rich_menu)
+      if default_menu || single_rich_menu
+        RichMenus::SetDefault.run(social_rich_menu: rich_menu)
+      end
+
+      if current || single_rich_menu
+        RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
+      end
+
+      social_account.social_rich_menus.where(social_name: key).where.not(id: rich_menu.id).each do |rich_menu|
+        compose(RichMenus::Delete, social_rich_menu: rich_menu)
+      end
     end
   end
 end
