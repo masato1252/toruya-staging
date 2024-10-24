@@ -12,7 +12,7 @@ module Notifiers
         object :reservation
 
         validate :receiver_should_be_customer
-        validate :service_should_be_booking_page
+        validate :service_should_be_booking_page_or_shop
 
         def message
           compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver, variable_source: reservation)
@@ -33,8 +33,8 @@ module Notifiers
           true # real time
         end
 
-        def service_should_be_booking_page
-          unless custom_message.service.is_a?(BookingPage)
+        def service_should_be_booking_page_or_shop
+          unless custom_message.service.is_a?(BookingPage) || custom_message.service.is_a?(Shop)
             errors.add(:custom_message, :is_invalid_service)
           end
         end

@@ -21,17 +21,36 @@
           )
         %>
 
-      <%= render "lines/user_bot/field_row",
-    title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_one_day_reminder"),
-    path: edit_scenario_lines_user_bot_settings_shop_custom_messages_path(
-      business_owner_id,
-      @shop,
-      scenario: ::CustomMessages::Customers::Template::RESERVATION_ONE_DAY_REMINDER,
-      right_away: true,
-      id: @one_day_reminder_message&.id
-    )
-  %>
+        <%= render "lines/user_bot/field_row",
+          title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_one_day_reminder"),
+          path: edit_scenario_lines_user_bot_settings_shop_custom_messages_path(
+            business_owner_id,
+            @shop,
+            scenario: ::CustomMessages::Customers::Template::RESERVATION_ONE_DAY_REMINDER,
+            right_away: true,
+            id: @one_day_reminder_message&.id
+          )
+        %>
+        <% @sequence_messages.each.with_index do |message, index| %>
+          <%= render "lines/user_bot/field_row",
+            path: edit_scenario_lines_user_bot_settings_shop_custom_messages_path(
+              @shop,
+              business_owner_id: business_owner_id,
+              scenario: ::CustomMessages::Customers::Template::SHOP_CUSTOM_REMINDER,
+              id: message.id
+            ),
+            title: t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_reminder", before_minutes: message.before_minutes)
+          %>
+        <% end %>
       </div>
+      
+      <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+        <span></span>
+        <%= link_to edit_scenario_lines_user_bot_settings_shop_custom_messages_path(@shop, business_owner_id: business_owner_id, scenario: ::CustomMessages::Customers::Template::SHOP_CUSTOM_REMINDER), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+          <i class="fas fa-plus fa-2x"></i>
+          <div class="word"><%= I18n.t("action.add_more") %></div>
+        <% end %>
+      <% end %>
     </div>
 
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>

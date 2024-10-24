@@ -11,7 +11,8 @@
             id: @message&.id,
             service_id: @shop.id,
             service_type: @shop.class.name,
-            template: @template,
+            before_minutes: @message&.before_minutes,
+            template: @template.presence || '',
           }.merge!(@shop.message_template_variables(Current.business_owner))
         }
       },

@@ -33,7 +33,8 @@ const CustomMessageEdit =({props}) => {
         scenario: props.scenario,
         content: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        before_minutes: before_minutes || 10
       })
     })
   }
@@ -49,7 +50,7 @@ const CustomMessageEdit =({props}) => {
         content: template,
         service_id: props.message.service_id,
         service_type: props.message.service_type,
-        before_minutes: before_minutes
+        before_minutes: before_minutes || 10
       })
     })
 
@@ -92,6 +93,17 @@ const CustomMessageEdit =({props}) => {
             <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_info_url}") }}> {I18n.t("common.booking_info_url")} </button>
           </div>
         )
+      case "shop_custom_reminder":
+        return (
+          <div className="field-row flex-start">
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_name")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{shop_phone_number}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.shop_phone_number")}</button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{booking_time}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.reservation_time")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{meeting_url}") }}> {I18n.t("common.meeting_url")} </button>
+            <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{product_name}") }}> {I18n.t("common.menu")} </button>
+          </div>
+        )
     }
   }
 
@@ -102,17 +114,18 @@ const CustomMessageEdit =({props}) => {
       case "booking_page_one_day_reminder":
       case "reservation_one_day_reminder":
       case "booking_page_custom_reminder":
+      case "shop_custom_reminder":
         return (
           <>
             {
-              props.scenario == 'booking_page_custom_reminder' ? (
+              props.scenario == 'booking_page_custom_reminder' || props.scenario == 'shop_custom_reminder' ? (
                 <div className="field-row">
                   <span>
                     {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_title")}<br />
                     {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_reservation")}
                     <input
                       type='tel'
-                      value={before_minutes ? before_minutes : 10}
+                      value={before_minutes}
                       onChange={(event) => {
                         setBeforeMinutes(event.target.value)
                       }}
