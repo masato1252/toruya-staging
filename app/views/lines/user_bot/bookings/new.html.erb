@@ -2,29 +2,32 @@
 <%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !ability(Current.business_owner).can?(:create, BookingPage) %>
 <%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.social_account&.line_settings_verified? %>
 
-<% if ability(Current.business_owner).can?(:create, BookingPage) && Current.business_owner.social_account&.line_settings_finished? %>
-  <%= react_component("user_bot/bookings/creation_flow", {
-    props: {
-      business_owner_id: business_owner_id,
-      line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
-      line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id)),
-      super_user_id: Current.business_owner.id,
-      selected_shop: @booking_shop ? CompanyInfoSerializer.new(@booking_shop).attributes_hash : {},
-      note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),
-      shops: @booking_shop ? [] : Current.business_owner.shops.includes(logo_attachment: :blob).map { |s| CompanyInfoSerializer.new(s).attributes_hash },
-      ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
-      i18n: {
-      }.merge!([
-        t("activerecord.attributes.menu"),
-        t("activerecord.attributes.shop"),
-        t("settings.booking_option.form"),
-        t("settings.booking_page.form"),
-        t("user_bot.dashboards.booking_page_creation"),
-        t("action").slice(:save, :edit),
-        t("common").slice(:required_time, :select_a_menu, :minute, :person_unit, :unit, :preview),
-      ].inject(:merge))
-    }
-  },
-  { camelize_props: false }
-  ) %>
-<% end %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="form with-top-bar">
+        <div class="action-block centerize">
+          <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible", method: :post, data: { confirm: I18n.t("user_bot.dashboards.booking_page_creation.confirm_booking_page_message") } do %>
+            <i class="fa fa-calendar-alt fa-4x"></i>
+            <h3 class="p-1"><%= I18n.t("user_bot.dashboards.booking.booking_page_creation.label") %></h3>
+            <p class="p-2 white-space-initial text-left">
+            <%= I18n.t("user_bot.dashboards.booking.booking_page_creation.description") %>
+            </p>
+          <% end %>
+        </div>
+
+        <div class="action-block centerize">
+          <%= link_to new_lines_user_bot_booking_option_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
+            <i class="fa fa-list fa-4x"></i>
+            <h3 class="p-1"><%= I18n.t("user_bot.dashboards.booking.booking_option_creation.label") %></h3>
+            <p class="p-2 white-space-initial text-left">
+            <%= I18n.t("user_bot.dashboards.booking.booking_option_creation.description") %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

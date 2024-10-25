@@ -273,6 +273,7 @@ tw:
     expire_date: 有效期限
     personal_schedule: 個人行程
     press_enter_to_add_tag: 輸入標籤
+    seat_number: 座位數
   errors:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。

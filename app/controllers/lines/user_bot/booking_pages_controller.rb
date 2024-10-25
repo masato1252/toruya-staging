@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
+  def new
+    @booking_shop = Current.business_owner.shops.count == 1 ? Current.business_owner.shops.first : nil
+  end
+
   def index
     @booking_pages = Current.business_owner.booking_pages.where(rich_menu_only: false).includes(:booking_options, :shop).order("updated_at DESC")
   end

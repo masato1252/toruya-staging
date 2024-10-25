@@ -1,0 +1,12 @@
+<%= react_component("user_bot/booking_options/new", {
+  props: {
+    business_owner_id: business_owner_id,
+    ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
+    booking_page_options: custom_options(Current.business_owner.booking_pages.order("updated_at DESC").end_yet.filter_map { |booking_page| booking_page if !booking_page.ended? }),
+    menu_group_options: @menu_result && menu_group_options(@menu_result[:category_with_menu_options], :minutes),
+    available_booking_options: @options ? custom_options(@options.map { |option| booking_option_item(option) }) : [],
+    back_path: params[:back_path],
+  }
+},
+{ camelize_props: false }
+) %>

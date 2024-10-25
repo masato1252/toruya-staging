@@ -28,7 +28,7 @@
             <div class="word"><%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %></div>
           <% end %>
 
-          <%= link_to new_lines_user_bot_booking_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+          <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: { confirm: I18n.t("user_bot.dashboards.booking_page_creation.confirm_booking_page_message") } do %>
             <i class="fas fa-plus fa-2x"></i>
             <div class="word"><%= I18n.t("action.add_more") %></div>
           <% end %>

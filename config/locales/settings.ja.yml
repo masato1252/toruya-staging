@@ -544,6 +544,8 @@ ja:
         greeting_placeholder: 予約ページ上部に表示されるます。
         booking_price_setting_header: 予約価格を設定
         booking_option_header: 予約価格
+        booking_page_setting_header: 予約ページにも掲載しますか?
+        search_placeholder: 掲載したいページを選択
         new_option: 予約価格
         new_option_top_bar_header: 予約価格
         new_option_title: 既存の予約価格から選択
@@ -552,6 +554,7 @@ ja:
         does_require_a_new_option: 新しい価格が必要ですか？
         create_a_new_option: 新しいメニューで価格を作成
         create_a_new_option_from_existing_menu: 既存メニューから価格を作成
+        create_a_new_option_from_existing_option: 既存の予約価格から選択 
         new_option_menu_title: 新しい価格を作成する
         new_option_menu_top_bar_header: 予約価格
         new_option_existing_menu_title: 新しい価格を作成する
@@ -658,6 +661,7 @@ ja:
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
           unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
           invalid_menu_html: "この予約価格に設定されているメニューには、%{shop_name}が利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。<a href=%{url}>メニュー設定</a>ページより%{shop_name}を利用店舗として設定してください。"
+          no_booking_option: この予約ページを使用するには、少なくとも1つの予約価格を作成する必要があります
     social_rich_menus:
       action_types:
         incoming_reservations: 全ての予約

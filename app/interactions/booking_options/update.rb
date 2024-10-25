@@ -31,6 +31,7 @@ module BookingOptions
       string :new_menu_name, default: nil
       integer :new_menu_minutes, default: nil
       boolean :new_menu_online_state, default: false
+      integer :new_menu_max_seat_number, default: 1
 
       # For changing menu priority
       array :sorted_menus_ids, default: []
@@ -69,7 +70,7 @@ module BookingOptions
                 shop_menus_attributes: user.shop_ids.map do |shop_id|
                   {
                     shop_id: shop_id,
-                    max_seat_number: 1
+                    max_seat_number: attrs[:new_menu_max_seat_number]
                   }
                 end,
                 staff_menus_attributes: [

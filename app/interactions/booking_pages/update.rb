@@ -31,6 +31,7 @@ module BookingPages
       end
       boolean :overbooking_restriction, default: true
 
+      # for adding a new option from existing option
       integer :new_option_id, default: nil
 
       # For adding a new option with existing menu
@@ -42,6 +43,7 @@ module BookingPages
       integer :new_menu_minutes, default: nil
       integer :new_menu_price, default: nil
       boolean :new_menu_online_state, default: false
+      integer :new_menu_max_seat_number, default: 1
       integer :ticket_quota, default: 1
       integer :ticket_expire_month, default: 1
 
@@ -140,7 +142,7 @@ module BookingPages
                     shop_menus_attributes: [
                       {
                         shop_id: booking_page.shop_id,
-                        max_seat_number: 1
+                        max_seat_number: attrs[:new_menu_max_seat_number]
                       }
                     ],
                     staff_menus_attributes: [

@@ -9,7 +9,7 @@ import MenuRestrictOrderField from "./menu_restrict_order_field";
 import BookingStartAtField from "components/user_bot/booking_pages/booking_start_at_field";
 import BookingEndAtField from "components/user_bot/booking_pages/booking_end_at_field";
 import BookingPriceField from "./booking_price_field";
-import NewMenuField from "./new_menu_field";
+import ExistingMenuField from "components/user_bot/booking_options/existing_menu_field";
 import { responseHandler } from "libraries/helper";
 
 const BookingOptionEdit =({props}) => {
@@ -92,7 +92,7 @@ const BookingOptionEdit =({props}) => {
       case "new_menu":
         return (
           <div>
-            <NewMenuField
+            <ExistingMenuField
               i18n={i18n} register={register} watch={watch} control={control}
               menu_group_options={props.menu_group_options}
               setValue={setValue}

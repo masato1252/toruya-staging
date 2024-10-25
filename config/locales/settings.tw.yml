@@ -664,6 +664,7 @@ tw:
           end_at_too_early: 根據上述設定，您只能設定{datetime}之後的日期和時間
           unavailable_booking_option: "{shop_name}包含無法銷售的菜單項目。"
           invalid_menu_html: "此預約價格中設定的菜單項目可能無法在%{shop_name}正確顯示，因為該店舖尚未被設定為可使用的店舖。請前往<a href=%{url}>菜單設定</a>頁面，將%{shop_name}設定為可使用的店舖。"
+          no_booking_option: 您需要至少設定一個預約價格才能開始使用此預約頁面。
     social_rich_menus:
       action_types:
         incoming_reservations: 所有預約

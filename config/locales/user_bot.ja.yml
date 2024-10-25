@@ -538,8 +538,8 @@ ja:
         product_name: サービス名
         other_services: その他のサービス
       booking_page_creation:
-        default_label: "%{menu_name}予約ページ"
-        default_greeting: "%{menu_name}の予約を受付ます。"
+        default_label: "%{name}予約ページ"
+        default_greeting: "%{name}の予約を受付ます。"
         default_category_name: "オンライン予約"
         default_note: "キャンセルポリシー\n --------------------\n ご予約をキャンセルされる場合、キャンセルポリシーに基づきキャンセル料が発生します。お申込前に必ずご確認ください。\n \n ■キャンセル料■\n ・連絡なしのキャンセルの場合：100%\n ・ご予約当日キャンセル：100%\n ・前日までにキャンセルをご連絡いただいた場合：無料\n"
         booking_shop: 予約店舗
@@ -557,6 +557,7 @@ ja:
         what_is_menu_name: メニュー名は何ですか？
         input_menu_name: メニュー名を入力
         what_is_menu_time: メニューの所用時間は何分ですか？
+        what_is_menu_max_seat_number: 同時に予約可能な最大座席数はいくつですか？
         is_menu_online: このメニューはオンライン開催ですか？
         menu_online: はい、オンライン開催です
         menu_local: いいえ、店舗に来店されます
@@ -578,6 +579,15 @@ ja:
         create_sale_page_later_warning_html: サービスは作成できましたが<br>宣伝用LPが未作成のため<br>顧客がサービスに登録できません
         remember_create_sale_page: 忘れずに宣伝用LPを作成してください
         create_sale_page_later_btn: 後で作る
+        confirm_booking_page_message: 新しい予約ページが作成されても、予約価格を掲載するまではご利用いただけません。
+        create_booking_page_successfully: 予約ページを作成しました。ただし予約価格を掲載するまでは顧客は予約できません。
+      booking:
+        booking_page_creation:
+          label: 予約ページを作成
+          description: ホームページにリンクしたり、SNSでシェアする予約ページを作成します。より詳細に受付方法を調節したい場合も、予約ページを使用してください
+        booking_option_creation:
+          label: 予約価格を作成
+          description: 顧客にメニューを販売する予約価格を作成します。既に購入を決めた顧客に、LINEなどから直接予約を受け付ける場合も、予約価格を使用できます。
       sales:
         modal:
           title: 宣伝用LPを確認

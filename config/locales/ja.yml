@@ -48,7 +48,8 @@ ja:
     broadcast:
       title: セグメント配信
     booking_pages:
-      title: 予約ページ
+      title: オンライン予約
+      list: 予約ページ 
     metrics:
       title: アクセス解析
       dashboard_title: ダッシュボード

@@ -12,7 +12,7 @@ RSpec.describe BookingPages::SmartCreate do
       attrs: {
         super_user_id: user.id,
         shop_id: shop.id,
-        menu_id: menu.id,
+          menu_id: menu.id,
         new_booking_option_price: 1000,
         new_booking_option_tax_include: true,
         note: "foo"
@@ -22,6 +22,31 @@ RSpec.describe BookingPages::SmartCreate do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    context "when booking_option and menu is nil" do
+      let(:args) do
+        {
+          attrs: {
+            super_user_id: user.id,
+            shop_id: shop.id,
+            note: "foo"
+          }
+        }
+      end
+      it "create an empty booking_page" do
+        expect {
+          described_class.run(args)
+        }.to change {
+          user.booking_pages.count
+        }.by(1)
+
+        booking_page = user.booking_pages.last
+        expect(booking_page.shop_id).to eq(shop.id)
+        expect(booking_page.note).to eq("foo")
+        expect(booking_page.draft).to eq(false)
+        expect(booking_page.booking_options).to eq([])
+      end
+    end
+
     context "when using existing booking option" do
       let!(:old_booking_option) { FactoryBot.create(:booking_option, user: user) }
       let(:args) do

@@ -48,7 +48,8 @@ tw:
     broadcast:
       title: 分眾傳播
     booking_pages:
-      title: 預約頁面
+      title: 線上預約
+      list: 預約頁面 
     metrics:
       title: 訪問分析
       dashboard_title: 儀表板
