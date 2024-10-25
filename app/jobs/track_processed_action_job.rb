@@ -1,7 +1,7 @@
 require "mixpanel_tracker"
 
 class TrackProcessedActionJob < ApplicationJob
-  queue_as :low
+  queue_as :low_priority
 
   def perform(tracking_object, event_name, event_properties)
     if tracking_object.is_a?(User)

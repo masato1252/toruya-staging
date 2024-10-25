@@ -11,7 +11,16 @@ module SayHi
 
   def say_hi
     if Rails.configuration.x.env.production?
-      HiJob.set(wait_until: 5.minutes.from_now).perform_later(self, channel_name) if self.hi_message.present?
+      if self.hi_message.present?
+
+        if channel_name == "toruya_users_support"
+          recent_messages_count = SocialUserMessage.where(social_user_id: self.social_user_id).where(created_at: 2.minutes.ago..).count
+
+          HiJob.set(wait: (recent_messages_count * 10).seconds).perform_later(self, channel_name)
+        else
+          HiJob.set(wait_until: 5.minutes.from_now).perform_later(self, channel_name)
+        end
+      end
       HiEventJob.perform_later(self, track_event) if track_event.present?
     end
   end
