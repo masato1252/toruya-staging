@@ -69,6 +69,20 @@ class ReservationCustomer < ApplicationRecord
     @paid_payment ||= customer.customer_payments.completed.where(product: self).first
   end
 
+  def price_text
+    if booking_amount_currency == "JPY"
+      tax_type = I18n.t("settings.booking_option.form.#{tax_include ? "tax_include" : "tax_excluded"}")
+
+      if booking_amount.zero?
+        "#{booking_amount.format(:ja_default_format)}"
+      else
+        "#{booking_amount.format(:ja_default_format)}(#{tax_type})"
+      end
+    else
+      booking_amount.format
+    end
+  end
+
   def reservation_state
     if accepted?
       reservation.aasm_state

@@ -39,7 +39,7 @@ module StripeEvents
           payment = customer.customer_payments.new(
             product: relation,
             amount_cents: data_object.total,
-            amount_currency: Money.default_currency.iso_code,
+            amount_currency: customer.user.currency,
             charge_at: Time.current,
             expired_at: Time.at(stripe_subscription.current_period_end),
             manual: false,

@@ -18,7 +18,7 @@
     <div class="desc">
       <% if sale_page.is_booking_page? %>
         <% if sale_page.product && sale_page.product.primary_product %>
-          <%= sale_page.product.primary_product.minutes %><%= I18n.t("common.minute")%><%= sale_page.product.product_price.format(:ja_default_format) %>(<%= I18n.t("settings.booking_option.form.#{sale_page.product.primary_product.tax_include ? "tax_include" : "tax_excluded"}") %>)
+          <%= sale_page.product.primary_product.minutes %><%= I18n.t("common.minute")%><%= sale_page.product.product_price_text %>
         <% end %>
       <% else %>
         <%= sale_page.selling_prices_text %>

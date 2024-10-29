@@ -18,7 +18,7 @@ class CustomerPayments::SquarePayReservation < ActiveInteraction::Base
           :idempotency_key => payment.order_id,
           :amount_money => {
             :amount => reservation_customer.booking_amount.fractional,
-            :currency => Money.default_currency.iso_code
+            :currency => reservation_customer.booking_amount.currency.iso_code
           },
           :autocomplete => true,
           :customer_id => customer.square_customer_id,

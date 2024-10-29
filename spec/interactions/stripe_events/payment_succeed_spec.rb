@@ -31,7 +31,7 @@ RSpec.describe StripeEvents::PaymentSucceed do
 
       expect(outcome.result).to have_attributes(
         amount_cents: event.data.object.total,
-        amount_currency: Money.default_currency.iso_code,
+        amount_currency: customer.user.currency,
         order_id: event.data.object.id,
         state: "completed"
       )

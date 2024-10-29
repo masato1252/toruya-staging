@@ -27,3 +27,22 @@ end
 Money.locale_backend = :i18n
 Money.rounding_mode = BigDecimal::ROUND_HALF_UP
 
+MoneyRails.configure do |config|
+  # reference: https://github.com/RubyMoney/money/blob/73b84b5183c19dfa251b4c27c84d120de29d342f/config/currency_iso.json#L957
+  config.register_currency = {
+    "priority": 100,
+    "iso_code": "TWD",
+    "name": "New Taiwan Dollar",
+    "symbol": "NT$", # original: $
+    "disambiguate_symbol": "NT$",
+    "alternate_symbols": ["NT$"],
+    "subunit": "Cent",
+    "subunit_to_unit": 1, # original: 100
+    "symbol_first": true,
+    "html_entity": "$",
+    "decimal_mark": ".",
+    "thousands_separator": ",",
+    "iso_numeric": "901",
+    "smallest_denomination": 50
+  }
+end

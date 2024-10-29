@@ -91,7 +91,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     if paid_payment
       outcome = CustomerPayments::Refund.run(
         customer_payment: paid_payment,
-        amount: Money.new(params[:amount], Money.default_currency.iso_code)
+        amount: Money.new(params[:amount], paid_payment.amount_currency)
       )
 
       if outcome.invalid?

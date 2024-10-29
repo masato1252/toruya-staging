@@ -9,7 +9,6 @@ module BookingOptions
       string :display_name, default: nil
       integer :minutes
       integer :amount_cents
-      string :amount_currency, default: "JPY"
       boolean :menu_restrict_order, default: false
       boolean :tax_include, default: false
       integer :ticket_quota, default: 1
@@ -34,7 +33,8 @@ module BookingOptions
         if booking_option.update(
             attrs.merge!(
               start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil,
-              end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil
+              end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil,
+              amount_currency: booking_option.user.currency
             ))
           booking_option.booking_option_menus.destroy_all
           booking_option_menus = booking_option.booking_option_menus.create(

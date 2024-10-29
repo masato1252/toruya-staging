@@ -86,4 +86,18 @@ class BookingOption < ApplicationRecord
       first_start_time.advance(months: ticket_expire_month)
     end
   end
+
+  def price_text
+    if amount_currency == "JPY"
+      tax_type = I18n.t("settings.booking_option.form.#{tax_include ? "tax_include" : "tax_excluded"}")
+
+      if amount.zero?
+        "#{amount.format(:ja_default_format)}"
+      else
+        "#{amount.format(:ja_default_format)}(#{tax_type})"
+      end
+    else
+      amount.format
+    end
+  end
 end

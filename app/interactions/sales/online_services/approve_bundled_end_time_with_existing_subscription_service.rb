@@ -29,7 +29,7 @@ module Sales
           payment = customer.customer_payments.new(
             product: existing_relation,
             amount_cents: 0,
-            amount_currency: Money.default_currency.iso_code,
+            amount_currency: user.currency,
             charge_at: Time.current,
             expired_at: Time.current.advance(months: 3),
             manual: false,

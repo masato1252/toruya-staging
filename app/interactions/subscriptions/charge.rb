@@ -37,7 +37,7 @@ module Subscriptions
         begin
           stripe_charge = Stripe::Charge.create({
             amount: amount.fractional,
-            currency: Money.default_currency.iso_code,
+            currency: amount.currency.iso_code,
             customer: user.subscription.stripe_customer_id,
             description: description,
             statement_descriptor: "Toruya #{description}",

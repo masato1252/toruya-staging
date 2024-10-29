@@ -73,6 +73,10 @@ class BookingPage < ApplicationRecord
     @product_price ||= primary_product&.amount
   end
 
+  def product_price_text
+    @product_price_text ||= primary_product&.price_text
+  end
+
   def start_time
     start_at || created_at
   end

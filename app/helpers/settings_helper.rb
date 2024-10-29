@@ -35,13 +35,11 @@ module SettingsHelper
   end
 
   def booking_option_item(booking_option)
-    tax_type = t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}")
-
     Option.new(
       id: booking_option.id,
       name: booking_option.display_name.presence || booking_option.name,
       minutes: booking_option.minutes,
-      price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
+      price: booking_option.price_text,
       price_amount: booking_option.amount.fractional,
       start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
       end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),

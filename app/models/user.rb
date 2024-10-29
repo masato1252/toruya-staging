@@ -286,6 +286,17 @@ class User < ApplicationRecord
     end
   end
 
+  def currency
+    case social_user&.locale
+    when "ja"
+      Money.default_currency.iso_code
+    when "tw"
+      "TWD"
+    else
+      Money.default_currency.iso_code
+    end
+  end
+
   private
 
   def today_reservations

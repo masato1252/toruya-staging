@@ -117,7 +117,7 @@ const NewBookingOption =({props}) => {
                   <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.how_much_of_this_price")}</div>
                   <div className="field-row flex-start">
                     <input ref={register({ required: true })} name="new_menu_price" type="tel" />
-                    {I18n.t("common.unit")}({I18n.t("common.tax_included")})
+                    {I18n.t("common.unit")}{props.support_feature_flags.support_tax_include_display && `(${I18n.t("common.tax_included")})`}
                     {watch("price_type") == "ticket" && watch("new_menu_price") > 50000 &&
                       <div className="warning">{I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit")}</div>}
                     {watch("new_menu_price") && watch("new_menu_price") < 100 &&

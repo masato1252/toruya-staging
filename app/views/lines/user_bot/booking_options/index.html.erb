@@ -10,7 +10,7 @@
           <div class="desc"><%= booking_option.menus.pluck(:name).join(", ")%></div>
           <div class="desc">
             <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %> ・
-            <%= booking_option.amount.format(:ja_default_format) %> (<%= t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}") %>)
+            <%= booking_option.price_text %>
           </div>
         </div>
       <i class="fa fa-angle-right"></i>

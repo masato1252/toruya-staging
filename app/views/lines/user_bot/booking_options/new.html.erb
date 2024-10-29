@@ -6,6 +6,7 @@
     menu_group_options: @menu_result && menu_group_options(@menu_result[:category_with_menu_options], :minutes),
     available_booking_options: @options ? custom_options(@options.map { |option| booking_option_item(option) }) : [],
     back_path: params[:back_path],
+    support_feature_flags: support_feature_flags
   }
 },
 { camelize_props: false }

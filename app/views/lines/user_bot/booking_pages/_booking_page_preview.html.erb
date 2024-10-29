@@ -20,7 +20,7 @@
         </div>
         <div><%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %></div>
       </div>
-      <div class="booking-option-row"><span><%= booking_option.amount.format(:ja_default_format) %> (<%= t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}") %>)</span></div>
+      <div class="booking-option-row"><span><%= booking_option.price_text %></span></div>
     </div>
 
     <% if (booking_options_count = booking_page.booking_options.count) != 1 %>

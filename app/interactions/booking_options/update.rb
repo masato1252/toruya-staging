@@ -12,7 +12,6 @@ module BookingOptions
       boolean :menu_restrict_order, default: false
 
       integer :amount_cents, default: nil
-      string :amount_currency, default: "JPY"
       integer :ticket_quota, default: 1
       integer :ticket_expire_month, default: 1
       boolean :tax_include, default: false
@@ -117,7 +116,7 @@ module BookingOptions
           booking_option.update(end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil)
         when "price"
           booking_option.update(
-            amount: Money.new(attrs[:amount_cents], attrs[:amount_currency]),
+            amount: Money.new(attrs[:amount_cents], user.currency),
             ticket_quota: attrs[:ticket_quota],
             ticket_expire_month: attrs[:ticket_expire_month],
             tax_include: attrs[:tax_include]

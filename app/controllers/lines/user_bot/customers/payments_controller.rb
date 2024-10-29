@@ -24,7 +24,7 @@ class Lines::UserBot::Customers::PaymentsController < Lines::UserBotDashboardCon
     customer_payment = CustomerPayment.find(params[:id])
     outcome = CustomerPayments::Refund.run(
       customer_payment: customer_payment,
-      amount: Money.new(params[:amount], Money.default_currency.iso_code)
+      amount: Money.new(params[:amount], customer_payment.amount.currency.iso_code)
     )
 
     if outcome.invalid?
