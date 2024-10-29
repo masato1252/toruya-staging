@@ -37,6 +37,7 @@ class ReservationCustomer < ApplicationRecord
   CANCEL_REASONS = %w[other_placeholder reschedule_reason no_longer_needed_reason].freeze
   ACTIVE_STATES = %w[pending accepted].freeze
   include SayHi
+  include Price
   hi_track_event "reservation_booked"
 
   belongs_to :reservation, touch: true
@@ -46,6 +47,7 @@ class ReservationCustomer < ApplicationRecord
   belongs_to :customer_ticket, required: false
   has_one :customer_ticket_consumer, as: :consumer
   serialize :details, HashieSerializer
+  alias_attribute :amount, :booking_amount
 
   enum state: {
     pending: 0,

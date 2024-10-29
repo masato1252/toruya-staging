@@ -29,6 +29,7 @@
 
 class BookingOption < ApplicationRecord
   include DateTimeAccessor
+  include Price
   date_time_accessor :start_at, :end_at, accessor_only: true
 # attr_accessor :start_at_date_part, :start_at_time_part
   LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT = 100 # 100 yen. amount < 100, always go cash
@@ -84,20 +85,6 @@ class BookingOption < ApplicationRecord
       first_start_time.advance(days: 180)
     else
       first_start_time.advance(months: ticket_expire_month)
-    end
-  end
-
-  def price_text
-    if amount_currency == "JPY"
-      tax_type = I18n.t("settings.booking_option.form.#{tax_include ? "tax_include" : "tax_excluded"}")
-
-      if amount.zero?
-        "#{amount.format(:ja_default_format)}"
-      else
-        "#{amount.format(:ja_default_format)}(#{tax_type})"
-      end
-    else
-      amount.format
     end
   end
 end
