@@ -131,9 +131,14 @@ module Reservations
 
         if reservation.saved_change_to_start_time?
           reservation.reservation_customers.each do |reservation_customer|
-            scenario = reservation_customer.booking_page_id.present? ? CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER : CustomMessages::Customers::Template::SHOP_CUSTOM_REMINDER
 
-            CustomMessage.scenario_of(reservation.shop, scenario).where.not(before_minutes: nil).each do |custom_message|
+            custom_messages_scope = if reservation_customer.booking_page_id.present?
+              CustomMessage.scenario_of(reservation_customer.booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER)
+            else
+              CustomMessage.scenario_of(reservation.shop, CustomMessages::Customers::Template::SHOP_CUSTOM_REMINDER)
+            end
+
+            custom_messages_scope.where.not(before_minutes: nil).each do |custom_message|
               delivery_time = reservation.start_time.advance(minutes: -custom_message.before_minutes)
               next if Time.current > delivery_time
 
