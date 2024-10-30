@@ -22,17 +22,17 @@ const SalesOnlineServiceCreationFlow = ({props}) => {
         <div className="col-sm-6 px-0 settings-view">
           <GlobalProvider props={props}>
             <FlowController new_version={true}>
-              <OnlineServiceSelectionStep />
-              <SellingPriceStep />
-              <SellingTimeStep />
-              <SellingNumberStep />
-              <HeaderTemplateSelectionStep />
-              <HeaderSetupStep />
-              <HeaderColorEditStep />
-              <ContentSetupStep />
-              <StaffSetupStep />
-              <ConfirmationStep />
-              <FinalStep />
+              <OnlineServiceSelectionStep key="online_service_selection_step" />
+              <SellingPriceStep key="selling_price_step" />
+              <SellingTimeStep key="selling_time_step" />
+              <SellingNumberStep key="selling_number_step" />
+              <HeaderTemplateSelectionStep key="header_template_selection_step" />
+              <HeaderSetupStep key="header_setup_step" />
+              <HeaderColorEditStep key="header_color_edit_step" />
+              <ContentSetupStep key="content_setup_step" />
+              <StaffSetupStep key="staff_setup_step" />
+              <ConfirmationStep key="confirmation_step" />
+              <FinalStep key="final_step" />
             </FlowController>
           </GlobalProvider>
         </div>

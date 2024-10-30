@@ -7,7 +7,7 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
 import { Template, HintTitle } from "shared/builders"
 
-const HeaderSetupStep = ({step, next, prev}) => {
+const HeaderSetupStep = ({step, next, jumpByKey}) => {
   const [submitting, setSubmitting] = useState(false)
   const [focus_field, setFocusField] = useState()
   const { initial, props, selected_booking_page, selected_template, dispatch, template_variables, isHeaderSetup, createDraftSalesBookingPage } = useGlobalContext()
@@ -44,7 +44,14 @@ const HeaderSetupStep = ({step, next, prev}) => {
       </SaleTemplateContainer>
 
       <div className="action-block">
-        <button onClick={prev} className="btn btn-tarco">
+        <button onClick={() => {
+          if (props.sale_templates.length > 1) {
+            jumpByKey("header_template_selection_step")
+          }
+          else {
+            jumpByKey("booking_page_selection_step")
+          }
+        }} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
         <button

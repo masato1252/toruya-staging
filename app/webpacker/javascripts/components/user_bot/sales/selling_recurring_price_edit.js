@@ -3,7 +3,7 @@ import _ from "lodash";
 
 import I18n from 'i18n-js/index.js.erb';
 
-const SellingRecurringPriceEdit = ({price, handlePriceChange}) => (
+const SellingRecurringPriceEdit = ({price, handlePriceChange, support_feature_flags}) => (
   <>
     <div className="margin-around">
       <label className="">
@@ -47,7 +47,7 @@ const SellingRecurringPriceEdit = ({price, handlePriceChange}) => (
                   })
                 }} />
                 {I18n.t("common.unit")}
-                ({I18n.t("common.tax_included")})
+                {support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}
               </>
           )}
           </div>
@@ -97,7 +97,7 @@ const SellingRecurringPriceEdit = ({price, handlePriceChange}) => (
                       })
                     }} />
                   {I18n.t("common.unit")}
-                  ({I18n.t("common.tax_included")})
+                  {support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}
                 </div>
               </>
             )}

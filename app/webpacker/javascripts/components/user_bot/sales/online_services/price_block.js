@@ -22,14 +22,14 @@ import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/book
 //     }
 //   }
 // }
-const NormalPriceBlock = ({amount}) => {
+const NormalPriceBlock = ({amount, support_feature_flags}) => {
   if (!amount) return <></>;
 
   return (
     <div>
       <div className="normal-price">
         <div className="label">{I18n.t("common.normal_price_label")}</div>
-        <div className="amount">{amount}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span></div>
+        <div className="amount">{amount}<span className="price-with-tax">{I18n.t("common.unit")}{support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}</span></div>
       </div>
 
       <div className="margin-around">
@@ -39,17 +39,17 @@ const NormalPriceBlock = ({amount}) => {
   )
 }
 
-const PriceOntTimePaymentText = ({amount}) => {
+const PriceOntTimePaymentText = ({amount, support_feature_flags}) => {
   if (!amount) return <></>;
 
-  return <div>{amount}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span></div>
+  return <div>{amount}<span className="price-with-tax">{I18n.t("common.unit")}{support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}</span></div>
 }
-const PriceMultipleTimesPaymnetText = ({times, amount}) => {
+const PriceMultipleTimesPaymnetText = ({times, amount, support_feature_flags}) => {
   if (!amount) return <></>;
 
   return (
     <div>
-      {amount}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span>
+      {amount}<span className="price-with-tax">{I18n.t("common.unit")}{support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}</span>
       <span className="multiple">&nbsp;X&nbsp;</span>
       {times}<span className="small-text">{I18n.t('common.times')}</span>
     </div>
@@ -68,7 +68,8 @@ const PriceBlock = ({
   social_account_add_friend_url,
   no_action,
   payable,
-  is_external
+  is_external,
+  support_feature_flags
 }) => {
 
   const renderActions = (payment_type) => {
@@ -153,7 +154,7 @@ const PriceBlock = ({
   if (isSinglePrice()) {
     return (
       <div className="product-price-block">
-        <NormalPriceBlock amount={normal_price} />
+        <NormalPriceBlock amount={normal_price} support_feature_flags={support_feature_flags} />
 
         <div className="price">
           <div className="special-price">
@@ -163,10 +164,10 @@ const PriceBlock = ({
                 <>
                   {hasPaymentType("month") && price?.price_amounts?.month?.amount && <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>}
                   {hasPaymentType("year") && price?.price_amounts?.year?.amount && <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>}
-                  {hasPaymentType("one_time") && <PriceOntTimePaymentText amount={price?.price_amounts?.one_time?.amount} />}
-                  {hasPaymentType("multiple_times") && <PriceMultipleTimesPaymnetText amount={price?.price_amounts?.multiple_times?.amount} times={price?.price_amounts?.multiple_times?.times} />}
-                  {hasPaymentType("month") && <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} />}
-                  {hasPaymentType("year") && <PriceOntTimePaymentText amount={price?.price_amounts?.year?.amount} />}
+                  {hasPaymentType("one_time") && <PriceOntTimePaymentText amount={price?.price_amounts?.one_time?.amount} support_feature_flags={support_feature_flags} />}
+                  {hasPaymentType("multiple_times") && <PriceMultipleTimesPaymnetText amount={price?.price_amounts?.multiple_times?.amount} times={price?.price_amounts?.multiple_times?.times} support_feature_flags={support_feature_flags} />}
+                  {hasPaymentType("month") && <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} support_feature_flags={support_feature_flags} />}
+                  {hasPaymentType("year") && <PriceOntTimePaymentText amount={price?.price_amounts?.year?.amount} support_feature_flags={support_feature_flags} />}
                 </>
               )
             }
@@ -188,7 +189,7 @@ const PriceBlock = ({
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.one_time_pay")}</h3>
               <div className="special-price">
-                <PriceOntTimePaymentText amount={price.price_amounts.one_time.amount} />
+                <PriceOntTimePaymentText amount={price.price_amounts.one_time.amount} support_feature_flags={support_feature_flags} />
               </div>
             </div>
 
@@ -201,7 +202,7 @@ const PriceBlock = ({
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.multiple_times_pay")}</h3>
               <div className="special-price">
-                <PriceMultipleTimesPaymnetText amount={price.price_amounts.multiple_times.amount} times={price.price_amounts.multiple_times.times} />
+                <PriceMultipleTimesPaymnetText amount={price.price_amounts.multiple_times.amount} times={price.price_amounts.multiple_times.times} support_feature_flags={support_feature_flags} />
               </div>
             </div>
 
@@ -214,7 +215,7 @@ const PriceBlock = ({
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>
               <div className="special-price">
-                <PriceOntTimePaymentText amount={price.price_amounts.month.amount} />
+                <PriceOntTimePaymentText amount={price.price_amounts.month.amount} support_feature_flags={support_feature_flags} />
               </div>
             </div>
 
@@ -227,7 +228,7 @@ const PriceBlock = ({
             <div className="price">
               <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>
               <div className="special-price">
-                <PriceOntTimePaymentText amount={price.price_amounts.year.amount} />
+                <PriceOntTimePaymentText amount={price.price_amounts.year.amount} support_feature_flags={support_feature_flags} />
               </div>
             </div>
 

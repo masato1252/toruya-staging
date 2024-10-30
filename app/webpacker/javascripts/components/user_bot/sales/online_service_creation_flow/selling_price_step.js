@@ -8,7 +8,7 @@ import SellingPriceEdit from "components/user_bot/sales/selling_price_edit";
 import SellingRecurringPriceEdit from "components/user_bot/sales/selling_recurring_price_edit";
 
 const SellingPriceStep = ({step, next, prev}) => {
-  const { initial, dispatch, price, selected_online_service, isPriceReady } = useGlobalContext()
+  const { initial, dispatch, price, selected_online_service, isPriceReady, props } = useGlobalContext()
 
   useEffect(() => {
     let default_price_type;
@@ -45,6 +45,7 @@ const SellingPriceStep = ({step, next, prev}) => {
 
       {selected_online_service.one_time_charge_required && (
         <SellingPriceEdit
+          support_feature_flags={props.support_feature_flags}
           price={price}
           handlePriceChange={(price_value) => {
             dispatch({
@@ -60,6 +61,7 @@ const SellingPriceStep = ({step, next, prev}) => {
 
       {selected_online_service.recurring_charge_required && (
         <SellingRecurringPriceEdit
+          support_feature_flags={props.support_feature_flags}
           price={price}
           handlePriceChange={(price_value) => {
             dispatch({

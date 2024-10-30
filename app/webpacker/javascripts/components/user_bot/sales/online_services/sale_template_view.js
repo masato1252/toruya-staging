@@ -27,7 +27,8 @@ const SaleTemplateView = ({
   is_ended,
   purchase_url,
   payable,
-  is_external
+  is_external,
+  support_feature_flags
 }) => (
   <SaleTemplateContainer shop={company_info} product={product}>
     {demo && (
@@ -68,6 +69,7 @@ const SaleTemplateView = ({
         purchase_url={purchase_url}
         payable={payable}
         is_external={is_external}
+        support_feature_flags={support_feature_flags}
       />
     </div>
   </SaleTemplateContainer>

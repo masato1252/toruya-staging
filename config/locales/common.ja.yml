@@ -273,6 +273,7 @@ ja:
     seat_number: 座席数
     toruya_user_login_html: Toruyaのユーザー登録がお済の方は、こちらからログインしてください。
     login: ログイン
+    template_version: テンプレート
     line_verification:
       login_first_message: まずはLINEでログインしてください
       service_content_message_html: サービスコンテンツは

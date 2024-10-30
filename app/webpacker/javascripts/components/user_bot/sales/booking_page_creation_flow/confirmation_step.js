@@ -35,6 +35,7 @@ const ConfirmationStep = ({step, next, jump}) => {
         jump={jump}
         dispatch={dispatch}
         demo={true}
+        support_feature_flags={props.support_feature_flags}
       />
       <div className="action-block confirm-block">
         <button

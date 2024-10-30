@@ -4,7 +4,7 @@ import _ from "lodash";
 import I18n from 'i18n-js/index.js.erb';
 import { SelectOptions, ErrorMessage } from "shared/components"
 
-const SellingPriceEdit = ({price, handlePriceChange}) => (
+const SellingPriceEdit = ({price, handlePriceChange, support_feature_flags}) => (
   <>
     <div className="margin-around">
       <label className="">
@@ -48,7 +48,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
                   })
                 }} />
                 {I18n.t("common.unit")}
-                ({I18n.t("common.tax_included")})
+                {support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}
               </>
           )}
           {price.price_amounts?.one_time?.amount && price.price_amounts?.one_time?.amount < 100 && <ErrorMessage error={I18n.t("errors.selling_price_too_low")}/>}
@@ -100,7 +100,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
                       })
                     }} />
                   {I18n.t("common.unit")}
-                  ({I18n.t("common.tax_included")})
+                  {support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}
                   {price.price_amounts?.multiple_times?.amount && price.price_amounts.multiple_times.amount < 100 && <ErrorMessage error={I18n.t("errors.selling_price_too_low")}/>}
                 </div>
                 <div>
@@ -140,7 +140,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
                 </div>
                 <div>
                   {I18n.t("common.total")}&nbsp;
-                  {(price.price_amounts?.multiple_times?.amount || 0) * (price.price_amounts?.multiple_times?.times || 0) }{I18n.t("common.unit")}({I18n.t("common.tax_included")})
+                  {(price.price_amounts?.multiple_times?.amount || 0) * (price.price_amounts?.multiple_times?.times || 0) }{I18n.t("common.unit")}{support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}
                 </div>
               </>
             )}

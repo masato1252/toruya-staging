@@ -19,16 +19,16 @@ const SalesBookingPageCreationFlow = ({props}) => {
       <div className="row">
         <div className="col-sm-6 px-0 settings-view">
           <GlobalProvider props={props}>
-            <FlowController>
-              { ({next, step}) => <BookingPageSelectionStep step={step} next={next} /> }
-              { ({next, prev, step}) => <HeaderTemplateSelectionStep step={step} next={next} prev={prev} /> }
-              { ({next, prev, step}) => <HeaderSetupStep step={step} next={next} prev={prev} /> }
-              { ({next, prev, step, jump}) => <HeaderColorEditStep step={step} next={next} prev={prev} jump={jump} /> }
-              { ({next, prev, step, jump}) => <ContentSetupStep step={step} next={next} prev={prev} jump={jump} /> }
-              { ({next, prev, step, jump}) => <StaffSetupStep step={step} next={next} prev={prev} jump={jump} /> }
-              { ({next, prev, step}) => <FlowSetupStep step={step} next={next} prev={prev} /> }
-              { ({jump, next, step}) => <ConfirmationStep step={step} next={next} jump={jump} /> }
-              { ({step}) => <FinalStep step={step} /> }
+            <FlowController new_version={true}>
+              <BookingPageSelectionStep key="booking_page_selection_step" /> 
+              <HeaderTemplateSelectionStep key="header_template_selection_step" />
+              <HeaderSetupStep key="header_setup_step" />
+              <HeaderColorEditStep key="header_color_edit_step" />
+              <ContentSetupStep key="content_setup_step" />
+              <StaffSetupStep key="staff_setup_step" />
+              <FlowSetupStep key="flow_setup_step" />
+              <ConfirmationStep key="confirmation_step" />
+              <FinalStep key="final_step" />
             </FlowController>
           </GlobalProvider>
         </div>

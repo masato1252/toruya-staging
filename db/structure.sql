@@ -2331,7 +2331,8 @@ CREATE TABLE public.sale_templates (
     edit_body json,
     view_body json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    locale character varying DEFAULT 'ja'::character varying NOT NULL
 );
 
 
@@ -6029,6 +6030,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241008143048'),
 ('20241013003439'),
 ('20241015000936'),
-('20241020232855');
+('20241020232855'),
+('20241024135016'),
+('20241030063029');
 
 

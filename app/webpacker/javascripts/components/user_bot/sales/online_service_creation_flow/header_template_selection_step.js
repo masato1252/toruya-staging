@@ -14,6 +14,16 @@ const HeaderTemplateSelectionStep = ({next, prev, step}) => {
     if (initial && selected_template) {
       next()
     }
+    else if (props.sale_templates.length === 1) {
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "selected_template",
+          value: props.sale_templates[0]
+        }
+      })
+      next()
+    }
   }, [])
 
   return (
@@ -27,7 +37,7 @@ const HeaderTemplateSelectionStep = ({next, prev, step}) => {
             shop={selected_online_service.company_info}
             product={selected_online_service}
             key={`template-${template.id}`}
-            template_id={template.id}
+            template_id={template.position}
           >
             <Template
               template={template.edit_body}

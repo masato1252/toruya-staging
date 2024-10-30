@@ -10,6 +10,7 @@ const PriceBlock = ({
   social_account_add_friend_url,
   no_action,
   normal_price,
+  support_feature_flags
 }) => {
   const renderActions = () => {
     if (no_action) return <></>
@@ -51,7 +52,7 @@ const PriceBlock = ({
             <>
               <span className="normal-price">
                 <div className="label">{I18n.t("common.normal_price_label")}</div>
-                <div className="amount">{normal_price}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span></div>
+                <div className="amount">{normal_price}<span className="price-with-tax">{I18n.t("common.unit")} {support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}</span></div>
               </span>
 
               <i className="fa fa-arrow-right"></i>
@@ -60,7 +61,7 @@ const PriceBlock = ({
           <span className="special-price">
             <div>
               <div className="label">{isFree() ? I18n.t("common.today_price_label") : I18n.t("common.booking_price")}</div>
-              {isFree() ? I18n.t("common.free_price") : product.price_number}{!isFree() && <span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span>}
+              {isFree() ? I18n.t("common.free_price") : product.price_number}{!isFree() && <span className="price-with-tax">{I18n.t("common.unit")}{support_feature_flags?.support_tax_include_display ? `(${I18n.t("common.tax_included")})` : ""}</span>}
             </div>
           </span>
         </div>

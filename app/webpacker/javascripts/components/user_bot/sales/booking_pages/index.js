@@ -13,7 +13,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 const SaleBookingPage = (
   {product, normal_price, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-    shop, flow, preview, introduction_video_url, sections_context, solution_type, reviews}) => {
+    shop, flow, preview, introduction_video_url, sections_context, solution_type, reviews, support_feature_flags}) => {
 
   if (preview) {
     return (
@@ -28,6 +28,7 @@ const SaleBookingPage = (
           social_account_add_friend_url={social_account_add_friend_url}
           normal_price={normal_price}
           jump={jump}
+          support_feature_flags={support_feature_flags}
         />
 
         <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />
@@ -52,6 +53,7 @@ const SaleBookingPage = (
         social_account_add_friend_url={social_account_add_friend_url}
         normal_price={normal_price}
         jump={jump}
+        support_feature_flags={support_feature_flags}
       />
 
       <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />

@@ -36,6 +36,7 @@ const ConfirmationStep = ({step, next, jump}) => {
         price={price}
         normal_price={normal_price}
         quantity={quantity}
+        support_feature_flags={props.support_feature_flags}
       />
 
       <div className="action-block confirm-block">

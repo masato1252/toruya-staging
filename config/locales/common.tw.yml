@@ -276,6 +276,7 @@ tw:
     seat_number: 座位數
     toruya_user_login_html: 請用Line 帳號登入
     login: 登入
+    template_version: 範本
     line_verification:
       login_first_message: 請先使用LINE帳號登入
       service_content_message_html: 服務內容將
