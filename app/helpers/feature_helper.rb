@@ -3,7 +3,8 @@ module FeatureHelper
     {
       support_phonetic_name: support_phonetic_name?,
       support_skip_required_shop_info: support_skip_required_shop_info?,
-      support_tax_include_display: support_tax_include_display?
+      support_tax_include_display: support_tax_include_display?,
+      support_japanese_asset: support_japanese_asset?
     }
   end
 
@@ -16,6 +17,10 @@ module FeatureHelper
   end
 
   def support_tax_include_display?
+    I18n.locale == :ja
+  end
+
+  def support_japanese_asset?
     I18n.locale == :ja
   end
 end
