@@ -24,7 +24,11 @@ class HiJob < ApplicationJob
         response = SlackClient.send(channel: channel, text: text, thread_ts: today_user_last_message&.slack_message_id)
       end
 
-      hiable_object_or_hi_message.update_columns(slack_message_id: today_user_last_message&.slack_message_id || response.message.thread_ts || response.message.ts)
+      if response.message.nil?
+        Rollbar.error("HiJob: slack message is nil", response: response)
+      end
+
+      hiable_object_or_hi_message.update_columns(slack_message_id: today_user_last_message&.slack_message_id || response.message&.thread_ts || response.message&.ts)
     else
       SlackClient.send(channel: channel, text: text)
     end
