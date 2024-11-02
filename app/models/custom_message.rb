@@ -8,6 +8,7 @@
 #  content        :text             not null
 #  content_type   :string           default("text")
 #  flex_template  :string
+#  locale         :string           default("ja")
 #  nth_time       :integer          default(1)
 #  receiver_ids   :string           default([]), is an Array
 #  scenario       :string           not null
@@ -38,6 +39,7 @@ class CustomMessage < ApplicationRecord
   validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
   validates :scenario, inclusion: { in: CustomMessages::Users::Template::SCENARIOS + CustomMessages::Customers::Template::SCENARIOS }, allow_nil: true
   validates :flex_template, inclusion: { in: LineMessages::FlexTemplateContent.singleton_methods(false).map(&:to_s) }, allow_nil: true
+  validates :locale, presence: true, inclusion: { in: I18n.available_locales.map(&:to_s) }
 
   belongs_to :service, polymorphic: true, optional: true # OnlineService, BookingPage or nil(Toruya user)
 

@@ -115,7 +115,7 @@ class User < ApplicationRecord
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, :company_name, :display_last_name, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, to: :profile, allow_nil: true
   delegate :current_plan, :trial_expired_date, to: :subscription
-  delegate :social_service_user_id, :locale, to: :social_user, allow_nil: true
+  delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
   delegate :square_client, to: :square_provider
   delegate :line_keyword_booking_page_ids, :line_keyword_booking_option_ids, :line_contact_customer_name_required, :customer_tags, to: :user_setting
@@ -295,6 +295,10 @@ class User < ApplicationRecord
     else
       Money.default_currency.iso_code
     end
+  end
+
+  def locale
+    social_user&.locale || I18n.default_locale
   end
 
   private

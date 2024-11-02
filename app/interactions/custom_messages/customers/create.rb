@@ -6,6 +6,7 @@ module CustomMessages
       string :scenario
       integer :after_days, default: nil
       integer :before_minutes, default: nil
+      string :locale, default: -> { I18n.locale.to_s }
 
       validate :validate_purchased_message
 
@@ -15,7 +16,8 @@ module CustomMessages
           scenario: scenario,
           content: content,
           after_days: after_days,
-          before_minutes: before_minutes
+          before_minutes: before_minutes,
+          locale: locale
         )
 
         if message.save

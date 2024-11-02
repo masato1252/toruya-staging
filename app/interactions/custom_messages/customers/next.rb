@@ -46,7 +46,7 @@ module CustomMessages
       def next_custom_messages
         return @next_custom_messages if defined?(@next_custom_messages)
 
-        @next_custom_messages = CustomMessage.scenario_of(message_product, scenario || custom_message.scenario)
+        @next_custom_messages = CustomMessage.scenario_of(message_product, scenario || custom_message.scenario).where(locale: receiver.locale)
         after_days = @next_custom_messages.where("after_days > ?", custom_message&.after_days || -100).order(:after_days).first&.after_days
 
         @next_custom_messages =

@@ -5,11 +5,11 @@ module Admin
     def scenarios; end
 
     def scenario
-      @sequence_messages = CustomMessage.where(scenario: params[:scenario]).order("nth_time ASC, after_days ASC")
+      @sequence_messages = CustomMessage.where(scenario: params[:scenario], locale: I18n.locale).order("nth_time ASC, after_days ASC")
     end
 
     def new
-      @message = CustomMessage.new(content_type: CustomMessage::TEXT_TYPE, after_days: 3, flex_template: "video_description_card", nth_time: 1)
+      @message = CustomMessage.new(content_type: CustomMessage::TEXT_TYPE, after_days: 3, flex_template: "video_description_card", nth_time: 1, locale: I18n.locale)
     end
 
     def edit
@@ -27,9 +27,10 @@ module Admin
           after_days: params[:after_days],
           nth_time: params[:nth_time],
           content_type: params[:content_type],
+          locale: params[:locale]
         )
 
-      return_json_response(outcome, { redirect_to: scenario_admin_custom_messages_path(params[:scenario]) })
+      return_json_response(outcome, { redirect_to: scenario_admin_custom_messages_path(params[:scenario], locale: I18n.locale) })
     end
 
     def update
@@ -42,7 +43,7 @@ module Admin
         content_type: params[:content_type]
       )
 
-      return_json_response(outcome, { redirect_to: scenario_admin_custom_messages_path(params[:scenario]) })
+      return_json_response(outcome, { redirect_to: scenario_admin_custom_messages_path(params[:scenario], locale: I18n.locale) })
     end
 
     def demo

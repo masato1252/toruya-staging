@@ -641,29 +641,31 @@ Rails.application.routes.draw do
   end
 
   authenticated :user, -> user { user.super_admin? || user.can_admin_chat? || Rails.env.development? } do
-    namespace :admin do
-      resource :memo, only: [:create]
-      resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id do
-        member do
-          post :line_finished_message
+    scope "(:locale)", locale: /tw|ja/, defaults: { locale: "ja" } do
+      namespace :admin do
+        resource :memo, only: [:create]
+        resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id do
+          member do
+            post :line_finished_message
+          end
         end
-      end
-      resources :chats, only: [:index, :create, :destroy]
-      resources :sale_pages, only: [:index]
-      resources :booking_pages, only: [:index]
-      resources :online_service_customer_relations, only: [:index]
-      resource :subscription, only: [:destroy]
-      get "logs"
+        resources :chats, only: [:index, :create, :destroy]
+        resources :sale_pages, only: [:index]
+        resources :booking_pages, only: [:index]
+        resources :online_service_customer_relations, only: [:index]
+        resource :subscription, only: [:destroy]
+        get "logs"
 
-      resources :custom_messages, only: [] do
-        collection do
-          get "scenario/:scenario", action: "scenario", as: :scenario
-          get "scenario/:scenario/new", action: "new", as: :new
-          get "scenario/:scenario/edit/:id", action: "edit", as: :edit
-          post "scenario/:scenario", action: "create", as: :create
-          put "scenario/:scenario/:id", action: "update", as: :update
-          get "scenarios", action: "scenarios"
-          post "scenario/:scenario/demo", action: "demo", as: :demo
+        resources :custom_messages, only: [] do
+          collection do
+            get "scenario/:scenario", action: "scenario", as: :scenario
+            get "scenario/:scenario/new", action: "new", as: :new
+            get "scenario/:scenario/edit/:id", action: "edit", as: :edit
+            post "scenario/:scenario", action: "create", as: :create
+            put "scenario/:scenario/:id", action: "update", as: :update
+            get "scenarios", action: "scenarios"
+            post "scenario/:scenario/demo", action: "demo", as: :demo
+          end
         end
       end
     end

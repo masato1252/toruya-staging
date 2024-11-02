@@ -7,7 +7,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         message: CustomMessage.find_by!(id: params[:id], service: service),
         content: params[:content],
         after_days: params[:after_days].presence,
-        before_minutes: params[:before_minutes].presence
+        before_minutes: params[:before_minutes].presence,
+        locale: params[:locale]
       )
     else
       outcome = CustomMessages::Customers::Create.run(
@@ -15,7 +16,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         scenario: params[:scenario],
         content: params[:content],
         after_days: params[:after_days].presence,
-        before_minutes: params[:before_minutes].presence
+        before_minutes: params[:before_minutes].presence,
+        locale: params[:locale]
       )
     end
 
@@ -43,6 +45,7 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
       service: service,
       content: message_content,
       content_type: params[:content_type] || CustomMessage::TEXT_TYPE,
+      locale: params[:locale]
     )
 
     CustomMessages::Demo.run!(custom_message: message, receiver: current_user)

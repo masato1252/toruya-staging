@@ -113,44 +113,50 @@ module Notifiers
     def nth_time_message; end
 
     def send_line
-      case target_line_user
-      when SocialUser
-        outcome = SocialUserMessages::Create.run(
-          social_user: target_line_user,
-          content: message,
-          content_type: content_type,
-          scenario: message_scenario,
-          nth_time: nth_time_message,
-          message_type: SocialMessage.message_types[:bot],
-          readed: true,
-          custom_message_id: custom_message_id
-        )
-        errors.merge!(outcome.errors) if outcome.invalid?
-      when SocialCustomer
-        outcome = SocialMessages::Create.run(
-          social_customer: target_line_user,
-          content: message,
-          content_type: content_type,
-          message_type: SocialMessage.message_types[:bot],
-          readed: true
-        )
-        errors.merge!(outcome.errors) if outcome.invalid?
-      else
-        LineClient.send(target_line_user, message)
+      I18n.with_locale(target_line_user.locale) do
+        case target_line_user
+        when SocialUser
+          outcome = SocialUserMessages::Create.run(
+            social_user: target_line_user,
+            content: message,
+            content_type: content_type,
+            scenario: message_scenario,
+            nth_time: nth_time_message,
+            message_type: SocialMessage.message_types[:bot],
+            readed: true,
+            custom_message_id: custom_message_id
+          )
+          errors.merge!(outcome.errors) if outcome.invalid?
+        when SocialCustomer
+          outcome = SocialMessages::Create.run(
+            social_customer: target_line_user,
+            content: message,
+            content_type: content_type,
+            message_type: SocialMessage.message_types[:bot],
+            readed: true
+          )
+          errors.merge!(outcome.errors) if outcome.invalid?
+        else
+          LineClient.send(target_line_user, message)
+        end
       end
     end
 
     def send_sms
-      Sms::Create.run(
-        user: user,
-        customer: customer,
-        message: message,
-        phone_number: phone_number
-      )
+      I18n.with_locale(user.locale || customer.locale || I18n.default_locale) do
+        Sms::Create.run(
+          user: user,
+          customer: customer,
+          message: message,
+          phone_number: phone_number
+        )
+      end
     end
 
     def send_email
-      mailer.public_send(mailer_method, target_email_user).deliver_now
+      I18n.with_locale(target_email_user.locale) do
+        mailer.public_send(mailer_method, target_email_user).deliver_now
+      end
     end
 
     def line?

@@ -28,11 +28,12 @@ module CustomMessages
       ].freeze
 
       string :scenario
+      string :locale
 
       validate :validate_product_type
 
       def execute
-        message = CustomMessage.find_by(scenario: scenario, after_days: nil)
+        message = CustomMessage.find_by(scenario: scenario, after_days: nil, locale: locale)
         return message.content if message
 
         case scenario

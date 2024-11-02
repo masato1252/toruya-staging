@@ -68,7 +68,7 @@ class SocialUserMessage < ApplicationRecord
       end
 
     if user?
-      "💭 `user_id: #{social_user.user_id}, #{social_user.social_user_name}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_service_user_id)}|chat link>"}
+      "💭 `user_id: #{social_user.user_id}, #{social_user.social_user_name}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_service_user_id, locale: social_user.locale)}|chat link>"}
       #{message_content}"
     end
   end

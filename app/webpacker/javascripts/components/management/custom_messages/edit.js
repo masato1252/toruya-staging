@@ -27,12 +27,12 @@ const CustomMessageEdit =({props}) => {
 
   const onDemo = async (data) => {
     await CommonServices.create({
-      url: Routes.demo_admin_custom_messages_path({scenario: props.scenario}),
+      url: Routes.demo_admin_custom_messages_path({scenario: props.scenario, locale: I18n.locale}),
       data: _.assign( data, {
         content: content,
         after_days: after_days,
         nth_time: nth_time,
-        flex_template: data.flex_template
+        flex_template: data.flex_template,
       })
     })
   }
@@ -47,18 +47,19 @@ const CustomMessageEdit =({props}) => {
           content: content,
           after_days: after_days,
           nth_time: nth_time,
-          flex_template: data.flex_template
+          flex_template: data.flex_template,
         })
       })
     }
     else {
       [error, response] = await CommonServices.create({
-        url: Routes.create_admin_custom_messages_path({scenario: props.scenario}),
+        url: Routes.create_admin_custom_messages_path({scenario: props.scenario, locale: I18n.locale}),
         data: _.assign( data, {
           content: content,
           after_days: after_days,
           nth_time: nth_time,
-          flex_template: data.flex_template
+          flex_template: data.flex_template,
+          locale: I18n.locale
         })
       })
     }

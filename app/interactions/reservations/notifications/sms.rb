@@ -9,14 +9,16 @@ module Reservations
       string :message
 
       def execute
-        compose(
-          ::Sms::Create,
-          user: customer.user,
-          message: "#{message}#{I18n.t("customer.notifications.noreply")}",
-          phone_number: phone_number,
-          reservation: reservation,
-          customer: customer
-        )
+        I18n.with_locale(customer.locale) do
+          compose(
+            ::Sms::Create,
+            user: customer.user,
+            message: "#{message}#{I18n.t("customer.notifications.noreply")}",
+            phone_number: phone_number,
+            reservation: reservation,
+            customer: customer
+          )
+        end
       end
     end
   end

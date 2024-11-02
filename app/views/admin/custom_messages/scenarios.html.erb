@@ -3,6 +3,6 @@
 <h1>Scenarios</h1>
 <ul>
   <% CustomMessages::Users::Template::SCENARIOS.each do |scenario| %>
-    <li><%= link_to scenario_label(scenario), scenario_admin_custom_messages_path(scenario) %></li>
+    <li><%= link_to scenario_label(scenario), scenario_admin_custom_messages_path(scenario, locale: I18n.locale) %></li>
   <% end %>
 </ul>

@@ -11,14 +11,16 @@ module Notifiers
       end
 
       def execute
-        # XXX: Send message
-        super
+        I18n.with_locale(receiver.locale) do
+          # XXX: Send message
+          super
 
-        ::CustomMessages::Users::Next.run(
-          scenario: nth_time_scenario,
-          receiver: receiver,
-          nth_time: nth_time
-        )
+          ::CustomMessages::Users::Next.run(
+            scenario: nth_time_scenario,
+            receiver: receiver,
+            nth_time: nth_time
+          )
+        end
       end
 
       self.nth_time_scenario = ::CustomMessages::Users::Template::USER_SIGN_UP

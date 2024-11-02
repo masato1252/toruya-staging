@@ -8,22 +8,24 @@ module Reservations
       string :phone_number, default: nil
 
       def execute
-        return unless customer.user.subscription.active?
+        I18n.with_locale(customer.locale) do
+          return unless customer.user.subscription.active?
 
-        if customer.social_customer && customer.user.social_account.line_settings_finished?
-          compose(
-            Reservations::Notifications::SocialMessage,
-            social_customer: customer.social_customer,
-            message: message
-          )
-        elsif phone.present?
-          compose(
-            Reservations::Notifications::Sms,
-            phone_number: phone,
-            customer: customer,
-            reservation: reservation,
-            message: message
-          )
+          if customer.social_customer && customer.user.social_account.line_settings_finished?
+            compose(
+              Reservations::Notifications::SocialMessage,
+              social_customer: customer.social_customer,
+              message: message
+            )
+          elsif phone.present?
+            compose(
+              Reservations::Notifications::Sms,
+              phone_number: phone,
+              customer: customer,
+              reservation: reservation,
+              message: message
+            )
+          end
         end
       end
 

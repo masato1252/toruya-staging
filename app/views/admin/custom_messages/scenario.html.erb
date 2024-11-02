@@ -9,7 +9,7 @@
 </ul>
 
 <div class="margin-around">
-  <%= link_to new_admin_custom_messages_path(params[:scenario]), class: "btn btn-yellow btn-save btn-tweak" do %>
+  <%= link_to new_admin_custom_messages_path(params[:scenario], locale: I18n.locale), class: "btn btn-yellow btn-save btn-tweak" do %>
     <i class="fas fa-plus fa-2x"></i>
     <div class="word"><%= I18n.t("action.add_more") %></div>
   <% end %>

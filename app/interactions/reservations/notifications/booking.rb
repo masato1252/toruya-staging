@@ -10,18 +10,20 @@ module Reservations
       object :booking_option
 
       def execute
-        # XXX: Use the email using at booking time
-        if email.present?
-          BookingMailer.with(
-            customer: customer,
-            reservation: reservation,
-            booking_page: booking_page,
-            booking_option: booking_option,
-            email: email
-          ).customer_reservation_notification.deliver_later
-        end
+        I18n.with_locale(customer.locale) do
+          # XXX: Use the email using at booking time
+          if email.present?
+            BookingMailer.with(
+              customer: customer,
+              reservation: reservation,
+              booking_page: booking_page,
+              booking_option: booking_option,
+              email: email
+            ).customer_reservation_notification.deliver_later
+          end
 
-        super
+          super
+        end
       end
 
       private

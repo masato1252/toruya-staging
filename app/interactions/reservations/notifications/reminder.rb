@@ -4,13 +4,15 @@ module Reservations
   module Notifications
     class Reminder < Notify
       def execute
-        return unless reservation.remind_customer?(customer)
+        I18n.with_locale(customer.locale) do
+          return unless reservation.remind_customer?(customer)
 
-        if customer.email.present?
-          CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_reminder.deliver_now
+          if customer.email.present?
+            CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_reminder.deliver_now
+          end
+
+          super
         end
-
-        super
       end
 
       private

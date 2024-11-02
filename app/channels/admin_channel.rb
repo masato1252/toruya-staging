@@ -44,6 +44,7 @@ class AdminChannel < ApplicationCable::Channel
     return unless data["channel_id"]
 
     social_users = SocialUser
+      .where(locale: data["locale"])
       .includes(:social_user_messages, :memos)
       .order("social_users.pinned DESC, social_users.updated_at DESC").limit(20)
 

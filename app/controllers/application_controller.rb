@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   skip_before_action :track_ahoy_visit
+  include Locale
 
   layout "home"
   protect_from_forgery with: :exception, prepend: true

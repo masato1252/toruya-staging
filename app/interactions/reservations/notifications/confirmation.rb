@@ -4,13 +4,15 @@ module Reservations
   module Notifications
     class Confirmation < Notify
       def execute
-        return if reservation.start_time < Time.current
+        I18n.with_locale(customer.locale) do
+          return if reservation.start_time < Time.current
 
-        if customer.email.present?
-          CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_confirmation.deliver_now
+          if customer.email.present?
+            CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_confirmation.deliver_now
+          end
+
+          super
         end
-
-        super
       end
 
       private

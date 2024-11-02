@@ -395,6 +395,10 @@ class Customer < ApplicationRecord
     BLACKLIST_IDS.include?(id)
   end
 
+  def locale
+    social_customer&.locale || user.locale
+  end
+
   private
 
   def primary_value(values)

@@ -39,6 +39,7 @@ const CustomMessageEdit =({props}) => {
         service_type: props.message.service_type,
         after_days: after_days,
         right_away: isSendRightAway(),
+        locale: I18n.locale
       })
     })
   }
@@ -56,6 +57,7 @@ const CustomMessageEdit =({props}) => {
         service_type: props.message.service_type,
         after_days: after_days,
         right_away: isSendRightAway(),
+        locale: I18n.locale
       })
     })
 

@@ -33,7 +33,8 @@ const CustomMessageEdit =({props}) => {
         scenario: props.scenario,
         content: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        locale: I18n.locale
       })
     })
   }
@@ -45,7 +46,8 @@ const CustomMessageEdit =({props}) => {
         scenario: props.scenario,
         content: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        locale: I18n.locale
       })
     })
 
