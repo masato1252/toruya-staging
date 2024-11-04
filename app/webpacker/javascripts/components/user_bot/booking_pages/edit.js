@@ -242,7 +242,7 @@ const BookingPageEdit =({props}) => {
             <hr className="border-gray-300" />
             <div className="margin-around centerize">
               <h3 className="centerize">{I18n.t("settings.booking_page.form.does_require_a_new_option")}</h3>
-              <div className="my-1">
+              <div className="my-2">
                 <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_existing_menu" })} className="btn btn-orange">
                   {I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}
                 </a>
