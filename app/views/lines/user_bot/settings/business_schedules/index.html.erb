@@ -2,7 +2,7 @@
   <%= render "lines/user_bot/top_navigation_bar", previous_path: shops_lines_user_bot_settings_business_schedules_path(business_owner_id), title: t("user_bot.dashboards.settings.business_schedules.business_time") %>
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.base_business_time") %></div>
-  <% (1..7).each do |wday| %>
+  <% (0..6).each do |wday| %>
     <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: @shop.id, wday: wday % 7, business_owner_id: business_owner_id), class: "field-row" do %>
       <% business_schedules = @wdays_business_schedules_mapping[wday % 7] %>
 

@@ -83,6 +83,40 @@
         <%= render "lines/user_bot/field_row",
           path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_type),
           title: I18n.t("settings.booking_page.form.#{@booking_page.booking_type}_label") %>
+        <% if @booking_page.booking_type == "any" %>
+          <% (0..6).each do |wday| %>
+            <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
+              <% business_schedules = @wdays_business_schedules_mapping[wday % 7] %>
+              <span><%= I18n.t("date.day_names").at(wday % 7) %></span>
+              <span>
+                <% if business_schedules.present? %>
+                  <% business_schedule = business_schedules.first %>
+                  <%= I18n.l(business_schedule.start_time, format: :time_only) %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) %>
+        
+                  <% if business_schedules.length > 1 %>
+                    <%= I18n.t("common.other_n_number", number: business_schedules.length - 1)%>
+                  <% end %>
+                <% else %>
+                  <span class="danger">CLOSE</span>
+                <% end %>
+              </span>
+            <% end %>
+          <% end %>
+          <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.business_schedules.national_holiday_label") %></span>
+            <span>
+              <% if @holiday_working_schedules.present? %>
+              <% business_schedule = @holiday_working_schedules.first %>
+              <%= I18n.l(business_schedule.start_time, format: :time_only) %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) %>
+              <% if @holiday_working_schedules.length > 1 %>
+                <%= I18n.t("common.other_n_number", number: @holiday_working_schedules.length - 1)%>
+              <% end %>
+              <% else %>
+                <span class="danger">CLOSE</span>
+              <% end %>
+            </span>
+          <% end %>
+        <% end %>
 
         <div class="field-header" id="interval"><%= I18n.t("settings.booking_page.form.interval_period_header") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_time), title: @booking_page.specific_booking_start_times.present? ? @booking_page.specific_booking_start_times.join(", ") : "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %>
