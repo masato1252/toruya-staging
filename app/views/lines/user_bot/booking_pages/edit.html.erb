@@ -10,6 +10,7 @@
     props: {
       business_owner_id: business_owner_id,
       menu_group_options: @menu_result && menu_group_options(@menu_result[:category_with_menu_options], :minutes),
+      menu_exists: @menu_exists,
       payment_provider_options: Current.business_owner.payment_providers.map { |payment_provider| { label: payment_provider_label(payment_provider.provider), value: payment_provider.provider } },
       ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
       requirements: @requirements,

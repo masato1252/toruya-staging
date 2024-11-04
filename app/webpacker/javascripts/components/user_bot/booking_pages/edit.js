@@ -226,27 +226,33 @@ const BookingPageEdit =({props}) => {
       case "new_option":
         return (
           <div>
-            <select autoFocus={true} className="extend" name="new_option_id" ref={register()}>
-              <SelectOptions options={props.booking_page.available_booking_options} />
-            </select>
-            <div className="margin-around centerize">
-              <button type="button" className="btn btn-yellow" onClick={handleSubmit(onSubmit)} disabled={formState.isSubmitting}>
-                {formState.isSubmitting ? (
-                  <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
-                ) : (
-                  I18n.t("user_bot.dashboards.booking_pages.form.add_a_new_option")
-                )}
-              </button>
-            </div>
-            <br />
-            <hr className="border-gray-300" />
+            {props.booking_page.available_booking_options.length > 0 && (
+              <>
+                <select autoFocus={true} className="extend" name="new_option_id" ref={register()}>
+                  <SelectOptions options={props.booking_page.available_booking_options} />
+                </select>
+                <div className="margin-around centerize">
+                  <button type="button" className="btn btn-yellow" onClick={handleSubmit(onSubmit)} disabled={formState.isSubmitting}>
+                    {formState.isSubmitting ? (
+                      <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+                    ) : (
+                        I18n.t("user_bot.dashboards.booking_pages.form.add_a_new_option")
+                      )}
+                  </button>
+                </div>
+                <br />
+                <hr className="border-gray-300" />
+              </>
+            )}
             <div className="margin-around centerize">
               <h3 className="centerize">{I18n.t("settings.booking_page.form.does_require_a_new_option")}</h3>
-              <div className="my-2">
-                <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_existing_menu" })} className="btn btn-orange">
+              {props.menu_exists && (
+                <div className="my-2">
+                  <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_existing_menu" })} className="btn btn-orange">
                   {I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}
-                </a>
-              </div>
+                  </a>
+                </div>
+              )}
               <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_menu" })} className="btn btn-orange">
                 {I18n.t("settings.booking_page.form.create_a_new_option")}
               </a>
