@@ -42,4 +42,12 @@ class Lines::UserBotController < ActionController::Base
     I18n.locale = params[:locale] || current_social_user&.locale || I18n.default_locale
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
+  
+  def device_detector
+    @device_detector ||=
+      begin
+        Current.device_detector = DeviceDetector.new(request.user_agent)
+      end
+  end
+  helper_method :device_detector
 end

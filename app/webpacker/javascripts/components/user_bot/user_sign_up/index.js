@@ -6,6 +6,12 @@ import UserShopInfo from "./user_shop_info";
 import FlowController from "shared/flow_controller";
 
 const SignUpSuccessfulView = ({props}) => {
+  useEffect(() => {
+    if (props.is_not_phone) {
+      window.location.href = "/";
+    }
+  }, []);
+  
   return (
     <div>
       <h2 className="centerize">
