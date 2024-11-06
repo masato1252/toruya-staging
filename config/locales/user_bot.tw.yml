@@ -27,7 +27,7 @@ tw:
           resend: 重新發送驗證碼
         message:
           successful_message_html: <div><p>感謝您完成使用者註冊！</p><p>請從LINE的使用者選單開始<br>使用onLINE研討會集客功能。</p><br><p>如果您想在電腦或平板上使用Toruya，請使用網頁版管理介面。</p><br>
-            https://manager.toruya.com/userlogin</div>
+            https://manager.toruya.com/tw/userlogin</div>
           unmatch_phone_number: 找不到與此號碼相關的使用者。
           booking_code_message: 請輸入我們發送到您手機的確認碼。
           booking_code_failed_message: 確認碼錯誤
