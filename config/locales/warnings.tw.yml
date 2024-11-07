@@ -1,5 +1,47 @@
 tw:
   warnings:
+    user_bot:
+      toruya_message_reply:
+        title: "為什麼需要透過Toruya與客戶聯繫？"
+        content_html: "<h3>使用Toruya LINE客戶管理的優點</h3>
+          ✅ 統一管理客戶資訊：可直接在客戶管理頁面收發LINE訊息，無需使用官方APP <br />
+          ✅ 每日通知：未讀訊息會在早上8點和晚上8點統一通知，讓您專注於客戶服務 <br />
+          ✅ 預約發送：可設定在深夜或清晨發送回覆訊息，避免遺漏回覆 <br />
+          ✅ 未來將推出更多便利功能，敬請期待！<br />
+          <br />
+
+          請注意，透過Toruya發送的訊息都會計入官方的免費訊息額度。<br />
+          <a href='https://toruya.com/help/line_messages'>詳情請參閱使用手冊</a>
+
+          <br />
+          <br />
+          <div class='button-container'>
+            <a href='%{upgrade_url}' class='btn btn-tarco'>立即升級</a>
+          </div>
+          <br />
+
+          <h4>2024年1月10日後繼續使用基本方案的情況</h4>
+          <p>新方案轉換後，請使用LINE官方APP收發訊息。<br>
+          <a href='https://toruya.com/help/line_messages#basic'>詳細設定方式請參閱使用手冊</a></p>
+          <br />
+          <div class='button-container'>
+            <button class='btn btn-gray' data-dismiss='modal'>不升級並關閉</button>
+          </div>
+          <br />
+          "
+      toruya_message_reply_block_message_html: "<p>透過Toruya收發LINE訊息是高級會員專屬功能。</p><br />
+          <h3>使用Toruya LINE客戶管理的優點</h3>
+          ✅ 統一管理客戶資訊：可直接在客戶管理頁面收發LINE訊息，無需使用官方APP <br />
+          ✅ 每日通知：未讀訊息會在早上8點和晚上8點統一通知，讓您專注於客戶服務 <br />
+          ✅ 預約發送：可設定在深夜或清晨發送回覆訊息，避免遺漏回覆 <br />
+          ✅ 未來將推出更多便利功能，敬請期待！
+          <br>
+          <p>請注意，透過Toruya發送的訊息都會計入官方的免費訊息額度。</p>
+          <p><a href='https://toruya.com/help/line_messages#basic'>詳情請參閱使用手冊</a></p>
+          <br>
+          <div class='button-container'>
+            <a href='%{upgrade_url}' class='btn btn-tarco'>立即升級</a>
+          </div>"
     create_booking_page:
       upgrade_title: 無法再新增預約頁面
       upgrade_content_html: <p>您已經擁有%{sale_page_limit}個宣傳用落地頁了。我們很高興您喜歡使用Toruya。</p><p>透過升級您的使用方案，我們可以繼續協助您的業務成長。</p>

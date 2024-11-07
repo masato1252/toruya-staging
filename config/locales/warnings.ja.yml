@@ -1,5 +1,47 @@
 ja:
   warnings:
+    user_bot:
+      toruya_message_reply:
+        title: "LINEタブがプレミアム会員限定になります"
+        content_html: "<h3>Toruya顧客台帳LINEタブのメリット</h3>
+          ✅ 顧客情報との一元管理：顧客台帳上からLINE送受信ができるので、公式アプリが不要に <br />
+          ✅ デイリー通知：未読メッセージは朝８時と夜８時にまとめて通知されるので、顧客対応に集中できる <br />
+          ✅ 予約送信：夜中や早朝に返信メッセージが設定できるので、返信漏れが防げる <br />
+          ✅ 今後もさらに便利な機能をリリース予定ですのでご期待ください！<br />
+          <br />
+
+          但し、Toruya経由で送信したメッセージは全て無料メッセージとしてカウントされます。<br />
+          <a href='https://toruya.com/help/line_messages'>詳しくはマニュアルをご確認ください。</a>
+
+          <br />
+          <br />
+          <div class='button-container'>
+            <a href='%{upgrade_url}' class='btn btn-tarco'>今すぐアップグレード</a>
+          </div>
+          <br />
+
+          <h4>2024年1月10日以降もベーシックプランで利用する場合</h4>
+          <p>新プラン移行後は、メッセージ送受信にはLINE公式アプリをご利用ください。<br>
+          <a href='https://toruya.com/help/line_messages#basic'>詳しい設定方法はマニュアルをご確認ください。</a></p>
+          <br />
+          <div class='button-container'>
+            <button class='btn btn-gray' data-dismiss='modal'>アップグレードせず閉じる</button>
+          </div>
+          <br />
+          "
+      toruya_message_reply_block_message_html: "<p>Toruya上からLINEの送受信ができる機能はプレミアム会員限定です。</p><br />
+          <h3>Toruya顧客台帳LINEタブのメリット</h3>
+          ✅ 顧客情報との一元管理：顧客台帳上からLINE送受信ができるので、公式アプリが不要に<br />
+          ✅ デイリー通知：未読メッセージは朝８時と夜８時にまとめて通知されるので、顧客対応に集中できる<br />
+          ✅ 予約送信：夜中や早朝に返信メッセージが設定できるので、返信漏れが防げる<br />
+          ✅ 今後もさらに便利な機能をリリース予定ですのでご期待ください！
+          <br>
+          <p>但し、Toruya経由で送信したメッセージは全て無料メッセージとしてカウントされます。</p>
+          <p><a href='https://toruya.com/help/line_messages#basic'>詳しくはマニュアルをご確認ください。</a></p>
+          <br>
+          <div class='button-container'>
+            <a href='%{upgrade_url}' class='btn btn-tarco'>今すぐアップグレード</a>
+          </div>"
     create_booking_page:
       upgrade_title: 予約ページはこれ以上追加できません
       upgrade_content_html: <p>既に%{sale_page_limit}つの宣伝用LPをお持ちですね。Toruyaを気に入っていただけて嬉しいです。</p><p>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>

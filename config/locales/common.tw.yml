@@ -10,6 +10,7 @@ tw:
     details: 詳細資訊
     cancel: 取消
     repurchase: 重新購買
+    processing: 處理中
     cancel_reservation: 取消預約
     stop_usage: 停止使用
     log_out: 登出

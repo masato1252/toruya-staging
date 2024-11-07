@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useRef, useLayoutEffect, useEffect } from "react";
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import CustomerBasicInfo from "./customer_basic_info";
 import CustomerNav from "./customer_nav";
@@ -17,8 +17,15 @@ const BottomBar = () => {
 
   return (
     <BottomNavigationBar klassName="centerize">
-      <span>
-      </span>
+      <button
+        className="btn btn-tarco btn-circle btn-bottom-left"
+        onClick={
+          () => {
+            $("#toruyaMessageReplyDifferenceModal").modal("show");
+          }
+        }>
+        <i className="fas fa-question-circle fa-2x"></i>
+      </button>
       <button
         className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak"
         onClick={
@@ -37,7 +44,7 @@ const BottomBar = () => {
 }
 
 const UserBotCustomerMessages = () => {
-  const { selected_customer, temp_new_messages } = useGlobalContext()
+  const { selected_customer, props, temp_new_messages } = useGlobalContext()
   const { messages, has_more_messages, fetchMessages } = useCustomerMessages(selected_customer)
   const messageListRef = useRef(null);
   let more_message_view;
@@ -45,6 +52,10 @@ const UserBotCustomerMessages = () => {
   useLayoutEffect(() => {
     messageListRef.current.scrollIntoView({ behavior: "auto" });
   }, [messages[messages.length - 1], temp_new_messages])
+
+  useEffect(() => {
+    $("#toruyaMessageReplyModal").modal("show");
+  }, []);
 
   if (has_more_messages === true) {
     more_message_view = (
@@ -59,6 +70,19 @@ const UserBotCustomerMessages = () => {
     more_message_view = (
       <div className="centerize warning">
         {I18n.t("action.no_more_message")}
+      </div>
+    )
+  }
+
+  if (props.block_toruya_message_reply) {
+    return (
+      <div className="customer-view">
+        <CustomerBasicInfo />
+        <CustomerNav />
+        <div
+          className="margin-around"
+          dangerouslySetInnerHTML={{__html: I18n.t("warnings.user_bot.toruya_message_reply_block_message_html", { upgrade_url: props.upgrade_url })}} />
+        <div ref={messageListRef} />
       </div>
     )
   }
