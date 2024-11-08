@@ -24,7 +24,8 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         LineActions::Uri.new(
           label: I18n.t("line.actions.label.reservation_info"),
           url: Rails.application.routes.url_helpers.booking_url(reservation_customer.slug),
-          btn: "secondary"
+          btn: "secondary",
+          key: social_customer.social_rich_menu_key
         ).template,
       ]
 

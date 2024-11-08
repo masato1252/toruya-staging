@@ -3,6 +3,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   get "(/:locale)/userlogin", to: "lines#user_login", as: :user_login
+  get '/redirect', to: 'function_redirects#redirect', as: :function_redirect
 
   scope module: :lines, path: :lines, as: :lines do
     # customer sesson new
@@ -266,7 +267,7 @@ Rails.application.routes.draw do
             end
 
             resource :rich_menu, only: [:edit, :create, :destroy]
-            resources :social_rich_menus, only: [:index, :new, :edit] do
+            resources :social_rich_menus, only: [:index, :new, :edit, :show] do
               collection do
                 post :upsert
                 get :keyword_rich_menu_size

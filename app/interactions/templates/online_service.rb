@@ -12,7 +12,8 @@ module Templates
         LineActions::Uri.new(
           label: I18n.t("common.status_info"),
           url: customer_status_online_service_url,
-          btn: "secondary"
+          btn: "secondary",
+          key: social_customer.social_rich_menu_key
         )
       ]
 
@@ -21,7 +22,8 @@ module Templates
           LineActions::Uri.new(
             label: I18n.t("action.online_service_actions.#{online_service.solution_type_for_message}"),
             url: content_url,
-            btn: "primary"
+            btn: "primary",
+            key: social_customer.social_rich_menu_key
           )
         )
       end

@@ -10,6 +10,7 @@ module RichMenus
         string :desc, default: nil
       end
     end
+    string :key
 
     LAYOUT_TYPES = {
       # a
@@ -177,7 +178,8 @@ module RichMenus
           when "booking_page", "sale_page"
             LineActions::Uri.template(
               label: action[:type],
-              url: action[:value]
+              url: action[:value],
+              key: key
             )
           when "text"
             {
@@ -188,7 +190,8 @@ module RichMenus
           when "uri"
             LineActions::Uri.template(
               label: action[:desc] || action[:value],
-              url: action[:value]
+              url: action[:value],
+              key: key
             )
           end
 

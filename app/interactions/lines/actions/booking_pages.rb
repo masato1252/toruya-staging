@@ -6,6 +6,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
   LINE_COLUMNS_NUMBER_LIMIT = 10
 
   object :social_customer
+  integer :function_access_id, default: nil
 
   # {
   #   "type": "template",
@@ -60,7 +61,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
           action_templates: [
             LineActions::Uri.new(
               action: "book",
-              url: Rails.application.routes.url_helpers.booking_page_url(booking_page.slug, social_user_id: social_customer.social_user_id, _from: "customer_bot"),
+              url: Rails.application.routes.url_helpers.booking_page_url(booking_page.slug, social_user_id: social_customer.social_user_id, _from: "customer_bot", function_access_id: function_access_id),
               btn: "primary"
             )
           ].map(&:template)

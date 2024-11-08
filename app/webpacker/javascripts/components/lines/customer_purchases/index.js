@@ -14,7 +14,7 @@ import I18n from 'i18n-js/index.js.erb';
 const FinalPaidPage = ({props, purchase_data}) => {
   const purchase = async () => {
     if (props.sale_page.is_free || props.customer_subscribed || props.sale_page.is_external) {
-      const [error, response] = await SaleServices.purchase({ data: { ...purchase_data, payment_type: props.sale_page.payment_type}})
+      const [error, response] = await SaleServices.purchase({ data: { ...purchase_data, payment_type: props.sale_page.payment_type, function_access_id: props.function_access_id}})
 
       if (error) {
         toastr.error(error.response.data.error_message)
@@ -43,6 +43,7 @@ const FinalPaidPage = ({props, purchase_data}) => {
           service_name={props.sale_page.product.name}
           price={props.sale_page.paying_amount_format}
           payment_type={props.sale_page.payment_type}
+          function_access_id={props.function_access_id}
         />
       </div>
     )

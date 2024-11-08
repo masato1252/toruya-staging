@@ -14,6 +14,7 @@
 #  updated_at             :datetime         not null
 #  bundled_service_id     :integer
 #  customer_id            :integer          not null
+#  function_access_id     :bigint
 #  online_service_id      :integer          not null
 #  sale_page_id           :integer          not null
 #  stripe_subscription_id :string

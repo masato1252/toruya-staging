@@ -7,6 +7,7 @@ FactoryBot.define do
     customer { FactoryBot.create(:customer, user: user) }
     social_user_id { SecureRandom.hex }
     social_user_name { Faker::Lorem.word }
+    social_rich_menu_key { SecureRandom.hex }
 
     trait :bot do
       conversation_state { SocialCustomer.conversation_states[:bot] }

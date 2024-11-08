@@ -55,6 +55,7 @@ module Sales
         end
 
         compose(Users::UpdateCustomerLatestActivityAt, user: sale_page.user)
+        relation
       end
 
       private

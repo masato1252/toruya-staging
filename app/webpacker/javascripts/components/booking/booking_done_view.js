@@ -7,7 +7,7 @@ import I18n from 'i18n-js/index.js.erb';
 import { CheckInLineBtn, LineLoginBtn } from "shared/booking";
 import { ticketExpireDate } from 'libraries/helper'
 
-const BookingDoneView = ({i18n, social_account_add_friend_url, social_account_login_url, ticket, booking_date, booking_page_url, booking_option_id, skip_social_customer}) => {
+const BookingDoneView = ({i18n, social_account_add_friend_url, social_account_login_url, ticket, booking_date, booking_page_url, booking_option_id, skip_social_customer, function_access_id}) => {
   const {
     title,
     message1,
@@ -53,7 +53,7 @@ const BookingDoneView = ({i18n, social_account_add_friend_url, social_account_lo
       )}
 
       <div className="margin-around">
-        <a href={`${booking_page_url}?last_booking_option_id=${booking_option_id}`} className="btn btn-tarco">{back_to_book}</a>
+        <a href={`${booking_page_url}?last_booking_option_id=${booking_option_id}${function_access_id ? `&function_access_id=${function_access_id}` : ''}`} className="btn btn-tarco">{back_to_book}</a>
       </div>
     </div>
   )

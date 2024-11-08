@@ -72,6 +72,8 @@ module Booking
     hash :present_customer_info, strip: false, default: nil
     integer :sale_page_id, default: nil
 
+    integer :function_access_id, default: nil
+
     validate :validates_enough_customer_data
 
     def execute
@@ -251,7 +253,8 @@ module Booking
                           details: {
                             new_customer_info: new_customer_info.attributes.compact,
                           },
-                          sale_page_id: sale_page_id
+                          sale_page_id: sale_page_id,
+                          function_access_id: function_access_id
                         }],
                         menu_staffs_list: valid_menus_spots,
                         staff_states: staff_states,
@@ -274,6 +277,20 @@ module Booking
           end
 
           if customer.persisted? && reservation
+            # Track conversion if coming from function redirect
+            if function_access_id.present?
+              function_access = FunctionAccess.find_by(id: function_access_id)
+              if function_access
+                FunctionAccess.track_conversion(
+                  content: function_access.content,
+                  source_type: function_access.source_type,
+                  source_id: function_access.source_id,
+                  action_type: function_access.action_type,
+                  revenue_cents: booking_option.amount.cents
+                )
+              end
+            end
+
             compose(Users::UpdateCustomerLatestActivityAt, user: user)
             reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
 

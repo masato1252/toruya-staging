@@ -21,8 +21,8 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
     sale_page.ended? || sale_page.sold_out?
   end
 
-  attribute :purchase_url do |object|
-    Rails.application.routes.url_helpers.new_lines_customers_online_service_purchases_url(slug: object.slug, _from: "sale_page", _from_id: object.id)
+  attribute :purchase_url do |object, params|
+    Rails.application.routes.url_helpers.new_lines_customers_online_service_purchases_url(slug: object.slug, _from: "sale_page", _from_id: object.id, function_access_id: params[:function_access_id])
   end
 
   attribute :company_info do |object|

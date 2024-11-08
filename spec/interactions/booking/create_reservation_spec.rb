@@ -657,5 +657,21 @@ RSpec.describe Booking::CreateReservation do
         outcome
       end
     end
+
+    context "when function_access_id exists" do
+      let(:function_access) { FactoryBot.create(:function_access) }
+
+      it "tracks this reservation with function access" do
+        args[:function_access_id] = function_access.id
+        args[:customer_info] = { "id": customer.id }
+        args[:present_customer_info] = { "id": customer.id }
+
+        outcome
+
+        result = outcome.result
+        reservation_customer = ReservationCustomer.find_by!(reservation: result[:reservation], customer: result[:customer])
+        expect(reservation_customer.function_access_id).to eq(function_access.id)
+      end
+    end
   end
 end

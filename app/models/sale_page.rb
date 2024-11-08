@@ -149,7 +149,7 @@ class SalePage < ApplicationRecord
   end
 
   def serializer(params = {})
-    @serializer ||=
+    @serializer =
       if is_booking_page?
         SalePages::BookingPageSerializer.new(self, params: params.try(:permit!)&.to_h || {})
       else

@@ -58,6 +58,13 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
     return_json_response(outcome, { redirect_to: lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: business_owner_id) })
   end
 
+  def show
+    @start_date = params[:start_date] || 2.week.ago.to_date
+    @end_date = params[:end_date] || Time.current.to_date
+    @rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
+    @metrics = FunctionAccess.metrics_for(source_id: @rich_menu.social_name, start_date: @start_date, end_date: @end_date)
+  end
+
   def destroy
   end
 

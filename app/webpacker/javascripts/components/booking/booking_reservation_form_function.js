@@ -356,7 +356,8 @@ const BookingReservationFormFunction = ({props}) => {
       ),
       {
         stripe_token,
-        square_token
+        square_token,
+        function_access_id: props.function_access_id
       }
     )
 
@@ -434,6 +435,7 @@ const BookingReservationFormFunction = ({props}) => {
           booking_page_url={props.booking_page.url}
           ticket={props.booking_options_quota[booking_option_id]}
           skip_social_customer={skip_social_customer}
+          function_access_id={props.function_access_id}
         />
       )
     }

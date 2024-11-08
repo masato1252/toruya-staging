@@ -16,7 +16,8 @@ class Lines::Actions::Contact < ActiveInteraction::Base
             LineActions::Uri.new(
               label: I18n.t("action.call"),
               url: "tel:#{user.shops.first.phone_number.gsub(/\D/, '')}",
-              btn: "secondary"
+              btn: "secondary",
+              key: social_customer.social_rich_menu_key
             )
           ]
         else
@@ -28,7 +29,8 @@ class Lines::Actions::Contact < ActiveInteraction::Base
             LineActions::Uri.new(
               label: "#{shop.short_name}#{I18n.t("action.call")}",
               url: "tel:#{shop.phone_number.gsub(/\D/, '')}",
-              btn: "secondary"
+              btn: "secondary",
+              key: social_customer.social_rich_menu_key
             )
           end
         end.compact
@@ -38,7 +40,8 @@ class Lines::Actions::Contact < ActiveInteraction::Base
       LineActions::Uri.new(
         label: I18n.t("action.send_message"),
         url: Rails.application.routes.url_helpers.lines_contacts_url(encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
-        btn: "secondary"
+        btn: "secondary",
+        key: social_customer.social_rich_menu_key
       )
     )
 

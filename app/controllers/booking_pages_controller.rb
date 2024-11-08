@@ -101,7 +101,8 @@ class BookingPagesController < ActionController::Base
       stripe_token: params[:stripe_token],
       square_token: params[:square_token],
       square_location_id: params[:square_location_id],
-      sale_page_id: params[:sale_page_id]
+      sale_page_id: params[:sale_page_id],
+      function_access_id: params[:function_access_id]
     )
 
     if outcome.valid?

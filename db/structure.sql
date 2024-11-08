@@ -1416,6 +1416,44 @@ ALTER SEQUENCE public.filtered_outcomes_id_seq OWNED BY public.filtered_outcomes
 
 
 --
+-- Name: function_accesses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.function_accesses (
+    id bigint NOT NULL,
+    content character varying NOT NULL,
+    source_type character varying,
+    source_id character varying,
+    action_type character varying,
+    access_date date NOT NULL,
+    access_count integer DEFAULT 0 NOT NULL,
+    conversion_count integer DEFAULT 0 NOT NULL,
+    revenue_cents integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: function_accesses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.function_accesses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: function_accesses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.function_accesses_id_seq OWNED BY public.function_accesses.id;
+
+
+--
 -- Name: lessons; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1611,7 +1649,8 @@ CREATE TABLE public.online_service_customer_relations (
     current boolean DEFAULT true,
     watched_lesson_ids character varying[] DEFAULT '{}'::character varying[],
     stripe_subscription_id character varying,
-    bundled_service_id integer
+    bundled_service_id integer,
+    function_access_id bigint
 );
 
 
@@ -2061,7 +2100,8 @@ CREATE TABLE public.reservation_customers (
     nth_quota integer,
     customer_ticket_id integer,
     slug character varying,
-    cancel_reason character varying
+    cancel_reason character varying,
+    function_access_id bigint
 );
 
 
@@ -3506,6 +3546,13 @@ ALTER TABLE ONLY public.filtered_outcomes ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: function_accesses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.function_accesses ALTER COLUMN id SET DEFAULT nextval('public.function_accesses_id_seq'::regclass);
+
+
+--
 -- Name: lessons id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4135,6 +4182,14 @@ ALTER TABLE ONLY public.episodes
 
 ALTER TABLE ONLY public.filtered_outcomes
     ADD CONSTRAINT filtered_outcomes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: function_accesses function_accesses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.function_accesses
+    ADD CONSTRAINT function_accesses_pkey PRIMARY KEY (id);
 
 
 --
@@ -5015,6 +5070,20 @@ CREATE INDEX index_episodes_on_online_service_id ON public.episodes USING btree 
 
 
 --
+-- Name: index_function_accesses_on_content_source_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_function_accesses_on_content_source_and_date ON public.function_accesses USING btree (access_date, source_id, content);
+
+
+--
+-- Name: index_function_accesses_on_date_and_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_function_accesses_on_date_and_source ON public.function_accesses USING btree (access_date, source_id, source_type);
+
+
+--
 -- Name: index_lessons_on_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5124,6 +5193,13 @@ CREATE INDEX index_reservation_booking_options_on_booking_option_id ON public.re
 --
 
 CREATE INDEX index_reservation_booking_options_on_reservation_id ON public.reservation_booking_options USING btree (reservation_id);
+
+
+--
+-- Name: index_reservation_customers_on_function_access_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservation_customers_on_function_access_id ON public.reservation_customers USING btree (function_access_id);
 
 
 --
@@ -6027,6 +6103,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240823213428'),
 ('20240826145415'),
 ('20240913015314'),
+('20240916014909'),
 ('20240926154657'),
 ('20241002201733'),
 ('20241008143048'),

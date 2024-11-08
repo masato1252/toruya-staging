@@ -32,7 +32,6 @@ require "tw_user_bot_social_account"
 class SocialRichMenu < ApplicationRecord
   LINE_OFFICIAL_RICH_MENU_KEY = "line_official"
   KEYWORDS = I18n.t("line.bot.keywords").keys.map(&:to_s) # "incoming_reservations", "booking_pages", "contacts", "services"
-  LINE_KEYWORDS = I18n.t("line.bot.keywords").values.map(&:to_s)
   store_accessor :context, %i[image_errors]
 
   belongs_to :social_account, required: false
@@ -73,28 +72,41 @@ class SocialRichMenu < ApplicationRecord
     end.first
   end
 
+  def action_values
+    actions.map { |action| action[:value] }
+  end
+
+  def self.line_keywords
+    I18n.available_locales.map { |locale| I18n.t("line.bot.keywords", locale: locale).values }.flatten.uniq
+  end
+
+  def self.label_key_mapping
+    I18n.available_locales.map { |locale| 
+      I18n.t("line.bot.keywords", locale: locale).invert
+    }.reduce({}, :merge)
+  end
+
   def actions
     return [] unless body&.dig("areas")
 
     body_actions = body["areas"].map { |area| area["action"] }
-    label_key_mapping = I18n.t("line.bot.keywords").invert
     # ja support only
     # I18n.available_locales
     body_actions.map do |action|
-      if LINE_KEYWORDS.include?(action["text"])
+      if self.class.line_keywords.include?(action["text"])
         {
-          type: label_key_mapping.dig(action["text"]),
-          value: label_key_mapping.dig(action["text"])
+          type: self.class.label_key_mapping.dig(action["text"]),
+          value: self.class.label_key_mapping.dig(action["text"])
         }
       elsif action["label"] == "booking_page"
         {
           type: "booking_page",
-          value: action["uri"]
+          value: rollback_to_content_url(action["uri"])
         }
       elsif action["label"] == "sale_page"
         {
           type: "sale_page",
-          value: action["uri"]
+          value: rollback_to_content_url(action["uri"])
         }
       elsif action["type"] == "message"
         {
@@ -105,7 +117,7 @@ class SocialRichMenu < ApplicationRecord
       elsif action["type"] == "uri"
         {
           type: "uri",
-          value: action["uri"],
+          value: rollback_to_content_url(action["uri"]),
           desc: action["label"]
         }
       end
@@ -118,5 +130,9 @@ class SocialRichMenu < ApplicationRecord
     else
       File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{social_name}.png")
     end
+  end
+
+  def rollback_to_content_url(url)
+    url.include?(Rails.application.routes.url_helpers.function_redirect_url) ? CGI.parse(URI.parse(url).query)["content"].first : url
   end
 end

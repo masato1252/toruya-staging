@@ -24,6 +24,7 @@ module Reservations
           # }
           hash :details, strip: false, default: nil
           integer :sale_page_id, default: nil
+          integer :function_access_id, default: nil
         end
       end
       array :menu_staffs_list do

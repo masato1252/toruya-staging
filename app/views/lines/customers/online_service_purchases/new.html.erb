@@ -8,6 +8,7 @@
     stripe_key: current_owner.stripe_provider&.publishable_key,
     customer_subscribed: @relation&.legal_to_access?,
     support_feature_flags: support_feature_flags,
+    function_access_id: params[:function_access_id],
     i18n: {
     }.merge!([
       t("booking_page"),

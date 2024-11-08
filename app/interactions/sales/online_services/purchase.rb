@@ -10,16 +10,33 @@ module Sales
       object :customer
       string :authorize_token, default: nil
       string :payment_type
+      integer :function_access_id, default: nil
 
       validate :validate_product
       validates :payment_type, inclusion: { in: SalePage::PAYMENTS.values }
 
       def execute
-        if product.bundler?
+        relation = if product.bundler?
           compose(Sales::OnlineServices::PurchaseBundlerService, inputs)
         else
           compose(Sales::OnlineServices::PurchaseNormalService, inputs)
         end
+
+        if function_access_id.present?
+          function_access = FunctionAccess.find_by(id: function_access_id)
+          if function_access && relation.purchased?
+            FunctionAccess.track_conversion(
+              content: function_access.content,
+              source_type: function_access.source_type,
+              source_id: function_access.source_id,
+              action_type: function_access.action_type,
+              revenue_cents: relation.product_amount.fractional
+            )
+            relation.update!(function_access_id: function_access_id)
+          end
+        end
+
+        relation
       end
 
       private

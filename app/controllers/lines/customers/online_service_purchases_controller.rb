@@ -31,7 +31,8 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
       sale_page: @sale_page,
       customer: current_customer,
       authorize_token: params[:token],
-      payment_type: params[:payment_type]
+      payment_type: params[:payment_type],
+      function_access_id: params[:function_access_id]
     )
 
     if outcome.invalid?

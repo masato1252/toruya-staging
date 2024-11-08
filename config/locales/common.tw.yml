@@ -54,6 +54,7 @@ tw:
     no_need_setup: 略過
     add_step: 新增步驟
     book_now: 立即預約
+    filter: 篩選
     sales:
       video: 立即觀看
       audio: 立即收聽

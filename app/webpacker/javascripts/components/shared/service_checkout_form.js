@@ -6,9 +6,9 @@ import StripeCheckoutForm from "shared/stripe_checkout_form"
 import { SaleServices } from "user_bot/api";
 import I18n from 'i18n-js/index.js.erb';
 
-const ServiceCheckoutForm = ({stripe_key, purchase_data, company_name, service_name, price, payment_type}) => {
+const ServiceCheckoutForm = ({stripe_key, purchase_data, company_name, service_name, price, payment_type, function_access_id}) => {
   const handleToken = async (token) => {
-    const [error, response] = await SaleServices.purchase({ data: {...purchase_data, token, payment_type}})
+    const [error, response] = await SaleServices.purchase({ data: {...purchase_data, token, payment_type, function_access_id}})
 
     if (error) {
       toastr.error(error.response.data.error_message)

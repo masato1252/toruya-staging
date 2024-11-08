@@ -525,6 +525,10 @@ tw:
         upsell_step: 追加銷售
         check_step: 預覽
       metrics:
+        content: 內容
+        click_count: 點擊數
+        conversion_count: 成交數
+        revenue: 銷售額
         title: 訪問分析
         sale_page: 宣傳頁面
         visit_count: 瀏覽次數

@@ -17,7 +17,8 @@ module Templates
           LineActions::Uri.new(
             label: I18n.t("action.online_service_actions.#{episode.solution_type}"),
             url: content_url,
-            btn: "primary"
+            btn: "primary",
+            key: social_customer.social_rich_menu_key
           )
         ].map(&:template)
       )

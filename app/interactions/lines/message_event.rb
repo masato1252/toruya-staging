@@ -32,16 +32,18 @@ class Lines::MessageEvent < ActiveInteraction::Base
       when "text"
         # Rollbar.info("Line text message", event: event)
 
+        function_access = keyword_in_rich_menu?(event["message"]["text"]) ? track_keyword_access(event["message"]["text"]) : nil
+
         case event["message"]["text"].strip
-        when I18n.t("line.bot.keywords.booking_options")
+        when *I18n.available_locales.map { |locale| I18n.t("line.bot.keywords.booking_options", locale: locale) }
           is_keyword = true
 
-          Lines::Actions::BookingOptions.run(social_customer: social_customer)
-        when I18n.t("line.bot.keywords.booking_pages"), I18n.t("line.bot.legacy_keyowords.booking_pages")
+          Lines::Actions::BookingOptions.run(social_customer: social_customer, function_access_id: function_access&.id)
+        when *I18n.available_locales.map { |locale| I18n.t("line.bot.keywords.booking_pages", locale: locale) }, *I18n.available_locales.map { |locale| I18n.t("line.bot.legacy_keyowords.booking_pages", locale: locale) }
           is_keyword = true
 
-          Lines::Actions::BookingPages.run(social_customer: social_customer)
-        when I18n.t("line.bot.keywords.incoming_reservations")
+          Lines::Actions::BookingPages.run(social_customer: social_customer, function_access_id: function_access&.id)
+        when *I18n.available_locales.map { |locale| I18n.t("line.bot.keywords.incoming_reservations", locale: locale) }
           is_keyword = true
 
           if social_customer.customer
@@ -49,7 +51,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
           else
             compose(Lines::Menus::Guest, social_customer: social_customer)
           end
-        when /#{I18n.t("line.bot.keywords.services")}/ # services
+        when Regexp.union(I18n.available_locales.map { |locale| I18n.t("line.bot.keywords.services", locale: locale) })
           is_keyword = true
 
           if social_customer.customer
@@ -59,7 +61,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
           else
             compose(Lines::Menus::Guest, social_customer: social_customer)
           end
-        when I18n.t("line.bot.keywords.contacts")
+        when *I18n.available_locales.map { |locale| I18n.t("line.bot.keywords.contacts", locale: locale) }
           is_keyword = true
 
           Lines::Actions::Contact.run(social_customer: social_customer)
@@ -98,5 +100,25 @@ class Lines::MessageEvent < ActiveInteraction::Base
         # Lines::Actions::Contact.run(social_customer: social_customer)
       end
     end
+  end
+
+  private
+
+  def keyword_in_rich_menu?(text)
+    if social_customer.social_account&.using_line_official_account?
+      false
+    else
+      mapped_text = SocialRichMenu.label_key_mapping.dig(text) || text
+      SocialRichMenu.find_by(social_account_id: social_customer.social_account_id, social_name: social_customer.social_rich_menu_key )&.action_values&.include?(mapped_text)
+    end
+  end
+
+  def track_keyword_access(text)
+    FunctionAccess.track_access(
+      content: text,
+      source_type: "SocialRichMenu",
+      source_id: social_customer.social_rich_menu_key,
+      action_type: "keyword"
+    )
   end
 end

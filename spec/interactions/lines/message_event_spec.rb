@@ -40,6 +40,46 @@ RSpec.describe Lines::MessageEvent, :with_line do
           SocialMessage.where(social_customer: social_customer, message_type: SocialMessage.message_types[:customer_reply_bot]).count
         }.by(1)
       end
+
+      context "when keyword is from rich menu" do
+        let!(:social_rich_menu) do
+          FactoryBot.create(:social_rich_menu,
+            social_account: social_customer.social_account,
+            social_name: social_customer.social_rich_menu_key,
+            body: {
+              "areas" => [
+                {
+                  "bounds" => {"x" => 0, "y" => 0, "width" => 100, "height" => 100},
+                  "action" => {"type" => "message", "text" => text}
+                }
+              ]
+            }
+          )
+        end
+
+        context "when not using line official account" do
+          it "tracks function access" do
+            expect(FunctionAccess).to receive(:track_access).with(
+              content: text,
+              source_type: "SocialRichMenu", 
+              source_id: social_customer.social_rich_menu_key,
+              action_type: "keyword"
+            )
+            outcome
+          end
+        end
+
+        context "when using line official account" do
+          before do
+            allow(social_customer.social_account).to receive(:using_line_official_account?).and_return(true)
+          end
+
+          it "does not track function access" do
+            expect(FunctionAccess).not_to receive(:track_access)
+            outcome
+          end
+        end
+      end
     end
 
     context "when keyword match services" do

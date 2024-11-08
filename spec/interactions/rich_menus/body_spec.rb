@@ -8,12 +8,14 @@ RSpec.describe RichMenus::Body do
       internal_name: "foo",
       bar_label: "foo",
       layout_type: layout_type,
-      actions: actions
+      actions: actions,
+      key: key
     }
   end
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    let(:key) { "rich_menu_id"}
     let(:layout_type) { "h" }
     let(:actions) do
       [
@@ -79,7 +81,7 @@ RSpec.describe RichMenus::Body do
             action: {
               "type": "uri",
               "label": "bar",
-              "uri": "https://foo.com"
+              "uri": Rails.application.routes.url_helpers.function_redirect_url(content: "https://foo.com", source_type: "SocialRichMenu", source_id: key, action_type: "url")
             }
           }
         ]

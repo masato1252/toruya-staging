@@ -152,5 +152,25 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
         end
       end
     end
+
+    context "when sale page has function_access_id" do
+      let(:function_access) { FactoryBot.create(:function_access) }
+      let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :one_time_payment, user: user) }
+
+      it "creates relation with function_access" do
+        args[:function_access_id] = function_access.id
+
+        expect {
+          outcome
+        }.to change {
+          customer.reload.updated_at
+        }
+
+        relation = OnlineServiceCustomerRelation.where(online_service: sale_page.product, customer: customer).take
+        expect(relation.function_access_id).to eq(function_access.id)
+        expect(relation).to be_active
+        expect(LineClient).to have_received(:flex)
+      end
+    end
   end
 end

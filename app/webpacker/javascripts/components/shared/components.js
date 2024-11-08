@@ -202,10 +202,10 @@ const SelectOptions = ({ options }) => {
   </>
 }
 
-const CircleButtonWithWord = ({onHandle, icon, word, disabled}) => (
+const CircleButtonWithWord = ({onHandle, icon, word, disabled, klassName}) => (
   <button
     disabled={disabled}
-    className="btn btn-yellow btn-circle btn-save btn-tweak btn-with-word"
+    className={klassName ? klassName : "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word"}
     onClick={onHandle}>
     {icon}
     <div className="word">{word}</div>
