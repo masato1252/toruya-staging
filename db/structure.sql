@@ -1067,7 +1067,8 @@ CREATE TABLE public.custom_messages (
     flex_template character varying,
     content_type character varying DEFAULT 'text'::character varying,
     before_minutes integer,
-    nth_time integer DEFAULT 1
+    nth_time integer DEFAULT 1,
+    locale character varying DEFAULT 'ja'::character varying
 );
 
 
