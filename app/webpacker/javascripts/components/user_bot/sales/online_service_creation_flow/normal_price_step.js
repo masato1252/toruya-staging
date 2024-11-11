@@ -19,7 +19,7 @@ const NormalPriceStep = ({step, next, prev, jump, lastStep}) => {
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize line-break-content">
+      <h3 className="header centerize break-line-content">
         {I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price")}
       </h3>
 

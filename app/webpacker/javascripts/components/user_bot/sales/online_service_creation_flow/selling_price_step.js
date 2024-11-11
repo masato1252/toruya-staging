@@ -41,7 +41,7 @@ const SellingPriceStep = ({step, next, prev}) => {
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize line-break-content">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_price")}</h3>
+      <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_price")}</h3>
 
       {selected_online_service.one_time_charge_required && (
         <SellingPriceEdit

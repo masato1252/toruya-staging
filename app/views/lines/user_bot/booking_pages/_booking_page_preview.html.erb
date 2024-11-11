@@ -15,7 +15,7 @@
 <% if booking_option.present? %>
     <div class="booking-option-field">
       <div class="booking-option-info">
-        <div class="booking-option-name">
+        <div class="booking-option-name break-line-content">
           <b><%= booking_option.name %></b>
         </div>
         <div><%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %></div>

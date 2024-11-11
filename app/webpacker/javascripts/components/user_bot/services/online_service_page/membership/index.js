@@ -78,7 +78,7 @@ const Episode = ({episode, setEpisode, index}) => {
       }}
     >
       <img className="preview-image" src={episode.thumbnail_url || ""} />
-      <span className="line-break-content dotdotdot">{episode.name}</span>
+      <span className="break-line-content dotdotdot">{episode.name}</span>
     </div>
   )
 }
