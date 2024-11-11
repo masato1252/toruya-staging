@@ -43,7 +43,7 @@ const BookingOptionEdit =({props}) => {
         return (
           <>
             <div className="field-row">
-              <input autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
+              <textarea autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" />
             </div>
             <div className="field-row hint no-border"> {i18n.hint} </div>
           </>

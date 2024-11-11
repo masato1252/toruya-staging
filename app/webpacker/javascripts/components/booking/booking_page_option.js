@@ -55,7 +55,7 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
               <i className="fa fa-repeat" aria-hidden="true"></i>{last_selected_option}
             </div>
           )}
-          <div className="booking-option-name">
+          <div className="booking-option-name break-line-content">
             <b>
               {booking_option_value.label}
             </b>
