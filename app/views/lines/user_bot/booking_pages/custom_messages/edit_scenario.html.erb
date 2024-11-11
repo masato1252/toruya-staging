@@ -7,6 +7,7 @@
       service_id: @booking_page.id,
       service_type: @booking_page.class.name,
       before_minutes: @message&.before_minutes,
+      after_days: @message&.after_days,
       template: @template.presence || '',
     }.merge!(@booking_page.message_template_variables(current_user))
   }

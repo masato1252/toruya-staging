@@ -12,6 +12,7 @@
             service_id: @shop.id,
             service_type: @shop.class.name,
             before_minutes: @message&.before_minutes,
+            after_days: @message&.after_days,
             template: @template.presence || '',
           }.merge!(@shop.message_template_variables(Current.business_owner))
         }

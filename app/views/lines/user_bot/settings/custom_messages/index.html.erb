@@ -35,7 +35,7 @@
               scenario: ::CustomMessages::Customers::Template::SHOP_CUSTOM_REMINDER,
               id: message.id
             ),
-            title: t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_reminder", before_minutes: message.before_minutes)
+            title: message.after_days.present? ? t("user_bot.dashboards.settings.custom_message.booking_page.after_days_reminder", after_days: message.after_days) : t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_reminder", before_minutes: message.before_minutes)
           %>
         <% end %>
       </div>

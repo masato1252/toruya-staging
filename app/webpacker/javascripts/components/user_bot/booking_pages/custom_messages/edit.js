@@ -20,6 +20,8 @@ const CustomMessageEdit =({props}) => {
   const [template, setTemplate] = useState(props.message.template)
   const [cursorPosition, setCursorPosition] = useState(0)
   const [before_minutes, setBeforeMinutes] = useState(props.message.before_minutes)
+  const [useAfterDays, setUseAfterDays] = useState(!!props.message.after_days)
+  const [after_days, setAfterDays] = useState(props.message.after_days)
 
   useEffect(() => {
     textareaRef.current.focus()
@@ -34,12 +36,20 @@ const CustomMessageEdit =({props}) => {
         content: template,
         service_id: props.message.service_id,
         service_type: props.message.service_type,
-        before_minutes: before_minutes || 10
+        before_minutes: before_minutes,
+        after_days: after_days
       })
     })
   }
 
   const onSubmit = async (data) => {
+    if (props.scenario === 'booking_page_custom_reminder' || props.scenario === 'shop_custom_reminder') {
+      if (!after_days && !before_minutes) {
+        toastr.error(I18n.t("user_bot.dashboards.settings.custom_message.booking_page.timing_required"));
+        return;
+      }
+    }
+
     let error, response;
 
     [error, response] = await CustomMessageServices.update({
@@ -50,7 +60,8 @@ const CustomMessageEdit =({props}) => {
         content: template,
         service_id: props.message.service_id,
         service_type: props.message.service_type,
-        before_minutes: before_minutes || 10
+        before_minutes: useAfterDays ? null : before_minutes,
+        after_days: useAfterDays ? after_days : null
       })
     })
 
@@ -120,18 +131,53 @@ const CustomMessageEdit =({props}) => {
             {
               props.scenario == 'booking_page_custom_reminder' || props.scenario == 'shop_custom_reminder' ? (
                 <div className="field-row">
-                  <span>
-                    {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_title")}<br />
-                    {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_reservation")}
-                    <input
-                      type='tel'
-                      value={before_minutes}
-                      onChange={(event) => {
-                        setBeforeMinutes(event.target.value)
-                      }}
-                    />
-                    {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_word")}
-                  </span>
+                  <div className="radio-group">
+                    <div className="radio-option">
+                      <input
+                        type="radio"
+                        id="before_minutes"
+                        name="timing_type"
+                        checked={!useAfterDays}
+                        onChange={() => setUseAfterDays(false)}
+                      />
+                      <label htmlFor="before_minutes">
+                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_title")}<br />
+                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_reservation")}
+                        <input
+                          type='tel'
+                          value={before_minutes}
+                          onChange={(event) => {
+                            setBeforeMinutes(event.target.value)
+                          }}
+                          disabled={useAfterDays}
+                        />
+                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_word")}
+                      </label>
+                    </div>
+
+                    <div className="radio-option">
+                      <input
+                        type="radio"
+                        id="after_days"
+                        name="timing_type"
+                        checked={useAfterDays}
+                        onChange={() => setUseAfterDays(true)}
+                      />
+                      <label htmlFor="after_days">
+                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.after_days_title")}<br />
+                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.after_reservation")}
+                        <input
+                          type='tel'
+                          value={after_days}
+                          onChange={(event) => {
+                            setAfterDays(event.target.value)
+                          }}
+                          disabled={!useAfterDays}
+                        />
+                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.after_days_word")}
+                      </label>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div className="field-row">{I18n.t(`user_bot.dashboards.settings.custom_message.booking_page.${props.scenario}`)}</div>

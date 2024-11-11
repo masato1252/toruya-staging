@@ -214,7 +214,12 @@ tw:
             before_minutes_title: 何時發送此訊息？
             before_reservation: 預約前
             before_minutes_word: 分鐘
-            before_minutes_reminder: "%{before_minutes} 分鐘前提醒"
+            before_minutes_reminder: "服務開始 %{before_minutes} 分鐘前提醒"
+            after_days_reminder: "服務結束 %{after_days} 天後提醒"
+            after_days_title: 服務後幾天發送？
+            after_reservation: 預約後
+            after_days_word: 天後
+            timing_required: 需要送信時間設定
           online_service:
             section_title: 數位產品
             service_page_title: 產品頁面

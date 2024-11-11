@@ -56,5 +56,25 @@ RSpec.describe Notifiers::Customers::CustomMessages::ReservationReminder, :with_
         perform_enqueued_jobs
       end
     end
+
+    context 'when custom_message changed after_days' do
+      it 'only send the latest scheduled message' do
+        custom_message.update(before_minutes: nil, after_days: 1)
+        
+        legacy_schedule_at = reservation.start_time.advance(days: custom_message.after_days)
+        described_class.perform_at(schedule_at: legacy_schedule_at, receiver: receiver, custom_message: custom_message, reservation: reservation)
+
+        custom_message.update(after_days: 2)
+
+        new_schedule_at = reservation.start_time.advance(days: custom_message.after_days)
+        described_class.perform_at(schedule_at: new_schedule_at, receiver: receiver, custom_message: custom_message, reservation: reservation)
+
+        expect(CustomMessages::ReceiverContent).to receive(:run) do |args|
+          expect(args[:custom_message].after_days).to eq(2)
+        end.once.and_call_original
+
+        perform_enqueued_jobs
+      end
+    end
   end
 end

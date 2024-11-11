@@ -22,6 +22,11 @@ module CustomMessages
       end
 
       def notify_reservation_customers(message)
+        notify_before_minutes_reservation_customers(message)
+        notify_after_days_reservation_customers(message)
+      end
+
+      def notify_before_minutes_reservation_customers(message)
         ReservationCustomer.
           includes(:reservation).
           where(booking_page: message.service).
@@ -32,6 +37,25 @@ module CustomMessages
             if reservation.notifiable? && message.before_minutes
               Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
                 schedule_at: reservation.start_time.advance(minutes: -message.before_minutes),
+                custom_message: message,
+                reservation: reservation,
+                receiver: reservation_customer.customer
+              )
+            end
+          end
+      end
+
+      def notify_after_days_reservation_customers(message)
+        ReservationCustomer.
+          includes(:reservation).
+          where(booking_page: message.service).
+          where("reservations.start_time > ?", Time.current).
+          references(:reservation).each do |reservation_customer|
+            reservation = reservation_customer.reservation
+
+            if reservation.notifiable? && message.after_days
+              Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
+                schedule_at: reservation.start_time.advance(days: message.after_days),
                 custom_message: message,
                 reservation: reservation,
                 receiver: reservation_customer.customer

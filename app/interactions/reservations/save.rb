@@ -151,6 +151,18 @@ module Reservations
                 receiver: reservation_customer.customer
               )
             end
+
+            custom_messages_scope.where.not(after_days: nil).each do |custom_message|
+              delivery_time = reservation.start_time.advance(days: custom_message.after_days)
+              next if Time.current > delivery_time
+
+              Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
+                schedule_at: delivery_time,
+                custom_message: custom_message,
+                reservation: reservation,
+                receiver: reservation_customer.customer
+              )
+            end
           end
         end
 

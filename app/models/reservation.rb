@@ -153,6 +153,10 @@ class Reservation < ApplicationRecord
     deleted_at.nil?
   end
 
+  def reminderable?
+    REMINDERABLE_STATES.include?(aasm_state)
+  end
+
   def remind_customer?(customer)
     notifiable? && reservation_customers.where(customer: customer, state: :accepted).exists?
   end

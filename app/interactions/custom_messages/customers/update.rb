@@ -9,6 +9,7 @@ module CustomMessages
       integer :before_minutes, default: nil
 
       validate :validate_purchased_message
+      validate :validate_timing_conflict
 
       def execute
         message.content = content
@@ -20,8 +21,12 @@ module CustomMessages
             notify_service_customers(message)
           end
 
-          if message.service.is_a?(BookingPage) && message.saved_change_to_before_minutes?
-            notify_reservation_customers(message)
+          if message.service.is_a?(BookingPage) && message.saved_change_to_before_minutes? 
+            notify_before_minutes_reservation_customers(message)
+          end
+
+          if message.service.is_a?(BookingPage) && message.saved_change_to_after_days?
+            notify_after_days_reservation_customers(message)
           end
         end
 
@@ -32,6 +37,12 @@ module CustomMessages
 
       def service
         @service ||= message.service
+      end
+
+      def validate_timing_conflict
+        if before_minutes.present? && after_days.present?
+          errors.add(:base, :cannot_set_both_timing_options)
+        end
       end
 
       def validate_purchased_message
