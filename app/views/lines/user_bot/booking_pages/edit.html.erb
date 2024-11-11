@@ -14,6 +14,7 @@
       payment_provider_options: Current.business_owner.payment_providers.map { |payment_provider| { label: payment_provider_label(payment_provider.provider), value: payment_provider.provider } },
       ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
       requirements: @requirements,
+      support_feature_flags: support_feature_flags,
       booking_page: @booking_page.attributes.merge!(
         shop_id: @booking_page.shop_id.to_s,
         available_booking_options: @options ? custom_options(@options.map { |option| booking_option_item(option) }) : [],
