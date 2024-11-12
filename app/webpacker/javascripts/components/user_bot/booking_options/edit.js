@@ -1,7 +1,11 @@
 "use strict"
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 import { BookingOptionServices } from "user_bot/api"
@@ -14,6 +18,25 @@ import { responseHandler } from "libraries/helper";
 
 const BookingOptionEdit =({props}) => {
   const i18n = props.i18n;
+  const [inputType, setInputType] = useState(() => {
+    const content = props.booking_option[props.attribute];
+    return content?.match(/<[^>]*>/) ? 'editor' : 'simple';
+  });
+
+  const [editorState, setEditorState] = useState(() => {
+    const content = props.booking_option[props.attribute];
+    if (!content) {
+      return EditorState.createEmpty();
+    }
+    const contentState = ContentState.createFromBlockArray(
+      htmlToDraft(content).contentBlocks
+    );
+    return EditorState.createWithContent(contentState);
+  });
+
+  const [displayName, setDisplayName] = useState(() => {
+    return props.booking_option.display_name?.replace(/<[^>]*>/g, '') || '';
+  });
 
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
@@ -28,6 +51,12 @@ const BookingOptionEdit =({props}) => {
   const onSubmit = async (data) => {
     let error, response;
 
+    if (props.attribute === "display_name" && inputType === 'editor') {
+      const rawContentState = convertToRaw(editorState.getCurrentContent());
+      const htmlContent = draftToHtml(rawContentState);
+      data[props.attribute] = htmlContent;
+    }
+
     [error, response] = await BookingOptionServices.update({
       booking_option_id: props.booking_option.id,
       data: _.assign( data, { attribute: props.attribute, business_owner_id: props.business_owner_id })
@@ -36,15 +65,87 @@ const BookingOptionEdit =({props}) => {
     responseHandler(error, response)
   }
 
+  const handleInputTypeChange = (type) => {
+    setInputType(type);
+    if (type === 'simple' && props.booking_option[props.attribute]) {
+      const strippedContent = props.booking_option[props.attribute].replace(/<[^>]*>/g, '');
+      setDisplayName(strippedContent);
+    }
+  };
+
   const renderCorrespondField = () => {
     switch(props.attribute) {
       case "name":
+        return (
+          <div className="field-row">
+            <input ref={register({ required: true })} name="name" type="text" className="extend" />
+          </div>
+        )
       case "display_name":
         return (
           <>
-            <div className="field-row">
-              <textarea autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" />
+            <div className="field-row flex-start">
+              <label>
+                <input 
+                  type="radio" 
+                  checked={inputType === 'simple'}
+                  onChange={() => {
+                    handleInputTypeChange('simple');
+                    const strippedContent = props.booking_option.display_name?.replace(/<[^>]*>/g, '');
+                    setDisplayName(strippedContent);
+                  }}
+                /> {I18n.t("settings.booking_option.form.simple_text")}
+              </label>
+              {inputType === 'simple' ? (
+                <input 
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  name="display_name" 
+                  type="text" 
+                  className="extend"
+                />
+              ) : null}
             </div>
+            <div className="field-row flex-start">
+              <label>
+                <input 
+                  type="radio" 
+                  checked={inputType === 'editor'}
+                  onChange={() => handleInputTypeChange('editor')}
+                /> {I18n.t("settings.booking_option.form.rich_text")}
+              </label>
+            </div>
+            {inputType === 'editor' ? (
+              <div className="field-row">
+                <Editor
+                  editorState={editorState}
+                  onEditorStateChange={setEditorState}
+                  toolbar={{
+                    options: ['inline', 'fontSize', 'colorPicker'],
+                    inline: {
+                      options: ['bold']
+                    },
+                    fontSize: {
+                      options: [12, 14, 16, 18, 24]
+                    },
+                    colorPicker: {
+                      colors: ['rgb(97,189,109)', 'rgb(26,188,156)', 'rgb(84,172,210)', 'rgb(44,130,201)',
+                        'rgb(147,101,184)', 'rgb(71,85,119)', 'rgb(204,204,204)', 'rgb(65,168,95)', 'rgb(0,168,133)', 
+                        'rgb(61,142,185)', 'rgb(41,105,176)', 'rgb(85,57,130)', 'rgb(40,50,78)', 'rgb(0,0,0)',
+                        'rgb(255,0,0)', 'rgb(255,153,0)', 'rgb(255,255,0)', 'rgb(0,255,0)', 
+                        'rgb(0,255,255)', 'rgb(0,0,255)', 'rgb(153,0,255)', 'rgb(255,0,255)',
+                        'rgb(244,67,54)', 'rgb(233,30,99)', 'rgb(156,39,176)', 'rgb(103,58,183)',
+                        'rgb(63,81,181)', 'rgb(33,150,243)', 'rgb(0,188,212)', 'rgb(0,150,136)',
+                        'rgb(76,175,80)', 'rgb(139,195,74)', 'rgb(205,220,57)', 'rgb(255,235,59)',
+                        'rgb(255,193,7)', 'rgb(255,152,0)', 'rgb(255,87,34)', 'rgb(121,85,72)']
+                    }
+                  }}
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName" 
+                  editorClassName="editorClassName"
+                />
+              </div>
+            ) : null}
             <div className="field-row hint no-border"> {i18n.hint} </div>
           </>
         );

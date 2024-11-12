@@ -55,10 +55,12 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
               <i className="fa fa-repeat" aria-hidden="true"></i>{last_selected_option}
             </div>
           )}
-          <div className="booking-option-name break-line-content">
-            <b>
-              {booking_option_value.label}
-            </b>
+          <div className="booking-option-name">
+            {booking_option_value.label.match(/<[^>]*>/) ? (
+              <div dangerouslySetInnerHTML={{ __html: booking_option_value.label }} />
+            ) : (
+              <b>{booking_option_value.label}</b>
+            )}
           </div>
 
           {option_content}

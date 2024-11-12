@@ -512,6 +512,8 @@ tw:
         how_many_ticket_in_one_book: 您想要設定幾次的套票銷售？
         when_ticket_expire: 您希望套票可使用到何時？
         booking_pages: 預約頁面
+        simple_text: 基本
+        rich_text: 客製化
         form_errors:
           enough_time_for_menu: 請為設定的菜單設定足夠的時間長度。
           reached_the_menus_limit: 最多只能設定兩個菜單。

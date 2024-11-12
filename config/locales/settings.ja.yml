@@ -509,6 +509,8 @@ ja:
         max_ticket_date: 最長180日
         how_many_ticket_in_one_book: 何回分をセット販売しますか？
         when_ticket_expire: いつまで利用可能にしますか？
+        simple_text: シンプル
+        rich_text: カスタム
         form_errors:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
           reached_the_menus_limit: メニューは２つまで設定できます
