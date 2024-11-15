@@ -281,7 +281,9 @@ class User < ApplicationRecord
   end
 
   def line_keyword_booking_options_page
-    booking_pages.active.where(rich_menu_only: true).includes(:booking_page_options).sort_by do |page|
+    booking_pages.active.where(rich_menu_only: true).includes(:booking_page_options).select do |page|
+      line_keyword_booking_option_ids.include?(page.booking_page_options.first.booking_option_id.to_s)
+    end.sort_by do |page|
       line_keyword_booking_option_ids.index(page.booking_page_options.first.booking_option_id.to_s)
     end
   end
