@@ -109,7 +109,7 @@ const EditBookingOptionsOrder = ({props}) => {
         </SortableContext>
       </DndContext>
       <div className="action-block">
-        <button className="btn btn-yellow" onClick={handleSubmit}>
+        <button className="btn btn-yellow" onClick={handleSubmit} disabled={!booking_options.length}>
           {I18n.t("action.save")}
         </button>
       </div>
