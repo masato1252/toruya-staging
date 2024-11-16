@@ -16,10 +16,10 @@
     <div class="booking-option-field">
       <div class="booking-option-info">
         <div class="booking-option-name">
-          <% if booking_option.display_name.match?(/<[^>]*>/) %>
-            <%= raw booking_option.display_name %>
+          <% if booking_option.present_name.match?(/<[^>]*>/) %>
+            <%= raw booking_option.present_name %>
           <% else %>
-            <b><%= booking_option.display_name %></b>
+            <b><%= booking_option.present_name %></b>
           <% end %>
         </div>
         <div><%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %></div>

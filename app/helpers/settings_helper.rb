@@ -37,7 +37,7 @@ module SettingsHelper
   def booking_option_item(booking_option)
     Option.new(
       id: booking_option.id,
-      name: booking_option.display_name.presence || booking_option.name,
+      name: booking_option.present_name,
       minutes: booking_option.minutes,
       price: booking_option.price_text,
       price_amount: booking_option.amount.fractional,

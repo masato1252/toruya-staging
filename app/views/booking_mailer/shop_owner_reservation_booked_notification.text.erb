@@ -12,6 +12,6 @@
 
 <%= date_member_url(@reservation.start_time.to_fs(:date), @reservation.id) %>
 
-<%= @customer.name %>が<%= @booking_option.display_name %>で<%= I18n.l(@reservation_customer.booking_at, format: :date_with_wday) %>に作成
+<%= @customer.name %>が<%= @booking_option.present_name %>で<%= I18n.l(@reservation_customer.booking_at, format: :date_with_wday) %>に作成
 
 <%= "※顧客情報の変更要請あり" if @reservation_customer.new_customer_info? %>

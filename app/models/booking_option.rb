@@ -50,6 +50,10 @@ class BookingOption < ApplicationRecord
   scope :active, -> { started.end_yet }
   scope :undeleted, -> { where(delete_at: nil) }
 
+  def present_name
+    display_name.presence || name
+  end
+
   def cash_pay_required?
     amount_cents < LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT || (ticket_enabled? && amount_cents > MAXIMUM_TICKET_REQUIRED_AMOUNT)
   end
