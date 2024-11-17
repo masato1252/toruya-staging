@@ -557,11 +557,6 @@ const BookingReservationFormFunction = ({props}) => {
     } else {
       return (
         <div>
-          <BookingFlowOptions
-            set_booking_reservation_form_values={set_booking_reservation_form_values}
-            booking_reservation_form_values={booking_reservation_form_values}
-            i18n={props.i18n}
-          />
           <BookingOptionFirstFlow
             booking_reservation_form_values={booking_reservation_form_values}
             booking_options_quota={props.booking_options_quota}
@@ -575,19 +570,6 @@ const BookingReservationFormFunction = ({props}) => {
             fetchBookingTimes={fetchBookingTimes}
             setBookingTimeAt={setBookingTimeAt}
             resetValues={resetValues}
-          />
-          <BookingDateFirstFlow
-            booking_reservation_form_values={booking_reservation_form_values}
-            booking_options_quota={props.booking_options_quota}
-            i18n={props.i18n}
-            calendar={props.calendar}
-            fetchBookingTimes={fetchBookingTimes}
-            setBookingTimeAt={setBookingTimeAt}
-            timezone={props.timezone}
-            resetValues={resetValues}
-            selected_booking_option={selected_booking_option()}
-            selectBookingOption={selectBookingOption}
-            sorted_booking_options={sorted_booking_options}
           />
           {isBookingFlowEnd() && !isSocialLoginChecked() && (
             <SocialCustomerLogin
