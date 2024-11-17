@@ -10,6 +10,8 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
 
     @menu_shops = @menu.shop_menus.includes(:shop)
     @staffs = @menu.staff_menus.includes(:staff).map(&:staff)
+    set_up_previous_cookie("booking_option_id", params[:booking_option_id]) if params[:booking_option_id]
+    clean_previous_cookie("menu_id")
   end
 
   def edit

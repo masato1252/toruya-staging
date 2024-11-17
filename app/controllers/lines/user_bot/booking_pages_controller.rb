@@ -19,6 +19,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
       @holiday_working_schedules = @booking_page.shop.business_schedules.opened.for_shop.holiday_working
       @shop = @booking_page.shop
     end
+    clean_previous_cookie("booking_page_id")
   end
 
   def edit

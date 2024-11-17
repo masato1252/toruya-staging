@@ -20,7 +20,9 @@
         <% @booking_page.booking_options.includes(menus: :shop_menus).each do |booking_option| %>
           <div class="field-row option-row">
             <div class="option-info">
-              <%= link_to booking_option.name, lines_user_bot_booking_option_path(business_owner_id, booking_option), class: "break-line-content" %><br />
+              <%= link_to booking_option.name, lines_user_bot_booking_option_path(business_owner_id, booking_option, {
+                booking_page_id: @booking_page.id
+              }), class: "break-line-content" %><br />
               <div class="desc">
                 <%= booking_option.menus.pluck(:name).join(", ") %><br />
                 <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %>・<%= booking_price_desc(booking_option) %>・<%= booking_option.menus.map {|menu| menu.shop_menus.map(&:max_seat_number).join(", ") }.join(", ") %><%= I18n.t("common.seat_number") %>

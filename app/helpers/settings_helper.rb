@@ -61,4 +61,14 @@ module SettingsHelper
   def rich_menu_image_url(rich_menu, size = nil)
     Images::Process.run!(image: rich_menu.image, resize: size || "120") || rich_menu.default_image_url
   end
+
+  def previous_path(default_path)
+    if current_scope = cookies["current_scope_booking_option_id"]
+      lines_user_bot_booking_option_path(current_scope, business_owner_id: Current.business_owner.id)
+    elsif current_scope = cookies["current_scope_booking_page_id"]
+      lines_user_bot_booking_page_path(current_scope, business_owner_id: Current.business_owner.id)
+    else
+      default_path
+    end
+  end
 end

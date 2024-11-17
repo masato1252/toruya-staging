@@ -20,4 +20,12 @@ module ControllerHelpers
     end
     render json: json_response(outcome, data), status: outcome.valid? ? :ok : :bad_request
   end
+
+  def set_up_previous_cookie(cookie_name, value)
+    cookies["current_scope_#{cookie_name}"] = value
+  end
+
+  def clean_previous_cookie(cookie_name)
+    cookies.delete("current_scope_#{cookie_name}")
+  end
 end

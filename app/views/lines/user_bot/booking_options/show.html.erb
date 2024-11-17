@@ -1,5 +1,5 @@
 <div class="booking-option-show form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_options_path(business_owner_id), title: @booking_option.name %>
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: previous_path(lines_user_bot_booking_options_path(business_owner_id: business_owner_id)), title: @booking_option.name %>
 
   <div class="field-group-header" id="name"><%= I18n.t("settings.booking_option.form.price_name") %></div>
   <div class="field-header"><%= I18n.t("settings.booking_option.form.price_name") %></div>

@@ -28,6 +28,8 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval, online: menu.online)
     end
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: all_menu_options)
+    set_up_previous_cookie("booking_page_id", params[:booking_page_id]) if params[:booking_page_id]
+    clean_previous_cookie("booking_option_id")
   end
 
   def edit
