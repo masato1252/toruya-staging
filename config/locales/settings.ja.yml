@@ -664,6 +664,7 @@ ja:
           unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
           invalid_menu_html: "この予約価格に設定されているメニューには、%{shop_name}が利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。<a href=%{url}>メニュー設定</a>ページより%{shop_name}を利用店舗として設定してください。"
           no_booking_option: この予約ページを使用するには、少なくとも1つの予約価格を作成する必要があります
+          no_menu: メニューが設定されていない予約価格があります。
     social_rich_menus:
       action_types:
         incoming_reservations: 全ての予約

@@ -36,6 +36,11 @@
                     </div>
                   <% end %>
                 <% end %>
+                <% if booking_option.menus.empty? %>
+                  <div class="warning">
+                    <%= I18n.t("settings.booking_page.form.form_errors.no_menu") %>
+                  </div>
+                <% end %>
 
                 <% booking_option.menus.each do |menu| %>
                   <% if menu.shop_menus.map(&:shop_id).exclude?(@booking_page.shop_id) %>
