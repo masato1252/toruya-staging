@@ -131,7 +131,7 @@ const LineKeywordsOptions = ({props}) => {
       </DndContext>
       <div className="action-block">
         {options.length > props.line_columns_number_limit && <div className="warning">{I18n.t("user_bot.dashboards.settings.line_keywords.booking_options.limit_desc")}</div>}
-        <button className="btn btn-yellow" onClick={handleSubmit}>
+        <button className="btn btn-yellow" onClick={handleSubmit} disabled={options.length === 0}>
           {I18n.t("action.save")}
         </button>
       </div>
