@@ -183,12 +183,43 @@ RSpec.describe BookingOptions::Update do
       end
 
       it "updates menu required_time" do
-        outcome
+        expect {
+          outcome
+        }.to change {
+          booking_option.reload.minutes
+        }.to(200)
 
         booking_option_menu = booking_option.booking_option_menus.first
 
         expect(booking_option_menu.menu_id).to eq(booking_option.menus.first.id)
         expect(booking_option_menu.required_time).to eq(200)
+        expect(booking_option.minutes).to eq(200)
+      end
+
+      context "when booking option only has one menu" do
+        let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, user: user) }
+
+        it "updates menu minutes" do
+          expect {
+            outcome
+          }.to change {
+            booking_option.menus.first.minutes
+          }.to(200)
+
+          expect(booking_option.reload.minutes).to eq(200)
+        end
+      end
+
+      context "when booking option has multiple menus" do
+        let(:booking_option) { FactoryBot.create(:booking_option, :multiple_menus, user: user) }
+
+        it "does NOT update menu minutes" do
+          expect {
+            outcome
+          }.to not_change {
+            booking_option.menus.first.minutes
+          }
+        end
       end
     end
   end

@@ -127,9 +127,17 @@ module BookingOptions
           end
         when "menu_required_time"
           booking_option_menu = booking_option.booking_option_menus.find_by(menu_id: attrs["menu_id"])
-          booking_option_menu.update(required_time: attrs["menu_required_time"])
+          if booking_option_menu.update(required_time: attrs["menu_required_time"])
+            # if this booking option only has one menu, update the minutes
+            if booking_option.booking_option_menus.count == 1
+              booking_option.menus.first.update(minutes: attrs["menu_required_time"])
+            end
+
+            BookingOption.where(id: booking_option.id).each do |booking_option|
+              booking_option.update!(minutes: booking_option.booking_option_menus.sum(:required_time))
+            end
+          end
           errors.merge!(booking_option_menu.errors)
-          booking_option.update(minutes: booking_option.booking_option_menus.sum(:required_time))
         end
 
         if booking_option.errors.present?

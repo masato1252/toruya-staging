@@ -19,6 +19,33 @@ RSpec.describe Menus::UpdateAttribute do
 
 
   describe "#execute" do
+    context "when update_attribute is minutes" do
+      let(:update_attribute) { "minutes" }
+      let(:minutes) { 200 }
+      let(:args) do
+        super().merge(attrs: { minutes: minutes })
+      end
+
+      it "updates menu minutes" do
+        outcome
+
+        expect(menu.reload.minutes).to eq(200)
+      end
+
+      context "when menu has a booking option" do
+        let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, menus: [menu]) }
+
+        it "updates booking option minutes" do
+          expect {
+            outcome
+          }.to change {
+            booking_option.reload.minutes
+          }.to(200)
+          expect(booking_option.booking_option_menus.first.required_time).to eq(200)
+        end
+      end
+    end
+
     context "updates menu_shops" do
       let(:update_attribute) { "menu_shops" }
       let(:menu_shops) do

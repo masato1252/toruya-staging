@@ -49,19 +49,43 @@ RSpec.describe BookingOptions::Save do
     end
 
     context "when booking option required_time is less than menu required_time" do
-      let(:menu_arguments) do
-        { "0" => { "label" => menu.name, "value" => menu.id, "priority" => 0, required_time: menu.minutes - 1 } }
+      context "when booking option has only one menu" do
+        let(:menu_arguments) do
+          {
+            "0" => { "label" => menu.name, "value" => menu.id, "priority" => 0, required_time: menu.minutes - 1 },
+          }
+        end
+        let(:booking_option) { user.booking_options.new }
+
+        it "does creates a booking option" do
+          expect {
+            outcome
+          }.to change {
+            user.booking_options.reload.count
+          }.by(1)
+
+          expect(outcome).to be_valid
+        end
       end
-      let(:booking_option) { user.booking_options.new }
+      context "when booking option has multiple menus" do
+        let(:menu2) { FactoryBot.create(:menu, user: user) }
+        let(:menu_arguments) do
+          {
+            "0" => { "label" => menu.name, "value" => menu.id, "priority" => 0, required_time: menu.minutes - 1 },
+            "1" => { "label" => menu2.name, "value" => menu2.id, "priority" => 1, required_time: menu2.minutes - 1 }
+          }
+        end
+        let(:booking_option) { user.booking_options.new }
 
-      it "does NOT creates a booking option" do
-        expect {
-          outcome
-        }.to not_change {
-          user.booking_options.reload.count
-        }
+        it "does NOT create a booking option" do
+          expect {
+            outcome
+          }.to not_change {
+            user.booking_options.reload.count
+          }
 
-        expect(outcome).to be_invalid
+          expect(outcome).to be_invalid
+        end
       end
     end
   end

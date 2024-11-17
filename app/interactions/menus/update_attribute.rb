@@ -22,7 +22,19 @@ module Menus
         case update_attribute
         when "name"
           menu.update(name: attrs[:name], short_name: attrs[:short_name])
-        when "minutes", "interval", "online"
+        when "minutes"
+          menu.update(attrs.slice(update_attribute))
+          # Find all the booking_pages that use this menu, and update the minutes when booking option menu's required time is less than the new minutes
+          # and this booking option only has one menu
+          booking_option_ids = menu.booking_option_menus.pluck(:booking_option_id)
+          BookingOptionMenu
+            .where(booking_option_id: booking_option_ids, menu_id: menu.id)
+            .update_all(required_time: attrs[:minutes])
+
+          BookingOption.where(id: booking_option_ids).each do |booking_option|
+            booking_option.update!(minutes: booking_option.booking_option_menus.sum(:required_time))
+          end
+        when "interval", "online"
           menu.update(attrs.slice(update_attribute))
         when "menu_shops"
           menu.transaction do
