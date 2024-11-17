@@ -8,6 +8,7 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
   def index
     @wdays_business_schedules_mapping = shop.business_schedules.opened.for_shop.group_by(&:day_of_week)
     @holiday_working_schedules = shop.business_schedules.opened.for_shop.holiday_working
+    set_up_previous_cookie("booking_page_id", params[:booking_page_id]) if params[:booking_page_id]
   end
 
   def edit

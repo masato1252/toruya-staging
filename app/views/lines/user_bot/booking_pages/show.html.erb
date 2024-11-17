@@ -92,7 +92,7 @@
           title: I18n.t("settings.booking_page.form.#{@booking_page.booking_type}_label") %>
         <% if @booking_page.booking_type == "any" %>
           <% (0..6).each do |wday| %>
-            <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
+            <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id, booking_page_id: @booking_page.id), class: "field-row" do %>
               <% business_schedules = @wdays_business_schedules_mapping[wday % 7] %>
               <span><%= I18n.t("date.day_names").at(wday % 7) %></span>
               <span>
@@ -109,7 +109,7 @@
               </span>
             <% end %>
           <% end %>
-          <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
+          <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id, booking_page_id: @booking_page.id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.business_schedules.national_holiday_label") %></span>
             <span>
               <% if @holiday_working_schedules.present? %>
