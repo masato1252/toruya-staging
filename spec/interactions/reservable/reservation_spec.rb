@@ -557,6 +557,30 @@ RSpec.describe Reservable::Reservation do
           end
         end
 
+        context "when staff is a full time staff, had a personal schedule(off schedule) overlap menu interval" do
+          let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
+          before do
+            schedule = FactoryBot.create(:custom_schedule, :closed, user: staff2.staff_account.user, start_time: time_range.first - 10.minute, end_time: time_range.first)
+            FactoryBot.create(:social_user, user: schedule.user)
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu1.id,
+              menu_required_time: menu1.minutes,
+              start_time: start_time,
+              end_time: end_time,
+              staff_ids: [staff1.id, staff2.id]
+            )
+
+            expect(outcome).to be_invalid
+            unworking_staff_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :ask_for_leave }
+
+            expect(unworking_staff_error).to eq(error: :ask_for_leave, staff_id: staff2.id, menu_id: menu1.id)
+          end
+        end
+
         context "when staff another account had a personal schedule(off schedule) during the period" do
           before do
             social_user = FactoryBot.create(:social_user, user: staff1.staff_account.user)

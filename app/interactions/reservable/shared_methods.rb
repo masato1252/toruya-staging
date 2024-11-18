@@ -30,7 +30,7 @@ module Reservable
     def closed_custom_schedules
       CustomSchedule.
         closed.
-        where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time)
+        where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time + interval_time, start_time - interval_time)
     end
 
     def closed_custom_schedules_staff_ids
