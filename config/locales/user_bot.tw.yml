@@ -209,8 +209,9 @@ tw:
             section_title: 線上服務
             service_page_title: 服務頁面
             online_service_purchased: 服務註冊
-            after_days: 服務開始%{after_days}天後
-            after_days_title: 服務開始後幾天發送？
+            after_days: 服務註冊%{after_days}天後
+            after_days_title: 服務註冊後幾天發送？
+            after_days_word: 天後
           lesson:
             lesson_watched: "%{lesson_name}完成時"
           episode:

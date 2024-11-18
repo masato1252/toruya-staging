@@ -206,8 +206,9 @@ ja:
             section_title: オンラインサービス
             service_page_title: サービスページ
             online_service_purchased: サービス登録
-            after_days: サービス開始%{after_days}日後
-            after_days_title: サービス開催、何日後に送信しますか？
+            after_days: サービス登録%{after_days}日後
+            after_days_title: このメッセージをいつ送信しますか？
+            after_days_word: 日後
           lesson:
             lesson_watched: "%{lesson_name}が「完了」になったら"
           episode:

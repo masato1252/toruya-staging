@@ -86,6 +86,7 @@ const CustomMessageEdit =({props}) => {
                     <div className="field-row">
                       <span>
                         {I18n.t("user_bot.dashboards.settings.custom_message.online_service.after_days_title")}<br />
+                        {I18n.t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")}
                         <input
                           type='tel'
                           value={after_days}
@@ -93,7 +94,7 @@ const CustomMessageEdit =({props}) => {
                             setAfterDays(event.target.value)
                           }}
                         />
-                        {I18n.t('common.day_word')}
+                        {I18n.t("user_bot.dashboards.settings.custom_message.online_service.after_days_word")}
                       </span>
                     </div>
                   </>
