@@ -20,7 +20,7 @@ const BookingOptionEdit =({props}) => {
   const i18n = props.i18n;
   const [inputType, setInputType] = useState(() => {
     const content = props.booking_option[props.attribute];
-    return content?.match(/<[^>]*>/) ? 'editor' : 'simple';
+    return content && content.match(/<[^>]*>/) ? 'editor' : 'simple';
   });
 
   const [editorState, setEditorState] = useState(() => {
