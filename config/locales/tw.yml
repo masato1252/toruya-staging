@@ -477,6 +477,8 @@ tw:
         channel_secret: "頻道密鑰"
         label: "頻道名稱"
         basic_id: "機器人基本ID"
+        login_channel_id: "頻道ID"
+        login_channel_secret: "頻道密鑰"
   date:
     abbr_day_names:
     - 日

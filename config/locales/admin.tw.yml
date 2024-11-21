@@ -28,3 +28,5 @@ tw:
       reply_placeholder: 請輸入回覆內容
       build_ai_faq: 儲存為 AI 常見問題
       build_ai_reply: 使用 AI 生成回覆
+      line_finished_message: 設定完成訊息送出
+      reset_line_settings: LINE 連接設定要重置嗎？

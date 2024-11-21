@@ -28,3 +28,5 @@ ja:
       reply_placeholder: 返信内容を入力
       build_ai_faq: AI用に保存
       build_ai_reply: AIで返信文を作成
+      line_finished_message: 設定完了メッセージ送信
+      reset_line_settings: LINE連携設定をリセットしますか？

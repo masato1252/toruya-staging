@@ -36,9 +36,9 @@ module Admin
     def line_finished_message
       user = User.find(params[:user_id])
 
-      Notifiers::Users::LineSettings::FinishedMessage.perform_later(receiver: user.social_user)
-      Notifiers::Users::LineSettings::FinishedFlex.perform_later(receiver: user.social_user)
-      Notifiers::Users::LineSettings::FinishedVideo.perform_later(receiver: user.social_user)
+      Notifiers::Users::LineSettings::FinishedMessage.perform_now(receiver: user.social_user)
+      Notifiers::Users::LineSettings::FinishedFlex.perform_now(receiver: user.social_user)
+      Notifiers::Users::LineSettings::FinishedVideo.perform_now(receiver: user.social_user)
 
       redirect_to admin_chats_path(user_id: user.id), notice: "Successfully"
     end
