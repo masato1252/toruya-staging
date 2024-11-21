@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "user_bot_social_account"
+require "tw_user_bot_social_account"
 require "line_client"
 
 module RichMenus
@@ -22,7 +23,8 @@ module RichMenus
           social_name: key,
           body: body,
           internal_name: internal_name,
-          bar_label: bar_label
+          bar_label: bar_label,
+          locale: user.locale
         )
         rich_menu.image.attach(io: image, filename: File.basename(image.path)) if image
         set_default_and_current(rich_menu)
@@ -44,7 +46,8 @@ module RichMenus
           social_name: key,
           body: body,
           internal_name: internal_name,
-          bar_label: bar_label
+          bar_label: bar_label,
+          locale: user.locale
         )
 
         rich_menu.image.attach(io: image, filename: File.basename(image.path)) if image
@@ -77,6 +80,10 @@ module RichMenus
     end
 
     private
+
+    def user
+      @user ||= social_account.user
+    end
 
     def single_rich_menu
       return @single_rich_menu if defined?(@single_rich_menu)

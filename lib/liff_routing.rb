@@ -1,27 +1,32 @@
 # frozen_string_literal: true
 
 class LiffRouting
-  USER_BOT_LIFF_ENDPOINT = "https://liff.line.me/#{Rails.application.secrets.toruya_liff_id}".freeze
-
+  LIFF_BASE_URL = "https://liff.line.me".freeze
+  
   class << self
-    # mapping to # https://toruya.com/lines/liff/{path}
-    def liff_url(path)
+    def liff_url(path, locale = 'ja')
       if @@liff_routing.keys.exclude?(path)
         raise "Unexpect path"
       end
 
-      "#{USER_BOT_LIFF_ENDPOINT}/#{path}"
+      "#{liff_endpoint(locale)}/#{path}"
     end
 
-    def url(liff_path)
+    def url(liff_path, locale = 'ja')
       formatted_path = liff_path[0] == "/" ? liff_path[1..-1] : liff_path
-
       @@liff_routing[formatted_path.to_sym]
     end
 
     def map(liff_path, url)
       @@liff_routing ||= {}
       @@liff_routing[liff_path] = Rails.application.routes.url_helpers.public_send(url) unless Rails.env.test?
+    end
+
+    private
+
+    def liff_endpoint(locale)
+      liff_id = Rails.application.secrets[locale][:toruya_liff_id]
+      "#{LIFF_BASE_URL}/#{liff_id}"
     end
   end
 

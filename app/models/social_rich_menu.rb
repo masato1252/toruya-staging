@@ -11,6 +11,7 @@
 #  default             :boolean
 #  end_at              :datetime
 #  internal_name       :string
+#  locale              :string           default("ja"), not null
 #  social_name         :string
 #  start_at            :datetime
 #  created_at          :datetime         not null
@@ -26,6 +27,7 @@
 #
 
 require "user_bot_social_account"
+require "tw_user_bot_social_account"
 
 class SocialRichMenu < ApplicationRecord
   LINE_OFFICIAL_RICH_MENU_KEY = "line_official"
@@ -42,7 +44,7 @@ class SocialRichMenu < ApplicationRecord
   has_one_attached :image # content picture
 
   def account
-    social_account || UserBotSocialAccount
+    social_account || (locale == 'tw' ? TwUserBotSocialAccount : UserBotSocialAccount)
   end
 
   def default_image_url

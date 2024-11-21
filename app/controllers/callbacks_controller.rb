@@ -4,8 +4,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token
   BUSINESS_LOGIN = "business_login"
   TORUYA_USER = "toruya_user"
+  TW_TORUYA_USER = "tw_toruya_user"
   SHOP_OWNER_CUSTOMER_SELF = "shop_owner_customer_self"
-  TORUYA_USER_LINE_SIGN_UP = "toruya_user_line_sign_up"
 
   include Devise::Controllers::Rememberable
   include UserBotCookies
@@ -74,7 +74,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   def line
     param = request.env["omniauth.params"]
 
-    if param["who"] && MessageEncryptor.decrypt(param["who"]) == TORUYA_USER
+    if param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
       )

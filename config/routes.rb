@@ -32,6 +32,10 @@ Rails.application.routes.draw do
       get "/(:liff_path)", action: "index"
     end
 
+    scope module: :liff, path: :twliff, as: :twliff do
+      get "/(:liff_path)", action: "tw_index"
+    end
+
     scope module: :user_bot, path: :user_bot, as: :user_bot do
       resource :change_log, only: [:update, :show]
 
@@ -614,6 +618,7 @@ Rails.application.routes.draw do
   namespace :webhooks do
     post "line/:channel_id", to: "lines#create", as: :line
     post "user_bot_line", to: "user_bot_lines#create", as: :user_bot_line
+    post "tw_user_bot_line", to: "user_bot_lines#tw_create", as: :tw_user_bot_line
     post "stripe", to: "stripe#create", as: :stripe
   end
 

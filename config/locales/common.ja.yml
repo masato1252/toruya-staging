@@ -274,6 +274,7 @@ ja:
     toruya_user_login_html: Toruyaのユーザー登録がお済の方は、こちらからログインしてください。
     login: ログイン
     template_version: テンプレート
+    welcome_to_toruya: Welcome to Toruya
     line_verification:
       login_first_message: まずはLINEでログインしてください
       service_content_message_html: サービスコンテンツは

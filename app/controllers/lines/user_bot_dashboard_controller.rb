@@ -17,8 +17,8 @@ class Lines::UserBotDashboardController < ActionController::Base
   include ControllerHelpers
 
   skip_before_action :track_ahoy_visit
-  before_action :redirect_from_rich_menu
   before_action :set_locale
+  before_action :redirect_from_rich_menu
 
   def from_line_bot
     true

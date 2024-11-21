@@ -114,10 +114,10 @@ export default ({ props }) => {
     const unread_message_count = Object.values(customers) ? Object.values(customers).flat().reduce((sum, customer) => sum + customer.unread_message_count, 0) : 0
 
     if (unread_message_count) {
-      document.title = `(${unread_message_count}) Toruyaースモールビジネスの顧客管理ツールー`
+      document.title = `(${unread_message_count}) <%= t("meta.title") %>`
     }
     else {
-      document.title = `Toruyaースモールビジネスの顧客管理ツールー`
+      document.title = `<%= t("meta.title") %>`
     }
   }, [customers], _.isEqual)
 

@@ -197,10 +197,31 @@ class OnlineService < ApplicationRecord
   scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'free_course', 'course', 'membership']) }
 
   def self.goals
+    goals = GOALS.map do |goal|
+      {
+        key: goal[:key],
+        name: I18n.t("user_bot.dashboards.online_service_creation.goals.#{goal[:key]}.title"),
+        description: I18n.t("user_bot.dashboards.online_service_creation.goals.#{goal[:key]}.description"), 
+        enabled: goal[:enabled],
+        single_content: goal[:single_content],
+        stripe_required: goal[:stripe_required],
+        one_time_charge: goal[:one_time_charge],
+        recurring_charge: goal[:recurring_charge],
+        premium_member_required: goal[:premium_member_required],
+        solutions: goal[:solutions].map do |solution|
+          {
+            key: solution[:key],
+            name: I18n.t("user_bot.dashboards.online_service_creation.solutions.#{solution[:key]}.title"),
+            description: I18n.t("user_bot.dashboards.online_service_creation.solutions.#{solution[:key]}.description")
+          }
+        end
+      }
+    end
+
     if Current.user.super_admin?
-      GOALS
+      goals
     else
-      GOALS.select { |goal| goal[:key] != 'free_course' }
+      goals.select { |goal| goal[:key] != 'free_course' }
     end
   end
 

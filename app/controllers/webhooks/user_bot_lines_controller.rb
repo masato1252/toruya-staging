@@ -3,7 +3,7 @@
 require "line/bot"
 
 class Webhooks::UserBotLinesController < WebhooksController
-  before_action :verify_header
+  # before_action :verify_header
 
   # message
   # {"events"=>[

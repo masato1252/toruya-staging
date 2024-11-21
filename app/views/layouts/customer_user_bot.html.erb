@@ -3,7 +3,7 @@
     <% if content_for?(:title) %>
       <%= yield :title %>
     <% else %>
-      <title>Toruyaースモールビジネスの顧客管理ツールー</title>
+      <title><%= t("meta.title") %></title>
     <% end %>
     <%= yield :meta_tags if content_for(:meta_tags) %>
     <%= csrf_meta_tags %>

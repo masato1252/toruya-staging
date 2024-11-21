@@ -7,11 +7,28 @@ module UserBotLines
     class Dashboard < ActiveInteraction::Base
       KEY = "user_dashboard".freeze
 
+      string :locale
+
       # 2500x1686
       # | 1 | 2 | 3 |
       # | 4 | 5 | 6 |
       def execute
-        body = {
+        I18n.with_locale(locale) do
+          compose(
+            ::RichMenus::ToruyaOfficialCreate,
+            body: locale == "tw" ? tw_body : ja_body,
+            key: KEY,
+            internal_name: KEY,
+            bar_label: I18n.t("user_bot.guest.rich_menu_bar"),
+            locale: locale
+          )
+        end
+      end
+
+      private
+
+      def tw_body
+        {
           "size": {
             "width": 2500,
             "height": 1686
@@ -30,7 +47,7 @@ module UserBotLines
               },
               "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.reservations"),
-                url: LiffRouting.liff_url(:schedules)
+                url: LiffRouting.liff_url(:schedules, locale)
               )
             },
             {
@@ -43,7 +60,7 @@ module UserBotLines
               },
               "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.customers"),
-                url: LiffRouting.liff_url(:customers)
+                url: LiffRouting.liff_url(:customers, locale)
               )
             },
             {
@@ -56,7 +73,99 @@ module UserBotLines
               },
               "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.settings"),
-                url: LiffRouting.liff_url(:settings)
+                url: LiffRouting.liff_url(:settings, locale)
+              )
+            },
+            {
+              # 4
+              "bounds": {
+                "x": 0,
+                "y": 843,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.booking_pages"),
+                url: LiffRouting.liff_url(:booking_pages, locale)
+              )
+            },
+            {
+              # 5
+              "bounds": {
+                "x": 834,
+                "y": 843,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.online_service"),
+                url: LiffRouting.liff_url(:online_services, locale)
+              )
+            },
+            {
+              # 6
+              "bounds": {
+                "x": 1667,
+                "y": 843,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.broadcasts"),
+                url: LiffRouting.liff_url(:broadcasts, locale)
+              )
+            }
+          ]
+        }
+      end
+
+      def ja_body
+        {
+          "size": {
+            "width": 2500,
+            "height": 1686
+          },
+          "selected": true,
+          "name": KEY,
+          "chatBarText": I18n.t("user_bot.guest.rich_menu_bar"),
+          "areas": [
+            {
+              # 1
+              "bounds": {
+                "x": 0,
+                "y": 0,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.reservations"),
+                url: LiffRouting.liff_url(:schedules, locale)
+              )
+            },
+            {
+              # 2
+              "bounds": {
+                "x": 834,
+                "y": 0,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.customers"),
+                url: LiffRouting.liff_url(:customers, locale)
+              )
+            },
+            {
+              # 3
+              "bounds": {
+                "x": 1667,
+                "y": 0,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.settings"),
+                url: LiffRouting.liff_url(:settings, locale)
               )
             },
             {
@@ -106,14 +215,6 @@ module UserBotLines
             }
           ]
         }
-
-        compose(
-          ::RichMenus::ToruyaOfficialCreate,
-          body: body,
-          key: KEY,
-          internal_name: KEY,
-          bar_label: I18n.t("user_bot.guest.rich_menu_bar")
-        )
       end
     end
   end

@@ -136,7 +136,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
         />
         <ErrorMessage error={errors.phone_number?.message} />
         {!watchIsIdentificationCodeExists && (
-          <div className="centerize">
+          <div className="centerize margin-around">
             <a href="#" className="btn btn-tarco submit" onClick={handleSubmit(generateCode)} disabled={isSubmitting}>
               {isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
@@ -176,11 +176,13 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
               {booking_code.resend}
             </a>
           </div>
-          <div className="margin-around">
-            <a href="https://toruya.com/faq/verification_sms/">
-              <i className="fas fa-question-circle"></i> {sms_faq}
-            </a>
-          </div>
+          {props.support_feature_flags.support_faq_display && (
+            <div className="margin-around">
+              <a href="https://toruya.com/faq/verification_sms/">
+                <i className="fas fa-question-circle"></i> {sms_faq}
+              </a>
+            </div>
+          )}
         </div>
       </div>
     )

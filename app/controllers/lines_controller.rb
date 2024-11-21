@@ -119,6 +119,11 @@ class LinesController < ActionController::Base
   end
 
   def user_login
+    if params[:locale] == "tw"
+      render action: "tw_user_login", layout: "booking"
+      return
+    end
+    render layout: "booking"
   end
 
   private

@@ -7,51 +7,56 @@ module UserBotLines
     class Guest < ActiveInteraction::Base
       KEY = "user_guest".freeze
 
-      def execute
-        body = {
-          "size": {
-            "width": 2500,
-            "height": 843
-          },
-          "selected": true,
-          "name": KEY,
-          "chatBarText": I18n.t("user_bot.guest.rich_menu_bar"),
-          "areas": [
-            {
-              "bounds": {
-                "x": 0,
-                "y": 0,
-                "width": 1250,
-                "height": 843
-              },
-              "action": LineActions::Uri.template(
-                label: I18n.t("toruya_line.actions.label.sign_in"),
-                url: LiffRouting.liff_url(:users_connect)
-              )
-            },
-            {
-              "bounds": {
-                "x": 1251,
-                "y": 0,
-                "width": 1250,
-                "height": 843
-              },
-              "action": LineActions::Uri.template(
-                label: I18n.t("toruya_line.actions.label.signup"),
-                url: LiffRouting.liff_url(:users_sign_up)
-              )
-            }
-          ]
-        }
+      string :locale
 
-        compose(
-          ::RichMenus::ToruyaOfficialCreate,
-          body: body,
-          key: KEY,
-          internal_name: KEY,
-          bar_label: I18n.t("user_bot.guest.rich_menu_bar"),
-          default_menu: true
-        )
+      def execute
+        I18n.with_locale(locale) do
+          body = {
+            "size": {
+              "width": 2500,
+              "height": 843
+            },
+            "selected": true,
+            "name": KEY,
+            "chatBarText": I18n.t("user_bot.guest.rich_menu_bar"),
+            "areas": [
+              {
+                "bounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1250,
+                  "height": 843
+                },
+                "action": LineActions::Uri.template(
+                  label: I18n.t("toruya_line.actions.label.sign_in"),
+                  url: LiffRouting.liff_url(:users_connect, locale)
+                )
+              },
+              {
+                "bounds": {
+                  "x": 1251,
+                  "y": 0,
+                  "width": 1250,
+                  "height": 843
+                },
+                "action": LineActions::Uri.template(
+                  label: I18n.t("toruya_line.actions.label.signup"),
+                  url: LiffRouting.liff_url(:users_sign_up, locale)
+                )
+              }
+            ]
+          }
+
+          compose(
+            ::RichMenus::ToruyaOfficialCreate,
+            body: body,
+            key: KEY,
+            internal_name: KEY,
+            bar_label: I18n.t("user_bot.guest.rich_menu_bar"),
+            default_menu: true,
+            locale: locale
+          )
+        end
       end
     end
   end

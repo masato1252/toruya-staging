@@ -25,6 +25,7 @@
 #
 
 require "user_bot_social_account"
+require "tw_user_bot_social_account"
 
 class SocialUser < ApplicationRecord
   acts_as_taggable_on :memos
@@ -49,7 +50,7 @@ class SocialUser < ApplicationRecord
   end
 
   def client
-    UserBotSocialAccount.client
+    locale == 'tw' ? TwUserBotSocialAccount.client : UserBotSocialAccount.client
   end
 
   def social_user_id

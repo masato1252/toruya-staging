@@ -1,31 +1,39 @@
 # frozen_string_literal: true
 
 require "user_bot_social_account"
+require "tw_user_bot_social_account"
 require "line_client"
 
 module RichMenus
   class ToruyaOfficialCreate < ActiveInteraction::Base
+    TW_SUPPORT_RICH_MENUS = [
+      UserBotLines::RichMenus::Dashboard::KEY,
+      UserBotLines::RichMenus::DashboardWithNotifications::KEY,
+      UserBotLines::RichMenus::Guest::KEY
+    ]
     hash :body, strip: false
     string :key
     string :internal_name
     string :bar_label
     boolean :default_menu, default: false
+    string :locale, default: 'ja'
 
     def execute
       return unless Rails.env.production?
+      return if TW_SUPPORT_RICH_MENUS.exclude?(key) && locale == 'tw'
 
       SocialRichMenu.transaction do
-        SocialRichMenu.where(social_name: key).each do |rich_menu|
+        SocialRichMenu.where(social_name: key, locale: locale).each do |rich_menu|
           compose(RichMenus::Delete, social_rich_menu: rich_menu)
         end
 
-        response = ::LineClient.create_rich_menu(social_account: UserBotSocialAccount, body: body)
+        response = ::LineClient.create_rich_menu(social_account: social_account, body: body)
 
         if response.is_a?(Net::HTTPOK)
           rich_menu_id = JSON.parse(response.body)["richMenuId"]
           # Note: You cannot replace an image attached to a rich menu. To update your rich menu image,
           # create a new rich menu object and upload another image.
-          ::LineClient.create_rich_menu_image(social_account: UserBotSocialAccount, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
+          ::LineClient.create_rich_menu_image(social_account: social_account, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
 
           rich_menu = SocialRichMenu.create(
             social_rich_menu_id: rich_menu_id,
@@ -33,7 +41,8 @@ module RichMenus
             body: body,
             internal_name: internal_name,
             bar_label: bar_label,
-            default: default_menu
+            default: default_menu,
+            locale: locale
           )
 
           ::LineClient.set_default_rich_menu(rich_menu) if default_menu
@@ -51,7 +60,20 @@ module RichMenus
     private
 
     def rich_menu_file_path
-      File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{key}.png")
+      if locale == 'tw'
+        File.join(Rails.root, "app", "assets", "images", "rich_menus", "tw", "#{key}.png")
+      else
+        File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{key}.png")
+      end
+    end
+
+    def social_account
+      case locale
+      when 'tw'
+        TwUserBotSocialAccount
+      else
+        UserBotSocialAccount
+      end
     end
   end
 end

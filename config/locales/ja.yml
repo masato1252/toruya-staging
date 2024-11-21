@@ -1,4 +1,6 @@
 ja:
+  meta:
+    title: <%= t("meta.title") %>
   broadcast:
     states:
       active: 配信待ち

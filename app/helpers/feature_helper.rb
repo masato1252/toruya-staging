@@ -4,8 +4,14 @@ module FeatureHelper
       support_phonetic_name: support_phonetic_name?,
       support_skip_required_shop_info: support_skip_required_shop_info?,
       support_tax_include_display: support_tax_include_display?,
-      support_japanese_asset: support_japanese_asset?
+      support_japanese_asset: support_japanese_asset?,
+      support_toruya_message_reply: support_toruya_message_reply?,
+      support_faq_display: support_faq_display?
     }
+  end
+
+  def support_faq_display?
+    I18n.locale == :ja
   end
 
   def support_phonetic_name?

@@ -10,6 +10,8 @@ module UserBotLines
       # 2500x1686
       # | 1 | 2 |
       # | 3 | 4 |
+      string :locale
+
       def execute
         body = {
           "size": {
@@ -73,7 +75,8 @@ module UserBotLines
           body: body,
           key: KEY,
           internal_name: KEY,
-          bar_label: I18n.t("user_bot.guest.rich_menu_bar")
+          bar_label: I18n.t("user_bot.guest.rich_menu_bar"),
+          locale: locale
         )
       end
     end

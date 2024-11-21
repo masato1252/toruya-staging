@@ -61,16 +61,18 @@ module SocialAccounts
           ]
         }
 
-        compose(
-          ::RichMenus::Create,
-          social_account: social_account,
-          body: body,
-          key: KEY,
-          internal_name: I18n.t("common.default"),
-          bar_label: sentence,
-          default_menu: true,
-          current: true
-        )
+        I18n.with_locale(social_account.user.locale) do
+          compose(
+            ::RichMenus::Create,
+            social_account: social_account,
+            body: body,
+            key: KEY,
+            internal_name: I18n.t("common.default"),
+            bar_label: sentence,
+            default_menu: true,
+            current: true
+          )
+        end
       end
     end
   end

@@ -26,8 +26,13 @@ class OmniauthSetup
     who = @request.parameters["who"].presence || @request.cookies["who"]
     if who && MessageEncryptor.decrypt(who) == CallbacksController::TORUYA_USER
       {
-        client_id: Rails.application.secrets.toruya_line_login_id,
-        client_secret: Rails.application.secrets.toruya_line_login_secret
+        client_id: Rails.application.secrets[:ja][:toruya_line_login_id],
+        client_secret: Rails.application.secrets[:ja][:toruya_line_login_secret]
+      }
+    elsif who && MessageEncryptor.decrypt(who) == CallbacksController::TW_TORUYA_USER
+      {
+        client_id: Rails.application.secrets[:tw][:toruya_line_login_id],
+        client_secret: Rails.application.secrets[:tw][:toruya_line_login_secret]
       }
     else
       oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || @request.cookies["oauth_social_account_id"]

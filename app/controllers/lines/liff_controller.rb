@@ -7,11 +7,24 @@ class Lines::LiffController < ActionController::Base
   layout "user_bot_guest"
   skip_before_action :track_ahoy_visit
 
+  # lines/liff
   def index
-    # XXX: the redirected url would bring the line user id, called social_service_user_id from here
-    @liff_id = Rails.application.secrets.toruya_liff_id
-    @redirect_to = LiffRouting.url(params[:liff_path] || params["liff.state"])
-
+    I18n.locale = "ja"
+    setup_liff('ja')
     render action: "redirect"
+  end
+
+  # lines/twliff
+  def tw_index
+    I18n.locale = "tw"
+    setup_liff('tw')
+    render action: "redirect"
+  end
+
+  private
+
+  def setup_liff(locale)
+    @liff_id = Rails.application.secrets[locale][:toruya_liff_id]
+    @redirect_to = LiffRouting.url(params[:liff_path] || params["liff.state"], locale)
   end
 end

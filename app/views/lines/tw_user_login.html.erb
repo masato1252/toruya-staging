@@ -1,0 +1,10 @@
+<div id="login">
+  <h3><%= t("common.welcome_to_toruya") %></h3>
+  <main id="socialLogin">
+    <p><%= t("common.toruya_user_login_html") %></p>
+
+    <%= button_to toruya_line_login_url(root_path), class: "btn line-button with-wording only-word" do %>
+      <%= I18n.t("common.line_login_btn_word") %>
+    <% end %>
+  </main>
+</div>
