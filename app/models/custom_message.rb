@@ -38,7 +38,7 @@ class CustomMessage < ApplicationRecord
   validates :service_type, inclusion: { in: %w(OnlineService BookingPage Shop Lesson Episode) }, allow_nil: true
   validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
   validates :scenario, inclusion: { in: CustomMessages::Users::Template::SCENARIOS + CustomMessages::Customers::Template::SCENARIOS }, allow_nil: true
-  validates :flex_template, inclusion: { in: LineMessages::FlexTemplateContent.singleton_methods(false).map(&:to_s) }, allow_nil: true
+  validates :flex_template, inclusion: { in: ::LineMessages::FlexTemplateContent.singleton_methods(false).map(&:to_s) }, allow_nil: true
   validates :locale, presence: true, inclusion: { in: I18n.available_locales.map(&:to_s) }
 
   belongs_to :service, polymorphic: true, optional: true # OnlineService, BookingPage or nil(Toruya user)

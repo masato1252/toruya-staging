@@ -23,9 +23,9 @@ class Lines::Actions::CustomerDashboard < ActiveInteraction::Base
 
     line_response = LineClient.flex(
       social_customer,
-      LineMessages::FlexTemplateContainer.template(
+      ::LineMessages::FlexTemplateContainer.template(
         altText: I18n.t("line.bot.messages.customer_dashboard.message"),
-        contents: LineMessages::FlexTemplateContent.title_button_card(
+        contents: ::LineMessages::FlexTemplateContent.title_button_card(
           title: I18n.t("line.bot.messages.customer_dashboard.message"),
           action_templates: actions.map(&:template)
         )

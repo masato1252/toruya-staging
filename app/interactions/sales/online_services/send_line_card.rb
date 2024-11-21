@@ -14,7 +14,7 @@ module Sales
               compose(Templates::Episode, episode: episode, social_customer: social_customer)
             end
 
-            LineMessages::FlexTemplateContainer.carousel_template(
+            ::LineMessages::FlexTemplateContainer.carousel_template(
               altText: I18n.t("line.bot.messages.online_services.available_episodes"),
               contents: contents
             )

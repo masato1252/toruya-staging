@@ -7,9 +7,9 @@ module Notifiers
         deliver_by :line
 
         def message
-          LineMessages::FlexTemplateContainer.template(
+          ::LineMessages::FlexTemplateContainer.template(
             altText: I18n.t("line_verification.confirmation_message.title1"),
-            contents: LineMessages::FlexTemplateContent.two_header_card(
+            contents: ::LineMessages::FlexTemplateContent.two_header_card(
               title1: I18n.t("line_verification.confirmation_message.title1"),
               title2: I18n.t("line_verification.confirmation_message.title2"),
               action_templates: [

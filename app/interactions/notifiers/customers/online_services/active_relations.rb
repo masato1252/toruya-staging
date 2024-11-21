@@ -15,7 +15,7 @@ module Notifiers
           if contents.blank?
             I18n.t("line.bot.messages.online_services.no_services")
           else
-            LineMessages::FlexTemplateContainer.carousel_template(
+            ::LineMessages::FlexTemplateContainer.carousel_template(
               altText: I18n.t("line.bot.keywords.services"),
               contents: contents
             ).to_json
@@ -47,8 +47,8 @@ module Notifiers
 
                 limited_relations.map do |relation|
                   compose(Templates::OnlineService, online_service_customer_relation: relation)
-                end.push(LineMessages::FlexTemplateContent.next_card(
-                  action_template: LineActions::Message.template(
+                end.push(::LineMessages::FlexTemplateContent.next_card(
+                    action_template: LineActions::Message.template(
                     text: "#{I18n.t("common.more")} - #{line_keyword}",
                     label: "More"
                   )))

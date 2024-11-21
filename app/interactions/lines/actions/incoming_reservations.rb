@@ -33,7 +33,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         action_templates << LineActions::Uri.new(action: "call", url: "tel:#{shop.phone_number}", btn: "secondary").template
       end
 
-      LineMessages::FlexTemplateContent.icon_three_header_body_card(
+      ::LineMessages::FlexTemplateContent.icon_three_header_body_card(
         asset_url: reservation.pending? ? PENDING_ASSET_URL : ACCEPTED_ASSET_URL,
         title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)}~",
         title2: reservation.menus.map(&:display_name).join(", "),
@@ -71,7 +71,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
 
       line_response = LineClient.flex(
         social_customer,
-        LineMessages::FlexTemplateContainer.carousel_template(
+        ::LineMessages::FlexTemplateContainer.carousel_template(
           altText: I18n.t("line.actions.label.incoming_reservations"),
           contents: contents
         )

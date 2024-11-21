@@ -10,9 +10,9 @@ module Lines
       def execute
         line_response = LineClient.flex(
           social_customer,
-          LineMessages::FlexTemplateContainer.template(
+          ::LineMessages::FlexTemplateContainer.template(
             altText: context[:desc],
-            contents: LineMessages::FlexTemplateContent.two_header_card(
+            contents: ::LineMessages::FlexTemplateContent.two_header_card(
               title1: context[:title],
               title2: context[:desc],
               action_templates: context[:action_templates]

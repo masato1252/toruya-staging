@@ -47,9 +47,9 @@ class Lines::Actions::Contact < ActiveInteraction::Base
 
     line_response = LineClient.flex(
       social_customer,
-      LineMessages::FlexTemplateContainer.template(
+      ::LineMessages::FlexTemplateContainer.template(
         altText: I18n.t("line.bot.messages.contact.contact_us"),
-        contents: LineMessages::FlexTemplateContent.two_header_card(
+        contents: ::LineMessages::FlexTemplateContent.two_header_card(
           title1: I18n.t("line.bot.messages.contact.contact_us"),
           title2: I18n.t("line.bot.messages.contact.contact_us_with_text_or_phone"),
           action_templates: actions.map(&:template)

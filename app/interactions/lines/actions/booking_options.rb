@@ -55,7 +55,7 @@ class Lines::Actions::BookingOptions < ActiveInteraction::Base
     # XXX: refactor to better query
     contents = user.line_keyword_booking_options_page.map do |booking_page|
       if booking_page.started? && !booking_page.ended?
-        LineMessages::FlexTemplateContent.two_header_card(
+        ::LineMessages::FlexTemplateContent.two_header_card(
           title1: booking_page.title,
           title2: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title).first(100),
           action_templates: [
@@ -81,7 +81,7 @@ class Lines::Actions::BookingOptions < ActiveInteraction::Base
     else
       line_response = LineClient.flex(
         social_customer,
-        LineMessages::FlexTemplateContainer.carousel_template(
+        ::LineMessages::FlexTemplateContainer.carousel_template(
           altText: I18n.t("line.bot.messages.booking_pages.available_pages"),
           contents: contents
         )

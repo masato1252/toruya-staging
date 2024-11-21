@@ -17,9 +17,9 @@ module CustomMessages
 
         case custom_message.flex_template
         when "video_description_card"
-          LineMessages::FlexTemplateContainer.template(
+          ::LineMessages::FlexTemplateContainer.template(
             altText: variables["title"],
-            contents: LineMessages::FlexTemplateContent.video_description_card(
+            contents: ::LineMessages::FlexTemplateContent.video_description_card(
               picture_url: variables["picture_url"],
               content_url: variables["content_url"],
               title: variables["title"],

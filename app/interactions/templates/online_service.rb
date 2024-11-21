@@ -28,7 +28,7 @@ module Templates
         )
       end
 
-      LineMessages::FlexTemplateContent.video_description_card(
+      ::LineMessages::FlexTemplateContent.video_description_card(
         picture_url: online_service.picture_url,
         content_url: content_url.presence || customer_status_online_service_url,
         title: online_service.name,
