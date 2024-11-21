@@ -256,6 +256,9 @@ const BookingPageEdit =({props}) => {
               <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_menu" })} className="btn btn-orange">
                 {I18n.t("settings.booking_page.form.create_a_new_option")}
               </a>
+              <div className="my-2">
+                <img src={props.booking_option_introduction_asset_path} alt="booking_option_introduction" className="w-full" />
+              </div>
             </div>
           </div>
         )
