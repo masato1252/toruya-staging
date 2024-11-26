@@ -16,5 +16,6 @@ class UserSetting < ApplicationRecord
     s.string :line_keyword_booking_option_ids, array: true, default: [], null: false
     s.boolean :line_contact_customer_name_required, default: false, null: false
     s.string :customer_tags, array: true, default: [], null: false
+    s.boolean :toruya_message_reply, default: false, null: false
   end
 end
