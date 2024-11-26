@@ -29,4 +29,8 @@ module FeatureHelper
   def support_japanese_asset?
     I18n.locale == :ja
   end
+
+  def support_toruya_message_reply?
+    !!Current.business_owner&.toruya_message_reply
+  end
 end
