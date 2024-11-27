@@ -48,7 +48,7 @@ module RichMenus
           ::LineClient.set_default_rich_menu(rich_menu) if default_menu
 
           # Link rich menu to social users
-          SocialUser.where(social_rich_menu_key: key).find_each do |social_user|
+          SocialUser.where(social_rich_menu_key: key, locale: locale).find_each do |social_user|
             RichMenus::Connect.run(social_target: social_user, social_rich_menu: rich_menu)
           end
         else
