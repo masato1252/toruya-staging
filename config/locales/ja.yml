@@ -1,6 +1,6 @@
 ja:
   meta:
-    title: <%= t("meta.title") %>
+    title: Toruyaースモールビジネスの顧客管理ツールー
   broadcast:
     states:
       active: 配信待ち
