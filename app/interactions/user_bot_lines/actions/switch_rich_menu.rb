@@ -26,7 +26,7 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
       compose(
         ::RichMenus::Connect,
         social_target: social_user,
-        social_rich_menu: ::SocialRichMenu.find_by!(social_name: menu_key)
+        social_rich_menu: ::SocialRichMenu.find_by!(social_name: menu_key, locale: social_user.locale)
       )
     end
   end
