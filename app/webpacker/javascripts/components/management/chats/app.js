@@ -2,7 +2,7 @@
 
 import React, { useEffect, useContext } from "react";
 import _ from "lodash";
-
+import I18n from "i18n-js";
 import { GlobalContext } from "context/chats/global_state"
 import Consumer from "libraries/consumer";
 import useCustomCompareEffect from "libraries/use_custom_compare_effect";
@@ -114,10 +114,10 @@ export default ({ props }) => {
     const unread_message_count = Object.values(customers) ? Object.values(customers).flat().reduce((sum, customer) => sum + customer.unread_message_count, 0) : 0
 
     if (unread_message_count) {
-      document.title = `(${unread_message_count}) ${t("meta.title")}`
+      document.title = `(${unread_message_count}) ${I18n.t("meta.title")}`
     }
     else {
-      document.title = `${t("meta.title")}`
+      document.title = `${I18n.t("meta.title")}`
     }
   }, [customers], _.isEqual)
 
