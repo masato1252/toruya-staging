@@ -114,10 +114,10 @@ export default ({ props }) => {
     const unread_message_count = Object.values(customers) ? Object.values(customers).flat().reduce((sum, customer) => sum + customer.unread_message_count, 0) : 0
 
     if (unread_message_count) {
-      document.title = `(${unread_message_count}) <%= t("meta.title") %>`
+      document.title = `(${unread_message_count}) ${t("meta.title")}`
     }
     else {
-      document.title = `<%= t("meta.title") %>`
+      document.title = `${t("meta.title")}`
     }
   }, [customers], _.isEqual)
 
