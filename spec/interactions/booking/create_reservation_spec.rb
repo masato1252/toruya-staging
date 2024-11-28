@@ -89,12 +89,12 @@ RSpec.describe Booking::CreateReservation do
         expect(reservation_customer.customer).to eq(customer)
         expect(reservation_customer.booking_amount).to eq(booking_option.amount)
         expect(reservation_customer.booking_page).to eq(booking_page)
-        expect(reservation_customer.booking_option).to eq(booking_option)
+        expect(reservation_customer.booking_options).to include(booking_option)
         expect(reservation_customer.tax_include).to eq(booking_option.tax_include)
         expect(reservation_customer.booking_at).to be_present
         expect(reservation_customer.details.new_customer_info).to eq({})
 
-        expect(reservation_customer.booking_option).to eq(booking_option)
+        expect(reservation_customer.booking_options).to include(booking_option)
 
         expect(customer.social_customer).to eq(social_customer)
       end
@@ -465,7 +465,7 @@ RSpec.describe Booking::CreateReservation do
             expect(reservation_customer.customer).to eq(customer)
             expect(reservation_customer.booking_amount).to eq(booking_option.amount)
             expect(reservation_customer.booking_page).to eq(booking_page)
-            expect(reservation_customer.booking_option).to eq(booking_option)
+            expect(reservation_customer.booking_options).to include(booking_option)
             expect(reservation_customer.tax_include).to eq(booking_option.tax_include)
             expect(reservation_customer.booking_at).to be_present
             expect(reservation_customer.details.new_customer_info).to eq({})

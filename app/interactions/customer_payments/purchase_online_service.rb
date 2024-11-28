@@ -34,7 +34,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
     begin
       stripe_charge = Stripe::Charge.create(
         {
-          amount: charging_price_amount.fractional,
+          amount: charging_price_amount.fractional * charging_price_amount.currency.default_subunit_to_unit,
           currency: customer.user.currency,
           customer: customer.stripe_customer_id,
           description: sale_page.product_name.first(STRIPE_DESCRIPTION_LIMIT),

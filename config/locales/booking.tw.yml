@@ -34,6 +34,7 @@ tw:
     booking_end_at: 預計結束時間
     thanks_for_come_back: 感謝您再次使用我們的服務
     please_select_a_menu: 請選擇項目
+    selected_booking_options: 已選擇的項目
     reset_button: 重新開始
     last_selected_option: 上次使用的項目
     i_dont_use_line: 我沒有使用LINE

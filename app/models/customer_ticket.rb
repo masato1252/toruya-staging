@@ -22,6 +22,7 @@
 class CustomerTicket < ApplicationRecord
   has_many :customer_ticket_consumers
   belongs_to :ticket
+  belongs_to :customer
   scope :unexpired, -> { where("expire_at > ?", Time.current) }
   scope :expired, -> { where("expire_at <= ?", Time.current) }
 

@@ -38,11 +38,13 @@ class BookingPagesController < ActionController::Base
         @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])
       end
 
-    @last_selected_option_id =
-      if params[:last_booking_option_id]
-        params[:last_booking_option_id].to_i
+    @last_selected_option_ids =
+      if params[:last_booking_option_ids] || params[:last_booking_option_id]
+        params[:last_booking_option_ids]&.split(",")&.map(&:to_i) || [params[:last_booking_option_id].to_i]
       elsif @customer
-        @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+        @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_ids
+      else
+        []
       end
 
     if @customer
@@ -65,9 +67,24 @@ class BookingPagesController < ActionController::Base
 
     @booking_options_quota = @booking_page.booking_options.active.each_with_object({}) do |booking_option, h|
       if ticket = @customer&.active_customer_ticket_of_product(booking_option)
-        h[booking_option.id.to_s] = { total_quota: ticket.total_quota, consumed_quota: ticket.consumed_quota, ticket_code: ticket.code, expire_date: I18n.l(ticket.expire_at, format: :date) }
+        h[booking_option.id.to_s] = {
+          booking_option_id: booking_option.id,
+          booking_option_name: booking_option.present_name  ,
+          total_quota: ticket.total_quota,
+          consumed_quota: ticket.consumed_quota,
+          ticket_code: ticket.code,
+          expire_date: I18n.l(ticket.expire_at, format: :date)
+        }
       elsif booking_option.ticket_enabled?
-        h[booking_option.id.to_s] = { total_quota: booking_option.ticket_quota, consumed_quota: 0, ticket_code: nil, expire_date: nil, expire_month: booking_option.ticket_expire_month }
+        h[booking_option.id.to_s] = {
+          booking_option_id: booking_option.id,
+          booking_option_name: booking_option.present_name,
+          total_quota: booking_option.ticket_quota,
+          consumed_quota: 0,
+          ticket_code: nil,
+          expire_date: nil,
+          expire_month: booking_option.ticket_expire_month
+        }
       end
     end
 
@@ -84,26 +101,51 @@ class BookingPagesController < ActionController::Base
 
   def booking_reservation
     params.permit!
-    outcome = Booking::CreateReservation.run(
-      booking_page_id: params[:id].to_i,
-      booking_option_id: params[:booking_option_id],
-      booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
-      customer_last_name: params[:customer_last_name],
-      customer_first_name: params[:customer_first_name],
-      customer_phonetic_last_name: params[:customer_phonetic_last_name],
-      customer_phonetic_first_name: params[:customer_phonetic_first_name],
-      customer_phone_number: params[:customer_phone_number],
-      customer_email: params[:customer_email],
-      customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
-      customer_info: params[:customer_info].to_h,
-      present_customer_info: params[:present_customer_info].to_h,
-      social_user_id: params[:social_user_id],
-      stripe_token: params[:stripe_token],
-      square_token: params[:square_token],
-      square_location_id: params[:square_location_id],
-      sale_page_id: params[:sale_page_id],
-      function_access_id: params[:function_access_id]
-    )
+
+    if enable_timeslot?
+      outcome = Booking::CreateReservationForTimeslot.run(
+        booking_page_id: params[:id].to_i,
+        staff_ids: [booking_page.user.current_staff.id],
+        booking_option_ids: params[:booking_option_ids].presence || booking_page.booking_option_ids,
+        booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
+        customer_last_name: params[:customer_last_name],
+        customer_first_name: params[:customer_first_name],
+        customer_phonetic_last_name: params[:customer_phonetic_last_name],
+        customer_phonetic_first_name: params[:customer_phonetic_first_name],
+        customer_phone_number: params[:customer_phone_number],
+        customer_email: params[:customer_email],
+        customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
+        customer_info: params[:customer_info].to_h,
+        present_customer_info: params[:present_customer_info].to_h,
+        social_user_id: params[:social_user_id],
+        stripe_token: params[:stripe_token],
+        square_token: params[:square_token],
+        square_location_id: params[:square_location_id],
+        sale_page_id: params[:sale_page_id],
+        function_access_id: params[:function_access_id]
+      )
+    else
+      outcome = Booking::CreateReservation.run(
+        booking_page_id: params[:id].to_i,
+        booking_option_id: params[:booking_option_id],
+        booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
+        customer_last_name: params[:customer_last_name],
+        customer_first_name: params[:customer_first_name],
+        customer_phonetic_last_name: params[:customer_phonetic_last_name],
+        customer_phonetic_first_name: params[:customer_phonetic_first_name],
+        customer_phone_number: params[:customer_phone_number],
+        customer_email: params[:customer_email],
+        customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
+        customer_info: params[:customer_info].to_h,
+        present_customer_info: params[:present_customer_info].to_h,
+        social_user_id: params[:social_user_id],
+        stripe_token: params[:stripe_token],
+        square_token: params[:square_token],
+        square_location_id: params[:square_location_id],
+        sale_page_id: params[:sale_page_id],
+        function_access_id: params[:function_access_id]
+      )
+    end
 
     if outcome.valid?
       result = outcome.result
@@ -140,7 +182,7 @@ class BookingPagesController < ActionController::Base
 
       render json: {
         customer_info: view_context.customer_info_as_json(customer),
-        last_selected_option_id: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id,
+        last_selected_option_ids: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_ids&.join(","),
         booking_code: {
           passed: true
         }
@@ -203,17 +245,32 @@ class BookingPagesController < ActionController::Base
       }.to_json
     end
 
-    outcome = Booking::Calendar.run(
-      shop: booking_page.shop,
-      booking_page: booking_page,
-      date_range: month_dates,
-      booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
-      special_dates: special_dates,
-      special_date_type: booking_page.booking_page_special_dates.exists?,
-      interval: booking_page.interval,
-      overbooking_restriction: booking_page.overbooking_restriction,
-      customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil,
-    )
+    outcome =
+      if enable_timeslot?
+        Booking::CalendarForTimeslot.run(
+          shop: booking_page.shop,
+          booking_page: booking_page,
+          staff_ids: [booking_page.user.current_staff.id],
+          date_range: month_dates,
+          booking_option_ids: params[:booking_option_ids],
+          special_dates: special_dates,
+          interval: booking_page.interval,
+          overbooking_restriction: booking_page.overbooking_restriction,
+          customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil,
+        )
+      else
+        Booking::Calendar.run(
+          shop: booking_page.shop,
+          booking_page: booking_page,
+          date_range: month_dates,
+          booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
+          special_dates: special_dates,
+          special_date_type: booking_page.booking_page_special_dates.exists?,
+          interval: booking_page.interval,
+          overbooking_restriction: booking_page.overbooking_restriction,
+          customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil,
+        )
+    end
 
     if outcome.valid?
       @schedules, @available_booking_dates = outcome.result
@@ -256,15 +313,29 @@ class BookingPagesController < ActionController::Base
       end
     end
 
-    outcome = Booking::AvailableBookingTimes.run(
-      shop: booking_page.shop,
-      booking_page: booking_page,
-      special_dates: booking_dates,
-      booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
-      interval: booking_page.interval,
-      overbooking_restriction: booking_page.overbooking_restriction,
-      customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil
-    )
+    outcome =
+      if enable_timeslot?
+        Booking::AvailableBookingTimesForTimeslot.run(
+          shop: booking_page.shop,
+          booking_page: booking_page,
+          booking_option_ids: params[:booking_option_ids],
+          staff_ids: [booking_page.user.current_staff.id],
+          special_dates: booking_dates,
+          interval: booking_page.interval,
+          overbooking_restriction: booking_page.overbooking_restriction,
+          customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil
+        )
+      else
+        Booking::AvailableBookingTimes.run(
+          shop: booking_page.shop,
+          booking_page: booking_page,
+          special_dates: booking_dates,
+          booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
+          interval: booking_page.interval,
+          overbooking_restriction: booking_page.overbooking_restriction,
+          customer: params[:customer_id] ? Customer.find_by(id: params[:customer_id]) : nil
+        )
+      end
 
     available_booking_times = outcome.result.each_with_object({}) { |(time, option_ids), h| h[I18n.l(time, format: :hour_minute)] = option_ids  }
 
@@ -297,5 +368,9 @@ class BookingPagesController < ActionController::Base
 
   def product_social_user
     booking_page.user.social_user
+  end
+
+  def enable_timeslot?
+    true
   end
 end

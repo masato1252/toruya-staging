@@ -6,9 +6,11 @@
       </h4>
     </div>
     <div class="modal-body">
-      <%= form_with url: update_ticket_lines_user_bot_customer_reservations_path(business_owner_id: @reservation_customer.reservation.user_id, reservation_id: @reservation_customer.reservation_id, customer_id: @reservation_customer.customer_id), local: true do |form| %>
-        <%= date_field_tag :expire_at, @reservation_customer.customer_ticket.expire_at.to_date %>
-        <%= form.submit t("action.change_and_save"), class: "btn btn-tarco" %>
+      <% @reservation_customer.customer_tickets.each do |customer_ticket| %>
+        <%= form_with url: update_ticket_lines_user_bot_customer_reservations_path(business_owner_id: @reservation_customer.reservation.user_id, reservation_id: @reservation_customer.reservation_id, customer_id: @reservation_customer.customer_id, customer_ticket_id: customer_ticket.id), local: true do |form| %>
+          <%= date_field_tag :expire_at, customer_ticket.expire_at.to_date %>
+          <%= form.submit t("action.change_and_save"), class: "btn btn-tarco" %>
+        <% end %>
       <% end %>
     </div>
   </div>

@@ -37,7 +37,7 @@ const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleF
   return (
     <form onSubmit={handleSubmit} className="credit-card">
       <header>
-        <h1>{header}</h1>
+        <h1 dangerouslySetInnerHTML={{__html: header}} />
         <h2>{desc}</h2>
       </header>
       <div className="details">

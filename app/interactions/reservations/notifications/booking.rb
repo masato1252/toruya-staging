@@ -7,20 +7,20 @@ module Reservations
     class Booking < Notify
       string :email, default: nil
       object :booking_page
-      object :booking_option
+      array :booking_options
 
       def execute
         I18n.with_locale(customer.locale) do
           # XXX: Use the email using at booking time
-          if email.present?
-            BookingMailer.with(
-              customer: customer,
-              reservation: reservation,
-              booking_page: booking_page,
-              booking_option: booking_option,
-              email: email
-            ).customer_reservation_notification.deliver_later
-          end
+          # if email.present?
+          #   BookingMailer.with(
+          #     customer: customer,
+          #     reservation: reservation,
+          #     booking_page: booking_page,
+          #     booking_options: booking_options,
+          #     email: email
+          #   ).customer_reservation_notification.deliver_later
+          # end
 
           super
         end

@@ -33,4 +33,13 @@ module FeatureHelper
   def support_toruya_message_reply?
     !!Current.business_owner&.toruya_message_reply
   end
+
+  def money_sample(locale)
+    case locale
+    when :tw
+      Money.new(1, :twd).format
+    else
+      "#{Money.new(1, :jpy).format(:ja_default_format)}(#{I18n.t("settings.booking_option.form.tax_include")})"
+    end
+  end
 end

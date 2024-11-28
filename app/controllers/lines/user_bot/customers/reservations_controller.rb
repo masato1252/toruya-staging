@@ -8,7 +8,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
 
     reservation_customers =
       @customer.reservation_customers
-        .includes(:customer_ticket, reservation: [ :menus, :active_reservation_customers, :reservation_menus, :customers, :staffs, shop: :user, reservation_staffs: [ :menu, :staff ] ])
+        .includes(reservation: [ :menus, :active_reservation_customers, :reservation_menus, :customers, :staffs, shop: :user, reservation_staffs: [ :menu, :staff ] ])
         .merge(Reservation.active)
         .order("reservations.start_time DESC")
 
@@ -115,7 +115,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
 
   def update_ticket
     reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
-    outcome = CustomerTickets::Update.run(customer_ticket: reservation_customer.customer_ticket, expire_at: params[:expire_at])
+    outcome = CustomerTickets::Update.run(customer_ticket: reservation_customer.customer_tickets.find(params[:customer_ticket_id]), expire_at: params[:expire_at])
 
     if outcome.invalid?
       Rollbar.error(

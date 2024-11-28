@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# validate single booking option booking, it validates, shop menu capacity and staff ability
 module Reservable
   class Reservation < ActiveInteraction::Base
     include SharedMethods
@@ -10,6 +11,7 @@ module Reservable
     time :end_time, default: nil
     integer :menu_id, default: nil
     integer :menu_required_time, default: nil
+    integer :total_require_time, default: nil
     array :staff_ids, default: nil
     integer :reservation_id, default: nil
     integer :number_of_customer, default: 1
@@ -57,8 +59,9 @@ module Reservable
       end
 
       # XXX: menu is required for the below validation
-      return if menu_id.nil? || menu_required_time.nil?
+      return if (menu_id.nil? || menu_required_time.nil?) && total_require_time.nil?
 
+      # TODO: [Multiple booking option] check total menu require time once
       if menu_required_time < menu.minutes
         errors.add(:menu_id, :time_not_enough, menu_id: menu_id)
       end
@@ -145,7 +148,6 @@ module Reservable
     def validate_after_interval_time
       next_reservation_validation_start_time = end_time
       next_reservation_validation_end_time = end_time.advance(seconds: interval_time)
-
       # The interval time is not enough for current reservation
       if @next_reservation_overlap =
           ReservationStaff.overlap_reservations(
@@ -201,23 +203,23 @@ module Reservable
       validate_after_interval_time unless skip_after_interval_time_validation
     end
 
-    def validate_menu_schedules
-      unless Menu.workable_scoped(shop: shop, start_time: start_time, end_time: end_time).where(id: menu.id).exists?
-        errors.add(:menu_id, :unschedule_menu, menu_id: menu_id)
-      end
-
-      if menu.menu_reservation_setting_rule
-        if menu.menu_reservation_setting_rule.start_date > date
-          errors.add(:menu_id, :start_yet,
-                     start_at: I18n.l(menu.menu_reservation_setting_rule.start_date, format: :year_month_date), menu_id: menu_id)
-        end
-
-        if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < date) ||
-            (menu.menu_reservation_setting_rule.repeating? && ShopMenuRepeatingDate.where(shop: shop, menu: menu).first.end_date < date)
-          errors.add(:menu_id, :is_over, menu_id: menu_id)
-        end
-      end
-    end
+    # def validate_menu_schedules
+    #   unless Menu.workable_scoped(shop: shop, start_time: start_time, end_time: end_time).where(id: menu.id).exists?
+    #     errors.add(:menu_id, :unschedule_menu, menu_id: menu_id)
+    #   end
+    #
+    #   if menu.menu_reservation_setting_rule
+    #     if menu.menu_reservation_setting_rule.start_date > date
+    #       errors.add(:menu_id, :start_yet,
+    #                  start_at: I18n.l(menu.menu_reservation_setting_rule.start_date, format: :year_month_date), menu_id: menu_id)
+    #     end
+    #
+    #     if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < date) ||
+    #         (menu.menu_reservation_setting_rule.repeating? && ShopMenuRepeatingDate.where(shop: shop, menu: menu).first.end_date < date)
+    #       errors.add(:menu_id, :is_over, menu_id: menu_id)
+    #     end
+    #   end
+    # end
 
     def validate_seats_for_customers
       if number_of_customer > shop_menu.max_seat_number

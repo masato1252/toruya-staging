@@ -18,12 +18,14 @@ module Reservations
         end
 
         reservation.active_reservation_customers.each do |reservation_customer|
-          if reservation_customer.customer_ticket_id && reservation_customer.customer_ticket.active?
-            Notifiers::Customers::Tickets::UnusedTicketLeft.perform_later(
-              receiver: reservation_customer.customer,
-              customer_ticket: reservation_customer.customer_ticket,
-              reservation_customer: reservation_customer
-            )
+          reservation_customer.customer_tickets.each do |customer_ticket| 
+            if customer_ticket.active?
+              Notifiers::Customers::Tickets::UnusedTicketLeft.perform_later(
+                receiver: reservation_customer.customer,
+                customer_ticket: customer_ticket,
+                reservation_customer: reservation_customer
+              )
+            end
           end
         end
 

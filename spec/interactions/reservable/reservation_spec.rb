@@ -916,6 +916,8 @@ RSpec.describe Reservable::Reservation do
               staff_ids: [staff2.id]
             )
 
+            expect(outcome).to be_invalid
+
             overlap_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :overlap_reservations }
             expect(overlap_error).to be_nil
           end

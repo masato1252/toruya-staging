@@ -17,7 +17,7 @@ class CustomerPayments::SquareRefund < ActiveInteraction::Base
           idempotency_key: SecureRandom.uuid,
           payment_id: customer_payment.charge_details.dig("payment", "id"),
           amount_money: {
-            amount: amount.fractional,
+            amount: amount.fractional * amount.currency.default_subunit_to_unit,
             currency: amount.currency.to_s
           },
           :autocomplete => true,

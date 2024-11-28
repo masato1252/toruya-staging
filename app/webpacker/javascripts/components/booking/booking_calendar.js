@@ -1,6 +1,6 @@
 "use strict";
 
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { SlideDown } from 'react-slidedown';
 
 import Calendar from "shared/calendar/calendar";
@@ -45,11 +45,11 @@ const BookingTimes = ({booking_reservation_form_values, i18n, setBookingTimeAt})
   }
 }
 
-const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetchBookingTimes, setBookingTimeAt, ticket_expire_date}) => {
+const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetchBookingTimes, setBookingTimeAt, ticket_expire_date, scrollToTarget}) => {
   const {
     booking_date,
     booking_at,
-    booking_option_id,
+    booking_option_ids,
   } = booking_reservation_form_values;
 
   const {
@@ -59,6 +59,13 @@ const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetch
     date,
     start_time,
   } = i18n;
+
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      scrollToTarget("footer")
+    }, 2000)
+  }, [])
+
 
   return (
     <SlideDown className={'calendar-slidedown'}>
@@ -74,7 +81,7 @@ const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetch
               skip_default_date={true}
               dateSelectedCallback={fetchBookingTimes}
               scheduleParams={{
-                booking_option_id: booking_option_id,
+                booking_option_ids: booking_option_ids,
                 customer_id: booking_reservation_form_values?.customer_info?.id
               }}
             />

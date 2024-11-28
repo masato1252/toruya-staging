@@ -17,14 +17,14 @@ class CustomerPayments::SquarePayReservation < ActiveInteraction::Base
           :source_id => source_id,
           :idempotency_key => payment.order_id,
           :amount_money => {
-            :amount => reservation_customer.booking_amount.fractional,
+            :amount => reservation_customer.booking_amount.fractional * reservation_customer.booking_amount.currency.default_subunit_to_unit,
             :currency => reservation_customer.booking_amount.currency.iso_code
           },
           :autocomplete => true,
           :customer_id => customer.square_customer_id,
           :location_id => location_id,
           :reference_id => "customer_payment-#{payment.id}",
-          :note => "#{reservation_customer.booking_option.name}".first(STRIPE_DESCRIPTION_LIMIT)
+          :note => "#{reservation_customer.booking_options.map(&:name).join(", ")}".first(STRIPE_DESCRIPTION_LIMIT)
         }
       )
 

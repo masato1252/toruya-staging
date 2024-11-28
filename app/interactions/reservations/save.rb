@@ -14,6 +14,7 @@ module Reservations
           string :state
           integer :booking_page_id, default: nil
           integer :booking_option_id, default: nil
+          array :booking_option_ids, default: []
           decimal :booking_amount_cents,  default: nil
           string :booking_amount_currency, default: nil
           boolean :tax_include, default: nil

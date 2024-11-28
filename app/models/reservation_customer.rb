@@ -8,7 +8,9 @@
 #  booking_amount_cents    :decimal(, )
 #  booking_amount_currency :string
 #  booking_at              :datetime
+#  booking_option_ids      :jsonb
 #  cancel_reason           :string
+#  customer_tickets_quota  :jsonb
 #  details                 :jsonb
 #  nth_quota               :integer
 #  payment_state           :integer          default("pending")
@@ -35,7 +37,20 @@
 
 require "hashie_serializer"
 
+# customer_tickets_quota is a hash, key is customer_ticket_id, value is nth_quota
+# {
+#   customer_ticket_id1 => {
+#     nth_quota: nth_quota1,
+#     product_id: product_id1
+#   },
+#   customer_ticket_id2 => {
+#     nth_quota: nth_quota2,
+#     product_id: product_id2
+#   }
+# }
+
 class ReservationCustomer < ApplicationRecord
+  include TicketProductConcern
   CANCEL_REASONS = %w[other_placeholder reschedule_reason no_longer_needed_reason].freeze
   ACTIVE_STATES = %w[pending accepted].freeze
   include SayHi
@@ -46,8 +61,7 @@ class ReservationCustomer < ApplicationRecord
   belongs_to :customer, touch: true
   belongs_to :booking_page, required: false
   belongs_to :booking_option, required: false
-  belongs_to :customer_ticket, required: false
-  has_one :customer_ticket_consumer, as: :consumer
+  serialize :customer_tickets_quota, HashieSerializer
   serialize :details, HashieSerializer
   alias_attribute :amount, :booking_amount
 
@@ -69,22 +83,12 @@ class ReservationCustomer < ApplicationRecord
 
   scope :active, -> { where(state: ACTIVE_STATES) }
 
-  def paid_payment
-    @paid_payment ||= customer.customer_payments.completed.where(product: self).first
+  def booking_options
+    @booking_options ||= BookingOption.where(id: booking_option_ids)
   end
 
-  def price_text
-    if booking_amount_currency == "JPY"
-      tax_type = I18n.t("settings.booking_option.form.#{tax_include ? "tax_include" : "tax_excluded"}")
-
-      if booking_amount.zero?
-        "#{booking_amount.format(:ja_default_format)}"
-      else
-        "#{booking_amount.format(:ja_default_format)}(#{tax_type})"
-      end
-    else
-      booking_amount.format
-    end
+  def paid_payment
+    @paid_payment ||= customer.customer_payments.completed.where(product: self).first
   end
 
   def reservation_state
@@ -175,5 +179,14 @@ class ReservationCustomer < ApplicationRecord
         reason
       end
     end
+  end
+
+  private
+  def products
+    booking_options
+  end
+
+  def product_ids
+    booking_option_ids
   end
 end

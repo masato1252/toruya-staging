@@ -47,16 +47,16 @@ const BookingReservationFormFunction = ({props}) => {
     return customer_info.address_details?.zip_code && customer_info.address_details?.region && customer_info.address_details?.city
   }
 
-  const selected_booking_option = () => {
-    const { booking_options, booking_option_id } = booking_reservation_form_values;
+  const selected_booking_options = () => {
+    const { booking_options, booking_option_ids } = booking_reservation_form_values;
 
-    return _.find(booking_options, (booking_option) => {
-      return booking_option.id === booking_option_id
+    return _.filter(booking_options, (booking_option) => {
+      return booking_option_ids.includes(booking_option.id)
     })
   }
 
   const isOnlinePayment= () => {
-    return selected_booking_option()?.is_online_payment
+    return _.some(selected_booking_options(), option => option?.is_online_payment)
   }
 
   const handleAddressCallback = (address) => {
@@ -79,6 +79,7 @@ const BookingReservationFormFunction = ({props}) => {
           resetValue = {}
           break;
         case "booking_times":
+        case "booking_option_ids":
           resetValue = []
           break;
       }
@@ -86,13 +87,13 @@ const BookingReservationFormFunction = ({props}) => {
     set_booking_reservation_form_values(prev => ({...prev, [field]: resetValue}))
     })
 
-    set_booking_reservation_form_values(prev => ({...prev, booking_failed: null, errors: {}}))
+    set_booking_reservation_form_values(prev => ({...prev, booking_option_selected_flow_done: false, booking_failed: null, errors: {}}))
     return {};
   }
 
   const resetFlowValues = async () => {
     resetValues([
-      "booking_option_id",
+      "booking_option_ids",
       "booking_date",
       "booking_at",
       "booking_times"
@@ -123,7 +124,7 @@ const BookingReservationFormFunction = ({props}) => {
       url: props.calendar.dateSelectedCallbackPath,
       params: {
         date: date,
-        booking_option_id: booking_reservation_form_values.booking_option_id,
+        booking_option_ids: booking_reservation_form_values.booking_option_ids,
         customer_id: booking_reservation_form_values?.customer_info?.id
       },
       responseType: "json"
@@ -166,9 +167,9 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const isBookingFlowEnd = () => {
-    const { booking_option_id, booking_date, booking_at } = booking_reservation_form_values;
+    const { booking_option_ids, booking_date, booking_at } = booking_reservation_form_values;
 
-    return booking_option_id && booking_date && booking_at
+    return booking_option_ids && booking_date && booking_at
   }
 
   const isSocialLoginChecked = () => {
@@ -210,11 +211,12 @@ const BookingReservationFormFunction = ({props}) => {
     return (use_default_customer && isEnoughCustomerInfo()) || (found_customer != null && booking_code && booking_code.passed)
   }
 
-  const sorted_booking_options = (booking_options, last_selected_option_id) => {
-    const matched_index = booking_options.findIndex(option => option.id === last_selected_option_id);
+  const sorted_booking_options = (booking_options, last_selected_option_ids) => {
+    const matched_index = booking_options.findIndex(option => last_selected_option_ids?.includes(option.id));
 
     if (matched_index > 0) {
-      return arrayMove(booking_options, matched_index, 0);
+      const targetIndex = last_selected_option_ids.indexOf(booking_options[matched_index].id);
+      return arrayMove(booking_options, matched_index, targetIndex);
     }
     else {
       return booking_options
@@ -222,8 +224,17 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const selectBookingOption = async (booking_option_id) => {
-    set_booking_reservation_form_values(prev => ({...prev, booking_option_id: booking_option_id}))
-    scrollToSelectedTarget()
+
+    if (props.booking_page.multiple_selection) {
+      set_booking_reservation_form_values(prev => ({...prev, booking_option_ids: [...new Set([...prev.booking_option_ids, booking_option_id])]}))
+    }
+    else {
+      set_booking_reservation_form_values(prev => ({...prev, booking_option_selected_flow_done: true, booking_option_ids: [...new Set([...prev.booking_option_ids, booking_option_id])]}))
+    }
+  }
+
+  const unselectBookingOption = async (booking_option_id) => {
+    set_booking_reservation_form_values(prev => ({...prev, booking_option_ids: prev.booking_option_ids.filter(id => id !== booking_option_id)}))
   }
 
   const validateData = async () => {
@@ -255,6 +266,19 @@ const BookingReservationFormFunction = ({props}) => {
         set_booking_reservation_form_values(prev => ({...prev, errors: {}}))
       }
     }
+  }
+
+  const selected_booking_options_need_to_pay = () => {
+    return selected_booking_options().filter(option => !props.booking_options_quota[option.id].ticket_code);
+  }
+
+  const selected_booking_options_need_to_pay_price = () => {
+    let total_price = selected_booking_options_need_to_pay().map(option => option.price_amount).reduce((a, b) => a + b, 0)
+
+    // price_text_sample = selected_booking_options_need_to_pay()[0].price_text
+    // price_text_sample's price part is like "100,000円", might got delimiter issue
+    // use total price to replace price_text_sample pricepart, and provide proper delimiter
+    return props.money_sample.replace(/[\d]+/, total_price.toLocaleString())
   }
 
   const findCustomer = async (event) => {
@@ -298,7 +322,7 @@ const BookingReservationFormFunction = ({props}) => {
 
     const {
       customer_info,
-      last_selected_option_id,
+      last_selected_option_ids,
       booking_code,
     } = response.data;
 
@@ -307,7 +331,7 @@ const BookingReservationFormFunction = ({props}) => {
       customer_info: customer_info,
       present_customer_info: customer_info,
       found_customer: Object.keys(customer_info).length ? true : false,
-      last_selected_option_id: last_selected_option_id,
+      last_selected_option_ids: last_selected_option_ids,
       is_finding_customer: null,
       booking_code: booking_code,
       use_default_customer: false,
@@ -341,7 +365,7 @@ const BookingReservationFormFunction = ({props}) => {
       ),
       _.pick(
         booking_reservation_form_values,
-        "booking_option_id",
+        "booking_option_ids",
         "booking_date",
         "booking_at",
         "customer_first_name",
@@ -380,10 +404,10 @@ const BookingReservationFormFunction = ({props}) => {
       const { status, errors } = response.data;
 
       if (status === "successful") {
-        set_booking_reservation_form_values(prev => ({...prev, is_done: true}))
+        set_booking_reservation_form_values(prev => ({...prev, is_done: true, submitting: false }))
       }
       else if (status === "failed") {
-        set_booking_reservation_form_values(prev => ({...prev, booking_failed: true}))
+        set_booking_reservation_form_values(prev => ({...prev, booking_failed: true, submitting: false}))
 
         if (errors) {
           set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, booking_failed_message: errors.message}}))
@@ -402,7 +426,7 @@ const BookingReservationFormFunction = ({props}) => {
 
   const renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = props.booking_page
-    const { is_done, is_paying_booking, is_filling_address, booking_option_id, skip_social_customer } = booking_reservation_form_values
+    const { is_done, is_paying_booking, is_filling_address, booking_option_ids, skip_social_customer } = booking_reservation_form_values
 
     if (props.product_requirement) {
       return (
@@ -428,12 +452,13 @@ const BookingReservationFormFunction = ({props}) => {
       return (
         <BookingDoneView
           i18n={props.i18n}
-          booking_option_id={booking_reservation_form_values.booking_option_id}
+          booking_option_ids={booking_option_ids}
           booking_date={booking_reservation_form_values.booking_date}
           social_account_add_friend_url={props.social_account_add_friend_url}
           social_account_login_url={props.social_account_login_url}
           booking_page_url={props.booking_page.url}
-          ticket={props.booking_options_quota[booking_option_id]}
+          tickets={booking_option_ids.map(id => props.booking_options_quota[id]).filter(Boolean)}
+          selected_booking_options={selected_booking_options()}
           skip_social_customer={skip_social_customer}
           function_access_id={props.function_access_id}
         />
@@ -458,9 +483,9 @@ const BookingReservationFormFunction = ({props}) => {
 
               handleSubmit()
             }}
-            product_name={selected_booking_option().name}
+            product_name={selected_booking_options_need_to_pay().map(option => option.name).join("<br />")}
             booking_details={`${moment.tz(`${booking_reservation_form_values.booking_date} ${booking_reservation_form_values.booking_at}`, "YYYY-MM-DD HH:mm", props.timezone).format("llll")} ${props.i18n.time_from}`}
-            product_price={selected_booking_option().price}
+            product_price={selected_booking_options_need_to_pay_price()}
           />
           <BookingFailedArea
             booking_failed={booking_reservation_form_values.booking_failed}
@@ -489,16 +514,17 @@ const BookingReservationFormFunction = ({props}) => {
             i18n={props.i18n}
             booking_reservation_form_values={booking_reservation_form_values}
             booking_option_value={selected_booking_option()}
-            ticket={props.booking_options_quota[booking_option_id]}
+            ticket={props.booking_options_quota[booking_option_ids[0]]}
             timezone={props.timezone}
           />
           <BookingCalendar
             i18n={props.i18n}
             booking_reservation_form_values={booking_reservation_form_values}
-            ticket_expire_date={props.booking_options_quota[booking_option_id]?.expire_date}
+            ticket_expire_date={props.booking_options_quota[booking_option_ids[0]]?.expire_date}
             calendar={props.calendar}
             fetchBookingTimes={fetchBookingTimes}
             setBookingTimeAt={setBookingTimeAt}
+            scrollToTarget={scrollToTarget}
           />
           {isBookingFlowEnd() && (
             <BookingDateTime
@@ -549,8 +575,9 @@ const BookingReservationFormFunction = ({props}) => {
               isOnlinePayment={isOnlinePayment()}
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
+              submitting={bookingReservationLoading_ref.current}
               is_single_option={is_single_option}
-              ticket={props.booking_options_quota[booking_option_id]}
+              tickets={booking_option_ids.map(id => props.booking_options_quota[id]).filter(Boolean).filter(ticket => ticket.ticket_code)}
               resetBookingFailedValues={resetBookingFailedValues}
             />
           )}
@@ -560,18 +587,21 @@ const BookingReservationFormFunction = ({props}) => {
       return (
         <div>
           <BookingOptionFirstFlow
+            set_booking_reservation_form_values={set_booking_reservation_form_values}
             booking_reservation_form_values={booking_reservation_form_values}
             booking_options_quota={props.booking_options_quota}
             i18n={props.i18n}
             sorted_booking_options={sorted_booking_options}
             selectBookingOption={selectBookingOption}
+            unselectBookingOption={unselectBookingOption}
             timezone={props.timezone}
-            selected_booking_option={selected_booking_option()}
+            selected_booking_options={selected_booking_options()}
             resetFlowValues={resetFlowValues}
             calendar={props.calendar}
             fetchBookingTimes={fetchBookingTimes}
             setBookingTimeAt={setBookingTimeAt}
             resetValues={resetValues}
+            scrollToTarget={scrollToTarget}
           />
           {isBookingFlowEnd() && !isSocialLoginChecked() && (
             <SocialCustomerLogin
@@ -615,7 +645,7 @@ const BookingReservationFormFunction = ({props}) => {
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}
-              ticket={props.booking_options_quota[booking_option_id]}
+              tickets={booking_option_ids.map(id => props.booking_options_quota[id]).filter(Boolean).filter(ticket => ticket.ticket_code)}
               resetBookingFailedValues={resetBookingFailedValues}
             />
           )}

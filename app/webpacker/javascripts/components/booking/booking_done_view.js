@@ -7,7 +7,17 @@ import I18n from 'i18n-js/index.js.erb';
 import { CheckInLineBtn, LineLoginBtn } from "shared/booking";
 import { ticketExpireDate } from 'libraries/helper'
 
-const BookingDoneView = ({i18n, social_account_add_friend_url, social_account_login_url, ticket, booking_date, booking_page_url, booking_option_id, skip_social_customer, function_access_id}) => {
+const BookingDoneView = ({
+  i18n,
+  social_account_add_friend_url,
+  social_account_login_url,
+  tickets,
+  booking_date,
+  booking_page_url,
+  booking_option_ids,
+  skip_social_customer,
+  function_access_id,
+}) => {
   const {
     title,
     message1,
@@ -39,21 +49,26 @@ const BookingDoneView = ({i18n, social_account_add_friend_url, social_account_lo
         )
       }
 
-      {ticket && ticket.consumed_quota + 1 == ticket.total_quota && (
-        <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_ticket_left_message_html") }} />
-      )}
+      {tickets?.length > 0 && tickets.map(ticket => (
+        <React.Fragment key={ticket.id}>
+          <div dangerouslySetInnerHTML={{ __html: ticket.booking_option_name }} />
+          {ticket.consumed_quota + 1 == ticket.total_quota && (
+            <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_ticket_left_message_html") }} />
+          )}
 
-      {ticket && ticket.consumed_quota + 1 !== ticket.total_quota && (
-        <div className="message" dangerouslySetInnerHTML={{
-          __html: I18n.t("booking_page.done.ticket_left_message_html", {
-            remaining_ticket_quota: ticket.total_quota -ticket.consumed_quota - 1,
-            expire_date: ticket.expire_date || ticketExpireDate(moment(booking_date), ticket.expire_month)}
-          )
-        }} />
-      )}
+          {ticket.consumed_quota + 1 !== ticket.total_quota && (
+            <div className="message" dangerouslySetInnerHTML={{
+              __html: I18n.t("booking_page.done.ticket_left_message_html", {
+                remaining_ticket_quota: ticket.total_quota - ticket.consumed_quota - 1,
+                expire_date: ticket.expire_date || ticketExpireDate(moment(booking_date), ticket.expire_month)}
+              )
+            }} />
+          )}
+        </React.Fragment>
+      ))}
 
       <div className="margin-around">
-        <a href={`${booking_page_url}?last_booking_option_id=${booking_option_id}${function_access_id ? `&function_access_id=${function_access_id}` : ''}`} className="btn btn-tarco">{back_to_book}</a>
+        <a href={`${booking_page_url}?last_booking_option_ids=${booking_option_ids}${function_access_id ? `&function_access_id=${function_access_id}` : ''}`} className="btn btn-tarco">{back_to_book}</a>
       </div>
     </div>
   )

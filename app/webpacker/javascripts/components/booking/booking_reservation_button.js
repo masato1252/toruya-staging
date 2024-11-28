@@ -8,12 +8,13 @@ import BookingFailedArea from "./booking_failed_area";
 const BookingReservationButton = ({
   set_booking_reservation_form_values, booking_reservation_form_values, i18n, booking_page, payment_solution,
   isBookingFlowEnd, isEnoughCustomerInfo, isCustomerTrusted, isOnlinePayment, isCustomerAddressFilled, handleSubmit, is_single_option, resetBookingFailedValues,
-  ticket
+  tickets
 }) => {
-  const { submitting } = booking_reservation_form_values;
   if (!isBookingFlowEnd) return <></>;
   if (!isEnoughCustomerInfo) return <></>;
   if (!isCustomerTrusted) return <></>;
+
+  const submitting = booking_reservation_form_values.submitting;
 
   const isAnyErrors = () => {
     return booking_reservation_form_values.errors && Object.keys(booking_reservation_form_values.errors).length
@@ -30,18 +31,20 @@ const BookingReservationButton = ({
       </div>
 
       <a href="#"
-        className="btn btn-tarco"
+        className={`btn btn-tarco ${submitting ? 'disabled' : ''}`}
         onClick={(_event) => {
+          if (submitting) return;
           if (isAnyErrors()) {
             $("#customer-info-modal").modal("show");
           }
-          else if (!ticket?.ticket_code && isPaymentSolutionReady() && isOnlinePayment) {
+          else if (tickets.length !== booking_reservation_form_values.booking_option_ids.length && isPaymentSolutionReady() && isOnlinePayment) {
             set_booking_reservation_form_values(prev => ({...prev, is_paying_booking: true}))
           }
           else if (!isOnlinePayment && !isCustomerAddressFilled) {
             set_booking_reservation_form_values(prev => ({...prev, is_filling_address: true}))
           }
           else {
+            set_booking_reservation_form_values(prev => ({...prev, submitting: true}))
             handleSubmit()
           }
         }}

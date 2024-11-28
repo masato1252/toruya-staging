@@ -165,8 +165,12 @@ $line-margin: 20px;
   border-radius: 0.25em;
 }
 
-.p-6 {
-  padding: 1.5rem;
+.p-0 {
+  padding: 0;
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem;
 }
 
 .pt-6 {

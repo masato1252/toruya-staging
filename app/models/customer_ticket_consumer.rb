@@ -12,7 +12,7 @@
 #
 # Indexes
 #
-#  consumer_ticket_index                                  (consumer_id,consumer_type) UNIQUE
+#  index_customer_ticket                                  (customer_ticket_id,consumer_id,consumer_type) UNIQUE
 #  index_customer_ticket_consumers_on_consumer            (consumer_type,consumer_id)
 #  index_customer_ticket_consumers_on_customer_ticket_id  (customer_ticket_id)
 #

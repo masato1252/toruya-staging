@@ -123,10 +123,14 @@ module OptionsHelper
 
       reservation_option(reservation_customer.reservation).merge!(
         reservation_customer_state: reservation_customer.reservation_state,
-        nth_quota: reservation_customer.nth_quota,
-        total_quota: reservation_customer.customer_ticket&.total_quota,
-        ticket_code: reservation_customer.customer_ticket&.code,
-        ticket_expire_date: reservation_customer.customer_ticket ? I18n.l(reservation_customer.customer_ticket.expire_at.to_date) : ""
+        tickets: reservation_customer.customer_tickets.map do |customer_ticket|
+          {
+            nth_quota: reservation_customer.nth_quota_of_customer_ticket(customer_ticket),
+            total_quota: customer_ticket.total_quota,
+            ticket_code: customer_ticket.code,
+            ticket_expire_date: I18n.l(customer_ticket.expire_at.to_date)
+          }
+        end
       )
     end.compact
   end

@@ -37,7 +37,20 @@ module Tickets
         customer_ticket.save!
 
         customer_ticket.customer_ticket_consumers.create!(consumer: consumer, ticket_quota_consumed: quote_consumed)
-        consumer.update!(customer_ticket: customer_ticket, nth_quota: customer_ticket.consumed_quota)
+        # Becasue one ticket only could have one product,
+        # so different product would use different customer_ticket,
+        # then might have different nth_quota
+        consumer.update!(
+          customer_tickets_quota: consumer.customer_tickets_quota.merge(
+            customer_ticket.id => {
+              nth_quota: customer_ticket.consumed_quota,
+              product_id: product.id
+            }
+          )
+        )
+
+        # Recalculate the amount need to pay
+        consumer.update!(booking_amount: consumer.amount_need_to_pay)
         customer_ticket
       end
     end

@@ -8,8 +8,14 @@ module Tickets
     def execute
       ApplicationRecord.transaction do
         customer_ticket.customer_ticket_consumers.where(consumer: consumer).destroy_all
-        consumer.update_columns(customer_ticket_id: nil, nth_quota: nil)
-        customer_ticket.update(consumed_quota: customer_ticket.customer_ticket_consumers.sum(:ticket_quota_consumed))
+        consumer.customer_tickets_quota.delete(customer_ticket.id)
+        consumer.booking_amount = consumer.amount_need_to_pay
+        consumer.save!
+        total_consumed_quota = customer_ticket.customer_ticket_consumers.sum(:ticket_quota_consumed)
+        customer_ticket.update(
+          state: total_consumed_quota == customer_ticket.total_quota ? :completed : :active,
+          consumed_quota: total_consumed_quota
+        )
       end
     end
   end

@@ -12,10 +12,10 @@ class CustomerPayments::StripePayReservation < ActiveInteraction::Base
     begin
       stripe_charge = Stripe::Charge.create(
         {
-          amount: reservation_customer.booking_amount.fractional,
+          amount: reservation_customer.booking_amount.fractional * reservation_customer.booking_amount.currency.default_subunit_to_unit,
           currency: reservation_customer.booking_amount.currency.iso_code,
           customer: customer.stripe_customer_id,
-          description: "#{reservation_customer.booking_option.name}".first(STRIPE_DESCRIPTION_LIMIT),
+          description: "#{reservation_customer.booking_options.map(&:name).join(", ")}".first(STRIPE_DESCRIPTION_LIMIT),
           metadata: {
             reservation_customer_id: reservation_customer.id,
             customer_id: customer.id,

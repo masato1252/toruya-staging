@@ -1,5 +1,5 @@
 <div class="reservation-menu reservation-info-row">
-  <i class="fa fa-ticket-alt text-gray-500"></i><span><%= "#{reservation_customer.customer_ticket.code} (#{reservation_customer.nth_quota}/#{reservation_customer.customer_ticket.total_quota}#{I18n.t('common.times')})" %> <%= I18n.t("common.expire_date") %>: <%= I18n.l(reservation_customer.customer_ticket.expire_at.to_date) %></span>
+  <i class="fa fa-ticket-alt text-gray-500"></i><span><%= "#{customer_ticket.code} (#{reservation_customer.nth_quota_of_customer_ticket(customer_ticket)}/#{customer_ticket.total_quota}#{I18n.t('common.times')})" %> <%= I18n.t("common.expire_date") %>: <%= I18n.l(customer_ticket.expire_at.to_date) %></span>
 
   <%= modal_link_to(
     t("action.change"),

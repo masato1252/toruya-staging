@@ -9,7 +9,7 @@ module Reservations
 
     def execute
       reservation.transaction do
-        reservation_for_staff.accepted!
+        ReservationStaff.where(reservation_id: reservation_for_staff.reservation_id, staff_id: reservation_for_staff.staff_id).each(&:accepted!)
         reservation.reservation_customers.pending.each do |reservation_customer|
           compose(
             ReservationCustomers::Accept,
@@ -18,6 +18,7 @@ module Reservations
             current_staff: current_staff
           )
         end
+
         reservation.try_accept
         reservation.save!
 

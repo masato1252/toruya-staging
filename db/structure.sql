@@ -716,7 +716,9 @@ CREATE TABLE public.booking_pages (
     customer_cancel_request boolean DEFAULT false,
     customer_cancel_request_before_day integer DEFAULT 1 NOT NULL,
     payment_option character varying DEFAULT 'offline'::character varying,
-    booking_limit_hours integer DEFAULT 0 NOT NULL
+    booking_limit_hours integer DEFAULT 0 NOT NULL,
+    cut_off_time timestamp(6) without time zone DEFAULT NULL::timestamp without time zone,
+    multiple_selection boolean DEFAULT false
 );
 
 
@@ -2102,7 +2104,9 @@ CREATE TABLE public.reservation_customers (
     customer_ticket_id integer,
     slug character varying,
     cancel_reason character varying,
-    function_access_id bigint
+    function_access_id bigint,
+    booking_option_ids jsonb DEFAULT '[]'::jsonb,
+    customer_tickets_quota jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -4623,13 +4627,6 @@ CREATE UNIQUE INDEX consultant_account_token_index ON public.consultant_accounts
 
 
 --
--- Name: consumer_ticket_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX consumer_ticket_index ON public.customer_ticket_consumers USING btree (consumer_id, consumer_type);
-
-
---
 -- Name: contact_groups_google_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5019,6 +5016,13 @@ CREATE INDEX index_customer_payments_on_customer_id ON public.customer_payments 
 --
 
 CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.customer_payments USING btree (product_id, product_type);
+
+
+--
+-- Name: index_customer_ticket; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_customer_ticket ON public.customer_ticket_consumers USING btree (customer_ticket_id, consumer_id, consumer_type);
 
 
 --
@@ -6117,6 +6121,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241108231106'),
 ('20241108231107'),
 ('20241108231108'),
-('20241121003446');
+('20241121003446'),
+('20241128194906'),
+('20241129233118'),
+('20241204010941'),
+('20241205095949');
 
 

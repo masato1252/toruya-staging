@@ -22,6 +22,14 @@ class Money
     alias_method :default_localize_formatting_rules, :localize_formatting_rules
     alias_method :localize_formatting_rules, :custom_localize_formatting_rules
   end
+
+  class Currency
+    def default_subunit_to_unit
+      # Normal money .fractional should already be in the subunit, so default_subunit_to_unit should be 1
+      # Currently only TWD needs this
+      Money::Currency.table[id][:default_subunit_to_unit] || 1
+    end
+  end
 end
 
 Money.locale_backend = :i18n
@@ -38,6 +46,7 @@ MoneyRails.configure do |config|
     "alternate_symbols": ["NT$"],
     "subunit": "Cent",
     "subunit_to_unit": 1, # original: 100
+    "default_subunit_to_unit": 100,
     "symbol_first": true,
     "html_entity": "$",
     "decimal_mark": ".",

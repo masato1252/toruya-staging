@@ -59,6 +59,7 @@ const BookingPageEdit =({props}) => {
     defaultValues: {
       ...props.booking_page,
       overbooking_restriction: String(props.booking_page.overbooking_restriction),
+      multiple_selection: String(props.booking_page.multiple_selection),
       line_sharing: String(props.booking_page.line_sharing),
       customer_cancel_request: String(props.booking_page.customer_cancel_request),
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
@@ -324,6 +325,19 @@ const BookingPageEdit =({props}) => {
         return <BookingEndAtField i18n={i18n} register={register} watch={watch} control={control} />
       case "overbooking_restriction":
         return <OverbookingRestrictionField i18n={i18n} register={register} />
+      case "multiple_selection":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input name="multiple_selection" type="radio" value="true" ref={register({ required: true })} />
+              {i18n.multiple_selection_label}
+            </label>
+            <label className="field-row flex-start">
+              <input name="multiple_selection" type="radio" value="false" ref={register({ required: true })} />
+              {i18n.not_multiple_selection_label}{i18n.not_multiple_selection_sentence}
+            </label>
+          </>
+        )
       case "line_sharing":
         return <LineSharingField i18n={i18n} register={register} />
       case "customer_cancel_request":

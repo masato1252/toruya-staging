@@ -6,7 +6,7 @@ class BookingMailer < CustomerMailer
     @shop = @reservation.shop
     @customer = params[:customer]
     @booking_page = params[:booking_page]
-    @booking_option = params[:booking_option]
+    @booking_options = params[:booking_options]
 
     tax_type = I18n.t("settings.booking_option.form.#{@booking_option.tax_include ? "tax_include" : "tax_excluded"}")
     @price = "#{@booking_option.amount.format(:ja_default_format)}(#{tax_type})"

@@ -683,6 +683,11 @@ ja:
             base:
               something_wrong: "^支払いに失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
               paying_reservation_something_wrong: "^予約に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+        booking/create_reservation_for_timeslot:
+          attributes:
+            base:
+              something_wrong: "^支払いに失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              paying_reservation_something_wrong: "^予約に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
         identification_codes/verify_user:
           attributes:
             phone_number:
@@ -792,6 +797,33 @@ ja:
               not_enough_ability: "^対応人数超"
             menu_id:
               time_not_enough: "^所要時間不足"
+              not_enough_seat: "^席数不足"
+              unschedule_menu: "^予約枠外"
+              start_yet: "^受付開始 %{start_at}"
+              is_over: "^受付終了"
+              shop_or_staff_not_enough_ability: "^オーバーブッキング中！"
+              lack_staffs: "^対応スタッフ不足"
+        reservable/reservation_for_timeslot:
+          attributes:
+            date:
+              shop_closed: "^休業日"
+            start_time:
+              interval_too_short: "^インターバル不足"
+              invalid_time: "^予約時間が正しくありません。"
+            end_time:
+              interval_too_short: "^インターバル不足"
+              invalid_time: "^予約時間が正しくありません。"
+            staff_ids:
+              unworking_staff: "^休暇中"
+              ask_for_leave: "^休暇中"
+              freelancer: "^勤務時間未設定"
+              other_shop: "^他店勤務中"
+              overlap_reservations: "^重複予約あり"
+              incapacity_menu: "^非対応メニュー"
+              not_enough_ability: "^対応人数超"
+            total_require_time:
+              time_not_enough: "^所要時間不足"
+            menu_ids:
               not_enough_seat: "^席数不足"
               unschedule_menu: "^予約枠外"
               start_yet: "^受付開始 %{start_at}"

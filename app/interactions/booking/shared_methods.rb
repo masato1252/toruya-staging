@@ -4,6 +4,72 @@ require "flow_backtracer"
 
 module Booking
   module SharedMethods
+    def loop_for_reserable_timeslot(
+      shop:,
+      staff_ids:,
+      booking_page:,
+      booking_options:,
+      date:,
+      booking_start_at:,
+      overbooking_restriction:,
+      overlap_restriction: true,
+      customer: nil
+    )
+      return if date < booking_page.available_booking_start_date
+
+      menu_ids = booking_options.map(&:menu_ids).flatten.uniq
+      # if all menus are not single seat, then check same content reservation
+      # otherwise, don't need to check
+      if !booking_page.overbooking_restriction || ShopMenu.where(shop_id: shop.id, menu_id: menu_ids).where("max_seat_number > 1").exists?
+        if same_content_reservation = matched_same_menus_reservation(
+          shop: shop,
+          booking_page: booking_page,
+          booking_start_at: booking_start_at,
+          booking_options: booking_options
+        )
+          # yield menus, staffs, reservation(if it is existing)
+          yield booking_options.map(&:menus).flatten.uniq, same_content_reservation.reservation_staffs.map { |reservation_staff|
+            { staff_id: reservation_staff.staff_id, state: reservation_staff.state }
+          }, same_content_reservation
+        end
+      end
+
+      # assume always single one staff handle reservation
+      staff_ids = staff_ids.each do |staff_id|
+        reserable_outcome = Reservable::ReservationForTimeslot.run(
+          shop: shop,
+          date: date,
+          start_time: booking_start_at,
+          total_require_time: booking_options.sum(&:minutes),
+          interval_time: booking_options.map(&:menus).flatten.map(&:interval).max,
+          menu_ids: booking_options.map(&:menus).flatten.map(&:id).uniq,
+          staff_ids: [staff_id],
+          overlap_restriction: overlap_restriction,
+          overbooking_restriction: overbooking_restriction,
+          skip_before_interval_time_validation: false,
+          skip_after_interval_time_validation: false,
+          online_reservation: booking_options.all?(&:online?),
+          booking_page: booking_page
+        )
+
+        if reserable_outcome.valid?
+          valid_menus = booking_options.map(&:booking_option_menus).flatten.uniq.group_by(&:menu_id).map.with_index do |(menu_id, booking_option_menus), index|
+            {
+              menu_id: menu_id,
+              position: index,
+              menu_interval_time: booking_option_menus.first.menu.interval,
+              menu_required_time: booking_option_menus.sum(&:required_time),
+              staff_ids: [{ staff_id: staff_id }],
+            }
+          end
+
+          yield valid_menus, [{ staff_id: staff_id, state: "pending" }], nil
+          # TODO: validate multiple staffs still only pick one to book
+          break
+        end
+      end
+    end
+
     # date: Date object
     def loop_for_reserable_spot(shop:, booking_page:, booking_option:, date:, booking_start_at:, overbooking_restriction:, overlap_restriction: true, customer: nil)
       # staffs are unavailable all days
@@ -11,6 +77,7 @@ module Booking
 
       return if date < booking_page.available_booking_start_date
 
+      # TODO: [Multiple booking option] for support multiple booking options, use menus to match
       if same_content_reservation = matched_same_content_reservation(shop: shop, booking_page: booking_page, booking_start_at: booking_start_at, booking_option: booking_option)
         # yield menus, staffs, reservation(if it is existing)
         yield booking_option.menus, same_content_reservation.reservation_staffs.map { |reservation_staff|
@@ -18,6 +85,8 @@ module Booking
         }, same_content_reservation
       end
 
+      # TODO: [Multiple booking option] for support multiple booking options, use all booking options menus to match
+      # Make it simpler, since we assume all staffs could handle it, no order issue, just check slot for total time
       booking_option.possible_menus_order_groups.each do |candidate_booking_option_menus_group|
         catch :next_menu_group do
           menu_position = 0
@@ -229,6 +298,47 @@ module Booking
             else
               next
             end
+          end
+        end
+      end
+
+      reservation
+    end
+
+    def matched_same_menus_reservation(shop:, booking_page:, booking_start_at:, booking_options:)
+      reservation = nil
+
+      Reservation.uncanceled.where(
+        shop: shop,
+        start_time: booking_start_at,
+      ).each do |same_time_reservation|
+        same_time_reservation.with_lock do
+          if booking_options.map(&:menus).flatten.pluck(:id).uniq.sort != same_time_reservation.reservation_menus.pluck(:menu_id).uniq.sort
+            next
+          end
+
+          present_reservable_reservation_outcome = Reservable::ReservationForTimeslot.run(
+            shop: shop,
+            date: booking_start_at.to_date,
+            start_time: booking_start_at,
+            total_require_time: booking_options.sum(&:minutes),
+            interval_time: booking_options.map(&:menus).flatten.map(&:interval).max,
+            menu_ids: booking_options.map(&:menus).flatten.map(&:id).uniq,
+            staff_ids: same_time_reservation.reservation_staffs.map(&:staff_id),
+            reservation_id: same_time_reservation.id,
+            number_of_customer: same_time_reservation.count_of_customers + 1,
+            overbooking_restriction: booking_page.overbooking_restriction,
+            skip_before_interval_time_validation: true,
+            skip_after_interval_time_validation: true,
+            online_reservation: booking_options.any?(&:online?),
+            booking_page: booking_page
+          )
+
+          if present_reservable_reservation_outcome.valid?
+            reservation = same_time_reservation
+            break
+          else
+            next
           end
         end
       end

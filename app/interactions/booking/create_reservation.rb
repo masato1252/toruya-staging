@@ -202,7 +202,7 @@ module Booking
                     if reservation_customer = same_content_reservation.reservation_customers.find_by(customer: customer)
                       reservation_customer.update(
                         booking_page_id: booking_page.id,
-                        booking_option_id: booking_option_id,
+                        booking_option_ids: [booking_option_id],
                         booking_amount_cents: booking_option.amount.fractional,
                         booking_amount_currency: booking_option.amount.currency.to_s,
                         tax_include: booking_option.tax_include,
@@ -219,7 +219,7 @@ module Booking
                           customer_id: customer.id,
                           state: "pending",
                           booking_page_id: booking_page.id,
-                          booking_option_id: booking_option_id,
+                          booking_option_ids: [booking_option_id],
                           booking_amount_cents: booking_option.amount.fractional,
                           booking_amount_currency: booking_option.amount.currency.to_s,
                           tax_include: booking_option.tax_include,
@@ -245,7 +245,7 @@ module Booking
                           customer_id: customer.id,
                           state: "pending",
                           booking_page_id: booking_page.id,
-                          booking_option_id: booking_option_id,
+                          booking_option_ids: [booking_option_id],
                           booking_amount_cents: booking_option.amount.fractional,
                           booking_amount_currency: booking_option.amount.currency.to_s,
                           tax_include: booking_option.tax_include,
@@ -377,6 +377,10 @@ module Booking
 
     def booking_page
       @booking_page ||= BookingPage.find_by(slug: booking_page_id) || BookingPage.find(booking_page_id)
+    end
+
+    def booking_options
+      @booking_options ||= user.booking_options.where(id: booking_option_ids)
     end
 
     def booking_option

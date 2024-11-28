@@ -642,6 +642,11 @@ tw:
         customer_cancel_request_label: 允許
         not_customer_cancel_request_label: 不允許
         customer_cancel_request_before_day_label: 允許取消的期限
+        multiple_selection: 客戶一次選擇多個預約項目
+        multiple_selection_title: 客戶一次選擇多個預約項目
+        multiple_selection_label: 允許預約多個項目
+        not_multiple_selection_label: 不允許預約多個項目
+        not_multiple_selection_sentence: (建議：您可以用預約項目整合多個服務，更易吸引客人)
         requirements: 會員限定預約
         requirements_title: 會員限定預約
         no_membership_services: 尚未設定會員限定預約。

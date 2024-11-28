@@ -3,9 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Tickets::AutoProcess do
-  let(:consumer) { FactoryBot.create(:reservation_customer) }
-  let(:user) { customer.user }
-  let(:customer) { consumer.customer }
+  let(:user) { FactoryBot.create(:user) }
+  let(:consumer) { FactoryBot.create(:reservation_customer, customer: customer, booking_option_ids: [product.id]) }
+  let(:customer) { FactoryBot.create(:customer, user: user) }
   let(:product) { FactoryBot.create(:booking_option, ticket_quota: 3, user: user) }
 
   let(:args) do
@@ -38,25 +38,30 @@ RSpec.describe Tickets::AutoProcess do
         customer_ticket = customer.customer_tickets.where(ticket: ticket).take
         expect(customer_ticket.consumed_quota).to eq(1)
         expect(customer_ticket.customer_ticket_consumers.count).to eq(1)
-        expect(consumer.customer_ticket).to eq(customer_ticket)
-        expect(consumer.nth_quota).to eq(1)
+        expect(consumer.customer_tickets.count).to eq(1)
+        expect(consumer.customer_tickets).to include(customer_ticket)
+        expect(consumer.nth_quota_of_product(product)).to eq(1)
+        expect(consumer.booking_amount).to eq(product.amount)
 
         second_consumer = FactoryBot.create(:reservation_customer, customer: customer)
         described_class.run(args.merge(consumer: second_consumer)) # consume second quota, left 1
         expect(customer_ticket.reload.consumed_quota).to eq(2)
         expect(customer_ticket.customer_ticket_consumers.count).to eq(2)
-        expect(second_consumer.customer_ticket).to eq(customer_ticket)
-        expect(second_consumer.nth_quota).to eq(2)
+        expect(second_consumer.customer_tickets).to include(customer_ticket)
+        expect(second_consumer.nth_quota_of_product(product)).to eq(2)
+        expect(second_consumer.booking_amount).to eq(0)
 
         third_consumer = FactoryBot.create(:reservation_customer, customer: customer)
         described_class.run(args.merge(consumer: third_consumer)) # consume third quota, left 0
         expect(customer_ticket.reload.consumed_quota).to eq(3)
         expect(customer_ticket).to be_completed
         expect(customer_ticket.customer_ticket_consumers.count).to eq(3)
-        expect(third_consumer.customer_ticket).to eq(customer_ticket)
-        expect(third_consumer.nth_quota).to eq(3)
+        expect(third_consumer.customer_tickets).to include(customer_ticket)
+        expect(third_consumer.nth_quota_of_product(product)).to eq(3)
+        expect(third_consumer.booking_amount).to eq(0)
 
-        described_class.run(args.merge(consumer: FactoryBot.create(:reservation_customer, customer: customer))) # last ticket was consumed all
+        new_consumer = FactoryBot.create(:reservation_customer, customer: customer, booking_option_ids: [product.id])
+        described_class.run(args.merge(consumer: new_consumer)) # last ticket was consumed all
         expect(user.tickets.count).to eq(1) # use the same ticket, doesn't create a new one
         expect(customer.customer_tickets.where(ticket: ticket).count).to eq(2) # create new customer ticket
         expect(ticket.customer_tickets.count).to eq(2)
@@ -64,6 +69,9 @@ RSpec.describe Tickets::AutoProcess do
 
         expect(new_customer_ticket.consumed_quota).to eq(1)
         expect(new_customer_ticket.customer_ticket_consumers.count).to eq(1)
+        expect(new_consumer.customer_tickets).to include(new_customer_ticket)
+        expect(new_consumer.nth_quota_of_product(product)).to eq(1)
+        expect(new_consumer.booking_amount).to eq(product.amount)
       end
     end
 

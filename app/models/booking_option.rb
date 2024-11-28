@@ -58,7 +58,11 @@ class BookingOption < ApplicationRecord
   end
 
   def present_name
-    display_name.presence || name
+    if ActionView::Base.full_sanitizer.sanitize(display_name).present?
+      display_name
+    else
+      name
+    end
   end
   alias_method :show_name, :present_name
 

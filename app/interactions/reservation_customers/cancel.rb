@@ -12,7 +12,7 @@ module ReservationCustomers
       reservation_customer.with_lock do
         reservation_customer.canceled!
 
-        if customer_ticket = reservation_customer.customer_ticket
+        reservation_customer.customer_tickets.each do |customer_ticket|
           compose(Tickets::Revert, consumer: reservation_customer, customer_ticket: customer_ticket)
         end
 

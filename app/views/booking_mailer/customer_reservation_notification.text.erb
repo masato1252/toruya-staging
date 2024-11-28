@@ -14,7 +14,7 @@
 <%= I18n.l(@reservation.start_time, format: :time_only) %> ~ <%= I18n.l(@reservation.end_time, format: :time_only) %>
 
 予約価格：
-<%= @booking_option.display_name %>
+<%= @booking_options..display_name %>
 <%= @price %>
 
 ご予約内容の変更・キャンセルは <%= @shop.phone_number %> までご連絡ください。

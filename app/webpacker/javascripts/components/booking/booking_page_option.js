@@ -3,7 +3,16 @@
 import React from "react";
 import { TicketPriceDesc } from "shared/components";
 
-const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n, booking_start_at, last_selected_option_id, ticket }) => {
+const BookingPageOption = ({
+  booking_option_value,
+  selectBookingOptionCallback,
+  unselectBookingOption,
+  i18n,
+  booking_start_at,
+  last_selected_option_ids,
+  ticket,
+  selected_booking_option_ids
+}) => {
   let option_content;
   const {
     open_details,
@@ -14,7 +23,10 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
   } = i18n;
 
   const handleOptionClick = (booking_option_id) => {
-    if (selectBookingOptionCallback) {
+    if (selected_booking_option_ids.includes(booking_option_id)) {
+      unselectBookingOption(booking_option_id)
+    }
+    else if (selectBookingOptionCallback) {
       selectBookingOptionCallback(booking_option_id)
     }
   }
@@ -50,7 +62,7 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
     <div className="result-field">
       <div className="booking-option-field" data-controller="collapse" data-collapse-status="closed">
         <div className="booking-option-info" onClick={() => handleOptionClick(booking_option_value.id)}>
-          {last_selected_option_id && last_selected_option_id === booking_option_value.id && (
+          {last_selected_option_ids && last_selected_option_ids.includes(booking_option_value.id) && (
             <div className="last-selected-option">
               <i className="fa fa-repeat" aria-hidden="true"></i>{last_selected_option}
             </div>

@@ -36,7 +36,7 @@ module Subscriptions
 
         begin
           stripe_charge = Stripe::Charge.create({
-            amount: amount.fractional,
+            amount: amount.fractional * amount.currency.default_subunit_to_unit,
             currency: amount.currency.iso_code,
             customer: user.subscription.stripe_customer_id,
             description: description,

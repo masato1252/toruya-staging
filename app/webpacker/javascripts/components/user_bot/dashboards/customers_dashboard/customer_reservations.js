@@ -89,12 +89,11 @@ const UserBotCustomerReservations = () =>{
               </div>
               <div className="content">
                 <div className="top">
-                  {reservation.menu}
-                  {reservation.ticket_code && (
-                    <>
-                      <i className="fa fa-ticket-alt text-gray-500"></i> {reservation.ticket_code} ({reservation.nth_quota}/{reservation.total_quota}{I18n.t("common.times")} {I18n.t("common.expire_date")}: {reservation.ticket_expire_date})
-                    </>
-                  )}
+                  {reservation.menu} {reservation.tickets?.map((ticket) => (
+                    <span key={ticket.ticket_code}>
+                      <i className="fa fa-ticket-alt text-gray-500"></i> {ticket.ticket_code} ({ticket.nth_quota}/{ticket.total_quota}{I18n.t("common.times")} {I18n.t("common.expire_date")}: {ticket.ticket_expire_date})
+                    </span>
+                  ))}
                 </div>
               </div>
               <div className="info">

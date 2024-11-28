@@ -3,14 +3,14 @@
 class ReservationBookingJob < ApplicationJob
   queue_as :default
 
-  def perform(customer, reservation, email, phone_number, booking_page, booking_option)
+  def perform(customer, reservation, email, phone_number, booking_page, booking_options)
     Reservations::Notifications::Booking.run!(
       customer: customer,
       reservation: reservation,
       email: email,
       phone_number: phone_number,
       booking_page: booking_page,
-      booking_option: booking_option
+      booking_options: booking_options
     )
 
     CustomMessage.scenario_of(booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER).where.not(before_minutes: nil).each do |custom_message|

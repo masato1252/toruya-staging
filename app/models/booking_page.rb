@@ -17,6 +17,7 @@
 #  greeting                           :text
 #  interval                           :integer
 #  line_sharing                       :boolean          default(TRUE)
+#  multiple_selection                 :boolean          default(FALSE)
 #  name                               :string           not null
 #  note                               :text
 #  online_payment_enabled             :boolean          default(FALSE)

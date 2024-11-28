@@ -35,7 +35,7 @@
 
     <% if @reservation_customer.booking_page.deleted_at.nil? %>
       <div class="margin-around">
-        <%= link_to t("booking_page.done.back_to_book"), booking_page_url(@reservation_customer.booking_page.slug, last_booking_option_id: @reservation_customer.booking_option_id), class: "btn btn-tarco" %>
+        <%= link_to t("booking_page.done.back_to_book"), booking_page_url(@reservation_customer.booking_page.slug, last_booking_option_id: @reservation_customer.booking_option_ids&.join(",")), class: "btn btn-tarco" %>
       </div>
     <% end %>
     <hr class="mb-8 bg-gray-300 border-0 h-px" />

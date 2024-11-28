@@ -1,0 +1,40 @@
+<div>
+  <% reservation_customers.each do |reservation_customer| %>
+    <%= link_to booking_url(reservation_customer.slug), class: "text-gray-700 no-underline" do %>
+      <div class="p-6 border border-solid border-gray-500 rounded-md my-1">
+        <h3 class="text-lg font-bold mb-2">
+          <%= reservation_customer.reservation.booking_time %>
+        </h3>
+
+        <div class="text-sm text-gray-500">
+          <%= t("common.reservation_details") %>: <%= t("reservation.#{reservation_customer.reservation_state}") %>
+        </div>
+
+        <div class="text-sm text-gray-500 mb-2">
+          <%= reservation_customer.reservation.menus_sentence %>
+        </div>
+        <div class="text-sm text-gray-500 mb-2">
+          <%= reservation_customer.reservation.shop.display_name %>
+        </div>
+
+        <div class="description">
+          <%= reservation_customer.reservation.shop.company_full_address %>
+        </div>
+
+        <% if (reservation_customer.booking_page && reservation_customer.booking_page.deleted_at.nil?) || reservation_customer.reservation.shop.phone_number.present? %>
+          <div class="mt-2 border-0 border-t border-solid border-gray-300 py-3">
+            <% if reservation_customer.booking_page && reservation_customer.booking_page.deleted_at.nil? %>
+              <%= link_to t("booking_page.done.back_to_book"), booking_page_url(reservation_customer.booking_page.slug, last_booking_option_ids: reservation_customer.booking_option_ids&.join(",")), class: "btn btn-tarco my-1" %>
+            <% end %>
+
+            <% if reservation_customer.reservation.shop.phone_number.present? %>
+              <%= link_to "tel:#{reservation_customer.reservation.shop.phone_number.gsub(/\D/, '')}", class: "btn btn-gray text-white" do %>
+                <i class='fa fa-phone'></i> <span class="text-sm"><%= reservation_customer.reservation.shop.phone_number %></span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

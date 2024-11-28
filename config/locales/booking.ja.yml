@@ -34,6 +34,7 @@ ja:
     booking_end_at: 終了予定
     thanks_for_come_back: いつもご利用ありがとうございます
     please_select_a_menu: メニューをお選びください
+    selected_booking_options: 選択したメニュー
     reset_button: 始めからやり直す
     last_selected_option: 前回ご利用のメニュー
     i_dont_use_line: LINEは持っていません

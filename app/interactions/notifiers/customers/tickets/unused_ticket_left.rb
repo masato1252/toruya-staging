@@ -36,7 +36,7 @@ module Notifiers
         end
 
         def booking_page_url
-          url_helpers.booking_page_url(reservation_customer.booking_page.slug, last_booking_option_id: reservation_customer.booking_option_id)
+          url_helpers.booking_page_url(reservation_customer.booking_page.slug, last_booking_option_ids: reservation_customer.booking_option_ids.join(","))
         end
       end
     end

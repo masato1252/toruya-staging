@@ -28,6 +28,7 @@ module BookingPages
         end
       end
       boolean :overbooking_restriction, default: true
+      boolean :multiple_selection, default: false
 
       string :payment_option, default: "offline"
       array :booking_page_online_payment_options_ids, default: []
@@ -200,7 +201,7 @@ module BookingPages
             booking_limit_hours: attrs[:booking_limit_hours],
             bookable_restriction_months: attrs[:bookable_restriction_months]
           )
-        when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable"
+        when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable", "multiple_selection"
           booking_page.update(attrs.slice(update_attribute))
         when "customer_cancel_request"
           booking_page.update(

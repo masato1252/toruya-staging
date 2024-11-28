@@ -21,7 +21,7 @@ class CustomerPaymentSerializer
     when OnlineServiceCustomerRelation
       object.product.online_service.name
     when ReservationCustomer
-      object.product.booking_option.name
+      object.product.booking_options.map(&:name).join(", ")
     end
   end
 
@@ -29,24 +29,16 @@ class CustomerPaymentSerializer
     object.amount.format
   end
 
-  attribute :ticket_code do |object|
+  attribute :tickets do |object|
     case object.product
     when ReservationCustomer
-      object.product.customer_ticket&.code
-    end
-  end
-
-  attribute :ticket_total_quota do |object|
-    case object.product
-    when ReservationCustomer
-      object.product.customer_ticket&.total_quota
-    end
-  end
-
-  attribute :remaining_ticket_quota do |object|
-    case object.product
-    when ReservationCustomer
-      object.product.customer_ticket&.remaining_quota
+      object.product.customer_tickets&.map do |customer_ticket|
+        {
+          ticket_code: customer_ticket.code,
+          ticket_total_quota: customer_ticket.total_quota,
+          ticket_remaining_quota: customer_ticket.remaining_quota
+        }
+      end
     end
   end
 end
