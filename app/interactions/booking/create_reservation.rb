@@ -265,7 +265,7 @@ module Booking
                       reservation = reservation_outcome.result
                       throw :booked_reservation
                     else
-                      errors.merge!(reservation.errors)
+                      errors.merge!(reservation_outcome.errors)
                     end
                   end
                 end
