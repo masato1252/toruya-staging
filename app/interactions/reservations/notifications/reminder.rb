@@ -7,9 +7,9 @@ module Reservations
         I18n.with_locale(customer.locale) do
           return unless reservation.remind_customer?(customer)
 
-          if customer.email.present?
-            CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_reminder.deliver_now
-          end
+          # if customer.email.present?
+          #   CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_reminder.deliver_now
+          # end
 
           super
         end
