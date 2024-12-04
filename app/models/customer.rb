@@ -59,6 +59,7 @@
 # }
 
 class Customer < ApplicationRecord
+  has_paper_trail on: [:update]
   BLACKLIST_IDS = [6388]
   include NormalizeName
   include SayHi
