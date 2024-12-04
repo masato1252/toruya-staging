@@ -396,7 +396,7 @@ class Customer < ApplicationRecord
   end
 
   def locale
-    social_customer&.locale || user.locale
+    user.locale
   end
 
   private
