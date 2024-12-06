@@ -56,6 +56,9 @@ const BookingOptionEdit =({props}) => {
       const htmlContent = draftToHtml(rawContentState);
       data[props.attribute] = htmlContent;
     }
+    else if (props.attribute === "display_name" && inputType === 'simple') {
+      data[props.attribute] = displayName;
+    }
 
     [error, response] = await BookingOptionServices.update({
       booking_option_id: props.booking_option.id,
