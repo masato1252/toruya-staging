@@ -79,7 +79,7 @@ class BookingPagesController < ActionController::Base
       end
     end
 
-    @booking_page_options = @booking_page.booking_page_options.includes(:booking_option).references(:booking_options).merge(BookingOption.active)
+    @booking_page_options = @booking_page.booking_page_options.includes(:booking_option).references(:booking_options)
   end
 
   def booking_reservation
