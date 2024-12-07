@@ -8,12 +8,8 @@
   <div class="field-header" id="display_name"><%= I18n.t("settings.booking_option.form.display_name") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :display_name), title: @booking_option.display_name %>
 
-  <%
-=begin%>
  <div class="field-header" id="booking_pages"><%= I18n.t("settings.booking_option.form.booking_pages") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :booking_page_ids), title: @booking_option.booking_pages.pluck(:name).join(", ") %> 
-<%
-=end%>
   <div class="field-group-header" id="new_menu"><%= I18n.t("settings.booking_option.form.menu_for_sale_label") %></div>
   <div class="field-header"><%= I18n.t("common.menu") %></div>
   <%= react_component("user_bot/booking_options/menus", {

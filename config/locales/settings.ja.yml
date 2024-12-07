@@ -482,8 +482,8 @@ ja:
         new_pure_menu_title: 新しいメニューを作成する
         menu_required_time_title: 所要時間
         menu_required_time_top_bar_header: 販売メニュー
-        booking_page_ids_title: 予約ページ
-        booking_page_ids_top_bar_header: 予約ページ
+        booking_page_ids_title: 掲載中の予約ページ
+        booking_page_ids_top_bar_header: 掲載中の予約ページ
         booking_options_total_time_tip: 販売メニューから自動計算
         time_span_label: 予約時間
         total_time: 合計時間
