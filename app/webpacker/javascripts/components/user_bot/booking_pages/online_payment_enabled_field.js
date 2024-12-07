@@ -25,10 +25,10 @@ const OnlinePaymentEnabledField = ({i18n, register, watch, payment_provider_opti
         <input name="payment_option" type="radio" value="offline" ref={register({ required: true })} />
         {i18n.payment_option_options.offline}
       </label>
-      <label className="field-row flex-start">
+      {/* <label className="field-row flex-start">
         <input name="payment_option" type="radio" value="custom" ref={register({ required: true })} />
         {i18n.payment_option_options.custom}
-      </label>
+      </label> */}
       {watch("payment_option") == "custom" ? (
         <>
           {booking_options_payment_options.map((booking_option_payment_option) => {
