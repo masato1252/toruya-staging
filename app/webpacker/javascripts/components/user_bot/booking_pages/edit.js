@@ -421,12 +421,12 @@ const BookingPageEdit =({props}) => {
         return (
           <>
             <label className="field-row flex-start">
-              <input name="multiple_selection" type="radio" value="true" ref={register({ required: true })} />
-              {i18n.multiple_selection_label}
-            </label>
-            <label className="field-row flex-start">
               <input name="multiple_selection" type="radio" value="false" ref={register({ required: true })} />
               {i18n.not_multiple_selection_label}{i18n.not_multiple_selection_sentence}
+            </label>
+            <label className="field-row flex-start">
+              <input name="multiple_selection" type="radio" value="true" ref={register({ required: true })} />
+              {i18n.multiple_selection_label}
             </label>
           </>
         )

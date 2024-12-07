@@ -651,15 +651,14 @@ ja:
         customer_cancel_request_label: 許可する
         not_customer_cancel_request_label: 許可しない
         customer_cancel_request_before_day_label: までキャンセルを許可
-        multiple_selection: 預約価格複数選択
-        multiple_selection_title: 預約価格複数選択
-        multiple_selection_label: 複数の予約価格を選択可能
-        not_multiple_selection_label: 複数の予約価格を選択不可
-        not_multiple_selection_sentence: (推奨：予約価格で複数のサービスを組み合わせると、より魅力的になります)
-        customer_address_required: 予約時に住所の入力が必要
-        customer_address_required_title: 予約時に住所の入力が必要
-        customer_address_required_label: 需要
-        not_customer_address_required_label: 不需要
+        multiple_selection: 価格の複数選択
+        multiple_selection_title: 価格の複数選択
+        multiple_selection_label: 複数選択可能（選択された価格の所要時間を合計した空き時間がある場合のみ予約可能）
+        not_multiple_selection_label: 複数選択不可
+        customer_address_required: 予約時の住所入力
+        customer_address_required_title: 予約時の住所入力
+        customer_address_required_label: 必須
+        not_customer_address_required_label: 不要（入力せずに予約可能）
         requirements: 会員限定予約
         requirements_title: 会員限定予約
         no_membership_services: 会員限定予約が設定されていません。

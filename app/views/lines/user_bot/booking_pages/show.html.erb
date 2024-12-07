@@ -170,15 +170,11 @@
       title: @booking_page.customer_cancel_request ? "#{I18n.t("settings.booking_page.form.customer_cancel_request_label")} (#{@booking_page.customer_cancel_request_before_day} #{I18n.t("common.before_day_word")})" : I18n.t("settings.booking_page.form.not_customer_cancel_request_label")
     %>
 
-    <%
-=begin%>
- <div class="field-group-header" id="multiple_selection"><%= I18n.t("settings.booking_page.form.multiple_selection") %></div>
+    <div class="field-group-header" id="multiple_selection"><%= I18n.t("settings.booking_page.form.multiple_selection") %></div>
     <%= render "lines/user_bot/field_row",
       path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :multiple_selection),
       title: @booking_page.multiple_selection ? I18n.t("settings.booking_page.form.multiple_selection_label") : I18n.t("settings.booking_page.form.not_multiple_selection_label")
-    %> 
-<%
-=end%>
+    %>
 
   <div class="field-group-header" id="customer_address_required"><%= I18n.t("settings.booking_page.form.customer_address_required") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_address_required), title: @booking_page.customer_address_required ? I18n.t("settings.booking_page.form.customer_address_required_label") : I18n.t("settings.booking_page.form.not_customer_address_required_label") %>

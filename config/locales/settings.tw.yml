@@ -656,7 +656,6 @@ tw:
         multiple_selection_title: 客戶一次選擇多個預約項目
         multiple_selection_label: 允許預約多個項目
         not_multiple_selection_label: 不允許預約多個項目
-        not_multiple_selection_sentence: (建議：您可以用預約項目整合多個服務，更易吸引客人)
         customer_address_required: 預約時客戶需填寫住址
         customer_address_required_title: 預約時客戶需填寫住址
         customer_address_required_label: 需要
