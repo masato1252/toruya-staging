@@ -47,7 +47,7 @@ RSpec.describe Plans::Property do
         details: I18n.t("plans")[:basic].dup.merge!(
           customer_number: I18n.t("plans.basic.customer_number", customer_limit:  Plan.max_customers_limit(Plan::BASIC_LEVEL, 0)),
           sale_page_number: I18n.t("plans.basic.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(Plan::BASIC_LEVEL, 0)),
-          ranks: Plan::DETAILS[Plan::BASIC_LEVEL].map { |rank_context| rank_context.merge!(costFormat: rank_context[:cost].to_money.format) }
+          ranks: Plan.plans[Plan::BASIC_LEVEL].map { |rank_context| rank_context.merge!(costFormat: rank_context[:cost].to_money.format) }
         )
       })
     end

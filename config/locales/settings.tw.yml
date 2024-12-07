@@ -373,7 +373,7 @@ tw:
         print_address: 列印地址
         add_staff: 新增員工
       free:
-        title: 免費版
+        title: 試用版
         period: ""
         shop_can_set: "1間店鋪"
         staff_in_charge: "1位"

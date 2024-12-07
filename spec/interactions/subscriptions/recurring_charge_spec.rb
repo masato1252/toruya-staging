@@ -98,7 +98,7 @@ RSpec.describe Subscriptions::RecurringCharge do
         let(:basic_customer_limit) { 2 }
         let(:basic_customer_max_limit) { 5 }
         before do
-          stub_const("Plan::DETAILS", {
+          stub_const("Plan::DETAILS_OLD", {
             Plan::BASIC_LEVEL => [
               {
                 rank: 0,
