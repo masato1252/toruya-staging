@@ -513,9 +513,9 @@ const BookingReservationFormFunction = ({props}) => {
           <SelectedBookingOption
             i18n={props.i18n}
             booking_reservation_form_values={booking_reservation_form_values}
-            booking_option_value={selected_booking_option()}
-            ticket={props.booking_options_quota[booking_option_ids[0]]}
             timezone={props.timezone}
+            booking_option_value={selected_booking_options()[0]}
+            ticket={props.booking_options_quota[booking_option_ids[0]]}
           />
           <BookingCalendar
             i18n={props.i18n}
