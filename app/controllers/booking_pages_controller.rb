@@ -106,7 +106,7 @@ class BookingPagesController < ActionController::Base
       outcome = Booking::CreateReservationForTimeslot.run(
         booking_page_id: params[:id].to_i,
         staff_ids: [booking_page.user.current_staff.id],
-        booking_option_ids: params[:booking_option_ids].presence || booking_page.booking_option_ids,
+        booking_option_ids: params[:booking_option_ids].presence || [params[:booking_option_id]],
         booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
         customer_last_name: params[:customer_last_name],
         customer_first_name: params[:customer_first_name],
@@ -252,7 +252,7 @@ class BookingPagesController < ActionController::Base
           booking_page: booking_page,
           staff_ids: [booking_page.user.current_staff.id],
           date_range: month_dates,
-          booking_option_ids: params[:booking_option_ids],
+          booking_option_ids: params[:booking_option_ids].presence || [params[:booking_option_id]],
           special_dates: special_dates,
           interval: booking_page.interval,
           overbooking_restriction: booking_page.overbooking_restriction,
@@ -318,7 +318,7 @@ class BookingPagesController < ActionController::Base
         Booking::AvailableBookingTimesForTimeslot.run(
           shop: booking_page.shop,
           booking_page: booking_page,
-          booking_option_ids: params[:booking_option_ids],
+          booking_option_ids: params[:booking_option_ids].presence || [params[:booking_option_id]],
           staff_ids: [booking_page.user.current_staff.id],
           special_dates: booking_dates,
           interval: booking_page.interval,
