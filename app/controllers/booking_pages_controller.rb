@@ -159,6 +159,7 @@ class BookingPagesController < ActionController::Base
         status: "successful"
       }
     else
+      booking_page.touch
       Rollbar.error("#{outcome.class} service failed", { errors: outcome.errors.details })
       render json: {
         status: "failed",
