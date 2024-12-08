@@ -51,7 +51,7 @@ const BookingReservationFormFunction = ({props}) => {
     const { booking_options, booking_option_ids } = booking_reservation_form_values;
 
     return _.filter(booking_options, (booking_option) => {
-      return booking_option_ids.includes(booking_option.id)
+      return booking_option_ids?.includes(booking_option.id)
     })
   }
 

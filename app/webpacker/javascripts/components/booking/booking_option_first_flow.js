@@ -67,7 +67,7 @@ const BookingOptionFirstFlow = ({
           </h4>
           {sorted_booking_options(booking_options, last_selected_option_ids)
             .map((booking_option_value) => {
-              if (booking_option_ids.includes(booking_option_value.id)) {
+              if (booking_option_ids?.includes(booking_option_value.id)) {
                 return (
                   <SelectedBookingOption
                     key={`selected-booking-option-${booking_option_value.id}`}

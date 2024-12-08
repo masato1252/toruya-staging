@@ -23,7 +23,7 @@ const BookingPageOption = ({
   } = i18n;
 
   const handleOptionClick = (booking_option_id) => {
-    if (selected_booking_option_ids.includes(booking_option_id)) {
+    if (selected_booking_option_ids?.includes(booking_option_id)) {
       unselectBookingOption(booking_option_id)
     }
     else if (selectBookingOptionCallback) {
