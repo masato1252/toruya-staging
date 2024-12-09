@@ -31,7 +31,7 @@
           <%= render "reservations/show_modal/ticket", reservation_customer: @reservation_customer, customer_ticket: customer_ticket %>
         <% end %>
       <% end %>
-      <%= render "reservations/show_modal/booking_price", reservation_customer: @reservation_customer if @reservation_customer && !@reservation_customer.booking_amount_cents.zero? %>
+      <%= render "reservations/show_modal/booking_price", reservation_customer: @reservation_customer if @reservation_customer && @reservation_customer.booking_amount_cents && !@reservation_customer.booking_amount_cents.zero? %>
       <%= render "reservations/show_modal/customer_info_changed", reservation_customer: @reservation_customer if @reservation_customer %>
       <%= render "reservations/show_modal/booking_from", reservation_customer: @reservation_customer, reservation: @reservation if @reservation_customer %>
     </div>
