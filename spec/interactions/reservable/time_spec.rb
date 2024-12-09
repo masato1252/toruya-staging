@@ -128,6 +128,8 @@ RSpec.describe Reservable::Time do
 
       it "returns available time range" do
         expect(Reservable::Time.run!(shop: shop, booking_page: booking_page, date: date)).to eq([ business_schedule.start_time_on(date)..business_schedule.end_time_on(date) ])
+
+        expect(Reservable::Time.run(shop: shop, booking_page: booking_page, date: date.advance(days: 1))).to be_invalid
       end
     end
 
@@ -147,6 +149,7 @@ RSpec.describe Reservable::Time do
           booking_page_special_date1.start_at..booking_page_special_date1.end_at,
           booking_page_special_date2.start_at..booking_page_special_date2.end_at
         ])
+        expect(Reservable::Time.run(shop: shop, booking_page: booking_page, date: date.advance(days: 1))).to be_invalid
       end
     end
   end

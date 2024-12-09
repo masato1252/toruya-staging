@@ -40,6 +40,7 @@ module Reservable
         end
       end
 
+      # Booking Page schedule
       if booking_page && booking_page.business_schedules.exists?
         if booking_page_schedules.present?
           return booking_page_schedules
