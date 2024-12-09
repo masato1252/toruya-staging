@@ -32,11 +32,19 @@ module Reservable
       end
 
       if booking_page && booking_page.business_schedules.exists?
-        return booking_page_schedules
+        if booking_page_schedules.present?
+          return booking_page_schedules
+        else
+          errors.add(:date, :shop_closed)
+        end
       end
 
       if booking_page && booking_page.booking_page_special_dates.exists?
-        return booking_page_special_date_schedules
+        if booking_page_special_date_schedules.present?
+          return booking_page_special_date_schedules
+        else
+          errors.add(:date, :shop_closed)
+        end
       end
 
       # normal business day

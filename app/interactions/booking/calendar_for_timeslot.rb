@@ -130,7 +130,6 @@ module Booking
       end
 
       time_range = time_range_outcome.result
-      return if time_range.last.nil?
       booking_available_end_at ||= shop_close_at = time_range.last.last
       total_required_time = @booking_options.sum(&:minutes)
 
