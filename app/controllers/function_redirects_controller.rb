@@ -14,7 +14,11 @@ class FunctionRedirectsController < ActionController::Base
         action_type: action_type
       )
 
-      redirect_to append_function_access_id(url, function_access&.id)
+      if url.to_s.start_with?('tel:')
+        redirect_to url
+      else
+        redirect_to append_function_access_id(url, function_access&.id)
+      end
     else
       Rollbar.error("FunctionRedirectsController#redirect",
         url: url,
@@ -24,6 +28,9 @@ class FunctionRedirectsController < ActionController::Base
       )
       redirect_to url
     end
+  rescue => e
+    Rollbar.error(e)
+    redirect_to url
   end
 
   private
