@@ -66,6 +66,24 @@ RSpec.describe Reservable::Time do
           expect(Reservable::Time.run(shop: shop, date: date)).to be_invalid
         end
       end
+      context "when booking_page has special date" do
+        let(:booking_page) { FactoryBot.create(:booking_page, shop: shop) }
+        let!(:booking_page_special_date1) { FactoryBot.create(:booking_page_special_date,
+                                                            booking_page: booking_page,
+                                                            start_at: now,
+                                                            end_at: now + 1.hour) }
+        let!(:booking_page_special_date2) { FactoryBot.create(:booking_page_special_date,
+                                                            booking_page: booking_page,
+                                                            start_at: now + 2.hours,
+                                                            end_at: now + 3.hours) }
+
+        it "returns available time range" do
+          expect(Reservable::Time.run!(shop: shop, booking_page: booking_page, date: date)).to eq([
+            booking_page_special_date1.start_at..booking_page_special_date1.end_at,
+            booking_page_special_date2.start_at..booking_page_special_date2.end_at
+          ])
+        end
+      end
     end
 
     context "when date is Taiwan national holiday" do

@@ -9,7 +9,7 @@ module Reservable
     date :date
 
     def execute
-      # Custom -> Holiday -> Booking Page schedule -> Business
+      # Custom -> Booking page special date -> Holiday -> Booking Page schedule -> Business
 
       # Custom
       if custom_close_schedule = shop.custom_schedules.for_shop.where(start_time: date.beginning_of_day..date.end_of_day).order("end_time").last
@@ -17,6 +17,15 @@ module Reservable
 
         if schedule && schedule.end_time > custom_close_schedule.end_time
           return [custom_close_schedule.end_time..schedule.end_time]
+        else
+          errors.add(:date, :shop_closed)
+        end
+      end
+
+      # Booking page special date
+      if booking_page && booking_page.booking_page_special_dates.exists?
+        if booking_page_special_date_schedules.present?
+          return booking_page_special_date_schedules
         else
           errors.add(:date, :shop_closed)
         end
@@ -34,14 +43,6 @@ module Reservable
       if booking_page && booking_page.business_schedules.exists?
         if booking_page_schedules.present?
           return booking_page_schedules
-        else
-          errors.add(:date, :shop_closed)
-        end
-      end
-
-      if booking_page && booking_page.booking_page_special_dates.exists?
-        if booking_page_special_date_schedules.present?
-          return booking_page_special_date_schedules
         else
           errors.add(:date, :shop_closed)
         end
