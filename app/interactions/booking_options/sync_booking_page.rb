@@ -6,8 +6,8 @@ class BookingOptions::SyncBookingPage < ActiveInteraction::Base
 
     if booking_page.present?
       booking_page.update(
-        title: booking_option.present_name,
-        name: booking_option.present_name,
+        title: booking_option.name,
+        name: booking_option.name,
         greeting: booking_option.memo.presence || I18n.t("user_bot.dashboards.booking_page_creation.default_greeting", name: booking_option.present_name),
         note: booking_option.memo.presence
       )
