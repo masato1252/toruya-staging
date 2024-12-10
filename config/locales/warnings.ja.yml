@@ -11,7 +11,7 @@ ja:
           <br />
 
           但し、Toruya経由で送信したメッセージは全て無料メッセージとしてカウントされます。<br />
-          <a href='https://toruya.com/help/line_messages'>詳しくはマニュアルをご確認ください。</a>
+          <a target='_blank' href='https://toruya.com/help/line_messages'>詳しくはマニュアルをご確認ください。</a>
 
           <br />
           <br />
@@ -22,7 +22,7 @@ ja:
 
           <h4>2024年1月10日以降もベーシックプランで利用する場合</h4>
           <p>新プラン移行後は、メッセージ送受信にはLINE公式アプリをご利用ください。<br>
-          <a href='https://toruya.com/help/line_messages#basic'>詳しい設定方法はマニュアルをご確認ください。</a></p>
+          <a target='_blank' href='https://toruya.com/help/line_messages#basic'>詳しい設定方法はマニュアルをご確認ください。</a></p>
           <br />
           <div class='button-container'>
             <button class='btn btn-gray' data-dismiss='modal'>アップグレードせず閉じる</button>
@@ -37,7 +37,7 @@ ja:
           ✅ 今後もさらに便利な機能をリリース予定ですのでご期待ください！
           <br>
           <p>但し、Toruya経由で送信したメッセージは全て無料メッセージとしてカウントされます。</p>
-          <p><a href='https://toruya.com/help/line_messages#basic'>詳しくはマニュアルをご確認ください。</a></p>
+          <p><a target='_blank' href='https://toruya.com/help/line_messages#basic'>詳しくはマニュアルをご確認ください。</a></p>
           <br>
           <div class='button-container'>
             <a href='%{upgrade_url}' class='btn btn-tarco'>今すぐアップグレード</a>
