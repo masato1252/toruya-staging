@@ -139,7 +139,7 @@ const ProfileEdit =({props}) => {
             <div className="field-header">{I18n.t("common.zip_code")}</div>
             <div className="field-row">
               <input
-                ref={register({ required: true })}
+                ref={register()}
                 name={`${props.attribute}[zip_code]`}
                 placeholder="1234567"
                 type="tel"
@@ -148,14 +148,14 @@ const ProfileEdit =({props}) => {
             <div className="field-header">{I18n.t("common.address_region")}</div>
             <div className="field-row">
               <input
-                ref={register({ required: true })}
+                ref={register()}
                 name={`${props.attribute}[region]`}
                 type="text"
               />
             </div>
             <div className="field-row">
               <input
-                ref={register({ required: true })}
+                ref={register()}
                 name={`${props.attribute}[city]`}
                 type="text"
                 className="expanded"
@@ -164,7 +164,6 @@ const ProfileEdit =({props}) => {
             <div className="field-row">
               <input
                 ref={register()}
-                name="street1"
                 name={`${props.attribute}[street1]`}
                 type="text"
                 className="expanded"

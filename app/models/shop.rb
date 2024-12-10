@@ -32,8 +32,6 @@ class Shop < ApplicationRecord
 
   validates :name, presence: true, format: { without: /\// }
   validates :short_name, presence: true
-  validates :zip_code, presence: true
-  validates :address, presence: true
 
   has_one_attached :logo
   has_many :staff_relations, class_name: "ShopStaff", dependent: :destroy

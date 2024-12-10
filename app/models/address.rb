@@ -12,7 +12,7 @@ class Address
   end
 
   def display_address
-    "〒#{zip_code} #{pure_address}"
+    "#{zip_code} #{pure_address}"
   end
 
   def pure_address

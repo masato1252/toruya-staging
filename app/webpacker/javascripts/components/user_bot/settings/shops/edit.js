@@ -135,7 +135,7 @@ const SocialAccountEdit =({props}) => {
             <div className="field-row">
               {I18n.t("common.zip_code")}
               <input
-                ref={register({ required: true })}
+                ref={register()}
                 name="address_details[zip_code]"
                 placeholder="1234567"
                 type="tel"
@@ -144,7 +144,7 @@ const SocialAccountEdit =({props}) => {
             <div className="field-row">
               {I18n.t("common.address_region")}
               <input
-                ref={register({ required: true })}
+                ref={register()}
                   name="address_details[region]"
                 type="text"
               />
@@ -152,7 +152,7 @@ const SocialAccountEdit =({props}) => {
             <div className="field-row">
               {I18n.t("common.address_city")}
               <input
-                ref={register({ required: true })}
+                ref={register()}
                 name="address_details[city]"
                 type="text"
               />
@@ -160,7 +160,7 @@ const SocialAccountEdit =({props}) => {
             <div className="field-row">
               {I18n.t("common.address_street1")}
               <input
-                ref={register}
+                ref={register()}
                 name="address_details[street1]"
                 type="text"
               />
@@ -168,7 +168,7 @@ const SocialAccountEdit =({props}) => {
             <div className="field-row">
               {I18n.t("common.address_street2")}
               <input
-                ref={register}
+                ref={register()}
                 name="address_details[street2]"
                 type="text"
               />
@@ -318,7 +318,7 @@ const SocialAccountEdit =({props}) => {
           {['address'].includes(props.attribute) && (
             <div className="fake-mobile-layout">
               <SaleDemoPage
-                shop={{...props.shop, address: `〒${watch('address_details[zip_code]')}${watch('address_details[region]')}${watch('address_details[city]')}${watch('address_details[street1]')}${watch('address_details[street2]')}`}}
+                shop={{...props.shop, address: `${watch('address_details[zip_code]')}${watch('address_details[region]')}${watch('address_details[city]')}${watch('address_details[street1]')}${watch('address_details[street2]')}`}}
               />
             </div>
           )}

@@ -52,7 +52,7 @@ class Profile < ApplicationRecord
   validates :phonetic_last_name, presence: false
 
   def personal_full_address
-    if personal_address_details.present?
+    if personal_address_details.present? && personal_address_details.values.any?(&:present?)
       Address.new(personal_address_details).display_address
     elsif address.present?
       "〒#{zip_code} #{address}"
@@ -60,10 +60,21 @@ class Profile < ApplicationRecord
   end
 
   def company_full_address
-    if company_address_details.present?
+    # company_address_details is a jsonb column
+    # it has the following keys: city, region, street1, street2, zip_code
+    # if company_address_details is present, use it
+    # if company_address_details is not present, use company_address and company_zip_code
+    # {
+    #   "city" => "",
+    #   "region" => "",
+    #   "street1" => "",
+    #   "street2" => "",
+    #   "zip_code" => ""
+    # }   
+    if company_address_details.present? && company_address_details.values.any?(&:present?)
       Address.new(company_address_details).display_address
     elsif company_address.present?
-      "〒#{company_zip_code} #{company_address}"
+      "#{company_zip_code} #{company_address}"
     end
   end
 
