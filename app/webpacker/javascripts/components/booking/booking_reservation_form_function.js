@@ -56,7 +56,7 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const isOnlinePayment= () => {
-    return props.booking_page.payment_option === "online"
+    return _.some(selected_booking_options(), option => option?.is_online_payment)
   }
 
   const handleAddressCallback = (address) => {

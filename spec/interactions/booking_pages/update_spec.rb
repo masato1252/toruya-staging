@@ -165,6 +165,42 @@ RSpec.describe BookingPages::Update do
 
         expect(last_booking_option.booking_option_id).to eq(new_booking_option.id)
       end
+
+      context "when booking_page payment_option is online" do
+        before do
+          booking_page.update(payment_option: "online")
+        end
+
+        it "updates online_payment_enabled to true" do
+          outcome
+
+          expect(booking_page.booking_page_options.last.online_payment_enabled).to eq(true)
+        end
+      end
+
+      context "when booking_page payment_option is offline" do
+        before do
+          booking_page.update(payment_option: "offline")
+        end
+
+        it "updates online_payment_enabled to false" do
+          outcome
+
+          expect(booking_page.booking_page_options.last.online_payment_enabled).to eq(false)
+        end
+      end
+
+      context "when booking_page payment_option is custom" do
+        before do
+          booking_page.update(payment_option: "custom")
+        end
+
+        it "updates online_payment_enabled to false" do
+          outcome
+
+          expect(booking_page.booking_page_options.last.online_payment_enabled).to eq(false)
+        end
+      end
     end
 
     context "update_attribute is new_option_menu" do
@@ -225,6 +261,44 @@ RSpec.describe BookingPages::Update do
           expect(new_menu.minutes).to eq(100)
           expect(new_menu.online).to eq(true)
         end
+
+        context "when booking_page payment_option is online" do
+          before do
+            booking_page.update(payment_option: "online")
+          end
+
+          it "updates online_payment_enabled to true" do
+            outcome
+
+            expect(booking_page.booking_page_options.last.online_payment_enabled).to eq(true)
+          end
+        end
+
+        context "when booking_page payment_option is offline" do
+          before do
+            booking_page.update(payment_option: "offline")
+          end
+
+          it "updates online_payment_enabled to false" do
+            outcome
+
+            expect(booking_page.booking_page_options.last.online_payment_enabled).to eq(false)
+          end
+        end
+
+        context "when booking_page payment_option is custom" do
+          before do
+            booking_page.update(payment_option: "custom")
+            FactoryBot.create(:booking_page_option, booking_page: booking_page, online_payment_enabled: true)
+          end
+
+          it "updates online_payment_enabled to true" do
+            # When existing online payment option is more than offline payment option
+            outcome
+
+            expect(booking_page.booking_page_options.last.online_payment_enabled).to eq(true)
+          end
+        end 
       end
     end
 

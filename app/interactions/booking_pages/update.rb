@@ -183,9 +183,11 @@ module BookingPages
             )
 
             booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_booking_option.id).uniq )
+            update_new_booking_page_option_payment_option(booking_page.booking_page_options.find_by(booking_option_id: new_booking_option.id))
           end
         when "new_option"
           booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_option_id).uniq )
+          update_new_booking_page_option_payment_option(booking_page.booking_page_options.find_by(booking_option_id: new_option_id))
         when "start_at"
           booking_page.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "end_at"
@@ -264,6 +266,23 @@ module BookingPages
           name: I18n.t("common.full_working_time"),
           short_name: I18n.t("common.full_working_time"),
           day_type: ReservationSetting::BUSINESS_DAYS)
+    end
+
+    def update_new_booking_page_option_payment_option(booking_page_option)
+      if booking_page.payment_option == "online"
+        booking_page.booking_page_options.update_all(online_payment_enabled: true)
+      elsif booking_page.payment_option == "offline"
+        booking_page.booking_page_options.update_all(online_payment_enabled: false)
+      elsif booking_page.payment_option == "custom"
+        custom_online_payment_options_count = booking_page.booking_page_options.where(online_payment_enabled: true).count
+        custom_offline_payment_options_count = booking_page.booking_page_options.where(online_payment_enabled: false).count
+
+        if custom_online_payment_options_count > custom_offline_payment_options_count 
+          booking_page_option.update(online_payment_enabled: true)
+        else
+          booking_page_option.update(online_payment_enabled: false)
+        end
+      end
     end
   end
 end
