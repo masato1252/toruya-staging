@@ -16,7 +16,7 @@
       requirements: @requirements,
       support_feature_flags: support_feature_flags,
       booking_option_introduction_asset_path: asset_pack_path("media/assets/user_bot/booking_option_introduction.png"),
-      booking_options_payment_options: @booking_page.booking_page_options.map { |booking_page_option| { label: booking_page_option.booking_option.show_name, value: booking_page_option.id } },
+      booking_options_payment_options: @booking_page.booking_page_options.map { |booking_page_option| { label: booking_page_option.booking_option.name, value: booking_page_option.id } },
       booking_page_online_payment_options_ids: @booking_page.booking_page_online_payment_options.pluck(:id),
       booking_page: @booking_page.attributes.merge!(
         shop_id: @booking_page.shop_id.to_s,
