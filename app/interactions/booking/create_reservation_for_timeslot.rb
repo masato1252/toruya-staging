@@ -351,7 +351,8 @@ module Booking
               customer: customer&.attributes,
               booking_page_id: booking_page_id,
               booking_option_ids: booking_option_ids,
-              booking_start_at: booking_start_at
+              booking_start_at: booking_start_at,
+              user_id: user.id
             })
 
             errors.add(:base, :reservation_something_wrong)
