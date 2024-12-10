@@ -75,7 +75,7 @@ class BookingPage < ApplicationRecord
   end
 
   def product_name
-    @product_name ||= primary_product&.display_name.presence || primary_product&.name.presence || name
+    @product_name ||= ActionController::Base.helpers.strip_tags(primary_product&.display_name.presence || primary_product&.name.presence || name)
   end
 
   def product_price
