@@ -269,7 +269,7 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const selected_booking_options_need_to_pay = () => {
-    return selected_booking_options().filter(option => !props.booking_options_quota[option.id].ticket_code);
+    return selected_booking_options().filter(option => !props.booking_options_quota[option.id]?.ticket_code);
   }
 
   const selected_booking_options_need_to_pay_price = () => {
