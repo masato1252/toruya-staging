@@ -37,7 +37,7 @@
     support_feature_flags: support_feature_flags,
     function_access_id: params[:function_access_id],
     money_sample: money_sample(I18n.locale),
-    booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled", "multiple_selection").merge!({
+    booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled", "multiple_selection", "payment_option").merge!({
       shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
       shop_name: @booking_page.shop.name,
       is_single_option: @is_single_booking_option,
