@@ -28,13 +28,15 @@ const Word = ({block, ...rest}) => {
   return (
     React.createElement(
       block.tag || "span",
-      { style:
-        {
+      { 
+        style: {
           color: rest[`${block.name}_color`] || block.color,
           fontSize: rest[`${block.name}_font_size`] || block.font_size
+        },
+        dangerouslySetInnerHTML: {
+          __html: rest[block.name] || block.content
         }
-      },
-      rest[block.name] || block.content
+      }
     )
   )
 }
@@ -49,7 +51,7 @@ const Components = ({block, index, ...props})=> {
   // component does exist
   if (typeof SupportComponents[block.component] !== "undefined") {
     return React.createElement(SupportComponents[block.component], {
-      key: `${block.component}-${block.name}-${index}`,
+      key: `${block.component}-${block.name}-${index}`, 
       block,
       ...props
     });
