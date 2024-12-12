@@ -5,7 +5,8 @@ module FeatureHelper
       support_skip_required_shop_info: support_skip_required_shop_info?,
       support_tax_include_display: support_tax_include_display?,
       support_japanese_asset: support_japanese_asset?,
-      support_faq_display: support_faq_display?
+      support_faq_display: support_faq_display?,
+      support_menu_restrict_order: support_menu_restrict_order?
     }
   end
 
@@ -27,6 +28,10 @@ module FeatureHelper
 
   def support_japanese_asset?
     I18n.locale == :ja
+  end
+
+  def support_menu_restrict_order?
+    false
   end
 
   def money_sample(locale)
