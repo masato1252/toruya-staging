@@ -10,6 +10,7 @@ tw:
     phonetic_first_name: 名字拼音
     email: 電子郵件
     phone_number: 手機號碼
+    why_need_phone_number: （用來接收預約提醒）
     remember_me: 下次自動填寫
     reminder_desc: 接收預約提醒
     confirm_customer_info: 發送確認碼

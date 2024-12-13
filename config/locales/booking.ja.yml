@@ -10,6 +10,7 @@ ja:
     phonetic_first_name: めい
     email: メール
     phone_number: 携帯電話
+    why_need_phone_number: ""
     remember_me: 次回から入力を省略する
     reminder_desc: 予約の通知を受け取る
     confirm_customer_info: 確認コード送信

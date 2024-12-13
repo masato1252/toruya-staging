@@ -31,7 +31,7 @@ const RegularCustomersOption = ({
   if (found_customer) return <></>;
   if (isCustomerTrusted) return <></>;
 
-  const { name, last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, next_step } = i18n;
+  const { name, last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, why_need_phone_number, next_step } = i18n;
 
   return (
     <div className="customer-type-options">
@@ -94,7 +94,7 @@ const RegularCustomersOption = ({
         </>
       )}
       <h4>
-        {phone_number}
+        {phone_number}{why_need_phone_number}
       </h4>
       <input
         name="booking_reservation_form[customer_phone_number]"
