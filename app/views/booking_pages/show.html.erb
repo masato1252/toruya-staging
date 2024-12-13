@@ -18,6 +18,7 @@
 <%
   page_booking_options = @booking_page_options.filter { |booking_page_option| booking_page_option.booking_option.active? }.map { |booking_page_option| booking_page_option_item(booking_page_option) }
   customer_info_hash = customer_info_as_json(@customer)
+  booking_option_ids = @is_single_booking_option ? [custom_options(page_booking_options)[0][:id]] : (params[:booking_option_ids].present? ? params[:booking_option_ids].split(",").map(&:to_i) : [])
 %>
 
 <%= react_component("booking/booking_reservation_form_function", {
@@ -71,7 +72,8 @@
       customer_info: customer_info_hash,
       present_customer_info: customer_info_hash,
       last_selected_option_ids: @last_selected_option_ids,
-      booking_option_ids: @is_single_booking_option ? [custom_options(page_booking_options)[0][:id]] : (params[:booking_option_ids].present? ? params[:booking_option_ids].split(",").map(&:to_i) : []),
+      booking_option_ids: booking_option_ids,
+      booking_option_selected_flow_done: booking_option_ids.present?,
       booking_date: params[:booking_date],
       booking_at: params[:booking_at],
       social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id,
