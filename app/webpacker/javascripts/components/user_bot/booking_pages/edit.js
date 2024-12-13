@@ -61,6 +61,7 @@ const BookingPageEdit =({props}) => {
       overbooking_restriction: String(props.booking_page.overbooking_restriction),
       multiple_selection: String(props.booking_page.multiple_selection),
       line_sharing: String(props.booking_page.line_sharing),
+      customer_address_required: String(props.booking_page.customer_address_required),
       customer_cancel_request: String(props.booking_page.customer_cancel_request),
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
       draft: String(props.booking_page.draft),
@@ -335,6 +336,19 @@ const BookingPageEdit =({props}) => {
             <label className="field-row flex-start">
               <input name="multiple_selection" type="radio" value="false" ref={register({ required: true })} />
               {i18n.not_multiple_selection_label}{i18n.not_multiple_selection_sentence}
+            </label>
+          </>
+        )
+      case "customer_address_required":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input name="customer_address_required" type="radio" value="true" ref={register({ required: true })} />
+              {i18n.customer_address_required_label}
+            </label>
+            <label className="field-row flex-start">
+              <input name="customer_address_required" type="radio" value="false" ref={register({ required: true })} />
+              {i18n.not_customer_address_required_label}
             </label>
           </>
         )

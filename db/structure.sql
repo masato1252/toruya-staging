@@ -718,7 +718,8 @@ CREATE TABLE public.booking_pages (
     payment_option character varying DEFAULT 'offline'::character varying,
     booking_limit_hours integer DEFAULT 0 NOT NULL,
     cut_off_time timestamp(6) without time zone DEFAULT NULL::timestamp without time zone,
-    multiple_selection boolean DEFAULT false
+    multiple_selection boolean DEFAULT false,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -6125,6 +6126,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241128194906'),
 ('20241129233118'),
 ('20241204010941'),
-('20241205095949');
+('20241205095949'),
+('20241213072553');
 
 

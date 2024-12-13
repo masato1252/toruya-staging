@@ -24,6 +24,7 @@
 #  overbooking_restriction            :boolean          default(TRUE)
 #  payment_option                     :string           default("offline")
 #  rich_menu_only                     :boolean          default(FALSE)
+#  settings                           :jsonb            not null
 #  slug                               :string
 #  social_account_skippable           :boolean          default(FALSE), not null
 #  specific_booking_start_times       :string           is an Array
@@ -69,6 +70,10 @@ class BookingPage < ApplicationRecord
     online: "online",
     custom: "custom"
   }
+
+  typed_store :settings do |s|
+    s.boolean :customer_address_required, default: true, null: false
+  end
 
   def primary_product
     @primary_product ||= booking_options.order(amount_cents: :asc).first

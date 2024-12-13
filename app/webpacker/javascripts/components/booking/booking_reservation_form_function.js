@@ -439,7 +439,7 @@ const BookingReservationFormFunction = ({props}) => {
       )
     }
 
-    if (!isOnlinePayment() && !isCustomerAddressFilled() && (is_filling_address || is_done || is_paying_booking)) {
+    if (!isOnlinePayment() && (props.booking_page.is_customer_address_required ? !isCustomerAddressFilled() : false) && (is_filling_address || is_done || is_paying_booking)) {
       return (
         <CustomerAddressView
           handleAddressCallback={handleAddressCallback}
@@ -573,6 +573,7 @@ const BookingReservationFormFunction = ({props}) => {
               isEnoughCustomerInfo={isEnoughCustomerInfo()}
               isCustomerTrusted={isCustomerTrusted()}
               isOnlinePayment={isOnlinePayment()}
+              isCustomerAddressRequired={props.booking_page.is_customer_address_required}
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               submitting={bookingReservationLoading_ref.current}
@@ -583,7 +584,7 @@ const BookingReservationFormFunction = ({props}) => {
           )}
         </div>
       )
-    } else {
+    } else if (!is_filling_address) {
       return (
         <div>
           <BookingOptionFirstFlow
@@ -642,6 +643,7 @@ const BookingReservationFormFunction = ({props}) => {
               isEnoughCustomerInfo={isEnoughCustomerInfo()}
               isCustomerTrusted={isCustomerTrusted()}
               isOnlinePayment={isOnlinePayment()}
+              isCustomerAddressRequired={props.booking_page.is_customer_address_required}
               isCustomerAddressFilled={isCustomerAddressFilled()}
               handleSubmit={handleSubmit}
               is_single_option={is_single_option}

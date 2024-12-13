@@ -7,7 +7,7 @@ import BookingFailedArea from "./booking_failed_area";
 
 const BookingReservationButton = ({
   set_booking_reservation_form_values, booking_reservation_form_values, i18n, booking_page, payment_solution,
-  isBookingFlowEnd, isEnoughCustomerInfo, isCustomerTrusted, isOnlinePayment, isCustomerAddressFilled, handleSubmit, is_single_option, resetBookingFailedValues,
+  isBookingFlowEnd, isEnoughCustomerInfo, isCustomerTrusted, isOnlinePayment, isCustomerAddressRequired, isCustomerAddressFilled, handleSubmit, is_single_option, resetBookingFailedValues,
   tickets
 }) => {
   if (!isBookingFlowEnd) return <></>;
@@ -40,7 +40,7 @@ const BookingReservationButton = ({
           else if (tickets.length !== booking_reservation_form_values.booking_option_ids.length && isPaymentSolutionReady() && isOnlinePayment) {
             set_booking_reservation_form_values(prev => ({...prev, is_paying_booking: true}))
           }
-          else if (!isOnlinePayment && !isCustomerAddressFilled) {
+          else if (!isOnlinePayment && isCustomerAddressRequired && !isCustomerAddressFilled) {
             set_booking_reservation_form_values(prev => ({...prev, is_filling_address: true}))
           }
           else {

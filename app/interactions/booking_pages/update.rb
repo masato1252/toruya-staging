@@ -31,6 +31,7 @@ module BookingPages
       boolean :multiple_selection, default: false
 
       string :payment_option, default: "offline"
+      boolean :customer_address_required, default: true
       array :booking_page_online_payment_options_ids, default: []
 
       # for adding a new option from existing option
@@ -222,7 +223,8 @@ module BookingPages
           end
           booking_page.payment_option = attrs[:payment_option]
           booking_page.save
-
+        when "customer_address_required"
+          booking_page.update(customer_address_required: attrs[:customer_address_required])
         when "line_sharing"
           booking_page.update(attrs.slice(update_attribute))
 

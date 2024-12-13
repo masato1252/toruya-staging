@@ -647,6 +647,10 @@ tw:
         multiple_selection_label: 允許預約多個項目
         not_multiple_selection_label: 不允許預約多個項目
         not_multiple_selection_sentence: (建議：您可以用預約項目整合多個服務，更易吸引客人)
+        customer_address_required: 預約時客戶需填寫住址
+        customer_address_required_title: 預約時客戶需填寫住址
+        customer_address_required_label: 需要
+        not_customer_address_required_label: 不需要
         requirements: 會員限定預約
         requirements_title: 會員限定預約
         no_membership_services: 尚未設定會員限定預約。

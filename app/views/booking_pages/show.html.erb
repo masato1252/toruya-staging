@@ -47,7 +47,8 @@
       start_at: I18n.l(@booking_page.start_time, format: :date_with_wday),
       draft: @booking_page.draft,
       regions: regions,
-      url: booking_page_url(@booking_page.slug)
+      url: booking_page_url(@booking_page.slug),
+      is_customer_address_required: @booking_page.customer_address_required
     }),
     calendar: {
       dayNames: I18n.t("date.abbr_day_names"),
