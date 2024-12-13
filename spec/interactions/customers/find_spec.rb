@@ -45,6 +45,32 @@ RSpec.describe Customers::Find do
           matched_customers: [customer]
         })
       end
+
+      context "when only customer name matched (phone number is not matched)" do
+        context "when customer created 30 days ago" do
+          it "returns the customer" do
+            customer = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name, created_at: 29.days.ago)
+            result = outcome.result
+
+            expect(result).to eq({
+              found_customer: customer,
+              matched_customers: [customer]
+            })
+          end
+        end
+      end
+
+      context "when customer got social customer" do
+        it "returns the customer" do
+          customer = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name, social_customer: FactoryBot.create(:social_customer))
+          result = outcome.result
+
+          expect(result).to eq({
+            found_customer: customer,
+            matched_customers: [customer]
+          })
+        end
+      end
     end
 
     context "when multiple customers matched" do

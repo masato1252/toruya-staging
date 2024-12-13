@@ -20,6 +20,16 @@ module Customers
         customer.phone_numbers_details&.map { |phone| phone["value"]&.gsub(/[^0-9]/, '') }&.include?(phone_number.gsub(/[^0-9]/, ''))
       end
 
+      # any customer got social customer
+      matched_customers = matched_customers.presence || customers.find_all do |customer|
+        customer.social_customer.present?
+      end
+
+      # any customer created 30 days ago
+      matched_customers = matched_customers.presence || customers.find_all do |customer|
+        customer.created_at >= 30.days.ago
+      end
+
       booking_customer =
         if matched_customers.length == 1
           matched_customers.first
