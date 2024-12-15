@@ -109,6 +109,7 @@ RSpec.describe Lines::MessageEvent, :with_line do
 
       context "when line customer does NOT have customer" do
         let(:social_customer) { FactoryBot.create(:social_customer, customer: nil) }
+        before { user.user_setting.update!(line_contact_customer_name_required: false) }
 
         context "when line_contact_customer_name_required is false" do
           it "creates a customer automatically" do
