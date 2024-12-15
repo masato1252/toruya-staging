@@ -180,12 +180,8 @@
 <%
 =end%>
 
-  <%
-=begin%>
- <div class="field-group-header" id="customer_address_required"><%= I18n.t("settings.booking_page.form.customer_address_required") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_address_required), title: @booking_page.customer_address_required ? I18n.t("settings.booking_page.form.customer_address_required_label") : I18n.t("settings.booking_page.form.not_customer_address_required_label") %> 
-<%
-=end%>
+  <div class="field-group-header" id="customer_address_required"><%= I18n.t("settings.booking_page.form.customer_address_required") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_address_required), title: @booking_page.customer_address_required ? I18n.t("settings.booking_page.form.customer_address_required_label") : I18n.t("settings.booking_page.form.not_customer_address_required_label") %>
 
   <div class="field-group-header" id="payment_option"><%= I18n.t("settings.booking_page.form.payment_option") %></div>
   <%= render "lines/user_bot/field_row",

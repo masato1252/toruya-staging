@@ -73,7 +73,7 @@ class BookingPage < ApplicationRecord
   }
 
   typed_store :settings do |s|
-    s.boolean :customer_address_required, default: true, null: false
+    s.boolean :customer_address_required, default: false, null: false
   end
 
   def primary_product
