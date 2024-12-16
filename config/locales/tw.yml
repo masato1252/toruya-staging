@@ -169,7 +169,7 @@ tw:
     noshow: 未到店
     checked_in: 已報到
     checked_out: 已結帳
-    reserved: 已預約
+    reserved: 已確認
     canceled: 已取消
     memo: 備註內容
     contain_some_warnings: 此預約包含注意事項
@@ -179,7 +179,7 @@ tw:
     details: 預約詳情
     become_overbooking: 將會超出預約人數上限！
     overbooking: 目前超出預約人數上限！
-    reserved: 已預約
+    reserved: 已確認
     full_seat: 客滿
     add_customer_btn: 新增客戶
     no_manpower_tip: 最少需要0位員工

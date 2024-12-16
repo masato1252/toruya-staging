@@ -133,7 +133,7 @@ module Booking
                 )
               end
               # Trying to booking for themself and put the shop owner customer data
-            elsif customer_first_name && customer_last_name && customer_phone_number
+            elsif has_basic_customer_info?
               # Booking for their customer, this is new customer, the name doesn't match
               customer = create_new_customer
             else
@@ -152,8 +152,8 @@ module Booking
                   first_name: customer_first_name,
                   phonetic_last_name: customer_phonetic_last_name,
                   phonetic_first_name: customer_phonetic_first_name,
-                  phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
-                  emails_details: [{ type: "mobile", value: customer_email }],
+                  phone_numbers_details: [{ type: "mobile", value: customer_phone_number.presence || customer.mobile_phone_number }],
+                  emails_details: [{ type: "mobile", value: customer_email.presence || customer.email }],
                 }.compact
               )
             else
