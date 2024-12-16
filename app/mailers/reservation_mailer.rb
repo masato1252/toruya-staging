@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class ReservationMailer < ApplicationMailer
-  def pending_summary(reservations, user)
-    @reservations = reservations
+  def pending_summary(reservations, user, message)
     @user = user
+    @message = message
 
-    mail(:to => @user.email,
-         :subject => subject("確認が必要な予約があります"))
+    mail(
+      :to => @user.email,
+      :subject => subject(I18n.t("mailers.pending_reservations_summary.title")),
+      :body => @message
+    )
   end
 end

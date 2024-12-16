@@ -373,6 +373,9 @@ ja:
   constants:
     rank:
       regular: "一般"
+  mailers:
+    pending_reservations_summary:
+      title: "確認が必要な予約があります。"
   helpers:
     placeholder:
       shop:

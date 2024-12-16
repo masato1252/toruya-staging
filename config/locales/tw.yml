@@ -379,6 +379,9 @@ tw:
   constants:
     rank:
       regular: "一般"
+  mailers:
+    pending_reservations_summary:
+      title: "需要確認的預約"
   helpers:
     placeholder:
       shop:

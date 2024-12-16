@@ -13,7 +13,7 @@ module Notifiers
       end
 
       def send_email
-        ReservationMailer.pending_summary(reservations, user).deliver_now
+        ReservationMailer.pending_summary(reservations, user, message).deliver_now
       end
 
       def deliverable?
