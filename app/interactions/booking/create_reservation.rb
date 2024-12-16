@@ -116,6 +116,21 @@ module Booking
           if social_customer&.is_owner?
             if customer
               # Trying to booking for themself and put the shop owner customer data
+              if customer_first_name && customer_last_name && customer_phone_number
+                customer = compose(Customers::Store,
+                  user: user,
+                  current_user: user,
+                  params: {
+                    id: customer.id.to_s,
+                    last_name: customer_last_name,
+                    first_name: customer_first_name,
+                    phonetic_last_name: customer_phonetic_last_name,
+                    phonetic_first_name: customer_phonetic_first_name,
+                    phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+                    emails_details: [{ type: "mobile", value: customer_email }],
+                  }.compact
+                )
+              end
             elsif customer_first_name && customer_last_name && customer_phone_number
               # Booking for their customer, this is new customer, the name doesn't match
               customer = create_new_customer

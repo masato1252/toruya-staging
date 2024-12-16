@@ -15,7 +15,7 @@ tw:
     reminder_desc: 接收預約提醒
     confirm_customer_info: 發送確認碼
     next_step: 下一步
-    confirm_reservation: 確認臨時預約
+    confirm_reservation: 確認
     not_me: 如果不是您，請點擊這裡
     edit_info: 修改地址或電話號碼
     edit: 修改
@@ -59,7 +59,7 @@ tw:
     done:
       owner_warning1: 由於您代替客戶進行預約，
       owner_warning2: 通知不會發送給客戶的LINE。
-      title: 臨時預約已完成
+      title: 『待確認預訂』已完成
       message1: 預約內容已發送至
       message2: 您登入的LINE帳號
       no_line_message1_html: 預約內容已發送至<br />您輸入的手機號碼
