@@ -715,11 +715,11 @@ tw:
         booking_options/delete:
           attributes:
             booking_option:
-              be_used_by_booking_page: "^此預約價格正在預約頁面上使用，無法刪除。"
+              be_used_by_booking_page: "^此預約項目正在預約頁面上使用，無法刪除。"
         menus/delete:
           attributes:
             menu:
-              be_used_by_booking_page: "此服務項目正被預約頁面上的預約價格使用，無法刪除。"
+              be_used_by_booking_page: "此服務項目正被預約頁面上的預約項目使用，無法刪除。"
         menus/update_attribute:
           attributes:
             menu:
@@ -812,7 +812,7 @@ tw:
         booking_pages/update:
           attributes:
             attrs:
-              unavailable_booking_option_exists: "^此店舖設定了無法使用的預約價格。"
+              unavailable_booking_option_exists: "^此店舖設定了無法使用的預約項目。"
         profiles/update_attribute:
           attributes:
             profile:

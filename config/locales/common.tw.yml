@@ -105,7 +105,7 @@ tw:
     age: 年齡
     years_old: 歲
     default: 預設
-    no_service_warning_html: <h1>因店家原因，目前無法提供服務。<br>請聯繫店家負責人。</h1>
+    no_service_warning_html: <h1>因商家原因，目前無法提供服務。<br>請聯繫商家負責人。</h1>
     processing: 傳送中
     preparing: 準備中
     date: 日期
@@ -153,14 +153,14 @@ tw:
     no_label: 無
     close: 關閉
     print: 列印
-    shop: 店家
+    shop: 商家
     select: 選擇
-    select_a_shop: 選擇店家
+    select_a_shop: 選擇商家
     select_a_menu: 選擇菜單
     staff: 員工
     account: 帳戶
     select_a_staff: 選擇員工
-    select_a_booking_option: 選擇預約價格
+    select_a_booking_option: 選擇預約項目
     select_a_service: 選擇服務
     content: 內容
     google_down: 目前無法連接 Google。請稍後再試。重新登入可能會解決問題。
@@ -179,7 +179,7 @@ tw:
     menu: 菜單
     responsible_employee: 負責人
     responsible_by: 負責
-    booking_price: 預約價格
+    booking_price: 預約項目
     left_ticket: 剩餘
     status: 狀態
     off_schedule: 臨時休假
@@ -201,11 +201,11 @@ tw:
     tax: 稅
     apply_now: 立即申請
     preparing: 準備中
-    shop_name: 店家名稱
-    shop_phone_number: 店家電話號碼
+    shop_name: 商家名稱
+    shop_phone_number: 商家電話號碼
     short_shop_name: 簡稱
     company_info: 公司資訊
-    shop_info: 店家資訊
+    shop_info: 商家資訊
     day_word: 天
     before_day_word: 天前
     hour_word: 小時
@@ -222,7 +222,7 @@ tw:
     login_add_friend_to_follow_information_html: 如欲註冊，請透過 <br />LINE 聯繫我們
     login_to_watch_html: 已註冊的用戶 <br />登入後即可瀏覽
     add_friend_to_follow_information_html: 加入 LINE 好友<br /> 接收下次活動通知
-    shop_label: 店家
+    shop_label: 商家
     no_setup: 未設定
     no_restriction: 不限制
     template: 範本
@@ -247,7 +247,7 @@ tw:
     month_pay: 月費方案
     birthday_month: 依生日月份
     year_pay: 年費方案
-    contact_owner_directly: 請直接與店家確認
+    contact_owner_directly: 請直接與商家確認
     usage_status: 使用狀況
     recommend: (推薦)
     more: 更多服務

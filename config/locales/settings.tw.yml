@@ -12,7 +12,7 @@ tw:
       no_limit: 無限制
       booking_tour:
         title: 線上預約
-        booking_option_setup: 創建預約價格
+        booking_option_setup: 創建預約項目
         booking_page_setup: 創建預約頁面
       basic_tour:
         title: 基本設定
@@ -452,9 +452,9 @@ tw:
         add_staff: ⃝
     booking_option:
       sider_label: 線上預約
-      booking_option_label: 預約價格
-      title: 預約價格設定
-      info_html: 請設定預約價格。<br />客戶將根據您在此設定的價格進行線上預約。
+      booking_option_label: 預約項目
+      title: 預約項目設定
+      info_html: 請設定預約項目。<br />客戶將根據您在此設定的價格進行線上預約。
       name: 價格名稱
       menu_for_sale: 菜單
       start_at: 開始銷售
@@ -463,8 +463,8 @@ tw:
       form:
         price_name: 價格名稱
         name_title: 價格名稱
-        price_name_hint: 這是您用來管理預約價格的名稱。
-        name_hint: 這是您用來管理預約價格的名稱。
+        price_name_hint: 這是您用來管理預約項目的名稱。
+        name_hint: 這是您用來管理預約項目的名稱。
         display_name: 顯示名稱
         display_name_title: 顯示名稱
         display_name_hint: 這是客戶預約時看到的菜單名稱。
@@ -519,7 +519,7 @@ tw:
           reached_the_menus_limit: 最多只能設定兩個菜單。
           no_available_shop: 由於此菜單未設定可使用的店舖，預約頁面可能無法正確顯示。
           ticket_max_price_limit: 超過5萬元的情況下無法使用線上結帳。
-          no_menu: 使用此預約價格時，至少需要建立一個菜單。
+          no_menu: 使用此預約項目時，至少需要建立一個菜單。
     booking_page:
       title: 預約頁面設定
       info_html: 設定預約頁面。<br>客戶將透過您在此設定的頁面進行線上預約。
@@ -547,23 +547,23 @@ tw:
         greeting: 問候語
         greeting_title: 問候語
         greeting_placeholder: 將顯示在預約頁面的頂部。
-        booking_price_setting_header: 設定預約價格
-        booking_option_header: 預約價格
+        booking_price_setting_header: 設定預約項目
+        booking_option_header: 預約項目
         booking_page_setting_header: 是否也要在預約頁面上刊登？
         search_placeholder: 請選擇您想刊登的頁面
-        new_option: 預約價格
-        new_option_top_bar_header: 預約價格
-        new_option_title: 從現有預約價格中選擇
+        new_option: 預約項目
+        new_option_top_bar_header: 預約項目
+        new_option_title: 從現有預約項目中選擇
         add_new_option: 新增價格
         reorder_options: 變更顯示順序
         does_require_a_new_option: 需要新的價格嗎？
         create_a_new_option: 使用新菜單創建價格
         create_a_new_option_from_existing_menu: 從現有菜單創建價格
-        create_a_new_option_from_existing_option: 從現有預約價格中選擇
+        create_a_new_option_from_existing_option: 從現有預約項目中選擇
         new_option_menu_title: 創建新價格
-        new_option_menu_top_bar_header: 預約價格
+        new_option_menu_top_bar_header: 預約項目
         new_option_existing_menu_title: 創建新價格
-        new_option_existing_menu_top_bar_header: 預約價格
+        new_option_existing_menu_top_bar_header: 預約項目
         new_option_existing_menu_menu_select_header: 您想為哪個菜單創建價格？
         booking_option_hint: 您的客戶將以此價格進行預約。
         booking_option_required_time: 所需時間
@@ -586,7 +586,7 @@ tw:
         business_schedules_booking_add_button: 新增接受時間
         booking_time_interval_label: 自動顯示所有可預約時間（建議）
         specific_booking_start_times_label: 僅顯示指定的開始時間
-        specific_booking_start_times_desc_html: 在設定的開始時間中，<br>僅顯示預約價格所需時間有空檔的<br>開始時間。
+        specific_booking_start_times_desc_html: 在設定的開始時間中，<br>僅顯示預約項目所需時間有空檔的<br>開始時間。
         add_booking_time_btn: 新增開始時間
         interval_header: 預約的開始時間
         interval_period_header: 預約時間的選項
@@ -675,14 +675,14 @@ tw:
           start_at_too_late: 根據上述設定，您只能設定{datetime}之前的日期和時間
           end_at_too_early: 根據上述設定，您只能設定{datetime}之後的日期和時間
           unavailable_booking_option: "{shop_name}包含無法銷售的菜單項目。"
-          invalid_menu_html: "此預約價格中設定的菜單項目可能無法在%{shop_name}正確顯示，因為該店舖尚未被設定為可使用的店舖。請前往<a href=%{url}>菜單設定</a>頁面，將%{shop_name}設定為可使用的店舖。"
-          no_booking_option: 您需要至少設定一個預約價格才能開始使用此預約頁面。
-          no_menu: 此預約價格未設定任何菜單。
+          invalid_menu_html: "此預約項目中設定的菜單項目可能無法在%{shop_name}正確顯示，因為該店舖尚未被設定為可使用的店舖。請前往<a href=%{url}>菜單設定</a>頁面，將%{shop_name}設定為可使用的店舖。"
+          no_booking_option: 您需要至少設定一個預約項目才能開始使用此預約頁面。
+          no_menu: 此預約項目未設定任何菜單。
     social_rich_menus:
       action_types:
         incoming_reservations: 所有預約
         booking_pages: 透過預約頁面接受
-        booking_options: 透過預約價格接受
+        booking_options: 透過預約項目接受
         contacts: 聯絡我們
         services: 使用中的服務
         sale_page: 宣傳用登陸頁面
@@ -709,7 +709,7 @@ tw:
       url_desc: 動作標籤（用於語音閱讀）
       label_length_warning: 只能保存20個字元
       line_send_booking_pages: 透過LINE發送的預約頁面
-      line_send_booking_options: 透過LINE發送的預約價格
+      line_send_booking_options: 透過LINE發送的預約項目
     social_account:
       sider_label: LINE
       settings: 設定

@@ -137,9 +137,9 @@ tw:
             list_desc: 透過LINE發送的預約頁面
             limit_desc: 最多可設定10個。
           booking_options:
-            title: 透過LINE發送的預約價格
-            desc: 請設定從客戶圖文選單自動發送的預約價格。
-            list_desc: 透過LINE發送的預約價格
+            title: 透過LINE發送的預約項目
+            desc: 請設定從客戶圖文選單自動發送的預約項目。
+            list_desc: 透過LINE發送的預約項目
             limit_desc: 最多可設定10個。
         business_schedules:
           reservation_management: 預約管理
@@ -557,7 +557,7 @@ tw:
         default_note: "取消政策\n --------------------\n 如果您需要取消預約，將根據取消政策收取取消費用。請在預約前務必確認。\n \n ■取消費用■\n ・未通知取消：100%\n ・預約當天取消：100%\n ・前一天之前通知取消：免費\n"
         booking_shop: 預約店鋪
         booking_options: 預約選項
-        booking_price: 預約價格
+        booking_price: 預約項目
         booking_note: 注意事項
         book_which_shop: 您要接受哪家店鋪的預約？
         book_for_this_shop: 將為以下店鋪創建預約接受頁面
@@ -574,7 +574,7 @@ tw:
         is_menu_online: 這是線上選項嗎？
         menu_online: 是的，這是線上選項
         menu_local: 否，客戶需要到店
-        current_booking_options_label: 從現有預約價格中選擇
+        current_booking_options_label: 從現有預約項目中選擇
         create_new_booking_option: 創建新價格
         how_much_of_this_price: 您想以多少價格銷售？
         enter_price: 輸入價格

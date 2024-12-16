@@ -49,17 +49,17 @@ tw:
       ask_in_line: 在LINE上詢問
       login_message: "如果您已經是會員，請使用LINE登入。"
     message:
-      unfound_customer_html: 找不到與輸入的姓名和手機號碼都相符的客戶資料。<br>請聯繫店家人員。
+      unfound_customer_html: 找不到與輸入的姓名和手機號碼都相符的客戶資料。<br>請聯繫商家人員。
       booking_failed_message_html: 該時間段和項目已滿。<br>請重新嘗試。
       booking_unexpected_failed_message: 預約因某些原因失敗。請重新嘗試。
       booking_code_message: 請輸入我們發送到您手機的確認碼。
       booking_code_failed_message: 確認碼錯誤
-      line_reminder_messages_html: 請先使用LINE登入
+      line_reminder_messages_html: 請先使用LINE登入，以便接收預約提醒。
       customer_phonetic_name_failed_message: 請輸入拼音
     done:
       owner_warning1: 由於您代替客戶進行預約，
       owner_warning2: 通知不會發送給客戶的LINE。
-      title: 『待確認預訂』已完成
+      title: 『待確認』預訂已完成，請等待商家確認
       message1: 預約內容已發送至
       message2: 您登入的LINE帳號
       no_line_message1_html: 預約內容已發送至<br />您輸入的手機號碼
@@ -69,7 +69,7 @@ tw:
       desc3: 免費日曆應用程式
       feature1: 管理個人行程
       feature2: 管理與朋友的約定和任務
-      feature3: 在日曆中確認各種店家的預約
+      feature3: 在日曆中確認各種商家的預約
       signup_now: 立即註冊
       add_friend_messages_html: "在LINE上加為好友<br>接收最新資訊"
       ticket_left_message_html: "您的次數券還剩下%{remaining_ticket_quota}次。<br />使用期限為%{expire_date}，<br />請儘早預約。"
