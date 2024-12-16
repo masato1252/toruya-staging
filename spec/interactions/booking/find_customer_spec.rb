@@ -8,12 +8,14 @@ RSpec.describe Booking::FindCustomer do
   let(:last_name) { "foo" }
   let(:first_name) { "bar" }
   let(:phone_number) { Faker::PhoneNumber.phone_number }
+  let(:email) { "example@email.com" }
   let(:args) do
     {
       booking_page: booking_page,
       last_name: last_name,
       first_name: first_name,
-      phone_number: phone_number
+      phone_number: phone_number,
+      email: email
     }
   end
   let(:outcome) { described_class.run(args) }
@@ -33,7 +35,8 @@ RSpec.describe Booking::FindCustomer do
       it "returns expected result" do
         customer = FactoryBot.create(
           :customer, user: user, first_name: first_name, last_name: last_name,
-          phone_numbers_details: [{"type" => "mobile", "value" => phone_number}]
+          phone_numbers_details: [{"type" => "mobile", "value" => phone_number}],
+          emails_details: [{"type" => "mobile", "value" => email}]
         )
         result = outcome.result
 
@@ -46,7 +49,8 @@ RSpec.describe Booking::FindCustomer do
         it "returns the recent reservation's customer" do
           customer1 = FactoryBot.create(
             :customer, user: user, first_name: first_name, last_name: last_name,
-            phone_numbers_details: [{"type" => "mobile", "value" => phone_number}]
+            phone_numbers_details: [{"type" => "mobile", "value" => phone_number}],
+            emails_details: [{"type" => "mobile", "value" => email}]
           )
           customer2 = FactoryBot.create(
             :customer, user: user, first_name: first_name, last_name: last_name,
@@ -65,11 +69,13 @@ RSpec.describe Booking::FindCustomer do
         it "returns the recent reservation's customer" do
           customer1 = FactoryBot.create(
             :customer, user: user, first_name: first_name, last_name: last_name,
-            phone_numbers_details: [{"type" => "mobile", "value" => phone_number}]
+            phone_numbers_details: [{"type" => "mobile", "value" => phone_number}],
+            emails_details: [{"type" => "mobile", "value" => email}]
           )
           customer2 = FactoryBot.create(
             :customer, user: user, first_name: first_name, last_name: last_name,
-            phone_numbers_details: [{"type" => "mobile", "value" => phone_number}]
+            phone_numbers_details: [{"type" => "mobile", "value" => phone_number}],
+            emails_details: [{"type" => "mobile", "value" => email}]
           )
           FactoryBot.create(:reservation_customer, customer: customer1)
           FactoryBot.create(:reservation_customer, customer: customer2)

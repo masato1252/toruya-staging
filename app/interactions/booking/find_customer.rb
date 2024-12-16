@@ -5,7 +5,8 @@ module Booking
     object :booking_page, class: "BookingPage"
     string :last_name
     string :first_name
-    string :phone_number
+    string :phone_number, default: nil
+    string :email, default: nil
 
     def execute
       customers_hash = compose(
@@ -13,7 +14,8 @@ module Booking
         user: booking_page.user,
         last_name: last_name,
         first_name: first_name,
-        phone_number: phone_number
+        phone_number: phone_number,
+        email: email
       )
 
       if customers_hash[:matched_customers].length > 1

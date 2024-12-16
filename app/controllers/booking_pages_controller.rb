@@ -178,7 +178,8 @@ class BookingPagesController < ActionController::Base
       booking_page: booking_page,
       first_name: params[:customer_first_name],
       last_name: params[:customer_last_name],
-      phone_number: params[:customer_phone_number]
+      phone_number: params[:customer_phone_number],
+      email: params[:customer_email]
     )
 
     if customer

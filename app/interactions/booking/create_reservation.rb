@@ -104,7 +104,8 @@ module Booking
               booking_page: booking_page,
               first_name: customer_first_name,
               last_name: customer_last_name,
-              phone_number: customer_phone_number
+              phone_number: customer_phone_number,
+              email: customer_email
             )
           end
 

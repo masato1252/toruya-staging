@@ -7,12 +7,14 @@ RSpec.describe Customers::Find do
   let(:last_name) { "foo" }
   let(:first_name) { "bar" }
   let(:phone_number) { Faker::PhoneNumber.phone_number }
+  let(:email) { "example@email.com" }
   let(:args) do
     {
       user: user,
       last_name: last_name,
       first_name: first_name,
-      phone_number: phone_number
+      phone_number: phone_number,
+      email: email
     }
   end
   let(:outcome) { described_class.run(args) }
@@ -32,18 +34,36 @@ RSpec.describe Customers::Find do
     end
 
     context "when only one customer matched" do
-      it "returns expected result" do
-        customer = FactoryBot.create(
-          :customer, user: user, first_name: first_name, last_name: last_name,
-          phone_numbers_details: ["type" => "mobile", "value" => phone_number]
-        )
+      context "when phone number matched" do
+        it "returns expected result" do
+          customer = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            phone_numbers_details: ["type" => "mobile", "value" => phone_number]
+          )
 
-        result = outcome.result
+          result = outcome.result
 
-        expect(result).to eq({
-          found_customer: customer,
-          matched_customers: [customer]
-        })
+          expect(result).to eq({
+            found_customer: customer,
+            matched_customers: [customer]
+          })
+        end
+      end
+
+      context "when email matched" do
+        it "returns expected result" do
+          customer = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            emails_details: ["type" => "mobile", "value" => email]
+          )
+
+          result = outcome.result
+
+          expect(result).to eq({
+            found_customer: customer,
+            matched_customers: [customer]
+          })
+        end
       end
 
       context "when only customer name matched (phone number is not matched)" do
