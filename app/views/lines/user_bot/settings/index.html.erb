@@ -127,10 +127,10 @@
 =end%>
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.support.user_support") %></div>
-        <%= link_to "https://toruya.com/help/", class: "field-row", target: '_blank' do %>
+        <%= link_to data_by_locale(:official_site_url) + "/help/", class: "field-row", target: '_blank' do %>
           <span><%= t("user_bot.dashboards.settings.support.documents") %></span><i class="fa fa-angle-right"></i>
         <% end %>
-        <%= link_to "https://toruya.com/faq/", class: "field-row", target: '_blank' do %>
+        <%= link_to data_by_locale(:official_site_url) + "/faq/", class: "field-row", target: '_blank' do %>
           <span><%= t("user_bot.dashboards.settings.support.faq") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 

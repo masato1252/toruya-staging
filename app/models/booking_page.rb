@@ -152,10 +152,10 @@ class BookingPage < ApplicationRecord
       shop: shop,
       start_time: Time.current,
       end_time: Time.current.advance(hours: 1),
-      meeting_url: 'https://toruya.com/',
+      meeting_url: ApplicationController.helpers.data_by_locale(:official_site_url),
       product_name: booking_options.first&.display_name.presence || I18n.t("common.menu"),
       booking_page_url: Rails.application.routes.url_helpers.booking_page_url(slug),
-      booking_info_url: 'https://toruya.com/'
+      booking_info_url: ApplicationController.helpers.data_by_locale(:official_site_url)
     )
   end
 

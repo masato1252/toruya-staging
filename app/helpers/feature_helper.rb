@@ -1,4 +1,17 @@
 module FeatureHelper
+  DATA_BY_LOCALE = {
+    ja: {
+      official_site_url: "https://toruya.com",
+    },
+    tw: {
+      official_site_url: "https://toruya.tw",
+    }
+  }
+
+  def data_by_locale(data_name)
+    DATA_BY_LOCALE[I18n.locale][data_name] || DATA_BY_LOCALE[:tw][data_name]
+  end
+
   def support_feature_flags
     {
       support_phonetic_name: support_phonetic_name?,

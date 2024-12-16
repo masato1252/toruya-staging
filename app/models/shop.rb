@@ -78,7 +78,7 @@ class Shop < ApplicationRecord
       shop: self,
       start_time: Time.current,
       end_time: Time.current.advance(hours: 1),
-      meeting_url: 'https://toruya.com/',
+      meeting_url: ApplicationController.helpers.data_by_locale(:official_site_url),
       product_name: I18n.t("common.menu")
     )
   end
