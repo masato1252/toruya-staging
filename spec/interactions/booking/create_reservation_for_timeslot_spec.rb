@@ -245,17 +245,17 @@ RSpec.describe Booking::CreateReservationForTimeslot do
 
           context 'when owner indeed try to booking for themselves' do
             context 'when there is match customer' do
-              let(:existing_customer) { FactoryBot.create(:customer, user: user, last_name: "foo", first_name: "bar", phone_numbers_details: [{"type" => "mobile", "value" => "123456789"}]) }
+              let(:existing_customer) { FactoryBot.create(:customer, user: user, last_name: "foo", first_name: "bar", phone_numbers_details: [{"type" => "mobile", "value" => "123456789"}], emails_details: [{"type" => "mobile", "value" => "example@email.com"}]) }
               let(:social_customer) { FactoryBot.create(:social_customer, :is_owner, customer: existing_customer, user: user) }
 
               it "does not create new customer" do
                 customer_info_hash = {
                   customer_last_name: existing_customer.last_name,
                   customer_first_name: existing_customer.first_name,
-                  customer_phone_number: existing_customer.phone_number,
+                  customer_phone_number: "12345",
                   customer_phonetic_last_name: existing_customer.phonetic_last_name,
                   customer_phonetic_first_name: existing_customer.phonetic_first_name,
-                  customer_email: existing_customer.email
+                  customer_email: nil
                 }
                 args.merge!(customer_info_hash)
 
@@ -265,6 +265,11 @@ RSpec.describe Booking::CreateReservationForTimeslot do
                   user.customers.count
                 }
                 expect(outcome).to be_valid
+                existing_customer.reload
+                expect(existing_customer.last_name).to eq("foo")
+                expect(existing_customer.first_name).to eq("bar")
+                expect(existing_customer.phone_numbers_details).to eq([{"type" => "mobile", "value" => "12345"}])
+                expect(existing_customer.emails_details).to eq([{"type" => "mobile", "value" => "example@email.com"}])
               end
             end
 

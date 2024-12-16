@@ -100,7 +100,7 @@ module Booking
           reservation = nil
           customer = nil
 
-          if booking_page && customer_first_name && customer_last_name && customer_phone_number
+          if booking_page && has_basic_customer_info?
             customer = Booking::FindCustomer.run!(
               booking_page: booking_page,
               first_name: customer_first_name,
@@ -116,7 +116,7 @@ module Booking
 
           if social_customer&.is_owner?
             if customer
-              if customer_first_name && customer_last_name && customer_phone_number
+              if has_basic_customer_info?
                 customer = compose(Customers::Store,
                   user: user,
                   current_user: user,
@@ -126,8 +126,8 @@ module Booking
                     first_name: customer_first_name,
                     phonetic_last_name: customer_phonetic_last_name,
                     phonetic_first_name: customer_phonetic_first_name,
-                    phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
-                    emails_details: [{ type: "mobile", value: customer_email }],
+                    phone_numbers_details: [{ type: "mobile", value: customer_phone_number.presence || customer.mobile_phone_number }],
+                    emails_details: [{ type: "mobile", value: customer_email.presence || customer.email }],
                   }.compact
                 )
               end
@@ -481,6 +481,10 @@ module Booking
 
     def estimated_booking_amount
       booking_options.sum(&:amount)
+    end
+
+    def has_basic_customer_info?
+      customer_last_name && customer_first_name && (customer_phone_number || customer_email)
     end
   end
 end
