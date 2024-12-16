@@ -353,7 +353,7 @@ module Booking
             if reservation.start_time < Time.current.tomorrow.end_of_day
               Notifiers::Users::PendingReservationsSummary.perform_later(
                 start_time: Time.current.beginning_of_day,
-                end_time: Time.current.end_of_day,
+                end_time: Time.current.tomorrow.end_of_day,
                 receiver: user,
                 user: user
               )
@@ -439,19 +439,11 @@ module Booking
     end
 
     def phone_number
-      if customer_info&.compact.present?
-        customer_info["phone_number"]
-      else
-        customer_phone_number
-      end
+      customer_info&.dig("phone_number").presence || customer_phone_number
     end
 
     def email
-      if customer_info&.compact.present?
-        customer_info["email"]
-      else
-        customer_email
-      end
+      customer_info&.dig("email").presence || customer_email
     end
 
     def social_customer
