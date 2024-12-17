@@ -207,7 +207,8 @@ class OnlineService < ApplicationRecord
         stripe_required: goal[:stripe_required],
         one_time_charge: goal[:one_time_charge],
         recurring_charge: goal[:recurring_charge],
-        premium_member_required: goal[:premium_member_required],
+        premium_member_required: goal[:premium_member_required] || 
+          (goal[:key] == 'paid_lesson' && Time.current >= Time.new(2025, 1, 10)),
         solutions: goal[:solutions].map do |solution|
           {
             key: solution[:key],
