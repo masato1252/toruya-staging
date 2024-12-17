@@ -31,7 +31,7 @@ const SortableMenuOption = sortableElement(({props, booking_option_id, menu, i18
         {i18n.delete}
       </a>
       {menu.no_available_shop && <div className="warning">{i18n.form_errors.no_available_shop}</div> }
-      {(menu.minutes > menu.required_time) && <div className="danger">{I18n.t("errors.short_than_menu_minutes", { required_minutes: menu.minutes })}</div>}
+      {(menu.minutes > menu.required_time) && <div className="warning">{I18n.t("errors.short_than_menu_minutes", { required_minutes: menu.minutes })}</div>}
     </div>
   )
 });

@@ -67,26 +67,6 @@ RSpec.describe BookingOptions::Save do
           expect(outcome).to be_valid
         end
       end
-      context "when booking option has multiple menus" do
-        let(:menu2) { FactoryBot.create(:menu, user: user) }
-        let(:menu_arguments) do
-          {
-            "0" => { "label" => menu.name, "value" => menu.id, "priority" => 0, required_time: menu.minutes - 1 },
-            "1" => { "label" => menu2.name, "value" => menu2.id, "priority" => 1, required_time: menu2.minutes - 1 }
-          }
-        end
-        let(:booking_option) { user.booking_options.new }
-
-        it "does NOT create a booking option" do
-          expect {
-            outcome
-          }.to not_change {
-            user.booking_options.reload.count
-          }
-
-          expect(outcome).to be_invalid
-        end
-      end
     end
   end
 end

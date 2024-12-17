@@ -52,8 +52,8 @@
                     </div>
                   <% end %>
 
-                  <% if booking_option.booking_option_menus.includes(:menu).any? { |booking_option_menu| booking_option_menu.required_time < booking_option_menu.menu.minutes } %>
-                    <div class="danger">
+                  <% if booking_option.booking_option_menus.includes(:menu).where(menu: menu).any? { |booking_option_menu| booking_option_menu.required_time < booking_option_menu.menu.minutes } %>
+                    <div class="warning">
                       <%= t("errors.short_than_menu_minutes", required_minutes: menu.minutes) %>
                     </div>
                   <% end %>
