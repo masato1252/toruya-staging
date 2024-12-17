@@ -288,30 +288,30 @@ tw:
               note_title: 文字
               start_time_title: 開始提供
         menu:
-          basic_settings: 菜單基本設定
-          name: 菜單名稱
+          basic_settings: 服務基本設定
+          name: 服務名稱
           short_name: 簡稱
           minutes: 最短所需時間
           interval: 間隔
           menu_shops: 可使用店鋪（滿座數）
           full_seat_number_title: 滿座數
-          menus_list: 菜單列表
+          menus_list: 服務列表
           method: 舉辦方式
           staffs: 負責員工
           methods:
             local: 在店內
             online: 線上
           form:
-            name_title: 菜單基本設定
-            short_name_title: 菜單基本設定
-            minutes_title: 菜單基本設定
-            interval_title: 菜單基本設定
+            name_title: 服務基本設定
+            short_name_title: 服務基本設定
+            minutes_title: 服務基本設定
+            interval_title: 服務基本設定
             menu_shops_title: 可使用店鋪
             menu_staffs_title: 負責員工
             menu_staffs_subtitle: 負責員工
             menu_staffs_max_customers: 同時可服務的人數
             online_title: 舉辦方式
-            name_subtitle: 菜單名稱
+            name_subtitle: 服務名稱
             short_name_subtitle: 簡稱
             minutes_subtitle: 所需時間
             interval_subtitle: 間隔
@@ -477,13 +477,13 @@ tw:
         form:
           add_a_new_option: 新增此價格
           new_option_with_existing_menu:
-            select_from_existing_menu: 從現有菜單建立價格
-            create_from_a_new_menu: 用新菜單建立價格
+            select_from_existing_menu: 從現有服務建立價格
+            create_from_a_new_menu: 用新服務建立價格
           booking_options_order_title: 價格順序
       booking_options:
         form:
-          add_this_new_menu: 新增此菜單
-          add_a_new_menu: 新增菜單
+          add_this_new_menu: 新增此服務
+          add_a_new_menu: 新增服務
       broadcast_creation:
         filters_step: 發送對象
         content_step: 發送內容
@@ -493,9 +493,9 @@ tw:
         all_customers_desc: 所有已連結客戶資訊的LINE好友
         vip_customers: VIP客戶
         vip_customers_desc: 向所有VIP客戶群發訊息
-        specific_menu_customers: 特定菜單的使用客戶
-        menu: 特定菜單的使用客戶
-        specific_menu_customers_desc: 向有特定菜單使用記錄（已結帳）的活躍客戶群發訊息
+        specific_menu_customers: 特定服務的使用客戶
+        menu: 特定服務的使用客戶
+        specific_menu_customers_desc: 向有特定服務使用記錄（已結帳）的活躍客戶群發訊息
         specific_service_customers: 特定服務的使用客戶
         online_service: 特定服務的使用客戶
         specific_service_customers_desc: 向有特定線上服務使用記錄的活躍客戶群發訊息
@@ -508,7 +508,7 @@ tw:
         customers_with_birthday: 生日的客戶
         customers_with_birthday_desc: 向生日的客戶群發訊息
         approximate_customers_count: 預計發送數量
-        what_menu_do_you_want: 您想向哪個菜單的使用客戶發送訊息？
+        what_menu_do_you_want: 您想向哪個服務的使用客戶發送訊息？
         what_service_do_you_want: 您想向哪個服務的使用客戶發送訊息？
         what_content_do_you_want: 您想發送什麼內容？
         preview: 預覽
@@ -585,8 +585,8 @@ tw:
         use_these_settings_create_this_page: 使用這些設置創建預約頁面
         share_your_booking_page: 分享您創建的預約頁面
         check_this_page: 預覽
-        want_to_create_a_new_menu: 需要創建新菜單嗎？
-        create_a_new_menu: 創建新菜單
+        want_to_create_a_new_menu: 需要創建新服務嗎？
+        create_a_new_menu: 創建新服務
         create_a_sale_page: 使用宣傳頁面可以在網上招攬預約
         create_a_sale_page_btn: 創建宣傳頁面
         create_sale_page_later_warning_html: 服務已創建，但由於<br>宣傳頁面尚未創建，<br>客戶無法註冊服務
@@ -667,7 +667,7 @@ tw:
             video: 這個影片講座能做到的事
             pdf: 這份PDF能做到的事
             audio: 這個音頻講座能做到的事
-            menu: 這個菜單能做到的事
+            menu: 這個服務能做到的事
             external: 這項服務能做到的事
             free_course: 這項服務能做到的事
             course: 這項服務能做到的事
@@ -725,7 +725,7 @@ tw:
           introduction_video_hint: 如果使用YouTube，請將影片設為「公開」。
           end_time_changes_warning: 更改此設定不會影響已註冊客戶的使用期限。
           why_user_buy_html: "這個服務的購買理由<br>或購買者的未來願景是什麼？"
-          what_buyer_future: 以文字輸入預約菜單的賣點或購買者的未來願景
+          what_buyer_future: 以文字輸入預約服務的賣點或購買者的未來願景
         booking_page_creation:
           booking_step: 預約頁面
           content_step: 內容
@@ -735,10 +735,10 @@ tw:
           select_header_template: 您要使用什麼樣的標題？
           select_color_html: "更改文字大小和顏色<br />可以讓標題更吸引人。"
           color_tip: ※此資訊將反映在店鋪設定中。
-          why_user_buy_html: "這個預約菜單的購買理由<br />或購買者的未來願景是什麼？"
+          why_user_buy_html: "這個預約服務的購買理由<br />或購買者的未來願景是什麼？"
           what_user_get: 輸入標語
           what_user_get_tip: ※建議每行約15個字，最多3行
-          what_buyer_future: 以文字輸入預約菜單的賣點或購買者的未來願景
+          what_buyer_future: 以文字輸入預約服務的賣點或購買者的未來願景
           what_buyer_future_tip: ※單次換行為行間距，連續兩次換行為段落間距
           staff_introduction: 主要負責員工的簡介
           staff_change_tip: ※此資訊將反映在所有宣傳頁面中。

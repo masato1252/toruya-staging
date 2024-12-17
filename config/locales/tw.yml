@@ -26,9 +26,9 @@ tw:
     staff_working_schedule_redirect_message: 設定工作排程。
     staff_working_schedule_warning_message: "請在%{link}設定工作排程。"
     staff_working_schedule_warning_link_title: 工作排程設定頁面
-    menu_redirect_message: 建立菜單。
-    menu_warning_message: "請在%{link}設定可預約的菜單項目。"
-    menu_warning_link_title: 菜單設定頁面
+    menu_redirect_message: 建立服務。
+    menu_warning_message: "請在%{link}設定可預約的服務項目。"
+    menu_warning_link_title: 服務設定頁面
     profile_redirect_message: 請完成Toruya的用戶註冊。
     shop_redirect_message: 建立店舖。
     shop_warning_message: "請在%{link}建立店舖。"
@@ -811,7 +811,7 @@ tw:
           attributes:
             broadcast:
               service_is_required: "^請至少設定一項服務。"
-              menu_is_required: "^請至少設定一個菜單項目。"
+              menu_is_required: "^請至少設定一個服務項目。"
         booking_pages/update:
           attributes:
             attrs:

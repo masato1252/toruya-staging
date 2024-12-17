@@ -30,7 +30,7 @@ tw:
     copy_url2: 複製網址
     copy_code: 複製預約按鈕
     preview: 預覽
-    add_a_menu: 新增菜單
+    add_a_menu: 新增服務
     ignore: 忽略
     save_changes: 儲存變更
     change_and_save: 變更並儲存
@@ -156,7 +156,7 @@ tw:
     shop: 商家
     select: 選擇
     select_a_shop: 選擇商家
-    select_a_menu: 選擇菜單
+    select_a_menu: 選擇服務
     staff: 員工
     account: 帳戶
     select_a_staff: 選擇員工
@@ -176,7 +176,7 @@ tw:
     sir: 先生/小姐
     number: 人數
     required_time: 所需時間
-    menu: 菜單
+    menu: 服務
     responsible_employee: 負責人
     responsible_by: 負責
     booking_price: 預約項目
@@ -289,5 +289,5 @@ tw:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。
     not_enough_info: "資訊不足"
-    short_than_menu_minutes: "此價格需要至少 %{required_minutes} 分鐘的菜單時間。"
+    short_than_menu_minutes: "此價格需要至少 %{required_minutes} 分鐘的服務時間。"
     selling_price_too_low: 100元以下無法使用線上結算。

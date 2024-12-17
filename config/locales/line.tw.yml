@@ -32,7 +32,7 @@ tw:
         notifications: "通知"
         sales: "銷售"
         online_service: "線上服務"
-        menus: "菜單"
+        menus: "服務"
         broadcasts: "廣播"
     page:
       user_sign_up:
