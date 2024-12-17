@@ -67,9 +67,9 @@ RSpec.describe Customers::Find do
       end
 
       context "when only customer name matched (phone number is not matched)" do
-        context "when customer created 30 days ago" do
+        context "when customer updated 30 days ago" do
           it "returns the customer" do
-            customer = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name, created_at: 29.days.ago)
+            customer = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name, updated_at: 29.days.ago)
             result = outcome.result
 
             expect(result).to eq({
