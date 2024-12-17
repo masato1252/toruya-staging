@@ -1434,7 +1434,8 @@ CREATE TABLE public.function_accesses (
     conversion_count integer DEFAULT 0 NOT NULL,
     revenue_cents integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    label character varying
 );
 
 
@@ -5090,6 +5091,13 @@ CREATE INDEX index_function_accesses_on_date_and_source ON public.function_acces
 
 
 --
+-- Name: index_function_accesses_on_date_and_source_and_label; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_function_accesses_on_date_and_source_and_label ON public.function_accesses USING btree (access_date, source_id, label);
+
+
+--
 -- Name: index_lessons_on_chapter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6127,6 +6135,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241129233118'),
 ('20241204010941'),
 ('20241205095949'),
-('20241213072553');
+('20241213072553'),
+('20241217134923');
 
 

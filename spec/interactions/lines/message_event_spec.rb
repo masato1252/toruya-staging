@@ -64,7 +64,8 @@ RSpec.describe Lines::MessageEvent, :with_line do
               content: text,
               source_type: "SocialRichMenu", 
               source_id: social_customer.social_rich_menu_key,
-              action_type: "keyword"
+              action_type: "keyword",
+              label: text
             )
             outcome
           end

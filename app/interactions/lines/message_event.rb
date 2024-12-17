@@ -133,7 +133,8 @@ class Lines::MessageEvent < ActiveInteraction::Base
       content: text,
       source_type: "SocialRichMenu",
       source_id: social_customer.social_rich_menu_key,
-      action_type: "keyword"
+      action_type: "keyword",
+      label: text
     )
   end
 end

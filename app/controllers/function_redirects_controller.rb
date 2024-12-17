@@ -4,6 +4,7 @@ class FunctionRedirectsController < ActionController::Base
     source_type = params[:source_type]
     source_id = params[:source_id]
     action_type = params[:action_type]
+    label = params[:label]
 
     # Track the access
     if url && source_id && source_type && action_type
@@ -11,7 +12,8 @@ class FunctionRedirectsController < ActionController::Base
         content: url,
         source_type: source_type,
         source_id: source_id,
-        action_type: action_type
+        action_type: action_type,
+        label: label
       )
 
       if url.to_s.start_with?('tel:')
@@ -24,7 +26,8 @@ class FunctionRedirectsController < ActionController::Base
         url: url,
         source_type: source_type,
         source_id: source_id,
-        action_type: action_type
+        action_type: action_type,
+        label: label
       )
       redirect_to url
     end

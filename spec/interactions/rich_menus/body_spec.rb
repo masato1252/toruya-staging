@@ -81,7 +81,7 @@ RSpec.describe RichMenus::Body do
             action: {
               "type": "uri",
               "label": "bar",
-              "uri": Rails.application.routes.url_helpers.function_redirect_url(content: "https://foo.com", source_type: "SocialRichMenu", source_id: key, action_type: "url")
+              "uri": Rails.application.routes.url_helpers.function_redirect_url(content: "https://foo.com", label: "bar", source_type: "SocialRichMenu", source_id: key, action_type: "url")
             }
           }
         ]

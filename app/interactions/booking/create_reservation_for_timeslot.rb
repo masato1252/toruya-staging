@@ -302,7 +302,8 @@ module Booking
                   source_type: function_access.source_type,
                   source_id: function_access.source_id,
                   action_type: function_access.action_type,
-                  revenue_cents: booking_options.sum(&:amount).cents
+                  revenue_cents: booking_options.sum(&:amount).cents,
+                  label: function_access.label
                 )
               end
             end

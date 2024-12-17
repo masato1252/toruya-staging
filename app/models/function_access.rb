@@ -8,6 +8,7 @@
 #  action_type      :string
 #  content          :string           not null
 #  conversion_count :integer          default(0), not null
+#  label            :string
 #  revenue_cents    :integer          default(0), not null
 #  source_type      :string
 #  created_at       :datetime         not null
@@ -16,8 +17,9 @@
 #
 # Indexes
 #
-#  index_function_accesses_on_content_source_and_date  (access_date,source_id,content)
-#  index_function_accesses_on_date_and_source          (access_date,source_id,source_type)
+#  index_function_accesses_on_content_source_and_date    (access_date,source_id,content)
+#  index_function_accesses_on_date_and_source            (access_date,source_id,source_type)
+#  index_function_accesses_on_date_and_source_and_label  (access_date,source_id,label)
 #
 class FunctionAccess < ApplicationRecord
   validates :content, presence: true
@@ -29,7 +31,7 @@ class FunctionAccess < ApplicationRecord
   scope :by_source_id, ->(id) { where(source_id: id) }
   scope :by_action_type, ->(action) { where(action_type: action) }
 
-  def self.track_access(content:, source_type: nil, source_id: nil, action_type: nil)
+  def self.track_access(content:, source_type: nil, source_id: nil, action_type: nil, label: nil)
     today = Time.current.to_date
     
     access = find_or_initialize_by(
@@ -37,7 +39,8 @@ class FunctionAccess < ApplicationRecord
       source_type: source_type,
       source_id: source_id,
       action_type: action_type,
-      access_date: today
+      access_date: today,
+      label: label
     )
     
     if access.new_record?
@@ -51,7 +54,7 @@ class FunctionAccess < ApplicationRecord
     access
   end
 
-  def self.track_conversion(content:, source_type: nil, source_id: nil, action_type: nil, revenue_cents: 0)
+  def self.track_conversion(content:, source_type: nil, source_id: nil, action_type: nil, revenue_cents: 0, label: nil)
     today = Time.current.to_date
     
     access = find_or_initialize_by(
@@ -59,7 +62,8 @@ class FunctionAccess < ApplicationRecord
       source_type: source_type,
       source_id: source_id,
       action_type: action_type,
-      access_date: today
+      access_date: today,
+      label: label
     )
     
     if access.new_record?
@@ -103,11 +107,11 @@ class FunctionAccess < ApplicationRecord
 
   def self.metrics_for(source_id:, start_date:, end_date:)
     scope = where(source_id: source_id).by_date_range(start_date, end_date)
-    scope.pluck(:content).uniq.each_with_object({}) do |content, result|
-      result[content] = {
-        clicks: scope.where(content: content).sum(:access_count),
-        conversions: scope.where(content: content).sum(:conversion_count), 
-        revenue_cents: scope.where(content: content).sum(:revenue_cents)
+    scope.pluck(:label).uniq.each_with_object({}) do |label, result|
+      result[label] = {
+        clicks: scope.where(label: label).sum(:access_count),
+        conversions: scope.where(label: label).sum(:conversion_count), 
+        revenue_cents: scope.where(label: label).sum(:revenue_cents)
       }
     end
   end

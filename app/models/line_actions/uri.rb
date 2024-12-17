@@ -21,10 +21,11 @@ module LineActions
     end
 
     def template
+      line_label = (label || I18n.t("line.actions.label.#{action}")).first(LABEL_LIMIT)
       result = {
         "type": "uri",
-        "label": (label || I18n.t("line.actions.label.#{action}")).first(LABEL_LIMIT),
-        "uri": key ? Rails.application.routes.url_helpers.function_redirect_url(content: url, source_type: "SocialRichMenu", source_id: key, action_type: "url") : url,
+        "label": line_label,
+        "uri": key ? Rails.application.routes.url_helpers.function_redirect_url(content: url, label: line_label, source_type: "SocialRichMenu", source_id: key, action_type: "url") : url,
       }
 
       if options[:btn]

@@ -6,12 +6,14 @@ RSpec.describe FunctionRedirectsController, type: :controller do
     let(:source_type) { 'rich_menu' }
     let(:source_id) { '123' }
     let(:action_type) { 'click' }
+    let(:label) { 'foo' }
     let(:params) do
       {
         content: url,
         source_type: source_type,
         source_id: source_id,
-        action_type: action_type
+        action_type: action_type,
+        label: label
       }
     end
 
@@ -25,6 +27,7 @@ RSpec.describe FunctionRedirectsController, type: :controller do
       expect(last_access.source_type).to eq(source_type)
       expect(last_access.source_id).to eq(source_id)
       expect(last_access.action_type).to eq(action_type)
+      expect(last_access.label).to eq(label)
       expect(response).to redirect_to("#{url}?function_access_id=#{FunctionAccess.last.id}")
     end
 

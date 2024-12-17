@@ -30,7 +30,8 @@ module Sales
               source_type: function_access.source_type,
               source_id: function_access.source_id,
               action_type: function_access.action_type,
-              revenue_cents: relation.product_amount.fractional
+              revenue_cents: relation.product_amount.fractional,
+              label: function_access.label
             )
             relation.update!(function_access_id: function_access_id)
           end

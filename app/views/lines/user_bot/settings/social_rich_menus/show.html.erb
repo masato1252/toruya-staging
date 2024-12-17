@@ -26,13 +26,13 @@
               <%= I18n.t("user_bot.dashboards.metrics.no_data") %>
             </p>
           <% else %>
-            <% @metrics.each do |content, metrics| %>
+            <% @metrics.each do |label, metrics| %>
               <div class="row">
                 <div class="col-xs-3 word-break-all" style="white-space: initial;">
-                  <% if content.match?(/\A#{URI::regexp}\z/) %>
-                    <%= link_to content, content, target: "_blank" %>
+                  <% if label.match?(/\A#{URI::regexp}\z/) %>
+                    <%= link_to label, label, target: "_blank" %>
                   <% else %>
-                    <%= content %>
+                    <%= label %>
                   <% end %>
                 </div>
                 <div class="col-xs-4"><%= metrics[:clicks] %></div>
