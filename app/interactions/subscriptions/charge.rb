@@ -55,8 +55,11 @@ module Subscriptions
           charge.completed!
 
           if Rails.configuration.x.env.production?
-            if user.subscription_charges.finished.count == 1 || manual
-              text = "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} new Paid user or user paid manually"
+            if user.subscription_charges.finished.count == 1
+              text = "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} new Paid user"
+              SlackClient.send(channel: 'new_paid_users', text: text)
+            elsif manual
+              text = "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} user upgraded"
               SlackClient.send(channel: 'new_paid_users', text: text)
             else
               SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Subscription Stripe charge user: #{user.id} 💰")
