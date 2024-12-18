@@ -91,10 +91,16 @@ ja:
             options:
               require_contact_customer_name: お客様に名前の入力を求める（忙しい方におすすめ）
               not_require_contact_customer_name: お客様に名前の入力を求めない
+          booking_options_menu_concept:
+            title: 予約価格とメニューの詳細設定
+            options:
+              enable_menu_concept: 有効にする
+              disable_menu_concept: 無効にする
         support:
           user_support: ユーザーサポート
           documents: ヘルプマニュアル
           faq: よくある質問
+          lab: Toruya Lab
         dashboard:
           title: 設定画面
           info_label: アカウント登録情報

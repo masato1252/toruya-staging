@@ -9,44 +9,49 @@
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :display_name), title: @booking_option.display_name %>
 
  <div class="field-header" id="booking_pages"><%= I18n.t("settings.booking_option.form.booking_pages") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :booking_page_ids), title: @booking_option.booking_pages.pluck(:name).join(", ") %> 
-  <div class="field-group-header" id="new_menu"><%= I18n.t("settings.booking_option.form.menu_for_sale_label") %></div>
-  <div class="field-header"><%= I18n.t("common.menu") %></div>
-  <%= react_component("user_bot/booking_options/menus", {
-    props: {
-      business_owner_id: business_owner_id,
-      booking_option: @booking_option.attributes.merge!(
-        menus: @booking_option.booking_option_menus.includes(menu: :shop_menus).order("priority").map { |booking_option_menu|
-          booking_option_menu.attributes.slice("priority", "required_time").merge(no_available_shop: !booking_option_menu.menu.shop_menus.exists?).reverse_merge!(menu_group_options(@menu_result[:menu_options], :minutes, :interval).find { |option| option["value"] == booking_option_menu.menu_id } || {})},
-      ),
-      attribute: @attribute,
-      i18n: {
-      }.merge!([
-        t("settings.booking_option.form"),
-        t("common").slice(:required_time, :minute, :are_you_sure_message),
-        t("action").slice(:delete),
-      ].inject(:merge))
-    }
-  },
-  { camelize_props: false }
-  ) %>
+ <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :booking_page_ids), title: @booking_option.booking_pages.pluck(:name).join(", ") %> 
 
-  <div class="action-block">
-    <%= link_to edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :new_menu), class: "btn btn-yellow" do %>
-      <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_option.form.new_menu") %></span>
-    <% end %>
- 
-    <% if @booking_option.booking_option_menus.count == 0 %>
-      <div class="danger margin-around">
-        <%= I18n.t("settings.booking_option.form.form_errors.no_menu") %>
-      </div>
-    <% end %>
-  </div>
+  <% if support_booking_options_menu_concept? %>
+    <div class="field-group-header" id="new_menu"><%= I18n.t("settings.booking_option.form.menu_for_sale_label") %></div>
+    <div class="field-header"><%= I18n.t("common.menu") %></div>
+    <%= react_component("user_bot/booking_options/menus", {
+      props: {
+        business_owner_id: business_owner_id,
+        booking_option: @booking_option.attributes.merge!(
+          menus: @booking_option.booking_option_menus.includes(menu: :shop_menus).order("priority").map { |booking_option_menu|
+            booking_option_menu.attributes.slice("priority", "required_time").merge(no_available_shop: !booking_option_menu.menu.shop_menus.exists?).reverse_merge!(menu_group_options(@menu_result[:menu_options], :minutes, :interval).find { |option| option["value"] == booking_option_menu.menu_id } || {})},
+        ),
+        attribute: @attribute,
+        i18n: {
+        }.merge!([
+          t("settings.booking_option.form"),
+          t("common").slice(:required_time, :minute, :are_you_sure_message),
+          t("action").slice(:delete),
+        ].inject(:merge))
+      }
+    },
+    { camelize_props: false }
+    ) %>
 
-  <div class="field-header"><%= I18n.t("settings.booking_option.form.total_time") %></div>
-  <%= render "lines/user_bot/field_row" do %>
-    <span><%= "#{@booking_option.minutes}#{I18n.t("common.minute")}" %></span>
-    <span><%= I18n.t("settings.booking_option.form.booking_options_total_time_tip") %></span>
+    <div class="action-block">
+      <%= link_to edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :new_menu), class: "btn btn-yellow" do %>
+        <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_option.form.new_menu") %></span>
+      <% end %>
+  
+      <% if @booking_option.booking_option_menus.count == 0 %>
+        <div class="danger margin-around">
+          <%= I18n.t("settings.booking_option.form.form_errors.no_menu") %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if support_booking_options_menu_concept? %>
+    <div class="field-header"><%= I18n.t("settings.booking_option.form.total_time") %></div>
+    <%= render "lines/user_bot/field_row" do %>
+      <span><%= "#{@booking_option.minutes}#{I18n.t("common.minute")}" %></span>
+      <span><%= I18n.t("settings.booking_option.form.booking_options_total_time_tip") %></span>
+    <% end %>
   <% end %>
 
   <% if support_menu_restrict_order? %>
@@ -68,6 +73,30 @@
     path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :end_at),
     title: @booking_option.end_at ? I18n.l(@booking_option.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_forever")
   %>
+
+  <% if !support_booking_options_menu_concept? %>
+    <div class="field-header"><%= t("user_bot.dashboards.settings.menu.minutes") %></div>
+    <% @booking_option.menus.each do |menu| %>
+      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :minutes, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: menu.minutes %>
+    <% end %>
+
+
+    <div class="field-header"><%= t("user_bot.dashboards.settings.menu.interval") %></div>
+    <% @booking_option.menus.each do |menu| %>
+      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :interval, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: menu.interval %>
+    <% end %>
+
+    <div class="field-header"><%= t("user_bot.dashboards.settings.menu.menu_shops") %></div>
+    <% @booking_option.menus.each do |menu| %>
+      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :menu_shops, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: ShopMenu.find_by(shop_id: @booking_option.user.shops.first.id, menu_id: menu.id).max_seat_number %>
+    <% end %>
+
+    <div class="field-header"><%= t("user_bot.dashboards.settings.menu.method") %></div>
+    <% @booking_option.menus.each do |menu| %>
+      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :online, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: t("user_bot.dashboards.settings.menu.methods.#{menu.online ? "online" : "local"}") %>
+    <% end %>
+  <% end %>
+
 
   <div class="field-group-header" id="memo"><%= I18n.t("settings.booking_option.form.note_label") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :memo), title: @booking_option.memo %>

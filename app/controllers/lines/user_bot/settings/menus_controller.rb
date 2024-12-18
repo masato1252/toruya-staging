@@ -43,7 +43,7 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
     menu = Current.business_owner.menus.find(params[:id])
     outcome = ::Menus::UpdateAttribute.run(menu: menu, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_settings_menu_path(business_owner_id, params[:id], anchor: params[:attribute]) })
+    return_json_response(outcome, { redirect_to: params[:back_path] || lines_user_bot_settings_menu_path(business_owner_id, params[:id], anchor: params[:attribute]) })
   end
 
   def destroy

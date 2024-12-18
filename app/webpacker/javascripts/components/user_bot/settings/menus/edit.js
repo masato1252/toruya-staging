@@ -25,7 +25,7 @@ const MenuEdit =({props}) => {
     let error, response;
 
     [error, response] = await MenuServices.update({
-      data: _.assign( data, { attribute: props.attribute, menu_shops: menu_shops_options, menu_staffs: menu_staffs_options, business_owner_id: props.business_owner_id })
+      data: _.assign( data, { attribute: props.attribute, menu_shops: menu_shops_options, menu_staffs: menu_staffs_options, business_owner_id: props.business_owner_id, back_path: props.back_path })
     })
 
     if (error) {
@@ -78,25 +78,27 @@ const MenuEdit =({props}) => {
             {menu_shops_options.map((option) => {
               return (
                 <div className="field-row flex-start" key={option.shop_id}>
-                  <div className="flex justify-between w-full">
-                    {option.name}
-                    <SwitchButton
-                      offWord="OFF"
-                      onWord="ON"
-                      checked={option.checked}
-                      name={option.name}
-                      nosize={true}
-                      onChange={() => {
-                        setMenuShops((menu_options) => {
-                          const new_menu_options = menu_options.map((menu_option) => {
-                            return menu_option.shop_id == option.shop_id ? {...menu_option, checked: !menu_option.checked} : menu_option
-                          })
+                  {false && (
+                    <div className="flex justify-between w-full">
+                      {option.name}
+                      <SwitchButton
+                        offWord="OFF"
+                        onWord="ON"
+                        checked={option.checked}
+                        name={option.name}
+                        nosize={true}
+                        onChange={() => {
+                          setMenuShops((menu_options) => {
+                            const new_menu_options = menu_options.map((menu_option) => {
+                              return menu_option.shop_id == option.shop_id ? {...menu_option, checked: !menu_option.checked} : menu_option
+                            })
 
-                          return new_menu_options
-                        })
-                      }}
-                    />
-                  </div>
+                            return new_menu_options
+                          })
+                        }}
+                      />
+                    </div>
+                  )}
 
                   {option.checked && (
                     <div>
@@ -186,7 +188,7 @@ const MenuEdit =({props}) => {
       <input type="hidden" name="id" ref={register({ required: true })} />
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_settings_menu_path(props.business_owner_id, props.menu.id)}>
+          <a href={props.back_path || Routes.lines_user_bot_settings_menu_path(props.business_owner_id, props.menu.id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }

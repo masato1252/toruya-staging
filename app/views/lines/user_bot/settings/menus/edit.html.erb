@@ -4,7 +4,8 @@
     menu: MenuSerializer.new(@menu).attributes_hash,
     attribute: params[:attribute],
     menu_shops_options: @menu_shops_options,
-    menu_staffs_options: @menu_staffs_options
+    menu_staffs_options: @menu_staffs_options,
+    back_path: params[:back_path]
   }
 },
 { camelize_props: false }

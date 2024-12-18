@@ -13,10 +13,10 @@ const UserSettingsEdit =({props}) => {
     console.log(data)
 
     const [error, response] = await CommonServices.update({
-      url: Routes.lines_user_bot_settings_user_setting_path({format: "json"}),
+      url: Routes.lines_user_bot_settings_user_setting_path(props.business_owner_id, {format: "json"}),
       data: _.assign(
         data,
-        { attribute: props.attribute }
+        { attribute: props.attribute, back_path: props.back_path }
       )
     })
 
@@ -27,6 +27,7 @@ const UserSettingsEdit =({props}) => {
     defaultValues: {
       ...props.user_settings,
       line_contact_customer_name_required: String(props.user_settings.line_contact_customer_name_required),
+      booking_options_menu_concept: String(props.user_settings.booking_options_menu_concept),
     }
   });
 
@@ -45,6 +46,31 @@ const UserSettingsEdit =({props}) => {
             </label>
           </>
         )
+      case "booking_options_menu_concept":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input name="booking_options_menu_concept" type="radio" value="true" ref={register({ required: true })} />
+              {I18n.t("user_bot.dashboards.settings.user_settings.booking_options_menu_concept.options.enable_menu_concept")}
+            </label>
+            <label className="field-row flex-start">
+              <input name="booking_options_menu_concept" type="radio" value="false" ref={register({ required: true })} />
+              {I18n.t("user_bot.dashboards.settings.user_settings.booking_options_menu_concept.options.disable_menu_concept")}
+            </label>
+            <div className="margin-around">
+              {props.support_feature_flags.support_japanese_asset && (
+                <div className="m-2">
+                  <img src={props.booking_option_introduction_asset_path} alt="booking_option_introduction" className="w-full" />
+                </div>
+              )}
+              {!props.support_feature_flags.support_japanese_asset && (
+                <div className="margin-around">
+                  <div dangerouslySetInnerHTML={{ __html: I18n.t("settings.booking_page.form.booking_option_introduction_html") }} />
+                </div>
+              )}
+            </div>
+          </>
+        )
     }
   }
 
@@ -55,7 +81,7 @@ const UserSettingsEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_settings_path(props.business_owner_id)}>
+                <a href={ props.back_path || Routes.lines_user_bot_settings_path(props.business_owner_id)}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

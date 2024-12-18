@@ -7,12 +7,13 @@ module UserSettings
 
     hash :attrs, default: nil, strip: false do
       boolean :line_contact_customer_name_required, default: false
+      boolean :booking_options_menu_concept, default: false
     end
 
     def execute
       user_setting.transaction do
         case update_attribute
-        when "line_contact_customer_name_required"
+        when "line_contact_customer_name_required", "booking_options_menu_concept"
           user_setting.update(attrs.slice(update_attribute))
         end
 

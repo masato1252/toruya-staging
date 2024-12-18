@@ -22,6 +22,7 @@ module FeatureHelper
       support_menu_restrict_order: support_menu_restrict_order?,
       support_terms_and_privacy_display: support_terms_and_privacy_display?,
       support_official_support_display: support_official_support_display?,
+      support_booking_options_menu_concept: support_booking_options_menu_concept?
     }
   end
 
@@ -41,6 +42,10 @@ module FeatureHelper
 
   def support_skip_required_shop_info?
     I18n.locale != :ja
+  end
+
+  def support_booking_options_menu_concept?
+    Current.business_owner&.booking_options_menu_concept
   end
 
   def money_sample(locale)

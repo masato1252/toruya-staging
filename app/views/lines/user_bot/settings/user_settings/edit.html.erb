@@ -2,7 +2,10 @@
   props: {
     business_owner_id: business_owner_id,
     attribute: params[:attribute],
-    user_settings: Current.business_owner.user_setting.content
+    user_settings: Current.business_owner.user_setting.content,
+    back_path: params[:back_path],
+    support_feature_flags: support_feature_flags,
+    booking_option_introduction_asset_path: asset_pack_path("media/assets/user_bot/booking_option_introduction.png"),
   }
 },
 { camelize_props: false }

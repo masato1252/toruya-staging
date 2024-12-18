@@ -78,9 +78,11 @@
             <li>
               <%= active_link_to t("common.booking_price"), lines_user_bot_booking_options_path(business_owner_id: business_owner_id) %>
             </li>
-            <li>
-              <%= active_link_to t("common.menu"), lines_user_bot_settings_menus_path(business_owner_id: business_owner_id) %>
-            </li>
+            <% if support_booking_options_menu_concept? %>
+              <li>
+                <%= active_link_to t("common.menu"), lines_user_bot_settings_menus_path(business_owner_id: business_owner_id) %>
+              </li>
+            <% end %>
           </ul>
         </li>
 

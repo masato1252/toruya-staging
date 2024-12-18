@@ -455,14 +455,14 @@ tw:
       booking_option_label: 預約項目
       title: 預約項目設定
       info_html: 請設定預約項目。<br />客戶將根據您在此設定的價格進行線上預約。
-      name: 價格名稱
+      name: 項目名稱
       menu_for_sale: 服務
       start_at: 開始銷售
       end_at: 結束銷售
       new_button: 新增
       form:
-        price_name: 價格名稱
-        name_title: 價格名稱
+        price_name: 項目名稱
+        name_title: 項目名稱
         price_name_hint: 這是您用來管理預約項目的名稱。
         name_hint: 這是您用來管理預約項目的名稱。
         display_name: 顯示名稱
@@ -505,7 +505,7 @@ tw:
         note_label: 說明及注意事項
         memo_title: 說明及注意事項
         note_hint: 顯示給客戶有關此價格預約的注意事項。
-        delete_option: 刪除價格
+        delete_option: 刪除項目
         from_purchase: 購買後
         after_month: 個月後
         max_ticket_date: 最長180天
@@ -557,7 +557,7 @@ tw:
         add_new_option: 新增預約項目
         reorder_options: 變更顯示順序
         does_require_a_new_option: 需要新的預約項目嗎？
-        create_a_new_option: 我要設定新的『服務』
+        create_a_new_option: 我需要設定新的服務
         create_a_new_option_from_existing_menu: 我要從『現有服務』建立預約項目
         create_a_new_option_from_existing_option: 從現有預約項目中選擇
         booking_option_introduction_html: "預約項目和服務的差別是什麼，服務是您提供的服務，而預約項目是您將單個或多個服務包裝成一個可以預約的項目。<br><br>我們日常最常見的例子就像是大腸包小腸，實際產品只有香腸和大腸，可是實際上大腸包小腸可以是另外一個可以獨立購買的項目，價格上也可能會有些不同。"

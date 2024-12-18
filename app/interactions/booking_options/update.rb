@@ -45,7 +45,13 @@ module BookingOptions
     def execute
       booking_option.with_lock do
         case update_attribute
-        when "name", "display_name", "memo"
+        when "name"
+          booking_option.update(name: attrs[:name])
+          # if this booking option only has one menu, update the minutes
+          if booking_option.booking_option_menus.count == 1
+            booking_option.menus.first.update(name: attrs[:name], short_name: attrs[:name])
+          end
+        when "display_name", "memo"
           booking_option.update(attrs.slice(update_attribute))
 
           if user.line_keyword_booking_option_ids.include?(booking_option.id.to_s)

@@ -11,8 +11,6 @@ import ExistingMenuField from "components/user_bot/booking_options/existing_menu
 const NewMenuOptionFields = ({register}) => {
   return (
     <>
-      <h3 className="header centerize">{I18n.t("settings.booking_page.form.create_a_new_option")}</h3>
-
       <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
       <input ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
 
@@ -86,16 +84,20 @@ const NewBookingOption =({props}) => {
               />
               {I18n.t("settings.booking_page.form.create_a_new_option")}
             </label>
-            <label className="field-row flex-start">
-              <input
-                type="radio"
-                name="newBookingOptionType"
-                value="new_option_existing_menu"
-                checked={newBookingOptionType === "new_option_existing_menu"}
-                onChange={() => setNewBookingOptionType("new_option_existing_menu")}
-              />
-              {I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}
-            </label>
+            {props.support_feature_flags.support_booking_options_menu_concept && (
+              <>
+                <label className="field-row flex-start">
+                  <input
+                    type="radio"
+                    name="newBookingOptionType"
+                    value="new_option_existing_menu"
+                    checked={newBookingOptionType === "new_option_existing_menu"}
+                    onChange={() => setNewBookingOptionType("new_option_existing_menu")}
+                  />
+                  {I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}
+                </label>
+              </>
+            )}
             <div>
               {newBookingOptionType == "new_option_new_menu" && <NewMenuOptionFields register={register} />} 
               {newBookingOptionType == "new_option_existing_menu" && (

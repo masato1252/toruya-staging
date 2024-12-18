@@ -87,10 +87,15 @@ tw:
       settings:
         user_settings:
           line_contact_customer_name_required:
-            title: 需要LINE聯絡人客戶名稱
+            title: 客戶聯絡時是否需要姓名
             options:
               require_contact_customer_name: 要求客戶提供姓名（推薦給忙碌的你）
               not_require_contact_customer_name: 不要求客戶提供姓名
+          booking_options_menu_concept:
+            title: 預約項目與服務選單進階設定
+            options:
+              enable_menu_concept: 啟用
+              disable_menu_concept: 不啟用
         support:
           user_support: 用戶支援
           documents: 幫助手冊
@@ -291,10 +296,10 @@ tw:
           basic_settings: 服務基本設定
           name: 服務名稱
           short_name: 簡稱
-          minutes: 最短所需時間
+          minutes: 所需時間
           interval: 間隔
-          menu_shops: 可使用店鋪（滿座數）
-          full_seat_number_title: 滿座數
+          menu_shops: 上限人數
+          full_seat_number_title: 上限人數
           menus_list: 服務列表
           method: 舉辦方式
           staffs: 負責成員
@@ -306,16 +311,16 @@ tw:
             short_name_title: 服務基本設定
             minutes_title: 服務基本設定
             interval_title: 服務基本設定
-            menu_shops_title: 可使用店鋪
-            menu_staffs_title: 負責成員
-            menu_staffs_subtitle: 負責成員
+            menu_shops_title: 上限人數
+            menu_staffs_title: 負責員工
+            menu_staffs_subtitle: 負責員工
             menu_staffs_max_customers: 同時可服務的人數
             online_title: 舉辦方式
             name_subtitle: 服務名稱
             short_name_subtitle: 簡稱
             minutes_subtitle: 所需時間
             interval_subtitle: 間隔
-            menu_shops_subtitle: 可使用店鋪（滿座數）
+            menu_shops_subtitle: 上限人數
             online_subtitle: 舉辦方式
             hint: 在線上預約頁面中<br>此處設定的座位數量<br>將可供預約。
         service_customer_relation:
@@ -480,7 +485,7 @@ tw:
           field_header: 預約頁面
           line_status: LINE預約
         form:
-          add_a_new_option: 新增此價格
+          add_a_new_option: 新增此項目
           new_option_with_existing_menu:
             select_from_existing_menu: 從現有服務建立價格
             create_from_a_new_menu: 用新服務建立價格

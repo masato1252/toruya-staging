@@ -9,6 +9,6 @@ class Lines::UserBot::Settings::UserSettingsController < Lines::UserBotDashboard
 
     flash[:notice] = I18n.t("common.update_successfully_message")
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_customers_path(business_owner_id: business_owner_id) })
+    return_json_response(outcome, { redirect_to: params[:back_path] || lines_user_bot_customers_path(business_owner_id: business_owner_id) })
   end
 end
