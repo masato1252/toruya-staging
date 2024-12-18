@@ -254,7 +254,7 @@ ja:
       receipt:
         label: 領収書
         desc_html: ご利用ありがとうございます。<br>ご質問・お問合せは、Toruyaマネージャーのお問合せフォームよりご連絡ください。
-        desc2_html: 但し　インターネットサービスToruya利用料として<br>上記正に領収いたしました 
+        desc2_html: 但し　インターネットサービスToruya利用料として<br>上記正に領収いたしました
         date: お支払日
         transaction_id: 取引ID
         account: ご利用アカウント
@@ -551,6 +551,7 @@ ja:
         booking_option_header: 予約価格
         booking_page_setting_header: 予約ページにも掲載しますか?
         search_placeholder: 掲載したいページを選択
+        business_schedules: 店舗の営業時間を編集
         new_option: 予約価格
         new_option_top_bar_header: 予約価格
         new_option_title: 既存の予約価格から選択
@@ -559,7 +560,7 @@ ja:
         does_require_a_new_option: 新しい価格が必要ですか？
         create_a_new_option: 新しいメニューで価格を作成
         create_a_new_option_from_existing_menu: 既存メニューから価格を作成
-        create_a_new_option_from_existing_option: 既存の予約価格から選択 
+        create_a_new_option_from_existing_option: 既存の予約価格から選択
         new_option_menu_title: 新しい価格を作成する
         new_option_menu_top_bar_header: 予約価格
         new_option_existing_menu_title: 新しい価格を作成する

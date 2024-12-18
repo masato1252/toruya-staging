@@ -171,3 +171,18 @@ $booking-flow-padding: 12px;
     margin-right: -$booking-flow-padding;
   }
 }
+
+a.field-row:has(+ .booking-page-business-schedules) {
+  border-bottom: 0;
+}
+.booking-page-business-schedules {
+  padding: 10px;
+  background: #fff;
+}
+.booking-page-business-schedules .field-row {
+  font-size: 90%;
+  background: #fffef5;
+  border: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
