@@ -79,7 +79,7 @@ tw:
           desc: 請連結客戶資訊以顯示現有預約。
         online_booking:
           title: 線上預約
-          desc: 請從以下選項中選擇。
+          desc: 請從以下項目中選擇。
           rich_menu:
             bar_text: "預約↓"
       messages:

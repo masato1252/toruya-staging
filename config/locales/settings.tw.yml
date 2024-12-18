@@ -324,7 +324,7 @@ tw:
         refund_failed_message: 退款程序失敗。請再試一次。
         extra_shop: 額外店鋪
       upgrade:
-        caption_title: 升級選項
+        caption_title: 升級項目
         caption_desc: 您有兩種升級選擇。
         immediately: 立即升級
         immediately_desc: 立即使用進階/基本會員專屬功能。
@@ -556,13 +556,14 @@ tw:
         new_option_title: 從現有預約項目中選擇
         add_new_option: 新增預約項目
         reorder_options: 變更顯示順序
-        does_require_a_new_option: 需要新的價格嗎？
-        create_a_new_option: 使用新服務創建價格
-        create_a_new_option_from_existing_menu: 從現有服務創建價格
+        does_require_a_new_option: 需要新的預約項目嗎？
+        create_a_new_option: 使用『新服務』建立預約項目
+        create_a_new_option_from_existing_menu: 從『現有服務』建立預約項目
         create_a_new_option_from_existing_option: 從現有預約項目中選擇
-        new_option_menu_title: 創建新價格
+        booking_option_introduction_html: 您可以透過預約頁面接受預約，並透過預約項目設定價格。
+        new_option_menu_title: 創建新預約項目
         new_option_menu_top_bar_header: 預約項目
-        new_option_existing_menu_title: 創建新價格
+        new_option_existing_menu_title: 創建新預約項目
         new_option_existing_menu_top_bar_header: 預約項目
         new_option_existing_menu_menu_select_header: 您想為哪個服務創建價格？
         booking_option_hint: 您的客戶將以此價格進行預約。
@@ -589,18 +590,18 @@ tw:
         specific_booking_start_times_desc_html: 在設定的開始時間中，<br>僅顯示預約項目所需時間有空檔的<br>開始時間。
         add_booking_time_btn: 新增開始時間
         interval_header: 預約的開始時間
-        interval_period_header: 預約時間的選項
-        interval: 預約時間的選項
-        interval_title: 預約時間的選項
-        booking_time_title: 預約時間的選項
-        interval_real_booking_time_explanation: 根據目前的設定內容和空位情況，顯示前4個選項。
+        interval_period_header: 預約時間的項目
+        interval: 預約時間的項目
+        interval_title: 預約時間的項目
+        booking_time_title: 預約時間的項目
+        interval_real_booking_time_explanation: 根據目前的設定內容和空位情況，顯示前4個項目。
         interval_real_booking_time_warning: 實際顯示可能會因預約狀況或員工的空閒時間而有所不同
-        interval_explanation: 顯示9:00至12:00之間的前4個選項。
+        interval_explanation: 顯示9:00至12:00之間的前4個項目。
         interval_start_time: 開始時間
-        interval_option: 選項間隔
+        interval_option: 項目間隔
         no_available_booking_times: 沒有可預約的時間
         per_minute: 分鐘間隔
-        interval_example_html: 例如，如果可預約時間為9:00至12:00，選項間隔設定為<strong>「30分鐘」</strong>，則預約開始時間的選項將為「9:00、9:30、10:00、10:30...」
+        interval_example_html: 例如，如果可預約時間為9:00至12:00，項目間隔設定為<strong>「30分鐘」</strong>，則預約開始時間的項目將為「9:00、9:30、10:00、10:30...」
         open_details: 詳細資訊
         close_details: 關閉
         sale_period: 預約接受期間
