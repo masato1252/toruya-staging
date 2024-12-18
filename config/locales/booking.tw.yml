@@ -39,7 +39,7 @@ tw:
     reset_button: 重新開始
     last_selected_option: 上次使用的項目
     i_dont_use_line: 我沒有使用LINE
-    owner_personal_schedule_warning: 如果您想設定為不可預約，請在『我的日曆』中創建個人行程。
+    owner_personal_schedule_warning: 如果您想設定為不可預約，請在『我的日曆』中建立個人行程。
     booking_code:
       code: 確認碼
       resend: 重新發送確認碼
@@ -72,8 +72,8 @@ tw:
       feature3: 在日曆中確認各種商家的預約
       signup_now: 立即註冊
       add_friend_messages_html: "在LINE上加為好友<br>接收最新資訊"
-      ticket_left_message_html: "您的次數券還剩下%{remaining_ticket_quota}次。<br />使用期限為%{expire_date}，<br />請儘早預約。"
-      no_ticket_left_message_html: "您的次數券已用完。<br /> 下次預約時可以重新購買次數券。"
+      ticket_left_message_html: "您的票卷還剩下%{remaining_ticket_quota}次。<br />使用期限為%{expire_date}，<br />請儘早預約。"
+      no_ticket_left_message_html: "您的票卷已用完。<br /> 下次預約時可以重新購買票卷。"
       add_friend_btn: 加為好友
       check_in_line_btn: 在LINE上確認
       back_to_book: 返回預約頁面

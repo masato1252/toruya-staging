@@ -7,13 +7,13 @@ tw:
       check_plan: 查看方案
       today_had_created: 您今天已經
       total_had_created: 您目前共有
-      do_reservations_created: 次，創建了預約
+      do_reservations_created: 次，建立了預約
       reservations_created: 筆預約
       no_limit: 無限制
       booking_tour:
         title: 線上預約
-        booking_option_setup: 創建預約項目
-        booking_page_setup: 創建預約頁面
+        booking_option_setup: 建立預約項目
+        booking_page_setup: 建立預約頁面
       basic_tour:
         title: 基本設定
         start_btn: 開始設定導覽
@@ -28,8 +28,8 @@ tw:
         reservations_blocks_settings: 設定預約時段
         menus_settings: 設定服務
         notifications:
-          customer_html: "要開始客戶管理，請從<a href='%{url}'>這裡</a>創建客戶資料庫。  <a href='%{hide_warning_url}'>不再顯示</a>"
-          shop_html: "要開始預約管理，請從<a href='%{url}'>這裡</a>創建店鋪。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          customer_html: "要開始客戶管理，請從<a href='%{url}'>這裡</a>建立客戶資料庫。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          shop_html: "要開始預約管理，請從<a href='%{url}'>這裡</a>建立店鋪。  <a href='%{hide_warning_url}'>不再顯示</a>"
           business_schedule_html: "%{user_name}的店鋪尚未設定營業時間。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
           working_time_html: "%{user_name}的店鋪尚未設定工作時間。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
           reservation_setting_html: "%{user_name}的店鋪尚未設定預約時段。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
@@ -55,8 +55,8 @@ tw:
         setup_menu: 設定服務
     shop:
       info_title: 店鋪資訊
-      new_title: 創建新店鋪資訊
-      new_button: 創建新店鋪
+      new_title: 建立新店鋪資訊
+      new_button: 建立新店鋪
       info_1: 這是已設定的店鋪列表。
       info_2: Toruya將根據這些設定接受預約。
       new_info_1: 設定店鋪資訊。
@@ -553,19 +553,19 @@ tw:
         search_placeholder: 請選擇您想刊登的頁面
         new_option: 預約項目
         new_option_top_bar_header: 預約項目
-        new_option_title: 從現有預約項目中選擇
+        new_option_title: 建立預約項目
         add_new_option: 新增預約項目
         reorder_options: 變更顯示順序
         does_require_a_new_option: 需要新的預約項目嗎？
-        create_a_new_option: 使用『新服務』建立預約項目
-        create_a_new_option_from_existing_menu: 從『現有服務』建立預約項目
+        create_a_new_option: 我要設定新的『服務』
+        create_a_new_option_from_existing_menu: 我要從『現有服務』建立預約項目
         create_a_new_option_from_existing_option: 從現有預約項目中選擇
-        booking_option_introduction_html: 您可以透過預約頁面接受預約，並透過預約項目設定價格。
-        new_option_menu_title: 創建新預約項目
+        booking_option_introduction_html: "預約項目和服務的差別是什麼，服務是您提供的服務，而預約項目是您將單個或多個服務包裝成一個可以預約的項目。<br><br>我們日常最常見的例子就像是大腸包小腸，實際產品只有香腸和大腸，可是實際上大腸包小腸可以是另外一個可以獨立購買的項目，價格上也可能會有些不同。"
+        new_option_menu_title: 建立新預約項目
         new_option_menu_top_bar_header: 預約項目
-        new_option_existing_menu_title: 創建新預約項目
+        new_option_existing_menu_title: 建立新預約項目
         new_option_existing_menu_top_bar_header: 預約項目
-        new_option_existing_menu_menu_select_header: 您想為哪個服務創建價格？
+        new_option_existing_menu_menu_select_header: 您想為哪個服務建立預約項目？
         booking_option_hint: 您的客戶將以此價格進行預約。
         booking_option_required_time: 所需時間
         shop_header: 可預約的店舖
@@ -582,7 +582,7 @@ tw:
         add_special_dates_btn: 新增指定日期
         only_special_dates_booking_label: 僅接受指定日期
         event_booking_label: 僅在舉辦活動時（優先保留時段）
-        event_booking_hint: ※將在日曆上自動創建此日期和時間的空白預約，其他預約頁面將無法預約。
+        event_booking_hint: ※將在日曆上自動建立此日期和時間的空白預約，其他預約頁面將無法預約。
         business_schedules_booking_label: 僅接受特定星期幾
         business_schedules_booking_add_button: 新增接受時間
         booking_time_interval_label: 自動顯示所有可預約時間（建議）

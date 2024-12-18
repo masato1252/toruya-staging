@@ -231,8 +231,8 @@ tw:
             what_is_episode_name: 內容名稱是什麼？
             what_is_your_solution: 這個內容提供什麼？
             do_you_have_any_note: 是否在內容頁面顯示備註？
-            below_is_what_you_want: 確定要創建以下內容嗎？
-            create_by_this_setting: 使用這些設置創建內容
+            below_is_what_you_want: 確定要建立以下內容嗎？
+            create_by_this_setting: 使用這些設置建立內容
           show:
             title: 提供內容
             content_label: 內容詳情
@@ -264,8 +264,8 @@ tw:
               name_content_label: 目錄
           lessons:
             new:
-              below_is_what_you_want: 確定要創建以下課程嗎？
-              create_by_this_setting: 使用這些設置創建課程
+              below_is_what_you_want: 確定要建立以下課程嗎？
+              create_by_this_setting: 使用這些設置建立課程
               start_time_step: 開始提供
               what_is_lesson_name: 課程名稱是什麼？
               what_is_your_solution: 這個課程提供什麼內容？
@@ -414,7 +414,7 @@ tw:
         clone_successfully: 已複製
         tags_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
         no_broadcasts_title: 沒有發送條件
-        no_broadcasts_desc: 請創建發送條件
+        no_broadcasts_desc: 請建立發送條件
         form: 
           query_title: 發送對象
           query_subtitle: 發送對象
@@ -504,7 +504,7 @@ tw:
         specific_available_service_customers_desc: 向正在使用特定線上服務的客戶群發訊息
         customers_with_tags: 特定標籤的客戶
         customers_with_tags_desc: 向擁有特定標籤的客戶群發訊息
-        customers_with_tags_no_data_desc: 目前還沒有客戶標籤。您可以在客戶編輯頁面創建標籤。
+        customers_with_tags_no_data_desc: 目前還沒有客戶標籤。您可以在客戶編輯頁面建立標籤。
         customers_with_birthday: 生日的客戶
         customers_with_birthday_desc: 向生日的客戶群發訊息
         approximate_customers_count: 預計發送數量
@@ -560,12 +560,12 @@ tw:
         booking_price: 預約項目
         booking_note: 注意事項
         book_which_shop: 您要接受哪家店鋪的預約？
-        book_for_this_shop: 將為以下店鋪創建預約接受頁面
+        book_for_this_shop: 將為以下店鋪建立預約接受頁面
         company_info: 公司資訊
         shop_info: 店鋪資訊
         shop_logo: 店鋪標誌
         shop_without_logo: 沒有店鋪標誌
-        create_page_from_this_shop: 使用此店鋪創建
+        create_page_from_this_shop: 使用此店鋪建立
         choose_which_option: 您要接受哪些項目的預約？
         what_is_menu_name: 項目名稱是什麼？
         input_menu_name: 輸入項目名稱
@@ -575,25 +575,25 @@ tw:
         menu_online: 是的，這是線上項目
         menu_local: 否，客戶需要到店
         current_booking_options_label: 從現有預約項目中選擇
-        create_new_booking_option: 創建新價格
+        create_new_booking_option: 建立新價格
         how_much_of_this_price: 您想以多少價格銷售？
         enter_price: 輸入價格
         sell_this_price: 以此價格繼續
         note_for_this_option: 預約時有什麼注意事項嗎？
         enter_note_policy: 輸入取消政策等
         use_this_page_note: 使用此注意事項繼續
-        use_these_settings_create_this_page: 使用這些設置創建預約頁面
-        share_your_booking_page: 分享您創建的預約頁面
+        use_these_settings_create_this_page: 使用這些設置建立預約頁面
+        share_your_booking_page: 分享您建立的預約頁面
         check_this_page: 預覽
-        want_to_create_a_new_menu: 需要創建新服務嗎？
-        create_a_new_menu: 創建新服務
+        want_to_create_a_new_menu: 需要建立新服務嗎？
+        create_a_new_menu: 建立新服務
         create_a_sale_page: 使用宣傳頁面可以在網上招攬預約
-        create_a_sale_page_btn: 創建宣傳頁面
-        create_sale_page_later_warning_html: 服務已創建，但由於<br>宣傳頁面尚未創建，<br>客戶無法註冊服務
-        remember_create_sale_page: 請記得創建宣傳頁面
-        create_sale_page_later_btn: 稍後創建
-        confirm_booking_page_message: 即使新的預約頁面已創建，在設定您的預約服務之前，客戶仍無法使用該頁面。
-        create_booking_page_successfully: 預約頁面已成功創建。請在此處編輯您提供的服務，並與客戶分享預約頁面。
+        create_a_sale_page_btn: 建立宣傳頁面
+        create_sale_page_later_warning_html: 服務已建立，但由於<br>宣傳頁面尚未建立，<br>客戶無法註冊服務
+        remember_create_sale_page: 請記得建立宣傳頁面
+        create_sale_page_later_btn: 稍後建立
+        confirm_booking_page_message: 即使新的預約頁面已建立，在設定您的預約服務之前，客戶仍無法使用該頁面。
+        create_booking_page_successfully: 預約頁面已成功建立。請在此處編輯您提供的服務，並與客戶分享預約頁面。
       booking:
         booking_page_creation:
           label: 建立預約頁面
@@ -697,9 +697,9 @@ tw:
         new:
           what_to_sale: 這個宣傳頁面的目的是什麼？
           online_booking: 線上預約招募
-          add_sale_page_to_sell_more: 創建宣傳頁面以增加線上預約頁面的預約量
+          add_sale_page_to_sell_more: 建立宣傳頁面以增加線上預約頁面的預約量
           online_service: 線上服務用戶招募
-          online_service_to_sell_more: 創建宣傳頁面以增加線上服務的用戶量
+          online_service_to_sell_more: 建立宣傳頁面以增加線上服務的用戶量
         online_service_creation:
           service_step: 商品
           price_step: 銷售價格
@@ -756,42 +756,42 @@ tw:
             step3: "預約當天請提前\n預留充足時間到店"
           sale_page_like_this: 宣傳頁面將如下所示
           sale_page_confirm_title_html: "已完成最基本的設置<br />請確認設置內容"
-          create_this_sale_page: 使用此設置創建宣傳頁面
-          share_sale_page: 分享您創建的宣傳頁面
+          create_this_sale_page: 使用此設置建立宣傳頁面
+          share_sale_page: 分享您建立的宣傳頁面
       online_service_creation:
         goals:
           collection:
             title: 收集好友
             line_title: PDF下載
-            description: 創建PDF下載服務以收集官方LINE好友
+            description: 建立PDF下載服務以收集官方LINE好友
           free_lesson:
             title: 免費課程
             line_title: 免費課程
-            description: 創建使用單個視頻的免費課程
+            description: 建立使用單個視頻的免費課程
           paid_lesson:
             title: 付費課程
             line_title: 付費課程
-            description: 創建使用單個視頻的付費課程
+            description: 建立使用單個視頻的付費課程
           free_course:
             title: 免費線上課程
             line_title: 免費線上課程
-            description: 創建按順序提供多個視頻課程和PDF工作簿的線上課程
+            description: 建立按順序提供多個視頻課程和PDF工作簿的線上課程
           course:
             title: 線上課程
             line_title: 線上課程
-            description: 創建按順序提供多個視頻課程和PDF工作簿的線上課程
+            description: 建立按順序提供多個視頻課程和PDF工作簿的線上課程
           membership:
             title: 會員制服務
             line_title: 會員制服務
-            description: 創建持續購買多個視頻課程和PDF工作簿的會員制服務
+            description: 建立持續購買多個視頻課程和PDF工作簿的會員制服務
           external:
             title: 外部服務
             line_title: 外部服務
-            description: 為外部服務用戶創建LINE營銷服務
+            description: 為外部服務用戶建立LINE營銷服務
           bundler:
             title: 服務套餐
             line_title: 服務套餐
-            description: 創建將多個服務打包銷售的服務
+            description: 建立將多個服務打包銷售的服務
         solutions:
           video:
             title: 影片講座
@@ -812,19 +812,19 @@ tw:
             description: 利用LINE自動訊息進行診斷回答，從結果中促進追加服務購買的服務
           external:
             title: 外部服務
-            description: 為外部服務用戶創建LINE營銷服務
+            description: 為外部服務用戶建立LINE營銷服務
           free_course:
             title: 免費線上課程
-            description: 創建按順序提供多個影片課程和PDF工作簿的服務
+            description: 建立按順序提供多個影片課程和PDF工作簿的服務
           course:
             title: 線上課程
-            description: 創建按順序提供多個影片課程和PDF工作簿的服務
+            description: 建立按順序提供多個影片課程和PDF工作簿的服務
           membership:
             title: 會員制服務
-            description: 創建為註冊會員提供多個影片和PDF的限定服務
+            description: 建立為註冊會員提供多個影片和PDF的限定服務
           bundler:
             title: 服務套餐
-            description: 創建將多個服務打包銷售的服務
+            description: 建立將多個服務打包銷售的服務
         what_is_your_goal: 這個服務的目的是什麼？
         what_is_your_solution: 這個服務提供什麼內容？
         what_is_this_video_provide: 您要提供哪個影片作為服務？
@@ -839,7 +839,7 @@ tw:
         external_purchase_url_input_placeholder: 輸入購買頁面的URL
         external_purchase_url_hint: 當客戶註冊此服務時，在輸入客戶資訊後將顯示此URL。
         what_is_service_name: 服務名稱是什麼？
-        this_is_company_info: 將作為以下商店的服務創建
+        this_is_company_info: 將作為以下商店的服務建立
         edit_shop_in_setting_page: 請在管理頁面編輯商店資訊。
         edit_company_in_setting_page: 請在管理頁面編輯公司資訊。
         what_company_info: 您要以哪個商店的名義提供服務？
@@ -854,9 +854,9 @@ tw:
         after_n_months: 個月內
         what_want_to_upsell: 在使用此服務後，您是否有想推薦購買的追加銷售宣傳頁面？
         select_upsell_product: 選擇宣傳頁面
-        below_is_what_you_want: 您確定要創建以下服務嗎？
-        create_by_this_setting: 使用此設置創建服務
-        create_a_sale_page: 要使用創建的服務，需要宣傳頁面
+        below_is_what_you_want: 您確定要建立以下服務嗎？
+        create_by_this_setting: 使用此設置建立服務
+        create_a_sale_page: 要使用建立的服務，需要宣傳頁面
         stripe_required_warning: 要銷售付費服務，需要設置Stripe帳戶連接。
         sale_page_like_this: 服務頁面將如下所示
         setup_line_bot_for_customers: "設置「使用中服務列表」\n 的顯示內容"
@@ -872,5 +872,5 @@ tw:
         title: 以下有新的數據
         unread_message_label: 未讀訊息
         pending_reservations_label: 需要確認的預約
-        missing_sale_page_service_label: 未創建宣傳頁面的服務
+        missing_sale_page_service_label: 未建立宣傳頁面的服務
         pending_customer_services_label: 需要確認的服務

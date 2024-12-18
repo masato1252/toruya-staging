@@ -22,7 +22,7 @@ https://manager.toruya.com/tw/userlogin"
       pending_reservation_message:    "□新預約　                  %{number}件\n"
       pending_online_service_message: "□未批准服務客戶  %{number}件\n"
     pending_reservations_summary:
-      message: "%{user_name} 您好\n\n已創建需要確認的預約。\n\n請從日曆選單確認。\n\nToruya"
+      message: "%{user_name} 您好\n\n已建立需要確認的預約。\n\n請從日曆選單確認。\n\nToruya"
     withdrawal_monthly_report:
       message:  "%{user_name} 您好\n\n最近的介紹費已確定。\n\n詳情請從設置畫面確認。\n\nToruya"
     customer_cancel_reservation:
@@ -49,7 +49,7 @@ https://manager.toruya.com/tw/userlogin"
         message: "%{user_name} 您好\n\n從%{booking_page_title}收到了新的預約。\n\n請從預約日曆確認。\n\nToruya"
     tickets:
       unused_ticket_left:
-        message: "感謝您使用次數券『%{product_name}』。\n\n次數券還剩下%{ticket_remaining_quota}次，使用期限到%{ticket_expire_date}為止。\n\n 您可以在期限日之前的預約中使用，請盡快預約。\n %{booking_page_url}\n\n＜如果您已經預約＞\n如果您已經完成下次預約但仍收到此提醒，可能是因為未能使用次數券進行預約。\n\n請從以下專用預約頁面重新預約，或通過LINE聯繫我們。\n%{booking_page_url}"
+        message: "感謝您使用票卷『%{product_name}』。\n\n票卷還剩下%{ticket_remaining_quota}次，使用期限到%{ticket_expire_date}為止。\n\n 您可以在期限日之前的預約中使用，請盡快預約。\n %{booking_page_url}\n\n＜如果您已經預約＞\n如果您已經完成下次預約但仍收到此提醒，可能是因為未能使用票卷進行預約。\n\n請從以下專用預約頁面重新預約，或通過LINE聯繫我們。\n%{booking_page_url}"
     online_service:
       purchased:
         video:
@@ -74,7 +74,7 @@ https://manager.toruya.com/tw/userlogin"
       trial_member_day_ago_reminder:
         message: "%{user_name} 您好\n\n感謝您一直以來使用預約管理系統Toruya。\n\n試用期已經結束。\n\n通過從設置畫面更改方案，您可以繼續使用相同的功能。\n\n%{plan_url}\n\nToruya"
       free_plan_reach_customers_limit:
-        message:  "%{user_name}您好\n\n客戶數量已達到上限。\n\n從現在開始，您將無法確認從線上預約頁面創建的新客戶信息或批准預約。\n\n如果您想繼續像以前一樣使用，請從設置畫面更改您的使用方案。"
+        message:  "%{user_name}您好\n\n客戶數量已達到上限。\n\n從現在開始，您將無法確認從線上預約頁面建立的新客戶信息或批准預約。\n\n如果您想繼續像以前一樣使用，請從設置畫面更改您的使用方案。"
       free_plan_close_customers_limit:
         message:  "%{user_name}您好\n\n客戶數量即將達到上限。\n\n當客戶數量超過%{max_customers_limit}時，您將無法確認新客戶的信息或批准這些客戶的預約。\n\n如果您想繼續像以前一樣使用，請從設置畫面更改您的使用方案。"
       paid_plan_close_customers_limit:
@@ -82,7 +82,7 @@ https://manager.toruya.com/tw/userlogin"
       paid_plan_reach_customers_limit:
         message: "%{user_name}您好\n\n客戶數量已達到上限。\n\n從下次帳單開始，我們將以等級%{next_max_customer_limit}向您收費。\n\n我們將繼續努力提供更好的服務，以支持%{user_last_name}先生/女士的進一步發展。"
       paid_plan_reach_whole_customers_limit:
-        message: "%{user_name}您好\n\n客戶數量已達到上限。\n\n從現在開始，您將無法確認從線上預約頁面創建的新客戶信息。\n\n為了讓您能夠繼續像以前一樣使用，我們將為您提供特別的使用方案，請從設置畫面聯繫我們。"
+        message: "%{user_name}您好\n\n客戶數量已達到上限。\n\n從現在開始，您將無法確認從線上預約頁面建立的新客戶信息。\n\n為了讓您能夠繼續像以前一樣使用，我們將為您提供特別的使用方案，請從設置畫面聯繫我們。"
     subscriptions:
       charge_successfully:
         message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n今天，您的使用費用已成功收取。\n\n今後也請繼續支持我們。\n\nToruya"

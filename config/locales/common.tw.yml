@@ -115,7 +115,7 @@ tw:
     times_number: 次數
     content: 內容
     regular_price: 一般價格
-    ticket: 次數券
+    ticket: 票卷
     start_time: 開始時間
     end_time: 結束時間
     updated_time: 更新時間
