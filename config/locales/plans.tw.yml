@@ -25,19 +25,19 @@ tw:
       message_template: 訊息範本
       support: 個人支援
     free:
-      title: 免費版
+      title: 試用版
       period: ""
       shop_can_set: 1間
       staff_in_charge: 1位（店主）
       reservation_restriction: 無限制
       customer_number: "最多%{customer_limit}位"
       booking_page_number: 無限制
-      get_more_friends: ⃝
-      free_lesson: ⃝
-      premium_lesson: ⃝
+      get_more_friends: O
+      free_lesson: O
+      premium_lesson: X
       online_course: X
       membership: X
-      external_service: ⃝
+      external_service: O
       sale_page_number: "%{sale_page_limit}頁"
       message_template: 純文字
       support: 無
@@ -49,12 +49,12 @@ tw:
       reservation_restriction: 無限制
       customer_number: "最多%{customer_limit}位"
       booking_page_number: 無限制
-      get_more_friends: ⃝
-      free_lesson: ⃝
-      premium_lesson: ⃝
+      get_more_friends: O
+      free_lesson: O
+      premium_lesson: X
       online_course: X
       membership: X
-      external_service: ⃝
+      external_service: O
       sale_page_number: 無限制
       message_template: 純文字
       support: 有
@@ -66,12 +66,12 @@ tw:
       reservation_restriction: 無限制
       customer_number: 無限制
       booking_page_number: 無限制
-      get_more_friends: ⃝
-      free_lesson: ⃝
-      premium_lesson: ⃝
-      online_course: ⃝
-      membership: ⃝
-      external_service: ⃝
+      get_more_friends: O
+      free_lesson: O
+      premium_lesson: O
+      online_course: O
+      membership: O
+      external_service: O
       sale_page_number: 無限制
       message_template: 文字及卡片
       support: 有

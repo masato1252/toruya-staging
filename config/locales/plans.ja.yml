@@ -32,29 +32,28 @@ ja:
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       booking_page_number: 無制限
-      get_more_friends:  ⃝
-      free_lesson:  ⃝
-      premium_lesson:  ⃝
+      get_more_friends:  O
+      free_lesson:  O
+      premium_lesson:  X
       online_course: X
       membership: X
-      external_service:  ⃝
+      external_service:  O
       sale_page_number: "%{sale_page_limit}ページ"
       message_template: テキスト
       support: なし
     basic:
       title: ベーシック
       period: 月額
-      shop_can_set: 1軒
       staff_in_charge: 1名(オーナー)
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       booking_page_number: 無制限
-      get_more_friends:  ⃝
-      free_lesson:  ⃝
-      premium_lesson:  ⃝
+      get_more_friends:  O
+      free_lesson:  O
+      premium_lesson:  X
       online_course: X
       membership: X
-      external_service:  ⃝
+      external_service: O
       sale_page_number: 無制限
       message_template: テキスト
       support: あり
@@ -66,12 +65,12 @@ ja:
       reservation_restriction: 無制限
       customer_number: 無制限
       booking_page_number: 無制限
-      get_more_friends:  ⃝
-      free_lesson:  ⃝
-      premium_lesson:  ⃝
-      online_course:  ⃝
-      membership:  ⃝
-      external_service:  ⃝
+      get_more_friends:  O
+      free_lesson:  O
+      premium_lesson:  O
+      online_course:  O
+      membership:  O
+      external_service:  O
       sale_page_number: 無制限
       message_template: テキスト＆カード
       support: あり
