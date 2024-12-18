@@ -290,9 +290,9 @@ class User < ApplicationRecord
 
   def currency
     case locale
-    when "ja"
+    when "ja", :ja
       Money.default_currency.iso_code
-    when "tw"
+    when "tw", :tw
       "TWD"
     else
       Money.default_currency.iso_code

@@ -251,17 +251,24 @@ const BookingPageEdit =({props}) => {
               <h3 className="centerize">{I18n.t("settings.booking_page.form.does_require_a_new_option")}</h3>
               {props.menu_exists && (
                 <div className="my-2">
-                  <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_existing_menu" })} className="btn btn-orange">
+                  <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_existing_menu" })} className="btn btn-tarco">
                   {I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}
                   </a>
                 </div>
               )}
-              <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_menu" })} className="btn btn-orange">
+              <a href={Routes.edit_lines_user_bot_booking_page_path(props.business_owner_id, props.booking_page.id, { attribute: "new_option_menu" })} className="btn btn-tarco">
                 {I18n.t("settings.booking_page.form.create_a_new_option")}
               </a>
-              <div className="my-2">
-                <img src={props.booking_option_introduction_asset_path} alt="booking_option_introduction" className="w-full" />
-              </div>
+              {props.support_feature_flags.support_japanese_asset && (
+                <div className="m-2">
+                  <img src={props.booking_option_introduction_asset_path} alt="booking_option_introduction" className="w-full" />
+                </div>
+              )}
+              {!props.support_feature_flags.support_japanese_asset && (
+                <div className="margin-around">
+                  <div dangerouslySetInnerHTML={{ __html: I18n.t("settings.booking_page.form.booking_option_introduction_html") }} />
+                </div>
+              )}
             </div>
           </div>
         )
