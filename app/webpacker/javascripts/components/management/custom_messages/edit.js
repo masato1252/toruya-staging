@@ -84,6 +84,7 @@ const CustomMessageEdit =({props}) => {
       case "line_settings_verified":
       case "user_sign_up":
       case "no_line_settings":
+      case "user_message_auto_reply":
         return (
           <>
             <div className="field-row">

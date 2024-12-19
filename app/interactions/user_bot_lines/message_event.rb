@@ -10,9 +10,10 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
   object :social_user
 
   def execute
-    if event.present?
-      case event["message"]["type"]
-      when "image"
+    I18n.with_locale(social_user.user&.locale || social_user.locale) do
+      if event.present?
+        case event["message"]["type"]
+        when "image"
         compose(
           SocialUserMessages::Create,
           social_user: social_user,
@@ -25,30 +26,30 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
           content_type: SocialUserMessages::Create::IMAGE_TYPE,
           message_type: SocialUserMessage.message_types[:user]
         )
-      when "text"
-        compose(
-          SocialUserMessages::Create,
-          social_user: social_user,
-          content: event["message"]["text"],
-          readed: false,
-          message_type: SocialUserMessage.message_types[:user]
-        )
-
-        case event["message"]["text"].strip
-        when USER_SIGN_OUT
-          SocialUsers::Disconnect.run(social_user: social_user)
-        else
-          SocialUserMessages::Create.perform_debounce(
+        when "text"
+          compose(
+            SocialUserMessages::Create,
             social_user: social_user,
-            content: I18n.t("toruya_line.bot.auto_reply_for_user_message"),
-            readed: true,
-            message_type: SocialUserMessage.message_types[:bot],
+            content: event["message"]["text"],
+            readed: false,
+            message_type: SocialUserMessage.message_types[:user]
           )
-        end
-      else
-        # Rollbar.warning("Line chat room don't support message type", event: event)
 
-        LineClient.send(social_user, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
+          case event["message"]["text"].strip
+          when USER_SIGN_OUT
+            SocialUsers::Disconnect.run(social_user: social_user)
+          else
+            SocialUserMessages::Create.perform_debounce(
+              social_user: social_user,
+              content: CustomMessage.user_message_auto_reply(social_user.user&.locale || social_user.locale)&.content.presence || I18n.t("toruya_line.bot.auto_reply_for_user_message"),
+              readed: true,
+              message_type: SocialUserMessage.message_types[:bot],
+            )
+          end
+        else
+          # Rollbar.warning("Line chat room don't support message type", event: event)
+          LineClient.send(social_user, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
+        end
       end
     end
   end

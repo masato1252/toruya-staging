@@ -48,4 +48,8 @@ class CustomMessage < ApplicationRecord
   def ever_sent_to_user(user)
     SocialUserMessage.where(custom_message_id: id, social_user_id: user.social_user_id).where.not(sent_at: nil).exists?
   end
+
+  def self.user_message_auto_reply(locale)
+    scenario_of(nil, CustomMessages::Users::Template::USER_MESSAGE_AUTO_REPLY).where(locale: locale).first
+  end
 end

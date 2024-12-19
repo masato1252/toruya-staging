@@ -3,6 +3,7 @@
 module CustomMessages
   module Users
     class Template < ActiveInteraction::Base
+      USER_MESSAGE_AUTO_REPLY = "user_message_auto_reply"
       USER_SIGN_UP = "user_sign_up"
       LINE_SETTINGS_VERIFIED = "line_settings_verified"
       FIRST_BOOKING_PAGE_CREATED = "first_booking_page_created"
@@ -15,6 +16,7 @@ module CustomMessages
       NO_LINE_SETTINGS = "no_line_settings"
 
       SCENARIOS = [
+        USER_MESSAGE_AUTO_REPLY,
         USER_SIGN_UP,
         LINE_SETTINGS_VERIFIED,
         FIRST_BOOKING_PAGE_CREATED,
