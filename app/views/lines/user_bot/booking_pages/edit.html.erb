@@ -1,6 +1,6 @@
 <% if @attribute == "payment_option" && !Current.business_owner.payment_providers.exists? %>
   <div class="settings-dashboard form with-top-bar">
-    <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id), title: t("settings.booking_page.form.online_payment_enabled_title") %>
+    <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id), title: t("settings.booking_page.form.payment_option_title") %>
     <%= render "lines/user_bot/settings/stripes/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, @booking_page, attribute: :payment_option) %>
     <hr />
     <%= render "lines/user_bot/settings/squares/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, @booking_page, attribute: :payment_option) %>
