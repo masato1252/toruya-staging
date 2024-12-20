@@ -106,8 +106,14 @@
         <% end %>
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
-        <%= link_to lines_user_bot_settings_shops_path(business_owner_id: business_owner_id), class: "field-row" do %>
-          <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
+        <% if Current.business_owner.shops.count == 1 %>
+          <%= link_to lines_user_bot_settings_shop_path(business_owner_id, Current.business_owner.shops.first.id), class: "field-row" do %>
+            <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+        <% else %>
+          <%= link_to lines_user_bot_settings_shops_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
         <% end %>
 
         <%= link_to shops_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id), class: "field-row" do %>
