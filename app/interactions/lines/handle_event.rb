@@ -77,7 +77,9 @@ class Lines::HandleEvent < ActiveInteraction::Base
       # Lines::MessageEvent
       # Lines::FollowEvent
       # Lines::PostbackEvent
-      "Lines::#{event[EVENT_TYPE_KEY].camelize}Event".constantize.run!(social_customer: social_customer, event: event)
+      I18n.with_locale(social_customer.user.locale) do
+        "Lines::#{event[EVENT_TYPE_KEY].camelize}Event".constantize.run!(social_customer: social_customer, event: event)
+      end
     else
       # Rollbar.warning("Unexpected event type".freeze,
       #   social_account_id: social_account.id,
