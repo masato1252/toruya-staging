@@ -1704,7 +1704,8 @@ CREATE TABLE public.online_services (
     note text,
     external_purchase_url character varying,
     internal_name character varying,
-    deleted_at timestamp(6) without time zone
+    deleted_at timestamp(6) without time zone,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -6136,6 +6137,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241204010941'),
 ('20241205095949'),
 ('20241213072553'),
-('20241217134923');
+('20241217134923'),
+('20241223032227');
 
 

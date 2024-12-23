@@ -100,7 +100,7 @@ export const CustomerPurchases = ({props}) => {
     )
   }
 
-  if (identified_customer && !props.sale_page.is_free && !is_customer_address_created) {
+  if (identified_customer && !props.sale_page.is_free && props.is_customer_address_required && !is_customer_address_created) {
     return (
       <div className="sale-page">
         <CompanyHeader shop={props.sale_page.company_info || props.sale_page.shop}>

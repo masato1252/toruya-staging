@@ -452,6 +452,11 @@ ja:
           start_time_title: 利用開始
           end_time_title: 利用終了
           external_purchase_url_title: 購入URL
+          customer_address_required: 登録時の住所入力
+          customer_address_required_title: 登録時の住所入力
+          customer_address_required_subtitle: 登録時の住所入力
+          customer_address_required_label: 必須
+          not_customer_address_required_label: 不要（入力せずに予約可能）
           demo_button: アクションボタン
           name_subtitle: サービス名
           company_subtitle: 提供店舗

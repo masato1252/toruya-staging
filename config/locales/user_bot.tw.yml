@@ -454,6 +454,11 @@ tw:
           start_time_title: 使用開始
           end_time_title: 使用結束
           external_purchase_url_title: 購買URL
+          customer_address_required: 註冊時客戶需填寫住址
+          customer_address_required_title: 註冊時客戶需填寫住址
+          customer_address_required_subtitle: 註冊時客戶需填寫住址
+          customer_address_required_label: 需要
+          not_customer_address_required_label: 不需要
           demo_button: 操作按鈕
           name_subtitle: 服務名稱
           company_subtitle: 提供店鋪

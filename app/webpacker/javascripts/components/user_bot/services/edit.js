@@ -27,7 +27,8 @@ const OnlineServiceEdit =({props}) => {
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
-      ...props.service
+      ...props.service,
+      customer_address_required: String(props.service.customer_address_required),
     }
   });
 
@@ -242,6 +243,19 @@ const OnlineServiceEdit =({props}) => {
               ))}
             </div>
           </div>
+        )
+      case "customer_address_required":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input name="customer_address_required" type="radio" value="true" ref={register({ required: true })} />
+              {I18n.t("user_bot.dashboards.services.form.customer_address_required_label")}
+            </label>
+            <label className="field-row flex-start">
+              <input name="customer_address_required" type="radio" value="false" ref={register({ required: true })} />
+              {I18n.t("user_bot.dashboards.services.form.not_customer_address_required_label")}
+            </label>
+          </>
         )
       case "company":
         return (

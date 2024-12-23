@@ -9,6 +9,7 @@
     customer_subscribed: @relation&.legal_to_access?,
     support_feature_flags: support_feature_flags,
     function_access_id: params[:function_access_id],
+    is_customer_address_required: @sale_page.product.customer_address_required,
     i18n: {
     }.merge!([
       t("booking_page"),

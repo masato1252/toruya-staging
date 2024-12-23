@@ -12,6 +12,7 @@ module OnlineServices
       string :content_url, default: nil
       string :external_purchase_url, default: nil
       string :solution_type, default: nil
+      boolean :customer_address_required, default: false
       string :company_type, default: nil
       integer :company_id, default: nil
       integer :upsell_sale_page_id, default: nil
@@ -44,7 +45,7 @@ module OnlineServices
     def execute
       online_service.with_lock do
         case update_attribute
-        when "name", "note", "external_purchase_url", "internal_name"
+        when "name", "note", "external_purchase_url", "internal_name", "customer_address_required"
           online_service.update(attrs.slice(update_attribute))
         when "content_url"
           online_service.update(content_url: attrs[:content_url], solution_type: attrs[:solution_type])

@@ -15,6 +15,7 @@
 #  internal_name         :string
 #  name                  :string           not null
 #  note                  :text
+#  settings              :jsonb            not null
 #  slug                  :string
 #  solution_type         :string           not null
 #  start_at              :datetime
@@ -192,6 +193,9 @@ class OnlineService < ApplicationRecord
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
   # solution_type pdf, video, external, membership, course
 
+  typed_store :settings do |s|
+    s.boolean :customer_address_required, default: false, null: false
+  end
 
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'free_course', 'course', 'membership']) }
