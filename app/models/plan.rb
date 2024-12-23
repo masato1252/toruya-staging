@@ -191,7 +191,7 @@ class Plan < ApplicationRecord
 
   def self.cost_with_currency(plan_level, _rank)
     @@cost_with_currency ||= {}
-    @@cost_with_currency["#{I18n.locale}_#{plan_level}-#{_rank}"] ||= Money.new(cost(plan_level, _rank), Money.default_currency.id)
+    @@cost_with_currency["#{I18n.locale}_#{plan_level}-#{_rank}"] ||= Money.new(cost(plan_level, _rank), User.currency)
   end
 
   def cost(_rank)

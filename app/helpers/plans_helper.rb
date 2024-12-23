@@ -5,7 +5,11 @@ module PlansHelper
     @plan_prices ||= {}
 
     return @plan_prices[plan_level] if @plan_prices[plan_level]
-    @plan_prices[plan_level] = Plans::Price.run!(user: user, plan: Plan.find_by!(level: plan_level))[0].format(ja_default_format: true)
+    if user.currency == "JPY"
+      @plan_prices[plan_level] = Plans::Price.run!(user: user, plan: Plan.find_by!(level: plan_level))[0].format(:ja_default_format)
+    else
+      @plan_prices[plan_level] = Plans::Price.run!(user: user, plan: Plan.find_by!(level: plan_level))[0].format
+    end
   end
 
   def charge_description(charge)

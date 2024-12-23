@@ -11,7 +11,7 @@ module Subscriptions
       charge = compose(Subscriptions::Charge,
                        user: user,
                        plan: Plan.premium_level.take,
-                       charge_amount: Money.new(Plans::Fee::PER_SHOP_FEE, Money.default_currency.id),
+                       charge_amount: Money.new(Plans::Fee::PER_SHOP_FEE[user.currency], user.currency),
                        charge_description: SubscriptionCharge::TYPES[:shop_fee],
                        manual: true)
 

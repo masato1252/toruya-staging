@@ -147,7 +147,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
         bundler_relation.price_details.first
       else
         ::OnlineServiceCustomerPrice.new(_attributes.merge(
-          charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil
+          charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil,
+          currency: sale_page.user.currency
         ))
       end
     end
@@ -179,7 +180,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def product_amount
-    price_details.map { |price| Money.new(price.amount) }.sum(0)
+    price_details.map { |price| Money.new(price.amount, sale_page.user.currency) }.sum(0)
   end
 
   def paid_completed?
@@ -202,6 +203,10 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     expire_at.nil? && !subscription?
   end
 
+  def user_currency
+    sale_page.user.currency
+  end
+
   def selling_prices_text
     if purchased_from_bundler?
       bundler_relation.selling_prices_text
@@ -209,17 +214,28 @@ class OnlineServiceCustomerRelation < ApplicationRecord
       if free_payment_state?
         I18n.t("common.free_price")
       elsif price_details.first.interval
-        # month_pay, year_pay
-        "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+        if user_currency == "JPY"
+          "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+        else
+          "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format}"
+        end
       elsif online_service.external?
         I18n.t("common.contact_owner_directly")
       elsif price_details.size == 1
-        "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+        if user_currency == "JPY"
+          "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
+        else
+          "#{I18n.t("common.one_time_pay")} #{price_details.first.amount_with_currency.format}"
+        end
       else
         times = price_details.size
         amount_with_currency = price_details.first.amount_with_currency
 
-        "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+        if user_currency == "JPY"
+          "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+        else
+          "#{I18n.t("common.multiple_times_pay")} #{amount_with_currency.format} X #{times} #{I18n.t("common.times")}"
+        end
       end
     end
   end

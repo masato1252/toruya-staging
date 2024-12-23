@@ -5,7 +5,7 @@
       <%= link_to relation.online_service.name, sale_page_path(relation.sale_page), target: "_blank" %>
       <%= relation.customer.name %>
       <%= relation.payment_state %>
-      <%= Money.new(relation.product_amount).format %>
+      <%= Money.new(relation.product_amount, relation.sale_page.user.currency).format %>
     </li>
 <% end %>
 </ul>

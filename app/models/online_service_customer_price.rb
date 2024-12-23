@@ -5,6 +5,7 @@ class OnlineServiceCustomerPrice
 
   attribute :interval, type: String
   attribute :amount, type: Integer
+  attribute :currency, type: String
   attribute :stripe_price_id, type: String
   attribute :charge_at, type: DateTime
   attribute :order_id, type: String
@@ -16,7 +17,7 @@ class OnlineServiceCustomerPrice
   validate :validate_price
 
   def amount_with_currency
-    Money.new(amount) if amount
+    Money.new(amount, currency) if amount
   end
 
   def price_type

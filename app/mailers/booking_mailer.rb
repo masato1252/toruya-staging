@@ -9,7 +9,11 @@ class BookingMailer < CustomerMailer
     @booking_options = params[:booking_options]
 
     tax_type = I18n.t("settings.booking_option.form.#{@booking_option.tax_include ? "tax_include" : "tax_excluded"}")
-    @price = "#{@booking_option.amount.format(:ja_default_format)}(#{tax_type})"
+    if @shop.user.currency == "JPY"
+      @price = "#{@booking_option.amount.format(:ja_default_format)}(#{tax_type})"
+    else
+      @price = "#{@booking_option.amount.format}(#{tax_type})"
+    end
 
     mail(
       to: customer_email,

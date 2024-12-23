@@ -80,8 +80,13 @@ class SalePage < ApplicationRecord
   scope :for_online_service, -> { where(product_type: "OnlineService") }
   validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
 
-  monetize :selling_price_amount_cents, allow_nil: true
-  monetize :normal_price_amount_cents, allow_nil: true
+  def selling_price_amount
+    Money.new(selling_price_amount_cents, user.currency) if selling_price_amount_cents.present?
+  end
+
+  def normal_price_amount
+    Money.new(normal_price_amount_cents, user.currency) if normal_price_amount_cents.present?
+  end
 
   def free?
     (selling_price_amount_cents.nil? || selling_price_amount.zero?) && selling_multiple_times_price.blank? && !recurring? && !external?
@@ -116,7 +121,11 @@ class SalePage < ApplicationRecord
   end
 
   def selling_price_text
-    selling_price_amount&.format(:ja_default_format)
+    if user.currency == "JPY"
+      selling_price_amount&.format(:ja_default_format)
+    else
+      selling_price_amount&.format
+    end
   end
 
   def selling_multiple_times_price_text
@@ -124,7 +133,11 @@ class SalePage < ApplicationRecord
       times = selling_multiple_times_price.size
       amount = selling_multiple_times_price.first
 
-      "#{Money.new(amount).format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+      if user.currency == "JPY"
+        "#{Money.new(amount).format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+      else
+        "#{Money.new(amount).format} X #{times} #{I18n.t("common.times")}"
+      end
     end
   end
 
@@ -132,20 +145,36 @@ class SalePage < ApplicationRecord
     Array.wrap(recurring_prices).map do |recurring_price|
       # I18n.t("common.#{recurring_price['interval']}_pay")
       # month_pay, year_pay
-      "#{Money.new(recurring_price["amount"]).format(:ja_default_format)} #{I18n.t("common.#{recurring_price['interval']}_pay")}"
+      if user.currency == "JPY"
+        "#{Money.new(recurring_price["amount"]).format(:ja_default_format)} #{I18n.t("common.#{recurring_price['interval']}_pay")}"
+      else
+        "#{Money.new(recurring_price["amount"]).format} #{I18n.t("common.#{recurring_price['interval']}_pay")}"
+      end
     end
   end
 
   def selling_multiple_times_first_price_text
-    Money.new(selling_multiple_times_price&.first).format(:ja_default_format)
+    if user.currency == "JPY"
+      Money.new(selling_multiple_times_price&.first).format(:ja_default_format)
+    else
+      Money.new(selling_multiple_times_price&.first).format
+    end
   end
 
   def monthly_price_text
-    monthly_price ? "#{I18n.t("common.month_pay")} #{Money.new(monthly_price.amount).format(:ja_default_format)}" : nil
+    if user.currency == "JPY"
+      monthly_price ? "#{I18n.t("common.month_pay")} #{Money.new(monthly_price.amount).format(:ja_default_format)}" : nil
+    else
+      monthly_price ? "#{I18n.t("common.month_pay")} #{Money.new(monthly_price.amount).format}" : nil
+    end
   end
 
   def year_price_text
-    yearly_price ? "#{I18n.t("common.year_pay")} #{Money.new(yearly_price.amount).format(:ja_default_format)}" : nil
+    if user.currency == "JPY"
+      yearly_price ? "#{I18n.t("common.year_pay")} #{Money.new(yearly_price.amount).format(:ja_default_format)}" : nil
+    else
+      yearly_price ? "#{I18n.t("common.year_pay")} #{Money.new(yearly_price.amount).format}" : nil
+    end
   end
 
   def serializer(params = {})
@@ -237,11 +266,12 @@ class SalePage < ApplicationRecord
 
     if selling_multiple_times_price.present?
       price_options[:price_types] << PAYMENTS[:multiple_times]
+
       price_options[:price_amounts].merge!(
         multiple_times: {
           times: selling_multiple_times_price.size,
           amount: selling_multiple_times_price.first,
-          amount_format: Money.new(selling_multiple_times_price.first).format
+          amount_format: Money.new(selling_multiple_times_price.first, user.currency).format
         }
       )
     end
@@ -253,7 +283,7 @@ class SalePage < ApplicationRecord
         price_options[:price_amounts].merge!(
           recurring_price.interval => {
             amount: recurring_price.amount,
-            amount_format: Money.new(recurring_price.amount).format
+            amount_format: Money.new(recurring_price.amount, user.currency).format
           }
         )
       end
@@ -285,7 +315,11 @@ class SalePage < ApplicationRecord
   end
 
   def normal_price_text
-    normal_price_amount&.format(:ja_default_format) || I18n.t("common.free_price")
+    if user.currency == "JPY"
+      normal_price_amount&.format(:ja_default_format) || I18n.t("common.free_price")
+    else
+      normal_price_amount&.format || I18n.t("common.free_price")
+    end
   end
 
   def quantity_text

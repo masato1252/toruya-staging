@@ -20,6 +20,7 @@ class OnlineServiceCustomerProductDetails
         [
           OnlineServiceCustomerPrice.new(
             amount: sale_page.selling_price_amount.fractional,
+            currency: sale_page.user.currency,
             charge_at: Time.current,
             order_id: OrderId.generate
           ).attributes
@@ -29,7 +30,8 @@ class OnlineServiceCustomerProductDetails
 
         sale_page.selling_multiple_times_price.map.with_index do |price, index|
           OnlineServiceCustomerPrice.new(
-            amount: Money.new(price).fractional,
+            amount: price,
+            currency: sale_page.user.currency,
             charge_at: current.advance(months: index),
             order_id: OrderId.generate
           ).attributes
@@ -39,7 +41,8 @@ class OnlineServiceCustomerProductDetails
 
         [
           OnlineServiceCustomerPrice.new(
-            amount: Money.new(recurring_price[:amount]).fractional,
+            amount: recurring_price[:amount],
+            currency: sale_page.user.currency,
             order_id: OrderId.generate,
             stripe_price_id: recurring_price[:stripe_price_id],
             interval: payment_type
@@ -49,6 +52,7 @@ class OnlineServiceCustomerProductDetails
         [
           OnlineServiceCustomerPrice.new(
             amount: 0,
+            currency: sale_page.user.currency,
             charge_at: Time.current
           ).attributes
         ]

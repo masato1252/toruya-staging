@@ -13,7 +13,11 @@ class BookingPageSerializer
   end
 
   attribute :price do |booking_page|
-    booking_page.product_price&.format(:ja_default_format)
+    if booking_page.user.currency == "JPY"
+      booking_page.product_price&.format(:ja_default_format)
+    else
+      booking_page.product_price&.format
+    end
   end
 
   attribute :start_time do |booking_page|

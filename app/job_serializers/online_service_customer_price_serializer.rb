@@ -14,7 +14,8 @@ class OnlineServiceCustomerPriceSerializer < ActiveJob::Serializers::ObjectSeria
 
   def deserialize(hash)
     OnlineServiceCustomerPrice.new(
-      amount: Money.new(hash["amount_fractional"], hash["amount_currency"]),
+      amount: hash["amount_fractional"],
+      currency: hash["amount_currency"],
       charge_at: hash["charge_at"] ? Time.parse(hash["charge_at"]) : nil,
       order_id: hash["order_id"]
     )
