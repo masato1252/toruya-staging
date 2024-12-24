@@ -52,7 +52,7 @@ tw:
       change_logs:
         notification_message_html: "<div class='notification alert alert-info' data-controller='change-log-notification' data-target='change-log-notification.content' data-change-log-notification-path=%{change_log_path}>
           <button class='close' data-action='click->change-log-notification#close'>x</button>
-          功能已更新。<a class='text-black underline' href='https://toruya.tw/updates' data-action='click->change-log-notification#close' target='_blank'>點此查看詳情</a>
+          功能已更新。<a class='text-black underline' href='https://toruya.tw/changelog' data-action='click->change-log-notification#close' target='_blank'>點此查看詳情</a>
           </div>"
       schedules:
         calendar_hint: 日曆
