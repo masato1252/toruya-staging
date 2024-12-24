@@ -106,7 +106,7 @@ class FunctionAccess < ApplicationRecord
   end
 
   def self.metrics_for(source_id:, start_date:, end_date:)
-    scope = where(source_id: source_id).by_date_range(start_date, end_date)
+    scope = where(source_id: source_id).where.not(label: nil).by_date_range(start_date, end_date)
     scope.pluck(:label).uniq.each_with_object({}) do |label, result|
       result[label] = {
         clicks: scope.where(label: label).sum(:access_count),
