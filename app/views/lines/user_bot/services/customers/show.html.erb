@@ -22,7 +22,7 @@
 
       <% if @relation.current %>
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-          <% if !@relation.canceled_payment_state? %>
+          <% if @relation.active? %>
             <%= link_to cancel_lines_user_bot_service_customer_path(business_owner_id, @online_service, @relation),
               method: :delete,
               data: { confirm: t("user_bot.dashboards.settings.service_customer_relation.stop_usage_confirmation") },
@@ -32,8 +32,8 @@
             <% end %>
           <% end %>
 
-          <% if @online_service.external? %>
-            <span></span>
+          <span></span>
+          <% if @relation.pending? %>
             <%= link_to approve_lines_user_bot_service_customer_path(business_owner_id, @online_service, @relation), method: :post, class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
               <i class="fas fa-user-check fa-2x"></i>
               <div class="word"><%= I18n.t("action.approve") %></div>

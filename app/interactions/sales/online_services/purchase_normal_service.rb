@@ -6,7 +6,8 @@ require "translator"
 module Sales
   module OnlineServices
     class PurchaseNormalService < ActiveInteraction::Base
-      object :sale_page
+      object :sale_page, default: nil
+      object :online_service, default: nil
       object :customer
       string :authorize_token, default: nil
       string :payment_type
@@ -34,7 +35,7 @@ module Sales
             )
           end
 
-          if sale_page.free?
+          if payment_type == SalePage::PAYMENTS[:assignment] || sale_page.free?
             ::Sales::OnlineServices::Approve.run(relation: relation)
           elsif sale_page.recurring?
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
@@ -54,14 +55,14 @@ module Sales
           end
         end
 
-        compose(Users::UpdateCustomerLatestActivityAt, user: sale_page.user)
+        compose(Users::UpdateCustomerLatestActivityAt, user: customer.user)
         relation
       end
 
       private
 
       def product
-        @product ||= sale_page.product
+        @product ||= sale_page&.product || online_service
       end
 
       def social_customer

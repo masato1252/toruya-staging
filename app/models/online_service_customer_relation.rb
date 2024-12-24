@@ -16,7 +16,7 @@
 #  customer_id            :integer          not null
 #  function_access_id     :bigint
 #  online_service_id      :integer          not null
-#  sale_page_id           :integer          not null
+#  sale_page_id           :integer
 #  stripe_subscription_id :string
 #
 # Indexes
@@ -39,7 +39,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   has_many :customer_payments, as: :product
   has_one :last_customer_payment, -> { where(state: CustomerPayment::PAYMENT_STATES).order(id: :desc) } , as: :product, class_name: "CustomerPayment"
   belongs_to :online_service
-  belongs_to :sale_page
+  belongs_to :sale_page, optional: true
   belongs_to :customer
   belongs_to :bundled_service, optional: true
 
@@ -66,6 +66,10 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     pending: 0,
     active: 1
   }
+
+  def assignment?
+    sale_page.nil?
+  end
 
   def approved_at
     active_at if active?
@@ -148,18 +152,22 @@ class OnlineServiceCustomerRelation < ApplicationRecord
       else
         ::OnlineServiceCustomerPrice.new(_attributes.merge(
           charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil,
-          currency: sale_page.user.currency
+          currency: customer.user.currency
         ))
       end
     end
   end
 
+  def user
+    @user ||= customer.user
+  end
+
   def bundler_relation
-    @bundler_relation ||= OnlineServiceCustomerRelation.where(
+    @bundler_relation ||= sale_page.present? ? OnlineServiceCustomerRelation.where(
       online_service: sale_page.product,
       sale_page: sale_page,
       customer: customer,
-    ).where.not(id: id).take
+    ).where.not(id: id).take : nil 
   end
 
   def bundled_service_relations
@@ -180,7 +188,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def product_amount
-    price_details.map { |price| Money.new(price.amount, sale_page.user.currency) }.sum(0)
+    price_details.map { |price| Money.new(price.amount, user.currency) }.sum(0)
   end
 
   def paid_completed?
@@ -204,14 +212,16 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def user_currency
-    sale_page.user.currency
+    user.currency
   end
 
   def selling_prices_text
     if purchased_from_bundler?
       bundler_relation.selling_prices_text
     else
-      if free_payment_state?
+      if assignment?
+        "N/A"
+      elsif free_payment_state?
         I18n.t("common.free_price")
       elsif price_details.first.interval
         if user_currency == "JPY"

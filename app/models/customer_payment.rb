@@ -45,7 +45,8 @@ class CustomerPayment < ApplicationRecord
     refund_failed: 5,
     bonus: 6,
     change_expire_at: 7,
-    canceled: 8
+    canceled: 8,
+    manually_approved: 9
   }
 
   enum provider: {

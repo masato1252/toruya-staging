@@ -1642,7 +1642,7 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 CREATE TABLE public.online_service_customer_relations (
     id bigint NOT NULL,
     online_service_id integer NOT NULL,
-    sale_page_id integer NOT NULL,
+    sale_page_id integer,
     customer_id integer NOT NULL,
     payment_state integer DEFAULT 0 NOT NULL,
     permission_state integer DEFAULT 0 NOT NULL,
@@ -6138,6 +6138,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241205095949'),
 ('20241213072553'),
 ('20241217134923'),
-('20241223032227');
+('20241223032227'),
+('20241223141736');
 
 

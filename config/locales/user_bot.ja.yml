@@ -343,6 +343,8 @@ ja:
           change_expire_at_time_label: 新しい利用期限(ずっと利用可能にする場合は空欄のまま保存)
           check_product_as_customer: サービスページを確認
           check_product_as_customer_desc: 5分間、お客様として内容を確認することができます
+          assign_customer: 手動追加利用者
+          select_customer_prompt: 利用者を選択
           permission_states:
             accessible: 利用可能
             available: 利用可能
@@ -361,6 +363,7 @@ ja:
             processor_failed: 失敗
             change_expire_at: 利用期限変更
             canceled: 中止
+            manually_approved: 手動承認
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携

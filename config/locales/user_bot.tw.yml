@@ -342,6 +342,8 @@ tw:
           change_expire_at_time_label: 新的使用期限（如果要設為永久使用，請留空並保存）
           check_product_as_customer: 查看服務頁面
           check_product_as_customer_desc: 5分鐘內，您可以以客戶身份查看內容
+          assign_customer: 手動新增使用者
+          select_customer_prompt: 選擇使用者
           permission_states:
             accessible: 可使用
             available: 可使用
@@ -360,6 +362,7 @@ tw:
             processor_failed: 失敗
             change_expire_at: 更改使用期限
             canceled: 已取消
+            manually_approved: 手動批准
         stripe:
           title: 線上付款
           connection_title: Stripe帳戶連結

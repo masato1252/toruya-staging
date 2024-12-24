@@ -62,6 +62,15 @@ class OnlineServiceCustomerProductDetails
             bundler_price: true
           ).attributes
         ]
+      when SalePage::PAYMENTS[:assignment]
+        [
+          OnlineServiceCustomerPrice.new(
+            amount: 0,
+            currency: User.currency,
+            charge_at: Time.current,
+            assignment: true
+          ).attributes
+        ]
       end
 
     {

@@ -136,6 +136,10 @@ Rails.application.routes.draw do
               delete :cancel
               put :change_expire_at
             end
+
+            collection do
+              post :assign
+            end
           end
 
           resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create, :destroy] do

@@ -24,8 +24,44 @@
           <% end %>
         <% end %>
       </div>
+
+      <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+        <a href="#" data-toggle="modal" data-target="#serviceCustomerAssignModal" class="btn btn-yellow btn-circle btn-save btn-tweak btn-with-word">
+          <i class="fas fa-plus fa-2x"></i>
+          <div class="word"><%= I18n.t("action.add_more") %></div>
+        </a>
+      <% end %>
     </div>
 
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>
+
+<div class="modal fade" id="serviceCustomerAssignModal" tabindex="-1" role="dialog" aria-labelledby="serviceCustomerAssignModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <%= t("user_bot.dashboards.settings.service_customer_relation.assign_customer") %>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <%= form_tag assign_lines_user_bot_service_customers_path(business_owner_id: business_owner_id, service_id: @online_service.id), method: :post, remote: false, class: 'assign-customer-form' do %>
+          <div class="form-group">
+            <%= select_tag :customer_id, 
+                options_from_collection_for_select(@available_customers, :id, :name),
+                class: 'form-control',
+                prompt: t("user_bot.dashboards.settings.service_customer_relation.select_customer_prompt") %>
+          </div>
+          
+          <div class="modal-footer flex items-center justify-between">
+            <button type="button" class="btn btn-gray" data-dismiss="modal"><%= t("common.close") %></button>
+            <%= submit_tag t("action.approve"), class: 'btn btn-tarco' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

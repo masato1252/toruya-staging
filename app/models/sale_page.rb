@@ -64,7 +64,8 @@ class SalePage < ApplicationRecord
     free: "free",
     month: "month",
     year: "year",
-    bundler: "bundler"
+    bundler: "bundler",
+    assignment: "assignment"
   }.freeze
 
   belongs_to :product, polymorphic: true # OnlineService/BookingPage

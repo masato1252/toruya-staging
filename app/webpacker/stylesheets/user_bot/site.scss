@@ -127,6 +127,7 @@ a {
   &.active,
   &.completed,
   &.partial_paid,
+  &.manually_approved,
   &.paid {
     background-color: $palette-color2-1;
     border-color: $palette-color2-2;

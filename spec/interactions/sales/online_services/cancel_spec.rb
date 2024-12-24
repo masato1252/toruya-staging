@@ -17,6 +17,18 @@ RSpec.describe Sales::OnlineServices::Cancel do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    context "when relation is assignment" do
+      let(:online_service) { FactoryBot.create(:online_service, user: customer.user) }
+      let(:relation) { FactoryBot.create(:online_service_customer_relation, :assignment, customer: customer, online_service: online_service) }
+
+      it "updates relation states" do
+        outcome
+
+        expect(relation).to be_pending
+        expect(relation).to be_canceled_payment_state
+      end
+    end
+
     context "when online_service is a subscription" do
       let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, customer: customer, permission_state: :active) }
 

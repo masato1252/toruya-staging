@@ -9,7 +9,9 @@ module Sales
       validate :validate_relation_current
 
       def execute
-        if relation.subscription? # subscription might bundler, as well
+        if relation.assignment?
+          relation.update(payment_state: :canceled, permission_state: :pending)
+        elsif relation.subscription? # subscription might bundler, as well
           OnlineServiceCustomerRelations::Cancel.run(relation: relation)
         elsif relation.online_service.bundler?
           relation.bundled_service_relations.each do |bundled_service_relation|

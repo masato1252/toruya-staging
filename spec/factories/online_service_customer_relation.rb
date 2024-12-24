@@ -7,6 +7,10 @@ FactoryBot.define do
     online_service { sale_page.product }
     current { true }
 
+    trait :assignment do
+      sale_page { nil }
+    end
+
     trait :free do
       payment_state { "free" }
       permission_state { "active" }

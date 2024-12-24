@@ -11,7 +11,11 @@ module Sales
         relation.permission_state = :active
         relation.expire_at = relation.online_service.current_expire_time
 
-        if relation.sale_page.free?
+        if relation.assignment?
+          relation.paid_at = Time.current
+          relation.payment_state = :pending
+          relation.save
+        elsif relation.sale_page&.free?
           relation.free_payment_state!
         else
           # paid_at => bought at, when customer bought this product, it should equals first time pay.

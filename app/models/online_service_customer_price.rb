@@ -10,6 +10,7 @@ class OnlineServiceCustomerPrice
   attribute :charge_at, type: DateTime
   attribute :order_id, type: String
   attribute :bundler_price, type: Boolean
+  attribute :assignment, type: Boolean, default: false
 
   validates_presence_of :amount, allow_nil: true # bundler price is nil
   validates :interval, inclusion: { in: %w[month year] }, allow_nil: true

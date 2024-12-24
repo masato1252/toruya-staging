@@ -4,7 +4,7 @@ module Sales
   module OnlineServices
     class Apply < ActiveInteraction::Base
       object :online_service
-      object :sale_page
+      object :sale_page, default: nil
       object :customer
       string :payment_type
 

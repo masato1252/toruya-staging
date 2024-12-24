@@ -36,7 +36,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
             bundled_relation = OnlineServiceCustomerRelation.where(online_service: bundled_service.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
             expect(bundled_relation.expire_at).to eq(now.advance(days: 1))
             expect(bundled_relation).to be_purchased_from_bundler
-            expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "currency"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
+            expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "assignment"=> false, "currency"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
             expect(bundled_relation.price_details).to eq(bundler_relation.price_details)
             expect(bundled_relation.bundled_service).to eq(bundled_service)
           end
@@ -57,7 +57,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           bundled_relation = OnlineServiceCustomerRelation.where(online_service: bundled_service.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
           expect(bundled_relation.expire_at).to be_nil
           expect(bundled_relation).to be_purchased_from_bundler
-          expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "currency"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
+          expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "assignment"=> false, "currency"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
           expect(bundled_relation.price_details).to eq(bundler_relation.price_details)
           expect(bundled_relation.bundled_service).to eq(bundled_service)
         end
@@ -80,7 +80,7 @@ RSpec.describe Sales::OnlineServices::ApproveBundledService, :with_line do
           bundled_relation = OnlineServiceCustomerRelation.where(online_service: bundled_service.online_service, customer: customer, sale_page: bundler_relation.sale_page).take
           expect(bundled_relation.expire_at).to be_nil
           expect(bundled_relation).to be_purchased_from_bundler
-          expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "currency"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
+          expect(bundled_relation.product_details).to eq("prices" => [{"amount"=>nil, "assignment"=> false, "currency"=>nil, "bundler_price"=>true, "charge_at"=>nil, "interval"=>nil, "order_id"=>nil, "stripe_price_id"=>nil}])
           expect(bundled_relation.price_details).to eq(bundler_relation.price_details)
           expect(bundled_relation.bundled_service).to eq(bundled_service)
           expect(bundled_relation.bundled_service.subscription).to eq(true)
