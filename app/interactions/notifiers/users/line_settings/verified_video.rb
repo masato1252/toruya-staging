@@ -16,6 +16,10 @@ module Notifiers
         def content_type
           SocialUserMessages::Create::VIDEO_TYPE
         end
+
+        def deliverable
+          receiver.locale == "ja" || receiver.user.locale == :ja
+        end
       end
     end
   end
