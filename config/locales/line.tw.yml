@@ -3,7 +3,7 @@ tw:
     line_login_confirm_title: "確認LINE連結"
     line_login_confirm_desc_html: "為了確認連結是否正確完成<br>請您使用LINE登入。"
     message_api_confirm_title: "您收到訊息了嗎？"
-    message_api_confirm_desc_html: "<p>您已經加入與Toruya連結的LINE官方帳號為好友，並且在Toruya上建立了您的客戶資訊。</p><p>如果LINE登入設定正確，您應該會收到來自Toruya的以下類似訊息。</p><iframe src='https://player.vimeo.com/video/710582368?h=577d1f0941' frameborder='0' allow='autoplay; fullscreen' allowfullscreen></iframe><p>如果您沒有收到訊息，很可能是LINE開發者側的設定有誤。</p><p>✅LINE登入是否與Messaging API在同一個提供者上？<br>✅LINE登入的「已連結的LINE官方帳號」中顯示的以「＠」開頭的字符，是否與連結Toruya的Messaging API的基本ID相同？</p><p>如果您在LINE開發者中重新設定後，請在Toruya的設定畫面中點擊「執行測試」按鈕，再次進行測試。</p>"
+    message_api_confirm_desc_html: "<p>您已經加入與Toruya連結的LINE官方帳號為好友，並且在Toruya上建立了您的客戶資訊。</p><p>如果LINE登入設定正確，您應該會收到來自Toruya的訊息。</p><p>如果您沒有收到訊息，很可能是LINE開發者側的設定有誤。</p><p>✅LINE登入是否與Messaging API在同一個提供者上？<br>✅LINE登入的「已連結的LINE官方帳號」中顯示的以「＠」開頭的字符，是否與連結Toruya的Messaging API的基本ID相同？</p><p>如果您在LINE開發者中重新設定後，請在Toruya的設定畫面中點擊「執行測試」按鈕，再次進行測試。</p>"
     done_page_title: 已確認LINE連結
     done_page_html: "<p>LINE連結似乎已正確完成。</p><p>然而，即使經過這次的確認作業，仍有可能發生無法避免的問題。</p><p>如果您遇到任何問題，請透過Toruya官方LINE聯繫我們的支援團隊。</p>"
     confirmation_message:
