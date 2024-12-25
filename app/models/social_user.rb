@@ -71,6 +71,10 @@ class SocialUser < ApplicationRecord
     @root_user ||= current_users.first
   end
 
+  def japanese?
+    locale == "ja" || user.locale == :ja
+  end
+
   def manage_accounts
     @manage_accounts ||=
       begin

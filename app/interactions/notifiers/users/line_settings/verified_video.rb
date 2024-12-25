@@ -18,7 +18,7 @@ module Notifiers
         end
 
         def deliverable
-          receiver.locale == "ja" || receiver.user.locale == :ja
+          receiver.japanese?
         end
       end
     end
