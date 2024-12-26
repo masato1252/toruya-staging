@@ -34,8 +34,10 @@
           <div class="flex justify-center items-center flex-col p-6 border-0 border-t border-solid border-gray-500">
             <div><%= t("user_bot.dashboards.settings.dashboard.last_thirty_customers_payment") %></div>
             <strong><span class="big"><%= @customers_payment %></span></strong>
-            <div><%= t("user_bot.dashboards.settings.dashboard.web_details_page") %></div>
-            <div><%= "https://#{ENV['MAIL_DOMAIN']}/userlogin" %></div>
+            <% mobile_only do %>
+              <div><%= t("user_bot.dashboards.settings.dashboard.web_details_page") %></div>
+              <div><%= "https://#{ENV['MAIL_DOMAIN']}/#{I18n.locale}/userlogin" %></div>
+            <% end %>
           </div>
         </div>
 
@@ -52,9 +54,11 @@
           <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
-        <%= link_to lines_user_bot_settings_consultants_path(business_owner_id: business_owner_id), class: "field-row" do %>
-          <span><%= t("user_bot.dashboards.settings.company.consultants") %></span><i class="fa fa-angle-right"></i>
-        <% end if is_owner %>
+        <% if support_official_support_display? %>
+          <%= link_to lines_user_bot_settings_consultants_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.company.consultants") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+        <% end %>
 
         <div class="field-header"><%= t("settings.plans.plan_info.caption") %></div>
 

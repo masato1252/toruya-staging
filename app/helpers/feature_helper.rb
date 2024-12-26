@@ -21,35 +21,24 @@ module FeatureHelper
       support_faq_display: support_faq_display?,
       support_menu_restrict_order: support_menu_restrict_order?,
       support_terms_and_privacy_display: support_terms_and_privacy_display?,
+      support_official_support_display: support_official_support_display?,
     }
   end
 
-  def support_faq_display?
+  def japanese_only?
     I18n.locale == :ja
   end
 
-  def support_phonetic_name?
-    I18n.locale == :ja
-  end
+  alias_method :support_faq_display?, :japanese_only?
+  alias_method :support_terms_and_privacy_display?, :japanese_only?
+  alias_method :support_official_support_display?, :japanese_only?
+  alias_method :support_menu_restrict_order?, :japanese_only?
+  alias_method :support_tax_include_display?, :japanese_only?
+  alias_method :support_japanese_asset?, :japanese_only?
+  alias_method :support_phonetic_name?, :japanese_only?
 
   def support_skip_required_shop_info?
     I18n.locale != :ja
-  end
-
-  def support_tax_include_display?
-    I18n.locale == :ja
-  end
-
-  def support_japanese_asset?
-    I18n.locale == :ja
-  end
-
-  def support_menu_restrict_order?
-    false
-  end
-
-  def support_terms_and_privacy_display?
-    I18n.locale == :ja
   end
 
   def money_sample(locale)
