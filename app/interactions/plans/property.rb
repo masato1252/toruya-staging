@@ -23,7 +23,7 @@ module Plans
       if plan.level != "free"
         details.merge!(
           ranks: Plan.plans[plan.level]
-          .map { |rank_context| rank_context.merge!(costFormat: rank_context[:cost].to_money.format) }
+          .map { |rank_context| rank_context.merge!(costFormat: rank_context[:cost].to_money(user.currency).format) }
         )
       end
 

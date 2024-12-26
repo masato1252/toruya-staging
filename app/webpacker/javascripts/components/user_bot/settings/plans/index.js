@@ -168,8 +168,6 @@ const Plans = ({props}) => {
             {header: I18n.t("plans.headers.customer_management")},
             "customer_number",
             {header: I18n.t("plans.headers.reservation_management")},
-            "shop_can_set",
-            "staff_in_charge",,
             "reservation_restriction",
             {header: I18n.t("plans.headers.online_booking")},
             "booking_page_number",
@@ -181,10 +179,7 @@ const Plans = ({props}) => {
             "membership",
             "external_service",
             {header: I18n.t("plans.headers.sale_promotion")},
-            "sale_page_number",
-            "message_template",
-            {header: I18n.t("plans.headers.support")},
-            "support"
+            "sale_page_number"
           ].map((labelName) => {
             if (typeof(labelName) === 'object') {
               return (
@@ -268,17 +263,19 @@ const Plans = ({props}) => {
             </div>
           ) }
         </div>
-        <div className="table-row">
-          <div className="col">
-            <div className="privacy-and-term">
+        {props.support_feature_flags.support_terms_and_privacy_display && (
+          <div className="table-row">
+            <div className="col">
+              <div className="privacy-and-term">
               全てのプランにおいて、Toruyaの
               <a href='https://toruya.com/privacy/' target='_blank'>プライバシーポリシー</a>
               と
               <a href='https://toruya.com/terms/' target='_blank'>利用規約</a>
               が適応されます。
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
       <SubscriptionModal
         {...props}

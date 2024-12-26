@@ -19,7 +19,8 @@ module FeatureHelper
       support_tax_include_display: support_tax_include_display?,
       support_japanese_asset: support_japanese_asset?,
       support_faq_display: support_faq_display?,
-      support_menu_restrict_order: support_menu_restrict_order?
+      support_menu_restrict_order: support_menu_restrict_order?,
+      support_terms_and_privacy_display: support_terms_and_privacy_display?,
     }
   end
 
@@ -45,6 +46,10 @@ module FeatureHelper
 
   def support_menu_restrict_order?
     false
+  end
+
+  def support_terms_and_privacy_display?
+    I18n.locale == :ja
   end
 
   def money_sample(locale)
