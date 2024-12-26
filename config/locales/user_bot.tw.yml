@@ -98,8 +98,8 @@ tw:
         dashboard:
           title: 設定頁面
           info_label: 帳戶註冊資訊
-          payments_label: 使用記錄
-          line_label: 行銷用LINE
+          payments_label: 發票
+          line_label: 整合Line
           line_message_api_label: Messaging API設定
           line_login_api_label: LINE登入設定
           line_rich_menu: 圖文選單
@@ -124,8 +124,8 @@ tw:
         rich_menu:
           auto: 自動
           manual: 手動
-          title: 行銷用LINE
-          manual_description_html: "切換到手動模式後，<br />將顯示在LINE官方帳號管理頁面中<br />設定的圖文選單。"
+          title: 整合 Line
+          manual_description_html: "切換到手動模式後，<br />將顯示你在Line官方管理頁面中<br />設定的圖文選單。"
           manual_switch_btn: 切換到手動模式
           auto_description_html: "切換到自動模式後，<br />您可以使用與Toruya功能連動的圖文選單，<br />以及活動選單等，<br />讓圖文選單管理更加便利。"
           auto_switch_btn: 切換到自動模式

@@ -71,7 +71,7 @@
                 <%= l(Current.business_owner.trial_expired_date) %>
               <% else %>
                 <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
-                <%= " (#{@subscription.next_plan.name}変更予定)" if @subscription.active? && @subscription.next_plan %>
+                <%= " (#{@subscription.next_plan.name}#{t("common.ready_to_change")})" if @subscription.active? && @subscription.next_plan %>
               <% end %>
             </div>
           </div>
@@ -101,14 +101,6 @@
           <% end %>
         <% end %>
 
-        <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
-        <%= link_to lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "field-row" do %>
-          <span><%= "Stripe" %> <%= "(#{t("common.default")})" if business_owner.stripe_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
-        <% end %>
-        <%= link_to lines_user_bot_settings_square_path(business_owner_id: business_owner_id), class: "field-row" do %>
-          <span><%= "Square" %> <%= "(#{t("common.default")})" if business_owner.square_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
-        <% end %>
-
         <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
         <% if Current.business_owner.shops.count == 1 %>
           <%= link_to lines_user_bot_settings_shop_path(business_owner_id, Current.business_owner.shops.first.id), class: "field-row" do %>
@@ -135,13 +127,26 @@
         <% end %> 
 <%
 =end%>
-
-        <div class="field-header"><%= t("user_bot.dashboards.settings.support.user_support") %></div>
-        <%= link_to data_by_locale(:official_site_url) + "/help/", class: "field-row", target: '_blank' do %>
-          <span><%= t("user_bot.dashboards.settings.support.documents") %></span><i class="fa fa-angle-right"></i>
+        <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
+        <% if support_stripe_payment? %>
+          <%= link_to lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= "Stripe" %> <%= "(#{t("common.default")})" if business_owner.stripe_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
+          <% end %>
         <% end %>
-        <%= link_to data_by_locale(:official_site_url) + "/faq/", class: "field-row", target: '_blank' do %>
-          <span><%= t("user_bot.dashboards.settings.support.faq") %></span><i class="fa fa-angle-right"></i>
+        <% if support_square_payment? %>
+          <%= link_to lines_user_bot_settings_square_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= "Square" %> <%= "(#{t("common.default")})" if business_owner.square_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+        <% end %>
+
+        <% if support_faq_display? %>
+          <div class="field-header"><%= t("user_bot.dashboards.settings.support.user_support") %></div>
+          <%= link_to data_by_locale(:official_site_url) + "/help/", class: "field-row", target: '_blank' do %>
+            <span><%= t("user_bot.dashboards.settings.support.documents") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+          <%= link_to data_by_locale(:official_site_url) + "/faq/", class: "field-row", target: '_blank' do %>
+            <span><%= t("user_bot.dashboards.settings.support.faq") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
         <% end %>
 
         <div class="bottom-navigation-bar centerize">

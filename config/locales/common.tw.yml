@@ -22,6 +22,7 @@ tw:
     search: 搜尋
     upgrade_to_premium: 升級至高級版
     upgrade_to_basic: 升級至基本版
+    ready_to_change: 預定變更
     cancel_upgrade: 取消升級
     new_reservation: 新增預約
     new_off_schedule: 新增個人行程
