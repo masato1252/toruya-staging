@@ -65,7 +65,7 @@ tw:
         schedule_modal_title: 新增預約或行程
         reservation_customers_title: 預約客戶
         delete_a_menu: 刪除項目
-        add_a_staff: 新增員工
+        add_a_staff: 新增成員
         staff_states_title: 狀態
         book_this_date: 預約此日期
         messages:
@@ -159,7 +159,7 @@ tw:
           holiday_schedule_without_business_schedule: 即使國定假日不是營業日，也營業
         company:
           info_hint: 主要顯示在宣傳頁面上。
-          staffs: 員工
+          staffs: 成員
           consultants: 官方支持者
         shop:
           shop_management: 店舖管理
@@ -297,7 +297,7 @@ tw:
           full_seat_number_title: 滿座數
           menus_list: 服務列表
           method: 舉辦方式
-          staffs: 負責員工
+          staffs: 負責成員
           methods:
             local: 在店內
             online: 線上
@@ -307,8 +307,8 @@ tw:
             minutes_title: 服務基本設定
             interval_title: 服務基本設定
             menu_shops_title: 可使用店鋪
-            menu_staffs_title: 負責員工
-            menu_staffs_subtitle: 負責員工
+            menu_staffs_title: 負責成員
+            menu_staffs_subtitle: 負責成員
             menu_staffs_max_customers: 同時可服務的人數
             online_title: 舉辦方式
             name_subtitle: 服務名稱
@@ -360,7 +360,7 @@ tw:
           connection_title: Stripe帳戶連結
           stripe_desc1_html: 連結Stripe帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的線上服務。
           stripe_desc2_html: 如果您還沒有Stripe帳戶，<br />請先註冊一個帳戶。
-          owner_warning: 員工帳戶無法連結Stripe。請聯繫帳戶擁有者進行連結設定。
+          owner_warning: 成員帳戶無法連結Stripe。請聯繫帳戶擁有者進行連結設定。
           default_payment_button: 將此付款方式設為預設
           stripe_disconnect_confirm: 您確定要斷開Stripe帳戶連結嗎？
         square:
@@ -368,37 +368,37 @@ tw:
           connection_title: Square帳戶連結
           square_desc1_html: 連結Square帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的線上服務。
           square_desc2_html: 如果您還沒有Square帳戶，<br />請先註冊一個帳戶。
-          owner_warning: 員工帳戶無法連結Square。請聯繫帳戶擁有者進行連結設定。
+          owner_warning: 成員帳戶無法連結Square。請聯繫帳戶擁有者進行連結設定。
           default_payment_button: 將此付款方式設為預設
           square_disconnect_confirm: 您確定要斷開Square帳戶連結嗎？
         consultants:
           list_page_title: 官方支持者
           list_page_header: 支持用戶
           invitation_link: 邀請連結
-          invitation_desc: 當您邀請的支持用戶在Toruya註冊後，您將被註冊為該用戶帳戶的管理員員工。
+          invitation_desc: 當您邀請的支持用戶在Toruya註冊後，您將被註冊為該用戶帳戶的管理員成員。
           pending_client: 等待用戶註冊
           new_page_title: 邀請支持用戶
           new_page_header: 您想邀請的人的手機號碼
           new_page_invite_desc_html: 我們將通過簡訊發送邀請連結<br>給您想支持的人
-          invitation_flow_desc_html: <b>【支持用戶邀請方法】</b><br> ①通過簡訊發送邀請連結給您想支持的人<br> ②被邀請的人自行通過邀請連結在Toruya註冊<br> ③您將被註冊為被邀請人帳戶的管理員員工，請從螢幕右上角的『切換帳戶』選單切換到被邀請人的帳戶使用
+          invitation_flow_desc_html: <b>【支持用戶邀請方法】</b><br> ①通過簡訊發送邀請連結給您想支持的人<br> ②被邀請的人自行通過邀請連結在Toruya註冊<br> ③您將被註冊為被邀請人帳戶的管理員成員，請從螢幕右上角的『切換帳戶』選單切換到被邀請人的帳戶使用
           feature_checking: 詳細了解功能
           apply_support: 提交註冊申請
           thanks_application: 感謝您的申請。我們將在近期內與您聯繫。
         staffs:
-          list_page_title: 員工
-          list_page_header: 已註冊員工
-          delete: 刪除員工
+          list_page_title: 成員
+          list_page_header: 已註冊成員
+          delete: 刪除成員
           authority: 權限
           introduction: 介紹
           authorities:
             admin: 管理員
             owner: 擁有者
-            employee: 員工
-          new_page_title: 新增員工
+            employee: 成員
+          new_page_title: 新增成員
           new_page_header: 手機號碼
-          new_page_desc: 我們將通過簡訊發送員工註冊頁面
-          cellphone_input_placeholder: 員工的手機號碼
-          new_page_methods_html: <b>【員工註冊方法】</b><br /> ①通過簡訊發送員工註冊頁面<br /> ②員工自行從註冊頁面完成員工註冊<br /> ③以員工身份使用Toruya
+          new_page_desc: 我們將通過簡訊發送成員註冊頁面
+          cellphone_input_placeholder: 成員的手機號碼
+          new_page_methods_html: <b>【成員註冊方法】</b><br /> ①通過簡訊發送成員註冊頁面<br /> ②成員自行從註冊頁面完成成員註冊<br /> ③以成員身份使用Toruya
       broadcasts:
         broadcast_title: 發送條件
         broadcast_conditions: 發送條件列表
@@ -628,7 +628,7 @@ tw:
           content_video: 頭部影片
           why_content: 購買理由
           benefits: 優點
-          staff: 負責員工
+          staff: 負責成員
           faq: 常見問題
           flow: 服務流程
           reviews: 客戶評價
@@ -680,7 +680,7 @@ tw:
             bundler: 這項服務能做到的事
           add_benefit: 新增項目
           staff_title: 宣傳頁面內容
-          staff_subtitle: 負責員工
+          staff_subtitle: 負責成員
           flow_title: 宣傳頁面內容
           flow_subtitle: 服務流程
           flow_header: 請說明從預約到使用服務的流程。
@@ -745,9 +745,9 @@ tw:
           what_user_get_tip: ※建議每行約15個字，最多3行
           what_buyer_future: 以文字輸入預約服務的賣點或購買者的未來願景
           what_buyer_future_tip: ※單次換行為行間距，連續兩次換行為段落間距
-          staff_introduction: 主要負責員工的簡介
+          staff_introduction: 主要負責成員的簡介
           staff_change_tip: ※此資訊將反映在所有宣傳頁面中。
-          introduce_who_do_this: 請介紹主要負責的員工
+          introduce_who_do_this: 請介紹主要負責的成員
           content_picture_requirement_tip: "設置圖片\n 寬度335像素以上，高度185像素以上"
           staff_picture_requirement_tip: "設置圖片\n 寬度180像素以上 高度180像素以上"
           flow_introduction_html: "請說明從預約到使用服務的<br />流程。"

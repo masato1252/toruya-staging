@@ -120,7 +120,7 @@ tw:
       new_info_1: 設定服務。
       new_info_2: Toruya將根據此設定接受預約。
       name: 服務名稱
-      staff: 負責員工
+      staff: 負責成員
       reservation_setting_name: 預約時段
       add_new_reservation_setting_btn: 新增
       reservation_ending_rule_none: 不結束
@@ -143,43 +143,43 @@ tw:
       new_info_2: Toruya 將根據此設定接受預約。
       name: 類別名稱
     staff:
-      sider_label: 員工管理
-      info_title: 員工帳戶
-      new_title: 新增員工
-      new_button: 新增員工
+      sider_label: 成員管理
+      info_title: 成員帳戶
+      new_title: 新增成員
+      new_button: 新增成員
       info_label: 顯示名稱
-      info_1: 這是已設定的員工列表。
+      info_1: 這是已設定的成員列表。
       info_2: Toruya 將根據此設定接受預約。
-      new_info_1: 請設定員工資訊。
+      new_info_1: 請設定成員資訊。
       new_info_2: Toruya 將根據此設定接受預約。
       name: 姓名
       shop_label: 工作店舖
       contact_groups_label: 客戶資料庫查閱權限
       group_reservations_only_readable_label: 僅可查看使用記錄
       group_details_readable_label: 可查看全部資訊
-      delete_confirmation_message: ‼︎ 確定要刪除員工嗎？ !! 刪除 %{staff_name} 後，其過去負責的預約記錄中的員工姓名將會保留。
+      delete_confirmation_message: ‼︎ 確定要刪除成員嗎？ !! 刪除 %{staff_name} 後，其過去負責的預約記錄中的成員姓名將會保留。
       work_time: 工作時間
-      all_work_time: 員工工作時間
+      all_work_time: 成員工作時間
       holiday_time: 休假
       modal:
         upgrade_title: 升級帳戶
-        upgrade_content_html: 若要新增員工，需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 即可新增多位員工。<br /><br />您可以隨時降級帳戶。
-        upgrade_edit_content_html: 若要使用員工帳戶功能，需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 即可新增多位員工。<br /><br />您可以隨時降級帳戶。
+        upgrade_content_html: 若要新增成員，需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 即可新增多位成員。<br /><br />您可以隨時降級帳戶。
+        upgrade_edit_content_html: 若要使用成員帳戶功能，需要升級帳戶。<br /><br />每月支付 %{premium_plan_price} 即可新增多位成員。<br /><br />您可以隨時降級帳戶。
     staff_account:
-      info_title: 員工帳戶
-      using_staff_account: 使用員工帳戶
+      info_title: 成員帳戶
+      using_staff_account: 使用成員帳戶
       email: 電子郵件地址
       capability: 權限
-      staff_capability: 員工
+      staff_capability: 成員
       manager_capability: 管理員
-      gmail_hint: 使用 Gmail 設定員工帳戶，可讓員工自行管理您的店舖和自己的行程。
+      gmail_hint: 使用 Gmail 設定成員帳戶，可讓成員自行管理您的店舖和自己的行程。
       resend_email: 重新發送驗證郵件
-      sent_message: 已將員工註冊連結發送至設定的員工手機。請讓員工透過收到的郵件進行註冊。
-      new_staff_active: 有新核准的員工帳戶。您可以設定員工的詳細權限。
-      staff_setting: 員工設定
-      connected_your_account: 員工帳戶設定已完成。
-      staff_connected_successfully: 員工註冊完成
-      staff_connected_failed: 此 LINE 帳戶已註冊為員工。請與店舖管理員確認。
+      sent_message: 已將成員註冊連結發送至設定的成員手機。請讓成員透過收到的郵件進行註冊。
+      new_staff_active: 有新核准的成員帳戶。您可以設定成員的詳細權限。
+      staff_setting: 成員設定
+      connected_your_account: 成員帳戶設定已完成。
+      staff_connected_successfully: 成員註冊完成
+      staff_connected_failed: 此 LINE 帳戶已註冊為成員。請與店舖管理員確認。
     consultant:
       consultant_connected_successfully: 註冊完成
       consultant_connected_failed: 註冊失敗。請與店舖管理員確認。
@@ -196,13 +196,13 @@ tw:
       reason_of_closing: 休假原因
       closing_reason: 休假原因／行程內容
       setting_title: 工作時間設定權限
-      full_time_permission: 允許員工變更全職／兼職設定
-      regular_working_time_permission: 允許員工變更固定工作時間設定
-      temporary_working_time_permission: 允許員工變更臨時上班設定
+      full_time_permission: 允許成員變更全職／兼職設定
+      regular_working_time_permission: 允許成員變更固定工作時間設定
+      temporary_working_time_permission: 允許成員變更臨時上班設定
       block_schedule: 封鎖預約頁面
     staff_holiday_time:
       setting_title: 休假設定權限
-      holiday_permission: 允許員工設定休假
+      holiday_permission: 允許成員設定休假
     contact:
       info_title: 客戶管理
       info_sub_title: 客戶資料庫
@@ -331,8 +331,8 @@ tw:
         later: 下次更新時升級
         later_desc: 從 %{expired_date} 開始使用進階/基本會員專屬功能。
       extra_staff:
-        caption_title: "%{staff_number} 個額外員工帳戶也將恢復使用"
-        caption_desc: 額外員工將能夠新增/編輯其負責的預約。如果您不需要其他員工帳戶，請事先在店鋪設定頁面中刪除。
+        caption_title: "%{staff_number} 個額外成員帳戶也將恢復使用"
+        caption_desc: 額外成員將能夠新增/編輯其負責的預約。如果您不需要其他成員帳戶，請事先在店鋪設定頁面中刪除。
       shop_fee:
         caption_title: "%{shop_number} 個額外店鋪也將恢復使用"
         caption_desc: 您將能夠新增/編輯額外店鋪的預約。如果您不需要額外店鋪，請事先在店鋪設定頁面中刪除。若未刪除，每個額外店鋪將額外收取每月 %{per_shop_fee_price} 元的使用費。
@@ -371,7 +371,7 @@ tw:
         customer_group_limit: 可設定的客戶資料庫數量
         customer_filter: 客戶資料搜尋
         print_address: 列印地址
-        add_staff: 新增員工
+        add_staff: 新增成員
       free:
         title: 試用版
         period: ""
@@ -471,8 +471,8 @@ tw:
         menu_for_sale_label: 銷售服務
         menu_restrict_order_label: 服務順序
         menu_restrict_order_title: 服務順序
-        menu_restrict_dont_need_order: 分配可以不按特定順序提供服務的員工。（建議）
-        menu_restrict_order: 分配可以按設定順序提供服務的員工。
+        menu_restrict_dont_need_order: 分配可以不按特定順序提供服務的成員。（建議）
+        menu_restrict_order: 分配可以按設定順序提供服務的成員。
         new_menu: 新增服務
         new_menu_top_bar_header: 新增服務
         new_menu_title: 從現有服務中選擇
@@ -595,7 +595,7 @@ tw:
         interval_title: 預約時間的項目
         booking_time_title: 預約時間的項目
         interval_real_booking_time_explanation: 根據目前的設定內容和空位情況，顯示前4個項目。
-        interval_real_booking_time_warning: 實際顯示可能會因預約狀況或員工的空閒時間而有所不同
+        interval_real_booking_time_warning: 實際顯示可能會因預約狀況或成員的空閒時間而有所不同
         interval_explanation: 顯示9:00至12:00之間的前4個項目。
         interval_start_time: 開始時間
         interval_option: 項目間隔

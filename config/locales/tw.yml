@@ -20,9 +20,9 @@ tw:
     business_schedule_redirect_message: 設定營業時間
     business_schedule_warning_message: "請在%{link}設定營業時間。"
     business_schedule_warning_link_title: 營業時間設定頁面
-    staff_redirect_message: 新增員工。
-    staff_warning_message: "請在%{link}設定員工資訊。"
-    staff_warning_link_title: 員工設定頁面
+    staff_redirect_message: 新增成員。
+    staff_warning_message: "請在%{link}設定成員資訊。"
+    staff_warning_link_title: 成員設定頁面
     staff_working_schedule_redirect_message: 設定工作排程。
     staff_working_schedule_warning_message: "請在%{link}設定工作排程。"
     staff_working_schedule_warning_link_title: 工作排程設定頁面
@@ -173,7 +173,7 @@ tw:
     canceled: 已取消
     memo: 備註內容
     contain_some_warnings: 此預約包含注意事項
-    deleted_staffs_sentence: "%{staff_names_sentence} 已從員工名單中刪除"
+    deleted_staffs_sentence: "%{staff_names_sentence} 已從成員名單中刪除"
     confirm_with_warnings: 儘管有錯誤，仍儲存此預約
     customers_list_label: 客戶
     details: 預約詳情
@@ -182,7 +182,7 @@ tw:
     reserved: 已確認
     full_seat: 客滿
     add_customer_btn: 新增客戶
-    no_manpower_tip: 最少需要0位員工
+    no_manpower_tip: 最少需要0位成員
     add_working_schedule: 將此時段設為上班時間
     other_customers: "其他%{other_customers_number}位"
     no_ending_time_message: ※結束時間無法編輯。預約的結束時間會根據服務項目的所需時間自動計算。
@@ -204,7 +204,7 @@ tw:
         confirmation_message: "確定要透過 %{provider} 進行退款嗎？"
       staff_states:
         title: 確認預約
-        message: "共%{total_staffs_number}位員工中，有%{accepted_staffs_number}位已確認此預約。"
+        message: "共%{total_staffs_number}位成員中，有%{accepted_staffs_number}位已確認此預約。"
         approve_btn: 確認此預約
         unapprove_btn: 將此預約設為未確認
       invalid_shops_exist_message:
@@ -321,7 +321,7 @@ tw:
       custom_id_confirm_warning: ※輸入客戶ID後，請點擊黃色加號按鈕
       shop_confirm_warning: ※選擇店舖後，請點擊黃色加號按鈕
       menu_confirm_warning: ※選擇服務項目後，請點擊黃色加號按鈕
-      staff_confirm_warning: ※選擇員工後，請點擊黃色加號按鈕
+      staff_confirm_warning: ※選擇成員後，請點擊黃色加號按鈕
       saved_filter_header: 使用已儲存的條件搜尋
       customer_conditions_header: 依客戶資訊搜尋
       reservation_conditions_header: 依消費紀錄搜尋
@@ -331,7 +331,7 @@ tw:
       shop: 店舖
       menu: 服務項目
       multiple_choices: 可多選
-      staff: 員工
+      staff: 成員
       error: 錯誤
       reservation_status_title: 預約狀態
       reservation_status_info: 請選擇狀態
@@ -428,7 +428,7 @@ tw:
               taken: "^您只能有一個群組用於匯入所有聯絡人群組"
     models:
       user: 用戶
-      staff: 員工
+      staff: 成員
     attributes:
       user:
         password: "密碼"
@@ -730,7 +730,7 @@ tw:
         staff_accounts/create:
           attributes:
             staff:
-              email_uniqueness_required: "^此電子郵件已被其他員工使用"
+              email_uniqueness_required: "^此電子郵件已被其他成員使用"
         customers/delete:
           attributes:
             customer:
@@ -806,7 +806,7 @@ tw:
               start_yet: "^開始接受預約時間：%{start_at}"
               is_over: "^預約已結束"
               shop_or_staff_not_enough_ability: "^目前超出預約人數上限！"
-              lack_staffs: "^可服務的員工不足"
+              lack_staffs: "^可服務的成員不足"
         broadcasts/update:
           attributes:
             broadcast:

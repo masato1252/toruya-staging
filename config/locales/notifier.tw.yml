@@ -3,7 +3,7 @@ tw:
     user_sign_up:
       message: "感謝您註冊成為用戶。\n\n從今天起至%{trial_end_date}，您可以免費使用我們的服務。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁版管理介面。\nhttps://manager.toruya.com/tw/userlogin"
     staff_user_sign_up:
-      message: "感謝您註冊成為用戶。\n\n 您可以作為%{owner_name}的員工免費使用我們的服務。\n\n 如果您想將其用於自己的業務，您也可以從今天起至%{trial_end_date}免費試用，歡迎您體驗。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁管理介面。\n
+      message: "感謝您註冊成為用戶。\n\n 您可以作為%{owner_name}的成員免費使用我們的服務。\n\n 如果您想將其用於自己的業務，您也可以從今天起至%{trial_end_date}免費試用，歡迎您體驗。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁管理介面。\n
 https://manager.toruya.com/tw/userlogin"
     created_shop:
       message: "用戶註冊和店舖設置已完成！\n\n從今天起至%{trial_end_date}，您可以免費試用。\n\n接下來，請從管理介面設置LINE官方帳號的連接。\n\n📝LINE連接手冊\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁版管理介面。\nhttps://manager.toruya.com/tw/userlogin\n\n▶︎設置代辦服務\n我們可以為您代辦連接設置，只需5,500日圓（含稅），讓您輕鬆開始使用Toruya。\n\n如果您有需要，請回覆此訊息。"
@@ -33,13 +33,13 @@ https://manager.toruya.com/tw/userlogin"
       new_referrer:
         message: "%{user_name} 您好\n\n您的代理商帳號已添加了一個子帳號。\n\n請從設置畫面確認。\n\nToruya"
       activate_staff_account:
-        message: "如果您要註冊為%{user_name}的店舖員工，請點擊連結\n %{url}"
+        message: "如果您要註冊為%{user_name}的店舖成員，請點擊連結\n %{url}"
       consultant_client_registered:
         message: "%{client_name}的Toruya註冊已完成。"
       invite_consultant_client:
         message: "我們收到了來自%{consultant_name}的LINE集客系統Toruya的邀請。\n\n請點擊連結註冊用戶。\n%{url}"
       staff_joined:
-        message: "%{staff_name} 的員工註冊已完成。"
+        message: "%{staff_name} 的成員註冊已完成。"
       assignee_accepted_reservation:
         message: "%{assignee_name} 已接受 %{booking_time} 的預約。"
       line_reached_monthly_limit:

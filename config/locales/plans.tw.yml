@@ -11,7 +11,7 @@ tw:
       support: 支援服務
     labels:
       shop_can_set: 可設置店鋪數
-      staff_in_charge: 負責員工數
+      staff_in_charge: 負責成員數
       reservation_restriction: 預約限制
       customer_number: 客戶資料數
       booking_page_number: 預約頁面數
