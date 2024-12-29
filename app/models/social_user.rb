@@ -92,4 +92,8 @@ class SocialUser < ApplicationRecord
   def staffs
     StaffAccount.where(user: current_users).active.includes(:staff).map(&:staff)
   end
+
+  def language
+    I18n.available_locales.include?(locale&.to_sym) ? locale.to_sym : I18n.default_locale
+  end
 end

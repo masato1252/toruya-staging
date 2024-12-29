@@ -113,7 +113,7 @@ module Notifiers
     def nth_time_message; end
 
     def send_line
-      I18n.with_locale(target_line_user.user.locale) do
+      I18n.with_locale(target_line_user.user&.locale || target_line_user.language) do
         case target_line_user
         when SocialUser
           outcome = SocialUserMessages::Create.run(

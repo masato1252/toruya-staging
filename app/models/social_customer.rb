@@ -36,4 +36,8 @@ class SocialCustomer < ApplicationRecord
     bot: 0,
     one_on_one: 1,
   }
+
+  def language
+    I18n.available_locales.include?(locale&.to_sym) ? locale.to_sym : I18n.default_locale
+  end
 end
