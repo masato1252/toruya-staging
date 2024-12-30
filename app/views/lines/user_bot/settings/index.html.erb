@@ -7,28 +7,15 @@
         <h3><%= I18n.t("user_bot.dashboards.settings.dashboard.title") %></h3>
 
         <div class="dashboard">
-          <div class="flex mb-6px">
-            <div class="cell">
-              <div>
-                <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
-              </div>
-              <div>
-                <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
-              </div>
-              <div class="desc">
-                <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
-              </div>
+          <div class="flex justify-center items-center flex-col p-6 border-0 border-solid border-gray-500">
+            <div>
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
             </div>
-            <div class="cell">
-              <div>
-                <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
-              </div>
-              <div>
-                <strong><span class="big"><%= @total_sale_page_count %></span><span> / <%= @total_sale_page_limit %></span></strong>
-              </div>
-              <div class="desc">
-                <%= I18n.t("user_bot.dashboards.settings.dashboard.sale_page_state") %>
-              </div>
+            <div>
+              <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
+            </div>
+            <div class="desc">
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
             </div>
           </div>
           <div class="flex justify-center items-center flex-col p-6 border-0 border-t border-solid border-gray-500">
