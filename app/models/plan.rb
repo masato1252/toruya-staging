@@ -38,8 +38,8 @@ class Plan < ApplicationRecord
 
   DETAILS_OLD = {
     Plan::FREE_LEVEL => [
-      { rank: 0, max_customers_limit: 50, max_sale_pages_limit: 3, cost: 0 },
-      { rank: 1, max_customers_limit: 100, max_sale_pages_limit: 3, cost: 0 },
+      { rank: 0, max_customers_limit: 50, cost: 0 },
+      { rank: 1, max_customers_limit: 100, cost: 0 },
     ],
     Plan::BASIC_LEVEL => [
       { rank: 0, max_customers_limit: 200, cost: 2_200, },
@@ -114,8 +114,8 @@ class Plan < ApplicationRecord
 
   DETAILS_TW = {
     Plan::FREE_LEVEL => [
-      { rank: 0, max_customers_limit: 50, max_sale_pages_limit: 3, cost: 0 },
-      { rank: 1, max_customers_limit: 100, max_sale_pages_limit: 3, cost: 0 },
+      { rank: 0, max_customers_limit: 20, max_sale_pages_limit: Float::INFINITY, cost: 0 },
+      { rank: 1, max_customers_limit: 100, max_sale_pages_limit: Float::INFINITY, cost: 0 },
     ],
     Plan::BASIC_LEVEL => [
       { rank: 0, max_customers_limit: 100, cost: 300, },

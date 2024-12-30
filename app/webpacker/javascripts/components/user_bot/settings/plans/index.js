@@ -175,7 +175,6 @@ const Plans = ({props}) => {
             "get_more_friends",
             "free_lesson",
             "premium_lesson",
-            "online_course",
             "membership",
             "external_service",
             {header: I18n.t("plans.headers.sale_promotion")},
