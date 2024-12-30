@@ -102,9 +102,9 @@ tw:
         other_reason: 其他原因
   customer_dashboard:
     no_reservations: 沒有預約
-    no_online_services: 沒有線上服務
+    no_online_services: 沒有數位產品
     reservations: 預約
-    online_services: 線上服務
+    online_services: 數位產品
   online_service_page:
     special_price_time: 特價購買期限剩餘
     register_now: 立即註冊

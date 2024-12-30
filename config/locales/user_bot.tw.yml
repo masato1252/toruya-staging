@@ -171,7 +171,7 @@ tw:
           website_label: 網站
           logo_label: 店舖標誌
           logo_limit_description: 390×135像素以內，30KB以下的PNG或GIF格式圖片
-          info_hint: 顯示在宣傳頁面、預約頁面和線上服務中
+          info_hint: 顯示在宣傳頁面、預約頁面和數位產品中
           phone_number_hint_html: "如果留空，「聯絡我們」選單中的<br>「撥打電話」按鈕將不會顯示。"
         custom_messages:
           auto_message: 提醒發送（預設）
@@ -209,7 +209,7 @@ tw:
             before_minutes_word: 分鐘
             before_minutes_reminder: "%{before_minutes} 分鐘前提醒"
           online_service:
-            section_title: 線上服務
+            section_title: 數位產品
             service_page_title: 服務頁面
             online_service_purchased: 服務註冊
             after_days: 服務註冊%{after_days}天後
@@ -358,7 +358,7 @@ tw:
         stripe:
           title: 線上付款
           connection_title: Stripe帳戶連結
-          stripe_desc1_html: 連結Stripe帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的線上服務。
+          stripe_desc1_html: 連結Stripe帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的數位產品。
           stripe_desc2_html: 如果您還沒有Stripe帳戶，<br />請先註冊一個帳戶。
           owner_warning: 成員帳戶無法連結Stripe。請聯繫帳戶擁有者進行連結設定。
           default_payment_button: 將此付款方式設為預設
@@ -366,7 +366,7 @@ tw:
         square:
           title: 線上結算
           connection_title: Square帳戶連結
-          square_desc1_html: 連結Square帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的線上服務。
+          square_desc1_html: 連結Square帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的數位產品。
           square_desc2_html: 如果您還沒有Square帳戶，<br />請先註冊一個帳戶。
           owner_warning: 成員帳戶無法連結Square。請聯繫帳戶擁有者進行連結設定。
           default_payment_button: 將此付款方式設為預設
@@ -423,7 +423,7 @@ tw:
           schedule_at_title: 發送時間
           schedule_at_subtitle: 發送時間
       services:
-        online_service: 線上服務
+        online_service: 數位產品
         service_page: 服務頁面
         service_about: 服務概要
         service_item: 服務
@@ -503,10 +503,10 @@ tw:
         specific_menu_customers_desc: 向有特定服務使用記錄（已結帳）的活躍客戶群發訊息
         specific_service_customers: 特定服務的使用客戶
         online_service: 特定服務的使用客戶
-        specific_service_customers_desc: 向有特定線上服務使用記錄的活躍客戶群發訊息
+        specific_service_customers_desc: 向有特定數位產品使用記錄的活躍客戶群發訊息
         specific_available_service_customers: 特定服務的使用中客戶
         online_service_for_active_customers: 特定服務的使用中客戶
-        specific_available_service_customers_desc: 向正在使用特定線上服務的客戶群發訊息
+        specific_available_service_customers_desc: 向正在使用特定數位產品的客戶群發訊息
         customers_with_tags: 特定標籤的客戶
         customers_with_tags_desc: 向擁有特定標籤的客戶群發訊息
         customers_with_tags_no_data_desc: 目前還沒有客戶標籤。您可以在客戶編輯頁面建立標籤。
@@ -703,8 +703,8 @@ tw:
           what_to_sale: 這個宣傳頁面的目的是什麼？
           online_booking: 線上預約招募
           add_sale_page_to_sell_more: 建立宣傳頁面以增加線上預約頁面的預約量
-          online_service: 線上服務用戶招募
-          online_service_to_sell_more: 建立宣傳頁面以增加線上服務的用戶量
+          online_service: 數位產品用戶招募
+          online_service_to_sell_more: 建立宣傳頁面以增加數位產品的用戶量
         online_service_creation:
           service_step: 商品
           price_step: 銷售價格
