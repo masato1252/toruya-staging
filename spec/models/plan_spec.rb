@@ -105,24 +105,6 @@ RSpec.describe Plan do
     end
   end
 
-  describe ".max_sale_pages_limit" do
-    context "when plan is free" do
-      context "when rank is 0" do
-        it "returns expected max_sale_pages_limit" do
-          expect(Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0)).to eq(3)
-        end
-      end
-    end
-
-    context "when plan is basic" do
-      context "when rank is 0" do
-        it "returns expected max_sale_pages_limit" do
-          expect(Plan.max_sale_pages_limit(Plan::BASIC_LEVEL, 0)).to eq(nil)
-        end
-      end
-    end
-  end
-
   describe ".cost_with_currency" do
     it "returns expected cost" do
       expect(Plan.cost_with_currency(Plan::BASIC_PLAN, 0)).to eq(Money.new(2_200, :jpy))

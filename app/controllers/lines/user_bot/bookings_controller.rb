@@ -5,8 +5,6 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   end
 
   def page
-    authorize! :create, BookingPage
-
     outcome = ::BookingPages::SmartCreate.run(attrs: {
       super_user_id: Current.business_owner.id,
       shop_id: Current.business_owner.shops.first.id,

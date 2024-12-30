@@ -75,8 +75,8 @@ class Plan < ApplicationRecord
 
   DETAILS_JP = {
     Plan::FREE_LEVEL => [
-      { rank: 0, max_customers_limit: 50, max_sale_pages_limit: 3, cost: 0 },
-      { rank: 1, max_customers_limit: 100, max_sale_pages_limit: 3, cost: 0 },
+      { rank: 0, max_customers_limit: 50, cost: 0 },
+      { rank: 1, max_customers_limit: 100, cost: 0 },
     ],
     Plan::BASIC_LEVEL => [
       { rank: 0, max_customers_limit: 100, cost: 2_200, },
@@ -114,8 +114,8 @@ class Plan < ApplicationRecord
 
   DETAILS_TW = {
     Plan::FREE_LEVEL => [
-      { rank: 0, max_customers_limit: 20, max_sale_pages_limit: Float::INFINITY, cost: 0 },
-      { rank: 1, max_customers_limit: 100, max_sale_pages_limit: Float::INFINITY, cost: 0 },
+      { rank: 0, max_customers_limit: 20, cost: 0 },
+      { rank: 1, max_customers_limit: 100, cost: 0 },
     ],
     Plan::BASIC_LEVEL => [
       { rank: 0, max_customers_limit: 100, cost: 300, },
@@ -174,10 +174,6 @@ class Plan < ApplicationRecord
 
   def self.max_customers_limit(plan_level, rank)
     plans[plan_level][rank][:max_customers_limit]
-  end
-
-  def self.max_sale_pages_limit(plan_level, rank)
-    plans[plan_level][rank][:max_sale_pages_limit]
   end
 
   def self.plan_details(plan_level, rank)

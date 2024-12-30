@@ -34,7 +34,6 @@ RSpec.describe Plans::Property do
         name: I18n.t("plan.level.free"),
         details: I18n.t("plans")[:free].dup.merge!(
           customer_number: I18n.t("plans.free.customer_number", customer_limit:  Plan.max_customers_limit(Plan::FREE_LEVEL, 0)),
-          sale_page_number: I18n.t("plans.free.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0))
         )
       })
 
@@ -46,7 +45,6 @@ RSpec.describe Plans::Property do
         name: I18n.t("plan.level.basic"),
         details: I18n.t("plans")[:basic].dup.merge!(
           customer_number: I18n.t("plans.basic.customer_number", customer_limit:  Plan.max_customers_limit(Plan::BASIC_LEVEL, 0)),
-          sale_page_number: I18n.t("plans.basic.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(Plan::BASIC_LEVEL, 0)),
           ranks: Plan.plans[Plan::BASIC_LEVEL].map { |rank_context| rank_context.merge!(costFormat: rank_context[:cost].to_money.format) }
         )
       })

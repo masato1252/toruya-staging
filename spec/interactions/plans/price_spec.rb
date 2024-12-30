@@ -22,7 +22,6 @@ RSpec.describe Plans::Price do
         {
           rank: 0,
           max_customers_limit: free_customer_limit,
-          max_sale_pages_limit: 3,
           cost: 0
         },
         {
@@ -122,7 +121,6 @@ RSpec.describe Plans::Price do
             {
               rank: 0,
               max_customers_limit: free_customer_limit,
-              max_sale_pages_limit: 3,
               cost: 0
             },
             {

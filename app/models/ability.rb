@@ -104,7 +104,6 @@ class Ability
       cannot :create, Staff
       cannot :create, Shop if super_user.shops.exists?
       cannot :create, Customer if super_user.customers.count >= Plan.max_customers_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
-      cannot :create, SalePage if super_user.sale_pages.count >= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
       cannot :create_course, OnlineService
       cannot :create_membership, OnlineService
       cannot :read, :metrics

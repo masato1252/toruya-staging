@@ -17,7 +17,6 @@ module Plans
 
       details = I18n.t("plans")[plan.level.to_sym].dup.merge!(
         customer_number: I18n.t("plans.#{plan.level}.customer_number", customer_limit:  Plan.max_customers_limit(plan.level, 0)),
-        sale_page_number: I18n.t("plans.#{plan.level}.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(plan.level, 0))
       )
 
       if plan.level != "free"
