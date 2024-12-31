@@ -38,7 +38,7 @@ ja:
       online_course: X
       membership: X
       external_service:  O
-      sale_page_number: "%{sale_page_limit}ページ"
+      sale_page_number: 無制限
       message_template: テキスト
       support: なし
     basic:

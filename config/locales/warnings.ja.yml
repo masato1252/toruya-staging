@@ -42,9 +42,6 @@ ja:
           <div class='button-container'>
             <a href='%{upgrade_url}' class='btn btn-tarco'>今すぐアップグレード</a>
           </div>"
-    create_booking_page:
-      upgrade_title: 予約ページはこれ以上追加できません
-      upgrade_content_html: <p>既に%{sale_page_limit}つの宣伝用LPをお持ちですね。Toruyaを気に入っていただけて嬉しいです。</p><p>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
     create_reservation_content:
       upgrade_title: 顧客情報が上限に達しました
       upgrade_content_html: <p>既に%{customers_limit}以上の顧客情報をお持ちですね。Toruyaを気に入っていただけて嬉しいです。</p><p>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
