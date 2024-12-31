@@ -25,12 +25,16 @@
         <% end %>
       </div>
 
-      <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+      <%
+=begin%>
+ <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
         <a href="#" data-toggle="modal" data-target="#serviceCustomerAssignModal" class="btn btn-yellow btn-circle btn-save btn-tweak btn-with-word">
           <i class="fas fa-plus fa-2x"></i>
           <div class="word"><%= I18n.t("action.add_more") %></div>
         </a>
-      <% end %>
+      <% end %> 
+<%
+=end%>
     </div>
 
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
