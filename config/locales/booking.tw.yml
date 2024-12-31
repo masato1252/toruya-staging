@@ -56,6 +56,7 @@ tw:
       booking_code_failed_message: 確認碼錯誤
       line_reminder_messages_html: 請先使用LINE登入，以便接收預約提醒。
       customer_phonetic_name_failed_message: 請輸入拼音
+      timeslot_already_booked: 該時間段和項目已滿。請重新嘗試。
     done:
       owner_warning1: 由於您代替客戶進行預約，
       owner_warning2: 通知不會發送給客戶的LINE。

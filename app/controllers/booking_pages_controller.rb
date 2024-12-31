@@ -102,6 +102,18 @@ class BookingPagesController < ActionController::Base
   def booking_reservation
     params.permit!
 
+    # Use Redis to prevent duplicate bookings for same time slot and options
+    booking_key = "booking_request:#{params[:booking_date]}:#{params[:booking_at]}:#{params[:booking_option_ids] || params[:booking_option_id]}:#{params[:social_user_id]}"
+    if Rails.cache.read(booking_key).present?
+      return render json: { 
+        status: "failed", 
+        errors: { message: I18n.t("booking_page.message.timeslot_already_booked") }
+      }
+    end
+    
+    # Set lock for 30 seconds
+    Rails.cache.write(booking_key, true, expires_in: 30.seconds)
+
     if enable_timeslot?
       outcome = Booking::CreateReservationForTimeslot.run(
         booking_page_id: params[:id].to_i,
