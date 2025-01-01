@@ -13,8 +13,8 @@ tw:
       shop_can_set: 可設置店鋪數
       staff_in_charge: 負責成員數
       reservation_restriction: 預約限制
-      customer_number: 客戶資料數
-      booking_page_number: 預約頁面數
+      customer_number: 客戶數
+      booking_page_number: 預約頁面
       get_more_friends: 獲取好友
       free_lesson: 免費課程
       premium_lesson: 付費課程

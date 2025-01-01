@@ -2,9 +2,11 @@ module FeatureHelper
   DATA_BY_LOCALE = {
     ja: {
       official_site_url: "https://toruya.com",
+      line_developer_url: "https://developers.line.biz/ja/?openExternalBrowser=1"
     },
     tw: {
       official_site_url: "https://toruya.tw",
+      line_developer_url: "https://developers.line.biz/zh-hant/?openExternalBrowser=1"
     }
   }
 
@@ -39,6 +41,7 @@ module FeatureHelper
   alias_method :support_phonetic_name?, :japanese_only?
   alias_method :support_stripe_payment?, :japanese_only?
   alias_method :support_square_payment?, :japanese_only?
+  alias_method :support_character_filter?, :japanese_only?
 
   def support_skip_required_shop_info?
     I18n.locale != :ja

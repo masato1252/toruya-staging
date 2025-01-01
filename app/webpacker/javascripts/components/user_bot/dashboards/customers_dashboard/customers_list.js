@@ -32,7 +32,11 @@ const BottomBar = () => {
 }
 
 const CustomerFilterCharacter = () =>{
-  const { filter_pattern_number, filterCustomers } = useGlobalContext()
+  const { filter_pattern_number, filterCustomers, props } = useGlobalContext()
+
+  if (!props.support_feature_flags.support_character_filter) {
+    return <i className="fa fa-filter"></i>
+  }
 
   return (
     <div className="filter-character-action">

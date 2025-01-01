@@ -18,9 +18,9 @@ tw:
         title: 基本設定
         start_btn: 開始設定導覽
         private_schedule_management: "私人行程管理"
-        account_info_settings: 設定帳戶資訊
+        account_info_settings: 設定帳號資訊
         customers_management: 客戶管理
-        customers_settings: 設定客戶資料庫
+        customers_settings: 設定客戶資料
         reservations_management: 預約管理
         shops_settings: 設定店鋪
         business_hours_settings: 設定營業時間
@@ -28,7 +28,7 @@ tw:
         reservations_blocks_settings: 設定預約時段
         menus_settings: 設定服務
         notifications:
-          customer_html: "要開始客戶管理，請從<a href='%{url}'>這裡</a>建立客戶資料庫。  <a href='%{hide_warning_url}'>不再顯示</a>"
+          customer_html: "要開始客戶管理，請從<a href='%{url}'>這裡</a>建立客戶資料。  <a href='%{hide_warning_url}'>不再顯示</a>"
           shop_html: "要開始預約管理，請從<a href='%{url}'>這裡</a>建立店鋪。  <a href='%{hide_warning_url}'>不再顯示</a>"
           business_schedule_html: "%{user_name}的店鋪尚未設定營業時間。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
           working_time_html: "%{user_name}的店鋪尚未設定工作時間。請從<a href='%{url}'>這裡</a>進行設定。  <a href='%{hide_warning_url}'>不再顯示</a>"
@@ -40,8 +40,8 @@ tw:
         by_myself: 我將自行設定
         basic_setting_start: 開始基本設定導覽
         end_tour: 結束導覽
-        setup_contact_group: 設定客戶資料庫
-        contact_group_title: 客戶資料庫設定（同步Google聯絡人）
+        setup_contact_group: 設定客戶資料
+        contact_group_title: 客戶資料設定（同步Google聯絡人）
         shop_title: 管理您的店鋪
         no_need: 不需要
         setup_shop: 設定店鋪
@@ -54,17 +54,17 @@ tw:
         menu_title: 服務設定
         setup_menu: 設定服務
     shop:
-      info_title: 店鋪資訊
-      new_title: 建立新店鋪資訊
+      info_title: 服務資訊
+      new_title: 建立新服務資訊
       new_button: 建立新店鋪
       info_1: 這是已設定的店鋪列表。
       info_2: Toruya將根據這些設定接受預約。
-      new_info_1: 設定店鋪資訊。
+      new_info_1: 設定服務資訊。
       new_info_2: Toruya將根據這些設定接受預約。
       name: 店鋪名稱
-      create_successfully_message: 已成功儲存店鋪資訊。
-      update_successfully_message: 已成功更新店鋪資訊。
-      delete_successfully_message: 已成功刪除店鋪資訊。
+      create_successfully_message: 已成功儲存服務資訊。
+      update_successfully_message: 已成功更新服務資訊。
+      delete_successfully_message: 已成功刪除服務資訊。
       logo_area:
         title: 店鋪標誌
         description_about_logo: 在線預約時會顯示在預約頁面上。
@@ -154,7 +154,7 @@ tw:
       new_info_2: Toruya 將根據此設定接受預約。
       name: 姓名
       shop_label: 工作店舖
-      contact_groups_label: 客戶資料庫查閱權限
+      contact_groups_label: 客戶資料查閱權限
       group_reservations_only_readable_label: 僅可查看使用記錄
       group_details_readable_label: 可查看全部資訊
       delete_confirmation_message: ‼︎ 確定要刪除成員嗎？ !! 刪除 %{staff_name} 後，其過去負責的預約記錄中的成員姓名將會保留。
@@ -205,12 +205,12 @@ tw:
       holiday_permission: 允許成員設定休假
     contact:
       info_title: 客戶管理
-      info_sub_title: 客戶資料庫
+      info_sub_title: 客戶資料
       new_title: 建立新資料庫
       new_button: 建立新群組
       info_1: 請在此設定要與 Toruya 同步的 Gmail 聯絡人群組。
-      info_2: 使用 Toruya 客戶資料庫需要同步 Gmail 聯絡人。
-      new_info_1: 設定新客戶資料庫的基本設定。
+      info_2: 使用 Toruya 客戶資料需要同步 Gmail 聯絡人。
+      new_info_1: 設定新客戶資料的基本設定。
       new_info_2: Toruya 將根據此設定接受預約。
       info_label: 資料庫資訊
       name: 資料庫名稱
@@ -221,29 +221,29 @@ tw:
       connected_google_group_title: Google 聯絡人群組
       connect: 設定同步
       sync: 重新同步
-      google_account_synchronization: 同步客戶資料庫
+      google_account_synchronization: 同步客戶資料
       google_account_synchronization_instructions1: 請選擇要匯入的 Google 聯絡人群組，或是
       google_account_synchronization_instructions2: 按下『不匯入，完成同步設定』按鈕。
       connection_binding_desc: 從現有 Google 聯絡人群組匯入。
       google_group_name: 現有 Google 聯絡人群組
       import_all_title: 從 Google 匯入所有聯絡人
       bind_all_btn: 匯入所有資料
-      import_all_warning_message: "* 為避免在 Toruya 中重複，只能為第一個客戶資料庫匯入所有聯絡人。"
+      import_all_warning_message: "* 為避免在 Toruya 中重複，只能為第一個客戶資料匯入所有聯絡人。"
       bind_btn: 匯入
-      binding_confirmation_message: 您確定要將 Google 聯絡人群組（%{google_group_name}）中的聯絡人資料匯入 Toruya 客戶資料庫（%{contact_group_name}）嗎？
-      delete_confirmation_message: 刪除客戶資料庫也會刪除從 Google 聯絡人同步的群組（標籤）。您確定要繼續嗎？
+      binding_confirmation_message: 您確定要將 Google 聯絡人群組（%{google_group_name}）中的聯絡人資料匯入 Toruya 客戶資料（%{contact_group_name}）嗎？
+      delete_confirmation_message: 刪除客戶資料也會刪除從 Google 聯絡人同步的群組（標籤）。您確定要繼續嗎？
       importing_message: 正在將 Google 聯絡人資料匯入 Toruya。匯入完成後，我們會透過電子郵件通知您。
       dont_want_connect_google: 如果沒有想要匯入的 Google 群組，請
       only_use_toruya_group: 不匯入，完成同步設定
       only_use_toruya_group_confirmation: "將完成同步設定，但不從 Google 聯絡人匯入資料。"
     account:
       info_title: 帳戶
-      info_title2: 帳戶資訊
+      info_title2: 帳號資訊
     profile:
       user_info: 管理員資訊
       company_info: 公司資訊
       info_title: 首先設定帳戶
-      info_1: 這是您的 Toruya 帳戶註冊資訊。
+      info_1: 這是您的 Toruya 帳號資訊。
       info_2: 您需要完成此設定才能使用 Toruya。
       new_info_1: 首先請註冊管理員資訊。
       new_info_2: 請設定管理 Toruya 註冊資訊的個人或法人，包括各種設定和使用費用支付等。
@@ -269,7 +269,7 @@ tw:
           amount_tip: 退款總額
     referrers:
       info_title: 子帳戶
-      info_desc_html: 這裡是您邀請的子帳戶資訊。<br>要收到推薦費用，子帳戶需要完成付款。
+      info_desc_html: 這裡是您邀請的子帳號資訊。<br>要收到推薦費用，子帳戶需要完成付款。
       sider_label: 代理商
       referrer_label: 子帳戶
       invite_button: 新增邀請
@@ -368,7 +368,7 @@ tw:
         reservation_restriction: 預約限制
         private_schedule: 新增和編輯個人行程
         customer_info: 輸入和編輯客戶資訊
-        customer_group_limit: 可設定的客戶資料庫數量
+        customer_group_limit: 可設定的客戶資料數量
         customer_filter: 客戶資料搜尋
         print_address: 列印地址
         add_staff: 新增成員

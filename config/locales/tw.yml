@@ -14,8 +14,8 @@ tw:
       conditions:
         contains: 包含
   requirement:
-    contact_redirect_message: 請設定要同步到客戶資料庫的Gmail聯絡人。
-    contact_warning_message: 請在客戶資料庫設定頁面進行%{link}。
+    contact_redirect_message: 請設定要同步到客戶資料的Gmail聯絡人。
+    contact_warning_message: 請在客戶資料設定頁面進行%{link}。
     contact_warning_link_title: Google同步設定
     business_schedule_redirect_message: 設定營業時間
     business_schedule_warning_message: "請在%{link}設定營業時間。"
@@ -77,8 +77,8 @@ tw:
     no_shop_reminder:
       shop_dashboard_html: 若要使用店舖儀表板，<br />請<a href=%{url}>點擊此處</a>建立店舖。
     no_contact_group:
-      customer_btn_html: 若要開始管理客戶，請<a href=%{settings_path}>點擊此處</a><br />建立客戶資料庫。
-      filter_btn_html: 若要使用進階搜尋，請<a href=%{settings_path}>點擊此處</a><br />建立客戶資料庫。
+      customer_btn_html: 若要開始管理客戶，請<a href=%{settings_path}>點擊此處</a><br />建立客戶資料。
+      filter_btn_html: 若要使用進階搜尋，請<a href=%{settings_path}>點擊此處</a><br />建立客戶資料。
     modal:
       shop_dashboard:
         admin:
@@ -89,8 +89,8 @@ tw:
           upgrade_content: "%{shop_name} 無法使用店舖儀表板。請聯繫店舖管理員。"
       customer_dashboard:
         staff:
-          upgrade_title: 無法使用客戶資料庫
-          upgrade_content: "%{owner_name} 的店舖無法使用客戶資料庫。請聯繫店舖管理員。"
+          upgrade_title: 無法使用客戶資料
+          upgrade_content: "%{owner_name} 的店舖無法使用客戶資料。請聯繫店舖管理員。"
       filter:
         admin:
           upgrade_title: 升級帳戶
@@ -123,9 +123,9 @@ tw:
     pending_reservation_confirm: 確認預約
     pending_customer_reservation_need_confirm: "有 %{number} 位客戶已被加入預約。"
     pending_customer_reservation_confirm: 確認預約客戶
-    non_group_customers: "發現 %{number} 筆未設定客戶資料庫的客戶資訊。"
+    non_group_customers: "發現 %{number} 筆未設定客戶資料的客戶資訊。"
     next_non_group_customer: "設定資料庫"
-    non_group_customers_alert_message: 請為此客戶設定客戶資料庫。
+    non_group_customers_alert_message: 請為此客戶設定客戶資料。
   filter:
     modal:
       saved_filter:
@@ -161,7 +161,7 @@ tw:
     cancel: 全員取消
     refund: 退　款
     customer_cancel: 取消預約
-    cancel_confirmation_message: 您可以在客戶資料庫中查看已取消的預約。
+    cancel_confirmation_message: 您可以在客戶資料中查看已取消的預約。
     pending: 待確認
     accepted: 已確認
     accepted_state: 已確認
@@ -274,9 +274,9 @@ tw:
     street: 街道地址
     postcode: 郵遞區號
     address1: 街道地址
-    address2: 大樓名稱/房號
+    address2: 街道地址2
     street1: 街道地址
-    street2: 大樓名稱/房號
+    street2: 街道地址2
     no_customer: 無相關資料
     no_more_customer: 已顯示所有相關資料
     group_blank_option: 無客戶名單

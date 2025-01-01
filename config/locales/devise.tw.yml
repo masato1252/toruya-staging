@@ -44,8 +44,8 @@ tw:
       signed_up_but_inactive: '您已成功註冊。但由於您的帳戶尚未啟用，所以無法登入。'
       signed_up_but_locked: '您已成功註冊。但由於您的帳戶已被凍結，所以無法登入。'
       signed_up_but_unconfirmed: '一封包含確認連結的郵件已發送至您的電子郵件地址。請點擊郵件中的連結以啟用您的帳戶。'
-      update_needs_confirmation: '您已成功更新帳戶資訊。但我們需要驗證您的新電子郵件地址。請查看您的電子郵件並點擊確認連結以完成新電子郵件地址的驗證。'
-      updated: '您的帳戶資訊已更新。'
+      update_needs_confirmation: '您已成功更新帳號資訊。但我們需要驗證您的新電子郵件地址。請查看您的電子郵件並點擊確認連結以完成新電子郵件地址的驗證。'
+      updated: '您的帳號資訊已更新。'
       signup_title: '用戶註冊'
       signup_btn: '註冊'
       min_password: "至少 %{min_length} 個字元（英文字母和數字）"

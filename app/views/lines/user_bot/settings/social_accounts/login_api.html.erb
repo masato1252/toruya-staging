@@ -6,7 +6,7 @@
       <div class="settings-dashboard form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.dashboard.line_login_api_label") %>
         <div class="centerize action-block">
-          <%= link_to "https://developers.line.biz/ja/?openExternalBrowser=1", class: "btn btn-tarco", target: "_blank", data: { confirm: t("user_bot.dashboards.settings.dashboard.line_page_warning") } do %>
+          <%= link_to data_by_locale(:line_developer_url), class: "btn btn-tarco", target: "_blank", data: { confirm: t("user_bot.dashboards.settings.dashboard.line_page_warning") } do %>
             <i class="fa fa-share-square"></i>
             <span><%= I18n.t("user_bot.dashboards.settings.social_account.line_developer") %></span>
           <% end %>

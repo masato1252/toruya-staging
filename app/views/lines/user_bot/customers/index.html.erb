@@ -23,6 +23,7 @@
     support_feature_flags: support_feature_flags,
     block_toruya_message_reply: !Current.business_owner.premium_member? && today >= Date.new(2025, 1, 10),
     upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL),
+    support_feature_flags: support_feature_flags,
     i18n: {
     }.merge!([
       t("reservation"),

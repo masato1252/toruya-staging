@@ -72,7 +72,7 @@ tw:
           broadcast_to_customer: 向預約客戶群發訊息
           broadcast_total_delivery: 預計發送數量
       customer:
-        title: 客戶資料庫
+        title: 客戶資料
         search_placeholder: 以名稱搜尋
         count: 共計
         unit: 筆
@@ -102,7 +102,7 @@ tw:
           faq: 常見問題
         dashboard:
           title: 設定頁面
-          info_label: 帳戶註冊資訊
+          info_label: 帳號資訊
           payments_label: 發票
           line_label: 整合Line
           line_message_api_label: Messaging API設定
@@ -229,7 +229,7 @@ tw:
             title: 提供內容
             subtitle: 內容列表
             tag_for_the_content: 為此內容設置標籤
-            tag_input_placeholder: 標籤短語
+            tag_input_placeholder: 標籤
             tag_history: 從歷史記錄中設置
         episodes:
           new:
@@ -575,7 +575,7 @@ tw:
         book_which_shop: 您要接受哪家店鋪的預約？
         book_for_this_shop: 將為以下店鋪建立預約接受頁面
         company_info: 公司資訊
-        shop_info: 店鋪資訊
+        shop_info: 服務資訊
         shop_logo: 店鋪標誌
         shop_without_logo: 沒有店鋪標誌
         create_page_from_this_shop: 使用此店鋪建立
