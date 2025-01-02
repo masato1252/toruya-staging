@@ -11,6 +11,13 @@
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.internal_name") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, business_owner_id: business_owner_id, attribute: :internal_name), title: @service.internal_name %>
 
+        <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
+        <%= render "lines/user_bot/field_row" do %>
+          <%= link_to "#", data: { toggle: "modal", target: "#salePagesModal" }, class: "btn btn-tarco" do %>
+            <%= I18n.t("user_bot.dashboards.sales.modal.title") %>
+          <% end %>
+        <% end %>
+
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, business_owner_id: business_owner_id, attribute: :company), title: @service.company.company_name %>
 

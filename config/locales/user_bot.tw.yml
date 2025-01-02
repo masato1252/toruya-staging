@@ -620,7 +620,7 @@ tw:
       sales:
         modal:
           title: 確認銷售頁面
-          description: 顧客是每個服務都需要從銷售頁面進行登錄。（僅LINE好友追加無法使用）
+          description: 顧客是每個產品都需要從銷售頁面進行登錄。（僅LINE好友追加無法使用）
           create_sale_page: 建立銷售頁面
         edit:
           sale_pages: 銷售頁面
