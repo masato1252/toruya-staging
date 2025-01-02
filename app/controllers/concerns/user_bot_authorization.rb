@@ -4,7 +4,7 @@ module UserBotAuthorization
   extend ActiveSupport::Concern
 
   included do
-    protect_from_forgery prepend: true, with: :exception
+    # protect_from_forgery prepend: true, with: :exception
     before_action :authenticate_current_user!
     before_action :authenticate_super_user
   end
