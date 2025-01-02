@@ -738,10 +738,11 @@ tw:
           until_people_number: 人為止
           sell_unlimit_number: 不限量銷售
           what_introduction_video: 在標題使用影片可以提高線上課程的銷售量。
-          introduction_video_hint: 如果使用YouTube，請將影片設為「公開」。
+          introduction_video_hint: 如果使用YouTube, Vimeo，請將影片設為「公開」。
           end_time_changes_warning: 更改此設定不會影響已註冊客戶的使用期限。
-          why_user_buy_html: "這個服務的購買理由<br>或購買者的未來願景是什麼？"
+          why_user_buy_html: "這個產品的購買理由<br>或購買者的未來願景是什麼？"
           what_buyer_future: 以文字輸入預約服務的賣點或購買者的未來願景
+          header_setup_step_hint_html: "這邊是銷售頁面標題<br />您可以輸入這個產品的購買理由<br />或購買者的未來願景來吸引顧客"
         booking_page_creation:
           booking_step: 預約頁面
           content_step: 內容
@@ -749,7 +750,7 @@ tw:
           select_booking_page: 選擇預約頁面
           sell_what_page: 您要銷售哪個預約頁面？
           select_header_template: 您要使用什麼樣的標題？
-          select_color_html: "更改文字大小和顏色<br />可以讓標題更吸引人。"
+          select_color_html: "更改文字和顏色<br />可以讓標題更吸引人。"
           color_tip: ※此資訊將反映在店鋪設定中。
           why_user_buy_html: "這個預約服務的購買理由<br />或購買者的未來願景是什麼？"
           what_user_get: 輸入標語
@@ -843,9 +844,9 @@ tw:
             description: 建立將多個產品打包銷售
         what_is_your_goal: 這個產品的目的是什麼？
         what_is_your_solution: 這個服務提供什麼內容？
-        what_is_this_video_provide: 您要提供哪個影片作為服務？
-        what_is_video_url: 請輸入YouTube等的URL
-        video_hint: 請輸入設置為「非公開」的YouTube或Vimeo影片URL。
+        what_is_this_video_provide: 您要提供哪個影片URL作為產品？
+        what_is_video_url: 請輸入YouTube, Vimeo等的URL
+        video_hint: 目前沒有支援上傳影片，請輸入設置為「非公開」的YouTube或Vimeo影片URL。
         what_is_pdf_url: 你想用來吸引客戶的PDF網址是？
         pdf_hint_html: 放pdf 最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
         pdf_hint_for_friend_html: 您可以做幾頁簡單的PDF，來吸引客戶成為您的Line好友。放pdf 最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
@@ -855,12 +856,12 @@ tw:
         what_is_external_purchase_url: 客戶在哪裡購買服務？
         external_purchase_url_input_placeholder: 輸入購買頁面的URL
         external_purchase_url_hint: 當客戶註冊此服務時，在輸入客戶資訊後將顯示此URL。
-        what_is_service_name: 服務名稱是什麼？
+        what_is_service_name: 產品名稱是什麼？
         this_is_company_info: 將使用下面的資訊
         edit_shop_in_setting_page: 請在設定頁面編輯商店資訊。
         edit_company_in_setting_page: 請在設定頁面編輯公司資訊。
-        what_company_info: 您要以哪個商店的名義提供服務？
-        what_is_end_time: 此服務是否有使用期限？
+        what_company_info: 您要以哪個名義提供產品？
+        what_is_end_time: 此產品是否有使用期限？
         expire_after_n_days: 購買後X天內
         expire_after_n_months: 購買後X個月內
         expire_by_subscription: 直到月費或年費的付款期限
@@ -869,22 +870,22 @@ tw:
         after_bought: 購買後
         after_n_days: 天內
         after_n_months: 個月內
-        what_want_to_upsell: 在使用此服務後，您是否有想推薦購買的追加銷售銷售頁面？
+        what_want_to_upsell: 在使用此產品後，您是否有想推薦購買的銷售頁面？
         select_upsell_product: 選擇銷售頁面
-        below_is_what_you_want: 您確定要建立以下服務嗎？
-        create_by_this_setting: 使用此設置建立服務
-        create_a_sale_page: 要使用建立的服務，需要銷售頁面
-        stripe_required_warning: 要銷售付費服務，需要設置Stripe帳戶連接。
+        below_is_what_you_want: 您確定要建立以下產品嗎？
+        create_by_this_setting: 使用此設置建立產品
+        create_a_sale_page: 要使用建立的產品，需要銷售頁面
+        stripe_required_warning: 要銷售付費產品，需要設置Stripe帳戶連接。
         sale_page_like_this: 產品頁面將如下所示
-        setup_line_bot_for_customers: "設置「使用中服務列表」\n 的顯示內容"
+        setup_line_bot_for_customers: "設置「使用中產品列表」\n 的顯示內容"
         content_picture_requirement_tip: "設置圖片\n 寬度1024像素，高度1024像素以下"
-        message_description: 服務描述（60字以內）
+        message_description: 產品描述（60字以內）
         fake_action_button: 操作按鈕
-        what_want_to_sell_as_bundler: 您想將哪些服務打包銷售？
-        select_bundler_product: 添加服務
-        bundled_services: 打包銷售的服務
-        bundled_service_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
-        when_bundled_service_expire: 各個服務是否有使用期限？
+        what_want_to_sell_as_bundler: 您想將哪些產品打包銷售？
+        select_bundler_product: 添加產品
+        bundled_services: 打包銷售的產品
+        bundled_service_usage_desc: 要取消選擇，請點擊已設置的產品名稱。
+        when_bundled_service_expire: 各個產品是否有使用期限？
       notifications:
         title: 以下有新的數據
         unread_message_label: 未讀訊息

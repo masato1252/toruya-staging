@@ -21,9 +21,11 @@ const FinalStep = ({next, step}) => {
           {I18n.t("action.open_sale_page")}
         </a>
       </div>
-      <div className="centerize margin-around">
-        <img src={props.sale_page_introduction_path} className="w-full" />
-      </div>
+      {props.support_feature_flags.support_japanese_asset && (
+        <div className="centerize margin-around">
+          <img src={props.sale_page_introduction_path} className="w-full" />
+        </div>
+      )}
     </div>
   )
 }

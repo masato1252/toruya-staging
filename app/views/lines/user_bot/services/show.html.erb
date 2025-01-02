@@ -207,7 +207,10 @@
           <div class="margin-around">
             <%= t("user_bot.dashboards.sales.modal.description") %>
           </div>
+
+          <% if support_japanese_asset? %>
             <%= image_pack_tag "media/assets/user_bot/sale_page_introduction.png", class: "w-full" %>
+          <% end %>
 
           <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
           <div class="booking-pages-list">

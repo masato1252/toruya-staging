@@ -40,6 +40,7 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
     outcome = SalePages::Clone.run(sale_page: sale_page)
 
     if outcome.valid?
+      flash[:notice] = I18n.t("common.create_successfully_message")
       redirect_to lines_user_bot_sale_path(outcome.result, business_owner_id: business_owner_id)
     else
       redirect_to lines_user_bot_sale_path(sale_page, business_owner_id: business_owner_id)

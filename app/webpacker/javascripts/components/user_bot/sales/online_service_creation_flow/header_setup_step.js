@@ -75,6 +75,9 @@ const HeaderSetupStep = ({step, next, prev, jumpByKey}) => {
           {I18n.t("action.next_step")}
         </button>
       </div>
+      <div className="margin-around centerize">
+        <div dangerouslySetInnerHTML={{__html: I18n.t("user_bot.dashboards.sales.online_service_creation.header_setup_step_hint_html")}} />
+      </div>
     </div>
   )
 }
