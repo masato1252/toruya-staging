@@ -4,6 +4,7 @@
 
 <%= react_component("user_bot/services/creation_flow", {
   props: {
+    support_feature_flags: support_feature_flags,
     business_owner_id: business_owner_id,
     is_premium_member: Current.business_owner.premium_member?,
     line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,

@@ -23,6 +23,8 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def index
+    @online_services_with_sale_page_ids = Current.business_owner.sale_pages.for_online_service.pluck(:product_id)
+    @online_services_with_draft_sale_page_ids = Current.business_owner.sale_pages.for_online_service.with_draft.group_by(&:product_id)
     @online_services = Current.business_owner.online_services.not_deleted.order("updated_at DESC")
   end
 

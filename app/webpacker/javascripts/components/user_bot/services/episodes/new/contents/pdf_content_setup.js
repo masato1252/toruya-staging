@@ -28,7 +28,7 @@ const PdfContentSetup = ({next, step}) => {
         className="extend with-border"
       />
       <p className="margin-around text-align-left">
-        {I18n.t("user_bot.dashboards.online_service_creation.pdf_hint")}
+        <div dangerouslySetInnerHTML={{__html: I18n.t("user_bot.dashboards.online_service_creation.pdf_hint_html")}} />
       </p>
 
       {content_url && (

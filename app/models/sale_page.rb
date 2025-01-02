@@ -79,6 +79,7 @@ class SalePage < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :end_yet, -> { where("selling_end_at is NULL or selling_end_at > ?", Time.current) }
   scope :for_online_service, -> { where(product_type: "OnlineService") }
+  scope :with_draft, -> { where(draft: true) }
   validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
 
   def selling_price_amount

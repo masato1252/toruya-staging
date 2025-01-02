@@ -57,6 +57,7 @@ tw:
     add_step: 新增步驟
     book_now: 立即預約
     filter: 篩選
+    continue_editing: 繼續編輯
     sales:
       video: 立即觀看
       audio: 立即收聽
@@ -68,7 +69,7 @@ tw:
       course: 立即註冊
       membership: 立即註冊
       bundler: 立即註冊
-    open_sale_page: 開啟宣傳頁面
+    open_sale_page: 開啟銷售頁面
     add_as_friend: 加為好友
     unsubscribe: 取消訂閱
     stripe_setting_btn: 設定 Stripe

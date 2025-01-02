@@ -448,6 +448,9 @@ ja:
         preview_the_service: サービスページを確認
         card_image: サムネイル
         default_card_image: デフォルト画像
+        warning:
+          no_sale_pages: サービスページがありません
+          draft_sale_page: サービスページがドラフト状態です
         form:
           name_title: サービス名
           company_title: 提供店舗

@@ -110,7 +110,7 @@ tw:
           line_rich_menu: 圖文選單
           now_state: 您目前
           customer_info_state: 擁有客戶資料
-          sale_page_state: 擁有宣傳頁面
+          sale_page_state: 擁有銷售頁面
           last_thirty_customers_payment: 過去30天的銷售額
           web_details_page: 詳細資訊請查看網頁版管理介面
           line_page_warning: 即將前往LINE官方網站。關於LINE Developers的使用方式，請向LINE公司諮詢。
@@ -130,7 +130,7 @@ tw:
           auto: 自動
           manual: 手動
           title: 整合 Line
-          manual_description_html: "切換到手動模式後，<br />將顯示你在Line官方管理頁面中<br />設定的圖文選單。"
+          manual_description_html: "切換到手動模式後，<br />將顯示你在Line官方設定頁面中<br />設定的圖文選單。"
           manual_switch_btn: 切換到手動模式
           auto_description_html: "切換到自動模式後，<br />您可以使用與Toruya功能連動的圖文選單，<br />以及活動選單等，<br />讓圖文選單管理更加便利。"
           auto_switch_btn: 切換到自動模式
@@ -163,7 +163,7 @@ tw:
           business_schedule_overlap_holiday_using_holiday_schedule: 如果國定假日是營業日，則營業並使用假日時間表
           holiday_schedule_without_business_schedule: 即使國定假日不是營業日，也營業
         company:
-          info_hint: 主要顯示在宣傳頁面上。
+          info_hint: 主要顯示在銷售頁面上。
           staffs: 成員
           consultants: 官方支持者
         shop:
@@ -176,7 +176,7 @@ tw:
           website_label: 網站
           logo_label: 店舖標誌
           logo_limit_description: 390×135像素以內，30KB以下的PNG或GIF格式圖片
-          info_hint: 顯示在宣傳頁面、預約頁面和數位產品中
+          info_hint: 顯示在銷售頁面、預約頁面和數位產品中
           phone_number_hint_html: "如果留空，「聯絡我們」選單中的<br>「撥打電話」按鈕將不會顯示。"
         custom_messages:
           auto_message: 提醒發送（預設）
@@ -449,6 +449,9 @@ tw:
         preview_the_service: 確認產品頁面
         card_image: 縮圖
         default_card_image: 預設圖片
+        warning:
+          no_sale_pages: 銷售頁面還沒有建立
+          draft_sale_page: 銷售頁面還沒有完成
         form:
           name_title: 服務名稱
           company_title: 提供店鋪
@@ -546,7 +549,7 @@ tw:
         conversion_count: 成交數
         revenue: 銷售額
         title: 訪問分析
-        sale_page: 宣傳頁面
+        sale_page: 銷售頁面
         visit_count: 瀏覽次數
         purchased_count: 註冊數
         conversion_rate: 轉換率
@@ -600,10 +603,10 @@ tw:
         check_this_page: 預覽
         want_to_create_a_new_menu: 需要建立新服務嗎？
         create_a_new_menu: 建立新服務
-        create_a_sale_page: 使用宣傳頁面可以在網上招攬預約
-        create_a_sale_page_btn: 建立宣傳頁面
-        create_sale_page_later_warning_html: 服務已建立，但由於<br>宣傳頁面尚未建立，<br>客戶無法註冊服務
-        remember_create_sale_page: 請記得建立宣傳頁面
+        create_a_sale_page: 使用銷售頁面可以在網上招攬預約
+        create_a_sale_page_btn: 建立銷售頁面
+        create_sale_page_later_warning_html: 服務已建立，但由於<br>銷售頁面尚未建立，<br>客戶無法註冊服務
+        remember_create_sale_page: 請記得建立銷售頁面
         create_sale_page_later_btn: 稍後建立
         confirm_booking_page_message: 即使新的預約頁面已建立，在設定您的預約服務之前，客戶仍無法使用該頁面。
         create_booking_page_successfully: 預約頁面已成功建立。請在此處編輯您提供的服務，並與客戶分享預約頁面。
@@ -616,11 +619,11 @@ tw:
           description: 建立是您所要銷售的服務內容。
       sales:
         modal:
-          title: 確認宣傳頁面
-          description: 顧客是每個服務都需要從宣傳頁面進行登錄。（僅LINE好友追加無法使用）
-          create_sale_page: 建立宣傳頁面
+          title: 確認銷售頁面
+          description: 顧客是每個服務都需要從銷售頁面進行登錄。（僅LINE好友追加無法使用）
+          create_sale_page: 建立銷售頁面
         edit:
-          sale_pages: 宣傳頁面
+          sale_pages: 銷售頁面
           sales_about: 頁面概覽
           selling_product: 銷售產品
           selling_start_at: 銷售開始
@@ -631,7 +634,7 @@ tw:
           normal_price: 原價
           selling_number: 銷售數量
           sold_out: 已售完
-          page_content: 宣傳頁面內容
+          page_content: 銷售頁面內容
           content_header: 標題
           content_video: 頭部影片
           why_content: 購買理由
@@ -640,7 +643,7 @@ tw:
           faq: 常見問題
           flow: 服務流程
           reviews: 客戶評價
-          delete_sale_page: 刪除宣傳頁面
+          delete_sale_page: 刪除銷售頁面
           flow_steps: "%{flow_number}步驟"
           benefit_items: "%{benefit_number}項"
           question_items: "%{question_number}個問題"
@@ -665,15 +668,15 @@ tw:
           normal_price_subtitle: 原價
           quantity_title: 銷售方式
           quantity_subtitle: 銷售數量
-          sale_template_variables_title: 宣傳頁面內容
+          sale_template_variables_title: 銷售頁面內容
           sale_template_variables_subtitle: 標題
-          introduction_video_url_title: 宣傳頁面內容
+          introduction_video_url_title: 銷售頁面內容
           introduction_video_url_subtitle: 頭部影片
-          why_content_title: 宣傳頁面內容
+          why_content_title: 銷售頁面內容
           why_content_subtitle: 購買理由
           published_title: 發布狀態
           published_subtitle: 發布狀態
-          benefits_title: 宣傳頁面內容
+          benefits_title: 銷售頁面內容
           benefits_subtitle: 優點
           benefits_header: 請具體列出購買此產品的優點和好處。
           benefits_content_header:
@@ -687,18 +690,18 @@ tw:
             membership: 這項服務能做到的事
             bundler: 這項服務能做到的事
           add_benefit: 新增項目
-          staff_title: 宣傳頁面內容
+          staff_title: 銷售頁面內容
           staff_subtitle: 負責成員
-          flow_title: 宣傳頁面內容
+          flow_title: 銷售頁面內容
           flow_subtitle: 服務流程
           flow_header: 請說明從預約到使用服務的流程。
-          faq_title: 宣傳頁面內容
+          faq_title: 銷售頁面內容
           faq_subtitle: 常見問題
           faq_header: 請具體列出購買此產品的優點和好處。
           faq_content_header: 常見問題
           faq_question_placeholder: 輸入問題
           faq_answer_placeholder: 輸入問題的答案
-          reviews_title: 宣傳頁面內容
+          reviews_title: 銷售頁面內容
           reviews_subtitle: 客戶評價
           reviews_header: 請輸入客戶評價。
           review_content_header: 客戶評價
@@ -708,11 +711,11 @@ tw:
           add_review: 新增客戶評價
           customer_picture_requirement_tip: 客戶照片
         new:
-          what_to_sale: 這個宣傳頁面的目的是什麼？
+          what_to_sale: 這個銷售頁面的目的是什麼？
           online_booking: 線上預約招募
-          add_sale_page_to_sell_more: 建立宣傳頁面以增加線上預約頁面的預約量
+          add_sale_page_to_sell_more: 建立銷售頁面以增加線上預約頁面的預約量
           online_service: 數位產品用戶招募
-          online_service_to_sell_more: 建立宣傳頁面以增加數位產品的用戶量
+          online_service_to_sell_more: 建立銷售頁面以增加數位產品的用戶量
         online_service_creation:
           service_step: 商品
           price_step: 銷售價格
@@ -722,7 +725,7 @@ tw:
           sell_what_service: 您要銷售哪種服務？
           service_start: 使用開始
           service_end: 使用結束
-          sell_what_price: 在這個宣傳頁面中，您要以多少價格銷售？
+          sell_what_price: 在這個銷售頁面中，您要以多少價格銷售？
           sell_free_price: 免費提供
           what_normal_price: 這項服務有正常價格嗎？
           normal_price_cost: 是的，有
@@ -754,7 +757,7 @@ tw:
           what_buyer_future: 以文字輸入預約服務的賣點或購買者的未來願景
           what_buyer_future_tip: ※單次換行為行間距，連續兩次換行為段落間距
           staff_introduction: 主要負責成員的簡介
-          staff_change_tip: ※此資訊將反映在所有宣傳頁面中。
+          staff_change_tip: ※此資訊將反映在所有銷售頁面中。
           introduce_who_do_this: 請介紹主要負責的成員
           content_picture_requirement_tip: "設置圖片\n 寬度335像素以上，高度185像素以上"
           staff_picture_requirement_tip: "設置圖片\n 寬度180像素以上 高度180像素以上"
@@ -767,10 +770,10 @@ tw:
             step1: "從預約日曆中選擇\n希望的日期和時間進行臨時預約"
             step2: "預約獲得確認後即完成預約"
             step3: "預約當天請提前\n預留充足時間到店"
-          sale_page_like_this: 宣傳頁面將如下所示
+          sale_page_like_this: 銷售頁面將如下所示
           sale_page_confirm_title_html: "已完成最基本的設置<br />請確認設置內容"
-          create_this_sale_page: 使用此設置建立宣傳頁面
-          share_sale_page: 分享您建立的宣傳頁面
+          create_this_sale_page: 使用此設置建立銷售頁面
+          share_sale_page: 分享您建立的銷售頁面
       online_service_creation:
         goals:
           collection:
@@ -843,8 +846,9 @@ tw:
         what_is_this_video_provide: 您要提供哪個影片作為服務？
         what_is_video_url: 請輸入YouTube等的URL
         video_hint: 請輸入設置為「非公開」的YouTube或Vimeo影片URL。
-        what_is_pdf_url: 您要提供哪個PDF作為服務？
-        pdf_hint: 如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
+        what_is_pdf_url: 你想用來吸引客戶的PDF網址是？
+        pdf_hint_html: 放pdf 最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
+        pdf_hint_for_friend_html: 您可以做幾頁簡單的PDF，來吸引客戶成為您的Line好友。放pdf 最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
         what_is_external_url: 服務提供的目標網站是哪裡？
         external_input_placeholder: 輸入服務提供目標URL
         external_hint: 註冊此服務的客戶將收到此URL
@@ -852,9 +856,9 @@ tw:
         external_purchase_url_input_placeholder: 輸入購買頁面的URL
         external_purchase_url_hint: 當客戶註冊此服務時，在輸入客戶資訊後將顯示此URL。
         what_is_service_name: 服務名稱是什麼？
-        this_is_company_info: 將作為以下商店的服務建立
-        edit_shop_in_setting_page: 請在管理頁面編輯商店資訊。
-        edit_company_in_setting_page: 請在管理頁面編輯公司資訊。
+        this_is_company_info: 將使用下面的資訊
+        edit_shop_in_setting_page: 請在設定頁面編輯商店資訊。
+        edit_company_in_setting_page: 請在設定頁面編輯公司資訊。
         what_company_info: 您要以哪個商店的名義提供服務？
         what_is_end_time: 此服務是否有使用期限？
         expire_after_n_days: 購買後X天內
@@ -865,11 +869,11 @@ tw:
         after_bought: 購買後
         after_n_days: 天內
         after_n_months: 個月內
-        what_want_to_upsell: 在使用此服務後，您是否有想推薦購買的追加銷售宣傳頁面？
-        select_upsell_product: 選擇宣傳頁面
+        what_want_to_upsell: 在使用此服務後，您是否有想推薦購買的追加銷售銷售頁面？
+        select_upsell_product: 選擇銷售頁面
         below_is_what_you_want: 您確定要建立以下服務嗎？
         create_by_this_setting: 使用此設置建立服務
-        create_a_sale_page: 要使用建立的服務，需要宣傳頁面
+        create_a_sale_page: 要使用建立的服務，需要銷售頁面
         stripe_required_warning: 要銷售付費服務，需要設置Stripe帳戶連接。
         sale_page_like_this: 產品頁面將如下所示
         setup_line_bot_for_customers: "設置「使用中服務列表」\n 的顯示內容"
@@ -885,5 +889,5 @@ tw:
         title: 以下有新的數據
         unread_message_label: 未讀訊息
         pending_reservations_label: 需要確認的預約
-        missing_sale_page_service_label: 未建立宣傳頁面的服務
+        missing_sale_page_service_label: 未建立銷售頁面的服務
         pending_customer_services_label: 需要確認的服務

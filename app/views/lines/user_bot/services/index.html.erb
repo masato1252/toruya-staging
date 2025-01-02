@@ -12,10 +12,30 @@
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
         <div class="booking-pages-list">
           <% @online_services.each do |service| %>
-            <%= link_to lines_user_bot_service_path(service, business_owner_id: business_owner_id), class: "field-row with-next-arrow" do %>
+            <%= content_tag :div, class: "field-row with-next-arrow" do %>
               <div>
-                <h3><%= service.internal_name.presence || service.name %></h3>
-                <div class="desc"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
+                <%= link_to lines_user_bot_service_path(service, business_owner_id: business_owner_id) do %>
+                  <h3><%= service.internal_name.presence || service.name %></h3>
+                  <div class="desc"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
+                <% end %>
+                <% if @online_services_with_sale_page_ids.exclude?(service.id) %>
+                  <div class="warning">
+                    <small><i class="fas fa-exclamation-triangle"></i> <%= I18n.t("user_bot.dashboards.services.warning.no_sale_pages") %></small>
+                    <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id, slug: service.slug), class: "btn btn-yellow  btn-save btn-tweak" do %>
+                      <i class="fas fa-plus"></i>
+                    <% end %>
+                  </div>
+                <% end %>
+                <% if @online_services_with_draft_sale_page_ids.key?(service.id) %>
+                  <div class="warning">
+                    <small><i class="fas fa-exclamation-triangle"></i> <%= I18n.t("user_bot.dashboards.services.warning.draft_sale_page") %></small>
+                    <% @online_services_with_draft_sale_page_ids[service.id].each do |sale_page| %>
+                      <%= link_to bot_sale_page_path(sale_page), class: "btn btn-yellow  btn-save btn-tweak" do %>
+                        <%= t("action.continue_editing") %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
               </div>
               <i class="fa fa-angle-right"></i>
             <% end %>
