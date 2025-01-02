@@ -19,7 +19,7 @@ tw:
     keywords:
       settings: 設定
     bot:
-      thanks_follow: "感謝您加入好友。\n\n從今天開始，您可以免費使用%{trial_days}天的預約管理和客戶管理服務。\n\n讓我們從店舖設定開始吧。"
+      thanks_follow: "感謝您加入好友。\n\n從今天開始，您可以免費使用%{trial_days}天的預約管理和客戶管理服務。"
       auto_reply_for_user_message: "感謝您的詢問！\n\n此帳號由支援人員個別手動回覆，請稍候片刻。\n\n另外，如果您要詢問關於故障的問題，請一併提供發生故障的預約頁面、產品頁面或宣傳用LP的URL，以及故障發生時的螢幕截圖。"
     actions:
       label:

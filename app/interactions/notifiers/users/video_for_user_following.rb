@@ -15,6 +15,10 @@ module Notifiers
       def content_type
         SocialUserMessages::Create::VIDEO_TYPE
       end
+
+      def deliverable
+        receiver.japanese?
+      end
     end
   end
 end
