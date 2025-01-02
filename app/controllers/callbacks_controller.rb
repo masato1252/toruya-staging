@@ -77,6 +77,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     if param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
+        who: MessageEncryptor.decrypt(param["who"])
       )
       social_user = outcome.result
       # if param["existing_owner_id"]

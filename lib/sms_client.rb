@@ -3,7 +3,7 @@
 class SmsClient
   HARUKO_PHONE = "09088158538".freeze
 
-  def self.send(phone_number, message, locale = :jp)
+  def self.send(phone_number, message)
     return if Rails.env.test? || Rails.env.development?
     return if phone_number.blank?
 
@@ -12,8 +12,6 @@ class SmsClient
     formatted_phone =
       if Rails.configuration.x.env.staging?
         Phonelib.parse(HARUKO_PHONE, locale).international(true)
-      elsif Phonelib.valid_for_country?(phone_number, 'JP') || Phonelib.valid_for_country?(phone_number, 'TW')
-        Phonelib.parse(phone_number, locale).international(true)
       else
         Phonelib.parse(phone_number).international(true)
       end
