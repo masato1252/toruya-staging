@@ -215,7 +215,7 @@ tw:
             before_minutes_reminder: "%{before_minutes} 分鐘前提醒"
           online_service:
             section_title: 數位產品
-            service_page_title: 服務頁面
+            service_page_title: 產品頁面
             online_service_purchased: 服務註冊
             after_days: 服務註冊%{after_days}天後
             after_days_title: 服務註冊後幾天發送？
@@ -340,7 +340,7 @@ tw:
           change_expire_at_title: 更改使用期限
           expire_change_reason: 更改原因
           change_expire_at_time_label: 新的使用期限（如果要設為永久使用，請留空並保存）
-          check_product_as_customer: 查看服務頁面
+          check_product_as_customer: 查看產品頁面
           check_product_as_customer_desc: 5分鐘內，您可以以客戶身份查看內容
           assign_customer: 手動新增使用者
           select_customer_prompt: 選擇使用者
@@ -432,7 +432,7 @@ tw:
           schedule_at_subtitle: 發送時間
       services:
         online_service: 數位產品
-        service_page: 服務頁面
+        service_page: 產品頁面
         service_about: 服務概要
         service_item: 服務
         name: 服務名稱
@@ -446,7 +446,7 @@ tw:
         end_time: 使用結束
         tags: 設置此內容的標籤
         show_the_service: 顯示頁面
-        preview_the_service: 確認服務頁面
+        preview_the_service: 確認產品頁面
         card_image: 縮圖
         default_card_image: 預設圖片
         form:
@@ -802,9 +802,9 @@ tw:
             line_title: 外部服務
             description: 為外部服務用戶建立LINE營銷服務
           bundler:
-            title: 服務套餐
-            line_title: 服務套餐
-            description: 建立將多個服務打包銷售的服務
+            title: 套餐
+            line_title: 套餐
+            description: 建立將多個產品打包銷售
         solutions:
           video:
             title: 影片講座
@@ -836,9 +836,9 @@ tw:
             title: 會員制服務
             description: 建立為註冊會員提供多個影片和PDF的限定服務
           bundler:
-            title: 服務套餐
-            description: 建立將多個服務打包銷售的服務
-        what_is_your_goal: 這個服務的目的是什麼？
+            title: 套餐
+            description: 建立將多個產品打包銷售
+        what_is_your_goal: 這個產品的目的是什麼？
         what_is_your_solution: 這個服務提供什麼內容？
         what_is_this_video_provide: 您要提供哪個影片作為服務？
         what_is_video_url: 請輸入YouTube等的URL
@@ -871,7 +871,7 @@ tw:
         create_by_this_setting: 使用此設置建立服務
         create_a_sale_page: 要使用建立的服務，需要宣傳頁面
         stripe_required_warning: 要銷售付費服務，需要設置Stripe帳戶連接。
-        sale_page_like_this: 服務頁面將如下所示
+        sale_page_like_this: 產品頁面將如下所示
         setup_line_bot_for_customers: "設置「使用中服務列表」\n 的顯示內容"
         content_picture_requirement_tip: "設置圖片\n 寬度1024像素，高度1024像素以下"
         message_description: 服務描述（60字以內）

@@ -264,7 +264,7 @@ tw:
     event: 活動
     manual: 手冊
     item:
-      list: 列表顯示
+      list: 列表
       new: 新增
     no_connection: 未連接
     from_when: 從
