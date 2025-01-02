@@ -20,6 +20,7 @@ module Booking
     boolean :overbooking_restriction, default: true
     integer :limit, default: nil
     object :customer, default: nil
+    boolean :force_update_cache, default: false
 
     def execute
       return {} if special_dates.blank?
@@ -31,7 +32,7 @@ module Booking
       if special_date.today?
         process_available_booking_times(special_date)
       else
-        Rails.cache.fetch(cache_key(special_date), expires_in: 12.hours) do
+        Rails.cache.fetch(cache_key(special_date), expires_in: 12.hours, force: force_update_cache) do
           process_available_booking_times(special_date)
         end
       end

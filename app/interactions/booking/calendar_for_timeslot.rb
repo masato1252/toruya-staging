@@ -21,6 +21,7 @@ module Booking
     integer :interval, default: 30
     boolean :overbooking_restriction, default: true
     object :customer, default: nil
+    boolean :force_update_cache, default: false
 
     def execute
       rules = compose(::Shops::WorkingCalendarRules, shop: shop, booking_page: booking_page, date_range: date_range)
@@ -46,7 +47,7 @@ module Booking
               special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
               special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
 
-              available_date = Rails.cache.fetch(cache_key(special_date), expires_in: 12.hours) do
+              available_date = Rails.cache.fetch(cache_key(special_date), expires_in: 12.hours, force: force_update_cache) do
                 # use empty string avoid return content is nil
                 test_available_booking_date(special_date, special_date_start_at, special_date_end_at) || ""
               end
@@ -61,7 +62,7 @@ module Booking
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
           # if true || Rails.env.test?
             available_working_dates.filter_map do |date|
-              available_date = Rails.cache.fetch(cache_key(date), expires_in: 12.hours) do
+              available_date = Rails.cache.fetch(cache_key(date), expires_in: 12.hours, force: force_update_cache) do
                 # use empty string avoid return content is nil
                 test_available_booking_date(date) || ""
               end

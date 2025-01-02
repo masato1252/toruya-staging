@@ -27,7 +27,8 @@ module Booking
           special_dates: special_dates,
           special_date_type: booking_page.booking_page_special_dates.exists?,
           interval: booking_page.interval,
-          overbooking_restriction: booking_page.overbooking_restriction
+          overbooking_restriction: booking_page.overbooking_restriction,
+          force_update_cache: true
         )
 
         time_outcome = Reservable::Time.run(shop: booking_page.shop, booking_page: booking_page, date: date)
@@ -55,7 +56,8 @@ module Booking
           booking_option_ids: [booking_option_id],
           staff_ids: staff_ids,
           interval: booking_page.interval,
-          overbooking_restriction: booking_page.overbooking_restriction
+          overbooking_restriction: booking_page.overbooking_restriction,
+          force_update_cache: true
         )
       end
     end
