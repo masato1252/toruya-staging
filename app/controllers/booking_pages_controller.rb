@@ -253,6 +253,7 @@ class BookingPagesController < ActionController::Base
 
   def calendar
     ::FlowBacktracer.enable(:debug_booking_page)
+    ::FlowBacktracer.track(:debug_booking_page) { { "business_owner_id": booking_page.user_id } }
     special_dates = booking_page.booking_page_special_dates.where(start_at: month_dates).map do |special_date|
       {
         start_at_date_part: special_date.start_at_date,
