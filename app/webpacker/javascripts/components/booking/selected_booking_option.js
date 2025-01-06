@@ -33,7 +33,7 @@ const SelectedBookingOption = ({
         last_selected_option_ids={last_selected_option_ids}
         ticket={ticket}
         i18n={i18n}
-        booking_start_at={moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", timezone)}
+        booking_start_at={booking_date && booking_at ? moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", timezone) : null}
         unselectBookingOption={unselectBookingOption}
         selected_booking_option_ids={selected_booking_option_ids}
       />
