@@ -70,7 +70,7 @@ https://manager.toruya.com/tw/userlogin"
         message: "%{customer_name} 您好\n\n感謝您一直以來使用%{shop_name}。\n\n我們將在%{charge_date}向您收取%{service_title}的使用費用。\n\n詳細的使用費用以及更改付款方式，請從以下頁面確認：\n\n %{customer_status_online_service_url}"
     reminders:
       trial_member_week_ago_reminder:
-        message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n試用期結束日期還有7天就到了。\n\n為了繼續使用相同的功能，請在%{trial_expired_date}之前完成付款手續。\n\n%{plan_url}\n\nToruya"
+        message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n試用期結束日期還有7天就到了。\n\n為了繼續使用相同的功能，請在%{trial_expired_date}之前完成付款手續。\n\n%{plan_url}\n\n我們非常希望能夠得到您的意見跟回饋，所以如果您對於我們服務有任何建議或問題都可以直接透過Line 送訊息與我們聯絡，感謝。\n\nToruya"
       trial_member_day_ago_reminder:
         message: "%{user_name} 您好\n\n感謝您一直以來使用預約管理系統Toruya。\n\n試用期已經結束。\n\n通過從設置畫面更改方案，您可以繼續使用相同的功能。\n\n%{plan_url}\n\nToruya"
       free_plan_reach_customers_limit:
@@ -85,7 +85,7 @@ https://manager.toruya.com/tw/userlogin"
         message: "%{user_name}您好\n\n客戶數量已達到上限。\n\n從現在開始，您將無法確認從線上預約頁面建立的新客戶信息。\n\n為了讓您能夠繼續像以前一樣使用，我們將為您提供特別的使用方案，請從設置畫面聯繫我們。"
     subscriptions:
       charge_successfully:
-        message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n今天，您的使用費用已成功收取。\n\n今後也請繼續支持我們。\n\nToruya"
+        message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n今天，您的使用費用已成功收取。\n\n我們非常希望能夠得到您的意見跟回饋，所以如果您對於我們服務有任何建議或問題都可以直接透過Line 送訊息與我們聯絡，感謝。\n\nToruya"
       charge_failed:
         message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n我們嘗試向您的信用卡收取使用費用，但未能獲得您指定卡片的使用授權。\n\n您可以從帳戶設置畫面更改卡片信息\n\n在完成付款之前，我們將暫時將您的帳戶切換為免費會員，請諒解。\n\nToruya"
       charge_shop_fee:
