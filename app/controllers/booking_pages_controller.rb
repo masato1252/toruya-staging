@@ -117,8 +117,8 @@ class BookingPagesController < ActionController::Base
     if enable_timeslot?
       outcome = Booking::CreateReservationForTimeslot.run(
         booking_page_id: params[:id].to_i,
-        staff_ids: [booking_page.user.current_staff.id],
-        booking_option_ids: params[:booking_option_ids].presence || [params[:booking_option_id]],
+        staff_ids: staff_ids,
+        booking_option_ids: booking_option_ids,
         booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
         customer_last_name: params[:customer_last_name],
         customer_first_name: params[:customer_first_name],
@@ -268,9 +268,9 @@ class BookingPagesController < ActionController::Base
         Booking::CalendarForTimeslot.run(
           shop: booking_page.shop,
           booking_page: booking_page,
-          staff_ids: [booking_page.user.current_staff.id],
+          staff_ids: staff_ids,
           date_range: month_dates,
-          booking_option_ids: params[:booking_option_ids].presence || [params[:booking_option_id]],
+          booking_option_ids: booking_option_ids,
           special_dates: special_dates,
           interval: booking_page.interval,
           overbooking_restriction: booking_page.overbooking_restriction,
@@ -336,8 +336,8 @@ class BookingPagesController < ActionController::Base
         Booking::AvailableBookingTimesForTimeslot.run(
           shop: booking_page.shop,
           booking_page: booking_page,
-          booking_option_ids: params[:booking_option_ids].presence || [params[:booking_option_id]],
-          staff_ids: [booking_page.user.current_staff.id],
+          booking_option_ids: booking_option_ids,
+          staff_ids: staff_ids,
           special_dates: booking_dates,
           interval: booking_page.interval,
           overbooking_restriction: booking_page.overbooking_restriction,
@@ -390,5 +390,16 @@ class BookingPagesController < ActionController::Base
 
   def enable_timeslot?
     true
+  end
+
+  def booking_option_ids
+    @booking_option_ids ||= params[:booking_option_ids].presence || [params[:booking_option_id]]
+  end
+
+  def staff_ids
+    @staff_ids ||= begin
+      menu_ids = BookingOptionMenu.where(booking_option_id: booking_option_ids).pluck(:menu_id)
+      StaffMenu.where(menu_id: menu_ids).group(:staff_id).having("COUNT(menu_id) = ?", menu_ids.size).pluck(:staff_id)
+    end
   end
 end

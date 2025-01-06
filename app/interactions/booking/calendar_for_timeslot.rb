@@ -109,6 +109,7 @@ module Booking
         shop,
         booking_option_ids,
         shop.reservations.in_date(date).order("updated_at").last,
+        staff_ids,
         CustomSchedule.in_date(date).closed.where(user_id: staff_user_ids).order("updated_at").last,
         BusinessSchedule.where(shop: shop).order("updated_at").last,
         BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).count,
