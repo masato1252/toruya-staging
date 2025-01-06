@@ -8,7 +8,6 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
         content: params[:content],
         after_days: params[:after_days].presence,
         before_minutes: params[:before_minutes].presence,
-        locale: params[:locale]
       )
     else
       outcome = CustomMessages::Customers::Create.run(

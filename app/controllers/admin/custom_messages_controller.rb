@@ -34,8 +34,9 @@ module Admin
     end
 
     def update
+      message = CustomMessage.find(params[:id])
       outcome = CustomMessages::Users::Update.run(
-        custom_message: CustomMessage.find(params[:id]),
+        custom_message: message,
         content: message_content,
         flex_template: params[:flex_template],
         after_days: params[:after_days],
@@ -43,7 +44,7 @@ module Admin
         content_type: params[:content_type]
       )
 
-      return_json_response(outcome, { redirect_to: scenario_admin_custom_messages_path(params[:scenario], locale: I18n.locale) })
+      return_json_response(outcome, { redirect_to: scenario_admin_custom_messages_path(params[:scenario], locale: message.locale) })
     end
 
     def demo

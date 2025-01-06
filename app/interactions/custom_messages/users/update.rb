@@ -9,7 +9,6 @@ module CustomMessages
       integer :nth_time
       string :flex_template, default: nil
       string :content_type
-      string :locale, default: -> { I18n.locale.to_s }
 
       def execute
         custom_message.assign_attributes(
@@ -18,7 +17,6 @@ module CustomMessages
           nth_time: nth_time,
           flex_template: flex_template,
           content_type: content_type,
-          locale: locale
         )
 
         if custom_message.valid? && custom_message.after_days_changed?

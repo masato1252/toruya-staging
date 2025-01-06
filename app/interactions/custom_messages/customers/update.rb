@@ -7,7 +7,6 @@ module CustomMessages
       string :content
       integer :after_days, default: nil
       integer :before_minutes, default: nil
-      string :locale, default: -> { I18n.locale.to_s }
 
       validate :validate_purchased_message
 
@@ -15,7 +14,6 @@ module CustomMessages
         message.content = content
         message.after_days = after_days
         message.before_minutes = before_minutes
-        message.locale = locale
 
         if message.save
           if message.service.is_a?(OnlineService) && message.saved_change_to_after_days?

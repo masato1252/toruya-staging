@@ -3,7 +3,7 @@
 <ul>
 <% @sequence_messages.each.with_index do |message, index| %>
   <li>
-    <%= render "lines/user_bot/field_row", path: edit_admin_custom_messages_path(scenario: params[:scenario], id: message.id), title: "( #{message.content_type} ) #{message.nth_time} nth time - After #{message.scenario.titleize}  #{message.after_days} days" %>
+    <%= render "lines/user_bot/field_row", path: edit_admin_custom_messages_path(scenario: params[:scenario], id: message.id, locale: I18n.locale), title: "( #{message.content_type} ) #{message.nth_time} nth time - After #{message.scenario.titleize}  #{message.after_days} days" %>
   </li>
 <% end %>
 </ul>
