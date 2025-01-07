@@ -413,7 +413,8 @@ namespace :analytic do
     user_ids = Subscription.charge_required.pluck(:user_id)
     google_worksheet = Google::Drive.spreadsheet(worksheet: 9)
 
-    reservation_per_month = user_ids.map do |user_id|
+    churn_user_ids = [923, 1660, 1057]
+    reservation_per_month = (user_ids + churn_user_ids).map do |user_id|
       first_paid_date = SubscriptionCharge.where(user_id: user_id).completed.order("id").first&.created_at&.to_date
       next unless first_paid_date
       month_period = 3.0
@@ -482,6 +483,7 @@ namespace :analytic do
         r[:reservation_count_monthly],
         r[:customer_payments_count_monthly],
         r[:custom_schedules_count],
+        r[:customer_social_messages_count_monthly],
         r[:reservation_revenue_monthly],
         r[:manual_reservation_count_monthly],
         r[:manual_reservation_revenue_monthly],
@@ -494,7 +496,6 @@ namespace :analytic do
         r[:sale_page_visit_monthly],
         r[:booking_page_visit_monthly],
         r[:social_messages_count_monthly],
-        r[:customer_social_messages_count_monthly],
         r[:had_reservation_in_one_month],
         r[:had_reservation_in_three_week],
         r[:had_reservation_in_two_week],
