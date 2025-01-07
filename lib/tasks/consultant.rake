@@ -8,6 +8,10 @@ namespace :consultant do
       Subscription.charge_required.find_each do |subscription|
         BusinessHealthChecks::Deliver.perform_later(subscription: subscription)
       end
+
+      Subscription.trial.find_each do |subscription|
+        BusinessHealthChecks::Deliver.perform_later(subscription: subscription)
+      end
     end
   end
 end

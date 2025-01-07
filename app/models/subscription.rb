@@ -52,6 +52,7 @@ class Subscription < ApplicationRecord
   scope :free, -> { where(plan_id: FREE_PLAN_ID) }
   scope :charge_required, -> { where.not(plan_id: FREE_PLAN_ID) }
   scope :unexpired, -> { where("expired_date > ?", Date.today) }
+  scope :trial, -> { free.where("trial_expired_date >= ?", Date.today) }
 
   def self.today
     Date.jp_today
