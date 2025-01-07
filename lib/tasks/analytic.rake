@@ -444,6 +444,7 @@ namespace :analytic do
       total_sale_page_recent_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "SalePage").where(started_at: first_account_date..).count
       total_booking_page_recent_visit = Ahoy::Visit.where(owner_id: user_id, product_type: "BookingPage").where(started_at: first_account_date..).count
       social_messages_count = SocialMessage.where(social_account_id: user.social_account_id).where(created_at: first_account_date..).count
+      customer_social_messages_count = SocialMessage.from_customer.where(social_account_id: user.social_account_id).where(created_at: first_account_date..).count
 
       {
         user_id: user_id,
@@ -465,7 +466,8 @@ namespace :analytic do
         new_line_customer_monthly: (line_customer_for_recent_period / month_period),
         sale_page_visit_monthly: (total_sale_page_recent_visit / month_period),
         booking_page_visit_monthly: (total_booking_page_recent_visit / month_period),
-        social_messages_count_monthly: (social_messages_count / month_period)
+        social_messages_count_monthly: (social_messages_count / month_period),
+        customer_social_messages_count_monthly: (customer_social_messages_count / month_period)
       }
     end.compact.sort_by {|r| r[:reservation_count_monthly] }
 
@@ -486,6 +488,7 @@ namespace :analytic do
         r[:sale_page_visit_monthly],
         r[:booking_page_visit_monthly],
         r[:social_messages_count_monthly],
+        r[:customer_social_messages_count_monthly],
         r[:had_reservation_in_one_month],
         r[:had_reservation_in_three_week],
         r[:had_reservation_in_two_week],
