@@ -42,6 +42,7 @@ class SocialUserMessage < ApplicationRecord
                                         WHEN social_user_messages.schedule_at IS NOT NULL THEN social_user_messages.schedule_at
                                         ELSE social_user_messages.created_at END) DESC, social_user_messages.id DESC"))  }
 
+  scope :from_user, -> { where(message_type: [SocialUserMessage.message_types[:user], SocialUserMessage.message_types[:user_reply_bot]]) }
   enum message_type: {
     bot: 0,
     admin: 1,

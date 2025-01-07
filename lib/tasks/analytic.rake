@@ -574,4 +574,26 @@ namespace :analytic do
       google_worksheet.save
     end
   end
+
+  task :key_metrics => :environment do
+    current = Time.now.in_time_zone('Tokyo')
+
+    # Only reports on Monday
+    if current.wday == 1
+      google_worksheet = Google::Drive.spreadsheet(worksheet: 13)
+
+      # Date, 
+      new_row_number = google_worksheet.num_rows + 1
+      new_row_data = [
+        current.to_date,
+        SocialUserMessage.from_user.where(created_at: current.advance(weeks: -1)..current).count,
+        SocialMessage.from_customer.where(created_at: current.advance(weeks: -1)..current).count
+      ]
+      new_row_data.each_with_index do |data, index|
+        google_worksheet[new_row_number, index + 1] = data
+      end
+
+      google_worksheet.save
+    end
+  end
 end
