@@ -423,7 +423,7 @@ namespace :analytic do
       owner_customer_id = user.owner_social_customer&.customer_id
       customer_ids = user.customer_ids
       reservation_ids = Reservation.where(user_id: user_id).where(created_at: first_account_date..).pluck(:id)
-      reservation_customer_scope = ReservationCustomer.where(id: reservation_ids).where.not(customer_id: owner_customer_id).where(state: [:accepted, :pending])
+      reservation_customer_scope = ReservationCustomer.where(reservation_id: reservation_ids).where.not(customer_id: owner_customer_id).where(state: [:accepted, :pending])
       reservation_count = reservation_customer_scope.count
 
       reservation_amount = reservation_customer_scope.where(booking_option_id: user.booking_option_ids).sum(:booking_amount_cents)
