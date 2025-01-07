@@ -18,8 +18,8 @@ module Customers
       end
 
       matched_customers = customers.find_all do |customer|
-        customer.phone_numbers_details&.map { |phone| phone["value"]&.gsub(/[^0-9]/, '') }&.include?(phone_number.gsub(/[^0-9]/, '')) ||
-          customer.emails_details&.map { |email| email["value"] }&.include?(email)
+        customer.phone_numbers_details&.map { |phone| phone["value"]&.gsub(/[^0-9]/, '') }.compact&.include?(phone_number&.gsub(/[^0-9]/, '')) ||
+          customer.emails_details&.map { |email| email["value"] }.compact&.include?(email)
       end
 
       # any customer got social customer
