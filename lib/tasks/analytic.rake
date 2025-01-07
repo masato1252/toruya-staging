@@ -446,6 +446,7 @@ namespace :analytic do
       social_messages_count = SocialMessage.where(social_account_id: user.social_account_id).where(created_at: first_account_date..).count
       customer_social_messages_count = SocialMessage.from_customer.where(social_account_id: user.social_account_id).where(created_at: first_account_date..).count
       completed_customer_payments_count = CustomerPayment.where(customer_id: customer_ids).completed.where(created_at: first_account_date..).count
+      custom_schedules_count = CustomSchedule.where(user_id: user_id).where(created_at: first_account_date..).count
 
       {
         user_id: user_id,
@@ -469,7 +470,8 @@ namespace :analytic do
         booking_page_visit_monthly: (total_booking_page_recent_visit / month_period),
         social_messages_count_monthly: (social_messages_count / month_period),
         customer_social_messages_count_monthly: (customer_social_messages_count / month_period),
-        customer_payments_count_monthly: (completed_customer_payments_count / month_period)
+        customer_payments_count_monthly: (completed_customer_payments_count / month_period),
+        custom_schedules_count: (custom_schedules_count / month_period),
       }
     end.compact.sort_by {|r| r[:reservation_count_monthly] }
 
@@ -479,6 +481,7 @@ namespace :analytic do
         %|=HYPERLINK("https://manager.toruya.com/admin/chats?user_id=#{r[:user_id]}", #{r[:user_id]})|,
         r[:reservation_count_monthly],
         r[:customer_payments_count_monthly],
+        r[:custom_schedules_count],
         r[:reservation_revenue_monthly],
         r[:manual_reservation_count_monthly],
         r[:manual_reservation_revenue_monthly],
