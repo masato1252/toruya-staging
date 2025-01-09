@@ -408,8 +408,8 @@ tw:
           cellphone_input_placeholder: 成員的手機號碼
           new_page_methods_html: <b>【成員註冊方法】</b><br /> ①通過簡訊發送成員註冊頁面<br /> ②成員自行從註冊頁面完成成員註冊<br /> ③以成員身份使用Toruya
       broadcasts:
-        broadcast_title: 發送條件
-        broadcast_conditions: 發送條件列表
+        broadcast_title: 分眾傳播
+        broadcast_conditions: 列表
         content: 訊息內容
         audiences: 發送對象
         recipients_count: 發送數量
@@ -421,8 +421,8 @@ tw:
         are_you_sure_to_stop: 您確定要停止發送嗎？
         clone_successfully: 已複製
         tags_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
-        no_broadcasts_title: 沒有發送條件
-        no_broadcasts_desc: 請建立發送條件
+        no_broadcasts_title: 沒有分眾傳播過
+        no_broadcasts_desc: 請建立分眾傳播
         form: 
           query_title: 發送對象
           query_subtitle: 發送對象
@@ -507,6 +507,8 @@ tw:
         what_is_your_audiences: 此訊息要發送給誰？
         all_customers: 所有客戶
         all_customers_desc: 所有已連結客戶資訊的LINE好友
+        active_customers: 活躍客戶
+        active_customers_desc: 向活躍客戶群發訊息
         vip_customers: VIP客戶
         vip_customers_desc: 向所有VIP客戶群發訊息
         specific_menu_customers: 某預約項目的使用客戶

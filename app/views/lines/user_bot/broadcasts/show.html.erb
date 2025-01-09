@@ -10,7 +10,7 @@
         <% end %>
 
         <div class="field-header"><%= t("user_bot.dashboards.broadcasts.audiences") %></div>
-        <%= render "lines/user_bot/field_row", path: @broadcast.draft? && !@broadcast.vip_customers? ? edit_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id, attribute: :query) : nil do %>
+        <%= render "lines/user_bot/field_row", path: @broadcast.draft? && !@broadcast.vip_customers? && !@broadcast.active_customers? ? edit_lines_user_bot_broadcast_path(@broadcast, business_owner_id: business_owner_id, attribute: :query) : nil do %>
           <div class="w-full"><%= I18n.t("user_bot.dashboards.broadcast_creation.#{@broadcast.query_type}") %></div>
           <% @broadcast.targets.each do |target_name| %>
             <div class="btn btn-gray mx-2 my-2"><%= target_name %></div>

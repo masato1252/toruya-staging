@@ -108,10 +108,10 @@
 
           <ul class='nav'>
             <li>
-              <%= link_to t("common.item.list"), lines_user_bot_sales_path(business_owner_id: business_owner_id) %>
+              <%= link_to t("common.item.new"), new_lines_user_bot_sale_path(business_owner_id: business_owner_id) %>
             </li>
             <li>
-              <%= link_to t("common.item.new"), new_lines_user_bot_sale_path(business_owner_id: business_owner_id) %>
+              <%= link_to t("common.item.list"), lines_user_bot_sales_path(business_owner_id: business_owner_id) %>
             </li>
           </ul>
         </li>
@@ -123,10 +123,10 @@
 
           <ul class='nav'>
             <li>
-              <%= link_to t("user_bot.dashboards.broadcasts.broadcast_conditions"), lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) %>
+              <%= link_to t("common.item.new"), new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id) %>
             </li>
             <li>
-              <%= link_to t("common.item.new"), new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id) %>
+              <%= link_to t("user_bot.dashboards.broadcasts.broadcast_conditions"), lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) %>
             </li>
           </ul>
         </li>

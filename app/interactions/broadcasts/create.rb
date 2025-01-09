@@ -5,7 +5,7 @@ module Broadcasts
     object :user
     hash :params do
       string :content
-      hash :query, strip: false
+      hash :query, strip: false, default: {}
       string :query_type
       time :schedule_at, default: nil
     end
@@ -18,6 +18,8 @@ module Broadcasts
         broadcast.update(recipients_count: customers.count)
 
         Broadcasts::Send.perform_at(schedule_at: broadcast.schedule_at, broadcast: broadcast)
+      else
+        errors.merge!(broadcast.errors)
       end
 
       broadcast

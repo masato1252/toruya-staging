@@ -23,7 +23,7 @@
 
 class Broadcast < ApplicationRecord
   belongs_to :user
-  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers", "customers_with_tags", "customers_with_birthday"]
+  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers", "customers_with_tags", "customers_with_birthday", "active_customers"]
   NORMAL_TYPES = TYPES - ["reservation_customers"]
 
   scope :ordered, -> { order(Arel.sql("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC"))  }
@@ -44,7 +44,8 @@ class Broadcast < ApplicationRecord
     reservation_staffs: "reservation_staffs",
     reservation_customers: "reservation_customers",
     customers_with_tags: "customers_with_tags",
-    customers_with_birthday: "customers_with_birthday"
+    customers_with_birthday: "customers_with_birthday",
+    active_customers: "active_customers"
   }
 
   def broadcast_at
@@ -54,6 +55,7 @@ class Broadcast < ApplicationRecord
   def target
     return I18n.t("broadcast.targets.all_customers") if query.blank?
     return I18n.t("broadcast.targets.vip_customers") if vip_customers?
+    return I18n.t("broadcast.targets.active_customers") if active_customers?
     return I18n.t("broadcast.targets.all_customers") if query["filters"].blank?
 
     filter = query["filters"][0]
@@ -81,6 +83,7 @@ class Broadcast < ApplicationRecord
   def targets
     return [I18n.t("broadcast.targets.all_customers")] if query.blank?
     return [I18n.t("broadcast.targets.vip_customers")] if vip_customers?
+    return [I18n.t("broadcast.targets.active_customers")] if active_customers?
     return [I18n.t("broadcast.targets.all_customers")] if query["filters"].blank?
 
     query["filters"].map do |filter|

@@ -13,7 +13,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
   const { props, dispatch, query, query_type, selected_menu, selected_online_service, customers_count, fetchCustomersCount } = useGlobalContext()
 
   useEffect(() => {
-    if (query_type === "all" || query_type === "vip_customers") next()
+    if (query_type === "all" || query_type === "vip_customers" || query_type === "active_customers") next()
       if (query_type === "customers_with_birthday") {
         dispatch({
           type: "SET_ATTRIBUTE",
