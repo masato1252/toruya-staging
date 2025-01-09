@@ -158,12 +158,12 @@ tw:
     shop: 商家
     select: 選擇
     select_a_shop: 選擇商家
-    select_a_menu: 選擇服務
+    select_a_menu: 選擇項目
     staff: 成員
     account: 帳戶
     select_a_staff: 選擇成員
     select_a_booking_option: 選擇預約項目
-    select_a_service: 選擇服務
+    select_a_service: 選擇產品
     content: 內容
     google_down: 目前無法連接 Google。請稍後再試。重新登入可能會解決問題。
     pending: 待核准

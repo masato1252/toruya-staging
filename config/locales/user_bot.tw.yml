@@ -509,23 +509,23 @@ tw:
         all_customers_desc: 所有已連結客戶資訊的LINE好友
         vip_customers: VIP客戶
         vip_customers_desc: 向所有VIP客戶群發訊息
-        specific_menu_customers: 特定服務的使用客戶
-        menu: 特定服務的使用客戶
-        specific_menu_customers_desc: 向有特定服務使用記錄（已結帳）的活躍客戶群發訊息
-        specific_service_customers: 特定服務的使用客戶
-        online_service: 特定服務的使用客戶
-        specific_service_customers_desc: 向有特定數位產品使用記錄的活躍客戶群發訊息
-        specific_available_service_customers: 特定服務的使用中客戶
-        online_service_for_active_customers: 特定服務的使用中客戶
-        specific_available_service_customers_desc: 向正在使用特定數位產品的客戶群發訊息
+        specific_menu_customers: 某預約項目的使用客戶
+        menu: 某預約項目的使用客戶
+        specific_menu_customers_desc: 向有某預約項目的客戶群發訊息
+        specific_service_customers: 某產品的使用客戶
+        online_service: 某產品的使用客戶
+        specific_service_customers_desc: 向有某產品使用記錄的客戶群發訊息
+        specific_available_service_customers: 某產品的使用中客戶
+        online_service_for_active_customers: 某產品的使用中客戶
+        specific_available_service_customers_desc: 向正在使用某產品的客戶群發訊息
         customers_with_tags: 特定標籤的客戶
         customers_with_tags_desc: 向擁有特定標籤的客戶群發訊息
         customers_with_tags_no_data_desc: 目前還沒有客戶標籤。您可以在客戶編輯頁面建立標籤。
         customers_with_birthday: 生日的客戶
         customers_with_birthday_desc: 向生日的客戶群發訊息
         approximate_customers_count: 預計發送數量
-        what_menu_do_you_want: 您想向哪個服務的使用客戶發送訊息？
-        what_service_do_you_want: 您想向哪個服務的使用客戶發送訊息？
+        what_menu_do_you_want: 您想向哪個項目的使用客戶發送訊息？
+        what_service_do_you_want: 您想向哪個產品的使用客戶發送訊息？
         what_content_do_you_want: 您想發送什麼內容？
         preview: 預覽
         when_do_you_want_to_send: 您想何時發送？
