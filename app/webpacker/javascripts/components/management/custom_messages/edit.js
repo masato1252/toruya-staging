@@ -86,6 +86,7 @@ const CustomMessageEdit =({props}) => {
       case "no_line_settings":
       case "user_message_auto_reply":
       case "user_charge_message":
+      case "no_enough_message":
         return (
           <>
             <div className="field-row">

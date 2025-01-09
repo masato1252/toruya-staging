@@ -15,11 +15,13 @@ module CustomMessages
       BOOKING_PAGE_NOT_ENOUGH_BOOKING = "booking_page_not_enough_booking"
       NO_NEW_CUSTOMER = "no_new_customer"
       NO_LINE_SETTINGS = "no_line_settings"
+      NO_ENOUGH_MESSAGE = "no_enough_message"
 
       HEALTH_CHECK_SCENARIOS = [
+        NO_ENOUGH_MESSAGE,
         BOOKING_PAGE_NOT_ENOUGH_PAGE_VIEW,
         BOOKING_PAGE_NOT_ENOUGH_BOOKING,
-        NO_NEW_CUSTOMER
+        NO_NEW_CUSTOMER,
       ].freeze
 
       NORMAL_SCENARIOS = [
