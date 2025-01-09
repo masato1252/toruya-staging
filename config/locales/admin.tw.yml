@@ -16,7 +16,7 @@ tw:
       message_api_verified: Messaging API 設定確認
       booking_pages: "預約頁面 %{count}"
       online_services: "服務 %{count}"
-      sale_pages: "宣傳用落地頁 %{count}"
+      sale_pages: "銷售頁面 %{count}"
       customers: "客戶資料 %{count}"
       reservations: "預約資料 %{count}"
       service_relations: "服務關係 %{count}"

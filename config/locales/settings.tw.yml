@@ -694,7 +694,7 @@ tw:
         booking_options: 透過預約項目接受
         contacts: 聯絡我們
         services: 使用中的服務
-        sale_page: 宣傳用登陸頁面
+        sale_page: 銷售頁面
         booking_page: 預約頁面
         text: 文字
         uri: 連結
@@ -709,7 +709,7 @@ tw:
       layout_type: 範本
       picture: 圖片
       actions: 動作
-      sale_page: 宣傳用登陸頁面
+      sale_page: 銷售頁面
       booking_page: 預約頁面
       picture_hint: "設定圖片\n 寬度800px〜2500px"
       default_desc: 當沒有其他選單時顯示

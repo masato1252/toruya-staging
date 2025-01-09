@@ -55,7 +55,7 @@ tw:
     metrics:
       title: 訪問分析
       dashboard_title: 儀表板
-      sale_page_title: 宣傳用落地頁
+      sale_page_title: 銷售頁面
       service_title: 數位產品
   top_navigation_bar:
     menu: ""
@@ -705,8 +705,8 @@ tw:
         online_services/update:
           attributes:
             attrs:
-              bundle_services_subscription_required: "^由於存在訂閱銷售的宣傳用登陸頁面，請至少將一項服務設定為「直到月費/年費支付期限」。"
-              bundle_services_all_end_time_required: "^由於存在非訂閱銷售的宣傳用登陸頁面，無法設定「直到月費/年費支付期限」。"
+              bundle_services_subscription_required: "^由於存在訂閱銷售的銷售頁面，請至少將一項服務設定為「直到月費/年費支付期限」。"
+              bundle_services_all_end_time_required: "^由於存在非訂閱銷售的銷售頁面，無法設定「直到月費/年費支付期限」。"
         chapters/delete:
           attributes:
             chapter:
