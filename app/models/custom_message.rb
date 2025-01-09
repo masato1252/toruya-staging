@@ -52,4 +52,8 @@ class CustomMessage < ApplicationRecord
   def self.user_message_auto_reply(locale)
     scenario_of(nil, CustomMessages::Users::Template::USER_MESSAGE_AUTO_REPLY).where(locale: locale).first
   end
+
+  def self.user_charge_message(locale)
+    scenario_of(nil, CustomMessages::Users::Template::USER_CHARGE_MESSAGE).where(locale: locale).first
+  end
 end

@@ -4,6 +4,7 @@ module CustomMessages
   module Users
     class Template < ActiveInteraction::Base
       USER_MESSAGE_AUTO_REPLY = "user_message_auto_reply"
+      USER_CHARGE_MESSAGE = "user_charge_message"
       USER_SIGN_UP = "user_sign_up"
       LINE_SETTINGS_VERIFIED = "line_settings_verified"
       FIRST_BOOKING_PAGE_CREATED = "first_booking_page_created"
@@ -15,7 +16,13 @@ module CustomMessages
       NO_NEW_CUSTOMER = "no_new_customer"
       NO_LINE_SETTINGS = "no_line_settings"
 
-      SCENARIOS = [
+      HEALTH_CHECK_SCENARIOS = [
+        BOOKING_PAGE_NOT_ENOUGH_PAGE_VIEW,
+        BOOKING_PAGE_NOT_ENOUGH_BOOKING,
+        NO_NEW_CUSTOMER
+      ].freeze
+
+      NORMAL_SCENARIOS = [
         USER_MESSAGE_AUTO_REPLY,
         USER_SIGN_UP,
         LINE_SETTINGS_VERIFIED,
@@ -23,11 +30,11 @@ module CustomMessages
         SECOND_BOOKING_PAGE_CREATED,
         ELEVENTH_BOOKING_PAGE_CREATED,
         FIRST_CUSTOMER_DATA_MANUALLY_CREATED,
-        BOOKING_PAGE_NOT_ENOUGH_PAGE_VIEW,
-        BOOKING_PAGE_NOT_ENOUGH_BOOKING,
-        NO_NEW_CUSTOMER,
-        NO_LINE_SETTINGS
+        NO_LINE_SETTINGS,
+        USER_CHARGE_MESSAGE
       ].freeze
+
+      SCENARIOS = HEALTH_CHECK_SCENARIOS + NORMAL_SCENARIOS
 
       string :scenario
       string :locale

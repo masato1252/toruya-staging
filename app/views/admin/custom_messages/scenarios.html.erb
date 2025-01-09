@@ -2,7 +2,12 @@
 
 <h1>Scenarios</h1>
 <ul>
-  <% CustomMessages::Users::Template::SCENARIOS.each do |scenario| %>
+  <% CustomMessages::Users::Template::NORMAL_SCENARIOS.each do |scenario| %>
+    <li><%= link_to scenario_label(scenario), scenario_admin_custom_messages_path(scenario, locale: I18n.locale) %></li>
+  <% end %>
+  <br />
+  <h2>Health Check</h2>
+  <% CustomMessages::Users::Template::HEALTH_CHECK_SCENARIOS.each do |scenario| %>
     <li><%= link_to scenario_label(scenario), scenario_admin_custom_messages_path(scenario, locale: I18n.locale) %></li>
   <% end %>
 </ul>

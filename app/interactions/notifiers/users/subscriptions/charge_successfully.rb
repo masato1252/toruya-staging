@@ -7,7 +7,7 @@ module Notifiers
         deliver_by_priority [:line, :sms, :email], mailer: SubscriptionMailer, mailer_method: :charge_successfully
 
         def message
-          I18n.t("notifier.subscriptions.charge_successfully.message", user_name: user.name)
+          CustomMessage.user_charge_message(user.locale)&.content.presence || I18n.t("notifier.subscriptions.charge_successfully.message", user_name: user.name)
         end
       end
     end
