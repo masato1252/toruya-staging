@@ -83,7 +83,7 @@ const ActionTypeFields = ({action_type, register, index, props, watch, keyword_b
           {!isValidHttpUrl(watch(`actions[${index}].value`)) && <span className="warning">{I18n.t("errors.invalid_url")}</span>}
         </div>
         <div>
-          <input type="text" name={`actions[${index}].desc`} ref={register({ required: true })} placeholder={I18n.t("settings.social_rich_menus.url_desc")} />
+          <input type="text" name={`actions[${index}].desc`} ref={register()} placeholder={I18n.t("settings.social_rich_menus.url_desc")} />
           {!isValidLength(watch(`actions[${index}].desc`), 20) && <span className="warning">{I18n.t("settings.social_rich_menus.label_length_warning")}</span>}
         </div>
       </>
