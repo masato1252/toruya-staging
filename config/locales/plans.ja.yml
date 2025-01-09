@@ -12,6 +12,7 @@ ja:
     labels:
       shop_can_set: 店舗数
       staff_in_charge: スタッフ数
+      line_tab: メッセージ<br>送受信
       reservation_restriction: 予約件数
       customer_number: 顧客データ
       booking_page_number: 予約ページ
@@ -31,13 +32,14 @@ ja:
       staff_in_charge: 1名(オーナー)
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
+      line_tab: 'X<br><a href="https://toruya.com/help/line_messages/#basic" target="_blank" style="font-size: 14px;">公式アプリをご利用ください</a>'
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O
       premium_lesson:  X
       online_course: X
       membership: X
-      external_service:  O
+      external_service:  X
       sale_page_number: 無制限
       message_template: テキスト
       support: なし
@@ -47,13 +49,14 @@ ja:
       staff_in_charge: 1名(オーナー)
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
+      line_tab: 'X<br><a href="https://toruya.com/help/line_messages/#basic" target="_blank" style="font-size: 14px;">公式アプリをご利用ください</a>'
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O
       premium_lesson:  X
       online_course: X
       membership: X
-      external_service: O
+      external_service: X
       sale_page_number: 無制限
       message_template: テキスト
       support: あり
@@ -64,6 +67,7 @@ ja:
       staff_in_charge: 1名(オーナー)
       reservation_restriction: 無制限
       customer_number: 無制限
+      line_tab: 無限制
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O

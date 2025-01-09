@@ -14,6 +14,7 @@ tw:
       staff_in_charge: 負責成員數
       reservation_restriction: 預約限制
       customer_number: 客戶數
+      line_tab: Line Tab
       booking_page_number: 預約頁面
       get_more_friends: 獲取好友
       free_lesson: 免費課程
@@ -31,6 +32,7 @@ tw:
       staff_in_charge: 1位（店主）
       reservation_restriction: 無限制
       customer_number: "最多%{customer_limit}位"
+      line_tab: X
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O
@@ -48,6 +50,7 @@ tw:
       staff_in_charge: 1位（店主）
       reservation_restriction: 無限制
       customer_number: "最多%{customer_limit}位"
+      line_tab: X
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O
@@ -65,6 +68,7 @@ tw:
       staff_in_charge: 1位（店主）
       reservation_restriction: 無限制
       customer_number: 無限制
+      line_tab: O
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O

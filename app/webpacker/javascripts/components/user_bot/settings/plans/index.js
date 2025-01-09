@@ -167,6 +167,7 @@ const Plans = ({props}) => {
           [
             {header: I18n.t("plans.headers.customer_management")},
             "customer_number",
+            "line_tab",
             {header: I18n.t("plans.headers.reservation_management")},
             "reservation_restriction",
             {header: I18n.t("plans.headers.online_booking")},
@@ -206,12 +207,12 @@ const Plans = ({props}) => {
             else {
               return (
                 <div className="table-row" key={labelName}>
-                  <div className="col th">{props.plan_labels[labelName]}</div>
+                  <div className="col th" dangerouslySetInnerHTML={{__html: props.plan_labels[labelName]}}></div>
                   <div className={`col`}>
-                    {freePlan.details[labelName]}
+                    <div dangerouslySetInnerHTML={{__html: freePlan.details[labelName]}}></div>
                   </div>
                   <div className={`col`}>
-                    {basicPlan.details[labelName]}
+                    <div dangerouslySetInnerHTML={{__html: basicPlan.details[labelName]}}></div>
                   </div>
                   {premiumPlan?.details?.[labelName] && (
                     <div className={`col`}>
