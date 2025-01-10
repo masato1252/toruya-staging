@@ -506,8 +506,8 @@ ja:
         what_is_your_audiences: このメッセージは誰に配信しますか？
         all_customers: 全ての顧客
         all_customers_desc: 顧客情報が連携されている全てのLINEフレンド
-        active_customers: 活躍顧客
-        active_customers_desc: 活躍顧客に一斉配信する
+        active_customers:  アクティブ顧客
+        active_customers_desc: 全てのアクティブ顧客に一斉配信する
         vip_customers: VIP顧客
         vip_customers_desc: 全てのVIP顧客に一斉配信する
         specific_menu_customers: 特定メニューの利用客
