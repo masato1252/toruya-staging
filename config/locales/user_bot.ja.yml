@@ -504,6 +504,9 @@ ja:
         content_step: 配信内容
         schedule_step: 配信時間
         what_is_your_audiences: このメッセージは誰に配信しますか？
+        target_reservation_customers: 予約状況に応じた配信
+        target_service_customers: オンラインサービスの利用状況に応じた配信
+        target_customers_by_data: 顧客台帳データに基づく配信
         all_customers: 全ての顧客
         all_customers_desc: 顧客情報が連携されている全てのLINEフレンド
         active_customers:  アクティブ顧客

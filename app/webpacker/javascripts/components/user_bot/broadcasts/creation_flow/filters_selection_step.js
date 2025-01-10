@@ -31,6 +31,7 @@ const FiltersSelectionStep = ({next, step}) => {
       <FlowStepIndicator step={step} />
       <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_is_your_audiences")}</h3>
+      <h4 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.target_reservation_customers")}</h4>
       <button
         onClick={() => {
           dispatch({
@@ -50,6 +51,7 @@ const FiltersSelectionStep = ({next, step}) => {
           {I18n.t("user_bot.dashboards.broadcast_creation.specific_menu_customers_desc")}
         </p>
       </button>
+      <h4 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.target_service_customers")}</h4>
       <button
         onClick={() => {
           dispatch({
@@ -88,6 +90,7 @@ const FiltersSelectionStep = ({next, step}) => {
           {I18n.t("user_bot.dashboards.broadcast_creation.specific_available_service_customers_desc")}
         </p>
       </button>
+      <h4 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.target_customers_by_data")}</h4>
       <button
         onClick={() => {
           dispatch({

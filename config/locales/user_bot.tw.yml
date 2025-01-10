@@ -505,6 +505,9 @@ tw:
         content_step: 發送內容
         schedule_step: 發送時間
         what_is_your_audiences: 此訊息要發送給誰？
+        target_reservation_customers: 依預約項目發送
+        target_service_customers: 依數位產品使用狀況發送
+        target_customers_by_data: 依客戶資料發送
         all_customers: 所有客戶
         all_customers_desc: 所有已連結客戶資訊的LINE好友
         active_customers: 活躍客戶
@@ -513,13 +516,13 @@ tw:
         vip_customers_desc: 向所有VIP客戶群發訊息
         specific_menu_customers: 某預約項目的使用客戶
         menu: 某預約項目的使用客戶
-        specific_menu_customers_desc: 向有某預約項目的客戶群發訊息
+        specific_menu_customers_desc: 向『用過』某預約項目的客戶群發訊息
         specific_service_customers: 某產品的使用客戶
         online_service: 某產品的使用客戶
-        specific_service_customers_desc: 向有某產品使用記錄的客戶群發訊息
+        specific_service_customers_desc: 向『用過』某產品的客戶群發訊息
         specific_available_service_customers: 某產品的使用中客戶
         online_service_for_active_customers: 某產品的使用中客戶
-        specific_available_service_customers_desc: 向正在使用某產品的客戶群發訊息
+        specific_available_service_customers_desc: 向『正在使用』某產品的客戶群發訊息
         customers_with_tags: 特定標籤的客戶
         customers_with_tags_desc: 向擁有特定標籤的客戶群發訊息
         customers_with_tags_no_data_desc: 目前還沒有客戶標籤。您可以在客戶編輯頁面建立標籤。
