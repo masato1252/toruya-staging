@@ -11,7 +11,7 @@ class SmsClient
 
     formatted_phone =
       if Rails.configuration.x.env.staging?
-        Phonelib.parse(HARUKO_PHONE, locale).international(true)
+        Phonelib.parse(HARUKO_PHONE).international(true)
       else
         Phonelib.parse(phone_number).international(true)
       end
