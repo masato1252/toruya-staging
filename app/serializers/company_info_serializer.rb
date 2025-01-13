@@ -36,7 +36,7 @@ class CompanyInfoSerializer
   end
 
   attribute :address do |object|
-    if object.user.locale == "ja"
+    if object.user.locale == :ja
       if object.company_full_address.present?
         "〒#{object.company_full_address}"
       end
