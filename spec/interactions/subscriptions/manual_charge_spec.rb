@@ -58,7 +58,7 @@ RSpec.describe Subscriptions::ManualCharge do
       let(:basic_customer_limit) { 2 }
       let(:basic_customer_max_limit) { 5 }
       before do
-        stub_const("Plan::DETAILS_OLD", {
+        stub_const("Plan::DETAILS_JP", {
           Plan::BASIC_LEVEL => [
             {
               rank: 0,

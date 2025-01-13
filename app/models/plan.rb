@@ -36,43 +36,6 @@ class Plan < ApplicationRecord
     enterprise: 6
   }, _suffix: true
 
-  DETAILS_OLD = {
-    Plan::FREE_LEVEL => [
-      { rank: 0, max_customers_limit: 50, cost: 0 },
-      { rank: 1, max_customers_limit: 100, cost: 0 },
-    ],
-    Plan::BASIC_LEVEL => [
-      { rank: 0, max_customers_limit: 200, cost: 2_200, },
-      { rank: 1, max_customers_limit: 300, cost: 2_750, },
-      { rank: 2, max_customers_limit: 500, cost: 3_300, },
-      { rank: 3, max_customers_limit: 800, cost: 4_400, },
-      { rank: 4, max_customers_limit: 1000, cost: 4_950, },
-      { rank: 5, max_customers_limit: 1500, cost: 6_600, },
-      { rank: 6, max_customers_limit: 2000, cost: 8_250, },
-      { rank: 7, max_customers_limit: Float::INFINITY, cost: 8_250, },
-    ],
-    Plan::PREMIUM_LEVEL => [
-      { rank: 0, max_customers_limit: 200, cost: 5_500, },
-      { rank: 1, max_customers_limit: 300, cost: 6_270, },
-      { rank: 2, max_customers_limit: 500, cost: 7_040, },
-      { rank: 3, max_customers_limit: 800, cost: 8_580, },
-      { rank: 4, max_customers_limit: 1000, cost: 9_350, },
-      { rank: 5, max_customers_limit: 1500, cost: 11_660, },
-      { rank: 6, max_customers_limit: 2000, cost: 13_970, },
-      { rank: 7, max_customers_limit: Float::INFINITY, cost: 13_970, },
-    ],
-    Plan::ENTERPRISE_LEVEL => [
-      { rank: 0, max_customers_limit: 200, cost: 5_500, },
-      { rank: 1, max_customers_limit: 300, cost: 6_270, },
-      { rank: 2, max_customers_limit: 500, cost: 7_040, },
-      { rank: 3, max_customers_limit: 800, cost: 8_580, },
-      { rank: 4, max_customers_limit: 1000, cost: 9_350, },
-      { rank: 5, max_customers_limit: 1500, cost: 11_660, },
-      { rank: 6, max_customers_limit: 2000, cost: 13_970, },
-      { rank: 7, max_customers_limit: Float::INFINITY, cost: 13_970, },
-    ]
-  }.freeze
-
   DETAILS_JP = {
     Plan::FREE_LEVEL => [
       { rank: 0, max_customers_limit: 50, cost: 0 },
@@ -156,7 +119,7 @@ class Plan < ApplicationRecord
     when :tw
       DETAILS_TW
     else
-      Date.today >= Date.parse("2025-01-10") ? DETAILS_JP : DETAILS_OLD
+      DETAILS_JP
     end
   end
 

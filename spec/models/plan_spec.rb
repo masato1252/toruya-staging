@@ -18,7 +18,7 @@ RSpec.describe Plan do
       end
 
       context "when customers is 51" do
-        it "returns rank 0" do
+        it "returns rank 1" do
           expect(Plan.rank(Plan::FREE_LEVEL, 51)).to eq(1)
         end
       end
@@ -26,38 +26,38 @@ RSpec.describe Plan do
 
     context "when plan is basic" do
       context "when customers is 199" do
-        it "returns rank 0" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 199)).to eq(0)
+        it "returns rank 1" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 199)).to eq(1)
         end
       end
 
       context "when customers is 200" do
-        it "returns rank 0" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 200)).to eq(0)
+        it "returns rank 1" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 200)).to eq(1)
         end
       end
 
       context "when customers is 201" do
-        it "returns rank 1" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 201)).to eq(1)
+        it "returns rank 2" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 201)).to eq(2)
         end
       end
 
       context "when customers is 499" do
         it "returns rank 3" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 499)).to eq(2)
+          expect(Plan.rank(Plan::BASIC_LEVEL, 499)).to eq(3)
         end
       end
 
       context "when customers is 500" do
         it "returns rank 3" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 500)).to eq(2)
+          expect(Plan.rank(Plan::BASIC_LEVEL, 500)).to eq(3)
         end
       end
 
       context "when customers is 501" do
         it "returns rank 4" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 501)).to eq(3)
+          expect(Plan.rank(Plan::BASIC_LEVEL, 501)).to eq(4)
         end
       end
     end
@@ -75,31 +75,31 @@ RSpec.describe Plan do
     context "when plan is basic" do
       context "when rank is 0" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 0)).to eq(200)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 0)).to eq(100)
         end
       end
 
       context "when rank is 1" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 1)).to eq(300)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 1)).to eq(200)
         end
       end
 
       context "when rank is 2" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 2)).to eq(500)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 2)).to eq(300)
         end
       end
 
       context "when rank is 3" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 3)).to eq(800)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 3)).to eq(500)
         end
       end
 
       context "when rank is 7" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 7)).to eq(Float::INFINITY)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 7)).to eq(2000)
         end
       end
     end
@@ -119,7 +119,7 @@ RSpec.describe Plan do
 
       context "when rank is 7" do
         it "returns expected cost" do
-          expect(Plan.cost_with_currency(Plan::BASIC_LEVEL, 7)).to eq(8_250.to_money)
+          expect(Plan.cost_with_currency(Plan::BASIC_LEVEL, 7)).to eq(11_660.to_money)
         end
       end
     end

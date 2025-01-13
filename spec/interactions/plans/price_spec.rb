@@ -17,7 +17,7 @@ RSpec.describe Plans::Price do
   let(:outcome) { described_class.run(args) }
 
   before do
-    stub_const("Plan::DETAILS_OLD", {
+    stub_const("Plan::DETAILS_JP", {
       Plan::FREE_LEVEL => [
         {
           rank: 0,

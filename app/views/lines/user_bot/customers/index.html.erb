@@ -21,7 +21,7 @@
     draft_message_content: @draft_message_content,
     customer_tags: current_user.user_setting.customer_tags,
     support_feature_flags: support_feature_flags,
-    block_toruya_message_reply: !Current.business_owner.premium_member? && today >= Date.new(2025, 1, 10),
+    block_toruya_message_reply: !Current.business_owner.premium_member?,
     upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL),
     support_feature_flags: support_feature_flags,
     i18n: {
@@ -36,23 +36,6 @@
 },
 { camelize_props: false }
 ) %>
-
-<% if !Current.business_owner.premium_member? && today < Date.new(2025, 1, 10) && today >= Date.new(2024, 12, 9) %>
-  <div class="modal fade" id="toruyaMessageReplyModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">
-          <%= t("warnings.user_bot.toruya_message_reply.title") %>
-        </h4>
-      </div>
-      <div class="modal-body">
-        <%= t("warnings.user_bot.toruya_message_reply.content_html", upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL)) %>
-        </div>
-      </div>
-    </div>
-  </div>
-<% end %>
 
 <div class="modal fade" id="toruyaMessageReplyDifferenceModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">

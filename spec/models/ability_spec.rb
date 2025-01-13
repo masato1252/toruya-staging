@@ -312,7 +312,7 @@ RSpec.describe Ability do
       context "when user is under trial plan" do
         let(:free_customer_limit) { 1 }
         before do
-          stub_const("Plan::DETAILS_OLD", {
+          stub_const("Plan::DETAILS_JP", {
             Plan::FREE_LEVEL => [
               {
                 rank: 0,
