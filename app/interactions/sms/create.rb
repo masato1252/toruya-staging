@@ -11,7 +11,7 @@ module Sms
     object :reservation, default: nil
 
     def execute
-      SmsClient.send(phone_number, message)
+      SmsClient.send(phone_number, message, user&.locale || customer&.locale || "ja")
 
       Notification.create!(
         user: user,
