@@ -32,7 +32,7 @@ module RichMenus
       if social_rich_menu.image.attached?
         social_rich_menu.image.url
       elsif social_rich_menu.social_name.match?(/[0-9]/)
-        if social_account.user.locale == "tw"
+        if social_account.user.locale == :tw
           File.join(Rails.root, "app", "assets", "images", "rich_menus", "tw", "#{SocialAccounts::RichMenus::CustomerReservations::KEY}.png")
         else
           File.join(Rails.root, "app", "assets", "images", "rich_menus", "#{SocialAccounts::RichMenus::CustomerReservations::KEY}.png")
