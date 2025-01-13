@@ -47,7 +47,13 @@ class SocialRichMenu < ApplicationRecord
   end
 
   def default_image_url
-    social_name ? "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/#{social_name}.png" : nil
+    return nil unless social_name
+
+    if locale == "tw"
+      "https://www.toruya.tw/app_assets/customer_reservations.png"
+    else
+      "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/#{social_name}.png"
+    end
   end
 
   def state
