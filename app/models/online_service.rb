@@ -96,7 +96,7 @@ class OnlineService < ApplicationRecord
       single_content: true,
       stripe_required: true,
       one_time_charge: true,
-      premium_member_required: false,
+      premium_member_required: true,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -205,19 +205,19 @@ class OnlineService < ApplicationRecord
       {
         key: goal[:key],
         name: I18n.t("user_bot.dashboards.online_service_creation.goals.#{goal[:key]}.title"),
-        description: I18n.t("user_bot.dashboards.online_service_creation.goals.#{goal[:key]}.description"), 
+        description: I18n.t("user_bot.dashboards.online_service_creation.goals.#{goal[:key]}.description"),
         enabled: goal[:enabled],
         single_content: goal[:single_content],
         stripe_required: goal[:stripe_required],
         one_time_charge: goal[:one_time_charge],
         recurring_charge: goal[:recurring_charge],
-        premium_member_required: goal[:premium_member_required] || 
-          (goal[:key] == 'paid_lesson' && Time.current >= Time.new(2025, 1, 10)),
+        premium_member_required: goal[:premium_member_required],
         solutions: goal[:solutions].map do |solution|
           {
             key: solution[:key],
             name: I18n.t("user_bot.dashboards.online_service_creation.solutions.#{solution[:key]}.title"),
-            description: I18n.t("user_bot.dashboards.online_service_creation.solutions.#{solution[:key]}.description")
+            description: I18n.t("user_bot.dashboards.online_service_creation.solutions.#{solution[:key]}.description"),
+            enabled: solution[:enabled]
           }
         end
       }
@@ -239,7 +239,7 @@ class OnlineService < ApplicationRecord
   end
 
   def solution_options
-    GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
+    self.class.goals.find {|solution| solution[:key] == goal_type}[:solutions]
   end
 
   def course_like?
