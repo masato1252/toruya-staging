@@ -19,7 +19,7 @@ RSpec.describe Sms::Create do
 
   describe "#execute" do
     it "calls SmsClient and creates Notification" do
-      expect(SmsClient).to receive(:send).with(phone_number, message)
+      expect(SmsClient).to receive(:send).with(phone_number, message, user.locale)
 
       expect {
         outcome

@@ -96,7 +96,11 @@ class SocialAccount < ApplicationRecord
     current_rich_menu&.official?
   end
 
+  def default_rich_menu_key
+    "#{SocialAccounts::RichMenus::CustomerReservations::KEY}_#{id}"
+  end
+
   def current_rich_menu_key
-    current_rich_menu&.social_name || SocialAccounts::RichMenus::CustomerReservations::KEY
+    current_rich_menu&.social_name || default_rich_menu_key
   end
 end

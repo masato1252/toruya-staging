@@ -66,7 +66,7 @@ module SocialAccounts
             ::RichMenus::Create,
             social_account: social_account,
             body: body,
-            key: KEY,
+            key: social_account.default_rich_menu_key,
             internal_name: I18n.t("common.default"),
             bar_label: sentence,
             default_menu: true,

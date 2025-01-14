@@ -21,7 +21,7 @@ module RichMenus
 
     def execute
       key = social_name.presence || SecureRandom.uuid
-      key = "#{key}_#{social_account.id}" if key == SocialAccounts::RichMenus::CustomerReservations::KEY
+      key = social_account.default_rich_menu_key if key == SocialAccounts::RichMenus::CustomerReservations::KEY
 
       body = compose(
         RichMenus::Body,
