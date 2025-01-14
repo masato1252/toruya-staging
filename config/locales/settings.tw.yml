@@ -690,8 +690,8 @@ tw:
     social_rich_menus:
       action_types:
         incoming_reservations: 所有預約
-        booking_pages: 透過預約頁面接受
-        booking_options: 透過預約項目接受
+        booking_pages: 預約頁面
+        booking_options: 預約項目
         contacts: 聯絡我們
         services: 使用中的服務
         sale_page: 銷售頁面
