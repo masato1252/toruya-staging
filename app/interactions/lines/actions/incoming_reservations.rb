@@ -29,7 +29,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         ).template,
       ]
 
-      if shop.phone_number.present?
+      if shop.phone_number.present? && shop.phone_number.to_i.positive?
         action_templates << LineActions::Uri.new(action: "call", url: "tel:#{shop.phone_number}", btn: "secondary").template
       end
 
