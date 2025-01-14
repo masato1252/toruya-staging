@@ -756,7 +756,7 @@ tw:
           sell_what_page: 您要銷售哪個預約頁面？
           select_header_template: 您要使用什麼樣的標題？
           select_color_html: "更改文字和顏色<br />可以讓標題更吸引人。"
-          color_tip: ※此資訊將反映在店鋪設定中。
+          color_tip: ※此資訊將反映在行銷頁面上。
           why_user_buy_html: "這個預約服務的購買理由<br />或購買者的未來願景是什麼？"
           what_user_get: 輸入標語
           what_user_get_tip: ※建議每行約15個字，最多3行
