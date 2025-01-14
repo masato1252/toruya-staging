@@ -423,7 +423,7 @@ tw:
         tags_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
         no_broadcasts_title: 沒有分眾傳播過
         no_broadcasts_desc: 請建立分眾傳播
-        form: 
+        form:
           query_title: 發送對象
           query_subtitle: 發送對象
           content_title: 訊息內容
@@ -803,9 +803,9 @@ tw:
             line_title: 線上課程
             description: 建立按順序提供多個視頻課程和PDF工作簿的線上課程
           membership:
-            title: 會員制服務
-            line_title: 會員制服務
-            description: 建立持續購買多個視頻課程和PDF工作簿的會員制服務
+            title: 訂閱制服務
+            line_title: 訂閱制服務
+            description: 建立持續購買多個視頻課程和PDF工作簿的訂閱制服務
           external:
             title: 外部服務
             line_title: 外部服務
@@ -842,7 +842,7 @@ tw:
             title: 線上課程
             description: 建立按順序提供多個影片課程和PDF工作簿的服務
           membership:
-            title: 會員制服務
+            title: 訂閱制服務
             description: 建立為註冊會員提供多個影片和PDF的限定服務
           bundler:
             title: 套餐
