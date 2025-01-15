@@ -39,6 +39,7 @@ module LineMessages
         "footer": {
           "type": "box",
           "layout": "vertical",
+          "spacing": "md",
           "contents": action_templates
         },
         "styles": {
