@@ -27,7 +27,7 @@ class SmsClient
 
   private
 
-  def locale_country_code(locale)
+  def self.locale_country_code(locale)
     case locale
     when "ja", :ja
       "JP"
