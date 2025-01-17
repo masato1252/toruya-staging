@@ -5,6 +5,10 @@ require "utils"
 class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashboardController
   def index
     @current_rich_menu = Current.business_owner.social_account.current_rich_menu
+    # show rollbar when no current rich menu
+    if @current_rich_menu.blank?
+      Rollbar.error("No current rich menu", business_owner_id: Current.business_owner.id)
+    end
 
     @pending_rich_menus = Current.business_owner.social_account.social_rich_menus.pending
   end
