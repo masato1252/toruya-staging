@@ -728,30 +728,30 @@ tw:
       new_button: 設定帳號
       info1_label: LINE頻道基本設定
       info2_label: Messaging API設定
-      webhook_desc: 請複製下方URL並貼到LINE開發者的Webhook設定中。
+      webhook_desc: 請複製下方URL並貼到LINE Developers的Webhook設定中。
       copy_webhook_btn: 複製Webhook URL
-      callback_desc: 請複製下方URL並貼到LINE開發者的回調URL設定中。
-      copy_callback_btn: 複製回調URL
+      callback_desc: 請複製下方URL並貼到LINE Developers的Callback URL設定中。
+      copy_callback_btn: 複製Callback URL
       form:
-        channel_basic_id: 機器人的基本ID
-        basic_id_title: 機器人的基本ID
-        channel_basic_id_tip: 請從LINE開發者複製機器人的基本ID並貼上
-        basic_id_hint: 請從LINE開發者複製機器人的基本ID並貼上
-        channel_token: 頻道存取權杖
-        channel_token_title: 頻道存取權杖
-        channel_token_tip: 請從LINE開發者複製頻道存取權杖（長期）並貼上
-        channel_token_hint: 請從LINE開發者複製頻道存取權杖（長期）並貼上
-        channel_id: 頻道ID
-        channel_id_title: 頻道ID
-        channel_id_tip: 請從LINE開發者複製頻道ID並貼上
-        channel_id_hint: 請從LINE開發者複製頻道ID並貼上
-        channel_name: 頻道名稱
-        label_title: 頻道名稱
+        channel_basic_id: Bot basic ID
+        basic_id_title: Bot basic ID
+        channel_basic_id_tip: 請從LINE Developers複製Bot basic ID並貼上
+        basic_id_hint: 請從LINE Developers複製Bot basic ID並貼上
+        channel_token: Channel access token
+        channel_token_title: Channel access token
+        channel_token_tip: 請從LINE Developers複製Channel access token（Long-lived）並貼上
+        channel_token_hint: 請從LINE Developers複製Channel access token（Long-lived）並貼上
+        channel_id: Channel ID
+        channel_id_title: Channel ID
+        channel_id_tip: 請從LINE Developers複製Channel ID並貼上
+        channel_id_hint: 請從LINE Developers複製Channel ID並貼上
+        channel_name: Channel name
+        label_title: Channel name
         channel_name_tip: 請輸入在Toruya上管理用的標籤
         label_hint: 請輸入在Toruya上管理用的標籤
-        channel_secret: 頻道密鑰
-        channel_secret_title: 頻道密鑰
-        channel_secret_tip: 請從LINE開發者複製頻道密鑰並貼上
-        channel_secret_hint: 請從LINE開發者複製頻道密鑰並貼上
-        login_channel_id_title: 頻道ID
-        login_channel_secret_title: 頻道密鑰
+        channel_secret: Channel secret
+        channel_secret_title: Channel secret
+        channel_secret_tip: 請從LINE Developers複製Channel secret並貼上
+        channel_secret_hint: 請從LINE Developers複製Channel secret並貼上
+        login_channel_id_title: Channel ID
+        login_channel_secret_title: Channel secret
