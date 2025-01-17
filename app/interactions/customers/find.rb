@@ -27,9 +27,9 @@ module Customers
         customer.social_customer.present?
       end
 
-      # any customer updated in 30 days ago
+      # any customer updated in 180 days ago
       matched_customers = matched_customers.presence || customers.find_all do |customer|
-        customer.updated_at >= 30.days.ago
+        customer.updated_at >= 180.days.ago
       end
 
       booking_customer =
