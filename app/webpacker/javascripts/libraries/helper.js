@@ -158,6 +158,22 @@ const isValidHttpUrl = (string) => {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
+const isValidLineUri = (string) => {
+  let url;
+
+  if (string === '') return true;
+
+  if (string.startsWith('tel:')) return true;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
 const isValidLength= (string, length) => {
   return (string ?? "").length <= length;
 }
@@ -198,6 +214,7 @@ export {
   Translator,
   zeroPad,
   isValidHttpUrl,
+  isValidLineUri,
   isValidLength,
   responseHandler,
   currencyFormat,

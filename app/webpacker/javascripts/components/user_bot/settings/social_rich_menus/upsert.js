@@ -8,7 +8,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SelectOptions } from "shared/components"
 import ImageSelect from "shared/image_select"
-import { isValidHttpUrl, isValidLength } from "libraries/helper";
+import { isValidLineUri, isValidLength } from "libraries/helper";
 import { CommonServices } from "user_bot/api";
 
 const ActionTypeFields = ({action_type, register, index, props, watch, keyword_booking_pages_size, keyword_booking_options_size}) => {
@@ -18,7 +18,7 @@ const ActionTypeFields = ({action_type, register, index, props, watch, keyword_b
         <div className="my-2">
           {I18n.t("settings.social_rich_menus.line_send_booking_pages")}： {keyword_booking_pages_size} {I18n.t("common.object_unit")}
           <a
-            href="#" 
+            href="#"
             data-toggle="modal"
             data-target="#booking_pages_keyword_modal"
             data-controller="modal"
@@ -36,7 +36,7 @@ const ActionTypeFields = ({action_type, register, index, props, watch, keyword_b
         <div className="my-2">
           {I18n.t("settings.social_rich_menus.line_send_booking_options")}： {keyword_booking_options_size} {I18n.t("common.object_unit")}
           <a
-            href="#" 
+            href="#"
             data-toggle="modal"
             data-target="#booking_options_keyword_modal"
             data-controller="second-modal"
@@ -79,8 +79,8 @@ const ActionTypeFields = ({action_type, register, index, props, watch, keyword_b
     return (
       <>
         <div className="my-2">
-          <input type="text" name={`actions[${index}].value`} ref={register({ required: true, validate: isValidHttpUrl })} placeholder={I18n.t("settings.social_rich_menus.url_placeholder")} />
-          {!isValidHttpUrl(watch(`actions[${index}].value`)) && <span className="warning">{I18n.t("errors.invalid_url")}</span>}
+          <input type="text" name={`actions[${index}].value`} ref={register({ required: true, validate: isValidLineUri })} placeholder={I18n.t("settings.social_rich_menus.url_placeholder")} />
+          {!isValidLineUri(watch(`actions[${index}].value`)) && <span className="warning">{I18n.t("errors.invalid_url")}</span>}
         </div>
         <div>
           <input type="text" name={`actions[${index}].desc`} ref={register()} placeholder={I18n.t("settings.social_rich_menus.url_desc")} />
