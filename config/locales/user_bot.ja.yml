@@ -84,6 +84,7 @@ ja:
         unread_confirmation_message: 未読メッセージとして後ほど通知しますか？
         reply_later: 後で通知
         line_info: LINE名
+        create_customer_manually_notice: お客様に予約ページを直接共有することで、手動での顧客データ作成が不要になります。
       settings:
         user_settings:
           line_contact_customer_name_required:
@@ -415,14 +416,14 @@ ja:
         state: 配信ステータス
         time: 配信時間
         stop_desc: 配信内容を編集するには【配信中止】ボタンを押してください。
-        active_desc: 予定通り配信するには編集して【有効化】を押してください 
+        active_desc: 予定通り配信するには編集して【有効化】を押してください
         stop_send: 配信中止
         are_you_sure_to_stop: 本当に配信を中止しますか？
         clone_successfully: 複製されました
         tags_usage_desc: 選択を解除するには、設定されたサービス名をタップしてください。
         no_broadcasts_title: 配信条件がありません
         no_broadcasts_desc: 配信条件を作成してください
-        form: 
+        form:
           query_title: 配信相手
           query_subtitle: 配信相手
           content_title: メッセージ内容

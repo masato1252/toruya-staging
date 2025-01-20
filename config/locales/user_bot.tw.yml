@@ -84,6 +84,7 @@ tw:
         unread_confirmation_message: 是否將此標記為未讀訊息以便稍後通知？
         reply_later: 稍後通知
         line_info: LINE名稱
+        create_customer_manually_notice: 您可以直接把預約頁面分享給您客戶，這樣您就不需要手動建立客戶資料。
       settings:
         user_settings:
           line_contact_customer_name_required:

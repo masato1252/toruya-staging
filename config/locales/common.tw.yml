@@ -279,6 +279,8 @@ tw:
     press_enter_to_add_tag: 輸入標籤
     seat_number: 位
     toruya_user_login_html: 請用Line 帳號註冊或登入，<br />這是為了方便您可以直接用Line 聯繫我們
+    notice: 注意
+    hint: 提示
     login: 登入
     template_version: 範本
     welcome_to_toruya: 歡迎來到 Toruya

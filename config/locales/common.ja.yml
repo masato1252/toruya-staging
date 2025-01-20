@@ -277,6 +277,8 @@ ja:
     press_enter_to_add_tag: タグフレーズを入力
     seat_number: 座席数
     toruya_user_login_html: Toruyaのユーザー登録がお済の方は、こちらからログインしてください。
+    notice: 注意
+    hint: ヒント
     login: ログイン
     template_version: テンプレート
     welcome_to_toruya: Welcome to Toruya

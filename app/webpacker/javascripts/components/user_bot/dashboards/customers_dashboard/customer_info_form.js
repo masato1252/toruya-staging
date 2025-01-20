@@ -187,6 +187,15 @@ const UserBotCustomerInfoForm = () => {
       <input ref={register} name="id" type="hidden" />
 
       <div className="customer-edit">
+        {
+          !selected_customer.id && (
+            <div className="field-row">
+              <span className="warning">
+                {I18n.t("common.hint")}: {I18n.t("user_bot.dashboards.customer.create_customer_manually_notice")}
+              </span>
+            </div>
+          )
+        }
         <div className="field-row" >
           <span>{i18n.group}</span>
           <select name="contact_group_id" ref={register({ required: true })}>
