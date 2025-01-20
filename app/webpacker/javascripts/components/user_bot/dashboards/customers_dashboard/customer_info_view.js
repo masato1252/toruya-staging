@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import moment from "moment-timezone";
+import { useHistory } from "react-router-dom";
+import Popup from "reactjs-popup";
 
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import CustomerBasicInfo from "./customer_basic_info";
@@ -10,10 +12,46 @@ import CustomerNav from "./customer_nav";
 import { zeroPad } from "libraries/helper";
 
 const BottomBar = () => {
-  const { selected_customer, props, dispatch } = useGlobalContext()
+  const { selected_customer, props, dispatch, deleteCustomer } = useGlobalContext()
+  let history = useHistory();
 
   return (
     <BottomNavigationBar klassName="centerize">
+      {selected_customer && (
+        <Popup
+          modal
+          trigger={
+            <button className="btn btn-orange btn-circle btn-delete btn-tweak btn-with-word">
+              <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
+              <div className="word">{I18n.t("action.delete")}</div>
+            </button>
+          }>
+            {close => (
+              <div>
+                <div className="modal-body centerize">
+                  <div className="margin-around">
+                    {I18n.t("user_bot.dashboards.customer.delete_confirmation_message")}
+                  </div>
+                </div>
+                <div className="modal-footer flex justify-between">
+                  <button
+                    className="btn btn-orange"
+                    onClick={() => {
+                      deleteCustomer(selected_customer.id)
+                      history.goBack()
+                    }}>
+                    {I18n.t("action.delete2")}
+                  </button>
+                  <button
+                    className="btn btn-tarco"
+                    onClick={close}>
+                    {I18n.t("action.cancel")}
+                  </button>
+                </div>
+              </div>
+            )}
+        </Popup>
+      )}
       <span>
         {props.i18n.updated_date} {selected_customer.lastUpdatedAt}({zeroPad(selected_customer?.id || 0, 7)})
       </span>
