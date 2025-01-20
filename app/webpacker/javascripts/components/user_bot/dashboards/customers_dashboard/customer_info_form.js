@@ -36,7 +36,7 @@ const TopBar = () => {
   )
 }
 
-const BottomBar = ({handleSubmit, onSubmit}) => {
+const BottomBar = ({handleSubmit, onSubmit, isSubmitting}) => {
   const { selected_customer, props, deleteCustomer } = useGlobalContext()
   let history = useHistory();
 
@@ -81,7 +81,8 @@ const BottomBar = ({handleSubmit, onSubmit}) => {
 
       <button
         className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak"
-        onClick={handleSubmit(onSubmit)} >
+        onClick={handleSubmit(onSubmit)}
+        disabled={isSubmitting} >
         <i className="fa fa-save fa-2x"></i>
         <div className="word">{I18n.t("action.save")}</div>
       </button>
@@ -93,6 +94,7 @@ const UserBotCustomerInfoForm = () => {
   const { selected_customer, props, selectCustomer } = useGlobalContext()
   const { i18n } = props
   const [similarCustomers, setSimilarCustomers] = useState([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
   let history = useHistory();
 
   const [tags, setTags] = useState((selected_customer.tags || []).map((tag) => ({
@@ -119,7 +121,7 @@ const UserBotCustomerInfoForm = () => {
     }
   });
 
-  const { isSubmitting } = formState;
+  const { isSubmitting: formStateIsSubmitting } = formState;
   const address = useAddress(watch("address_details[zip_code]"))
   const firstNameWatched = watch("first_name")
   const lastNameWatched = watch("last_name")
@@ -171,13 +173,22 @@ const UserBotCustomerInfoForm = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data)
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    let error, response;
+    try {
+      let error, response;
+      [error, response] = await CustomerServices.save({ business_owner_id: props.business_owner_id, data: { ...data, tags } })
 
-    [error, response] = await CustomerServices.save({ business_owner_id: props.business_owner_id, data: { ...data, tags } })
+      if (error) {
+        throw error;
+      }
 
-    window.location = response.data.redirect_to
+      window.location = response.data.redirect_to
+    } catch (err) {
+      console.error('Submission error:', err);
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -418,6 +429,7 @@ const UserBotCustomerInfoForm = () => {
       <BottomBar
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
+        isSubmitting={isSubmitting}
       />
     </div>
   )
