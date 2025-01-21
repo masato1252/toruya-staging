@@ -52,7 +52,7 @@ class SocialRichMenu < ApplicationRecord
     if locale == "tw"
       "https://www.toruya.tw/app_assets/customer_reservations.png"
     else
-      "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/#{social_name}.png"
+      "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/customer_reservations.png"
     end
   end
 
@@ -87,7 +87,7 @@ class SocialRichMenu < ApplicationRecord
   end
 
   def self.label_key_mapping
-    I18n.available_locales.map { |locale| 
+    I18n.available_locales.map { |locale|
       I18n.t("line.bot.keywords", locale: locale).invert
     }.reduce({}, :merge)
   end
