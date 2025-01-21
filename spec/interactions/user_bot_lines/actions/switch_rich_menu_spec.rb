@@ -4,8 +4,9 @@ require "rails_helper"
 
 RSpec.describe UserBotLines::Actions::SwitchRichMenu do
   let(:social_account) { FactoryBot.create(:social_account) }
-  let(:social_user) { FactoryBot.create(:social_user, user: social_account.user) }
-  let!(:staff_account) { FactoryBot.create(:staff_account, user: social_user.user, owner: social_user.user) }
+  let(:user) { social_account.user }
+  let(:social_user) { FactoryBot.create(:social_user, user: user) }
+  let!(:staff_account) { FactoryBot.create(:staff_account, user: user, owner: user) }
   let(:args) do
     {
       social_user: social_user,
@@ -31,21 +32,38 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
       end
     end
 
-    context "when try to switch normal dashboard rich menu" do
+    context "when try to switch dashboard rich menu" do
       let(:rich_menu_key) { UserBotLines::RichMenus::Dashboard::KEY }
 
       context "when there is unread message" do
         before { FactoryBot.create(:social_message, social_account: social_account) }
 
-        it "switch to expected rich_menu" do
-          expect(RichMenus::Connect).to receive(:run).with(
-            {
-              social_target: social_user,
-              social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
-            }
-          ).and_return(double(invalid?: false, result: double))
+        context "when user is basic plan user" do
+          it "switch to expected rich_menu" do
+            expect(RichMenus::Connect).to receive(:run).with(
+              {
+                social_target: social_user,
+                social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+              }
+            ).and_return(double(invalid?: false, result: double))
 
-          outcome
+            outcome
+          end
+        end
+
+        context "when user is premium plan user" do
+          before { user.subscription.update(plan: Plan.premium_level.take, expired_date: Subscription.today.advance(days: 1)) }
+
+          it "switch to expected rich_menu" do
+            expect(RichMenus::Connect).to receive(:run).with(
+              {
+                social_target: social_user,
+                social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
+              }
+            ).and_return(double(invalid?: false, result: double))
+
+            outcome
+          end
         end
       end
 
