@@ -52,7 +52,7 @@ class SocialRichMenu < ApplicationRecord
     if locale == "tw"
       "https://www.toruya.tw/app_assets/customer_reservations.png"
     else
-      "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/customer_reservations.png"
+      "https://toruya.s3.ap-southeast-1.amazonaws.com/public/rich_menus/new_customer_reservations.png"
     end
   end
 
