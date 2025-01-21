@@ -32,7 +32,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { CommonServices } from "user_bot/api";
 
 const BookingReservationFormFunction = ({props}) => {
-  moment.locale("ja");
+  moment.locale(props.locale);
   let findCustomerCall;
 
   const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(props.booking_reservation_form)
@@ -550,6 +550,7 @@ const BookingReservationFormFunction = ({props}) => {
               i18n={props.i18n}
               findCustomer={findCustomer}
               support_phonetic_name={props.support_feature_flags.support_phonetic_name}
+              locale={props.locale}
             />
           )}
           {isBookingFlowEnd() && isSocialLoginChecked() && (
@@ -620,6 +621,7 @@ const BookingReservationFormFunction = ({props}) => {
               i18n={props.i18n}
               findCustomer={findCustomer}
               support_phonetic_name={props.support_feature_flags.support_phonetic_name}
+              locale={props.locale}
             />
           )}
           {isBookingFlowEnd() && isSocialLoginChecked() && (

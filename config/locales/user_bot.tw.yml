@@ -183,7 +183,7 @@ tw:
           auto_message: 提醒發送（預設）
         custom_message:
           auto_message_label: 自動發送訊息
-          line_message_title: LINE訊息設定
+          line_message_title: 提醒訊息設定
           auto_message_booking_label: 提醒發送
           auto_message_service_label: 階段發送
           send_message_label: 發送訊息
