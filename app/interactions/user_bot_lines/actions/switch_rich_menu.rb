@@ -11,10 +11,10 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
 
     if rich_menu_key == UserBotLines::RichMenus::Dashboard::KEY
       social_user.manage_accounts.each do |owner|
-        if (owner.social_account && owner.social_account.social_messages.handleable.unread.exists?) ||
+        if (unread_messages_exists?(owner) ||
             owner.pending_reservations.exists? ||
             owner.missing_sale_page_services.exists? ||
-            owner.pending_customer_services.exists?
+            owner.pending_customer_services.exists?)
           menu_key = UserBotLines::RichMenus::DashboardWithNotifications::KEY
         end
       end
@@ -29,5 +29,11 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
         social_rich_menu: ::SocialRichMenu.find_by!(social_name: menu_key, locale: social_user.locale)
       )
     end
+  end
+
+  private
+
+  def unread_messages_exists?(owner)
+    owner.social_account && owner.support_toruya_message_reply? && owner.social_account.social_messages.handleable.unread.exists?
   end
 end

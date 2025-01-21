@@ -201,6 +201,10 @@ class User < ApplicationRecord
     member_plan == Plan::BUSINESS_PLAN
   end
 
+  def support_toruya_message_reply?
+    premium_member?
+  end
+
   def valid_shop_ids
     @valid_shop_ids ||=
       if true || premium_member?

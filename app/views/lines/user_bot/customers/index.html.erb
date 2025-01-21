@@ -21,7 +21,7 @@
     draft_message_content: @draft_message_content,
     customer_tags: current_user.user_setting.customer_tags,
     support_feature_flags: support_feature_flags,
-    block_toruya_message_reply: !Current.business_owner.premium_member?,
+    block_toruya_message_reply: !Current.business_owner.support_toruya_message_reply?,
     upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL),
     support_feature_flags: support_feature_flags,
     i18n: {
