@@ -15,7 +15,7 @@ module Notifiers
 
         pending_reservations_count =
           ReservationCustomer.joins(:reservation).where("reservations.user_id": receiver.id).where("reservation_customers.created_at": period).pending.count
-        pending_messages_count = receiver.social_account ? receiver.social_account.social_messages.handleable.unread.where(created_at: period).count : 0
+        pending_messages_count = receiver.social_account && receiver.support_toruya_message_reply? ? receiver.social_account.social_messages.handleable.unread.where(created_at: period).count : 0
         pending_online_service_count =
           OnlineServiceCustomerRelation.
           joins(:online_service).
