@@ -18,24 +18,6 @@
         </dd>
       <% end %>
 
-      <% if reservation.reserved? || reservation.noshow? %>
-        <dd>
-
-        <% if !user_ability.can?(:check_content, reservation)%>
-          <%= modal_link_to(
-            t("reservation.check_in"),
-            check_reservation_content_lines_user_bot_warnings_path,
-            class: "btn enhanced BTNyellow",
-            modal_target: "#dummyModal2"
-          ) %>
-        <% elsif user_ability.can?(:edit, reservation) &&  %>
-          <%= link_to t("reservation.check_in"), SiteRouting.new(self).check_in_shop_reservation_states_path(reservation.shop, reservation, business_owner_id: reservation.user_id, reservation_date: params[:reservation_date]), class: "btn enhanced BTNyellow" %>
-        <% else %>
-          <%= link_to t("reservation.check_in"), "#", class: "btn enhanced BTNyellow disabled" %>
-        <% end %>
-        </dd>
-      <% end %>
-
       <% if reservation.checked_out? %>
         <dd>
         <% if !user_ability.can?(:check_content, reservation)%>

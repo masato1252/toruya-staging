@@ -82,7 +82,7 @@ class Reservation < ApplicationRecord
     end
 
     event :check_out do
-      transitions from: :checked_in, to: :checked_out
+      transitions from: [:checked_in, :reserved, :noshow], to: :checked_out
     end
 
     event :cancel do
