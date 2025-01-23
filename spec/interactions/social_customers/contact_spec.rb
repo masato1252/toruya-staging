@@ -16,7 +16,6 @@ RSpec.describe SocialCustomers::Contact do
   describe "#execute" do
     context "when social_customer connected with customer" do
       it "creates a message" do
-        expect(LineClient).to receive(:send).with(social_customer, I18n.t("contact_page.message_sent.line_content"))
         expect {
           outcome
         }.to change {
@@ -39,7 +38,6 @@ RSpec.describe SocialCustomers::Contact do
       end
 
       it "creates a message and customer" do
-        expect(LineClient).to receive(:send).with(social_customer, I18n.t("contact_page.message_sent.line_content"))
         expect {
           outcome
         }.to change {
