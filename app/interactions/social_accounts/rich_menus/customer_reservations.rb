@@ -24,7 +24,7 @@ module SocialAccounts
                 "bounds": {
                   "x": 0,
                   "y": 0,
-                  "width": 833,
+                  "width": 1250,
                   "height": 843
                 },
                 "action": {
@@ -35,28 +35,15 @@ module SocialAccounts
               },
               {
                 "bounds": {
-                  "x": 834,
+                  "x": 1251,
                   "y": 0,
-                  "width": 833,
+                  "width": 1250,
                   "height": 843
                 },
                 "action": {
                   "type": "message",
                   "label": I18n.t("line.bot.keywords.booking_pages"),
                   "text": I18n.t("line.bot.keywords.booking_pages")
-                }
-              },
-              {
-                "bounds": {
-                  "x": 1667,
-                  "y": 0,
-                  "width": 833,
-                  "height": 843
-                },
-                "action": {
-                  "type": "message",
-                  "label": I18n.t("line.bot.keywords.contacts"),
-                  "text": I18n.t("line.bot.keywords.contacts")
                 }
               }
             ]
