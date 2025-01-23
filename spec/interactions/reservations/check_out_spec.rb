@@ -14,7 +14,7 @@ RSpec.describe Reservations::CheckOut do
 
   describe "#execute" do
     context "when reservation is not check_out" do
-      let(:reservation) { FactoryBot.create(:reservation, :reserved) }
+      let(:reservation) { FactoryBot.create(:reservation, :pending) }
 
       it "add errors" do
         expect(outcome.errors.details[:reservation]).to include(error: :not_checkoutable)
