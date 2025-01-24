@@ -51,7 +51,7 @@ tw:
       title: 分眾傳播
     booking_pages:
       title: 線上預約
-      list: 預約頁面 
+      list: 預約頁面
     metrics:
       title: 訪問分析
       dashboard_title: 儀表板
@@ -171,6 +171,7 @@ tw:
     checked_out: 已結帳
     reserved: 已確認
     canceled: 已取消
+    deleted: 已取消
     memo: 備註內容
     contain_some_warnings: 此預約包含注意事項
     deleted_staffs_sentence: "%{staff_names_sentence} 已從成員名單中刪除"

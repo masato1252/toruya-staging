@@ -12,10 +12,14 @@ class BookingsController < ActionController::Base
   end
 
   def destroy
-    ReservationCustomers::CustomerCancel.run!(
+    outcome = ReservationCustomers::CustomerCancel.run(
       reservation_customer: reservation_customer,
       cancel_reason: "#{params[:cancel_reason]&.join(',')},#{params[:other_reason]}"
     )
+
+    if outcome.invalid?
+      Rollbar.error("ReservationCustomers::CustomerCancel", details: outcome.errors.details, slug: reservation_customer.slug)
+    end
 
     redirect_to booking_path(reservation_customer.slug)
   end

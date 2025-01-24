@@ -51,7 +51,7 @@ ja:
       title: セグメント配信
     booking_pages:
       title: オンライン予約
-      list: 予約ページ 
+      list: 予約ページ
     metrics:
       title: アクセス解析
       dashboard_title: ダッシュボード
@@ -171,6 +171,7 @@ ja:
     checked_out: チェックアウト
     reserved: 予約
     canceled: キャンセル
+    deleted: キャンセル
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
