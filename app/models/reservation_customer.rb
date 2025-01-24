@@ -94,7 +94,7 @@ class ReservationCustomer < ApplicationRecord
   def reservation_state
     if accepted?
       reservation.aasm_state
-    elsif customer_canceled?
+    elsif customer_canceled? || deleted? || canceled?
       "canceled"
     else
       state
