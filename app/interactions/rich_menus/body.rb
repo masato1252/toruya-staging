@@ -109,7 +109,7 @@ module RichMenus
           { "x": 1667, "y": 0, "width": 833, "height": 843 }
         ]
       },
-      # i
+      # i - 9
       # 2500x843
       # | 1 |   2   |
       i: {
@@ -119,7 +119,7 @@ module RichMenus
           { "x": 834, "y": 0, "width": 1666, "height": 843 },
         ]
       },
-      # j
+      # j - 10
       # 2500x843
       # |   1   | 2 |
       j: {
@@ -129,7 +129,7 @@ module RichMenus
           { "x": 1667, "y": 0, "width": 833, "height": 843 },
         ]
       },
-      # k
+      # k - 11
       # 2500x843
       # |  1  |  2  |
       k: {
@@ -139,7 +139,7 @@ module RichMenus
           { "x": 1251, "y": 0, "width": 1250, "height": 843 },
         ]
       },
-      # L
+      # L - 12
       # 2500x843
       # |     1     |
       l: {
