@@ -12,7 +12,9 @@ module RichMenus
         social_rich_menu.update(current: true)
       end
 
+      owner_social_customer = social_rich_menu.social_account.user.owner_social_customer
       # Link rich menu to social customer
+      ::RichMenus::Connect.run(social_target: owner_social_customer, social_rich_menu: social_rich_menu) if owner_social_customer
       SocialAccounts::RichMenus::Connect.perform_later(social_rich_menu: social_rich_menu)
 
       social_rich_menu
