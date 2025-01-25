@@ -101,7 +101,7 @@ module RichMenus
       end
 
       social_account.social_rich_menus.where(social_name: key).where.not(id: rich_menu.id).each do |rich_menu|
-        RichMenus::Delete.perform_at(schedule_at: 60.minutes.from_now, social_rich_menu: rich_menu)
+        compose(RichMenus::Delete, social_rich_menu: rich_menu)
       end
     end
   end
