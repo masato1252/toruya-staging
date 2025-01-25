@@ -279,7 +279,7 @@ Rails.application.routes.draw do
             end
 
             resource :rich_menu, only: [:edit, :create, :destroy]
-            resources :social_rich_menus, only: [:index, :new, :edit, :show] do
+            resources :social_rich_menus, only: [:index, :new, :edit, :show, :destroy] do
               collection do
                 post :upsert
                 get :keyword_rich_menu_size

@@ -6,5 +6,6 @@
     <span class="dotdotdot"><%= rich_menu.internal_name %></span>
     <div class="desc"><%= rich_menu.default ? t("settings.social_rich_menus.default_desc") : " " %></div>
     <%= button_to t("settings.social_rich_menus.show_it_now"), current_lines_user_bot_settings_social_account_social_rich_menu_path(business_owner_id, rich_menu), class: "btn btn-tarco", method: :put if !rich_menu.current %>
+    <%= button_to t("action.delete"), lines_user_bot_settings_social_account_social_rich_menu_path(business_owner_id, rich_menu), class: "btn btn-orange", method: :delete, data: { confirm: t("common.are_you_sure_message") } if !rich_menu.current %>
   </div>
 </div>

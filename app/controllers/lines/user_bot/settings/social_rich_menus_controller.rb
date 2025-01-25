@@ -70,6 +70,14 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def destroy
+    @rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
+    outcome = RichMenus::Delete.run(social_rich_menu: @rich_menu)
+
+    if outcome.invalid?
+      Rollbar.error("RichMenus::Delete", details: outcome.errors.details, social_rich_menu_id: @rich_menu.id)
+    end
+
+    redirect_to lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: business_owner_id)
   end
 
   def current
