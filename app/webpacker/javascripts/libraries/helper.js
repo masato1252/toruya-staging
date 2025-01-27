@@ -163,7 +163,7 @@ const isValidLineUri = (string) => {
 
   if (string === '') return true;
 
-  if (string.startsWith('tel:')) return true;
+  if (string?.startsWith('tel:')) return true;
 
   try {
     url = new URL(string);
