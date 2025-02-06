@@ -106,8 +106,8 @@ tw:
           info_label: 帳號資訊
           payments_label: 發票
           line_label: 整合Line
-          line_message_api_label: Messaging API設定
-          line_login_api_label: LINE登入設定
+          line_message_api_label: Messaging API 設定
+          line_login_api_label: LINE Login 設定
           line_rich_menu: 圖文選單
           now_state: 您目前
           customer_info_state: 擁有客戶資料

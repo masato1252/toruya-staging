@@ -12,7 +12,7 @@ tw:
       clean_line_settings: 重置設定
       set_line_settings: 確認設定
       line_settings_finished: LINE 連接設定
-      line_login_verified: LINE 登入設定確認
+      line_login_verified: LINE Login設定確認
       message_api_verified: Messaging API 設定確認
       booking_pages: "預約頁面 %{count}"
       online_services: "服務 %{count}"

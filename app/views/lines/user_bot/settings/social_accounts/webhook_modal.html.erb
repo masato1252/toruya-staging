@@ -13,9 +13,11 @@
         <div class="centerize">
           <%= button_tag I18n.t("settings.social_account.copy_webhook_btn"), class: "btn btn-gray btn-extend", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: webhooks_line_url(@social_account.channel_id), clipboard_popup_text: t("common.copied") } %>
         </div>
-        <div>
-          <%= image_pack_tag "media/assets/management/line_webhook_instruction.png", class: "line-webhook-instruction" %>
-        </div>
+        <% if support_japanese_asset? %>
+          <div>
+            <%= image_pack_tag "media/assets/management/line_webhook_instruction.png", class: "line-webhook-instruction" %>
+          </div>
+        <% end %>
       </div>
     </div>
 
