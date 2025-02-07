@@ -6,7 +6,14 @@ module Users
 
     def execute
       ApplicationRecord.transaction do
-        social_user = existing_user.social_user.deep_clone(only: [:social_service_user_id, :social_user_name, :social_rich_menu_key])
+        social_user = existing_user.social_user.deep_clone(only: [
+          :social_service_user_id,
+          :social_user_name,
+          :social_user_picture_url,
+          :social_rich_menu_key,
+          :locale,
+          :release_version,
+        ])
         social_user.save
 
         user = User.new(password: Devise.friendly_token[0, 20])
