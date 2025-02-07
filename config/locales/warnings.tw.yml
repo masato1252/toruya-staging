@@ -50,7 +50,7 @@ tw:
       upgrade_content_html: <p>由於試用期已結束，您無法再管理預約和客戶資訊。<br>透過升級您的使用方案，我們可以繼續協助您的業務成長。</p>
       upgrade_button: 升級使用方案
     disconnect:
-      content_html: 如果您不打算繼續使用Toruya，無需進行任何特別的程序，我們不會自動向您收費。如果您想解除已設定的LINE連結，請自行操作。
+      content_html: 如果您不打算繼續使用Toruya，無需進行任何特別的程序，我們不會自動向您收費。
       how_to_disconnect_button: 如何解除LINE連結
     create_course:
       upgrade_title: 此為高級會員功能

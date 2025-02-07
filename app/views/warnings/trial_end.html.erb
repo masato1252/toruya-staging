@@ -15,7 +15,9 @@
       <div class="modal-body">
         <%= t("warnings.disconnect.content_html") %>
       </div>
-      <%= link_to t("warnings.disconnect.how_to_disconnect_button"), "https://toruya.com/faq/line_linkage_disconnect", class: "btn btn-tarco" %>
+      <% if support_japanese_asset? %>
+        <%= link_to t("warnings.disconnect.how_to_disconnect_button"), "https://toruya.com/faq/line_linkage_disconnect", class: "btn btn-tarco" %>
+      <% end %>
     </div>
   </div>
 </div>
