@@ -12,7 +12,7 @@ module SocialUsers
       if change_rich_menu && Rails.env.production?
         RichMenus::Connect.run(
           social_target: social_user,
-          social_rich_menu: SocialRichMenu.find_by!(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+          social_rich_menu: SocialRichMenu.find_by!(social_name: UserBotLines::RichMenus::Dashboard::KEY, locale: social_user.locale)
         )
       end
     end
