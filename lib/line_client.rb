@@ -13,7 +13,7 @@ class LineClient
   def self.error_handler(*args)
     response = yield
 
-    if response.is_a?(Net::HTTPBadRequest)
+    if !response.is_a?(Net::HTTPSuccess)
       Rollbar.error(
         "Line client Request failed",
         response: response.body,
