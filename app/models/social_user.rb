@@ -27,6 +27,8 @@
 require "user_bot_social_account"
 require "tw_user_bot_social_account"
 
+# locale means the locale where user sign up their account(sign up from tw or ja)
+
 class SocialUser < ApplicationRecord
   acts_as_taggable_on :memos
   ADMIN_IDS = [
