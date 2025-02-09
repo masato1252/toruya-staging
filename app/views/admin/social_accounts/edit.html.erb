@@ -34,8 +34,10 @@
   </div>
 <% end %>
 
-<hr>
+<br /><hr><br />
 <%= button_to "#{t("admin.chat.clean_line_settings")} (#{@social_account.user_id})", admin_social_account_path(user_id: @social_account.user_id) , method: :delete, data: { confirm: "#{@social_account.user_id} #{t("admin.chat.reset_line_settings")}" }, class: "btn btn-danger" %>
 
 <br />
 <%= button_to t("admin.chat.line_finished_message"), line_finished_message_admin_social_account_path(user_id: @social_account.user_id), class: "btn btn-gray" %>
+<br /><hr><br />
+<%= link_to "Line friend", @social_account.add_friend_url if @social_account.add_friend_url %>
