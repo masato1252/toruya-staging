@@ -126,7 +126,7 @@ class BookingPage < ApplicationRecord
   end
 
   def started?
-    Time.zone.now >= start_time && booking_options.active.exists?
+    Time.zone.now >= start_time
   end
 
   def ended?
