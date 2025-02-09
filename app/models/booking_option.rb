@@ -47,7 +47,7 @@ class BookingOption < ApplicationRecord
 
   scope :started, -> { where(start_at: nil).or(where("booking_options.start_at < ?", Time.current)) }
   scope :end_yet, -> { where(end_at: nil).or(where("booking_options.end_at >= ?", Time.current)) }
-  scope :active, -> { started.end_yet.joins(:booking_option_menus).includes(:booking_option_menus) }
+  scope :active, -> { end_yet.joins(:booking_option_menus).includes(:booking_option_menus) }
   scope :undeleted, -> { where(delete_at: nil) }
 
   def active?
