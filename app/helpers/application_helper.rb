@@ -130,7 +130,8 @@ module ApplicationHelper
 
   def toruya_new_line_account_url(oauth_redirect_to_url, *args)
     options = args.extract_options!
-    encrypted_content = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
+    toruya_user = Current.business_owner.locale == 'tw' ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
+    encrypted_content = MessageEncryptor.encrypt(toruya_user)
     cookies[:who] = { value: encrypted_content, expires: 100.year }
 
     options.merge!(
