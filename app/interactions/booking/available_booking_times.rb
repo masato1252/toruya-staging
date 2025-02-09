@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+# [redundant]
 module Booking
   class AvailableBookingTimes < ActiveInteraction::Base
     include ::Booking::SharedMethods

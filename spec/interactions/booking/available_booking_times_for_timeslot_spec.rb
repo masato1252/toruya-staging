@@ -69,6 +69,12 @@ RSpec.describe Booking::AvailableBookingTimesForTimeslot do
                                              start_at: Time.new(2019, 5, 14),
                                              end_at: Time.new(2019, 5, 26)) }
     it "returns expected result" do
+      result = outcome.result
+
+      expect(result).to eq({})
+    end
+
+    it "returns expected result" do
       args[:booking_option_ids] = [booking_option2.id]
       result = outcome.result
 
@@ -184,7 +190,7 @@ RSpec.describe Booking::AvailableBookingTimesForTimeslot do
             Time.zone.local(2019, 5, 13, 13) => [[booking_option2.id]]
           })
         end
-      end 
+      end
     end
 
     context "when the booking option's menu is no-manpower type(min_staffs_number is 0)" do

@@ -8,7 +8,7 @@ module Booking
     # booking_option_ids
     # ["1"]
     object :booking_page
-    array :booking_option_ids # ["1"] # want to book
+    array :booking_option_ids # ["1"] # the booking option ids that want to book, not candidate booking options
     array :staff_ids # [1] # candidate staffs
     # special_dates
     # [
