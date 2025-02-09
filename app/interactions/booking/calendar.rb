@@ -143,8 +143,7 @@ module Booking
 
       catch :next_working_date do
         # booking_option doesn't sell on that date
-        if booking_option.start_time.to_date > date ||
-            booking_option.end_at && booking_option.end_at.to_date < date
+        if !booking_option.sellable_on?(date)
           next
         end
 

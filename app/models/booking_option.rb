@@ -63,6 +63,13 @@ class BookingOption < ApplicationRecord
       booking_option_menus.any?
   end
 
+  def sellable_on?(date)
+    (start_at.nil? || start_at.to_date <= date) &&
+      (end_at.nil? || end_at.to_date >= date) &&
+      delete_at.nil? &&
+      booking_option_menus.any?
+  end
+
   def present_name
     if ActionView::Base.full_sanitizer.sanitize(display_name).present?
       display_name

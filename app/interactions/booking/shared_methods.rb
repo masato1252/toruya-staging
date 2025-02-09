@@ -16,6 +16,8 @@ module Booking
       customer: nil
     )
       return if date < booking_page.available_booking_start_date
+        # booking_option doesn't sell on that date
+      return if booking_options.any? { |booking_option| !booking_option.sellable_on?(date) }
 
       menu_ids = booking_options.map(&:menu_ids).flatten.uniq
       # if all menus are not single seat, then check same content reservation
