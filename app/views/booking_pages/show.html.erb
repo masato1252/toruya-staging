@@ -16,7 +16,7 @@
   <meta property="og:description" content="<%= @booking_page.name %> <%= booking_page_url(@booking_page.slug) %> <%= @booking_page.greeting&.squish %>">
 <% end %>
 <%
-  page_booking_options = @booking_page_options.filter { |booking_page_option| booking_page_option.booking_option.active? }.map { |booking_page_option| booking_page_option_item(booking_page_option) }
+  page_booking_options = @booking_page_options.filter { |booking_page_option| booking_page_option.booking_option.bookable? }.map { |booking_page_option| booking_page_option_item(booking_page_option) }
   customer_info_hash = customer_info_as_json(@customer)
   booking_option_ids = @is_single_booking_option ? [custom_options(page_booking_options)[0][:id]] : (params[:booking_option_ids].present? ? params[:booking_option_ids].split(",").map(&:to_i) : [])
 %>
