@@ -726,7 +726,7 @@ tw:
       info_html: 您可以透過LINE接受線上預約。<br>請設定<a href='https://developers.line.biz/zh-hant/' target='_blank'>LINE官方帳號</a>，並在LINE中設定Webhook URL。
       name: 名稱
       new_button: 設定帳號
-      info1_label: LINE頻道基本設定
+      info1_label: LINE Channel Basic Settings
       info2_label: Messaging API設定
       webhook_desc: 請複製下方URL並貼到LINE Developers的Webhook設定中。
       copy_webhook_btn: 複製Webhook URL

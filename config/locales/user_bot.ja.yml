@@ -126,7 +126,7 @@ ja:
           new_btn: アカウントを追加する
           line_developer: LINEデベロッパーズ
           copy_url_btn: コピーURL
-          verification_hint_message: Toruyaの利用を始める前に、LINE連携の動作テストを完了してください。
+          verification_hint_message_html: Toruyaの利用を始める前に、LINE連携の動作テストを完了してください。
           same_secret_key_warning_message_html: "<i class='fa fa-exclamation danger' aria-hidden='true'></i><i class='fa fa-exclamation danger' aria-hidden='true'></i> Messaging APIとLINEログインの設定が同じになることはあり得ません。もう一度設定内容をご確認ください。 <a href='https://toruya.com/help/line_sync/#setting03_02' target='_blank'>マニュアル</a>"
         rich_menu:
           auto: 自動

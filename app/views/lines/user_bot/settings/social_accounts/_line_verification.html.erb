@@ -1,6 +1,4 @@
 <div class="margin-around centerize">
-  <div><%= t("user_bot.dashboards.settings.social_account.verification_hint_message") %></div>
-
   <%= button_to t("action.verify_line"),
     lines_verification_path(
       encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id),
@@ -10,4 +8,6 @@
     method: :get,
     disabled: !Current.business_owner.social_account&.line_settings_finished? || Current.business_owner.social_account&.line_settings_verified?
   %>
+
+  <div class="mt-6"><%= t("user_bot.dashboards.settings.social_account.verification_hint_message_html") %></div>
 </div>

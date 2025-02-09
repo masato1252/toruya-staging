@@ -409,6 +409,7 @@ Rails.application.routes.draw do
             get :trial_end
             get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
             get :change_verified_line_settings
+            get :line_verified_required
           end
         end
 

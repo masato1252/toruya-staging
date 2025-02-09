@@ -52,6 +52,12 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
     render template: "warnings/line_settings_verified"
   end
 
+  def line_verified_required
+    write_user_bot_cookies(:redirect_to, request.referrer)
+
+    render template: "warnings/line_verified_required"
+  end
+
   def trial_end
     write_user_bot_cookies(:redirect_to, request.referrer)
 

@@ -42,6 +42,7 @@ module FeatureHelper
   alias_method :support_stripe_payment?, :japanese_only?
   alias_method :support_square_payment?, :japanese_only?
   alias_method :support_character_filter?, :japanese_only?
+  alias_method :business_line_required?, :japanese_only?
 
   def support_skip_required_shop_info?
     I18n.locale != :ja
