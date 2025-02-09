@@ -306,7 +306,7 @@ tw:
     reservation_day: 預約日期
     level_label: 客戶等級
     tip_before_new_customer: 在新增客戶之前，請先搜尋是否已有現有資料。
-    google_contact_missing_message_html: "目前僅顯示Toruya伺服器上的客戶資料。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
+    google_contact_missing_message_html: "目前僅顯示Toruya伺服器上的客戶資料。"
     customer_info_changed_message: 客戶資料需要更改
     reminder_confirmation_message: 您確定要關閉分群發送嗎？
     reminder_changed_message: 分群發送

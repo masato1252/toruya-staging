@@ -6,7 +6,7 @@ tw:
       message: "感謝您註冊成為用戶。\n\n 您可以作為%{owner_name}的成員免費使用我們的服務。\n\n 如果您想將其用於自己的業務，您也可以從今天起至%{trial_end_date}免費試用，歡迎您體驗。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁管理介面。\n
 https://manager.toruya.com/tw/userlogin"
     created_shop:
-      message: "用戶註冊和店舖設置已完成！\n\n從今天起至%{trial_end_date}，您可以免費試用。\n\n接下來，請從管理介面設置LINE官方帳號的連接。\n\n📝LINE連接手冊\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁版管理介面。\nhttps://manager.toruya.com/tw/userlogin\n\n▶︎設置代辦服務\n我們可以為您代辦連接設置，只需5,500日圓（含稅），讓您輕鬆開始使用Toruya。\n\n如果您有需要，請回覆此訊息。"
+      message: "用戶註冊和店舖設置已完成！\n\n從今天起至%{trial_end_date}，您可以免費試用。"
     line_api_settings_finished:
       message: "LINE連接設置已完成！\n\n接下來，請點擊我們剛剛發送的「開始確認設置」按鈕，確認LINE連接是否正確。"
       card_button: "開始確認設置"
@@ -28,7 +28,7 @@ https://manager.toruya.com/tw/userlogin"
     customer_cancel_reservation:
       message: "%{booking_time}的%{customer_name}的預約已被取消\n\n%{booking_customer_popup_url}"
     extra_new_line_account:
-      successful_message: "新帳號已添加。\n\n用戶選單可以通過切換每個帳號進行設置，請為新添加的帳號設置以下內容：\n\n✅店舖設置\n✅LINE連接設置\n\n📝LINE連接手冊\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1\n\n您也可以從電腦或平板設備訪問網頁版管理介面來切換帳號。\nhttps://manager.toruya.com/tw/userlogin\n ※如果您之前已經在使用，請按瀏覽器的重新整理按鈕，帳號切換項目就會顯示。\n\n 請盡快完成LINE連接設置，開始使用新帳號的Toruya。"
+      successful_message: "新帳號已添加。\n\n用戶選單可以通過切換每個帳號進行設置，請為新添加的帳號設置以下內容：\n\n✅店舖設置\n✅LINE連接設置\n\n您也可以從電腦或平板設備訪問網頁版管理介面來切換帳號。\nhttps://manager.toruya.com/tw/userlogin\n ※如果您之前已經在使用，請按瀏覽器的重新整理按鈕，帳號切換項目就會顯示。"
     notifications:
       new_referrer:
         message: "%{user_name} 您好\n\n您的代理商帳號已添加了一個子帳號。\n\n請從設置畫面確認。\n\nToruya"
@@ -43,7 +43,7 @@ https://manager.toruya.com/tw/userlogin"
       assignee_accepted_reservation:
         message: "%{assignee_name} 已接受 %{booking_time} 的預約。"
       line_reached_monthly_limit:
-        message: "由於LINE訊息數量已達到上限，無法向客戶發送訊息。\nhttps://toruya.com/faq/line_free_message_and_toruya_message/"
+        message: "由於LINE訊息數量已達到上限，無法向客戶發送訊息。\n請到您的Line 官方帳號的後台去增加額度"
     booking:
       shop_owner_reservation_booked_notification:
         message: "%{user_name} 您好\n\n從%{booking_page_title}收到了新的預約。\n\n請從預約日曆確認。\n\nToruya"

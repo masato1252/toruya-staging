@@ -11,7 +11,6 @@ tw:
           <br />
 
           請注意，透過Toruya發送的訊息都會計入官方的免費訊息額度。<br />
-          <a target='_blank' href='https://toruya.tw/help/line_messages'>詳情請參閱使用手冊</a>
 
           <br />
           <br />
@@ -22,7 +21,6 @@ tw:
 
           <h4>2024年1月10日後繼續使用基本方案的情況</h4>
           <p>新方案轉換後，請使用LINE官方APP收發訊息。<br>
-          <a target='_blank' href='https://toruya.tw/help/line_messages#basic'>詳細設定方式請參閱使用手冊</a></p>
           <br />
           <div class='button-container'>
             <button class='btn btn-gray' data-dismiss='modal'>不升級並關閉</button>
@@ -37,7 +35,6 @@ tw:
           ✅ 未來將推出更多便利功能，敬請期待！
           <br>
           <p>請注意，透過Toruya發送的訊息都會計入官方的免費訊息額度。</p>
-          <p><a target='_blank' href='https://toruya.com/help/line_messages#basic'>詳情請參閱使用手冊</a></p>
           <br>
           <div class='button-container'>
             <a href='%{upgrade_url}' class='btn btn-tarco'>立即升級</a>
