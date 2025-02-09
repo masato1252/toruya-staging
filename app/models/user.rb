@@ -316,6 +316,10 @@ class User < ApplicationRecord
     I18n.available_locales.include?(social_user&.locale&.to_sym) ? social_user&.locale.to_sym : I18n.default_locale
   end
 
+  def locale_is?(locale)
+    locale.to_sym == locale
+  end
+
   private
 
   def today_reservations
