@@ -135,7 +135,7 @@ module ApplicationHelper
     cookies[:who] = { value: encrypted_content, expires: 100.year }
 
     options.merge!(
-      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content, existing_owner_id: root_user.id
+      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content, existing_owner_id: root_user.id, locale: params[:locale]
     )
 
     user_line_omniauth_authorize_path(options)
@@ -148,7 +148,7 @@ module ApplicationHelper
     cookies[:who] = { value: encrypted_content, expires: 100.year }
 
     options.merge!(
-      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content
+      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content, locale: params[:locale]
     )
 
     user_line_omniauth_authorize_path(options)

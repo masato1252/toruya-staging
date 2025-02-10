@@ -127,7 +127,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         end
       elsif outcome.valid? && outcome.result.user.nil?
         # user sign up
-        redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"], consultant_token: param["consultant_token"])
+        redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"], consultant_token: param["consultant_token"], locale: param["locale"])
       else
         redirect_to root_path
       end
