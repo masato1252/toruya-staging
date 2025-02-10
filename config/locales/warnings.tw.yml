@@ -54,7 +54,7 @@ tw:
       upgrade_content_html: 這項功能僅供高級會員使用。<br>透過升級您的使用方案，您就可以使用此功能。
     line_settings_verified:
       verify_title: 預約系統還沒有與LINE整合
-      verify_content_html: 您還沒有與Line 整合，您仍然可以使用預約系統，客戶的提醒訊息將會透過『簡訊』通知。<br /><br /> 但是我們仍建議妳與Line 整合以便給你與客戶更好的體驗。
+      verify_content_html: 您還沒有與Line 整合，您『仍然可以』使用預約系統，客戶的提醒訊息將會透過『簡訊』通知。<br /><br /> 但是我們仍建議妳與Line 整合以便給你與客戶更好的體驗。
       action_button: 與Line 整合
     line_verified_required:
       verify_title: 此功能需要與LINE整合
