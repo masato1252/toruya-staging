@@ -10,7 +10,7 @@ import _ from "lodash";
 const DatesList = ({props}) => {
   moment.locale(props.locale);
 
-  const period = 4;
+  const period = 3;
   const [startDate, setStartDate] = useState(moment(props.startDate))
   const [endDate, setEndDate] = useState(moment(props.startDate).add(period, "day"))
   const schedules1 = useSchedules({ business_owner_id: props.business_owner_id, date: startDate });
