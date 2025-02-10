@@ -66,7 +66,8 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
       _.merge(
         {
           staff_token: props.staff_token,
-          consultant_token: props.consultant_token
+          consultant_token: props.consultant_token,
+          locale: props.locale
         },
         _.pick(data, ['phone_number', 'uuid', 'code']
       )
@@ -90,7 +91,8 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
       _.merge(
         {
           staff_token: props.staff_token,
-          consultant_token: props.consultant_token
+          consultant_token: props.consultant_token,
+          locale: props.locale
         },
         data
       )
