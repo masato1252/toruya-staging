@@ -723,7 +723,7 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "lines/user_bot/metrics#dashboard"
+  root to: "lines/user_bot/schedules#mine"
 
   resources :booking_pages, only: [:show] do
     member do
