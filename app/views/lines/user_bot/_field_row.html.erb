@@ -1,10 +1,10 @@
 <% if local_assigns[:path] %>
   <%= link_to local_assigns[:path], class: "field-row with-next-arrow with-format #{local_assigns[:klass]} #{local_assigns[:header_row] && 'header-row'}" do %>
     <% if local_assigns[:title] %>
-      <% if mobile_only %>
-        <span class="dotdotdot"><%= raw local_assigns[:title] %></span>
-      <% else %>
+      <% if is_not_phone? %>
         <span><%= raw local_assigns[:title] %></span>
+      <% else %>
+        <span class="dotdotdot"><%= raw local_assigns[:title] %></span>
       <% end %>
     <% else %>
       <%= yield %>
@@ -14,10 +14,10 @@
 <% else  %>
   <div class="field-row with-format <%= local_assigns[:header_row] && 'header-row' %>">
     <% if local_assigns[:title] %>
-      <% if mobile_only %>
-        <span class="dotdotdot"><%= raw local_assigns[:title] %></span>
-      <% else %>
+      <% if is_not_phone? %>
         <span><%= raw local_assigns[:title] %></span>
+      <% else %>
+        <span class="dotdotdot"><%= raw local_assigns[:title] %></span>
       <% end %>
     <% else %>
       <%= yield %>
