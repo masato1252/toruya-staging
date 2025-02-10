@@ -213,6 +213,10 @@ module ApplicationHelper
     "#{booking_option.price_text} #{"<i class='fa fa-ticket-alt text-gray-500'></i> #{booking_option.amount / booking_option.ticket_quota} #{I18n.t("common.unit")} X #{booking_option.ticket_quota} #{I18n.t("common.times")}" if booking_option.ticket_enabled?}".html_safe
   end
 
+  def toruya_line_friend_url
+    "https://line.me/R/ti/p/@#{Rails.application.secrets[I18n.locale][:toruya_user_bot_basic_id]}"
+  end
+
   private
 
   def wider_device_types

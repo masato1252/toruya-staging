@@ -3,7 +3,9 @@
   is_user_logged_in: current_user&.id&.present? && social_user.user_id.present?,
   toruya_logo_url: asset_pack_path("media/assets/user_bot/logo.png"),
   locale: I18n.locale,
+  toruya_line_friend_url: toruya_line_friend_url,
   support_feature_flags: support_feature_flags,
+  is_not_phone: is_not_phone?,
   i18n: {
   }.merge!([
     t("user_bot.guest"),
