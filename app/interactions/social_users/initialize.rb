@@ -31,7 +31,6 @@ module SocialUsers
 
       LineProfileJob.perform_later(social_user)
 
-      Rollbar.info("SocialUserCreated", social_user_id: social_user.id, social_service_user_id: social_user.social_service_user_id)
       social_user
     end
 
