@@ -7,9 +7,7 @@ import FlowController from "shared/flow_controller";
 
 const SignUpSuccessfulView = ({props}) => {
   useEffect(() => {
-    if (props.is_not_phone) {
-      window.location.href = "/";
-    }
+    window.location.href = "/";
   }, []);
 
   return (
