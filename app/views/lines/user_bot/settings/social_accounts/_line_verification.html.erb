@@ -9,5 +9,5 @@
     disabled: !Current.business_owner.social_account&.line_settings_finished? || Current.business_owner.social_account&.line_settings_verified?
   %>
 
-  <div class="mt-6"><%= t("user_bot.dashboards.settings.social_account.verification_hint_message_html") %></div>
+  <div class="mt-6 warning"><%= t("user_bot.dashboards.settings.social_account.verification_hint_message_html") %></div>
 </div>
