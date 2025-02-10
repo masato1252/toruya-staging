@@ -8,7 +8,7 @@ import mergeArrayOfObjects from "libraries/merge_array_of_objects";
 import _ from "lodash";
 
 const DatesList = ({props}) => {
-  moment.locale('ja');
+  moment.locale(props.locale);
 
   const period = 4;
   const [startDate, setStartDate] = useState(moment(props.startDate))
@@ -43,7 +43,7 @@ const DatesList = ({props}) => {
             <b>{day.format("MM/DD")}</b>
           </div>
           <div>
-            {day.format("dd")}
+            {props.calendar.dayNames[day.day()]}
           </div>
         </a>
       )

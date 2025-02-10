@@ -32,7 +32,12 @@
           business_owner_id: business_owner_id,
           my_calendar: @my_calendar,
           selectedDate: @month_date || @date,
-          startDate: params[:schedule_display_start_date] || @month_date || @date
+          startDate: params[:schedule_display_start_date] || @month_date || @date,
+          locale: I18n.locale,
+          calendar: {
+            dayNames: I18n.t("date.abbr_day_names"),
+            monthNames: I18n.t("date.abbr_month_names").compact
+          }
         }
       },
       { camelize_props: false }
