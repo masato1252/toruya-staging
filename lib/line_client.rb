@@ -156,7 +156,7 @@ class LineClient
 
   def self.unlink_rich_menu(social_customer:)
     error_handler(__method__, social_customer.id) do
-      social_customer.client.unlink_user_rich_menu(social_customer.social_user_id)
+      social_customer.client&.unlink_user_rich_menu(social_customer.social_user_id)
     end
   end
 
