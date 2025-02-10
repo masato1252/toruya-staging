@@ -7,13 +7,13 @@ import FlowController from "shared/flow_controller";
 
 const SignUpSuccessfulView = ({props}) => {
   useEffect(() => {
-    setTimeout(() => {
+    if (props.is_not_phone) {
       window.location.href = "/";
-    }, 2000);
+    }
   }, []);
 
   return (
-    <div className="margin-around">
+    <div>
       <h2 className="centerize">
         {props.i18n.user_sign_up.page_title}
       </h2>
