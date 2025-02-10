@@ -5,9 +5,11 @@ require "message_encryptor"
 class LinesController < ActionController::Base
   include ControllerHelpers
   include ProductLocale
+  include UserBotCookies
 
   protect_from_forgery with: :exception, prepend: true
   before_action :social_customer, only: %w(identify_shop_customer find_customer create_customer identify_code ask_identification_code)
+  before_action :authenticate_social_user, only: %w(user_login)
   skip_before_action :track_ahoy_visit
 
   layout "booking"
@@ -123,7 +125,18 @@ class LinesController < ActionController::Base
       render action: "tw_user_login", layout: "booking"
       return
     end
+
     render layout: "booking"
+  end
+
+  def user_logout
+    delete_user_bot_cookies(:social_service_user_id)
+
+    if params[:locale] == "tw"
+      redirect_to "https://toruya.tw"
+    else
+      redirect_to "https://toruya.com"
+    end
   end
 
   private
@@ -139,5 +152,12 @@ class LinesController < ActionController::Base
 
   def product_social_user
     social_customer&.user&.social_user
+  end
+
+  def authenticate_social_user
+    if user_bot_cookies(:social_service_user_id)
+      @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
+      redirect_to root_path
+    end
   end
 end

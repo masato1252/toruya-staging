@@ -3,6 +3,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   get "(/:locale)/userlogin", to: "lines#user_login", as: :user_login
+  get "(/:locale)/userlogout", to: "lines#user_logout", as: :user_logout
   get '/redirect', to: 'function_redirects#redirect', as: :function_redirect
 
   scope module: :lines, path: :lines, as: :lines do
