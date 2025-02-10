@@ -16,7 +16,7 @@ class LineClient
     if !response.is_a?(Net::HTTPSuccess)
       Rollbar.error(
         "Line client Request failed",
-        response: response.body,
+        response: response&.body,
         args: args,
         backtrace: caller
       )
