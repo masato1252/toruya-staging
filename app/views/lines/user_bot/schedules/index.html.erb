@@ -29,6 +29,7 @@
     <%= react_component(
       "user_bot/dashboards/schedules_dashboard/dates_list", {
         props: {
+          is_not_phone: is_not_phone?,
           business_owner_id: business_owner_id,
           my_calendar: @my_calendar,
           selectedDate: @month_date || @date,
