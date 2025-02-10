@@ -91,10 +91,10 @@
         <%= render "lines/user_bot/field_row",
           path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_type),
           title: I18n.t("settings.booking_page.form.#{@booking_page.booking_type}_label") %>
-        <%= render "lines/user_bot/field_row",
-          path: index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id, booking_page_id: @booking_page.id),
-          title: I18n.t("settings.booking_page.form.business_schedules") %>
         <% if @booking_page.booking_type == "any" %>
+          <%= render "lines/user_bot/field_row",
+            path: index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id, booking_page_id: @booking_page.id),
+            title: I18n.t("settings.booking_page.form.business_schedules") %>
           <div class="booking-page-business-schedules">
             <% (0..6).each do |wday| %>
               <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id, booking_page_id: @booking_page.id), class: "field-row" do %>
