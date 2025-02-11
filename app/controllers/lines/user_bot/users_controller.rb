@@ -22,6 +22,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
 
   def generate_code
     if I18n.locale == :ja && (Phonelib.invalid_for_country?(params[:phone_number], 'JP') || Phonelib.invalid?(params[:phone_number]))
+      Rollbar.error("User sign up invalid phone number", phone_number: params[:phone_number])
       render json: {
         user_id: nil,
         errors: {
