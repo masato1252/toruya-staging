@@ -56,6 +56,7 @@ tw:
           </div>"
       schedules:
         calendar_hint: 日曆
+        no_schedule: 無預定行程
         user_not_available: "%{user_name} 不在"
         whole_month_schedule: 整月行程
         end_time_earlier_schedule_warning: 結束時間早於開始時間。

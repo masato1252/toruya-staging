@@ -56,6 +56,7 @@ ja:
           </div>"
       schedules:
         calendar_hint: カレンダー
+        no_schedule: 予定なし
         user_not_available: "%{user_name} 不在"
         whole_month_schedule: 月間スケジュール
         end_time_earlier_schedule_warning: 終了時刻が開始時刻より前になっています。

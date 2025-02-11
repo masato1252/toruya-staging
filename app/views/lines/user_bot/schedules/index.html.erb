@@ -51,6 +51,9 @@
     <% else %>
       <div class="schedule-date"><%= I18n.l(@date, format: :long) %></div>
     <% end %>
+    <h3 class="margin-around centerize">
+      <%= t("user_bot.dashboards.schedules.no_schedule") %>
+    </h3>
   <% end %>
   <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: @reservations_approval_flow, date: @date, my_calendar: @my_calendar, related_user_ids: @related_user_ids %>
   <%= render "lines/user_bot/schedules/schedule_modal", my_calendar: @my_calendar %>
