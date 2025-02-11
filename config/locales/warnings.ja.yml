@@ -63,6 +63,7 @@ ja:
       verify_title: LINE連携の動作確認が必要です
       verify_content_html: Toruyaを存分に活かしていただくためにも、LINE連携の動作確認をしてください。
       action_button: 動作テスト
+      skip_button: 後で設定する
     change_verified_line_settings:
       title: 連携解除が必要です
       content_html: この設定を変更するには、すべてのLINE連携を解除する必要があります
