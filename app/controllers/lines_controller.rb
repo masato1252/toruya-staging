@@ -70,7 +70,7 @@ class LinesController < ActionController::Base
   end
 
   def ask_identification_code
-    if I18n.locale == :ja && (Phonelib.invalid_for_country?(params[:customer_phone_number], 'JP') || Phonelib.invalid?(params[:customer_phone_number]))
+    if I18n.locale == :ja && (Phonelib.invalid_for_country?(params[:customer_phone_number], 'JP') && Phonelib.invalid?(params[:customer_phone_number]))
       Rollbar.error("Customer sign up invalid phone number", phone_number: params[:customer_phone_number])
 
       render json: {
