@@ -2777,7 +2777,8 @@ CREATE TABLE public.social_users (
     pinned boolean DEFAULT false NOT NULL,
     release_version character varying,
     consultant_at timestamp(6) without time zone,
-    locale character varying DEFAULT 'ja'::character varying
+    locale character varying DEFAULT 'ja'::character varying,
+    email character varying
 );
 
 
@@ -5358,6 +5359,13 @@ CREATE INDEX index_social_users_on_consultant_at ON public.social_users USING bt
 
 
 --
+-- Name: index_social_users_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_users_on_email ON public.social_users USING btree (email);
+
+
+--
 -- Name: index_social_users_on_pinned_and_updated_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6139,6 +6147,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241213072553'),
 ('20241217134923'),
 ('20241223032227'),
-('20241223141736');
+('20241223141736'),
+('20250212163447');
 
 

@@ -14,6 +14,16 @@ module LineOAuth2
       end
     end
   end
+
+  # Override info hash to include additional fields
+  def info
+    {
+      name: raw_info['displayName'],
+      image: raw_info['pictureUrl'],
+      description: raw_info['statusMessage'],
+      access_token: access_token
+    }
+  end
 end
 
 OmniAuth::Strategies::Line.include(LineOAuth2)

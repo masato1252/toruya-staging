@@ -18,7 +18,7 @@ class OmniauthSetup
 
   # The main purpose of this method is to set the consumer key and secret.
   def setup
-    @env['omniauth.strategy'].options.merge!(custom_credentials)
+    @env['omniauth.strategy'].options.merge!(custom_credentials.merge(scope: "profile openid email"))
   end
 
   # Use the subdomain in the request to find the account with credentials

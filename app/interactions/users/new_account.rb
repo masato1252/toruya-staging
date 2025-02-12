@@ -12,6 +12,7 @@ module Users
           :social_user_picture_url,
           :social_rich_menu_key,
           :locale,
+          :email,
           :release_version,
         ])
         social_user.save

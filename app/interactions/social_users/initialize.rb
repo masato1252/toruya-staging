@@ -6,6 +6,7 @@ module SocialUsers
   class Initialize < ActiveInteraction::Base
     string :social_service_user_id
     string :who, default: nil
+    string :email, default: nil
 
     def execute
       _who = if who.nil?
@@ -28,6 +29,8 @@ module SocialUsers
         rescue ActiveRecord::RecordNotUnique
           retry
         end
+
+      social_user.update(email: email) if email.present?
 
       LineProfileJob.perform_later(social_user)
 
