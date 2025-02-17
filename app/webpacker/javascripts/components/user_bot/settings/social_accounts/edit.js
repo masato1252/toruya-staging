@@ -44,7 +44,9 @@ const SocialAccountEdit =({props}) => {
             </div>
             <div className="field-row hint no-border">
               {i18n.hint}
-              <img src={props.image_path} className="demo" />
+              {props.support_feature_flags.support_japanese_asset && (
+                <img src={props.image_path} className="demo" />
+              )}
             </div>
           </>
         );
