@@ -291,7 +291,7 @@ const Form = () => {
 
             disabled={!_isValidToReserve() || processing}
             onClick={handleSubmit(onSubmit)}
-            className="btn btn-yellow btn-circle btn-save"
+            className="btn btn-yellow btn-circle btn-save btn-extend-right"
           >
             <i className="fa fa-save fa-2x"></i>
           </button>

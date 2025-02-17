@@ -80,7 +80,7 @@ const BottomBar = ({handleSubmit, onSubmit, isSubmitting}) => {
       <span>{selected_customer?.id ? props.i18n.updated_date : props.i18n.unsave } {selected_customer.lastUpdatedAt}</span>
 
       <button
-        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak"
+        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak btn-extend-right"
         onClick={handleSubmit(onSubmit)}
         disabled={isSubmitting} >
         <i className="fa fa-save fa-2x"></i>

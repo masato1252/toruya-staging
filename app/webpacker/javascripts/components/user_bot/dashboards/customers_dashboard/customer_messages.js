@@ -27,7 +27,7 @@ const BottomBar = () => {
         <i className="fas fa-question-circle fa-2x"></i>
       </button>
       <button
-        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak"
+        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak btn-extend-right"
         onClick={
           () => {
             if (confirm(I18n.t("user_bot.dashboards.customer.unread_confirmation_message"))) {

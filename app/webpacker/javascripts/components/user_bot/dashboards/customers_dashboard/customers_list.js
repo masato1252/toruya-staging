@@ -18,7 +18,7 @@ const BottomBar = () => {
     <BottomNavigationBar klassName="centerize">
       <span>{props.i18n.count}{total_customers_number}{props.i18n.unit}</span>
       <button
-        className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
+        className="btn btn-yellow btn-circle btn-save btn-tweak btn-big btn-extend-right"
         onClick={() => {
           dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})
           dispatch({type: "SELECT_CUSTOMER", payload: { customer: { contactGroupId: props.contact_groups[0]?.value } } })

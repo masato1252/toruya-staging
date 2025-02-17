@@ -56,7 +56,7 @@ const BottomBar = () => {
         {props.i18n.updated_date} {selected_customer.lastUpdatedAt}({zeroPad(selected_customer?.id || 0, 7)})
       </span>
       <button
-        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak"
+        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak btn-extend-right"
         onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})} >
         <i className="fa fa-user-edit fa-2x"></i>
         <div className="word">{I18n.t("action.edit")}</div>
