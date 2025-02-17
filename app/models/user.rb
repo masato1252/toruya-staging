@@ -316,8 +316,8 @@ class User < ApplicationRecord
     I18n.available_locales.include?(social_user&.locale&.to_sym) ? social_user&.locale.to_sym : I18n.default_locale
   end
 
-  def locale_is?(locale)
-    locale.to_sym == locale
+  def locale_is?(_locale)
+    locale.to_sym == _locale
   end
 
   private

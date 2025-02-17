@@ -29,7 +29,11 @@ module FeatureHelper
   end
 
   def japanese_only?
-    I18n.locale == :ja
+    if Current.business_owner.present?
+      Current.business_owner.locale_is?(:ja)
+    else
+      I18n.locale == :ja
+    end
   end
 
   alias_method :support_faq_display?, :japanese_only?
@@ -45,7 +49,11 @@ module FeatureHelper
   alias_method :business_line_required?, :japanese_only?
 
   def support_skip_required_shop_info?
-    I18n.locale != :ja
+    if Current.business_owner.present?
+      !Current.business_owner.locale_is?(:ja)
+    else
+      I18n.locale != :ja
+    end
   end
 
   def support_booking_options_menu_concept?
