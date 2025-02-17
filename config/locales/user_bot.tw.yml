@@ -121,7 +121,7 @@ tw:
           save_and_pay: 選擇並付款
         social_account:
           new: 新增帳號
-          description_html: 新增Toruya帳號後，<br>您可以將其他LINE官方帳號<br>連結到Toruya。
+          description_html: 一個Toruya 帳號可以與一個LINE 官方帳號連結，<br>如果您有多個LINE官方帳號，<br>您可以新增新的Toruya帳號。
           warning_html: 每個帳號都需要<br>單獨訂閱使用方案。
           new_btn: 新增帳號
           line_developer: LINE Developers
