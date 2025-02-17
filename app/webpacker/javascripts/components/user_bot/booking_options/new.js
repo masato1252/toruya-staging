@@ -99,7 +99,7 @@ const NewBookingOption =({props}) => {
               </>
             )}
             <div>
-              {newBookingOptionType == "new_option_new_menu" && <NewMenuOptionFields register={register} />} 
+              {newBookingOptionType == "new_option_new_menu" && <NewMenuOptionFields register={register} />}
               {newBookingOptionType == "new_option_existing_menu" && (
                 <>
                   <h3 className="header centerize">{I18n.t("settings.booking_page.form.create_a_new_option_from_existing_menu")}</h3>
@@ -134,7 +134,7 @@ const NewBookingOption =({props}) => {
                   />
                 </>
               )}
-              {props.booking_page_options.length && (
+              {props.booking_page_options.length > 0 && (
                 <>
                   <div className="field-header">{I18n.t("settings.booking_page.form.booking_page_setting_header")}</div>
                   <CheckboxSearchFields

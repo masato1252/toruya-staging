@@ -4,7 +4,8 @@
     profile: CompanyInfoSerializer.new(@profile).attributes_hash.merge!(@profile.slice(:company_name, :company_address_details, :company_phone_number)),
     attribute: params[:attribute],
     previous_path: @previous_path,
-    title: @title
+    title: @title,
+    support_feature_flags: support_feature_flags
   }
 },
 { camelize_props: false }

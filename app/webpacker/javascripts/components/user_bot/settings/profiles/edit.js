@@ -63,30 +63,36 @@ const ProfileEdit =({props}) => {
             <div className="field-row">
               <input
                 ref={register({ required: true })}
+                placeholder={I18n.t("common.last_name")}
                 name="last_name"
                 type="text"
               />
               <input
                 ref={register({ required: true })}
+                placeholder={I18n.t("common.first_name")}
                 name="first_name"
                 type="text"
               />
             </div>
-            <div className="field-header">
-              {I18n.t("common.phonetic_name")}
-            </div>
-            <div className="field-row">
-              <input
-                ref={register({ required: true })}
-                type="text"
-                name="phonetic_last_name"
-              />
-              <input
-                ref={register({ required: true })}
-                type="text"
-                name="phonetic_first_name"
-              />
-            </div>
+            {props.support_feature_flags.support_phonetic_name && (
+              <>
+                <div className="field-header">
+                  {I18n.t("common.phonetic_name")}
+                </div>
+                <div className="field-row">
+                  <input
+                    ref={register({ required: true })}
+                  type="text"
+                  name="phonetic_last_name"
+                />
+                <input
+                  ref={register({ required: true })}
+                  type="text"
+                    name="phonetic_first_name"
+                  />
+                </div>
+              </>
+            )}
           </>
         );
         break

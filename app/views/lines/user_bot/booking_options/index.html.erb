@@ -1,37 +1,53 @@
-<div class="booking-options form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("settings.booking_option.booking_option_label") %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-options form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("settings.booking_option.booking_option_label") %>
 
-  <div class="field-header"><%= I18n.t("settings.booking_option.booking_option_label") %></div>
-  <div class="booking-pages-list">
-    <% @booking_options.each do |booking_option| %>
-      <%= link_to lines_user_bot_booking_option_path(business_owner_id, booking_option), class: "field-row with-next-arrow" do %>
-        <div>
-          <h3 class="break-line-content"><%= booking_option.name %></h3>
-          <div class="desc"><%= booking_option.menus.pluck(:name).join(", ")%></div>
-          <div class="desc">
-            <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %> ・
-            <%= booking_option.price_text %>
-          </div>
+        <div class="field-header"><%= I18n.t("settings.booking_option.booking_option_label") %></div>
+        <div class="booking-pages-list">
+          <% @booking_options.each do |booking_option| %>
+            <%= link_to lines_user_bot_booking_option_path(business_owner_id, booking_option), class: "field-row with-next-arrow" do %>
+              <div>
+                <h3 class="break-line-content"><%= booking_option.name %></h3>
+                <div class="desc"><%= booking_option.menus.pluck(:name).join(", ") %></div>
+                <div class="desc">
+                  <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %> ・
+                  <%= booking_option.price_text %>
+                </div>
+              </div>
+              <i class="fa fa-angle-right"></i>
+            <% end %>
+          <% end %>
+
+          <% if is_not_phone? %>
+            <div class="margin-around centerize">
+              <%= link_to new_lines_user_bot_booking_option_path(business_owner_id: business_owner_id, back_path: lines_user_bot_booking_options_path(business_owner_id: business_owner_id)), class: "btn btn-yellow" do %>
+                <i class="fa fa-plus"></i>
+                <%= t("action.add_more") %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
-      <i class="fa fa-angle-right"></i>
-      <% end %>
-    <% end %>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+          <%= link_to edit_booking_options_lines_user_bot_settings_line_keyword_path(business_owner_id: business_owner_id),
+            class: "btn btn-tarco btn-circle btn-tweak btn-bottom-left btn-with-word" do %>
+            <i class="fa fab fa-line fa-2x"></i>
+            <div class="word"><%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %></div>
+          <% end %>
+
+          <%= link_to new_lines_user_bot_booking_option_path(
+            business_owner_id: business_owner_id,
+            back_path: lines_user_bot_booking_options_path(business_owner_id: business_owner_id)
+            ),
+            class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+            <i class="fas fa-plus fa-2x"></i>
+            <div class="word"><%= I18n.t("action.add_more") %></div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
-
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-    <%= link_to edit_booking_options_lines_user_bot_settings_line_keyword_path(business_owner_id: business_owner_id),
-      class: "btn btn-tarco btn-circle btn-tweak btn-bottom-left btn-with-word" do %>
-      <i class="fa fab fa-line fa-2x"></i>
-      <div class="word"><%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %></div>
-    <% end %>
-
-    <%= link_to new_lines_user_bot_booking_option_path(
-      business_owner_id: business_owner_id,
-      back_path: lines_user_bot_booking_options_path(business_owner_id: business_owner_id)
-      ),
-      class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
-      <i class="fas fa-plus fa-2x"></i>
-      <div class="word"><%= I18n.t("action.add_more") %></div>
-    <% end %>
-  <% end %>
 </div>
