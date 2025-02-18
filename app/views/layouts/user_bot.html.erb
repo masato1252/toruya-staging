@@ -42,7 +42,7 @@
             <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.calendar.mine") %>
           <% end %>
         </li>
- 
+
         <hr class="my-2" />
 
         <li class="p-1">
@@ -131,25 +131,23 @@
           </ul>
         </li>
 
-        <% if is_not_phone? %>
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
-              <i class="fa fa-chart-line fa-2x"></i> <%= t("user_bot.dashboards.metrics.title") %>
-            <% end %>
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-chart-line fa-2x"></i> <%= t("user_bot.dashboards.metrics.title") %>
+          <% end %>
 
-            <ul class='nav'>
-              <li>
-                <%= active_link_to t("sidebar.metrics.dashboard_title"), lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path(business_owner_id: business_owner_id) %>
-              </li>
-            </ul>
-          </li>
-        <% end %>
+          <ul class='nav'>
+            <li>
+              <%= active_link_to t("sidebar.metrics.dashboard_title"), lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) %>
+            </li>
+            <li>
+              <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>
+            </li>
+            <li>
+              <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path(business_owner_id: business_owner_id) %>
+            </li>
+          </ul>
+        </li>
       </ul>
 
       <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">

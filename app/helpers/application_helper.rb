@@ -162,6 +162,10 @@ module ApplicationHelper
     wider_device_types.include?(device_detector.device_type)
   end
 
+  def is_phone?
+    !is_not_phone?
+  end
+
   def not_phone
     if is_not_phone?
       yield
