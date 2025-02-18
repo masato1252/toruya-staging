@@ -550,10 +550,10 @@ ja:
         upsell_step: アップセル
         check_step: プレビュー
       metrics:
-        content: コンテンツ
+        content: アクション
         click_count: クリック数
         conversion_count: 成約数
-        revenue: 銷售額
+        revenue: 売上合計
         title: アクセス解析
         sale_page: 宣伝用LP
         visit_count: 表示数

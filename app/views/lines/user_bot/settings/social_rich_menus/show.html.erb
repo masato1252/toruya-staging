@@ -9,7 +9,7 @@
           <%= form_tag lines_user_bot_settings_social_account_social_rich_menu_path(business_owner_id: business_owner_id, id: @rich_menu.id), method: :get do %>
             <div class="d-flex align-items-center">
               <%= date_field_tag :start_date, @start_date, class: "form-control mr-3" %> ～ <%= date_field_tag :end_date, @end_date, class: "form-control mr-3" %>
-              <%= submit_tag I18n.t("action.filter"), class: "btn btn-primary" %>
+              <%= submit_tag I18n.t("action.display"), class: "btn btn-tarco" %>
             </div>
           <% end %>
         </div>

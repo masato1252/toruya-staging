@@ -57,6 +57,7 @@ tw:
     add_step: 新增步驟
     book_now: 立即預約
     filter: 篩選
+    display: 顯示
     continue_editing: 繼續編輯
     sales:
       video: 立即觀看

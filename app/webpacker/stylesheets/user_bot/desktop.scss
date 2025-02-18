@@ -211,3 +211,36 @@
     }
   }
 }
+
+.container {
+  width: 100%;
+  width: -webkit-fill-available;
+  padding: 0;
+
+  &.table {
+    .row {
+      margin-right: 0;
+      margin-left: 0;
+      background-color: #ffffff;
+
+      &:nth-child(odd) {
+        background-color: #f1f1f1;
+      }
+
+      &:first-of-type {
+        background-color: #d3d3d3;
+      }
+
+      & > div:first-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      & > div {
+        padding: 10px;
+      }
+    }
+
+  }
+}
