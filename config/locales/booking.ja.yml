@@ -10,14 +10,13 @@ ja:
     phonetic_first_name: めい
     email: メール
     phone_number: 携帯電話
-    why_need_phone_number: ""
     remember_me: 次回から入力を省略する
     reminder_desc: 予約の通知を受け取る
     confirm_customer_info: 確認コード送信
     next_step: 次　へ
     confirm_reservation: 仮予約を確定する
     not_me: 様でない場合はこちら
-    edit_info: 住所や電話番号を変更する
+    edit_info: 個人情報を編集する
     edit: 変更する
     address: 住所
     address_details:
@@ -61,9 +60,11 @@ ja:
       owner_warning1: 顧客の代わりに予約をされた為、
       owner_warning2: 通知LINEはお客様へは送られません。
       title: 仮予約が完了しました
-      message1: LINEログインされたアカウントに
-      message2: ご予約内容を送信しました
-      no_line_message1_html: 入力された携帯電話に<br />ご予約内容を送信しました
+      message1: ご予約内容を送信しました
+      message_line: ログインされたLINEアカウントまたは携帯電話のSMS
+      message_sms: 携帯電話のSMSまたはメール
+      message_email: メールアドレス
+      no_line_message1_html: ご予約内容を<br />ご入力いただいた携帯電話番号またはメールアドレスに送信しました
       no_line_message2_html: LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます
       desc1: の予約情報を
       desc2: あなたの予定と一緒に管理できる
@@ -120,7 +121,7 @@ ja:
     service_unavailable_description_html: このサービスは現在ご利用いただけません。
   online_service_purchases:
     service_content: サービスコンテンツを
-    please_check_in_line: LINEでお届けしましたので<br>ご確認ください
+    please_check_in_channel: 透過%{channel}でお届けしましたので<br>ご確認ください
   membership:
     all_tag: すべて
     no_episode_yet: まだコンテンツ準備中です。

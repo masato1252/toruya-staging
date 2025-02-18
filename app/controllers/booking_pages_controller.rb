@@ -34,8 +34,8 @@ class BookingPagesController < ActionController::Base
       end
 
     @customer ||=
-      if cookies[:booking_customer_id]
-        @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])
+      if cookies[:booking_customer_id] || cookies[:verified_customer_id]
+        @booking_page.user.customers.find_by(id: cookies[:booking_customer_id] || cookies[:verified_customer_id])
       end
 
     @last_selected_option_ids =
@@ -181,72 +181,6 @@ class BookingPagesController < ActionController::Base
         status: "failed",
         errors: {
           message: I18n.t("booking_page.message.booking_unexpected_failed_message")
-        }
-      }
-    end
-  end
-
-  def find_customer
-    customer = Booking::FindCustomer.run!(
-      booking_page: booking_page,
-      first_name: params[:customer_first_name],
-      last_name: params[:customer_last_name],
-      phone_number: params[:customer_phone_number],
-      email: params[:customer_email]
-    )
-
-    if customer
-      cookies.permanent[:booking_customer_id] = customer.id
-
-      render json: {
-        customer_info: view_context.customer_info_as_json(customer),
-        last_selected_option_ids: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_ids&.join(","),
-        booking_code: {
-          passed: true
-        }
-      }
-    else
-      render json: {
-        customer_info: {},
-        booking_code: {
-          passed: true
-        },
-        errors: {
-          message: I18n.t("booking_page.message.unfound_customer_html")
-        }
-      }
-    end
-  end
-
-  def ask_confirmation_code
-    booking_code = Booking::CreateCode.run!(
-      booking_page: booking_page,
-      phone_number: params[:customer_phone_number]
-    )
-
-    render json: {
-      booking_code: {
-        uuid: booking_code.uuid
-      }
-    }
-  end
-
-  def confirm_code
-    code_passed = !!IdentificationCodes::Verify.run!(uuid: params[:uuid], code: params[:code])
-
-    if code_passed
-      render json: {
-        booking_code: {
-          passed: code_passed
-        }
-      }
-    else
-      render json: {
-        booking_code: {
-          passed: code_passed
-        },
-        errors: {
-          message: I18n.t("booking_page.message.booking_code_failed_message")
         }
       }
     end

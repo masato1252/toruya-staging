@@ -309,9 +309,10 @@ module Booking
               end
             end
 
-
             compose(Users::UpdateCustomerLatestActivityAt, user: user)
             reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
+
+            Customers::RequestUpdate.run(reservation_customer: reservation_customer)
 
             if survey_answers.present?
               survey_outcome = Surveys::Reply.run(survey: booking_page.survey, owner: reservation_customer, answers: survey_answers)

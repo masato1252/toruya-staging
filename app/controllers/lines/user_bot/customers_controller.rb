@@ -79,17 +79,8 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def save
     outcome = ::Customers::Store.run(user: Current.business_owner, current_user: current_user, params: convert_params(params.permit!.to_h))
 
-    if outcome.valid?
-      customer = outcome.result
-
-      render json: {
-        status: "successful",
-        redirect_to: SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id)
-      }
-
-    else
-      head :unprocessable_entity
-    end
+    customer = outcome.result
+    return_json_response(outcome, { redirect_to: SiteRouting.new(view_context).customers_path(customer&.user_id, customer_id: customer&.id) })
   end
 
   def data_changed

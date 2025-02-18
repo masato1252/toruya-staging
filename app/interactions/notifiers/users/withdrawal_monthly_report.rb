@@ -16,10 +16,6 @@ module Notifiers
           amount: withdrawal.amount.format
         )
       end
-
-      def send_email
-        WithdrawalMailer.with(withdrawal: withdrawal).monthly_report.deliver_now
-      end
     end
   end
 end

@@ -55,16 +55,11 @@ ja:
     create_course:
       upgrade_title: プレミアム向けです
       upgrade_content_html: この機能はプレミアム会員向けです。<br>ご利用プランをアップグレードしていただくことで、ご利用いただけます。
-    line_settings_verified:
-      verify_title: LINE連携の動作確認が必要です
-      verify_content_html: Toruyaを存分に活かしていただくためにも、LINE連携の動作確認をしてください。
-      action_button: 動作テスト
-    line_verified_required:
-      verify_title: LINE連携の動作確認が必要です
-      verify_content_html: Toruyaを存分に活かしていただくためにも、LINE連携の動作確認をしてください。
-      action_button: 動作テスト
-      skip_button: 後で設定する
     change_verified_line_settings:
       title: 連携解除が必要です
       content_html: この設定を変更するには、すべてのLINE連携を解除する必要があります
       disconnect_btn: 連携を解除する
+    over_free_limit:
+      upgrade_title: 顧客情報が無料プランの上限に達しました
+      upgrade_content_html: <p>既に%{customers_limit}以上の顧客情報をお持ちですね。Toruyaを気に入っていただけて嬉しいです。</p><p>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
+      upgrade_button: 利用プランをアップグレードする

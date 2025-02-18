@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <%= yield %>
+
+    <hr style="border: 1px solid #ddd; margin: 20px 0;" />
+
+    <p style="color: #666; font-size: 12px;">
+      <strong>※ 這是一封自動生成的電子郵件。</strong><br />
+      此電子郵件由 Toruya 系統自動發送。請勿回覆此郵件。
+    </p>
+
+    <hr style="border: 1px solid #ddd; margin: 20px 0;" />
+  </body>
+</html>

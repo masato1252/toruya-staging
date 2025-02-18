@@ -4,7 +4,7 @@ module Notifiers
   module Users
     module LineSettings
       class LineLoginVerificationVideo < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
 
         def message
           {

@@ -4,8 +4,6 @@ module Notifiers
   module Customers
     module LineSettings
       class LineLoginVerificationFlex < Base
-        deliver_by :line
-
         def message
           ::LineMessages::FlexTemplateContainer.template(
             altText: I18n.t("line_verification.confirmation_message.title1"),

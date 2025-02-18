@@ -59,4 +59,8 @@ class StaffAccount < ApplicationRecord
     self.state = :pending
     self.active_uniqueness = nil
   end
+
+  def locale
+    owner.locale
+  end
 end

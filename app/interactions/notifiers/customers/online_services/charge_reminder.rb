@@ -4,8 +4,6 @@ module Notifiers
   module Customers
     module OnlineServices
       class ChargeReminder < Base
-        deliver_by :line
-
         object :online_service_customer_relation
         object :online_service_customer_price, class: OnlineServiceCustomerPrice
         time :charge_at, default: nil # recurring service's price object doesn't have charge date data, the time is from webhook

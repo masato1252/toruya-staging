@@ -87,6 +87,8 @@ ja:
         line_info: LINE名
         create_customer_manually_notice: お客様に予約ページを直接共有することで、手動での顧客データ作成が不要になります。
       settings:
+        payment_required: 有料プランが必要です
+        line_verification_required: LINE認証が必要です
         user_settings:
           line_contact_customer_name_required:
             title: LINE連絡時の顧客名入力必須
@@ -98,6 +100,12 @@ ja:
             options:
               enable_menu_concept: 有効にする
               disable_menu_concept: 無効にする
+          customer_notification_channel:
+            title: 顧客通知方式
+            options:
+              email: 電子メール
+              sms: SMS
+              line: LINE
         support:
           user_support: ユーザーサポート
           documents: ヘルプマニュアル

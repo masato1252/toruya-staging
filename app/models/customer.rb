@@ -7,6 +7,8 @@
 #  address                      :string
 #  address_details              :jsonb
 #  birthday                     :date
+#  customer_email               :string
+#  customer_phone_number        :string
 #  deleted_at                   :datetime
 #  email_types                  :string
 #  emails_details               :jsonb
@@ -36,14 +38,16 @@
 #
 # Indexes
 #
-#  customer_names_on_first_name_idx           (first_name) USING gin
-#  customer_names_on_last_name_idx            (last_name) USING gin
-#  customer_names_on_phonetic_first_name_idx  (phonetic_first_name) USING gin
-#  customer_names_on_phonetic_last_name_idx   (phonetic_last_name) USING gin
-#  customers_basic_index                      (user_id,contact_group_id,deleted_at)
-#  customers_google_index                     (user_id,google_uid,google_contact_id) UNIQUE
-#  jp_name_index                              (user_id,phonetic_last_name,phonetic_first_name)
-#  used_services_index                        (user_id,menu_ids,online_service_ids) USING gin
+#  customer_names_on_first_name_idx                      (first_name) USING gin
+#  customer_names_on_last_name_idx                       (last_name) USING gin
+#  customer_names_on_phonetic_first_name_idx             (phonetic_first_name) USING gin
+#  customer_names_on_phonetic_last_name_idx              (phonetic_last_name) USING gin
+#  customers_basic_index                                 (user_id,contact_group_id,deleted_at)
+#  customers_google_index                                (user_id,google_uid,google_contact_id) UNIQUE
+#  index_customers_on_user_id_and_customer_email         (user_id,customer_email)
+#  index_customers_on_user_id_and_customer_phone_number  (user_id,customer_phone_number) UNIQUE
+#  jp_name_index                                         (user_id,phonetic_last_name,phonetic_first_name)
+#  used_services_index                                   (user_id,menu_ids,online_service_ids) USING gin
 #
 
 # attributes format:
@@ -86,6 +90,7 @@ class Customer < ApplicationRecord
   belongs_to :rank, required: false
 
   validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true
+  validates :customer_phone_number, uniqueness: { scope: [:user_id] }, allow_nil: true
 
   before_validation :assign_default_rank
 
@@ -94,6 +99,13 @@ class Customer < ApplicationRecord
   scope :active_in, ->(time_ago) { active.where("customers.updated_at > ?", time_ago) }
   scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
   scope :marketable, -> { where(reminder_permission: true) }
+
+  before_validation :update_customer_email_and_phone_number
+
+  def update_customer_email_and_phone_number
+    self.customer_email = email
+    self.customer_phone_number = Phonelib.parse(mobile_phone_number).international(false)
+  end
 
   def active_customer_ticket_of_product(product) # booking_option
     customer_tickets.active.unexpired.joins(ticket: :ticket_products).where("ticket_products.product": product).take
@@ -355,7 +367,7 @@ class Customer < ApplicationRecord
   end
 
   def main_email
-    emails_details&.first
+    emails_details&.find { |email| email["value"].present? }
   end
 
   def main_phone
@@ -375,7 +387,7 @@ class Customer < ApplicationRecord
   end
 
   def main_mobile_phone
-    phone_numbers_details&.find{|h| h["type"] == "mobile"}
+    phone_numbers_details&.find{|h| h["type"] == "mobile" && h["value"].present?}
   end
 
   def simple_address

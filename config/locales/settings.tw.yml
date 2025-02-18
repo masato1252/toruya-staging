@@ -373,7 +373,7 @@ tw:
         print_address: 列印地址
         add_staff: 新增成員
       free:
-        title: 試用版
+        title: 免費版
         period: ""
         shop_can_set: "1間店鋪"
         staff_in_charge: "1位"
@@ -626,10 +626,11 @@ tw:
         overbooking_restriction_title: 重複預約限制
         not_allow_overbooking_label: 達到額滿人數時停止接受預約（建議）
         allow_overbooking_label: 不論額滿與否都接受預約
-        social_account_skippable_title: 無需LINE登入即可預約
-        social_account_skippable: 無需LINE登入即可預約
-        social_account_skippable_label: 允許
-        not_social_account_skippable_label: 不允許
+        social_account_skippable_title: 客戶要有LINE才可預約
+        social_account_skippable: 客戶要有LINE才可預約
+        social_account_skippable_label: 不用LINE也可預約(有電話號碼即可)
+        not_social_account_skippable_label: 必須要LINE才可預約
+        need_to_verify_line_settings_to_change_setting: 需要先完成您的LINE設定，才能變更此設定。
         note_label: 說明與注意事項
         note: 說明與注意事項
         note_title: 說明與注意事項
@@ -647,9 +648,9 @@ tw:
         booking_page_period_no_end_date_sample: "此預約頁面將從%{start_at_date}開始顯示。"
         booking_calendar_display_period: 日曆的預約時間
         booking_page_display_period: 預約頁面的顯示時間
-        customer_cancel_request: 客戶取消請求
-        customer_cancel_request_title: 客戶取消請求
-        customer_cancel_request_hint: 允許客戶提出取消預約的請求。
+        customer_cancel_request: 客戶自行取消
+        customer_cancel_request_title: 客戶自行取消
+        customer_cancel_request_hint: 允許客戶自行取消預約。
         customer_cancel_request_label: 允許
         not_customer_cancel_request_label: 不允許
         customer_cancel_request_before_day_label: 允許取消的期限

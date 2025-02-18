@@ -10,7 +10,15 @@ module Customers
 
     def execute
       user_customers = user.customers.order("id")
-      customers = nil
+      customers = user_customers.where(customer_phone_number: Phonelib.parse(phone_number).international(false)) if phone_number.present?
+      customers = customers.presence || user_customers.where(customer_email: email) if email.present?
+
+      if customers.present?
+        return {
+          found_customer: customers.first,
+          matched_customers: customers
+        }
+      end
 
       with_retry(max_reties: 1) do
         customers = user_customers.where(last_name: last_name, first_name: first_name).or(user_customers.where(phonetic_last_name: last_name, phonetic_first_name: first_name)).to_a
@@ -18,8 +26,9 @@ module Customers
       end
 
       matched_customers = customers.find_all do |customer|
+        customer.customer_email == email ||
         customer.phone_numbers_details&.map { |phone| phone["value"]&.gsub(/[^0-9]/, '') }.compact&.include?(phone_number&.gsub(/[^0-9]/, '')) ||
-          customer.emails_details&.map { |email| email["value"] }.compact&.include?(email)
+        customer.emails_details&.map { |email| email["value"] }.compact&.include?(email)
       end
 
       # any customer got social customer

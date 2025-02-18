@@ -65,7 +65,8 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.action_mailer.default_url_options = { :host => "kasaike.dev" }
-  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :letter_opener_web
+  config.action_mailer.perform_deliveries = true
 
   # [TODD]: open this setting when we upgrade webpacker
   # yarn integrity check to ensure that all local JavaScript packages are up-to-date.

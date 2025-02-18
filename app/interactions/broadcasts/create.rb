@@ -17,7 +17,28 @@ module Broadcasts
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
         broadcast.update(recipients_count: customers.count)
 
-        Broadcasts::Send.perform_at(schedule_at: broadcast.schedule_at, broadcast: broadcast)
+        # If there's a scheduled time, ensure it's in the user's timezone
+        schedule_time = broadcast.schedule_at
+
+        if schedule_time
+          # Get the user's timezone
+          user_timezone = ::LOCALE_TIME_ZONE[user.locale] || "Asia/Tokyo"
+
+          # Use the user's timezone for scheduling
+          Time.use_zone(user_timezone) do
+            # Schedule the broadcast ensuring timezone is preserved
+            Broadcasts::Send.perform_at(
+              schedule_at: schedule_time,
+              broadcast: broadcast
+            )
+          end
+        else
+          # If there's no scheduled time, send immediately
+          Broadcasts::Send.perform_at(
+            schedule_at: broadcast.schedule_at,
+            broadcast: broadcast
+          )
+        end
       else
         errors.merge!(broadcast.errors)
       end

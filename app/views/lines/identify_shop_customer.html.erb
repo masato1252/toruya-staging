@@ -1,6 +1,8 @@
 <%= react_component("lines/customer_identifications", {
   social_customer: @social_customer.attributes.slice("social_user_id", "customer_id"),
+  customer: { user_id: @social_customer.user_id, customer_id: @social_customer.customer_id },
   support_feature_flags: support_feature_flags,
+  locale: @social_customer.user.locale,
   i18n: {
   }.merge!([
     t("booking_page"),

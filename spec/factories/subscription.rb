@@ -51,5 +51,11 @@ FactoryBot.define do
         }).id
       end
     end
+
+    after(:create) do |subscription, proxy|
+      user = subscription.user
+      Users::BuildDefaultData.run!(user: user)
+      user.save!
+    end
   end
 end

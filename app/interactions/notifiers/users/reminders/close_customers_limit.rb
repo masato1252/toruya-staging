@@ -4,7 +4,7 @@ module Notifiers
   module Users
     module Reminders
       class CloseCustomersLimit < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
 
         def message
           if receiver.subscription.plan.free_level?

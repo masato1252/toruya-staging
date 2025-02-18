@@ -15,11 +15,8 @@ import ChargingView from "./charging_view";
 import BookingFailedArea from "./booking_failed_area";
 import BookingEndedView from "./booking_ended_view";
 import BookingStartedYetView from "./booking_started_yet_view";
-import SelectedBookingOption from "./selected_booking_option";
-import BookingCalendar from "./booking_calendar";
-import BookingDateTime from "./booking_date_time";
 import SocialCustomerLogin from "./social_customer_login";
-import RegularCustomersOption from "./regular_customers_option";
+import CustomerVerificationForm from "components/shared/customer_verification_form";
 import CurrentCustomerInfo from "./current_customer_info";
 import CustomerInfoModal from "./customer_info_modal";
 import CustomerInfoFieldModel from "./customer_info_field_modal";
@@ -186,6 +183,7 @@ const BookingReservationFormFunction = ({props}) => {
       customer_phonetic_last_name,
       customer_phonetic_first_name,
       customer_phone_number,
+      customer_email,
       found_customer
     } = booking_reservation_form_values;
 
@@ -195,20 +193,15 @@ const BookingReservationFormFunction = ({props}) => {
         customer_first_name &&
         customer_phonetic_last_name &&
         customer_phonetic_first_name &&
-        customer_phone_number
+        customer_phone_number &&
+        customer_email
       )
     }
     else {
       return (found_customer && customer_info && customer_info.id) || (
-        customer_last_name && customer_first_name && customer_phone_number
+        customer_last_name && customer_first_name && customer_phone_number && customer_email
       )
     }
-  }
-
-  const isCustomerTrusted = () => {
-    const { found_customer, use_default_customer, booking_code } = booking_reservation_form_values;
-
-    return (use_default_customer && isEnoughCustomerInfo()) || (found_customer != null && booking_code && booking_code.passed)
   }
 
   const sorted_booking_options = (booking_options, last_selected_option_ids) => {
@@ -236,37 +229,6 @@ const BookingReservationFormFunction = ({props}) => {
     set_booking_reservation_form_values(prev => ({...prev, booking_option_ids: prev.booking_option_ids.filter(id => id !== booking_option_id)}))
   }
 
-  const validateData = async () => {
-    const { customer_first_name, customer_last_name, customer_phonetic_last_name, customer_phonetic_first_name, customer_phone_number } = booking_reservation_form_values;
-
-    if (!customer_last_name) {
-      set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, customer_last_name_failed_message: `${props.i18n.last_name}${props.i18n.errors.required}`}}))
-    }
-
-    if (!customer_first_name) {
-      set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, customer_first_name_failed_message: `${props.i18n.first_name}${props.i18n.errors.required}`}}))
-    }
-
-    if (!customer_phone_number) {
-      set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, customer_phone_number_failed_message: `${props.i18n.phone_number}${props.i18n.errors.required}`}}))
-    }
-
-    if (props.support_feature_flags.support_phonetic_name && (!customer_phonetic_first_name || !customer_phonetic_last_name)) {
-      set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, customer_phonetic_name_failed_message: props.i18n.message.customer_phonetic_name_failed_message}}))
-    }
-
-    if (props.support_feature_flags.support_phonetic_name) {
-      if (customer_first_name && customer_last_name && customer_phonetic_last_name && customer_phonetic_first_name) {
-        set_booking_reservation_form_values(prev => ({...prev, errors: {}}))
-      }
-    }
-    else {
-      if (customer_first_name && customer_last_name && customer_phone_number) {
-        set_booking_reservation_form_values(prev => ({...prev, errors: {}}))
-      }
-    }
-  }
-
   const selected_booking_options_need_to_pay = () => {
     return selected_booking_options().filter(option => !props.booking_options_quota[option.id]?.ticket_code);
   }
@@ -278,69 +240,6 @@ const BookingReservationFormFunction = ({props}) => {
     // price_text_sample's price part is like "100,000円", might got delimiter issue
     // use total price to replace price_text_sample pricepart, and provide proper delimiter
     return props.money_sample.replace(/[\d]+/, total_price.toLocaleString())
-  }
-
-  const findCustomer = async (event) => {
-    event.preventDefault();
-    await validateData()
-    const { customer_first_name, customer_last_name, customer_phonetic_last_name, customer_phonetic_first_name, customer_phone_number } = booking_reservation_form_values;
-
-    if (props.support_feature_flags.support_phonetic_name) {
-      if (!(customer_first_name && customer_last_name && customer_phonetic_last_name && customer_phonetic_first_name)) {
-        return;
-      }
-    }
-    else {
-      if (!(customer_first_name && customer_last_name && customer_phone_number)) {
-        return;
-      }
-    }
-
-    if (findCustomerCall) {
-      return;
-    }
-
-    set_booking_reservation_form_values(prev => ({
-      ...prev,
-      is_finding_customer: true,
-      errors: {}
-    }))
-
-    findCustomerCall = "loading";
-
-    const response = await axios({
-      method: "GET",
-      url: props.path.find_customer,
-      params: {
-        customer_first_name: customer_first_name,
-        customer_last_name: customer_last_name,
-        customer_phone_number: customer_phone_number,
-      },
-      responseType: "json"
-    })
-
-    const {
-      customer_info,
-      last_selected_option_ids,
-      booking_code,
-    } = response.data;
-
-    set_booking_reservation_form_values(prev => ({
-      ...prev,
-      customer_info: customer_info,
-      present_customer_info: customer_info,
-      found_customer: Object.keys(customer_info).length ? true : false,
-      last_selected_option_ids: last_selected_option_ids,
-      is_finding_customer: null,
-      booking_code: booking_code,
-      use_default_customer: false,
-      booking_code: {
-        ...prev.booking_code,
-        passed: booking_code.passed
-      }
-    }))
-
-    findCustomerCall = null;
   }
 
   const handleSubmit = async (e) => {
@@ -373,6 +272,7 @@ const BookingReservationFormFunction = ({props}) => {
         "customer_phonetic_last_name",
         "customer_phonetic_first_name",
         "customer_phone_number",
+        "customer_email",
         "customer_info",
         "present_customer_info",
         "social_user_id",
@@ -462,6 +362,7 @@ const BookingReservationFormFunction = ({props}) => {
           selected_booking_options={selected_booking_options()}
           skip_social_customer={skip_social_customer}
           function_access_id={props.function_access_id}
+          customer_notification_channel={props.customer_notification_channel}
         />
       )
     }
@@ -536,17 +437,26 @@ const BookingReservationFormFunction = ({props}) => {
           />
         )}
         {isBookingFlowEnd() && isSocialLoginChecked() && (
-          <RegularCustomersOption
-            set_booking_reservation_form_values={set_booking_reservation_form_values}
-            booking_reservation_form_values={booking_reservation_form_values}
-            isCustomerTrusted={isCustomerTrusted()}
+          <CustomerVerificationForm
+            setCustomerValues={set_booking_reservation_form_values}
+            customerValues={booking_reservation_form_values}
+            found_customer={found_customer}
+            setCustomerFound={({customer_id}) => {
+              set_booking_reservation_form_values(prev => ({
+                ...prev,
+                found_customer: true,
+                customer_info: {
+                  ...prev.customer_info,
+                  id: customer_id
+                }
+              }))
+            }}
             i18n={props.i18n}
-            findCustomer={findCustomer}
             support_phonetic_name={props.support_feature_flags.support_phonetic_name}
             locale={props.locale}
           />
         )}
-        {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer || isCustomerTrusted()) && props.booking_page.survey && !is_survey_done && (
+        {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer) && props.booking_page.survey && !is_survey_done && (
           <SurveyForm
             survey={props.booking_page.survey}
             survey_answers={booking_reservation_form_values.survey_answers}
@@ -558,11 +468,11 @@ const BookingReservationFormFunction = ({props}) => {
             i18n={props.i18n}
           />
         )}
-        {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer || isCustomerTrusted()) && (!props.booking_page.survey || is_survey_done) && !submitting && (
+        {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer) && (!props.booking_page.survey || is_survey_done) && !submitting && (
           <CurrentCustomerInfo
             booking_reservation_form_values={booking_reservation_form_values}
             i18n={props.i18n}
-            isCustomerTrusted={isCustomerTrusted()}
+            isCustomerTrusted={found_customer}
             not_me_callback={() => {
               set_booking_reservation_form_values(prev => ({...prev, found_customer: null, use_default_customer: false}))
             }}
@@ -577,7 +487,7 @@ const BookingReservationFormFunction = ({props}) => {
             payment_solution={props.payment_solution}
             isBookingFlowEnd={isBookingFlowEnd()}
             isEnoughCustomerInfo={isEnoughCustomerInfo()}
-            isCustomerTrusted={isCustomerTrusted()}
+            isCustomerTrusted={found_customer}
             isOnlinePayment={isOnlinePayment()}
             isCustomerAddressRequired={props.booking_page.is_customer_address_required}
             isCustomerAddressFilled={isCustomerAddressFilled()}

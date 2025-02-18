@@ -4,7 +4,7 @@ module Notifiers
   module Users
     module Notifications
       class UserSignedUpAsStaff < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
         object :owner, class: User
 
         validate :receiver_should_be_user

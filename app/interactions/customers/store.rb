@@ -38,7 +38,9 @@ class Customers::Store < ActiveInteraction::Base
 
     customer.contact_group_id = user.contact_groups.first&.id if customer.contact_group_id.nil?
     unless customer.save
-      errors.merge!(customer.errors)
+      customer.errors.each do |error|
+        errors.add(error.attribute, error.message)
+      end
     end
     user.user_setting&.update(customer_tags: Array.wrap(user.user_setting&.customer_tags || []).concat(params[:tags].map { |tag| tag[:text] }).uniq.compact)
 

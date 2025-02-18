@@ -168,10 +168,21 @@
         %>
 
         <div class="field-group-header" id="social_account_skippable"><%= I18n.t("settings.booking_page.form.social_account_skippable") %></div>
-        <%= render "lines/user_bot/field_row",
-          path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :social_account_skippable),
-          title: @booking_page.social_account_skippable ? I18n.t("settings.booking_page.form.social_account_skippable_label") : I18n.t("settings.booking_page.form.not_social_account_skippable_label")
-        %>
+        <% if Current.business_owner.social_account&.line_settings_verified? %>
+          <%= render "lines/user_bot/field_row",
+            path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :social_account_skippable),
+            title: @booking_page.social_account_skippable ? I18n.t("settings.booking_page.form.social_account_skippable_label") : I18n.t("settings.booking_page.form.not_social_account_skippable_label")
+          %>
+        <% else %>
+          <div class="field-row disabled">
+            <div>
+              <%= I18n.t("settings.booking_page.form.social_account_skippable_label") %>
+              <div class="warning">
+                <%= I18n.t("settings.booking_page.form.need_to_verify_line_settings_to_change_setting") %>
+              </div>
+            </div>
+          </div>
+        <% end %>
 
         <div class="field-group-header" id="customer_address_required"><%= I18n.t("settings.booking_page.form.customer_address_required") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_address_required), title: @booking_page.customer_address_required ? I18n.t("settings.booking_page.form.customer_address_required_label") : I18n.t("settings.booking_page.form.not_customer_address_required_label") %>

@@ -168,6 +168,7 @@ const Plans = ({props}) => {
             {header: I18n.t("plans.headers.customer_management")},
             "customer_number",
             "line_tab",
+            "customer_notification",
             {header: I18n.t("plans.headers.reservation_management")},
             "reservation_restriction",
             {header: I18n.t("plans.headers.online_booking")},

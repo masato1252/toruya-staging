@@ -4,7 +4,7 @@ module Notifiers
   module Users
     module CustomerPayments
       class ChargeFailedToOwner < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
 
         object :customer_payment
 

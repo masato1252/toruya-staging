@@ -11,8 +11,8 @@ import { BottomNavigationBar, TopNavigationBar, SelectOptions } from "shared/com
 import { CustomerServices } from "user_bot/api"
 import useAddress from "libraries/use_address";
 import ProcessingBar from "shared/processing_bar.js"
-import EditTagsInput from "user_bot/services/episodes/shared/edit_tags_input";
 import { TagsInput } from "shared/components";
+import { responseHandler } from "libraries/helper";
 
 const TopBar = () => {
   const { dispatch, props, selected_customer } = useGlobalContext()
@@ -185,19 +185,9 @@ const UserBotCustomerInfoForm = () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    try {
-      let error, response;
-      [error, response] = await CustomerServices.save({ business_owner_id: props.business_owner_id, data: { ...data, tags } })
-
-      if (error) {
-        throw error;
-      }
-
-      window.location = response.data.redirect_to
-    } catch (err) {
-      console.error('Submission error:', err);
-      setIsSubmitting(false);
-    }
+    const [error, response] = await CustomerServices.save({ business_owner_id: props.business_owner_id, data: { ...data, tags } })
+    responseHandler(error, response)
+    setIsSubmitting(false);
   }
 
   return (

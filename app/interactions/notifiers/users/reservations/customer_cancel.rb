@@ -5,7 +5,7 @@ module Notifiers
   module Users
     module Reservations
       class CustomerCancel < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
 
         string :customer_name
         string :booking_customer_popup_url

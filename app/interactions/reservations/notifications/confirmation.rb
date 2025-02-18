@@ -7,10 +7,6 @@ module Reservations
         I18n.with_locale(customer.locale) do
           return if reservation.start_time < Time.current
 
-          # if customer.email.present?
-          #   CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email, content: message).reservation_confirmation.deliver_now
-          # end
-
           super
         end
       end

@@ -421,7 +421,11 @@ ja:
         contact_group:
           attributes:
             bind_all:
-              taken: "^You could only have one group to import all the contact groups"
+              taken: "^このグループはすでに使用されています"
+        customer:
+          attributes:
+            customer_phone_number:
+              taken: "^この電話番号はすでに使用されています，他の電話番号を使用してください"
     models:
       user: ユーザー
       staff: スタッフ
@@ -430,7 +434,7 @@ ja:
         password: "パスワード"
         email: "E-mail"
         password: "パスワード"
-        password_confirmation: "input password again"
+        password_confirmation: "パスワードを再入力"
       shop:
         name: "店舗名"
         short_name: "短縮店舗名"
@@ -454,6 +458,7 @@ ja:
         phonetic_last_name: せい
         phonetic_first_name: めい
         phone_number: 電話番号
+        customer_phone_number: 顧客電話番号
         email: メール
         address: 住所
       staff_menu:

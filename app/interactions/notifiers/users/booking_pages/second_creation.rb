@@ -4,7 +4,7 @@ module Notifiers
   module Users
     module BookingPages
       class SecondCreation < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
 
         # No default message, since all Toruya message was setup by us manually
         def message; end

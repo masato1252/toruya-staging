@@ -5,21 +5,15 @@ require "rails_helper"
 RSpec.describe Plan do
   describe ".rank" do
     context "when plan is free" do
-      context "when customers is 49" do
+      context "when customers is 19" do
         it "returns rank 0" do
-          expect(Plan.rank(Plan::FREE_LEVEL, 49)).to eq(0)
+          expect(Plan.rank(Plan::FREE_LEVEL, 19)).to eq(0)
         end
       end
 
-      context "when customers is 50" do
+      context "when customers is 20" do
         it "returns rank 0" do
-          expect(Plan.rank(Plan::FREE_LEVEL, 50)).to eq(0)
-        end
-      end
-
-      context "when customers is 51" do
-        it "returns rank 1" do
-          expect(Plan.rank(Plan::FREE_LEVEL, 51)).to eq(1)
+          expect(Plan.rank(Plan::FREE_LEVEL, 20)).to eq(0)
         end
       end
     end

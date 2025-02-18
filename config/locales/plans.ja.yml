@@ -15,6 +15,7 @@ ja:
       line_tab: メッセージ<br>送受信
       reservation_restriction: 予約件数
       customer_number: 顧客データ
+      customer_notification: 通知
       booking_page_number: 予約ページ
       get_more_friends: お友だち集め
       free_lesson: 無料レッスン
@@ -33,6 +34,7 @@ ja:
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       line_tab: 'X<br><a href="https://toruya.com/help/line_messages/#basic" target="_blank" style="font-size: 14px;">公式アプリをご利用ください</a>'
+      customer_notification: E-mail
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O
@@ -50,6 +52,7 @@ ja:
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       line_tab: 'X<br><a href="https://toruya.com/help/line_messages/#basic" target="_blank" style="font-size: 14px;">公式アプリをご利用ください</a>'
+      customer_notification: E-mail, SMS, LINE
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O
@@ -68,6 +71,7 @@ ja:
       reservation_restriction: 無制限
       customer_number: 無制限
       line_tab: 無限制
+      customer_notification: E-mail, SMS, LINE
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O

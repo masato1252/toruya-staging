@@ -2,33 +2,60 @@
 
 import React, { useState } from "react";
 
-import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
+import CustomerVerificationForm from "components/shared/customer_verification_form"
 
-export const CustomerIdentification = (props) => {
-  const { successful_message_html } = props.i18n;
-  const { social_user_id, customer_id } = props.social_customer;
-  const [identified_customer, setIdentifiedCustomer] = useState(customer_id)
+export const CustomerIdentification = ({
+    social_customer,
+    customer,
+    i18n,
+    support_feature_flags,
+    locale,
+    identifiedCallback,
+    user_id
+  }) => {
 
-  if (identified_customer) {
+  const [customer_values, setCustomerValues] = useState({
+    customer_id: customer?.customer_id,
+    customer_last_name: customer?.customer_last_name,
+    customer_first_name: customer?.customer_first_name,
+    customer_phonetic_last_name: customer?.customer_phonetic_last_name,
+    customer_phonetic_first_name: customer?.customer_phonetic_first_name,
+    customer_phone_number: customer?.customer_phone_number,
+    customer_email: customer?.customer_email,
+    user_id: customer?.user_id || '',
+    customer_social_user_id: social_customer?.social_user_id || '',
+    errors: {}
+  });
+
+  if (!!customer_values.customer_id) {
     return (
       <div className="whole-page-center final">
-        <div dangerouslySetInnerHTML={{ __html: successful_message_html }} />
+        <div dangerouslySetInnerHTML={{ __html: i18n.successful_message_html }} />
       </div>
     )
   }
 
   return (
-    <CustomerIdentificationView
-      social_user_id={social_user_id}
-      customer_id={customer_id}
-      support_phonetic_name={props.support_feature_flags.support_phonetic_name}
-      i18n={props.i18n}
-      identifiedCallback={
-        (customer) => {
-          setIdentifiedCustomer(customer.customer_id)
-        }
-      }
-    />
+    <div className="margin-around">
+      <CustomerVerificationForm
+        setCustomerValues={setCustomerValues}
+        customerValues={customer_values}
+        found_customer={!!customer_values.customer_id}
+        setCustomerFound={({customer_id}) => {
+          setCustomerValues(prev => ({
+            ...prev,
+            customer_id: customer_id
+          }));
+
+          if (identifiedCallback) {
+            identifiedCallback({customer_id});
+          }
+        }}
+        i18n={i18n}
+        support_phonetic_name={support_feature_flags.support_phonetic_name}
+        locale={locale || 'en'}
+      />
+    </div>
   )
 }
 

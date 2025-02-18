@@ -6,6 +6,13 @@ Rails.application.routes.draw do
   get "(/:locale)/userlogout", to: "lines#user_logout", as: :user_logout
   get '/redirect', to: 'function_redirects#redirect', as: :function_redirect
 
+  # Customer verification routes
+  namespace :customer_verification do
+    post :generate_verification_code
+    post :verify_code
+    post :create_or_update_customer
+  end
+
   scope module: :lines, path: :lines, as: :lines do
     # customer sesson new
     get "/identify_shop_customer/(:social_service_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
@@ -412,11 +419,9 @@ Rails.application.routes.draw do
             get :create_reservation
             get :create_course
             get :check_reservation_content
-            get :line_settings_verified
-            get :trial_end
+            get :over_free_limit
             get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
             get :change_verified_line_settings
-            get :line_verified_required
           end
         end
 
@@ -771,5 +776,10 @@ Rails.application.routes.draw do
       post :apply
       post :pay
     end
+  end
+
+  # Mount letter_opener web interface in development
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 end

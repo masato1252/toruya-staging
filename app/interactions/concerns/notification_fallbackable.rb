@@ -1,0 +1,40 @@
+module NotificationFallbackable
+  # The core notification fallback logic that is the same in both classes
+  def send_notification_with_fallbacks(preferred_channel: nil, custom_priority: nil)
+    channels_by_priority = custom_priority || notification_priority_for(preferred_channel)
+
+    channels_by_priority.each do |channel|
+      next unless send_method_available?(channel)
+
+      send_notification_via(channel)
+      break
+    end
+  end
+
+  def notification_priority_for(preferred_channel)
+    case preferred_channel
+    when "email", :email then %w[email]
+    when "sms", :sms then %w[sms email]
+    when "line", :line then %w[line sms email]
+    else %w[line sms email]
+    end
+  end
+
+  # Check if a notification method is available
+  def send_method_available?(channel)
+    case channel
+    when "email", :email then available_to_send_email?
+    when "sms", :sms then available_to_send_sms?
+    when "line", :line then available_to_send_line?
+    end
+  end
+
+  # Send notification via the specified channel
+  def send_notification_via(channel)
+    case channel
+    when "email", :email then notify_by_email
+    when "sms", :sms then notify_by_sms
+    when "line", :line then notify_by_line
+    end
+  end
+end

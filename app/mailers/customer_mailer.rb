@@ -1,34 +1,36 @@
 # frozen_string_literal: true
 
-require "message_encryptor"
-
 class CustomerMailer < ApplicationMailer
-  layout "shop_to_customer"
+  # Default layout is mailer, but will be determined by locale
+  layout :determine_layout
 
-  def reservation_confirmation
-    @reservation = params[:reservation]
-    @shop = @reservation.shop
-    @customer = params[:customer]
-    @encrypted_data = MessageEncryptor.encrypt({shop_id: @shop.id, customer_id: @customer.id })
-    @content = params[:content]
-
+  def custom
+    @message_content = params[:message]
     mail(
-      to: customer_email,
-      subject: I18n.t("customer_mailer.reservation_confirmation.title", shop_name: @shop.display_name),
-      body: @content
+      to: params[:email],
+      subject: params[:subject]
     )
   end
 
-  def reservation_reminder
-    @reservation = params[:reservation]
-    @shop = @reservation.shop
-    @customer = params[:customer]
-    @content = params[:content]
+  private
 
-    mail(
-      to: customer_email,
-      subject: I18n.t("customer_mailer.reservation_reminder.title", shop_name: @shop.display_name),
-      body: @content
-    )
+  def determine_layout
+    # Check for locale in params or from customer object
+    locale = if params[:locale].present?
+               params[:locale]
+             elsif params[:customer].present?
+               params[:customer].locale
+             else
+               I18n.locale || I18n.default_locale
+             end
+
+    case locale.to_s
+    when 'ja'
+      'mailer_ja'
+    when 'tw'
+      'mailer_tw'
+    else
+      'mailer_en'
+    end
   end
 end

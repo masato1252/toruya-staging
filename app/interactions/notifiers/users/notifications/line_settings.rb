@@ -6,7 +6,7 @@ module Notifiers
   module Users
     module Notifications
       class LineSettings < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
         validate :receiver_should_be_user
 
         def message; end

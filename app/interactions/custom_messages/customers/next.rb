@@ -11,12 +11,20 @@ module CustomMessages
 
       validate :validate_next_scenario
 
+      # Default hour to send messages (in customer's local timezone)
+      DEFAULT_NOTIFICATION_HOUR = 9
+
       def execute
-        if schedule_right_away
-          send_schedule_message(custom_message)
-        elsif next_custom_messages.exists?
-          next_custom_messages.find_each do |next_custom_message|
-            send_schedule_message(next_custom_message)
+        # Ensure all time operations use the customer's timezone
+        customer_timezone = ::LOCALE_TIME_ZONE[receiver.locale] || "Asia/Tokyo"
+
+        Time.use_zone(customer_timezone) do
+          if schedule_right_away
+            send_schedule_message(custom_message)
+          elsif next_custom_messages.exists?
+            next_custom_messages.find_each do |next_custom_message|
+              send_schedule_message(next_custom_message)
+            end
           end
         end
       end
@@ -28,9 +36,15 @@ module CustomMessages
         # each 1 day after message looking for next custom messages, then that causes total four 7 days after messages in the queues
         # That might causes duplicate message be sent to the same customer
         # Add rand number to make then don't send at the same time to avoid this.
-        schedule_at = message_product.start_at_for_customer(receiver).advance(days: message.after_days).change(hour: 9, min: rand(5), sec: rand(59))
 
-        if schedule_at > Time.current || message.after_days == 0
+        # Calculate the schedule time in the customer's timezone
+        # We're already in the customer's timezone context from the execute method
+        base_time = message_product.start_at_for_customer(receiver).advance(days: message.after_days)
+        schedule_at = base_time.change(hour: DEFAULT_NOTIFICATION_HOUR, min: rand(5), sec: rand(59))
+
+        # Compare times in the same timezone context
+        current_time = Time.current
+        if schedule_at > current_time || message.after_days == 0
           Notifiers::Customers::CustomMessages::Send.perform_at(
             schedule_at: schedule_at,
             custom_message: message,

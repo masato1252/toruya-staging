@@ -6,8 +6,6 @@ module Notifiers
   module Customers
     module CustomMessages
       class ReservationReminder < Base
-        deliver_by_priority [:line, :sms]
-
         object :custom_message
         object :reservation
 
@@ -31,10 +29,10 @@ module Notifiers
         def expected_schedule_time
           if schedule_at && custom_message.before_minutes
             expected_schedule_at = reservation.start_time.advance(minutes: -custom_message.before_minutes)
-            return expected_schedule_at.to_fs(:iso8601) == schedule_at.to_fs(:iso8601)
+            return expected_schedule_at.utc.to_i == schedule_at.utc.to_i
           elsif schedule_at && custom_message.after_days
             expected_schedule_at = reservation.start_time.advance(days: custom_message.after_days)
-            return expected_schedule_at.to_fs(:iso8601) == schedule_at.to_fs(:iso8601)
+            return expected_schedule_at.utc.to_i == schedule_at.utc.to_i
           end
 
           true # real time

@@ -34,7 +34,7 @@ module Profiles
             )
           end
 
-          Profiles::CreateMetric.perform_later(user: user) if Rails.configuration.x.env.production? 
+          Profiles::CreateMetric.perform_later(user: user) if Rails.configuration.x.env.production?
         end
 
         if profile.where_know_toruya.present? || profile.what_main_problem.present?

@@ -6,7 +6,7 @@ module Notifiers
   module Users
     module CustomMessages
       class Send < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
 
         object :custom_message
         time :scenario_start_at, default: nil
@@ -55,8 +55,8 @@ module Notifiers
 
         def expected_schedule_time
           if schedule_at && custom_message.after_days && scenario_start_at
-            expected_schedule_at = scenario_start_at.advance(days: custom_message.after_days).change(hour: 9)
-            return expected_schedule_at.to_fs(:iso8601) == schedule_at.change(hour: 9).to_fs(:iso8601)
+            expected_schedule_at = scenario_start_at.advance(days: custom_message.after_days).change(hour: ::CustomMessages::Users::Next::DEFAULT_NOTIFICATION_HOUR)
+            return expected_schedule_at.utc.to_i == schedule_at.change(min: 0, sec: 0).utc.to_i
           end
 
           true # real time

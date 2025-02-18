@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useState } from "react";
 
 import AddressView from "shared/address_view";
 import LineIdentificationView from "components/lines/customer_identifications/shared/line_identification_view"
-import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
+import CustomerIdentification from "components/lines/customer_identifications"
 import { SaleServices, CommonServices } from "user_bot/api";
 import CompanyHeader from "shared/company_header";
 import { CheckInLineBtn } from "shared/booking";
@@ -61,7 +61,11 @@ const FinalPaidPage = ({props, purchase_data}) => {
         <div className="message break-line-content">
           {I18n.t("online_service_purchases.service_content")}
           <br />
-          <div dangerouslySetInnerHTML={{ __html: I18n.t("online_service_purchases.please_check_in_line")  }} />
+          <div dangerouslySetInnerHTML={{
+             __html: I18n.t("online_service_purchases.please_check_in_channel", {
+              channel: props.channel
+             })
+          }} />
         </div>
       </CheckInLineBtn>
     </div>
@@ -90,7 +94,7 @@ export const CustomerPurchases = ({props}) => {
     }
   }
 
-  if (!social_user_id) {
+  if (!social_user_id && props.line_login_required) {
     return (
       <div className="sale-page">
         <CompanyHeader shop={props.sale_page.company_info || props.sale_page.shop}>
@@ -134,11 +138,15 @@ export const CustomerPurchases = ({props}) => {
   return (
     <div className="sale-page">
       <CompanyHeader shop={props.sale_page.company_info || props.sale_page.shop}>
-        <CustomerIdentificationView
-          social_user_id={social_user_id}
-          customer_id={customer_id}
+        <CustomerIdentification
+          social_customer={{
+            social_user_id: social_user_id,
+            customer_id: customer_id
+          }}
+          customer={props.customer}
           i18n={props.i18n}
-          support_phonetic_name={props.support_feature_flags.support_phonetic_name}
+          support_feature_flags={props.support_feature_flags}
+          locale={props.locale}
           identifiedCallback={
             (customer) => {
               setIdentifiedCustomer(customer.customer_id)

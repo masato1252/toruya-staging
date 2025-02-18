@@ -44,7 +44,8 @@ tw:
     applicant_paid:
       title: 已確認代理商註冊費用付款
   customer_mailer:
-    reservation_confirmation:
-      title: "已完成%{shop_name}的預約"
-    reservation_reminder:
-      title: "%{shop_name}下次預約提醒"
+    custom:
+      title: "%{company_name}的通知"
+  user_mailer:
+    custom:
+      title: "來自Toruya的通知"

@@ -428,6 +428,10 @@ tw:
           attributes:
             bind_all:
               taken: "^您只能有一個群組用於匯入所有聯絡人群組"
+        customer:
+          attributes:
+            customer_phone_number:
+              taken: "^此手機號碼已有客戶使用，請使用其他手機號碼"
     models:
       user: 用戶
       staff: 成員
@@ -460,6 +464,7 @@ tw:
         phonetic_last_name: "姓氏拼音"
         phonetic_first_name: "名字拼音"
         phone_number: "手機號碼"
+        customer_phone_number: "客戶手機號碼"
         email: "電子郵件"
         address: "地址"
       staff_menu:

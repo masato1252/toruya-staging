@@ -17,11 +17,14 @@ const BookingDoneView = ({
   booking_option_ids,
   skip_social_customer,
   function_access_id,
+  customer_notification_channel
 }) => {
   const {
     title,
     message1,
-    message2,
+    message_line,
+    message_sms,
+    message_email,
     back_to_book
   } = i18n.done
 
@@ -31,7 +34,7 @@ const BookingDoneView = ({
         {title}
       </h3>
       {
-        skip_social_customer ? (
+        skip_social_customer && customer_notification_channel === 'line' ? (
           <>
             <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_line_message1_html") }} />
             <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_line_message2_html") }} />
@@ -42,9 +45,9 @@ const BookingDoneView = ({
             <div className="message">
               {message1}
               <br />
-              {message2}
+              {customer_notification_channel === 'line' ? message_line : customer_notification_channel === 'sms' ? message_sms : message_email}
             </div>
-            <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} />
+            {customer_notification_channel === 'line' ? <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} /> : null}
           </>
         )
       }

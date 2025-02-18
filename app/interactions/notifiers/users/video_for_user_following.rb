@@ -3,7 +3,7 @@
 module Notifiers
   module Users
     class VideoForUserFollowing < Base
-      deliver_by :line
+      deliver_by_priority [:line, :sms, :email]
 
       def message
         {

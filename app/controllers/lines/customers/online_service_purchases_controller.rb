@@ -19,6 +19,12 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
         product = sale_page.product
         product.online_service_customer_relations.find_by(online_service: product, customer: current_customer)
       end
+
+    if @relation
+      # Redirect to the online service page
+      redirect_to online_service_path(slug: product.slug)
+      return
+    end
   end
 
   def create

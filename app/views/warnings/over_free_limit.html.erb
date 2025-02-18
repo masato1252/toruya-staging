@@ -1,0 +1,16 @@
+
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("warnings.over_free_limit.upgrade_title") %>
+      </h4>
+    </div>
+    <div class="modal-footer centerize">
+      <div class="modal-body">
+        <%= t("warnings.over_free_limit.upgrade_content_html", customers_limit: Current.business_owner.subscription.customers_limit) %>
+      </div>
+      <%= link_to t("warnings.over_free_limit.upgrade_button"), lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::BASIC_LEVEL), class: "btn btn-yellow" %>
+    </div>
+  </div>
+</div>

@@ -6,8 +6,6 @@ module Notifiers
   module Customers
     module CustomMessages
       class Send < Base
-        deliver_by :line
-
         object :custom_message
 
         validate :receiver_should_be_customer
@@ -41,12 +39,14 @@ module Notifiers
 
         def expected_schedule_time
           if schedule_at && custom_message.after_days
-            expected_schedule_at = custom_message.service.start_at_for_customer(receiver).advance(days: custom_message.after_days).change(hour: 9)
+            expected_schedule_at = custom_message.service.start_at_for_customer(receiver).advance(days: custom_message.after_days).change(hour: ::CustomMessages::Customers::Next::DEFAULT_NOTIFICATION_HOUR)
             # app/interactions/custom_messages/customers/next.rb
             # schedule_at = message_product.start_at_for_customer(receiver).advance(days: message.after_days).change(hour: 9, min: rand(5), sec: rand(59))
             # We used rand number to tweak schedule time in above file to avoid duplicate message,
             # but that might also cause our schedule time validation was incorrect so change it back here - change(hour: 9)
-            return expected_schedule_at.to_fs(:iso8601) == schedule_at.change(hour: 9).to_fs(:iso8601)
+
+            # Fix for timezone-aware comparison: convert both to UTC and compare timestamps
+            return expected_schedule_at.utc.to_i == schedule_at.change(min: 0, sec: 0).utc.to_i
           end
 
           true # real time
@@ -56,6 +56,14 @@ module Notifiers
           unless custom_message.service.is_a?(OnlineService)
             errors.add(:custom_message, :is_invalid_service)
           end
+        end
+
+        def customer
+          receiver
+        end
+
+        def user
+          receiver.user
         end
       end
     end

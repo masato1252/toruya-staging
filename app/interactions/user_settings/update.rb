@@ -8,12 +8,13 @@ module UserSettings
     hash :attrs, default: nil, strip: false do
       boolean :line_contact_customer_name_required, default: false
       boolean :booking_options_menu_concept, default: false
+      string :customer_notification_channel, default: "email"
     end
 
     def execute
       user_setting.transaction do
         case update_attribute
-        when "line_contact_customer_name_required", "booking_options_menu_concept"
+        when "line_contact_customer_name_required", "booking_options_menu_concept", "customer_notification_channel"
           user_setting.update(attrs.slice(update_attribute))
         end
 

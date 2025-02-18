@@ -629,6 +629,7 @@ ja:
         social_account_skippable: LINEログインせず予約
         social_account_skippable_label: 許可する
         not_social_account_skippable_label: 許可しない
+        need_to_verify_line_settings_to_change_setting: この設定を変更するには、先にLINE設定を完了する必要があります。
         note_label: 説明・注意事項
         note: 説明・注意事項
         note_title: 説明・注意事項

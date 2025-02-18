@@ -19,7 +19,8 @@ en:
     applicant_paid:
       title: Business account registration fee payment confirmed
   customer_mailer:
-    reservation_confirmation:
-      title: "You've just booked %{shop_name}"
-    reservation_reminder:
-      title: "Your reservation reminder to %{shop_name}"
+    custom:
+      title: "The notification from %{company_name}"
+  user_mailer:
+    custom:
+      title: "The notification from Toruya"

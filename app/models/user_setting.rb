@@ -11,6 +11,7 @@
 #  index_user_settings_on_user_id  (user_id)
 #
 class UserSetting < ApplicationRecord
+  belongs_to :user
   typed_store :content do |s|
     s.string :line_keyword_booking_page_ids, array: true, default: [], null: false
     s.string :line_keyword_booking_option_ids, array: true, default: [], null: false
@@ -18,5 +19,10 @@ class UserSetting < ApplicationRecord
     s.string :customer_tags, array: true, default: [], null: false
     s.boolean :toruya_message_reply, default: false, null: false
     s.boolean :booking_options_menu_concept, default: true, null: false
+    # default is email
+    # paid user can choose email, sms, line
+    # Paid user default change to sms
+    # line verified user change to line
+    s.string :customer_notification_channel, default: "email", null: false # email, sms, line
   end
 end

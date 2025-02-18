@@ -6,7 +6,7 @@ module Notifiers
   module Users
     module LineSettings
       class FinishedFlex < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
 
         def message
           ::LineMessages::FlexTemplateContainer.template(

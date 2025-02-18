@@ -3,7 +3,7 @@ module Notifiers
   module Users
     module Notifications
       class ConsultantClientRegistered < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
         object :client, class: User
 
         def message

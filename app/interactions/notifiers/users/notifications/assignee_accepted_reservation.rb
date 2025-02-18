@@ -3,7 +3,7 @@ module Notifiers
   module Users
     module Notifications
       class AssigneeAcceptedReservation < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
         string :assignee_name
         string :booking_time_sentence
 

@@ -44,7 +44,8 @@ ja:
     applicant_paid:
       title: 代理店登録料のお支払いが確認されました
   customer_mailer:
-    reservation_confirmation:
-      title: "%{shop_name}の予約が完了しました"
-    reservation_reminder:
-      title: "%{shop_name}次回のご予約確認です"
+    custom:
+      title: "%{company_name}からのお知らせ"
+  user_mailer:
+    custom:
+      title: "Toruyaからのお知らせ"

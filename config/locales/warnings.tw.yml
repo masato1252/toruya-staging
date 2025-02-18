@@ -52,16 +52,11 @@ tw:
     create_course:
       upgrade_title: 此為高級會員功能
       upgrade_content_html: 這項功能僅供高級會員使用。<br>透過升級您的使用方案，您就可以使用此功能。
-    line_settings_verified:
-      verify_title: 預約系統還沒有與LINE 官方帳號整合
-      verify_content_html: 您還沒有與Line 官方帳號整合，您『仍然可以』使用預約系統，客戶的提醒訊息將會透過『簡訊』通知。<br /><br /> 但是我們仍建議妳與Line 官方帳號整合以便給你與客戶更好的體驗。
-      action_button: 與Line 官方帳號整合
-      skip_button: 稍後設定
-    line_verified_required:
-      verify_title: 此功能需要與LINE 官方帳號整合
-      verify_content_html: 您需要與Line 官方帳號整合，以便給你與客戶更好的體驗。
-      action_button: 與Line 官方帳號整合
     change_verified_line_settings:
       title: 需要解除連結
       content_html: 要更改此設定，您需要解除所有的LINE連結
       disconnect_btn: 解除連結
+    over_free_limit:
+      upgrade_title: 客戶資訊已達免費方案上限
+      upgrade_content_html: <p>您已經擁有%{customers_limit}位以上的客戶資訊了。我們很高興您喜歡使用Toruya。</p><p>透過升級您的使用方案，我們可以繼續協助您的業務成長。</p>
+      upgrade_button: 升級使用方案

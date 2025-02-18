@@ -4,6 +4,9 @@ require "line_client"
 
 module Notifiers
   class Base < ActiveInteraction::Base
+    # Include shared notification fallback logic
+    include NotificationFallbackable
+
     class << self
       # @deliver_by_priority would try to use one of the way to notify users base on the priority
       # Note: Need to provide the mailer and mailer_method option when delivered by email
@@ -20,17 +23,17 @@ module Notifiers
 
       # deliver_by :{deliver_solution} would use the way dine to notify users
       #
-      # deliver_by :line
+      # deliver_by_priority [:line, :sms, :email]
       # deliver_by :sms
       # deliver_by :email, mailer: NotificationMailer, mailer_method: :activate_staff_account
       def deliver_by(notifier, *args)
         options = args.extract_options!
 
         self.public_send("deliver_by_#{notifier}=", true)
+        self.notifier = notifier
         self.mailer ||= options[:mailer]
         self.mailer_method ||= options[:mailer_method]
       end
-
     end
 
     class_attribute :delivered_by_priority, instance_writer: false
@@ -38,12 +41,13 @@ module Notifiers
     class_attribute :deliver_by_line, instance_writer: false
     class_attribute :deliver_by_email, instance_writer: false
     class_attribute :mailer, instance_writer: false
+    class_attribute :notifier, instance_writer: false
     class_attribute :mailer_method, instance_writer: false
     class_attribute :nth_time_scenario, instance_writer: false
     delegate :email, to: :target_email_user
     delegate :phone_number, to: :target_phone_user
 
-    # User, StaffAccount, SocialUser, Customer, SocialCustomer
+    # User, StaffAccount, ConsultantAccount, SocialUser, Customer, SocialCustomer
     object :receiver, class: ApplicationRecord
     object :user, default: nil # used for sending SMS
     object :customer, default: nil # used for sending SMS
@@ -52,26 +56,17 @@ module Notifiers
     def execute
       return unless deliverable
 
-      if delivered_by_priority.present?
-        delivered_by_priority.each do |notifier|
-          if public_send("#{notifier}?").present?
-            public_send("send_#{notifier}".to_sym)
+      if receiver.is_a?(Customer) || receiver.is_a?(SocialCustomer)
+        # send to customer decided by business owner
+        return unless business_owner.subscription.active?
 
-            break
-          end
-        end
-      end
-
-      if deliver_by_email && email?
-        send_email
-      end
-
-      if deliver_by_sms && sms?
-        send_sms
-      end
-
-      if deliver_by_line && line?
-        send_line
+        send_notification_with_fallbacks(preferred_channel: business_owner.customer_notification_channel)
+      elsif receiver.is_a?(StaffAccount) || receiver.is_a?(ConsultantAccount)
+        # send to staff or consultant decided by delivered_by :notifier
+        send_notification_with_fallbacks(preferred_channel: notifier)
+      else
+        # send to user decided by delivered_by_priority
+        send_notification_with_fallbacks(custom_priority: delivered_by_priority)
       end
     end
 
@@ -112,7 +107,7 @@ module Notifiers
 
     def nth_time_message; end
 
-    def send_line
+    def notify_by_line
       I18n.with_locale(target_line_user.user&.locale || target_line_user.language) do
         case target_line_user
         when SocialUser
@@ -142,8 +137,8 @@ module Notifiers
       end
     end
 
-    def send_sms
-      I18n.with_locale(user&.locale || customer&.locale || I18n.default_locale) do
+    def notify_by_sms
+      I18n.with_locale(target_phone_user.locale || I18n.default_locale) do
         Sms::Create.run(
           user: user,
           customer: customer,
@@ -153,21 +148,33 @@ module Notifiers
       end
     end
 
-    def send_email
+    def notify_by_email
       I18n.with_locale(target_email_user.locale) do
-        mailer.public_send(mailer_method, target_email_user).deliver_now
+        if target_email_user.is_a?(Customer)
+          CustomerMailer.with(
+            email: email,
+            message: message,
+            subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name)
+          ).custom.deliver_now
+        else
+          UserMailer.with(
+            email: email || social_user.email,
+            message: message,
+            subject: I18n.t("user_mailer.custom.title")
+          ).custom.deliver_now
+        end
       end
     end
 
-    def line?
+    def available_to_send_line?
       target_line_user.try(:social_user_id).present?
     end
 
-    def sms?
+    def available_to_send_sms?
       phone_number.present?
     end
 
-    def email?
+    def available_to_send_email?
       email.present?
     end
 
@@ -177,6 +184,10 @@ module Notifiers
 
     def deliverable
       true
+    end
+
+    def business_owner
+      target_line_user&.user || target_email_user.try(:user) || target_email_user
     end
 
     private

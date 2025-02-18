@@ -14,86 +14,8 @@ class LinesController < ActionController::Base
 
   layout "booking"
 
-  # customer sign up page
-  def identify_shop_customer; end
-
-  def customer_sign_in
-    customer = SocialCustomers::FindOrCreateCustomer.run!(
-      social_customer: social_customer,
-      customer_last_name: params[:customer_last_name],
-      customer_first_name: params[:customer_first_name],
-      customer_phonetic_last_name: params[:customer_phonetic_last_name],
-      customer_phonetic_first_name: params[:customer_phonetic_first_name],
-      customer_phone_number: params[:customer_phone_number]
-    )
-
-    render json: {
-      identification_successful: true,
-      customer_id: customer.id
-    }
-  end
-
-  def identify_code
-    identification_code = Customers::VerifyIdentificationCode.run!(
-      social_customer: social_customer,
-      uuid: params[:uuid],
-      code: params[:code]
-    )
-
-    if identification_code
-      customer = SocialCustomers::FindOrCreateCustomer.run!(
-        social_customer: social_customer,
-        customer_last_name: params[:customer_last_name],
-        customer_first_name: params[:customer_first_name],
-        customer_phonetic_last_name: params[:customer_phonetic_last_name],
-        customer_phonetic_first_name: params[:customer_phonetic_first_name],
-        customer_phone_number: params[:customer_phone_number]
-      )
-
-      ApplicationRecord.transaction do
-        booking_code = BookingCode.find_by!(uuid: params[:uuid])
-        booking_code.update!(customer_id: customer.id)
-      end
-
-      render json: {
-        identification_successful: true,
-        customer_id: customer.id
-      }
-    else
-      render json: {
-        identification_successful: false,
-        errors: {
-          message: I18n.t("booking_page.message.booking_code_failed_message")
-        }
-      }
-    end
-  end
-
-  def ask_identification_code
-    if I18n.locale == :ja && (Phonelib.invalid_for_country?(params[:customer_phone_number], 'JP') && Phonelib.invalid?(params[:customer_phone_number]))
-      Rollbar.error("Customer sign up invalid phone number", phone_number: params[:customer_phone_number])
-
-      render json: {
-        identification_successful: false,
-        errors: {
-          message: I18n.t("errors.invalid_jp_phone_number")
-        }
-      }
-      return
-    end
-
-    identification_code = IdentificationCodes::Create.run!(
-      user: social_customer.user,
-      customer: customer,
-      phone_number: params[:customer_phone_number]
-    )
-
-    render json: {
-      identification_code: {
-        uuid: identification_code.uuid,
-        customer_id: customer&.id,
-      }
-    }
+  # customer sign up page from Line
+  def identify_shop_customer
   end
 
   def contacts

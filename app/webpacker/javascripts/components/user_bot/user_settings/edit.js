@@ -33,6 +33,41 @@ const UserSettingsEdit =({props}) => {
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
+      case "customer_notification_channel":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input name="customer_notification_channel" type="radio" value="email" ref={register({ required: true })} />
+              {I18n.t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.email")}
+            </label>
+            <label className={`field-row flex-start ${!props.is_paid_user ? 'opacity-50' : ''}`}>
+              <input
+                name="customer_notification_channel"
+                type="radio"
+                value="sms"
+                ref={register({ required: true })}
+                disabled={!props.is_paid_user}
+              />
+              {I18n.t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.sms")}
+              <span className="text-sm text-red-500 ml-2">
+                ({I18n.t("user_bot.dashboards.settings.payment_required")})
+              </span>
+            </label>
+            <label className={`field-row flex-start ${(!props.is_paid_user || !props.line_settings_verified) ? 'opacity-50' : ''}`}>
+              <input
+                name="customer_notification_channel"
+                type="radio"
+                value="line"
+                ref={register({ required: true })}
+                disabled={!props.is_paid_user || !props.line_settings_verified}
+              />
+              {I18n.t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.line")}
+              <span className="text-sm text-red-500 ml-2">
+                ({I18n.t("user_bot.dashboards.settings.payment_required")}， {I18n.t("user_bot.dashboards.settings.line_verification_required")})
+              </span>
+            </label>
+          </>
+        )
       case "line_contact_customer_name_required":
         return (
           <>

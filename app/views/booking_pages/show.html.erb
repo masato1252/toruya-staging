@@ -39,6 +39,7 @@
     function_access_id: params[:function_access_id],
     money_sample: money_sample(I18n.locale),
     locale: @booking_page.user.locale,
+    customer_notification_channel: @booking_page.user.customer_notification_channel,
     booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled", "multiple_selection", "payment_option").merge!({
       shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
       shop_name: @booking_page.shop.name,
@@ -50,7 +51,7 @@
       regions: regions,
       url: booking_page_url(@booking_page.slug),
       is_customer_address_required: @booking_page.customer_address_required,
-      survey: @booking_page.survey ? SurveySerializer.new(@booking_page.survey).attributes_hash : nil
+      survey: @booking_page.survey ? SurveySerializer.new(@booking_page.survey).attributes_hash : nil,
     }),
     calendar: {
       dayNames: I18n.t("date.abbr_day_names"),
@@ -79,8 +80,10 @@
       booking_option_selected_flow_done: booking_option_ids.present?,
       booking_date: params[:booking_date],
       booking_at: params[:booking_at],
-      social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id,
+      social_user_id: @social_customer&.social_user_id,
+      customer_social_user_id: @social_customer&.social_user_id,
       sale_page_id: params[:_from_id],
+      user_id: @booking_page.user_id,
     },
     path: {
       save: booking_reservation_booking_page_path(@booking_page, format: :json),
@@ -93,9 +96,10 @@
     }.merge!([
       t("settings.booking_page.form"),
       t("booking_page"),
-      t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time),
-      t("action").slice(:save, :confirm),
+      t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time, :repeat_email),
+      t("action").slice(:save, :confirm, :verify_identity),
       t("customer").slice(:select_region),
+      t("errors").slice(:email_mismatch),
       t("booking_page.done").merge(add_friend_messages_html: I18n.t("booking_page.done.add_friend_messages_html", shop_name: @booking_page.shop.name))
     ].inject(:merge)
             ),

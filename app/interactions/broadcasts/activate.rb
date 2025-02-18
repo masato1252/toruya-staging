@@ -13,7 +13,16 @@ module Broadcasts
           # the scheduled job already executed, but the broadcast was draft at that time
           # so broadcast won't be sent to customers
           if broadcast.schedule_at.nil? || broadcast.schedule_at < Time.current
-            Broadcasts::Send.perform_at(schedule_at: broadcast.schedule_at, broadcast: broadcast)
+            # Get the user's timezone for proper scheduling
+            user_timezone = ::LOCALE_TIME_ZONE[broadcast.user.locale] || "Asia/Tokyo"
+
+            # Use the user's timezone for scheduling
+            Time.use_zone(user_timezone) do
+              Broadcasts::Send.perform_at(
+                schedule_at: broadcast.schedule_at,
+                broadcast: broadcast
+              )
+            end
           end
         end
       end

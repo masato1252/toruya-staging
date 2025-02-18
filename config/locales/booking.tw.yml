@@ -10,14 +10,13 @@ tw:
     phonetic_first_name: 名字拼音
     email: 電子郵件
     phone_number: 手機號碼
-    why_need_phone_number: （用來接收預約提醒）
     remember_me: 下次自動填寫
-    reminder_desc: 接收預約提醒
+    reminder_desc: 接收提醒
     confirm_customer_info: 發送確認碼
     next_step: 下一步
     confirm_reservation: 確認
     not_me: 如果不是您，請點擊這裡
-    edit_info: 修改地址
+    edit_info: 修改個人資訊
     edit: 修改
     address: 地址
     address_details:
@@ -62,8 +61,10 @@ tw:
       owner_warning2: 通知不會發送給客戶的LINE。
       title: 『待確認』預訂已完成，請等待商家確認
       message1: 預約內容已發送至
-      message2: 您登入的LINE帳號或您的手機號碼
-      no_line_message1_html: 預約內容已發送至<br />您輸入的手機號碼
+      message_line: 您登入的LINE帳號或手機簡訊
+      message_sms: 您的手機簡訊或電子郵件
+      message_email: 您的電子郵件
+      no_line_message1_html: 預約內容已發送至<br />您輸入的手機號碼或電子郵件
       no_line_message2_html: 如果您連結LINE帳號，<br />可以透過LINE接收預約內容<br />和前一天的提醒
       desc1: 的預約資訊
       desc2: 可以與您的行程一起管理的
@@ -120,7 +121,7 @@ tw:
     service_unavailable_description_html: 此服務目前無法使用。
   online_service_purchases:
     service_content: 服務內容
-    please_check_in_line: 已透過LINE發送給您<br>請查看
+    please_check_in_channel: 已透過%{channel}發送給您<br>請查看
   membership:
     all_tag: 全部
     no_episode_yet: 內容正在準備中。

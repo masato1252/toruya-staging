@@ -5,7 +5,6 @@ require "translator"
 module Notifiers
   module Customers
     class Broadcast < Base
-      deliver_by :line
       object :broadcast
 
       def message
@@ -18,7 +17,7 @@ module Notifiers
         end
       end
 
-      def send_line
+      def notify_by_line
         SocialMessages::Create.run(
           social_customer: target_line_user,
           content: message,

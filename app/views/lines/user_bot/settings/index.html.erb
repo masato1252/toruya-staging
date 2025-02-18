@@ -64,12 +64,8 @@
             <%= t("settings.plans.plan_info.plan_member", plan_name: Current.business_owner.member_plan_name) %><br />
             <div class="desc">
               <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
-              <% if Current.business_owner.trial_member? %>
-                <%= l(Current.business_owner.trial_expired_date) %>
-              <% else %>
-                <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
-                <%= " (#{@subscription.next_plan.name}#{t("action.ready_to_change")})" if @subscription.active? && @subscription.next_plan %>
-              <% end %>
+              <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
+              <%= " (#{@subscription.next_plan.name}#{t("action.ready_to_change")})" if @subscription.active? && @subscription.next_plan %>
             </div>
           </div>
           <i class="fa fa-angle-right"></i>
@@ -108,7 +104,6 @@
           <%= link_to lines_user_bot_settings_shop_custom_messages_path(shop_id: shop.id, business_owner_id: business_owner_id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
           <% end %>
-
         <% else %>
           <%= link_to shops_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
@@ -118,16 +113,8 @@
           <% end %>
         <% end %>
 
-
-        <%
-=begin%>
- <%= link_to edit_lines_user_bot_settings_user_setting_path(business_owner_id: business_owner_id, attribute: "line_contact_customer_name_required"), class: "field-row" do %>
-          <span><%= t("user_bot.dashboards.settings.user_settings.line_contact_customer_name_required.title") %></span><i class="fa fa-angle-right"></i>
-        <% end %>
-<%
-=end%>
-        <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
         <% if support_stripe_payment? %>
+        <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
           <%= link_to lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "field-row" do %>
             <span><%= "Stripe" %> <%= "(#{t("common.default")})" if business_owner.stripe_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
           <% end %>
@@ -149,17 +136,10 @@
           <% end %>
         <% end %>
 
-        <%
-=begin%>
- <div class="field-header"><%= t("user_bot.dashboards.settings.support.toruya_lab") %></div>
-        <%= link_to edit_lines_user_bot_settings_user_setting_path(business_owner_id: business_owner_id, attribute: "booking_options_menu_concept", back_path: lines_user_bot_settings_path(business_owner_id: business_owner_id)), class: "field-row" do %>
-          <span>
-          <%= t("user_bot.dashboards.settings.user_settings.booking_options_menu_concept.title") %>
-          (<%= Current.business_owner.booking_options_menu_concept ? t("user_bot.dashboards.settings.user_settings.booking_options_menu_concept.options.enable_menu_concept") : t("user_bot.dashboards.settings.user_settings.booking_options_menu_concept.options.disable_menu_concept") %>)
-          </span><i class="fa fa-angle-right"></i>
+      <div class="field-header"><%= t("user_bot.dashboards.settings.support.toruya_lab") %></div>
+        <%= link_to edit_lines_user_bot_settings_user_setting_path(business_owner_id: business_owner_id, attribute: "customer_notification_channel", back_path: lines_user_bot_settings_path(business_owner_id: business_owner_id)), class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.user_settings.customer_notification_channel.title") %>: <%= t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.#{Current.business_owner.customer_notification_channel}") %></span><i class="fa fa-angle-right"></i>
         <% end %>
-<%
-=end%>
 
         <div class="bottom-navigation-bar centerize">
           <%= sprintf("%07d", Current.business_owner.id) %>

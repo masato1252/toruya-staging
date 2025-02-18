@@ -59,6 +59,16 @@ class Subscription < ApplicationRecord
     Date.jp_today
   end
 
+  def customers_limit
+    I18n.with_locale(user.locale) do
+      Plan.max_customers_limit(Plan::FREE_LEVEL, 0)
+    end
+  end
+
+  def over_free_limit?
+    in_free_plan? && user.customers.count > customers_limit
+  end
+
   def charge_required
     plan_id != FREE_PLAN_ID
   end
@@ -67,12 +77,20 @@ class Subscription < ApplicationRecord
     @current_plan ||= active? ? plan : Plan.free_level.take
   end
 
+  def active_paid_plan?
+    active? && in_paid_plan
+  end
+
   def in_paid_plan
     charge_required && expired_date && expired_date >= self.class.today
   end
 
+  def in_free_plan?
+    plan_id == FREE_PLAN_ID
+  end
+
   def active?
-    (plan_id == FREE_PLAN_ID && trial_expired_date >= self.class.today) || !!(expired_date && expired_date >= self.class.today.advance(days: INACTIVE_BUFFER_DAYS))
+    (in_free_plan? && trial_expired_date >= self.class.today) || !!(expired_date && expired_date >= self.class.today.advance(days: INACTIVE_BUFFER_DAYS)) || (in_free_plan? && !over_free_limit?)
   end
 
   def chargeable?

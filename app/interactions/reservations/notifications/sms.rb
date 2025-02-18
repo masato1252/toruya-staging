@@ -13,7 +13,7 @@ module Reservations
           compose(
             ::Sms::Create,
             user: customer.user,
-            message: "#{message}#{I18n.t("customer.notifications.noreply")}",
+            message: message,
             phone_number: phone_number,
             reservation: reservation,
             customer: customer

@@ -4,7 +4,7 @@ module Notifiers
   module Users
     module Notifications
       class StaffJoined < Base
-        deliver_by :line
+        deliver_by_priority [:line, :sms, :email]
         string :staff_name
 
         def message

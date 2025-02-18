@@ -1280,7 +1280,9 @@ CREATE TABLE public.customers (
     online_service_ids character varying[] DEFAULT '{}'::character varying[],
     mixpanel_profile_last_set_at timestamp without time zone,
     square_customer_id character varying,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    customer_email character varying,
+    customer_phone_number character varying
 );
 
 
@@ -3267,39 +3269,6 @@ ALTER SEQUENCE public.ticket_products_id_seq OWNED BY public.ticket_products.id;
 
 
 --
--- Name: ticket_resources; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.ticket_resources (
-    id bigint NOT NULL,
-    ticket_id bigint NOT NULL,
-    resource_type character varying NOT NULL,
-    resource_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: ticket_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.ticket_resources_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: ticket_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.ticket_resources_id_seq OWNED BY public.ticket_resources.id;
-
-
---
 -- Name: tickets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4102,13 +4071,6 @@ ALTER TABLE ONLY public.ticket_products ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- Name: ticket_resources id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.ticket_resources ALTER COLUMN id SET DEFAULT nextval('public.ticket_resources_id_seq'::regclass);
-
-
---
 -- Name: tickets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4855,14 +4817,6 @@ ALTER TABLE ONLY public.ticket_products
 
 
 --
--- Name: ticket_resources ticket_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.ticket_resources
-    ADD CONSTRAINT ticket_resources_pkey PRIMARY KEY (id);
-
-
---
 -- Name: tickets tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5363,6 +5317,20 @@ CREATE INDEX index_customer_tickets_on_customer_id ON public.customer_tickets US
 --
 
 CREATE INDEX index_customer_tickets_on_ticket_id ON public.customer_tickets USING btree (ticket_id);
+
+
+--
+-- Name: index_customers_on_user_id_and_customer_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_on_user_id_and_customer_email ON public.customers USING btree (user_id, customer_email);
+
+
+--
+-- Name: index_customers_on_user_id_and_customer_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_customers_on_user_id_and_customer_phone_number ON public.customers USING btree (user_id, customer_phone_number);
 
 
 --
@@ -5867,20 +5835,6 @@ CREATE INDEX index_ticket_products_on_product ON public.ticket_products USING bt
 --
 
 CREATE INDEX index_ticket_products_on_ticket_id ON public.ticket_products USING btree (ticket_id);
-
-
---
--- Name: index_ticket_resources_on_resource; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_ticket_resources_on_resource ON public.ticket_resources USING btree (resource_type, resource_id);
-
-
---
--- Name: index_ticket_resources_on_ticket_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_ticket_resources_on_ticket_id ON public.ticket_resources USING btree (ticket_id);
 
 
 --
@@ -6504,7 +6458,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240823213428'),
 ('20240826145415'),
 ('20240913015314'),
-('20240916014909'),
 ('20240926154657'),
 ('20241002201733'),
 ('20241008143048'),
@@ -6528,6 +6481,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241223141736'),
 ('20250212163447'),
 ('20250218163447'),
-('20250228004652');
+('20250228004652'),
+('20250306135657'),
+('20250311141530');
 
 

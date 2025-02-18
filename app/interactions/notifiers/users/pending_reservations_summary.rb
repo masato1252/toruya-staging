@@ -12,10 +12,6 @@ module Notifiers
         I18n.t("notifier.pending_reservations_summary.message", user_name: user.name)
       end
 
-      def send_email
-        ReservationMailer.pending_summary(reservations, user, message).deliver_now
-      end
-
       def deliverable?
         reservations.any?
       end

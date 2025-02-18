@@ -20,10 +20,6 @@ module Notifiers
           )
         end
 
-        def send_email
-          SubscriptionMailer.charge_failed(subscription, subscription_charge).deliver_now
-        end
-
         private
 
         def charging_plan

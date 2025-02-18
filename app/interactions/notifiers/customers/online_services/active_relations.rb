@@ -4,8 +4,6 @@ module Notifiers
   module Customers
     module OnlineServices
       class ActiveRelations < Base
-        deliver_by :line
-
         integer :bundler_service_id, default: nil
         integer :last_relation_id, default: nil
 

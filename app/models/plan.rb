@@ -39,7 +39,6 @@ class Plan < ApplicationRecord
   DETAILS_JP = {
     Plan::FREE_LEVEL => [
       { rank: 0, max_customers_limit: 50, cost: 0 },
-      { rank: 1, max_customers_limit: 100, cost: 0 },
     ],
     Plan::BASIC_LEVEL => [
       { rank: 0, max_customers_limit: 100, cost: 2_200, },
@@ -77,8 +76,7 @@ class Plan < ApplicationRecord
 
   DETAILS_TW = {
     Plan::FREE_LEVEL => [
-      { rank: 0, max_customers_limit: 20, cost: 0 },
-      { rank: 1, max_customers_limit: 100, cost: 0 },
+      { rank: 0, max_customers_limit: 50, cost: 0 },
     ],
     Plan::BASIC_LEVEL => [
       { rank: 0, max_customers_limit: 100, cost: 300, },

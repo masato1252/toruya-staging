@@ -87,6 +87,8 @@ tw:
         line_info: LINE名稱
         create_customer_manually_notice: 您可以直接把預約頁面分享給您客戶，這樣您就不需要手動建立客戶資料。
       settings:
+        payment_required: 需要付費方案
+        line_verification_required: 需要LINE驗證
         user_settings:
           line_contact_customer_name_required:
             title: 客戶聯絡時是否需要姓名
@@ -98,6 +100,12 @@ tw:
             options:
               enable_menu_concept: 啟用
               disable_menu_concept: 不啟用
+          customer_notification_channel:
+            title: 客戶通知方式
+            options:
+              email: 電子郵件
+              sms: 簡訊
+              line: LINE
         support:
           user_support: 用戶支援
           documents: 幫助手冊

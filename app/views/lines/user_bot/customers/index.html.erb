@@ -1,4 +1,4 @@
-<%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
+<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
 <%= jump_out_modal(lines_user_bot_shop_reservation_path(business_owner_id, @reservation.shop, @reservation, customer_id: params[:customer_id], from: "customer_dashboard")) if @reservation %>
 
 <% today = params[:debug_date] ? Date.parse(params[:debug_date]) : Date.today %>

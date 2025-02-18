@@ -1,5 +1,4 @@
-<%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
-<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.social_account&.line_settings_verified? && business_line_required? %>
+<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if Current.business_owner.subscription.over_free_limit? %>
 
 <div class="container-fluid">
   <div class="row">
@@ -59,10 +58,11 @@
         </div>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-          <%= link_to edit_booking_pages_lines_user_bot_settings_line_keyword_path(business_owner_id: business_owner_id),
-            class: "btn btn-tarco btn-circle btn-tweak btn-bottom-left btn-with-word" do %>
-            <i class="fa fab fa-line fa-2x"></i>
-            <div class="word"><%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %></div>
+          <% if Current.business_owner.social_account&.line_settings_verified? %>
+            <%= link_to edit_booking_pages_lines_user_bot_settings_line_keyword_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-circle btn-tweak btn-bottom-left btn-with-word" do %>
+              <i class="fa fab fa-line fa-2x"></i>
+              <div class="word"><%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %></div>
+            <% end %>
           <% end %>
 
           <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: { confirm: I18n.t("user_bot.dashboards.booking_page_creation.confirm_booking_page_message") } do %>

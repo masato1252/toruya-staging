@@ -6,8 +6,6 @@ module Notifiers
   module Customers
     module OnlineServices
       class Purchased < Base
-        deliver_by :line
-
         object :online_service
 
         validate :receiver_should_be_customer

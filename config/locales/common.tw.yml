@@ -105,7 +105,10 @@ tw:
     load_more: 查看更多
     no_more_message: 訊息已結束
     view_more: 查看更多
+    verify_identity: 驗證
+    complete: 完成
   common:
+    why_need_phone_number: ""
     age: 年齡
     years_old: 歲
     default: 預設
@@ -291,11 +294,17 @@ tw:
     manual_booking: 手動預約
     new_feature: 新功能
     notify_user_customer_reservation_confirmation_message: 已為顧客發送預約確認的訊息
+    repeat_email: 請輸入相同的電子郵件地址來避免輸入錯誤
     line_verification:
       login_first_message: 請先使用LINE帳號登入
       service_content_message_html: 服務內容將
         <br />
         透過LINE訊息發送
+    phone_number_changed_message: "手機號碼已變更"
+    phone_verified: "手機號碼已驗證"
+    verification_code: 驗證碼
+    please_enter_verification_code: "請輸入驗證碼"
+    resend_code: "重新發送"
   errors:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。
@@ -304,3 +313,5 @@ tw:
     selling_price_too_low: 100元以下無法使用線上結算。
     please_answer_all_required_questions: "請回答所有必填問題"
     this_service_is_line_integration_required: "此服務需要完成與LINE整合的設定。"
+    email_mismatch: "請輸入相同的電子郵件地址"
+    code_required: "需要驗證碼"

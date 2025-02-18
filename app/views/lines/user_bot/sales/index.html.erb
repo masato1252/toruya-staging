@@ -1,5 +1,4 @@
-<%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
-<%= jump_out_modal(line_verified_required_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: business_line_required?) if !Current.business_owner.social_account&.line_settings_verified? %>
+<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
 
 <div class="container-fluid">
   <div class="row">

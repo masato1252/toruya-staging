@@ -15,6 +15,7 @@ tw:
       reservation_restriction: 預約限制
       customer_number: 客戶數
       line_tab: Line Tab
+      customer_notification: 客戶通知
       booking_page_number: 預約頁面
       get_more_friends: 獲取好友
       free_lesson: 免費課程
@@ -26,13 +27,14 @@ tw:
       message_template: 訊息範本
       support: 個人支援
     free:
-      title: 試用版
+      title: 免費版
       period: ""
       shop_can_set: 1間
       staff_in_charge: 1位（店主）
       reservation_restriction: 無限制
       customer_number: "最多%{customer_limit}位"
       line_tab: X
+      customer_notification: E-mail
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O
@@ -51,6 +53,7 @@ tw:
       reservation_restriction: 無限制
       customer_number: "最多%{customer_limit}位"
       line_tab: X
+      customer_notification: E-mail, 簡訊, LINE
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O
@@ -69,6 +72,7 @@ tw:
       reservation_restriction: 無限制
       customer_number: 無限制
       line_tab: O
+      customer_notification: E-mail, 簡訊, LINE
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O

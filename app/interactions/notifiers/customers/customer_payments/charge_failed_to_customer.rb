@@ -4,8 +4,6 @@ module Notifiers
   module Customers
     module CustomerPayments
       class ChargeFailedToCustomer < Base
-        deliver_by :line
-
         object :customer_payment
 
         validate :receiver_should_be_customer

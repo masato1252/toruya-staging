@@ -6,8 +6,6 @@ module Notifiers
   module Customers
     module CustomMessages
       class LessonWatched < Base
-        deliver_by :line
-
         object :custom_message
 
         validate :receiver_should_be_customer

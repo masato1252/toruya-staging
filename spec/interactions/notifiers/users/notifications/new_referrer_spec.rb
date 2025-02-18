@@ -51,7 +51,14 @@ RSpec.describe Notifiers::Users::Notifications::NewReferrer, :with_line do
       before { referee.update_columns(email: "foo@email.com", phone_number: nil) }
 
       it "sends email" do
-        expect(NotificationMailer).to receive(:new_referrer).with(referee).and_return(double(deliver_now: true))
+        mailer_double = double(deliver_now: true)
+        expect(UserMailer).to receive(:with).with(
+          hash_including(
+            email: anything,
+            message: anything,
+            subject: I18n.t("user_mailer.custom.title")
+          )
+        ).and_return(double(custom: mailer_double))
 
         outcome
       end
@@ -63,7 +70,7 @@ RSpec.describe Notifiers::Users::Notifications::NewReferrer, :with_line do
       end
 
       it "only sends sms" do
-        expect(NotificationMailer).not_to receive(:new_referrer)
+        expect(UserMailer).not_to receive(:with)
 
         expect {
           outcome

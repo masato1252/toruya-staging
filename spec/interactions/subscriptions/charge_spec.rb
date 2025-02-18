@@ -116,7 +116,15 @@ RSpec.describe Subscriptions::Charge do
         it "notfiy users" do
           StripeMock.prepare_card_error(:card_declined)
           expect(Notifiers::Users::Subscriptions::ChargeFailed).to receive(:run).and_call_original
-          expect(SubscriptionMailer).to receive(:charge_failed).and_return(double(deliver_now: true))
+
+          mailer_double = double(deliver_now: true)
+          expect(UserMailer).to receive(:with).with(
+            hash_including(
+              email: anything,
+              message: anything,
+              subject: I18n.t("user_mailer.custom.title")
+            )
+          ).and_return(double(custom: mailer_double))
 
           outcome
         end

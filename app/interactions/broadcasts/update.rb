@@ -18,7 +18,16 @@ module Broadcasts
       broadcast.update!(params.slice(update_attribute))
 
       if broadcast.saved_change_to_attribute?(:schedule_at)
-        Broadcasts::Send.perform_at(schedule_at: broadcast.schedule_at, broadcast: broadcast)
+        # Get the user's timezone for proper scheduling
+        user_timezone = ::LOCALE_TIME_ZONE[broadcast.user.locale] || "Asia/Tokyo"
+
+        # Use the user's timezone for scheduling the broadcast
+        Time.use_zone(user_timezone) do
+          Broadcasts::Send.perform_at(
+            schedule_at: broadcast.schedule_at,
+            broadcast: broadcast
+          )
+        end
       end
 
       customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)

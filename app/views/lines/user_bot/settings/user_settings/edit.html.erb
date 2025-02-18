@@ -6,6 +6,8 @@
     back_path: params[:back_path],
     support_feature_flags: support_feature_flags,
     booking_option_introduction_asset_path: asset_pack_path("media/assets/user_bot/booking_option_introduction.png"),
+    line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
+    is_paid_user: Current.business_owner.subscription.active_paid_plan?,
   }
 },
 { camelize_props: false }

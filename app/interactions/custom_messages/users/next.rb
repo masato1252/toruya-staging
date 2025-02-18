@@ -13,13 +13,19 @@ module CustomMessages
 
       validate :validate_next_scenario
       validates :scenario, inclusion: { in: CustomMessages::Users::Template::SCENARIOS }, allow_nil: true
+      DEFAULT_NOTIFICATION_HOUR = 9
 
       def execute
-        if schedule_right_away
-          send_schedule_message(custom_message)
-        elsif next_custom_messages.exists?
-          next_custom_messages.find_each do |next_custom_message|
-            send_schedule_message(next_custom_message)
+        # Ensure all time operations use the customer's timezone
+        user_timezone = ::LOCALE_TIME_ZONE[receiver.locale] || "Asia/Tokyo"
+
+        Time.use_zone(user_timezone) do
+          if schedule_right_away
+            send_schedule_message(custom_message)
+          elsif next_custom_messages.exists?
+            next_custom_messages.find_each do |next_custom_message|
+              send_schedule_message(next_custom_message)
+            end
           end
         end
       end
@@ -27,7 +33,7 @@ module CustomMessages
       private
 
       def send_schedule_message(message)
-        schedule_at = scenario_start_at.advance(days: message.after_days).change(hour: 9, min: rand(5), sec: rand(59))
+        schedule_at = scenario_start_at.advance(days: message.after_days).change(hour: DEFAULT_NOTIFICATION_HOUR, min: rand(5), sec: rand(59))
 
         if schedule_at > Time.current || message.after_days == 0
           Notifiers::Users::CustomMessages::Send.perform_at(

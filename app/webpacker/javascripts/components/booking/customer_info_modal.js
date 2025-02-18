@@ -53,20 +53,6 @@ const CustomerInfoModal = ({
               </>
             )}
             <h4>
-              {i18n.phone_number}
-              <a href="#" className="edit" onClick={() => openCustomerInfoFieldModel("phone_number")}>{i18n.edit}</a>
-            </h4>
-            <div className="info">
-              {phone_number}
-            </div>
-            <h4>
-              {i18n.email}
-              <a href="#" className="edit" onClick={() => openCustomerInfoFieldModel("email")}>{i18n.edit}</a>
-            </h4>
-            <div className="info">
-              {email}
-            </div>
-            <h4>
               {i18n.address}
               <a href="#" className="edit" onClick={() => openCustomerInfoFieldModel("address_details")}>{i18n.edit}</a>
             </h4>

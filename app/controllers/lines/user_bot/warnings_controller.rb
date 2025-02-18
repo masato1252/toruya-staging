@@ -64,6 +64,12 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
     render template: "warnings/trial_end"
   end
 
+  def over_free_limit
+    write_user_bot_cookies(:redirect_to, request.referrer)
+
+    render template: "warnings/over_free_limit"
+  end
+
   def change_verified_line_settings
     write_user_bot_cookies(:redirect_to, request.referrer)
 

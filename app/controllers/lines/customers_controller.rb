@@ -11,8 +11,10 @@ class Lines::CustomersController < ActionController::Base
 
   include ControllerHelpers
 
+  private
+
   def current_customer
-    current_social_customer&.customer
+    current_social_customer&.customer || current_owner.customers.find_by(id: cookies[:verified_customer_id])
   end
   helper_method :current_customer
   before_action :set_locale
