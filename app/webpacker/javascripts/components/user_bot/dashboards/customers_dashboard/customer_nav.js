@@ -13,7 +13,7 @@ const CustomerNav = () => {
   }
 
   return (
-    <ul className="nav nav-tabs">
+    <ul className="nav nav-tabs text-15px">
       <li className={view == "customer_reservations" ? "active" : ""}>
         <a onClick={() => onHandleClick("customer_reservations")}>
           <i className="fa fa-calendar"></i> <span>{props.i18n.tab.customer_reservations}</span>

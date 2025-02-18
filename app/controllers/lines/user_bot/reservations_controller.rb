@@ -20,6 +20,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @customer = Customer.find_by(id: params[:customer_id])
     @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:customer_id])
     @paid_payment = @reservation_customer&.paid_payment
+    @survey_response = @reservation_customer&.survey_response
 
     template = params[:from] == "customer_dashboard" ? "reservations/customer_reservation_show" : "reservations/show"
 
@@ -227,7 +228,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       working_shop_ids: working_shop_ids,
       user_ids: Current.business_owner.all_staff_related_users.pluck(:id),
       date: @date,
-    ) 
+    )
 
     @schedules = schedules_events(schedules)
     @related_user_ids = Current.business_owner.related_users.map(&:id)

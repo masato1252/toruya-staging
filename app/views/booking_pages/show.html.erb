@@ -49,7 +49,8 @@
       draft: @booking_page.draft,
       regions: regions,
       url: booking_page_url(@booking_page.slug),
-      is_customer_address_required: @booking_page.customer_address_required
+      is_customer_address_required: @booking_page.customer_address_required,
+      survey: @booking_page.survey ? SurveySerializer.new(@booking_page.survey).attributes_hash : nil
     }),
     calendar: {
       dayNames: I18n.t("date.abbr_day_names"),
@@ -79,7 +80,7 @@
       booking_date: params[:booking_date],
       booking_at: params[:booking_at],
       social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id,
-      sale_page_id: params[:_from_id]
+      sale_page_id: params[:_from_id],
     },
     path: {
       save: booking_reservation_booking_page_path(@booking_page, format: :json),

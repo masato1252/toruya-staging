@@ -80,6 +80,26 @@ module BookingPages
 
       integer :requirement_sale_page_id, default: nil
       integer :requirement_online_service_id, default: nil
+
+      # For survey form
+      hash :survey_form, default: nil do
+        array :questions, default: [] do
+          hash do
+            integer :id, default: nil
+            string :description
+            string :question_type
+            boolean :required, default: false
+            integer :position
+            array :options, default: [] do
+              hash do
+                integer :id, default: nil
+                string :content
+                integer :position
+              end
+            end
+          end
+        end
+      end
     end
 
     def execute
@@ -89,6 +109,7 @@ module BookingPages
       special_dates = attrs.delete(:special_dates)
       business_schedules = attrs.delete(:business_schedules)
       payment_option_type = attrs.delete(:payment_option_type)
+      survey_form = attrs.delete(:survey_form)
 
       booking_page.transaction do
         case update_attribute
@@ -236,6 +257,18 @@ module BookingPages
           booking_page.update(attrs.slice(update_attribute))
 
           BookingPages::ChangeLineSharing.run(booking_page: booking_page)
+        when "survey"
+          if survey_form&.dig(:questions).present?
+            compose(
+              Surveys::Upsert,
+              user: user,
+              owner: booking_page,
+              survey: booking_page.survey,
+              questions: survey_form[:questions]
+            )
+          else
+            booking_page.survey&.destroy
+          end
         end
 
         if booking_page.errors.present?
@@ -286,7 +319,7 @@ module BookingPages
         custom_online_payment_options_count = booking_page.booking_page_options.where(online_payment_enabled: true).count
         custom_offline_payment_options_count = booking_page.booking_page_options.where(online_payment_enabled: false).count
 
-        if custom_online_payment_options_count > custom_offline_payment_options_count 
+        if custom_online_payment_options_count > custom_offline_payment_options_count
           booking_page_option.update(online_payment_enabled: true)
         else
           booking_page_option.update(online_payment_enabled: false)

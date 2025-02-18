@@ -105,12 +105,12 @@ class BookingPagesController < ActionController::Base
     # Use Redis to prevent duplicate bookings for same time slot and options
     booking_key = "booking_request:#{params[:booking_date]}:#{params[:booking_at]}:#{params[:booking_option_ids] || params[:booking_option_id]}:#{params[:social_user_id]}"
     if Rails.cache.read(booking_key).present?
-      return render json: { 
-        status: "failed", 
+      return render json: {
+        status: "failed",
         errors: { message: I18n.t("booking_page.message.timeslot_already_booked") }
       }
     end
-    
+
     # Set lock for 30 seconds
     Rails.cache.write(booking_key, true, expires_in: 30.seconds)
 
@@ -134,6 +134,7 @@ class BookingPagesController < ActionController::Base
         square_token: params[:square_token],
         square_location_id: params[:square_location_id],
         sale_page_id: params[:sale_page_id],
+        survey_answers: params[:survey_answers],
         function_access_id: params[:function_access_id]
       )
     else
@@ -172,7 +173,7 @@ class BookingPagesController < ActionController::Base
       }
     else
       booking_page.touch
-      Rollbar.error("#{outcome.class} service failed", { 
+      Rollbar.error("#{outcome.class} service failed", {
         errors: outcome.errors.details,
         user_id: booking_page.user_id
       })
@@ -301,7 +302,7 @@ class BookingPagesController < ActionController::Base
 
   def booking_times
     ::FlowBacktracer.enable(:debug_booking_page)
- 
+
     booking_dates = if booking_page.booking_page_special_dates.exists?
       booking_page.booking_page_special_dates.where(start_at: date.all_day).map do |matched_special_date|
         {

@@ -6,7 +6,8 @@ import _ from "lodash";
 import moment from "moment-timezone";
 import ReactSelect from "react-select";
 
-import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields  } from "shared/components"
+import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields } from "shared/components"
+import SurveyBuilder from "components/shared/survey";
 import { BookingPageServices } from "user_bot/api"
 
 import BookingTimeField from "./booking_time_field";
@@ -27,6 +28,7 @@ const BookingPageEdit =({props}) => {
   const i18n = props.i18n;
   const [requirement_online_service, setRequirementOnlineService] = useState(props.booking_page.requirement_online_service)
   const [booking_page_online_payment_options_ids, setBookingPageOnlinePaymentOptionsIds] = useState(props.booking_page_online_payment_options_ids)
+
   const onSubmit = async (data) => {
     console.log(data)
 
@@ -47,6 +49,22 @@ const BookingPageEdit =({props}) => {
         { booking_start_times: data.had_specific_booking_start_times === "true" ? data.booking_start_times : [] },
         { booking_page_online_payment_options_ids: data.payment_option === "custom" ? booking_page_online_payment_options_ids : [] },
       )
+    })
+
+    if (response.data.status == "successful") {
+      window.location = response.data.redirect_to
+    } else {
+      toastr.error(response.data.error_message)
+    }
+  }
+
+  const onSurveySubmit = async (data) => {
+    console.log("data", data)
+
+    let error, response;
+    [error, response] = await BookingPageServices.update({
+      booking_page_id: props.booking_page.id,
+      data: _.assign({ survey_form: data }, { attribute: "survey" })
     })
 
     if (response.data.status == "successful") {
@@ -124,6 +142,8 @@ const BookingPageEdit =({props}) => {
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
+      case "survey":
+        return <SurveyBuilder onSubmit={onSurveySubmit} initialData={props.booking_page.survey} skip_header={true} />
       case "name":
       case "title":
         return (
@@ -492,12 +512,14 @@ const BookingPageEdit =({props}) => {
             {renderCorrespondField()}
             <BottomNavigationBar klassName="centerize transparent">
               <span></span>
-              <CircleButtonWithWord
-                disabled={isSubmitDisabled()}
-                onHandle={handleSubmit(onSubmit)}
-                icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
-                word={i18n.save}
-              />
+              {props.attribute !== "survey" && (
+                <CircleButtonWithWord
+                  disabled={isSubmitDisabled()}
+                  onHandle={handleSubmit(onSubmit)}
+                  icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
+                  word={i18n.save}
+                />
+              )}
             </BottomNavigationBar>
           </div>
         </div>

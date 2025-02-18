@@ -3,6 +3,7 @@
 
 <% today = params[:debug_date] ? Date.parse(params[:debug_date]) : Date.today %>
 
+
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
     business_owner_id: business_owner_id,

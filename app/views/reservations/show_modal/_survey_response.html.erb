@@ -1,0 +1,36 @@
+<div class="survey-response">
+  <% if response.survey&.title.present? %>
+    <div class="survey-header">
+      <h2><%= response.survey.title %></h2>
+      <% if response.survey.description.present? %>
+        <p class="survey-description"><%= response.survey.description %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="questions-container">
+    <% response.question_answers.group_by(&:survey_question_id).each do |_, answers| %>
+      <div class="question-container">
+        <h3 class="question-text">
+          <%= answers.first.survey_question_snapshot %>
+        </h3>
+
+        <% if answers.present? %>
+          <% if answers.first.text_answer.present? %>
+            <p class="answer-text"><%= answers.first.text_answer %></p>
+          <% elsif answers.length > 1 %>
+            <ul class="answer-list">
+              <% answers.each do |answer| %>
+                <li><%= answer.survey_option_snapshot %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="answer-text"><%= answers.first.survey_option_snapshot %></p>
+          <% end %>
+        <% else %>
+          <p class="no-answer">No answer provided</p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

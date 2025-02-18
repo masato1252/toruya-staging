@@ -57,6 +57,7 @@ class BookingPage < ApplicationRecord
   has_many :booking_page_special_dates, -> { order(:start_at) }
   has_many :business_schedules
   has_one :product_requirement, as: :requirer
+  has_one :survey, as: :owner
 
   belongs_to :user
   belongs_to :shop

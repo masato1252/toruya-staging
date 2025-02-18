@@ -74,6 +74,7 @@ module Booking
     integer :sale_page_id, default: nil
 
     integer :function_access_id, default: nil
+    array :survey_answers, default: nil
 
     validate :validates_enough_customer_data
 
@@ -93,7 +94,7 @@ module Booking
       #     if not allow overlap, show error message
       #
       # else reservation doesn't exist
-      #  use Booking::SharedMethods loop_for_reserable_spot to find the available staffs 
+      #  use Booking::SharedMethods loop_for_reserable_spot to find the available staffs
 
       Reservation.transaction do
         ActiveRecord::Base.with_advisory_lock("customer_booking_in_user_#{user.id}") do
@@ -308,8 +309,13 @@ module Booking
               end
             end
 
+
             compose(Users::UpdateCustomerLatestActivityAt, user: user)
             reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
+
+            if survey_answers.present?
+              survey_outcome = Surveys::Reply.run(survey: booking_page.survey, owner: reservation_customer, answers: survey_answers)
+            end
 
             booking_options.each do |booking_option|
               compose(Tickets::AutoProcess, customer: customer, product: booking_option, consumer: reservation_customer) if booking_option.ticket_enabled?

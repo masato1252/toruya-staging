@@ -23,10 +23,9 @@ import RegularCustomersOption from "./regular_customers_option";
 import CurrentCustomerInfo from "./current_customer_info";
 import CustomerInfoModal from "./customer_info_modal";
 import CustomerInfoFieldModel from "./customer_info_field_modal";
+import SurveyForm from "components/shared/survey/form";
 import BookingReservationButton from "./booking_reservation_button";
-import BookingFlowOptions from "./booking_flow_options";
 import BookingOptionFirstFlow from "./booking_option_first_flow";
-import BookingDateFirstFlow from "./booking_date_first_flow";
 import ProductRequirementView from "./product_requirement_view";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { CommonServices } from "user_bot/api";
@@ -87,7 +86,7 @@ const BookingReservationFormFunction = ({props}) => {
     set_booking_reservation_form_values(prev => ({...prev, [field]: resetValue}))
     })
 
-    set_booking_reservation_form_values(prev => ({...prev, booking_option_selected_flow_done: false, booking_failed: null, errors: {}}))
+    set_booking_reservation_form_values(prev => ({...prev, booking_option_selected_flow_done: false, is_survey_done: false, booking_failed: null, errors: {}}))
     return {};
   }
 
@@ -224,7 +223,6 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const selectBookingOption = async (booking_option_id) => {
-
     if (props.booking_page.multiple_selection) {
       set_booking_reservation_form_values(prev => ({...prev, booking_option_ids: [...new Set([...prev.booking_option_ids, booking_option_id])]}))
     }
@@ -344,7 +342,8 @@ const BookingReservationFormFunction = ({props}) => {
     findCustomerCall = null;
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
     const { is_paying_booking } = booking_reservation_form_values
 
     if (bookingReservationLoading_ref.current) return;
@@ -376,7 +375,8 @@ const BookingReservationFormFunction = ({props}) => {
         "customer_info",
         "present_customer_info",
         "social_user_id",
-        "sale_page_id"
+        "sale_page_id",
+        "survey_answers"
       ),
       {
         stripe_token,
@@ -426,7 +426,7 @@ const BookingReservationFormFunction = ({props}) => {
 
   const renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = props.booking_page
-    const { is_done, is_paying_booking, is_filling_address, booking_option_ids, skip_social_customer } = booking_reservation_form_values
+    const { is_done, is_paying_booking, is_filling_address, booking_option_ids, skip_social_customer, found_customer, is_survey_done, submitting } = booking_reservation_form_values
 
     if (props.product_requirement) {
       return (
@@ -507,155 +507,87 @@ const BookingReservationFormFunction = ({props}) => {
       return <BookingStartedYetView start_at={props.booking_page.start_at} social_account_add_friend_url={props.social_account_add_friend_url} />
     }
 
-    if (is_single_option) {
-      return (
-        <div>
-          <SelectedBookingOption
-            i18n={props.i18n}
-            booking_reservation_form_values={booking_reservation_form_values}
-            timezone={props.timezone}
-            booking_option_value={selected_booking_options()[0]}
-            ticket={props.booking_options_quota[booking_option_ids[0]]}
-          />
-          <BookingCalendar
-            i18n={props.i18n}
-            booking_reservation_form_values={booking_reservation_form_values}
-            ticket_expire_date={props.booking_options_quota[booking_option_ids[0]]?.expire_date}
-            calendar={props.calendar}
-            fetchBookingTimes={fetchBookingTimes}
-            setBookingTimeAt={setBookingTimeAt}
-            scrollToTarget={scrollToTarget}
-          />
-          {isBookingFlowEnd() && (
-            <BookingDateTime
-              i18n={props.i18n}
-              booking_reservation_form_values={booking_reservation_form_values}
-              timezone={props.timezone}
-              resetValuesCallback={() => resetValues(["booking_date", "booking_at", "booking_times"])}
-            />
-          )}
-          {isBookingFlowEnd() && !isSocialLoginChecked() && (
-            <SocialCustomerLogin
-              set_booking_reservation_form_values={set_booking_reservation_form_values}
-              booking_reservation_form_values={booking_reservation_form_values}
-              social_account_login_url={props.social_account_login_url}
-              social_account_skippable={props.social_account_skippable}
-            />
-          )}
-          {isBookingFlowEnd() && isSocialLoginChecked() && (
-            <RegularCustomersOption
-              set_booking_reservation_form_values={set_booking_reservation_form_values}
-              booking_reservation_form_values={booking_reservation_form_values}
-              isCustomerTrusted={isCustomerTrusted()}
-              i18n={props.i18n}
-              findCustomer={findCustomer}
-              support_phonetic_name={props.support_feature_flags.support_phonetic_name}
-              locale={props.locale}
-            />
-          )}
-          {isBookingFlowEnd() && isSocialLoginChecked() && (
-            <CurrentCustomerInfo
-              booking_reservation_form_values={booking_reservation_form_values}
-              i18n={props.i18n}
-              isCustomerTrusted={isCustomerTrusted()}
-              not_me_callback={() => {
-                set_booking_reservation_form_values(prev => ({...prev, found_customer: null, use_default_customer: false}))
-              }}
-            />
-          )}
-          {isSocialLoginChecked() && (
-            <BookingReservationButton
-              set_booking_reservation_form_values={set_booking_reservation_form_values}
-              booking_reservation_form_values={booking_reservation_form_values}
-              i18n={props.i18n}
-              booking_page={props.booking_page}
-              payment_solution={props.payment_solution}
-              isBookingFlowEnd={isBookingFlowEnd()}
-              isEnoughCustomerInfo={isEnoughCustomerInfo()}
-              isCustomerTrusted={isCustomerTrusted()}
-              isOnlinePayment={isOnlinePayment()}
-              isCustomerAddressRequired={props.booking_page.is_customer_address_required}
-              isCustomerAddressFilled={isCustomerAddressFilled()}
-              handleSubmit={handleSubmit}
-              submitting={bookingReservationLoading_ref.current}
-              is_single_option={is_single_option}
-              tickets={booking_option_ids.map(id => props.booking_options_quota[id]).filter(Boolean).filter(ticket => ticket.ticket_code)}
-              resetBookingFailedValues={resetBookingFailedValues}
-            />
-          )}
-        </div>
-      )
-    } else if (!is_filling_address) {
-      return (
-        <div>
-          <BookingOptionFirstFlow
+    return (
+      <div>
+        <BookingOptionFirstFlow
+          set_booking_reservation_form_values={set_booking_reservation_form_values}
+          booking_reservation_form_values={booking_reservation_form_values}
+          booking_options_quota={props.booking_options_quota}
+          i18n={props.i18n}
+          sorted_booking_options={sorted_booking_options}
+          selectBookingOption={selectBookingOption}
+          unselectBookingOption={unselectBookingOption}
+          timezone={props.timezone}
+          selected_booking_options={selected_booking_options()}
+          resetFlowValues={resetFlowValues}
+          calendar={props.calendar}
+          fetchBookingTimes={fetchBookingTimes}
+          setBookingTimeAt={setBookingTimeAt}
+          resetValues={resetValues}
+          scrollToTarget={scrollToTarget}
+        />
+        {isBookingFlowEnd() && !isSocialLoginChecked() && (
+          <SocialCustomerLogin
             set_booking_reservation_form_values={set_booking_reservation_form_values}
             booking_reservation_form_values={booking_reservation_form_values}
-            booking_options_quota={props.booking_options_quota}
-            i18n={props.i18n}
-            sorted_booking_options={sorted_booking_options}
-            selectBookingOption={selectBookingOption}
-            unselectBookingOption={unselectBookingOption}
-            timezone={props.timezone}
-            selected_booking_options={selected_booking_options()}
-            resetFlowValues={resetFlowValues}
-            calendar={props.calendar}
-            fetchBookingTimes={fetchBookingTimes}
-            setBookingTimeAt={setBookingTimeAt}
-            resetValues={resetValues}
-            scrollToTarget={scrollToTarget}
+            social_account_login_url={props.social_account_login_url}
+            social_account_skippable={props.social_account_skippable}
           />
-          {isBookingFlowEnd() && !isSocialLoginChecked() && (
-            <SocialCustomerLogin
-              set_booking_reservation_form_values={set_booking_reservation_form_values}
-              booking_reservation_form_values={booking_reservation_form_values}
-              social_account_login_url={props.social_account_login_url}
-              social_account_skippable={props.social_account_skippable}
-            />
-          )}
-          {isBookingFlowEnd() && isSocialLoginChecked() && (
-            <RegularCustomersOption
-              set_booking_reservation_form_values={set_booking_reservation_form_values}
-              booking_reservation_form_values={booking_reservation_form_values}
-              isCustomerTrusted={isCustomerTrusted()}
-              i18n={props.i18n}
-              findCustomer={findCustomer}
-              support_phonetic_name={props.support_feature_flags.support_phonetic_name}
-              locale={props.locale}
-            />
-          )}
-          {isBookingFlowEnd() && isSocialLoginChecked() && (
-            <CurrentCustomerInfo
-              booking_reservation_form_values={booking_reservation_form_values}
-              i18n={props.i18n}
-              isCustomerTrusted={isCustomerTrusted()}
-              not_me_callback={() => {
-                set_booking_reservation_form_values(prev => ({...prev, found_customer: null, use_default_customer: false}))
-              }}
-            />
-          )}
-          {isSocialLoginChecked() && (
-            <BookingReservationButton
-              set_booking_reservation_form_values={set_booking_reservation_form_values}
-              booking_reservation_form_values={booking_reservation_form_values}
-              i18n={props.i18n}
-              booking_page={props.booking_page}
-              payment_solution={props.payment_solution}
-              isBookingFlowEnd={isBookingFlowEnd()}
-              isEnoughCustomerInfo={isEnoughCustomerInfo()}
-              isCustomerTrusted={isCustomerTrusted()}
-              isOnlinePayment={isOnlinePayment()}
-              isCustomerAddressRequired={props.booking_page.is_customer_address_required}
-              isCustomerAddressFilled={isCustomerAddressFilled()}
-              handleSubmit={handleSubmit}
-              is_single_option={is_single_option}
-              tickets={booking_option_ids.map(id => props.booking_options_quota[id]).filter(Boolean).filter(ticket => ticket.ticket_code)}
-              resetBookingFailedValues={resetBookingFailedValues}
-            />
-          )}
-        </div>
-      )
-    }
+        )}
+        {isBookingFlowEnd() && isSocialLoginChecked() && (
+          <RegularCustomersOption
+            set_booking_reservation_form_values={set_booking_reservation_form_values}
+            booking_reservation_form_values={booking_reservation_form_values}
+            isCustomerTrusted={isCustomerTrusted()}
+            i18n={props.i18n}
+            findCustomer={findCustomer}
+            support_phonetic_name={props.support_feature_flags.support_phonetic_name}
+            locale={props.locale}
+          />
+        )}
+        {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer || isCustomerTrusted()) && props.booking_page.survey && !is_survey_done && (
+          <SurveyForm
+            survey={props.booking_page.survey}
+            survey_answers={booking_reservation_form_values.survey_answers}
+            onSubmit={(data) => {
+              console.log("survey data", data)
+              set_booking_reservation_form_values(prev => ({...prev, is_survey_done: true, survey_answers: data}))
+            }}
+            booking_reservation_form_values={booking_reservation_form_values}
+            i18n={props.i18n}
+          />
+        )}
+        {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer || isCustomerTrusted()) && (!props.booking_page.survey || is_survey_done) && !submitting && (
+          <CurrentCustomerInfo
+            booking_reservation_form_values={booking_reservation_form_values}
+            i18n={props.i18n}
+            isCustomerTrusted={isCustomerTrusted()}
+            not_me_callback={() => {
+              set_booking_reservation_form_values(prev => ({...prev, found_customer: null, use_default_customer: false}))
+            }}
+          />
+        )}
+        {isSocialLoginChecked() && (!props.booking_page.survey || is_survey_done) && (
+          <BookingReservationButton
+            set_booking_reservation_form_values={set_booking_reservation_form_values}
+            booking_reservation_form_values={booking_reservation_form_values}
+            i18n={props.i18n}
+            booking_page={props.booking_page}
+            payment_solution={props.payment_solution}
+            isBookingFlowEnd={isBookingFlowEnd()}
+            isEnoughCustomerInfo={isEnoughCustomerInfo()}
+            isCustomerTrusted={isCustomerTrusted()}
+            isOnlinePayment={isOnlinePayment()}
+            isCustomerAddressRequired={props.booking_page.is_customer_address_required}
+            isCustomerAddressFilled={isCustomerAddressFilled()}
+            handleSubmit={handleSubmit}
+            is_single_option={is_single_option}
+            tickets={booking_option_ids.map(id => props.booking_options_quota[id]).filter(Boolean).filter(ticket => ticket.ticket_code)}
+            resetBookingFailedValues={resetBookingFailedValues}
+          />
+        )}
+      </div>
+    )
   }
 
   return (

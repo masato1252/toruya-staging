@@ -26,9 +26,11 @@ const BookingReservationButton = ({
 
   return (
     <div className="reservation-confirmation">
-      <div className="note">
-        <div dangerouslySetInnerHTML={{ __html: Autolinker.link(booking_page.note) }} />
-      </div>
+      {booking_page.note && booking_page.note.trim().length > 0 && !submitting && (
+        <div className="note">
+          <div dangerouslySetInnerHTML={{ __html: Autolinker.link(booking_page.note) }} />
+        </div>
+      )}
 
       <a href="#"
         className={`btn btn-tarco ${submitting ? 'disabled' : ''}`}

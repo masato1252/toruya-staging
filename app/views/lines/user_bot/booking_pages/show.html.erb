@@ -184,6 +184,9 @@
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
   <%= render "lines/user_bot/field_row", path: lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %>
 
+  <div class="field-group-header" id="survey"><%= t("settings.booking_page.form.survey") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :survey), title: @booking_page.survey&.questions&.count ? t("settings.booking_page.form.survey_questions_count", count: @booking_page.survey.questions.count) : t("settings.booking_page.form.survey_questions_count_empty") %>
+
   <div class="action-block">
     <%= link_to lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
       <i class="fa fa-minus"></i> <span><%= I18n.t("settings.booking_page.form.delete_page") %></span>

@@ -63,6 +63,7 @@ class ReservationCustomer < ApplicationRecord
   belongs_to :booking_option, required: false
   serialize :customer_tickets_quota, HashieSerializer
   serialize :details, HashieSerializer
+  has_one :survey_response, as: :owner
   alias_attribute :amount, :booking_amount
 
   enum state: {

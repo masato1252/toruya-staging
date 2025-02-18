@@ -15,6 +15,7 @@ tw:
     stop_usage: 停止使用
     log_out: 登出
     save: 儲存
+    submit: 送出
     save_pending: 儲存為待審核
     save_as_draft: 儲存為草稿
     save_and_publish: 儲存並發布
@@ -299,3 +300,4 @@ tw:
     not_enough_info: "資訊不足"
     short_than_menu_minutes: "此價格需要至少 %{required_minutes} 分鐘的服務時間。"
     selling_price_too_low: 100元以下無法使用線上結算。
+    please_answer_all_required_questions: "請回答所有必填問題"

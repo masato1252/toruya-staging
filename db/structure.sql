@@ -1,6 +1,7 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -1989,6 +1990,42 @@ ALTER SEQUENCE public.query_filters_id_seq OWNED BY public.query_filters.id;
 
 
 --
+-- Name: question_answers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.question_answers (
+    id bigint NOT NULL,
+    survey_response_id bigint NOT NULL,
+    survey_question_id bigint NOT NULL,
+    survey_option_id bigint,
+    survey_question_snapshot text NOT NULL,
+    survey_option_snapshot text,
+    text_answer text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: question_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.question_answers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: question_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.question_answers_id_seq OWNED BY public.question_answers.id;
+
+
+--
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3028,6 +3065,146 @@ ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 
 
 --
+-- Name: survey_options; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_options (
+    id bigint NOT NULL,
+    survey_question_id bigint NOT NULL,
+    content character varying NOT NULL,
+    "position" integer,
+    deleted_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: survey_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_options_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_options_id_seq OWNED BY public.survey_options.id;
+
+
+--
+-- Name: survey_questions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_questions (
+    id bigint NOT NULL,
+    survey_id bigint NOT NULL,
+    description text NOT NULL,
+    question_type character varying NOT NULL,
+    required boolean DEFAULT false,
+    "position" integer,
+    deleted_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: survey_questions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_questions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_questions_id_seq OWNED BY public.survey_questions.id;
+
+
+--
+-- Name: survey_responses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_responses (
+    id bigint NOT NULL,
+    survey_id bigint NOT NULL,
+    owner_type character varying,
+    owner_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: survey_responses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_responses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_responses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_responses_id_seq OWNED BY public.survey_responses.id;
+
+
+--
+-- Name: surveys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.surveys (
+    id bigint NOT NULL,
+    title character varying,
+    description text,
+    active boolean DEFAULT true,
+    user_id bigint NOT NULL,
+    owner_type character varying,
+    owner_id bigint,
+    scenario character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.surveys_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.surveys_id_seq OWNED BY public.surveys.id;
+
+
+--
 -- Name: taggings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3087,6 +3264,39 @@ CREATE SEQUENCE public.ticket_products_id_seq
 --
 
 ALTER SEQUENCE public.ticket_products_id_seq OWNED BY public.ticket_products.id;
+
+
+--
+-- Name: ticket_resources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ticket_resources (
+    id bigint NOT NULL,
+    ticket_id bigint NOT NULL,
+    resource_type character varying NOT NULL,
+    resource_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ticket_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ticket_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ticket_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ticket_resources_id_seq OWNED BY public.ticket_resources.id;
 
 
 --
@@ -3661,6 +3871,13 @@ ALTER TABLE ONLY public.query_filters ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: question_answers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.question_answers ALTER COLUMN id SET DEFAULT nextval('public.question_answers_id_seq'::regclass);
+
+
+--
 -- Name: ranks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3850,10 +4067,45 @@ ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: survey_options id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_options ALTER COLUMN id SET DEFAULT nextval('public.survey_options_id_seq'::regclass);
+
+
+--
+-- Name: survey_questions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_questions ALTER COLUMN id SET DEFAULT nextval('public.survey_questions_id_seq'::regclass);
+
+
+--
+-- Name: survey_responses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_responses ALTER COLUMN id SET DEFAULT nextval('public.survey_responses_id_seq'::regclass);
+
+
+--
+-- Name: surveys id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.surveys ALTER COLUMN id SET DEFAULT nextval('public.surveys_id_seq'::regclass);
+
+
+--
 -- Name: ticket_products id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ticket_products ALTER COLUMN id SET DEFAULT nextval('public.ticket_products_id_seq'::regclass);
+
+
+--
+-- Name: ticket_resources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ticket_resources ALTER COLUMN id SET DEFAULT nextval('public.ticket_resources_id_seq'::regclass);
 
 
 --
@@ -4315,6 +4567,14 @@ ALTER TABLE ONLY public.query_filters
 
 
 --
+-- Name: question_answers question_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.question_answers
+    ADD CONSTRAINT question_answers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ranks ranks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4539,6 +4799,38 @@ ALTER TABLE ONLY public.subscriptions
 
 
 --
+-- Name: survey_options survey_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_options
+    ADD CONSTRAINT survey_options_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: survey_questions survey_questions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_questions
+    ADD CONSTRAINT survey_questions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: survey_responses survey_responses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_responses
+    ADD CONSTRAINT survey_responses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: surveys surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.surveys
+    ADD CONSTRAINT surveys_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: taggings taggings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4560,6 +4852,14 @@ ALTER TABLE ONLY public.tags
 
 ALTER TABLE ONLY public.ticket_products
     ADD CONSTRAINT ticket_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ticket_resources ticket_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ticket_resources
+    ADD CONSTRAINT ticket_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -5185,6 +5485,27 @@ CREATE INDEX index_query_filters_on_user_id ON public.query_filters USING btree 
 
 
 --
+-- Name: index_question_answers_on_survey_option_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_question_answers_on_survey_option_id ON public.question_answers USING btree (survey_option_id);
+
+
+--
+-- Name: index_question_answers_on_survey_question_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_question_answers_on_survey_question_id ON public.question_answers USING btree (survey_question_id);
+
+
+--
+-- Name: index_question_answers_on_survey_response_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_question_answers_on_survey_response_id ON public.question_answers USING btree (survey_response_id);
+
+
+--
 -- Name: index_ranks_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5444,6 +5765,48 @@ CREATE UNIQUE INDEX index_subscriptions_on_user_id ON public.subscriptions USING
 
 
 --
+-- Name: index_survey_options_on_survey_question_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_options_on_survey_question_id ON public.survey_options USING btree (survey_question_id);
+
+
+--
+-- Name: index_survey_questions_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_questions_on_survey_id ON public.survey_questions USING btree (survey_id);
+
+
+--
+-- Name: index_survey_responses_on_owner; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_responses_on_owner ON public.survey_responses USING btree (owner_type, owner_id);
+
+
+--
+-- Name: index_survey_responses_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_responses_on_survey_id ON public.survey_responses USING btree (survey_id);
+
+
+--
+-- Name: index_surveys_on_owner; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_surveys_on_owner ON public.surveys USING btree (owner_type, owner_id);
+
+
+--
+-- Name: index_surveys_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_surveys_on_user_id ON public.surveys USING btree (user_id);
+
+
+--
 -- Name: index_taggings_on_context; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5504,6 +5867,20 @@ CREATE INDEX index_ticket_products_on_product ON public.ticket_products USING bt
 --
 
 CREATE INDEX index_ticket_products_on_ticket_id ON public.ticket_products USING btree (ticket_id);
+
+
+--
+-- Name: index_ticket_resources_on_resource; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ticket_resources_on_resource ON public.ticket_resources USING btree (resource_type, resource_id);
+
+
+--
+-- Name: index_ticket_resources_on_ticket_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ticket_resources_on_ticket_id ON public.ticket_resources USING btree (ticket_id);
 
 
 --

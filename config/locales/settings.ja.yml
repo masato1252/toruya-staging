@@ -680,6 +680,23 @@ ja:
         public: 公開
         private: 非公開
         delete_page: ページを削除
+        survey: 預約表單
+        survey_title: 預約表單
+        survey_questions_count: "預約表單題目数: %{count}題"
+        survey_questions_count_empty: 預約表單題目数が設定されていません
+        survey_input_placeholder: 預約表單問題を入力
+        survey_question_type_text: 文字回答
+        survey_question_type_single_selection: 単選
+        survey_question_type_multiple_selection: 複選
+        survey_question_type_dropdown: 下拉選單
+        survey_delete_option: 選項を削除
+        survey_option_placeholder: "選項 %{index}"
+        survey_add_option: 選項を追加
+        survey_delete_question: 預約表單問題を削除
+        survey_answer_placeholder: 文字回答
+        survey_required: 必須
+        survey_add_question: 預約表單問題を追加
+        survey_save: 保存
         form_errors:
           start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません

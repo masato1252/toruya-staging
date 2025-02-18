@@ -46,7 +46,8 @@
           }
         end,
         requirement_online_service: @booking_page.requirement_online_service ? OnlineServiceOptionSerializer.new(@booking_page.requirement_online_service).attributes_hash : nil,
-        customer_address_required: @booking_page.customer_address_required
+        customer_address_required: @booking_page.customer_address_required,
+        survey: @booking_page.survey ? SurveySerializer.new(@booking_page.survey).attributes_hash : nil
       ),
       attribute: @attribute,
       shop_options: shop_options(Current.business_owner.shops.order("id")),

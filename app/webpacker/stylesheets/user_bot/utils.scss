@@ -49,6 +49,14 @@ $line-margin: 20px;
   font-size: 12px;
 }
 
+.text-14px {
+  font-size: 14px;
+}
+
+.text-15px {
+  font-size: 15px;
+}
+
 .text-16px {
   font-size: 16px;
 }
@@ -111,6 +119,14 @@ $line-margin: 20px;
 
 .justify-end {
   justify-content: flex-end;
+}
+
+.justify-right {
+  justify-content: right;
+}
+
+.justify-left {
+  justify-content: left;
 }
 
 .items-baseline {
@@ -335,9 +351,51 @@ $line-margin: 20px;
   margin-right: 0.5rem;
 }
 
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.mx-6 {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-6px {
+  margin-bottom: 6px;
 }
 
 .ml-0 {
@@ -352,29 +410,6 @@ $line-margin: 20px;
   margin-right: 0.5rem;
 }
 
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-
-.mt-1 {
-  margin-top: 0.25rem;
-}
-
-.mt-6 {
-  margin-top: 1.5rem;
-}
-
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
-.mb-6px {
-  margin-bottom: 6px;
-}
 
 .mx-auto {
   margin-left: auto;
