@@ -139,7 +139,7 @@ const UserBotCustomerInfoView = () => {
         <dl className="email">
           <dt>{i18n.email}</dt>
           <dd>
-            {(selected_customer.emailsDetails || []).map((email, index) => <EmailIcon key={`${email.value}-${index}`} email={email} />)}
+            {(selected_customer.emailsDetails || []).filter(email => email.value).map((email, index) => <EmailIcon key={`${email.value}-${index}`} email={email} />)}
           </dd>
         </dl>
         <dl className="customerID">
