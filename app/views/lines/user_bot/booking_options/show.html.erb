@@ -9,7 +9,7 @@
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :display_name), title: @booking_option.display_name %>
 
  <div class="field-header" id="booking_pages"><%= I18n.t("settings.booking_option.form.booking_pages") %></div>
- <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :booking_page_ids), title: @booking_option.booking_pages.pluck(:name).join(", ") %> 
+ <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :booking_page_ids), title: @booking_option.booking_pages.normal.pluck(:name).join(", ") %>
 
   <% if support_booking_options_menu_concept? %>
     <div class="field-group-header" id="new_menu"><%= I18n.t("settings.booking_option.form.menu_for_sale_label") %></div>
@@ -37,7 +37,7 @@
       <%= link_to edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :new_menu), class: "btn btn-yellow" do %>
         <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_option.form.new_menu") %></span>
       <% end %>
-  
+
       <% if @booking_option.booking_option_menus.count == 0 %>
         <div class="danger margin-around">
           <%= I18n.t("settings.booking_option.form.form_errors.no_menu") %>

@@ -21,9 +21,6 @@ class Lines::UserBot::Settings::LineKeywordsController < Lines::UserBotDashboard
 
   def edit_booking_options
     @keyword_options = Current.business_owner.line_keyword_booking_options.map { |booking_option| { label: booking_option.name, value: booking_option.id, id: booking_option.id } }
-    # @option_mapping_page_ids = BookingPageOption.where("booking_page_options.booking_option_id": Current.business_owner.line_keyword_booking_option_ids).joins(:booking_page).where("booking_pages.rich_menu_only": true, "booking_pages.deleted_at": nil).each_with_object({}) do |booking_page_option, h|
-    #   h[booking_page_option.booking_option_id] = booking_page_option.booking_page_id
-    # end
     @booking_options = Current.business_owner.booking_options.active.map do |booking_option|
       { label: booking_option.name, value: booking_option.id, id: booking_option.id }
     end

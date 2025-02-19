@@ -60,6 +60,10 @@ module BookingOptions
         when "menu_restrict_order"
           booking_option.update(attrs.slice(update_attribute))
         when "booking_page_ids"
+          # find the booking page's of booking option that have rich_menu_only enabled
+          rich_menu_pages = booking_option.booking_pages.for_option_in_rich_menu
+          attrs[:booking_page_ids] = attrs[:booking_page_ids] + rich_menu_pages.pluck(:id)
+
           booking_option.update(booking_page_ids: attrs[:booking_page_ids])
         when "new_pure_menu"
           ApplicationRecord.transaction do

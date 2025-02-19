@@ -37,7 +37,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     @booking_option = Current.business_owner.booking_options.find(params[:id])
     @attribute = params[:attribute]
     option_menu = @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])
-    @booking_pages = Current.business_owner.booking_pages.order("updated_at DESC")
+    @booking_pages = Current.business_owner.booking_pages.normal.order("updated_at DESC")
 
     if option_menu
       @editing_menu = option_menu.attributes.slice("priority", "required_time", "menu_id").merge!(label: option_menu.menu.name)

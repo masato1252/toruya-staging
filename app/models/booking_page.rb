@@ -65,6 +65,8 @@ class BookingPage < ApplicationRecord
   scope :started, -> { active.where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
   scope :end_yet, -> { where("end_at is NULL or end_at > ?", Time.current) }
   validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
+  scope :normal, -> { where(rich_menu_only: false) }
+  scope :for_option_in_rich_menu, -> { where(rich_menu_only: true) }
 
   enum payment_option: {
     offline: "offline",

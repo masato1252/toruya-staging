@@ -13,7 +13,7 @@ module BookingOptions
     private
 
     def validate_booking_page_usage
-      if booking_option.booking_pages.active.exists?
+      if booking_option.booking_pages.normal.active.exists?
         errors.add(:booking_option, :be_used_by_booking_page)
       end
     end
