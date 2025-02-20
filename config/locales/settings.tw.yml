@@ -544,8 +544,8 @@ tw:
         title_title: 頁面標題
         title_top_bar_header: 頁面標題
         title_hint: 這將顯示為預約頁面的標題。
-        greeting: 問候語
-        greeting_title: 問候語
+        greeting: 描述
+        greeting_title: 描述
         greeting_placeholder: 將顯示在預約頁面的頂部。
         booking_price_setting_header: 設定預約項目
         booking_option_header: 預約項目
