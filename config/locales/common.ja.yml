@@ -283,6 +283,7 @@ ja:
     login: ログイン
     template_version: テンプレート
     welcome_to_toruya: Welcome to Toruya
+    url_copied: コードをコピーしました
     line_verification:
       login_first_message: まずはLINEでログインしてください
       service_content_message_html: サービスコンテンツは
