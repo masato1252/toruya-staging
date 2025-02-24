@@ -76,7 +76,7 @@ class SocialUser < ApplicationRecord
   end
 
   def japanese?
-    locale == "ja" || user.locale == :ja
+    locale == "ja" || user&.locale == :ja
   end
 
   def manage_accounts
