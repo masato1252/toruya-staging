@@ -181,7 +181,7 @@ tw:
           info_hint: 顯示在銷售頁面、預約頁面和數位產品中
           phone_number_hint_html: "如果留空，「聯絡我們」選單中的<br>「撥打電話」按鈕將不會顯示。"
         custom_messages:
-          auto_message: 提醒發送（預設）
+          auto_message: 自動發送訊息
         custom_message:
           auto_message_label: 自動發送訊息
           line_message_title: 提醒訊息設定
