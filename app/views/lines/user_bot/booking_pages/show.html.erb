@@ -144,20 +144,6 @@
           title: @booking_page.overbooking_restriction ? I18n.t("settings.booking_page.form.not_allow_overbooking_label") : I18n.t("settings.booking_page.form.allow_overbooking_label")
         %>
 
-        <div class="field-header"><%= I18n.t("settings.booking_page.form.requirements") %></div>
-        <% if @membership_online_services_exists %>
-          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :requirements) do %>
-            <span><%= @booking_page.requirement_online_service&.name || I18n.t("common.no_restriction") %></span>
-          <% end %>
-        <% else %>
-          <%= render "lines/user_bot/field_row" do %>
-          <span class="warning">
-            <%= I18n.t("settings.booking_page.form.no_membership_services") %>
-            <%= link_to I18n.t("action.create_new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id), class: "btn btn-tarco" %>
-          </span>
-        <% end %>
-      <% end %>
-
     <div class="field-group-header" id="line_sharing"><%= I18n.t("settings.booking_page.form.line_sharing") %></div>
     <%= render "lines/user_bot/field_row",
       path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :line_sharing),

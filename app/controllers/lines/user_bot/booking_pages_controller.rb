@@ -12,7 +12,6 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   def show
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @booking_option = @booking_page.booking_options.first
-    @membership_online_services_exists = Current.business_owner.online_services.membership.exists?
 
     if @booking_page.booking_type == "any"
       @wdays_business_schedules_mapping = @booking_page.shop.business_schedules.opened.for_shop.group_by(&:day_of_week)
