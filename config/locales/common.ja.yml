@@ -139,6 +139,7 @@ ja:
     phonetic_last_name: せい
     phonetic_first_name: めい
     company_name: 社名・屋号
+    company_email: メールアドレス
     website: Webサイト
     update_failed_message: 更新失敗
     update_successfully_message: 更新完了

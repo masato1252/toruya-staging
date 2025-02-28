@@ -9,11 +9,12 @@ import BenefitsView from "components/user_bot/sales/benefits_view";
 import ReviewsView from "components/user_bot/sales/reviews_view";
 import FaqView from "components/user_bot/sales/faq_view";
 import WhyContentView from "components/user_bot/sales/why_content_view";
+import CompanyInfoView from "components/user_bot/sales/company_info_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleBookingPage = (
   {product, normal_price, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-    shop, flow, preview, introduction_video_url, sections_context, solution_type, reviews, support_feature_flags}) => {
+    shop, flow, preview, introduction_video_url, sections_context, solution_type, reviews, support_feature_flags, company_info}) => {
 
   if (preview) {
     return (
@@ -73,12 +74,7 @@ const SaleBookingPage = (
         />
       </div>
 
-      <div className="shop-content content">
-        <div><b>{shop.name}</b></div>
-        <div>{shop.address}</div>
-        {shop.phone_number && <div><i className="fa fa-phone"></i> <a href={`tel:${shop.phone_number}`}>{shop.phone_number}</a></div>}
-        {shop.email && <div><i className="fa fa-envelope"></i> {shop.email}</div>}
-      </div>
+      <CompanyInfoView info={company_info} className="shop-content content" />
     </div>
   )
 }

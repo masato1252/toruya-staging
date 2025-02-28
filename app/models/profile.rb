@@ -8,6 +8,7 @@
 #  city                     :string
 #  company_address          :string
 #  company_address_details  :jsonb
+#  company_email            :string
 #  company_name             :string
 #  company_phone_number     :string
 #  company_zip_code         :string

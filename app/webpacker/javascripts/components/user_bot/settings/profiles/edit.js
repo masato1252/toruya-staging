@@ -98,6 +98,7 @@ const ProfileEdit =({props}) => {
         break
       case "website":
       case "company_name":
+      case "company_email":
         return (
           <>
             <div className="field-header">{I18n.t(`common.${props.attribute}`)}</div>

@@ -92,9 +92,6 @@
 
         <% if Current.business_owner.shops.count == 1 %>
           <% shop = Current.business_owner.shops.first %>
-          <%= link_to lines_user_bot_settings_shop_path(business_owner_id, shop.id), class: "field-row" do %>
-            <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
           <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
           <% end %>
@@ -103,9 +100,6 @@
           <% end %>
 
         <% else %>
-          <%= link_to lines_user_bot_settings_shops_path(business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
           <%= link_to shops_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
           <% end %>

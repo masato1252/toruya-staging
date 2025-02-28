@@ -12,6 +12,7 @@ module Profiles
       string :phonetic_first_name, default: nil
       string :company_name, default: nil
       string :company_phone_number, default: nil
+      string :company_email, default: nil
       string :website, default: nil
       hash :company_address_details, default: nil, strip: false
       file :logo, default: nil
@@ -35,7 +36,7 @@ module Profiles
             phonetic_last_name: attrs[:phonetic_last_name],
             phonetic_first_name: attrs[:phonetic_first_name]
           )
-        when "company_name", "company_phone_number", "website"
+        when "company_name", "company_phone_number", "company_email", "website"
           profile.update(attrs.slice(update_attribute))
         when "company_address_details"
           address = Address.new(attrs[:company_address_details])

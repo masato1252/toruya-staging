@@ -11,9 +11,7 @@
     line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id)),
     service_goals: ::OnlineService.goals,
     user_payable: Current.business_owner.payable?,
-    companies: Current.business_owner.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
-      CompanyInfoSerializer.new(Current.business_owner.profile).attributes_hash
-    ),
+    companies: [CompanyInfoSerializer.new(Current.business_owner.profile).attributes_hash],
     upsell_sales: Current.business_owner.sale_pages.end_yet.includes(:product, :sale_template).map do |sale_page|
       next unless sale_page.product
 

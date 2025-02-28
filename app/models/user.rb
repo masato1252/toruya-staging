@@ -70,6 +70,7 @@ class User < ApplicationRecord
   has_many :reservations, -> { active }
   has_many :all_reservations, class_name: "Reservation"
   has_many :shops, -> { active }
+  has_one :shop, -> { active.order("id") }
   has_many :menus, -> { active }
   has_many :staffs, -> { active }
   has_many :customers, -> { active }

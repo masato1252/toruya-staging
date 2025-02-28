@@ -4,9 +4,8 @@
     back_path: lines_user_bot_service_path({ business_owner_id: business_owner_id, id: @service.id }),
     service: OnlineServiceSerializer.new(@service).attributes_hash,
     attribute: @attribute,
-    companies: Current.business_owner.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
-      CompanyInfoSerializer.new(Current.business_owner.profile).attributes_hash
-    ),
+    companies: [CompanyInfoSerializer.new(Current.business_owner.profile).attributes_hash]
+    ,
     upsell_sales: Current.business_owner.sale_pages.end_yet.includes(:product, :sale_template).map do |sale_page|
       next unless sale_page.product
       hash = SalePageOptionSerializer.new(sale_page).attributes_hash

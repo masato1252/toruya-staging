@@ -141,6 +141,7 @@ tw:
     phonetic_last_name: 姓氏拼音
     phonetic_first_name: 名字拼音
     company_name: 公司名稱
+    company_email: 公司電子郵件
     website: 網站
     update_failed_message: 更新失敗
     update_successfully_message: 更新成功

@@ -44,7 +44,7 @@ class SalePageOptionSerializer
   end
 
   attribute :shop do |sale_page|
-    sale_page.product.is_a?(BookingPage) ? CompanyInfoSerializer.new(sale_page.product.shop).attributes_hash : CompanyInfoSerializer.new(sale_page.product.company).attributes_hash
+    CompanyInfoSerializer.new(sale_page.user.profile).attributes_hash
   end
 
   attribute :template do |sale_page|

@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
@@ -9,7 +9,20 @@ import OnlineServicePage from "user_bot/services/online_service_page";
 
 const ConfirmationStep = ({next, prev, jumpByKey, step, step_key}) => {
   const { props, dispatch, createService, selected_company, name, selected_solution, content_url, upsell } = useGlobalContext()
-  const company_info = props.companies.find((company) => company.id == selected_company.id && company.type == selected_company.type)
+  const company_info = props.companies[0]
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_ATTRIBUTE",
+      payload: {
+        attribute: "selected_company",
+        value: {
+          type: company_info.type,
+          id: company_info.id
+        }
+      }
+    })
+  }, [])
 
   useLayoutEffect(() => {
     $("body").scrollTop(0)

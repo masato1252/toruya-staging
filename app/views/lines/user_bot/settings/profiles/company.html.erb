@@ -13,6 +13,9 @@
         <div class="field-header"><%= Profile.human_attribute_name(:phone_number) %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_profile_path(attribute: :company_phone_number, business_owner_id: business_owner_id), title: @profile.company_phone_number %>
 
+        <div class="field-header"><%= Profile.human_attribute_name(:email) %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_profile_path(attribute: :company_email, business_owner_id: business_owner_id), title: @profile.company_email %>
+
         <div class="field-header"><%= Profile.human_attribute_name(:website) %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_profile_path(attribute: :website, business_owner_id: business_owner_id), title: @profile.website %>
 

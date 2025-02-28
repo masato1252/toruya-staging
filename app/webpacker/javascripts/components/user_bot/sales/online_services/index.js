@@ -9,16 +9,17 @@ import BenefitsView from "components/user_bot/sales/benefits_view";
 import ReviewsView from "components/user_bot/sales/reviews_view";
 import FaqView from "components/user_bot/sales/faq_view";
 import WhyContentView from "components/user_bot/sales/why_content_view";
+import CompanyInfoView from "components/user_bot/sales/company_info_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  price, normal_price, quantity, introduction_video_url, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews, is_external, support_feature_flags}) => {
+  price, normal_price, quantity, introduction_video_url, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews, is_external, support_feature_flags, company_info}) => {
 
   if (preview) {
     return (
       <div className="sale-page centerize">
         <SaleTemplateView
-          company_info={product.company_info}
+          company_info={company_info}
           product={product}
           demo={demo}
           template={template}
@@ -50,7 +51,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
   return (
     <div className="sale-page centerize">
       <SaleTemplateView
-        company_info={product.company_info}
+        company_info={company_info}
         product={product}
         demo={demo}
         template={template}
@@ -96,11 +97,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
         />
       </div>
 
-      <div className="shop-content content">
-        <div><b>{product.company_info.name}</b></div>
-        <div>{product.company_info.address}</div>
-        {product.company_info.phone_number && <div><i className="fa fa-phone"></i> <a href={`tel:${product.company_info.phone_number}`}>{product.company_info.phone_number}</a></div>}
-      </div>
+      <CompanyInfoView info={company_info} className="shop-content content" />
     </div>
   )
 }

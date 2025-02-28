@@ -1930,7 +1930,8 @@ CREATE TABLE public.profiles (
     personal_address_details jsonb,
     company_address_details jsonb,
     template_variables json,
-    context jsonb
+    context jsonb,
+    company_email character varying
 );
 
 
@@ -6148,6 +6149,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241217134923'),
 ('20241223032227'),
 ('20241223141736'),
-('20250212163447');
+('20250212163447'),
+('20250218163447'),
+('20250228004652');
 
 

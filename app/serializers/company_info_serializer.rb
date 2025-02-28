@@ -4,6 +4,22 @@ class CompanyInfoSerializer
   include JSONAPI::Serializer
   attribute :id, :email, :template_variables, :logo_url, :website
 
+  attribute :email do |object|
+    if object.class == Shop
+      object.user.profile.company_email
+    else
+      object.company_email
+    end
+  end
+
+  attribute :logo_url do |object|
+    if object.class == Shop
+      object.user.profile.logo_url
+    else
+      object.logo_url
+    end
+  end
+
   attribute :type do |object|
     object.class.name
   end
@@ -11,7 +27,7 @@ class CompanyInfoSerializer
   attribute :short_name do |object|
     case object
     when Shop
-      object.short_name
+      object.user.profile.company_name
     when Profile
       object.company_name
     end
@@ -20,7 +36,7 @@ class CompanyInfoSerializer
   attribute :name do |object|
     case object
     when Shop
-      object.name
+      object.user.profile.company_name
     when Profile
       object.company_name
     end
@@ -29,24 +45,36 @@ class CompanyInfoSerializer
   attribute :label do |object|
     case object
     when Shop
-      object.display_name
+      I18n.t("common.company_info")
     when Profile
       I18n.t("common.company_info")
     end
   end
 
   attribute :address do |object|
+    address = case object
+    when Shop
+      object.user.profile.company_full_address
+    when Profile
+      object.company_full_address
+    end
+
     if object.user.locale == :ja
-      if object.company_full_address.present?
-        "〒#{object.company_full_address}"
+      if address.present?
+        "〒#{address}"
       end
     else
-      object.company_full_address
+      address
     end
   end
 
   attribute :phone_number do |object|
-    object.company_phone_number
+    case object
+    when Shop
+      object.user.profile.company_phone_number
+    when Profile
+      object.company_phone_number
+    end
   end
 
   attribute :holiday_working do |object|

@@ -8,7 +8,6 @@ import ExternalPurchaseUrlStep from "./external_purchase_url_step"
 import NameStep from "./name_step"
 import BundledItemsStep from "./bundled_items_step"
 import BundledItemsEndTimeStep from "./bundled_items_end_time_step"
-import CompanyInfoStep from "./company_info_step"
 import EndtimeStep from "./endtime_step"
 import UpsellStep from "./upsell_step"
 import ConfirmationStep from "./confirmation_step"
@@ -25,7 +24,6 @@ const GoalFlowDispatcher = ({}) => {
         <FlowController new_version={true}>
           <SolutionStep key="solution_step" />
           <NameStep key="name_step" />
-          <CompanyInfoStep key="company_step" />
           <EndtimeStep key="endtime_step" />
           <UpsellStep key="upsell_step" />
           <ConfirmationStep key="confirmation_step" />
@@ -36,7 +34,6 @@ const GoalFlowDispatcher = ({}) => {
       return (
         <FlowController new_version={true}>
           <NameStep key="name_step" />
-          <CompanyInfoStep key="company_step" />
           <EndtimeStep key="endtime_step" />
           <FinalStep key="final_step" />
         </FlowController>
@@ -45,7 +42,6 @@ const GoalFlowDispatcher = ({}) => {
       return (
         <FlowController new_version={true}>
           <NameStep key="name_step" />
-          <CompanyInfoStep key="company_step" />
           <EndtimeStep key="endtime_step" />
           <FinalStep key="final_step" />
         </FlowController>
@@ -56,7 +52,6 @@ const GoalFlowDispatcher = ({}) => {
           <NameStep key="name_step" />
           <BundledItemsStep key="bundled_items_step" />
           <BundledItemsEndTimeStep key="bundled_items_end_time_step" />
-          <CompanyInfoStep key="company_step" />
           <FinalStep key="final_step" />
         </FlowController>
       )
@@ -64,7 +59,6 @@ const GoalFlowDispatcher = ({}) => {
       return (
         <FlowController new_version={true}>
           <NameStep key="name_step" />
-          <CompanyInfoStep key="company_step" />
           <FinalStep key="final_step" />
         </FlowController>
       )
@@ -74,7 +68,6 @@ const GoalFlowDispatcher = ({}) => {
           <SolutionStep key="solution_step" />
           <ExternalPurchaseUrlStep key="external_purchase_url_step" />
           <NameStep key="name_step" />
-          <CompanyInfoStep key="company_step" />
           <EndtimeStep key="endtime_step" />
           <UpsellStep key="upsell_step" />
           <ConfirmationStep key="confirmation_step" />

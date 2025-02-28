@@ -25,7 +25,7 @@ module ShopHelper
       if latest
         Images::Process.run!(image: shop.logo, resize: "#{size}")
       else
-        @shop_logo_urls[shop.id] ||= Images::Process.run!(image: shop.logo, resize: "#{size}")
+        @shop_logo_urls["#{shop.class.name}_#{shop.id}_#{size}"] ||= Images::Process.run!(image: shop.logo, resize: "#{size}")
       end
     end
   end

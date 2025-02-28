@@ -34,7 +34,7 @@ class Lines::UserBot::Settings::ProfilesController < Lines::UserBotDashboardCont
       case params[:attribute]
       when "name"
         lines_user_bot_settings_profile_path(business_owner_id: params[:business_owner_id])
-      when "company_name", "company_phone_number", "website", "company_address_details", 'logo'
+      when "company_name", "company_phone_number", "website", "company_address_details", 'logo', "company_email"
         company_lines_user_bot_settings_profile_path(business_owner_id: params[:business_owner_id])
       end
 
