@@ -240,13 +240,13 @@ tw:
       info_title: 帳戶
       info_title2: 帳號資訊
     profile:
-      user_info: 管理員資訊
+      user_info: 使用者資訊
       company_info: 公司資訊
       info_title: 首先設定帳戶
       info_1: 這是您的 Toruya 帳號資訊。
       info_2: 您需要完成此設定才能使用 Toruya。
-      new_info_1: 首先請註冊管理員資訊。
-      new_info_2: 請設定管理 Toruya 註冊資訊的個人或法人，包括各種設定和使用費用支付等。
+      new_info_1: 首先請註冊使用者資訊。
+      new_info_2: 請設定使用者資訊，包括各種設定和使用費用支付等。
     subscription:
       status:
         active: 使用中

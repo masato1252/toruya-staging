@@ -749,7 +749,7 @@ tw:
         shops/update:
           attributes:
             shop:
-              photo_invalid: "^店舖標誌圖片必須小於50KB，格式為PNG、JPG或GIF"
+              photo_invalid: "^標誌圖片必須小於50KB，格式為PNG、JPG或GIF"
         reservable/time:
           attributes:
             date:
@@ -820,7 +820,7 @@ tw:
         profiles/update_attribute:
           attributes:
             profile:
-              logo_invalid: "^店舖標誌圖片必須為50KB以下的PNG、JPG或GIF格式"
+              logo_invalid: "^標誌圖片必須為50KB以下的PNG、JPG或GIF格式"
             attrs:
               address_invalid: "^無效地址"
         social_accounts/update:

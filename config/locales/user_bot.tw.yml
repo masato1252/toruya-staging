@@ -176,7 +176,7 @@ tw:
           phone_number_label: 電話號碼
           email_label: 電子郵件
           website_label: 網站
-          logo_label: 店舖標誌
+          logo_label: Logo
           logo_limit_description: 390×135像素以內，30KB以下的PNG或GIF格式圖片
           info_hint: 顯示在銷售頁面、預約頁面和數位產品中
           phone_number_hint_html: "如果留空，「聯絡我們」選單中的<br>「撥打電話」按鈕將不會顯示。"
