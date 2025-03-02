@@ -57,6 +57,7 @@ tw:
       dashboard_title: 儀表板
       sale_page_title: 銷售頁面
       service_title: 數位產品
+      booking_page_title: 預約頁面
   top_navigation_bar:
     menu: ""
   invitation:

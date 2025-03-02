@@ -17,6 +17,8 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     @customers_payment = CustomerPayment.completed.where(customer_id: Current.business_owner.customers.select(:id)).where("created_at > ?", metric_start_time).sum(:amount_cents).to_i
     @comparison_customers_payment = @customers_payment - CustomerPayment.completed.where(customer_id: Current.business_owner.customers.select(:id)).where(created_at: comparison_period).sum(:amount_cents).to_i
     @services_mapping_total_amount = ::Metrics::OnlineServicesRevenues.run!(user: Current.business_owner, metric_period: metric_period)
+    @booking_revenue = ::Metrics::BookingRevenue.run!(user: Current.business_owner, metric_period: metric_period)
+
 
     if params[:demo]
       @active_customers_rate = ((rand(100)/100.0) * 100).to_i
@@ -34,6 +36,14 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
 
   def online_services
     @online_services = Current.business_owner.online_services.order("updated_at DESC")
+  end
+
+  def booking_pages
+    @booking_pages = Current.business_owner.booking_pages.order("updated_at DESC")
+  end
+
+  def booking_page
+    @booking_page = Current.business_owner.booking_pages.find(params[:id])
   end
 
   def online_service

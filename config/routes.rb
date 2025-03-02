@@ -93,6 +93,13 @@ Rails.application.routes.draw do
           get :sale_pages
           get :online_services
           get "/online_services/:id", action: "online_service", as: :online_service, constraints: { id: /\d+/ }
+          get :booking_pages
+          get "/booking_pages/:id", action: "booking_page", as: :booking_page, constraints: { id: /\d+/ }
+
+          namespace :booking_pages do
+            get :visits
+            get :conversions
+          end
 
           namespace :sale_pages do
             get :visits

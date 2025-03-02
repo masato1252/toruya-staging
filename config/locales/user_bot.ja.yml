@@ -572,6 +572,9 @@ ja:
         sale_page_ranking: 人気サービス
         product_name: サービス名
         other_services: その他のサービス
+        booking_revenue: 予約収益
+        booking_option: 予約メニュー
+        bookings_count: 予約数
       booking_page_creation:
         default_label: "%{name}予約ページ"
         default_greeting: "%{name}の予約を受付ます。"

@@ -573,6 +573,9 @@ tw:
         sale_page_ranking: 熱門服務
         product_name: 服務名稱
         other_services: 其他服務
+        booking_revenue: 預約收入
+        booking_option: 預約項目
+        bookings_count: 預約數量
       booking_page_creation:
         default_label: "%{name}預約頁面"
         default_greeting: "接受%{name}的預約。"
@@ -610,7 +613,7 @@ tw:
         check_this_page: 預覽
         want_to_create_a_new_menu: 需要建立新服務嗎？
         create_a_new_menu: 建立新服務
-        create_a_sale_page: 使用銷售頁面可以在網上招攬預約
+        create_a_sale_page: 要使用建立的產品，需要銷售頁面
         create_a_sale_page_btn: 建立銷售頁面
         create_sale_page_later_warning_html: 服務已建立，但由於<br>銷售頁面尚未建立，<br>客戶無法註冊服務
         remember_create_sale_page: 請記得建立銷售頁面

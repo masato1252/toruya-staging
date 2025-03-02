@@ -46,9 +46,34 @@
   </div>
 </div>
 
-<div class="container table margin-around border border-solid border-gray-500">
-  <h3 class="p-6"><%= t("user_bot.dashboards.metrics.sale_page_ranking") %></h3>
-  <div class="row">
+<% if @booking_revenue.present? %>
+  <div class="container table margin-around border border-solid border-gray-500">
+    <h3 class="p-6"><%= t("user_bot.dashboards.metrics.booking_revenue") %></h3>
+    <div class="row">
+    <div class="col-sm-7 col-xs-6"><%= t("user_bot.dashboards.metrics.booking_option") %></div>
+    <div class="col-sm-2 col-xs-3"><%= t("user_bot.dashboards.metrics.bookings_count") %></div>
+    <div class="col-sm-3 col-xs-3"><%= t("user_bot.dashboards.metrics.total_revenue") %></div>
+  </div>
+  <% @booking_revenue.each do |booking| %>
+    <div class="row">
+      <div class="col-sm-7 col-xs-6">
+        <div><strong><%= booking["booking_option_name"] %></strong></div>
+      </div>
+      <div class="col-sm-2 col-xs-3">
+        <%= booking["count"] %>
+      </div>
+      <div class="col-sm-3 col-xs-3">
+        <%= booking["revenue"] %>
+      </div>
+    </div>
+  <% end %>
+  </div>
+<% end %>
+
+<% if @services_mapping_total_amount.present? %>
+  <div class="container table margin-around border border-solid border-gray-500">
+    <h3 class="p-6"><%= t("user_bot.dashboards.metrics.sale_page_ranking") %></h3>
+    <div class="row">
     <div class="col-sm-9 col-xs-6"><%= t("user_bot.dashboards.metrics.product_name") %></div>
     <div class="col-sm-3 col-xs-6"><%= t("user_bot.dashboards.metrics.total_revenue") %></div>
   </div>
@@ -67,4 +92,5 @@
       <%= link_to t("user_bot.dashboards.metrics.other_services"), lines_user_bot_metrics_online_services_path(business_owner_id) %>
     </div>
   <% end %>
-</div>
+  </div>
+<% end %>
