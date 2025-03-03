@@ -62,9 +62,7 @@ module Users
         end
       end
 
-      if !user.locale_is?(:ja)
-        user.user_setting.update(booking_options_menu_concept: false)
-      end
+      user.user_setting.update(booking_options_menu_concept: false)
 
       user
     end
