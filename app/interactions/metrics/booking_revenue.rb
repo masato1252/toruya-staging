@@ -38,7 +38,6 @@ module Metrics
       booking_options = user.booking_options.where(id: booking_option_ids).to_a
       booking_results = booking_option_counts.map do |booking_option_id, count|
       booking_option = booking_options.find { |option| option.id.to_s == booking_option_id.to_s }
-
         {
           "booking_option_id" => booking_option_id,
           "booking_option_name" => booking_option.name,
@@ -48,34 +47,40 @@ module Metrics
       end
 
       # Get manual bookings (without booking options)
-      # manual_booking_options = user.booking_options.group_by(&:id)
-      # manual_reservation_customers = reservation_customer_scope.where(booking_page_id: nil)
+      manual_booking_options = user.booking_options.group_by(&:id)
+      manual_reservation_customers = reservation_customer_scope.where(booking_page_id: nil)
+      reservation_ids = manual_reservation_customers.pluck(:reservation_id).flatten.compact
+      menu_ids = ReservationMenu.where(reservation_id: reservation_ids).pluck(:menu_id)
+      menu_counts = menu_ids.group_by(&:itself).transform_values(&:count)
+      menu_ids = menu_counts.keys
 
-      # manual_results = []
-      # manual_reservation_customers.joins(:reservation)
-      #   .joins("LEFT JOIN reservation_menus ON reservation_menus.reservation_id = reservations.id")
-      #   .joins("LEFT JOIN menus ON menus.id = reservation_menus.menu_id")
-      #   .joins("LEFT JOIN booking_option_menus ON booking_option_menus.menu_id = menus.id")
-      #   .joins("LEFT JOIN booking_options ON booking_options.id = booking_option_menus.booking_option_id")
-      #   .group("booking_options.id", "menus.id")
-      #   .select(
-      #     "booking_options.id as booking_option_id",
-      #     "booking_options.name as booking_option_name",
-      #     "menus.id as menu_id",
-      #     "menus.name as menu_name",
-      #     "SUM(booking_options.amount_cents) as revenue",
-      #     "COUNT(DISTINCT reservation_customers.id) as count"
-      #   ).each do |result|
-      #     manual_results << {
-      #       "booking_option_id" => result.booking_option_id,
-      #       "booking_option_name" => result.menu_name,
-      #       "revenue" => result.revenue.to_i,
-      #       "count" => result.count.to_i
-      #     }
-      #   end
+      manual_results = menu_counts.map do |menu_id, count|
+        menu = Menu.find(menu_id)
+        exclusive_booking_option = menu.exclusive_booking_options.first
 
+        if exclusive_booking_option
+          {
+            "booking_option_id" => exclusive_booking_option.id.to_s,
+            "booking_option_name" => exclusive_booking_option.name,
+            "count" => count,
+            "revenue" => count * exclusive_booking_option.amount_cents
+          }
+        end
+      end.compact
       # Combine both results and sort by revenue
-      (booking_results).sort_by { |r| -r["revenue"] }
+      # Combine results with the same booking_option_id
+      combined_results = (booking_results + manual_results).group_by { |r| r["booking_option_id"] }
+        .map do |booking_option_id, items|
+          {
+            "booking_option_id" => booking_option_id,
+            "booking_option_name" => items.first["booking_option_name"],
+            "count" => items.sum { |item| item["count"] },
+            "revenue" => items.sum { |item| item["revenue"] }
+          }
+        end
+
+      # Sort by revenue in descending order
+      combined_results.sort_by { |r| -r["revenue"] }
     end
   end
 end

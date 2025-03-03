@@ -107,6 +107,14 @@ class Menu < ApplicationRecord
     min_staffs_number == NO_MAN_POWER_STAFF_NUMBER
   end
 
+  def exclusive_booking_options
+    BookingOption.joins(:booking_option_menus)
+                 .where(delete_at: nil)
+                 .group('booking_options.id')
+                 .having('COUNT(DISTINCT booking_option_menus.menu_id) = 1')
+                 .having('bool_and(booking_option_menus.menu_id = ?)', self.id)
+  end
+
   private
 
   def reject_staffs(attributes)
