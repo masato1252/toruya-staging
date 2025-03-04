@@ -63,6 +63,7 @@ module Users
       end
 
       user.user_setting.update(booking_options_menu_concept: false)
+      Users::CreateDefaultSettings.run(user: user)
 
       user
     end
