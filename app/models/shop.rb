@@ -48,7 +48,7 @@ class Shop < ApplicationRecord
 
   enum holiday_working_option: {
     business_schedule_overlap_holiday_using_holiday_schedule: "business_schedule_overlap_holiday_using_holiday_schedule",
-    holiday_schedule_without_business_schedule: "holiday_schedule_without_business_schedule" 
+    holiday_schedule_without_business_schedule: "holiday_schedule_without_business_schedule"
   }
 
   def staff_users
@@ -64,8 +64,10 @@ class Shop < ApplicationRecord
   end
 
   def company_name
-    display_name
+    user.profile.company_name
   end
+  alias_attribute :name, :company_name
+  alias_attribute :short_name, :company_name
 
   def logo_url
     ApplicationController.helpers.shop_logo_url(self, "260")
