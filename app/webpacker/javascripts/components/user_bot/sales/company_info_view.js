@@ -1,6 +1,8 @@
 import React from "react";
 
 const CompanyInfoView = ({ info, className = "company-info" }) => {
+  if (!info) return <></>;
+
   return (
     <div className={className}>
       {info.name && <div><b>{info.name}</b></div>}
