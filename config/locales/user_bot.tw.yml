@@ -488,6 +488,7 @@ tw:
           bundled_services_expiration: 各服務的使用期限
           broadcast_to_customers: 向使用中的客戶群發訊息
       booking_pages:
+        introduction_message_html: 這裡是您建立預約頁面並分享給客戶的地方。<br>您可以建立多個的預約頁面來整理或銷售不同的服務。
         index:
           title: 線上預約頁面
           field_header: 預約頁面

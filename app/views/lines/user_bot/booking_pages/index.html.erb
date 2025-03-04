@@ -1,5 +1,5 @@
 <%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
-<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: business_line_required?) if !Current.business_owner.social_account&.line_settings_verified? %>
+<%= jump_out_modal(line_settings_verified_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.social_account&.line_settings_verified? && business_line_required? %>
 
 <div class="container-fluid">
   <div class="row">
@@ -40,14 +40,16 @@
             <% end %>
           <% end %>
 
-          <% if is_not_phone? %>
-            <div class="margin-around centerize">
-              <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow", data: { confirm: I18n.t("user_bot.dashboards.booking_page_creation.confirm_booking_page_message") } do %>
+          <div class="margin-around centerize">
+            <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow", data: { confirm: I18n.t("user_bot.dashboards.booking_page_creation.confirm_booking_page_message") } do %>
             <i class="fa fa-plus"></i>
               <%= t("action.add_more") %>
             <% end %>
           </div>
-        <% end %>
+
+          <div class="margin-around centerize">
+            <%= t("user_bot.dashboards.booking_pages.introduction_message_html") %>
+          </div>
         </div>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>

@@ -487,6 +487,7 @@ ja:
           bundled_services_expiration: 各サービスの利用期限
           broadcast_to_customers: 利用中の顧客に一斉配信
       booking_pages:
+        introduction_message_html: ここは予約ページを作成して、顧客に共有する場所です。<br>異なるサービスを整理したり、銷售するために複数の予約ページを作成できます。
         index:
           title: オンライン予約ページ
           field_header: 予約ページ

@@ -3,11 +3,6 @@
     <div class="modal-header">
       <h4 class="modal-title">
         <%= t("warnings.line_settings_verified.verify_title") %>
-        <% if !business_line_required? %>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        <% end %>
       </h4>
     </div>
     <div class="modal-body">
@@ -22,12 +17,6 @@
         class: "btn btn-yellow",
         method: :get
       %>
-
-      <% if !business_line_required? %>
-        <button type="button" class="btn btn-gray" data-dismiss="modal" aria-label="Close">
-          <%= t("warnings.line_settings_verified.skip_button") %>
-        </button>
-      <% end %>
     </div>
   </div>
 </div>
