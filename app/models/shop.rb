@@ -64,10 +64,10 @@ class Shop < ApplicationRecord
   end
 
   def company_name
-    user.profile.company_name
+    user.profile&.company_name || read_attribute(:name)
   end
-  alias_attribute :name, :company_name
-  alias_attribute :short_name, :company_name
+  alias_method :name, :company_name
+  alias_method :short_name, :company_name
 
   def logo_url
     ApplicationController.helpers.shop_logo_url(self, "260")
