@@ -34,13 +34,13 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   def sale_pages
   end
 
+  def booking_pages
+  end
+
   def online_services
     @online_services = Current.business_owner.online_services.order("updated_at DESC")
   end
 
-  def booking_pages
-    @booking_pages = Current.business_owner.booking_pages.order("updated_at DESC")
-  end
 
   def booking_page
     @booking_page = Current.business_owner.booking_pages.find(params[:id])

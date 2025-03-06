@@ -1,23 +1,37 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-6 px-0 settings-view">
-      <div class="booking-options form with-top-bar">
-        <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.metrics.title") %>
+<div class="booking-pages form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.metrics.title") %>
 
-        <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
-        <div class="booking-pages-list">
-          <% @booking_pages.each do |page| %>
-            <%= link_to lines_user_bot_metrics_booking_page_path(page, business_owner_id: business_owner_id), class: "field-row with-next-arrow" do %>
-              <div>
-                <h3><%= page.title %></h3>
-              </div>
-              <i class="fa fa-angle-right"></i>
-            <% end %>
-          <% end %>
-        </div>
+  <div class="margin-around date-range-selector mb-4">
+    <% default_start_date = params[:start_date].presence || 30.days.ago.to_date.to_s %>
+    <% default_end_date = params[:end_date].presence || Date.today.to_s %>
+    <%= form_tag lines_user_bot_metrics_booking_pages_path(business_owner_id), method: :get do %>
+      <div class="d-flex align-items-center">
+        <%= date_field_tag :start_date, default_start_date, class: "form-control mr-3" %> ～ <%= date_field_tag :end_date, default_end_date, class: "form-control mr-3" %>
+        <%= hidden_field_tag :demo, params[:demo] if params[:demo].present? %>
+        <%= submit_tag I18n.t("action.display"), class: "btn btn-tarco" %>
       </div>
-    </div>
-
-    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+    <% end %>
   </div>
+
+  <% if is_not_phone? %>
+    <%= react_component("user_bot/metrics/sale_pages_visits", {
+      demo: params[:demo],
+      metric_path: lines_user_bot_metrics_booking_pages_visits_path(business_owner_id, {
+        format: "json",
+        start_date: default_start_date,
+        end_date: default_end_date
+      }),
+    }, { camelize_props: false }) %>
+  <% end %>
+
+  <%= react_component("user_bot/metrics/sale_pages_conversions", {
+    demo: params[:demo],
+    metric_path: lines_user_bot_metrics_booking_pages_conversions_path(business_owner_id, {
+      format: "json",
+      start_date: default_start_date,
+      end_date: default_end_date
+    }),
+    is_phone: is_phone?,
+  },
+  { camelize_props: false }) %>
 </div>

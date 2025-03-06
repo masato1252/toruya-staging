@@ -6,7 +6,7 @@ module Metrics
     array :booking_page_ids do
       integer
     end
-    time :metric_start_time
+    object :metric_period, class: Range
     boolean :demo, default: false
 
     def execute
@@ -44,39 +44,48 @@ module Metrics
         }
       end
 
-      visit_scope = Ahoy::Visit.where(owner_id: user.id, product_type: "BookingPage")
-      metrics = booking_pages.each_with_object({}) do |booking_page, h|
-        start_time = metric_start_time
+      # Calculate all days in the period
+      days = []
+      current_day = metric_period.begin.beginning_of_day
 
-        h[booking_page.id] = 4.times.map do |i|
-          end_time = (start_time + 7.days).end_of_day
-          count = visit_scope.where(product_id: booking_page.id, product_type: "BookingPage").where(started_at: start_time..end_time).count
+      while current_day <= metric_period.end.end_of_day
+        days << current_day.to_date
+        current_day = current_day.next_day
+      end
 
-          start_time = end_time.next_day.beginning_of_day
+      # Fetch all visit data in a single query, grouped by booking page and day
+      visits_by_date = Ahoy::Visit
+        .where(owner_id: user.id, product_type: "BookingPage")
+        .where(product_id: booking_page_ids)
+        .where(started_at: metric_period)
+        .select("product_id, DATE(started_at) as visit_date, COUNT(*) as visit_count")
+        .group("product_id, DATE(started_at)")
+        .order("product_id, DATE(started_at)")
+        .map { |v| [v.product_id, v.visit_date.to_date, v.visit_count] }
 
-          count
+      # Organize data by booking page and date
+      visit_counts = {}
+      booking_pages.each do |booking_page|
+        visit_counts[booking_page.id] = {}
+        days.each do |day|
+          visit_counts[booking_page.id][day] = 0
         end
       end
-      # metrics = {
-      #   382=>[45, 34, 0, 0],
-      #   384=>[2, 8, 32, 0],
-      #   386=>[0, 1, 2, 0]
-      # }
 
-      start_time = metric_start_time
-      labels = 4.times.map do |i|
-        end_time = (start_time + 7.days).end_of_day
-        label = "#{I18n.l(start_time, format: :date)} ~ #{I18n.l(end_time, format: :date)}"
-        start_time = end_time.next_day.beginning_of_day
-
-        label
+      # Fill in the actual counts from the query results
+      visits_by_date.each do |product_id, date, count|
+        if visit_counts[product_id] && visit_counts[product_id][date]
+          visit_counts[product_id][date] = count
+        end
       end
-      # labels = [
-      #  "2022/11/07(月) ~ 2022/11/14(月)",
-      #  "2022/11/15(火) ~ 2022/11/22(火)",
-      #  "2022/11/23(水) ~ 2022/11/30(水)",
-      #  "2022/12/01(木) ~ 2022/12/08(木)"
-      # ]
+
+      # Create the final metrics structure
+      metrics = booking_pages.each_with_object({}) do |booking_page, h|
+        h[booking_page.id] = days.map { |day| visit_counts[booking_page.id][day] }
+      end
+
+      # Generate labels for each day
+      labels = days.map { |day| I18n.l(day, format: :long) }
 
       datasets = metrics.map do |booking_page_id, visit_counts|
         booking_page = booking_pages.find { |page| page.id == booking_page_id }
@@ -91,23 +100,6 @@ module Metrics
         }
       end
 
-      # {
-      #   labels,
-      #   datasets: [
-      #     {
-      #       label: 'Dataset 1',
-      #       data: labels.map(() => 100),
-      #       borderColor: 'rgb(255, 99, 132)',
-      #       backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      #     },
-      #     {
-      #       label: 'Dataset 2',
-      #       data: labels.map(() => 200),
-      #       borderColor: 'rgb(53, 162, 235)',
-      #       backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      #     },
-      #   ]
-      # }
       {
         labels: labels,
         datasets: datasets

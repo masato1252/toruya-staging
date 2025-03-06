@@ -6,8 +6,8 @@ class Lines::UserBot::Metrics::BookingPagesController < Lines::UserBotDashboardC
   def visits
     render json: ::Metrics::BookingPagesVisits.run!(
       user: Current.business_owner,
-      booking_page_ids: booking_page_ids,
-      metric_start_time: metric_start_time,
+      booking_page_ids: uniq_booking_page_ids,
+      metric_period: metric_period,
       demo: params[:demo] == "true"
     )
   end
@@ -15,15 +15,9 @@ class Lines::UserBot::Metrics::BookingPagesController < Lines::UserBotDashboardC
   def conversions
     render json: ::Metrics::BookingPagesConversions.run!(
       user: Current.business_owner,
-      booking_page_ids: booking_page_ids,
+      booking_page_ids: uniq_booking_page_ids,
       metric_period: metric_period,
       demo: params[:demo] == "true"
     )
-  end
-
-  private
-
-  def booking_page_ids
-    [params[:id]]
   end
 end

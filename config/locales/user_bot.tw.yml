@@ -557,12 +557,12 @@ tw:
         conversion_count: 成交數
         revenue: 銷售額
         title: 訪問分析
-        sale_page: 銷售頁面
+        sale_page: 頁面
         visit_count: 瀏覽次數
         purchased_count: 註冊數
         conversion_rate: 轉換率
         total_revenue: 總收入
-        weekly_sale_page_visit_count: 分析資訊：宣傳用LP
+        weekly_sale_page_visit_count: 分析資訊
         weekly_service_sale_page_visit_count: "分析資訊：%{service_name}"
         no_data: 沒有可顯示的數據
         active_customers_rate: 活躍客戶比率
