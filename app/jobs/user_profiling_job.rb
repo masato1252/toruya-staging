@@ -11,7 +11,7 @@ class UserProfilingJob < ApplicationJob
 
     return if profile.where_know_toruya.blank? && profile.what_main_problem.blank?
 
-    google_worksheet = Google::Drive.spreadsheet(worksheet: 4)
+    google_worksheet = Google::Drive.spreadsheet(gid: 1913363436)
     new_row_number = google_worksheet.num_rows + 1
 
     new_row_data = [

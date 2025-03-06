@@ -79,7 +79,7 @@ namespace :analytic do
         { message_api_verified_count: "#{message_api_verified_count} ( #{message_verified_line_user_percent} / #{message_verified_toruya_user_percent} / #{message_verified_total_settings_percent} )" }
       ]
 
-      google_worksheet = Google::Drive.spreadsheet(worksheet: 0)
+      google_worksheet = Google::Drive.spreadsheet(gid: 0)
       new_row_number = google_worksheet.num_rows + 1
       new_row_data = [
         Time.current.to_fs(:date),
@@ -102,7 +102,7 @@ namespace :analytic do
   task :function_usage => :environment do
     # Only reports on 1st and 14th of each moth
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
-      google_worksheet = Google::Drive.spreadsheet(worksheet: 1)
+      google_worksheet = Google::Drive.spreadsheet(gid: 846072525)
       new_row_number = google_worksheet.num_rows + 1
 
       new_row_data = [
@@ -167,7 +167,7 @@ namespace :analytic do
   task :function_biweekly_usage => :environment do
     # Only reports on 1st and 14th of each moth
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
-      google_worksheet = Google::Drive.spreadsheet(worksheet: 2)
+      google_worksheet = Google::Drive.spreadsheet(gid: 1491437126)
       new_row_number = google_worksheet.num_rows + 1
 
       new_row_data = [
@@ -192,7 +192,7 @@ namespace :analytic do
   task :paid_user_data => :environment do
     # Only reports on 1st and 14th of each moth
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
-      google_worksheet = Google::Drive.spreadsheet(worksheet: 3)
+      google_worksheet = Google::Drive.spreadsheet(gid: 476056491)
       new_row_number = google_worksheet.num_rows + 1
 
       last_month_paid_user_ids = SubscriptionCharge.where(created_at: 2.month.ago..1.month.ago).pluck(:user_id).uniq
@@ -245,7 +245,7 @@ namespace :analytic do
 
   task :reply_time => :environment do
     if Time.now.in_time_zone('Tokyo').day == 1 || Time.now.in_time_zone('Tokyo').day == 14
-      google_worksheet = Google::Drive.spreadsheet(worksheet: 5)
+      google_worksheet = Google::Drive.spreadsheet(gid: 1444275187)
       new_row_number = google_worksheet.num_rows + 1
       no_reply_user_ids = []
 
@@ -262,7 +262,7 @@ namespace :analytic do
 
           { SocialUser.find(social_user_id).user_id => period / 3600.0 }
         else
-          no_reply_user_ids << SocialUser.find(social_user_id).user_id 
+          no_reply_user_ids << SocialUser.find(social_user_id).user_id
           { SocialUser.find(social_user_id).user_id => nil || 48 }
         end
       end
@@ -357,16 +357,16 @@ namespace :analytic do
     end
 
     ["retention_rate", "net_retention_rate", "money"].each do |scenario|
-      worksheet = case scenario
-                  when "retention_rate"
-                    6
-                  when "net_retention_rate"
-                    7
-                  when "money"
-                    8
-                  end
+      gid = case scenario
+            when "retention_rate"
+              591602408
+            when "net_retention_rate"
+              1435973454
+            when "money"
+              1020433754
+            end
 
-      google_worksheet = Google::Drive.spreadsheet(worksheet: worksheet)
+      google_worksheet = Google::Drive.spreadsheet(gid: gid)
 
       joined_month
       new_row_number = 5
@@ -411,7 +411,7 @@ namespace :analytic do
 
   task :user_business_status => :environment do
     user_ids = Subscription.charge_required.pluck(:user_id)
-    google_worksheet = Google::Drive.spreadsheet(worksheet: 9)
+    google_worksheet = Google::Drive.spreadsheet(gid: 961862816)
 
     churn_user_ids = [923, 1660, 1057]
     reservation_per_month = (user_ids + churn_user_ids).map do |user_id|
@@ -555,7 +555,7 @@ namespace :analytic do
 
     # Only reports on Monday
     if current.wday == 1
-      google_worksheet = Google::Drive.spreadsheet(worksheet: 12)
+      google_worksheet = Google::Drive.spreadsheet(gid: 1945229869)
       paid_user_ids = SubscriptionCharge.distinct(:user_id).pluck(:user_id)
 
       new_row_number = 2
@@ -580,9 +580,9 @@ namespace :analytic do
 
     # Only reports on Monday
     if current.wday == 1
-      google_worksheet = Google::Drive.spreadsheet(worksheet: 13)
+      google_worksheet = Google::Drive.spreadsheet(gid: 203455717)
 
-      # Date, 
+      # Date,
       new_row_number = google_worksheet.num_rows + 1
       new_row_data = [
         current.to_date,
