@@ -85,7 +85,7 @@ module Metrics
       end
 
       # Generate labels for each day
-      labels = days.map { |day| I18n.l(day, format: :long) }
+      labels = days.map { |day| I18n.l(day, format: :short) }
 
       datasets = metrics.map do |booking_page_id, visit_counts|
         booking_page = booking_pages.find { |page| page.id == booking_page_id }
