@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "google/drive"
+
 module CustomMessages
   module Users
     class Next < ActiveInteraction::Base
@@ -32,8 +34,10 @@ module CustomMessages
             schedule_at: schedule_at,
             scenario_start_at: scenario_start_at,
             custom_message: message,
-            receiver: receiver
+            receiver: receiver,
           )
+
+          log_health_check(schedule_at)
         end
       end
 
@@ -82,6 +86,19 @@ module CustomMessages
 
       def nth_time_message
         nth_time || custom_message.nth_time
+      end
+
+      def log_health_check(schedule_at)
+        # https://docs.google.com/spreadsheets/d/1aKZ35SIno9Ia1B2q-m8SLej_rt_MK_SpjYYy0ebE1U0/edit?gid=2106564582#gid=2106564582
+        if CustomMessages::Users::Template::HEALTH_CHECK_SCENARIOS.include?(user_scenario)
+          sheet = Google::Drive.spreadsheet(google_sheet_id: "1aKZ35SIno9Ia1B2q-m8SLej_rt_MK_SpjYYy0ebE1U0", gid: 2106564582)
+          new_row_number = sheet.num_rows + 1
+
+          [receiver.id, schedule_at, user_scenario, nth_time_message].each_with_index do |data, index|
+            sheet[new_row_number, index + 1] = data
+          end
+          sheet.save
+        end
       end
     end
   end
