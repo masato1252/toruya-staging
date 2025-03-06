@@ -52,8 +52,8 @@ class User < ApplicationRecord
 
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"
-  ADMIN_IDS = [1, 2, 5, 61, 813].freeze
-  CHAT_OPERATOR_IDS = [1073, 1053].freeze
+  ADMIN_IDS = [1, 2, 5, 61, 813, 1053].freeze
+  CHAT_OPERATOR_IDS = [1073].freeze
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
