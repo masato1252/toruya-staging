@@ -859,6 +859,7 @@ ja:
         video_hint: 現在、動画のアップロードには対応していません。YouTubeまたはVimeoで「限定公開」に設定した動画URLを入力してください。
         what_is_pdf_url: どのPDFをサービス提供しますか？
         pdf_hint: PDFの提供にGoogleドライブを使う場合、シェアリンクを「リンクを知っている全員」に設定してください。
+        pdf_hint_for_friend_html: PDFの提供にGoogleドライブを使う場合、シェアリンクを「リンクを知っている全員」に設定してください。
         what_is_external_url: サービス提供先はどこですか？
         external_input_placeholder: サービス提供先URLを入力
         external_hint: このサービスに登録した顧客に、このURLが送信されます
