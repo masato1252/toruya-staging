@@ -115,7 +115,7 @@ ja:
           customer_info_state: 顧客情報があります
           sale_page_state: 宣伝用LPがあります
           last_thirty_customers_payment: 過去30日間の売上
-          web_details_page: 詳細はWEB版管理画面で
+          web_details_page: パソコンやタブレット端末からToruyaを使用する場合は、WEB版管理画面をご利用ください。
           line_page_warning: LINE社のサイトに移動します。LINEデベロッパーズの仕様についてはLINE社にお問合せください。
         plans:
           save: 選択する

@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-sm-3 col-xs-6 p-0 flex justify-center centerize">
+    <div class="p-4 w-11-12 metric-cell h-full">
+      <h5><%= t("user_bot.dashboards.metrics.active_customers_rate") %></h5>
+      <div className="mx-auto">
+        <p><%= t("user_bot.dashboards.metrics.last_year") %></p>
+        <span class="text-4xl"><%= @active_customers_rate %></span>%
+        <div class="flex justify-center" aria-hidden="true">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-xs-6 p-0 flex justify-center centerize">
+    <div class="p-4 w-11-12 metric-cell h-full">
+      <h5><%= t("user_bot.dashboards.metrics.new_customers") %></h5>
+      <div class="mx-auto">
+        <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
+        <span class="text-4xl"><%= @customers_count %></span>
+        <%= number_up_or_down(@comparison_customers_count) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-xs-6 p-0 flex justify-center centerize mt-4 mt-sm-0">
+    <div class="p-4 w-11-12 metric-cell h-full">
+      <h5><%= t("user_bot.dashboards.metrics.new_reservations") %></h5>
+      <div class="mx-auto">
+        <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
+        <span class="text-4xl"><%= @reservations_count %></span>
+        <%= number_up_or_down(@comparison_reservations_count) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-xs-6 p-0 flex justify-center centerize mt-4 mt-sm-0">
+    <div class="p-4 w-11-12 metric-cell h-full">
+      <h5><%= t("user_bot.dashboards.metrics.total_revenue") %></h5>
+      <div class="mx-auto">
+        <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
+        <span class="text-4xl"><%= @customers_payment %></span>
+        <%= number_up_or_down(@comparison_customers_payment) %>
+      </div>
+    </div>
+  </div>
+</div>

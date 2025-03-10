@@ -114,7 +114,7 @@ tw:
           customer_info_state: 擁有客戶資料
           sale_page_state: 擁有銷售頁面
           last_thirty_customers_payment: 過去30天的銷售額
-          web_details_page: 詳細資訊請查看網頁版管理介面
+          web_details_page: 如果你用手機的話，我們也有網頁版管理介面
           line_page_warning: 即將前往LINE官方網站。關於LINE Developers的使用方式，請向LINE公司諮詢。
         plans:
           save: 選擇
