@@ -14,7 +14,7 @@
     <div class="p-4 w-11-12 metric-cell h-full">
       <h5><%= t("user_bot.dashboards.metrics.new_customers") %></h5>
       <div class="mx-auto">
-        <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
+        <p><%= t("user_bot.dashboards.metrics.last_n_days", days: @days_in_period) %></p>
         <span class="text-4xl"><%= @customers_count %></span>
         <%= number_up_or_down(@comparison_customers_count) %>
       </div>
@@ -25,7 +25,7 @@
     <div class="p-4 w-11-12 metric-cell h-full">
       <h5><%= t("user_bot.dashboards.metrics.new_reservations") %></h5>
       <div class="mx-auto">
-        <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
+        <p><%= t("user_bot.dashboards.metrics.last_n_days", days: @days_in_period) %></p>
         <span class="text-4xl"><%= @reservations_count %></span>
         <%= number_up_or_down(@comparison_reservations_count) %>
       </div>
@@ -36,9 +36,9 @@
     <div class="p-4 w-11-12 metric-cell h-full">
       <h5><%= t("user_bot.dashboards.metrics.total_revenue") %></h5>
       <div class="mx-auto">
-        <p><%= t("user_bot.dashboards.metrics.last_three_months") %></p>
-        <span class="text-4xl"><%= @customers_payment %></span>
-        <%= number_up_or_down(@comparison_customers_payment) %>
+        <p><%= t("user_bot.dashboards.metrics.last_n_days", days: @days_in_period) %></p>
+        <span class="text-4xl"><%= number_with_delimiter(@customers_payment.to_i) %></span>
+        <%= number_up_or_down(@comparison_customers_payment.to_i) %>
       </div>
     </div>
   </div>

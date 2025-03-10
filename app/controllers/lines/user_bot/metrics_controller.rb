@@ -5,7 +5,9 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   include ::MetricsHelpers
 
   def dashboard
-    comparison_period = metric_start_time.advance(days: -30)..metric_start_time
+    # Calculate the comparison period (previous 30 days before the metric start time)
+    @days_in_period = (metric_period.end.to_date - metric_period.begin.to_date).to_i
+    comparison_period = metric_start_time.advance(days: -@days_in_period)..metric_start_time
     @active_customers_rate = Current.business_owner.customers_count.positive? ? ((Current.business_owner.customers.active_in(1.year.ago).count / Current.business_owner.customers_count.to_f) * 100).to_i : 0
 
     @customers_count = Current.business_owner.customers.where(created_at: metric_period).count

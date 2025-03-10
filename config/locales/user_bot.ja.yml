@@ -572,7 +572,7 @@ ja:
         active_customers_rate: アクティブ顧客率
         new_customers: 新規顧客
         last_year: 過去1年間
-        last_three_months: 過去30日間
+        last_n_days: 過去%{days}日間
         new_reservations: 新規予約
         total_revenue: 売上合計
         sale_page_ranking: 人気サービス

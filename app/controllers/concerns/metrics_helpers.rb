@@ -9,7 +9,7 @@ module MetricsHelpers
     if params[:start_date].present?
       Time.zone.parse(params[:start_date]).beginning_of_day
     else
-      31.days.ago.beginning_of_day
+      30.days.ago.beginning_of_day
     end
   end
 
@@ -40,6 +40,4 @@ module MetricsHelpers
                 .distinct(:product_id)
                 .pluck(:product_id)
   end
-
-
 end

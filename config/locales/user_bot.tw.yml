@@ -573,7 +573,7 @@ tw:
         active_customers_rate: 活躍客戶比率
         new_customers: 新客戶
         last_year: 過去1年
-        last_three_months: 過去30天
+        last_n_days: 過去%{days}天
         new_reservations: 新預約
         total_revenue: 總銷售額
         sale_page_ranking: 熱門服務
