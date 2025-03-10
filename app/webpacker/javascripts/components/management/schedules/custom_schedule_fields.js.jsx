@@ -3,12 +3,15 @@
 import React from "react";
 import moment from "moment-timezone";
 import CommonDatepickerField from "shared/datepicker_field.js";
+import { getMomentLocale } from "libraries/helper.js";
 
 class CustomScheduleFields extends React.Component {
   constructor(props) {
     super(props);
 
-    moment.locale('ja');
+    // Use default locale 'ja' if not provided in props
+    const locale = this.props.locale || 'ja';
+    moment.locale(getMomentLocale(locale));
 
     this.state = {
       start_time_date_part: this.props.schedule.startTimeDatePart || "",

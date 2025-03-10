@@ -5,11 +5,13 @@ import { debounce } from "lodash";
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { CustomerServices, CommonServices } from "components/user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
+import { getMomentLocale } from "libraries/helper.js";
 
 const CustomerMessageForm = () => {
-  moment.locale('ja');
-  const ref = useRef()
   const { selected_customer, draft_message_content, dispatch, props } = useGlobalContext()
+  const locale = props?.locale || 'ja';
+  moment.locale(getMomentLocale(locale));
+  const ref = useRef()
   const [submitting, setSubmitting] = useState(false)
   const [drafting, setDrafting] = useState(false)
   const [schedule_at, setScheduleAt] = useState(null)

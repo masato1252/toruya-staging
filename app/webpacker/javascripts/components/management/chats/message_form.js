@@ -10,9 +10,10 @@ import { SubmitButton } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js'
 import ProcessingBar from "shared/processing_bar";
+import { getMomentLocale } from "libraries/helper.js";
 
-const MessageForm = () => {
-  moment.locale('ja');
+const MessageForm = ({ locale = 'ja' }) => {
+  moment.locale(getMomentLocale(locale));
   const ref = useRef()
   const { selected_customer, selected_channel_id, reply_message, reply_images, reply_image_urls, ai_question, dispatch } = useContext(GlobalContext)
   const [schedule_at, setScheduleAt] = useState(null)

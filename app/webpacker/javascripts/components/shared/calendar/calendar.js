@@ -8,9 +8,10 @@ import DayNames from "./day_names.js";
 import Week from "./week.js";
 import Select from "../select.js";
 import useSchedule from "./use_schedule";
+import { getMomentLocale } from "libraries/helper.js";
 
-const Calendar = ({...props}) => {
-  moment.locale('ja');
+const Calendar = ({locale = 'ja', ...props}) => {
+  moment.locale(getMomentLocale(locale));
   let staff_id;
   const startDate = props.selectedDate ? moment(props.selectedDate) : moment().startOf("day");
 

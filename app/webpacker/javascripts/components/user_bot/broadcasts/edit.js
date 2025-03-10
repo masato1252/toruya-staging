@@ -7,7 +7,7 @@ import ReactSelect from "react-select";
 import _ from "lodash";
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
-import { Translator } from "libraries/helper";
+import { Translator, getMomentLocale } from "libraries/helper";
 import { CommonServices } from "user_bot/api"
 import CustomerWithTagsQuery from "user_bot/broadcasts/creation_flow/customer_with_tags_query";
 import CustomerWithBirthdayQuery from "user_bot/broadcasts/creation_flow/customer_with_birthday_query";
@@ -15,7 +15,8 @@ import CustomerWithBirthdayQuery from "user_bot/broadcasts/creation_flow/custome
 let personalizeKeyword = "";
 
 const BroadcastEdit =({props}) => {
-  moment.locale('ja');
+  const locale = props.locale || 'ja';
+  moment.locale(getMomentLocale(locale));
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
@@ -197,7 +198,7 @@ const BroadcastEdit =({props}) => {
                   setQuery={(query_payload) => {
                     setQuery(query_payload)
                   }}
-                /> 
+                />
               )
             case "menu":
               return (
@@ -275,7 +276,7 @@ const BroadcastEdit =({props}) => {
                     <button
                       key={condition.value}
                       className="btn btn-gray mx-2 my-2"
-                      onClick={() => 
+                      onClick={() =>
                         {
                           setQuery(
                             {

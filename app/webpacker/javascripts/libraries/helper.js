@@ -195,6 +195,16 @@ const ticketExpireDate = (start_time, expire_month) => {
   return expire_month != 6 ? start_time.add(expire_month, "M").format("YYYY-MM-DD") : start_time.add(180, "d").format("YYYY-MM-DD")
 }
 
+// Map Rails locale codes to moment.js locale codes
+const getMomentLocale = (appLocale = "tw") => {
+  const localeMap = {
+    'tw': 'zh-TW', // Map Rails "tw" to moment's "zh-TW"
+    'ja': 'ja'     // Japanese uses the same code
+  };
+
+  return localeMap[appLocale] || 'zh-TW'; // Default to zh-TW if locale not found
+}
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -218,5 +228,6 @@ export {
   isValidLength,
   responseHandler,
   currencyFormat,
-  ticketExpireDate
+  ticketExpireDate,
+  getMomentLocale
 };

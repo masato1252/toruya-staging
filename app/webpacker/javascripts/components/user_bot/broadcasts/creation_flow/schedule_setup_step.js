@@ -5,10 +5,11 @@ import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
 import { SubmitButton } from "shared/components";
+import { getMomentLocale } from "libraries/helper.js";
 
-const ScheduleSetupStep = ({next, step, prev}) => {
+const ScheduleSetupStep = ({next, step, prev, locale = 'ja'}) => {
   const { props, dispatch, schedule_at, createBroadcast } = useGlobalContext()
-  moment.locale('ja');
+  moment.locale(getMomentLocale(locale));
 
   return (
     <div className="form settings-flow centerize">

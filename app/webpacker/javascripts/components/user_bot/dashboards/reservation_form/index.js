@@ -16,12 +16,11 @@ import CustomerModal from "./customer_modal";
 import MenuStaffsList from "./menu_staffs_list";
 import ReservationCustomersList from "./customers_list";
 import StaffStates from "./staff_states";
-import { displayErrors, zeroPad } from "libraries/helper.js"
+import { displayErrors, zeroPad, getMomentLocale } from "libraries/helper.js"
 
 import { GlobalProvider, GlobalContext } from "context/user_bots/reservation_form/global_state"
 
 const Form = () => {
-  moment.locale('ja');
   const [initial, setInitial] = useState(true)
   const {
     reservation_errors, menu_staffs_list, staff_states, customers_list, props, dispatch, all_staff_ids, all_menu_ids,
@@ -31,6 +30,10 @@ const Form = () => {
   } = useContext(GlobalContext)
 
   const { i18n } = props
+
+  // Use the reusable utility function to get moment locale
+  const appLocale = props.locale || "tw";
+  moment.locale(getMomentLocale(appLocale));
 
   useEffect(() => {
     if (props.book_next_time) {

@@ -10,6 +10,7 @@ import CustomerBasicInfo from "./customer_basic_info";
 import { BottomNavigationBar, NotificationMessages } from "shared/components"
 import CustomerNav from "./customer_nav";
 import { zeroPad } from "libraries/helper";
+import { getMomentLocale } from "libraries/helper";
 
 const BottomBar = () => {
   const { selected_customer, props, dispatch, deleteCustomer } = useGlobalContext()
@@ -112,9 +113,10 @@ const EmailIcon = ({email}) => {
 };
 
 const UserBotCustomerInfoView = () => {
-  moment.locale('ja');
   const { selected_customer, props } = useGlobalContext()
   const { i18n } = props
+  const locale = props?.locale || 'ja';
+  moment.locale(getMomentLocale(locale));
 
   return (
     <div className="customer-view">

@@ -29,9 +29,10 @@ import BookingOptionFirstFlow from "./booking_option_first_flow";
 import ProductRequirementView from "./product_requirement_view";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { CommonServices } from "user_bot/api";
+import { getMomentLocale } from "libraries/helper.js";
 
 const BookingReservationFormFunction = ({props}) => {
-  moment.locale(props.locale);
+  moment.locale(getMomentLocale(props.locale));
   let findCustomerCall;
 
   const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(props.booking_reservation_form)
