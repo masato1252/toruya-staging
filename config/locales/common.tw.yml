@@ -10,7 +10,6 @@ tw:
     details: 詳細資訊
     cancel: 取消
     repurchase: 重新購買
-    processing: 處理中
     cancel_reservation: 取消預約
     stop_usage: 停止使用
     log_out: 登出
@@ -110,7 +109,7 @@ tw:
     years_old: 歲
     default: 預設
     no_service_warning_html: <h1>因商家原因，目前無法提供服務。<br>請聯繫商家負責人。</h1>
-    processing: 傳送中
+    processing: 處理做
     preparing: 準備中
     date: 日期
     day: 星期

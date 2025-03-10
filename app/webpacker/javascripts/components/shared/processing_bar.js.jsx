@@ -1,9 +1,10 @@
 "use strict";
 
 import React from "react";
+import I18n from 'i18n-js/index.js.erb';
 
 class ProcessingBar extends React.Component {
-  static defaultProps = { processingMessage: "送信中" };
+  static defaultProps = { processingMessage: I18n.t("common.processing") };
 
   render() {
     if (!this.props.processing) {
