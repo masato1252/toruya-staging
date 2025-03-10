@@ -46,6 +46,20 @@
   </div>
 </div>
 
+<div class="container margin-around">
+  <div class="date-range-selector mb-4">
+    <% default_start_date = params[:start_date].presence || 30.days.ago.to_date.to_s %>
+    <% default_end_date = params[:end_date].presence || Date.today.to_s %>
+    <%= form_tag lines_user_bot_metrics_dashboard_path(business_owner_id), method: :get do %>
+      <div class="d-flex align-items-center">
+        <%= date_field_tag :start_date, default_start_date, class: "form-control mr-3" %> ～ <%= date_field_tag :end_date, default_end_date, class: "form-control mr-3" %>
+        <%= hidden_field_tag :demo, params[:demo] if params[:demo].present? %>
+        <%= button_tag I18n.t("action.display"), class: "btn btn-tarco" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
 <% if @booking_revenue.present? %>
   <div class="container table margin-around border border-solid border-gray-500">
     <h3 class="p-6"><%= t("user_bot.dashboards.metrics.booking_revenue") %></h3>
@@ -80,7 +94,7 @@
   <% @services_mapping_total_amount.slice(0, Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER).each do |h| %>
     <div class="row">
       <div class="col-sm-9 col-xs-6">
-        <%= link_to h[:service].internal_product_name, lines_user_bot_metrics_online_service_path(business_owner_id, h[:service]) %>
+        <%= link_to h[:service].internal_product_name, lines_user_bot_metrics_online_service_path(business_owner_id, h[:service], start_date: params[:start_date], end_date: params[:end_date], demo: params[:demo]) %>
       </div>
       <div class="col-sm-3 col-xs-6">
         <%= h[:total_revenue] %>
@@ -89,7 +103,7 @@
   <% end %>
   <% if @services_mapping_total_amount.length > Lines::UserBot::MetricsController::TOP_SERVICES_NUMBER %>
     <div class="row p-6 text-right">
-      <%= link_to t("user_bot.dashboards.metrics.other_services"), lines_user_bot_metrics_online_services_path(business_owner_id) %>
+      <%= link_to t("user_bot.dashboards.metrics.other_services"), lines_user_bot_metrics_online_services_path(business_owner_id, start_date: params[:start_date], end_date: params[:end_date], demo: params[:demo]) %>
     </div>
   <% end %>
   </div>
