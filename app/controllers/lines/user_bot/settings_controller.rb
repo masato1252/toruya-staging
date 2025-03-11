@@ -6,6 +6,8 @@ class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
   def index
     @subscription = Current.business_owner.subscription
     @social_account = Current.business_owner.social_account
+    @total_customer_count = Current.business_owner.customers.count
+    @total_customer_limit = Plan.max_customers_limit(Current.business_owner.current_plan.level, @subscription.rank) || I18n.t("settings.dashboard.no_limit")
 
     @days_in_period = (metric_period.end.to_date - metric_period.begin.to_date).to_i
     comparison_period = metric_start_time.advance(days: -@days_in_period)..metric_start_time

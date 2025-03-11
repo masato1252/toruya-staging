@@ -4,12 +4,36 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="settings-dashboard form">
-        <div class="margin-around">
-          <%= render 'lines/user_bot/shared/metrics_dashboard' %>
+        <% if japanese_only? %>
+        <div class="dashboard">
+          <div class="flex justify-center items-center flex-col p-6 border-0 border-solid border-gray-500">
+            <div>
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
+            </div>
+            <div>
+              <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
+            </div>
+            <div class="desc">
+              <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
+            </div>
+          </div>
+          <div class="flex justify-center items-center flex-col p-6 border-0 border-t border-solid border-gray-500">
+            <div><%= t("user_bot.dashboards.settings.dashboard.last_thirty_customers_payment") %></div>
+            <strong><span class="big"><%= @customers_payment %></span></strong>
+            <% mobile_only do %>
+              <div><%= t("user_bot.dashboards.settings.dashboard.web_details_page") %></div>
+              <div><%= "https://#{ENV['MAIL_DOMAIN']}/#{I18n.locale}/userlogin" %></div>
+            <% end %>
+          </div>
         </div>
-        <div class="my-4 centerize">
-          <%= link_to t("action.view_more"), lines_user_bot_metrics_dashboard_path(business_owner_id) %>
-        </div>
+        <% else %>
+          <div class="margin-around">
+            <%= render 'lines/user_bot/shared/metrics_dashboard' %>
+          </div>
+          <div class="my-4 centerize">
+            <%= link_to t("action.view_more"), lines_user_bot_metrics_dashboard_path(business_owner_id) %>
+          </div>
+        <% end %>
         <% mobile_only do %>
           <div class="margin-around">
             <div><%= t("user_bot.dashboards.settings.dashboard.web_details_page") %></div>
