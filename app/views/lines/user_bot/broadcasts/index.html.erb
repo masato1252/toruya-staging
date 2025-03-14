@@ -8,7 +8,7 @@
           <%= render "lines/user_bot/field_state", state: broadcast.state do %>
             <%= render "lines/user_bot/field_row", path: lines_user_bot_broadcast_path(broadcast, business_owner_id: business_owner_id), state: broadcast.state do %>
               <div class="dotdotdot">
-                <h3><%= broadcast_deliver_at(broadcast) %></h3>
+                <h3 class="underline"><%= broadcast_deliver_at(broadcast) %></h3>
                 <div class="desc"><%= I18n.t("user_bot.dashboards.broadcast_creation.#{broadcast.query_type}") %></div>
                 <div class="desc"><%= broadcast.targets.join(", ") %></div>
                 <% if broadcast.customers_permission_warning %>

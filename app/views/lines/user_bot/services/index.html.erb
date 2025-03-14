@@ -15,7 +15,7 @@
             <%= content_tag :div, class: "field-row with-next-arrow" do %>
               <div>
                 <%= link_to lines_user_bot_service_path(service, business_owner_id: business_owner_id) do %>
-                  <h3><%= service.internal_name.presence || service.name %></h3>
+                  <h3 class="underline text-gray-700"><%= service.internal_name.presence || service.name %></h3>
                   <div class="desc"><%= I18n.t("user_bot.dashboards.online_service_creation.goals.#{service.goal_type}.title") %></div>
                 <% end %>
                 <% if @online_services_with_sale_page_ids.exclude?(service.id) %>

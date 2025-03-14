@@ -70,7 +70,7 @@
             </div>
           <% end %>
 
-        <div class="action-block">
+        <div class="action-block <%= 'border-red border-solid' if @booking_page.booking_page_options.count == 0 %>">
           <%= link_to edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :new_option), class: "btn btn-yellow" do %>
             <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_page.form.add_new_option") %></span>
           <% end %>

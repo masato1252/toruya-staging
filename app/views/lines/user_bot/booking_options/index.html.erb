@@ -9,7 +9,7 @@
           <% @booking_options.each do |booking_option| %>
             <%= link_to lines_user_bot_booking_option_path(business_owner_id, booking_option), class: "field-row with-next-arrow" do %>
               <div>
-                <h3 class="break-line-content"><%= booking_option.name %></h3>
+                <h3 class="break-line-content underline"><%= booking_option.name %></h3>
                 <div class="desc"><%= booking_option.menus.pluck(:name).join(", ") %></div>
                 <div class="desc">
                   <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %> ・
