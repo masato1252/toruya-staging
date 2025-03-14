@@ -69,7 +69,7 @@ class Lesson < ApplicationRecord
   def message_template_variables(customer_or_user)
     chapter.online_service.message_template_variables(customer_or_user).merge!(
       {
-        customer_name: customer_or_user.display_last_name,
+        customer_name: customer_or_user.name,
         lesson_name: name
       }
     )

@@ -13,7 +13,7 @@ module Notifiers
         def message
           I18n.t(
             "notifier.customer_payments.charge_failed_to_customer.message",
-            customer_name: receiver.display_last_name,
+            customer_name: receiver.name,
             service_title: sale_page.product_name,
             shop_name: online_service.company.company_name,
             shop_phone: online_service.company.company_phone_number,

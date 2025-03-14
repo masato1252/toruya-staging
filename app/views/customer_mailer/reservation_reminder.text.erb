@@ -12,6 +12,6 @@
 <%= I18n.l(@reservation.start_time, format: :long_date) %>
 <%= I18n.l(@reservation.start_time, format: :time_only) %> ~ <%= I18n.l(@reservation.end_time, format: :time_only) %>
 
-<%= @customer.display_last_name %>様のご来店を、お待ち申し上げております。
+<%= @customer.name %>様のご来店を、お待ち申し上げております。
 
 ご予約内容の変更・キャンセルは <%= @shop.phone_number %> までご連絡ください。

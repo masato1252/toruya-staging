@@ -10,7 +10,7 @@
     line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id)),
     online_services: @online_services,
     message: {
-      customer_name: Current.business_owner.display_last_name,
+      customer_name: Current.business_owner.name,
     },
     selected_online_service: params[:online_service_id] ? @online_services.find { |service| service[:value][:id] == params[:online_service_id].to_i }[:value] : nil,
     broadcast: params[:online_service_id] ? Broadcast.new(

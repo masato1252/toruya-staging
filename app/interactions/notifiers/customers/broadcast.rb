@@ -14,7 +14,7 @@ module Notifiers
 
           Translator.perform(broadcast.content, reservation.message_template_variables(receiver))
         else
-          Translator.perform(broadcast.content, { customer_name: receiver.display_last_name })
+          Translator.perform(broadcast.content, { customer_name: receiver.name })
         end
       end
 

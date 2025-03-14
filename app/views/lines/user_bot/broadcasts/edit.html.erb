@@ -7,7 +7,7 @@
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     online_services: @online_services,
     message: {
-      customer_name: Current.business_owner.display_last_name,
+      customer_name: Current.business_owner.name,
     }
   }
 },
