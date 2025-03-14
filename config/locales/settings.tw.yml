@@ -591,10 +591,10 @@ tw:
         specific_booking_start_times_desc_html: 在設定的開始時間中，<br>僅顯示預約項目所需時間有空檔的<br>開始時間。
         add_booking_time_btn: 新增開始時間
         interval_header: 預約的開始時間
-        interval_period_header: 預約時間的項目
-        interval: 預約時間的項目
-        interval_title: 預約時間的項目
-        booking_time_title: 預約時間的項目
+        interval_period_header: 預約時間的間隔
+        interval: 預約時間的間隔
+        interval_title: 預約時間的間隔
+        booking_time_title: 預約時間的間隔
         interval_real_booking_time_explanation: 根據目前的設定內容和空位情況，顯示前4個項目。
         interval_real_booking_time_warning: 實際顯示可能會因預約狀況或成員的空閒時間而有所不同
         interval_explanation: 顯示9:00至12:00之間的前4個項目。
