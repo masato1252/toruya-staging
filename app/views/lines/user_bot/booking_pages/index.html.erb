@@ -12,31 +12,37 @@
           <% @booking_pages.each do |booking_page| %>
             <%= content_tag :div, class: "field-row with-next-arrow" do %>
               <%= link_to lines_user_bot_booking_page_path(booking_page, business_owner_id: business_owner_id), class: "w-8-12" do %>
-                <h3 class="text-gray-700"><%= booking_page.name %></h3>
-                <div class="desc"><%= booking_page.title %></div>
-                <div class="desc"><%= booking_page.booking_options.pluck(:name).join(", ")%></div>
-                <div class="desc">
-                  <%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %><%= booking_page.line_sharing ? "ON" : "OFF" %>
-                </div>
+                <h3 class="text-gray-700 underline"><%= booking_page.name %></h3>
+                <% if @booking_pages_without_option_ids.include?(booking_page.id) %>
+                  <div class="desc warning"><%= I18n.t("user_bot.dashboards.booking_pages.index.no_option") %></div>
+                <% else %>
+                  <div class="desc"><%= booking_page.title %></div>
+                  <div class="desc"><%= booking_page.booking_options.pluck(:name).join(", ")%></div>
+                  <div class="desc">
+                    <%= I18n.t("user_bot.dashboards.booking_pages.index.line_status") %><%= booking_page.line_sharing ? "ON" : "OFF" %>
+                  </div>
+                <% end %>
               <% end %>
 
-              <div class="w-3-12 flex">
-                <%= button_tag type: 'button',
-                    class: 'btn btn-icon btn-tarco mr-2',
-                    data: {
-                      clipboard_text: booking_page_url(booking_page),
-                      controller: 'clipboard',
-                      action: 'clipboard#copy',
-                      clipboard_popup_text: I18n.t("common.url_copied")
-                    } do %>
-                  <i class="far fa-clone"></i>
-                <% end %>
-                <%= link_to booking_page_url(booking_page),
-                    target: '_blank',
-                    class: 'btn btn-icon btn-tarco' do %>
-                  <i class="fas fa-external-link-alt"></i>
-                <% end %>
-              </div>
+              <% if @booking_pages_without_option_ids.exclude?(booking_page.id) %>
+                <div class="w-3-12 flex">
+                  <%= button_tag type: 'button',
+                      class: 'btn btn-icon btn-tarco mr-2',
+                      data: {
+                        clipboard_text: booking_page_url(booking_page),
+                        controller: 'clipboard',
+                        action: 'clipboard#copy',
+                        clipboard_popup_text: I18n.t("common.url_copied")
+                      } do %>
+                    <i class="far fa-clone"></i>
+                  <% end %>
+                  <%= link_to booking_page_url(booking_page),
+                      target: '_blank',
+                      class: 'btn btn-icon btn-tarco' do %>
+                    <i class="fas fa-external-link-alt"></i>
+                  <% end %>
+                </div>
+              <% end %>
             <% end %>
           <% end %>
 
