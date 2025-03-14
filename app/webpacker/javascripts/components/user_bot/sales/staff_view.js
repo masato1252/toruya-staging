@@ -11,10 +11,10 @@ const StaffView = ({staff, jumpTo, demo}) => (
         {I18n.t("action.edit")}
       </span>
     )}
-    <img className="staff-picture" src={staff.picture_url} />
-    <b className="name">{staff.name}</b>
+    <img className="staff-picture" src={staff?.picture_url} />
+    <b className="name">{staff?.name}</b>
     <p>
-      {staff.introduction}
+      {staff?.introduction}
     </p>
   </div>
 )
