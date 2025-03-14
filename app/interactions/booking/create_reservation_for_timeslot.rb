@@ -354,9 +354,11 @@ module Booking
             end
 
             ::RichMenus::BusinessSwitchRichMenu.run(owner: user)
+            # send to customer
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_options.to_a)
 
             # notify pending reservations summary immediately for today & tomorrow's reservation
+            # Send to user
             if reservation.start_time < Time.current.tomorrow.end_of_day
               Notifiers::Users::PendingReservationsSummary.perform_later(
                 start_time: Time.current.beginning_of_day,

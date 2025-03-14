@@ -31,7 +31,7 @@
       menu_staffs_list: @menu_staffs_list,
       staff_states: @staff_states.uniq,
       customers_list: @customers_list,
-      by_staff_id: @reservation.persisted? ? @reservation.by_staff_id : Current.user.current_staff.id
+      by_staff_id: @reservation.by_staff_id.presence || Current.user.current_staff.id
     }),
     i18n: {
     }.merge!([

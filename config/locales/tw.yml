@@ -156,7 +156,7 @@ tw:
     check_out: 結帳
     accept: 確認預約
     accept_customer: 確認預約客戶
-    pend: 未確認
+    pend: 待確認
     accept_in_canceled: 恢復預約
     shop_closed: 非營業時間
     cancel: 全員取消
@@ -166,7 +166,7 @@ tw:
     pending: 待確認
     accepted: 已確認
     accepted_state: 已確認
-    pending_state: 未確認
+    pending_state: 待確認
     noshow: 未到店
     checked_in: 已報到
     checked_out: 已結帳
@@ -208,7 +208,7 @@ tw:
         title: 確認預約
         message: "共%{total_staffs_number}位成員中，有%{accepted_staffs_number}位已確認此預約。"
         approve_btn: 確認此預約
-        unapprove_btn: 將此預約設為未確認
+        unapprove_btn: 將此預約設為待確認
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※根據您/店舖擁有者的使用方案，有些店舖無法新增預約。
         manage_self_shop_reservations_no_permission: ※根據您的使用方案，有些店舖無法新增預約。
