@@ -95,7 +95,9 @@ ja:
     cancel_modal:
       title:  予約をキャンセルする
       description: キャンセル理由をお聞かせください。
-      reservation_was_canceled: 予約は解約されました 
+      reservation_was_canceled: 予約は解約されました
+      you_could_cancel_reservation_in_n_days_by_yourself: ご予約%{days}日前までは自分でキャンセルできます。それ以降は%{shop_name}へお問合せください。
+      you_couldnt_cancel_reservation_by_yourself: ご予約%{days}日前を過ぎたためキャンセルできません。ご予約については%{shop_name}へお問合せください。
       cancel_reasons:
         other_placeholder: 他の予定が入った
         reschedule_reason: 予約日時が変更したい

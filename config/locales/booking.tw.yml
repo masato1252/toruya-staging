@@ -96,6 +96,8 @@ tw:
       title: 取消預約
       description: 請告訴我們取消的原因。
       reservation_was_canceled: 預約已取消
+      you_could_cancel_reservation_in_n_days_by_yourself: 您可以在預約前%{days}天自行取消預約，在這之後請與商家聯絡
+      you_couldnt_cancel_reservation_by_yourself: 您可以在預約前%{days}天自行取消預約，在這之後請與商家聯絡
       cancel_reasons:
         other_placeholder: 有其他安排
         reschedule_reason: 想更改預約日期時間
