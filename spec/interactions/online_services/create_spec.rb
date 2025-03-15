@@ -7,6 +7,7 @@ RSpec.describe OnlineServices::Create do
   after { StripeMock.stop }
   let(:user) { FactoryBot.create(:access_provider, :stripe).user }
   let(:shop) { FactoryBot.create(:shop, user: user) }
+  let!(:profile) { FactoryBot.create(:profile, user: user) }
   let(:name) { "foo" }
   let(:selected_goal) { OnlineService.goal_types[:membership] }
   let(:selected_solution) {}
@@ -14,12 +15,6 @@ RSpec.describe OnlineServices::Create do
   let(:end_time) {}
   let(:upsell) {}
   let(:bundled_services) { [] }
-  let(:selected_company) do
-    {
-      type: shop.class.to_s,
-      id: shop.id
-    }
-  end
   let(:message_template) {}
 
   let(:args) do
@@ -31,7 +26,6 @@ RSpec.describe OnlineServices::Create do
       content_url: content_url,
       end_time: end_time,
       upsell: upsell,
-      selected_company: selected_company,
       message_template: message_template,
       bundled_services: bundled_services
     }
@@ -81,7 +75,7 @@ RSpec.describe OnlineServices::Create do
           {
             id: online_service2.id
           }
-        ] 
+        ]
       end
 
       it "creates bundled services without stripe" do
