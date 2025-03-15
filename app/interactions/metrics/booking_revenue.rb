@@ -35,7 +35,7 @@ module Metrics
       booking_option_ids = booking_reservation_customer_scope.pluck(:booking_option_ids).flatten.compact
       booking_option_counts = booking_option_ids.group_by(&:itself).transform_values(&:count)
       booking_option_ids = booking_option_counts.keys
-      booking_options = user.booking_options.where(id: booking_option_ids).to_a
+      booking_options = user.all_booking_options.where(id: booking_option_ids).to_a
       booking_results = booking_option_counts.map do |booking_option_id, count|
       booking_option = booking_options.find { |option| option.id.to_s == booking_option_id.to_s }
         {
