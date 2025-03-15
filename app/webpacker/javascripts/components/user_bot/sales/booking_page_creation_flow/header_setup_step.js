@@ -21,6 +21,9 @@ const HeaderSetupStep = ({step, next, jumpByKey}) => {
   return (
     <div className="form">
       <SalesFlowStepIndicator step={step} />
+      <div className="margin-around centerize warning">
+        <div dangerouslySetInnerHTML={{__html: I18n.t("user_bot.dashboards.sales.online_service_creation.header_setup_step_hint_html")}} />
+      </div>
       <HintTitle template={selected_template.edit_body} focus_field={focus_field} />
 
       <SaleTemplateContainer

@@ -34,7 +34,7 @@ const WhyContentEdit = ({product_content, handleContentChange, handlePictureChan
           maxFileSize={5242880}
         />
       </div>
-      {focus_field == "what_buyer_future_tip" && <p className="centerize">{I18n.t(`user_bot.dashboards.sales.booking_page_creation.what_buyer_future_tip`)}</p>}
+      {focus_field == "what_buyer_future_tip" && <p className="centerize mt-2 warning-text">{I18n.t(`user_bot.dashboards.sales.booking_page_creation.what_buyer_future_tip`)}</p>}
       <TextareaAutosize
         className="extend with-border"
         value={product_content.desc2}

@@ -21,6 +21,9 @@ const HeaderSetupStep = ({step, next, prev, jumpByKey}) => {
   return (
     <div className="form settings-flow">
       <SalesFlowStepIndicator step={step} />
+      <div className="margin-around centerize warning">
+        <div dangerouslySetInnerHTML={{__html: I18n.t("user_bot.dashboards.sales.online_service_creation.header_setup_step_hint_html")}} />
+      </div>
       <HintTitle template={selected_template.edit_body} focus_field={focus_field} />
 
       <SaleTemplateContainer
@@ -74,9 +77,6 @@ const HeaderSetupStep = ({step, next, prev, jumpByKey}) => {
           disabled={!isHeaderSetup()}>
           {I18n.t("action.next_step")}
         </button>
-      </div>
-      <div className="margin-around centerize">
-        <div dangerouslySetInnerHTML={{__html: I18n.t("user_bot.dashboards.sales.online_service_creation.header_setup_step_hint_html")}} />
       </div>
     </div>
   )

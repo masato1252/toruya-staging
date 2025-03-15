@@ -20,7 +20,7 @@ class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardC
       selected_online_service_id: params[:selected_online_service_id],
       selected_template_id: params[:selected_template_id],
       template_variables: params[:template_variables]&.permit!.to_h,
-      content: params[:content].permit!.to_h.transform_values! { |v| v.presence },
+      content: params[:content]&.permit!.to_h&.transform_values! { |v| v.presence },
       staff: params[:staff]&.permit!&.to_h,
       introduction_video_url: params[:introduction_video_url],
       draft: params[:draft]

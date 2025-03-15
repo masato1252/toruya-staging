@@ -9,7 +9,8 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def show
-    @sale_page = Current.business_owner.sale_pages.find(params[:id])
+    @sale_page = Current.business_owner.sale_pages.find_by(id: params[:id])
+    @sale_page ||= Current.business_owner.sale_pages.find_by(slug: params[:id])
   end
 
   def edit

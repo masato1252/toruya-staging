@@ -123,8 +123,8 @@ class Plan < ApplicationRecord
     end
   end
 
-  def self.max_legal_rank
-    plans[Plan::BASIC_LEVEL].max{ |a, b| a[:rank] <=> b[:rank] }[:rank] - 1 #7
+  def self.max_legal_rank(plan_level = BASIC_LEVEL)
+    plans[plan_level].max{ |a, b| a[:rank] <=> b[:rank] }[:rank] - 1 #7
   end
 
   def self.rank(plan_level, customers_count)
@@ -136,7 +136,7 @@ class Plan < ApplicationRecord
   end
 
   def self.max_customers_limit(plan_level, rank)
-    plans[plan_level][rank][:max_customers_limit]
+    plans[plan_level][rank]&.[](:max_customers_limit) || plans[plan_level][max_legal_rank(plan_level)][:max_customers_limit]
   end
 
   def self.plan_details(plan_level, rank)

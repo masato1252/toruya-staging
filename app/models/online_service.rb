@@ -68,6 +68,7 @@ class OnlineService < ApplicationRecord
       key: "collection",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.description"),
+      available_locales: [:ja, :tw],
       enabled: true,
       single_content: true,
       stripe_required: false,
@@ -80,6 +81,7 @@ class OnlineService < ApplicationRecord
       key: "free_lesson",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.description"),
+      available_locales: [:ja],
       enabled: true,
       single_content: true,
       stripe_required: false,
@@ -92,6 +94,7 @@ class OnlineService < ApplicationRecord
       key: "paid_lesson",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.description"),
+      available_locales: [:ja],
       enabled: true,
       single_content: true,
       stripe_required: true,
@@ -105,6 +108,7 @@ class OnlineService < ApplicationRecord
       key: "free_course",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.free_course.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.free_course.description"),
+      available_locales: [:ja],
       enabled: true,
       single_content: false,
       stripe_required: false,
@@ -118,6 +122,7 @@ class OnlineService < ApplicationRecord
       key: "course",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.course.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.course.description"),
+      available_locales: [:ja, :tw],
       enabled: true,
       single_content: false,
       stripe_required: true,
@@ -132,6 +137,7 @@ class OnlineService < ApplicationRecord
       key: "membership",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.description"),
+      available_locales: [:ja],
       enabled: true,
       single_content: false,
       stripe_required: true,
@@ -146,6 +152,7 @@ class OnlineService < ApplicationRecord
       key: "external",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.external.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
+      available_locales: [:ja],
       enabled: true,
       single_content: true,
       stripe_required: false,
@@ -159,6 +166,7 @@ class OnlineService < ApplicationRecord
       key: "bundler",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.bundler.description"),
+      available_locales: [:ja],
       enabled: true,
       single_content: false,
       stripe_required: true,
@@ -212,6 +220,7 @@ class OnlineService < ApplicationRecord
         one_time_charge: goal[:one_time_charge],
         recurring_charge: goal[:recurring_charge],
         premium_member_required: goal[:premium_member_required],
+        available_locales: goal[:available_locales],
         solutions: goal[:solutions].map do |solution|
           {
             key: solution[:key],
@@ -223,11 +232,7 @@ class OnlineService < ApplicationRecord
       }
     end
 
-    if Current.user.super_admin?
-      goals
-    else
-      goals.select { |goal| goal[:key] != 'free_course' }
-    end
+    goals.select { |goal| goal[:available_locales].include?(Current.business_owner.locale) }
   end
 
   def internal_product_name

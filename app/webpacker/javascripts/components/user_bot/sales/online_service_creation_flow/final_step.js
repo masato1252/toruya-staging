@@ -21,6 +21,14 @@ const FinalStep = ({next, step}) => {
           {I18n.t("action.open_sale_page")}
         </a>
       </div>
+
+      <div className="action-block">
+        <a
+          className="btn btn-tarco"
+          href={Routes.lines_user_bot_sale_path(props.business_owner_id, sale_page_id || 0)}>
+          {I18n.t("user_bot.dashboards.sales.booking_page_creation.edit_sale_page")}
+        </a>
+      </div>
       {props.support_feature_flags.support_japanese_asset && (
         <div className="centerize margin-around">
           <img src={props.sale_page_introduction_path} className="w-full" />

@@ -653,7 +653,7 @@ tw:
           sold_out: 已售完
           page_content: 銷售頁面內容
           content_header: 標題
-          content_video: 頭部影片
+          content_video: 介紹影片
           why_content: 購買理由
           benefits: 優點
           staff: 負責成員
@@ -688,7 +688,7 @@ tw:
           sale_template_variables_title: 銷售頁面內容
           sale_template_variables_subtitle: 標題
           introduction_video_url_title: 銷售頁面內容
-          introduction_video_url_subtitle: 頭部影片
+          introduction_video_url_subtitle: 介紹影片
           why_content_title: 銷售頁面內容
           why_content_subtitle: 購買理由
           published_title: 發布狀態
@@ -728,11 +728,12 @@ tw:
           add_review: 新增客戶評價
           customer_picture_requirement_tip: 客戶照片
         new:
-          what_to_sale: 這個銷售頁面的目的是什麼？
-          online_booking: 線上預約招募
-          add_sale_page_to_sell_more: 建立銷售頁面以增加線上預約頁面的預約量
-          online_service: 數位產品用戶招募
-          online_service_to_sell_more: 建立銷售頁面以增加數位產品的用戶量
+          what_to_sale: 你想行銷什麼產品
+          online_booking: 線上預約服務
+          add_sale_page_to_sell_more: 行銷頁面可以添加服務介紹，客戶評價，常見問題等等的相關資訊
+          online_service: 數位產品
+          online_service_to_sell_more: 行銷頁面可以添加產品介紹，客戶評價，常見問題等等的相關資訊
+          how_to_sell: 小提示：即使是相同的產品，也可以建立多個銷售頁面，在不同管道行銷。
         online_service_creation:
           service_step: 商品
           price_step: 銷售價格
@@ -792,28 +793,29 @@ tw:
           sale_page_confirm_title_html: "已完成最基本的設置<br />請確認設置內容"
           create_this_sale_page: 使用此設置建立銷售頁面
           share_sale_page: 分享您建立的銷售頁面
+          edit_sale_page: 編輯銷售頁面，還有更多的設置可以調整
       online_service_creation:
         goals:
           collection:
-            title: 收集好友
-            line_title: PDF下載
-            description: 建立PDF下載服務以收集官方LINE好友
+            title: 銷售PDF電子書
+            line_title: 銷售PDF電子書
+            description: "您可以銷售電子書PDF，或用PDF電子書吸引客戶加Line好友或Email"
           free_lesson:
-            title: 免費課程
-            line_title: 免費課程
-            description: 建立使用單個視頻的免費課程
+            title: 銷售影片
+            line_title: 銷售影片
+            description: 建立使用『單個』視頻的免費課程
           paid_lesson:
             title: 付費課程
             line_title: 付費課程
-            description: 建立使用單個視頻的付費課程
+            description: 建立使用『單個』視頻的付費課程
           free_course:
             title: 免費線上課程
             line_title: 免費線上課程
-            description: 建立按順序提供多個視頻課程和PDF工作簿的線上課程
+            description: 建立提供『多個』視頻和PDF的所組成的線上課程
           course:
             title: 線上課程
             line_title: 線上課程
-            description: 建立按順序提供多個視頻課程和PDF工作簿的線上課程
+            description: 建立提供『多個』視頻和PDF的所組成的線上課程
           membership:
             title: 訂閱制服務
             line_title: 訂閱制服務
@@ -859,14 +861,14 @@ tw:
           bundler:
             title: 套餐
             description: 建立將多個產品打包銷售
-        what_is_your_goal: 這個產品的目的是什麼？
+        what_is_your_goal: 你想銷售什麼產品？
         what_is_your_solution: 這個服務提供什麼內容？
         what_is_this_video_provide: 您要提供哪個影片URL作為產品？
         what_is_video_url: 請輸入YouTube, Vimeo等的URL
         video_hint: 目前沒有支援上傳影片，請輸入設置為「非公開」的YouTube或Vimeo影片URL。
-        what_is_pdf_url: 你想用來吸引客戶的PDF網址是？
-        pdf_hint_html: 放pdf 最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
-        pdf_hint_for_friend_html: 您可以做幾頁簡單的PDF，來吸引客戶成為您的Line好友。放pdf 最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
+        what_is_pdf_url: 你的電子書PDF網址是？
+        pdf_hint_html: 目前Toruya還沒有支援上傳PDF，你可以找你喜歡的服務放pdf<br />最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
+        pdf_hint_for_friend_html: 目前Toruya還沒有支援上傳PDF，你可以找你喜歡的服務放pdf<br />最常見的方式就是使用Google Drive。 <br /><br />請注意如果使用Google雲端硬碟提供PDF，請將分享連結設置為「知道連結的任何人」。
         what_is_external_url: 服務提供的目標網站是哪裡？
         external_input_placeholder: 輸入服務提供目標URL
         external_hint: 註冊此服務的客戶將收到此URL

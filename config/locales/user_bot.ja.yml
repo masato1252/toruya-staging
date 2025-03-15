@@ -732,6 +732,7 @@ ja:
           add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の宣伝用LPを作成
           online_service: オンラインサービス利用者募集
           online_service_to_sell_more: オンラインサービスの利用者を増やす為の宣伝用LPを作成
+          how_to_sell: ヒント：同じ商品でも、複数の宣伝用LPを作成して、異なるチャネルでマーケティングすることができます。
         online_service_creation:
           service_step: 商品
           price_step: 販売価格
@@ -791,6 +792,7 @@ ja:
           sale_page_confirm_title_html: "最低限の設定ができましたので<br />設定内容を確認してください"
           create_this_sale_page: この設定で宣伝用LPを作成する
           share_sale_page: 作成した宣伝用LPをシェアしましょう
+          edit_sale_page: 宣伝用LPを編集，より詳細な設定も可能
       online_service_creation:
         goals:
           collection:

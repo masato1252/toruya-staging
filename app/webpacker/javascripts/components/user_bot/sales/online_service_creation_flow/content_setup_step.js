@@ -75,9 +75,7 @@ const ContentSetupStep = ({step, next, prev, lastStep}) => {
               I18n.t("action.save_as_draft")
             )}
           </button>
-          <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow"
-            disabled={!isContentSetup()}
-          >
+          <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow">
             {I18n.t("action.next_step")}
           </button>
         </div>

@@ -29,7 +29,7 @@ const GoalSelectionStep = ({next, step}) => {
                   disabled={!goal.enabled}
                   key={goal.key}>
                   <h4>{goal.name}</h4>
-                  <p className="break-line-content text-align-left">
+                  <p className="break-line-content text-align-left mt-2">
                     {goal.description}
                   </p>
                   {!goal.enabled && <span className="preparing">{I18n.t('common.preparing')}</span>}
@@ -64,7 +64,7 @@ const GoalSelectionStep = ({next, step}) => {
               disabled={!goal.enabled}
               key={goal.key}>
               <h4>{goal.name}</h4>
-              <p className="break-line-content text-align-left">
+              <p className="break-line-content text-align-left mt-2">
                 {goal.description}
               </p>
               {!goal.enabled && <span className="preparing">{I18n.t('common.preparing')}</span>}
@@ -87,7 +87,7 @@ const GoalSelectionStep = ({next, step}) => {
               disabled={!goal.enabled}
               key={goal.key}>
               <h4>{goal.name}</h4>
-              <p className="break-line-content text-align-left">
+              <p className="break-line-content text-align-left mt-2">
                 {goal.description}
               </p>
               {!goal.enabled && <span className="preparing">{I18n.t('common.preparing')}</span>}
