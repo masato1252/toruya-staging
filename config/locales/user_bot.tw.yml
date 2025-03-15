@@ -246,10 +246,10 @@ tw:
             below_is_what_you_want: 確定要建立以下內容嗎？
             create_by_this_setting: 使用這些設置建立內容
           show:
-            title: 提供內容
-            content_label: 內容詳情
-            content_url_label: 內容
-            start_time_label: 內容提供期間
+            title: 提供課程內容
+            content_label: 課程詳情
+            content_url_label: 課程內容
+            start_time_label: 課程提供期間
           form:
             tags_subtitle: 為此內容設置標籤
             start_time_subtitle: 使用開始
@@ -263,16 +263,16 @@ tw:
             search_by_name: 按標題搜索
             start_time_title: 開始提供
         course:
-          title: 提供內容
+          title: 課程內容
           content_label: 內容目錄
           add_a_chapter: 添加章節
           add_a_lesson: 添加課程
-          no_content: 未設置提供內容
-          chapter_word: 章
+          no_content: 未設置課程內容
+          chapter_word: 章節
           chapters:
-            title: 提供內容
+            title: 課程內容
             form:
-              name_title: 提供內容
+              name_title: 課程內容
               name_content_label: 目錄
           lessons:
             new:
@@ -761,6 +761,8 @@ tw:
           why_user_buy_html: "這個產品的購買理由<br>或購買者的未來願景是什麼？"
           what_buyer_future: 以文字輸入預約服務的賣點或購買者的未來願景
           header_setup_step_hint_html: "這邊是銷售頁面標題<br />您可以輸入這個產品的購買理由<br />或購買者的未來願景來吸引顧客"
+          edit_course_content: 設定課程內容
+          edit_sale_page: 編輯銷售頁面
         booking_page_creation:
           booking_step: 預約頁面
           content_step: 內容

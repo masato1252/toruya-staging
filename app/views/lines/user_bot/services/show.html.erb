@@ -13,10 +13,35 @@
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
         <%= render "lines/user_bot/field_row" do %>
-          <%= link_to "#", data: { toggle: "modal", target: "#salePagesModal" }, class: "btn btn-tarco" do %>
-            <%= I18n.t("user_bot.dashboards.sales.modal.title") %>
+          <div class="flex items-center flex-col">
+          <% if @sale_pages %>
+            <div class="danger">
+              <i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.services.warning.no_sale_pages") %>
+              <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id, slug: @service.slug), class: "btn btn-yellow  btn-save btn-tweak" do %>
+                <i class="fas fa-plus"></i>
+              <% end %>
+            </div>
+          <% else %>
+            <%= link_to "#", data: { toggle: "modal", target: "#salePagesModal" }, class: "btn btn-tarco" do %>
+              <%= I18n.t("user_bot.dashboards.sales.modal.title") %>
+            <% end %>
+          <% end %>
+          </div>
+        <% end %>
+
+        <% if @service.course_like? %>
+          <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
+          <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service, business_owner_id: business_owner_id) do %>
+            <% if @lessons_count.zero? && @chapters_count.zero? %>
+              <span class="danger flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
+            <% elsif @lessons_count.zero? %>
+              <div class="flex"><span class="danger flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= @lessons_count %> <%= t("common.lesson") %></span>&nbsp;/&nbsp;<%= @chapters_count %> <%= t("common.chapter") %></div>
+            <% else %>
+              <span class="flex items-center"><%= @lessons_count %> <%= t("common.lesson") %> / <%= @chapters_count %> <%= t("common.chapter") %></span>
+            <% end %>
           <% end %>
         <% end %>
+
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.card_image") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, business_owner_id: business_owner_id, attribute: :message_template) do %>
@@ -83,19 +108,6 @@
               <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
             <% else %>
               <span class="flex items-center"><%= @episodes_count %></span>
-            <% end %>
-          <% end %>
-        <% end %>
-
-        <% if @service.course_like? %>
-          <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
-          <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service, business_owner_id: business_owner_id) do %>
-            <% if @lessons_count.zero? && @chapters_count.zero? %>
-              <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
-            <% elsif @lessons_count.zero? %>
-              <div class="flex"><span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= @lessons_count %> <%= t("common.lesson") %></span>&nbsp;/&nbsp;<%= @chapters_count %> <%= t("common.chapter") %></div>
-            <% else %>
-              <span class="flex items-center"><%= @lessons_count %> <%= t("common.lesson") %> / <%= @chapters_count %> <%= t("common.chapter") %></span>
             <% end %>
           <% end %>
         <% end %>

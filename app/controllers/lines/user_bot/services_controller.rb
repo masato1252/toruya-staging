@@ -24,7 +24,8 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   def index
     @online_services_with_sale_page_ids = Current.business_owner.sale_pages.for_online_service.pluck(:product_id)
     @online_services_with_draft_sale_page_ids = Current.business_owner.sale_pages.for_online_service.with_draft.group_by(&:product_id)
-    @online_services = Current.business_owner.online_services.not_deleted.order("updated_at DESC")
+    @online_services = Current.business_owner.online_services.not_deleted.order("online_services.updated_at DESC")
+    @course_without_chapter_ids = @online_services.course_like.left_joins(:chapters).where(chapters: { id: nil }).pluck('online_services.id')
   end
 
   def show

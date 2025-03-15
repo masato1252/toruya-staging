@@ -7,7 +7,7 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import { UrlCopyBtn } from "shared/components";
 
 const FinalStep = ({next, step}) => {
-  const { sale_page_id, props } = useGlobalContext()
+  const { sale_page_id, props, selected_online_service } = useGlobalContext()
 
   return (
     <div className="form">
@@ -22,13 +22,25 @@ const FinalStep = ({next, step}) => {
         </a>
       </div>
 
+      {(selected_online_service.solution_type === "free_course" || selected_online_service.solution_type === "course") && (
+        <div className="action-block">
+          <a
+            className="btn btn-tarco"
+          href={Routes.lines_user_bot_service_path(props.business_owner_id, selected_online_service.id)}>
+            {I18n.t("user_bot.dashboards.sales.online_service_creation.edit_course_content")}
+          </a>
+        </div>
+      )}
+
+      {(selected_online_service.solution_type !== "free_course" && selected_online_service.solution_type !== "course") && (
       <div className="action-block">
         <a
           className="btn btn-tarco"
           href={Routes.lines_user_bot_sale_path(props.business_owner_id, sale_page_id || 0)}>
-          {I18n.t("user_bot.dashboards.sales.booking_page_creation.edit_sale_page")}
+          {I18n.t("user_bot.dashboards.sales.online_service_creation.edit_sale_page")}
         </a>
-      </div>
+      </div>)}
+
       {props.support_feature_flags.support_japanese_asset && (
         <div className="centerize margin-around">
           <img src={props.sale_page_introduction_path} className="w-full" />

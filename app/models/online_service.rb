@@ -207,6 +207,7 @@ class OnlineService < ApplicationRecord
 
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'free_course', 'course', 'membership']) }
+  scope :course_like, -> { where(goal_type: ['course', 'free_course']) }
 
   def self.goals
     goals = GOALS.map do |goal|

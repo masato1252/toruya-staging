@@ -77,7 +77,7 @@
 
           <% if @booking_page.booking_page_options.count == 0 %>
             <div class="danger margin-around">
-              <%= I18n.t("settings.booking_page.form.form_errors.no_booking_option") %>
+              <i class="fas fa-exclamation-circle"></i>&nbsp;<%= I18n.t("settings.booking_page.form.form_errors.no_booking_option") %>
             </div>
           <% end %>
 

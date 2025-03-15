@@ -760,6 +760,8 @@ ja:
           why_user_buy_html: "このサービスの登録/購入理由になる<br>売りや登録/購入者の未来像は何ですか？"
           what_buyer_future: サービスの売りや登録/購入者の未来像を、文章で入力
           header_setup_step_hint_html: "ヘッドラインの設定<br />サービスの購入理由<br />または購入者の未来像を入力して顧客を引き付けましょう"
+          edit_course_content: コンテンツを編集
+          edit_sale_page: 宣伝用LPを編集
         booking_page_creation:
           booking_step: 予約ページ
           content_step: 内容

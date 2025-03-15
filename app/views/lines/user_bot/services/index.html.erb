@@ -36,6 +36,14 @@
                     <% end %>
                   </div>
                 <% end %>
+                <% if @course_without_chapter_ids.include?(service.id) %>
+                  <div class="warning">
+                    <small><i class="fas fa-exclamation-triangle"></i> <%= I18n.t("user_bot.dashboards.settings.course.no_content") %></small>
+                    <%= link_to lines_user_bot_service_chapters_path(service, business_owner_id: business_owner_id), class: "btn btn-yellow  btn-save btn-tweak" do %>
+                      <i class="fas fa-plus"></i>
+                    <% end %>
+                  </div>
+                <% end %>
               </div>
               <i class="fa fa-angle-right"></i>
             <% end %>
