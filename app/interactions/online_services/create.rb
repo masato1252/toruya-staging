@@ -15,10 +15,6 @@ module OnlineServices
     hash :upsell, default: nil do
       integer :sale_page_id, default: nil
     end
-    hash :selected_company do
-      string :type
-      integer :id
-    end
     hash :message_template, default: nil do
       file :picture, default: nil
       string :content, default: nil
@@ -49,8 +45,7 @@ module OnlineServices
           content_url: content_url,
           external_purchase_url: external_purchase_url,
           upsell_sale_page_id: upsell&.dig(:sale_page_id),
-          company_type: selected_company[:type],
-          company_id: selected_company[:id],
+          company: user.profile,
           slug: SecureRandom.alphanumeric(10)
         )
 
