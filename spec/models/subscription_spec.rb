@@ -5,6 +5,96 @@ require "rails_helper"
 RSpec.describe Subscription do
   let(:subscription) { FactoryBot.create(:subscription) }
 
+  describe "#active?" do
+    before do
+      Time.zone = "Tokyo"
+      Timecop.freeze(Date.new(2022, 5, 15))
+    end
+
+    context "when subscription is free plan" do
+      let(:subscription) { FactoryBot.create(:subscription, plan_id: Subscription::FREE_PLAN_ID) }
+
+      context "when trial hasn't expired" do
+        before do
+          subscription.update(trial_expired_date: Date.new(2022, 5, 20))
+        end
+
+        it "returns true" do
+          expect(subscription.active?).to be true
+        end
+      end
+
+      context "when trial has expired" do
+        before do
+          subscription.update(trial_expired_date: Date.new(2022, 5, 10))
+        end
+
+        it "returns false" do
+          expect(subscription.active?).to be false
+        end
+      end
+    end
+
+    context "when subscription is paid plan" do
+      let(:subscription) { FactoryBot.create(:subscription, plan_id: 2) } # Assuming 2 is a paid plan ID
+
+      context "when expired_date is in the future" do
+        before do
+          subscription.update(expired_date: Date.new(2022, 6, 15))
+        end
+
+        it "returns true" do
+          expect(subscription.active?).to be true
+        end
+      end
+
+      context "when expired_date is today" do
+        before do
+          subscription.update(expired_date: Date.new(2022, 5, 15))
+        end
+
+        it "returns true" do
+          expect(subscription.active?).to be true
+        end
+      end
+
+      context "when expired_date is within the buffer period" do
+        before do
+          subscription.update(expired_date: Date.new(2022, 5, 14))
+        end
+
+        it "returns true" do
+          expect(subscription.active?).to be true
+        end
+
+        it "considers subscriptions within INACTIVE_BUFFER_DAYS as active" do
+          subscription.update(expired_date: Date.today.advance(days: Subscription::INACTIVE_BUFFER_DAYS))
+          expect(subscription.active?).to be true
+        end
+      end
+
+      context "when expired_date is before the buffer period" do
+        before do
+          subscription.update(expired_date: Date.new(2022, 5, 12))
+        end
+
+        it "returns false" do
+          expect(subscription.active?).to be false
+        end
+      end
+
+      context "when expired_date is nil" do
+        before do
+          subscription.update(expired_date: nil)
+        end
+
+        it "returns false" do
+          expect(subscription.active?).to be false
+        end
+      end
+    end
+  end
+
   describe "#set_recurring_day" do
     it "sets today's day" do
       subscription.set_recurring_day

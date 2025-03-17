@@ -25,6 +25,7 @@
 class Subscription < ApplicationRecord
   FREE_PLAN_ID = 1
   REFUNDABLE_DAYS = 8
+  INACTIVE_BUFFER_DAYS = -2
 
   belongs_to :plan, required: false
   belongs_to :next_plan, class_name: "Plan", required: false
@@ -71,7 +72,7 @@ class Subscription < ApplicationRecord
   end
 
   def active?
-    (plan_id == FREE_PLAN_ID && trial_expired_date >= self.class.today) || !!(expired_date && expired_date >= self.class.today)
+    (plan_id == FREE_PLAN_ID && trial_expired_date >= self.class.today) || !!(expired_date && expired_date >= self.class.today.advance(days: INACTIVE_BUFFER_DAYS))
   end
 
   def chargeable?
