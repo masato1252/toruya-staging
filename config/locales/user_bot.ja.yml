@@ -801,6 +801,10 @@ ja:
             title: お友だち集め
             line_title: PDFダウンロード
             description: 公式LINEにお友だちを集めるためのPDFダウンロードサービスを作成
+          ebook:
+            title: 電子書籍
+            line_title: 電子書籍
+            description: 電子書籍を頒布するサービスを作成
           free_lesson:
             title: 無料レッスン
             line_title: 無料レッスン

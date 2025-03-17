@@ -20,6 +20,7 @@ const GoalFlowDispatcher = ({}) => {
     case 'collection':
     case 'free_lesson':
     case 'paid_lesson':
+    case 'ebook':
       return (
         <FlowController new_version={true}>
           <SolutionStep key="solution_step" />

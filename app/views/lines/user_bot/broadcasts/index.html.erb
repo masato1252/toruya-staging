@@ -22,15 +22,33 @@
           <div class="dotdotdot margin-around centerize">
             <h3><%= I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_title") %></h3>
             <div class="desc margin-around"><%= I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_desc") %></div>
-            <%= link_to new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id), class: "btn btn-yellow" do %>
-              <i class="fas fa-plus fa-2x"></i>
-              <div class="word"><%= I18n.t("action.add_more") %></div>
+          </div>
+        <% end %>
+
+        <% if is_not_phone? %>
+          <div class="margin-around centerize">
+            <% if Current.business_owner.social_account&.line_settings_verified? %>
+              <%= link_to new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id), class: "btn btn-yellow" do %>
+                <i class="fa fa-plus"></i>
+                <%= t("action.add_more") %>
+              <% end %>
+            <% else %>
+              <%= link_to "#", class: "btn btn-yellow", disabled: true do %>
+                <i class="fa fa-plus"></i>
+                <%= t("action.add_more") %>
+              <% end %>
             <% end %>
           </div>
         <% end %>
 
+        <% if !Current.business_owner.social_account&.line_settings_verified? %>
+          <div class="margin-around centerize warning">
+            <%= I18n.t("errors.this_service_is_line_integration_required") %>
+          </div>
+        <% end %>
+
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
-          <%= link_to new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+          <%= link_to new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", disabled: !Current.business_owner.social_account&.line_settings_verified? do %>
             <i class="fas fa-plus fa-2x"></i>
             <div class="word"><%= I18n.t("action.add_more") %></div>
           <% end %>

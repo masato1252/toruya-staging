@@ -301,3 +301,4 @@ tw:
     short_than_menu_minutes: "此價格需要至少 %{required_minutes} 分鐘的服務時間。"
     selling_price_too_low: 100元以下無法使用線上結算。
     please_answer_all_required_questions: "請回答所有必填問題"
+    this_service_is_line_integration_required: "此服務需要完成與LINE整合的設定。"

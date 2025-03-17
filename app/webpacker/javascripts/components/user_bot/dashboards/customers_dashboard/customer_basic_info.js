@@ -51,9 +51,10 @@ const CustomerBasicInfo = () => {
           />
         )}
         <div className="customer-data">
-          <div className="group-rank">
-            {
-              selected_customer.groupName ? (
+          {props.support_feature_flags.support_advance_customer_info && (
+            <div className="group-rank">
+              {
+                selected_customer.groupName ? (
                 <div>{selected_customer.groupName}</div>
               ) : (
                 <div className="field-error-border">{props.i18n.group_blank_option}</div>
@@ -66,6 +67,7 @@ const CustomerBasicInfo = () => {
               )
             }
           </div>
+          )}
           <div className="names">
             {props.support_feature_flags.support_phonetic_name && (
               <div className="phonetic-name">
@@ -77,7 +79,7 @@ const CustomerBasicInfo = () => {
               </span>
               </div>
             )}
-            
+
             <div className="name">
               <span>
                 {selected_customer.lastName}

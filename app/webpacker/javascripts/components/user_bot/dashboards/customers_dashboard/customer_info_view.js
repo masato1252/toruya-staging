@@ -83,9 +83,11 @@ const PhoneIcon = ({phone}) => {
       break;
   }
   return (
-    <a href={`tel:${phone.value}`} className="btn btn-tarco btn-icon">
-      <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={phone.type}></i>
-    </a>
+    phone.value && (
+      <a href={`tel:${phone.value}`} className="btn btn-tarco btn-icon">
+        <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={phone.type}></i>
+      </a>
+    )
   )
 };
 
@@ -106,9 +108,11 @@ const EmailIcon = ({email}) => {
       break;
   }
   return (
-    <a href={`mailto:${email.value}`} className="btn btn-tarco btn-icon">
-      <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={email.type}></i>
-    </a>
+    email.value && (
+      <a href={`mailto:${email.value}`} className="btn btn-tarco btn-icon">
+        <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={email.type}></i>
+      </a>
+    )
   )
 };
 

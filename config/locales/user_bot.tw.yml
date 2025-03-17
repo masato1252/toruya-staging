@@ -173,7 +173,7 @@ tw:
           shop_info_label: 店舖資訊
           name_label: 店名
           address_label: 店舖地址
-          phone_number_label: 電話號碼
+          phone_number_label: 手機號碼
           email_label: 電子郵件
           website_label: 網站
           logo_label: Logo
@@ -429,7 +429,7 @@ tw:
         clone_successfully: 已複製
         tags_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
         no_broadcasts_title: 沒有分眾傳播過
-        no_broadcasts_desc: 請建立分眾傳播
+        no_broadcasts_desc: 此服務是用來發送訊息給你不同分眾的客戶。
         form:
           query_title: 發送對象
           query_subtitle: 發送對象
@@ -520,7 +520,7 @@ tw:
         all_customers: 所有客戶
         all_customers_desc: 所有已連結客戶資訊的LINE好友
         active_customers: 活躍客戶
-        active_customers_desc: 向活躍客戶群發訊息
+        active_customers_desc: 向活躍客戶群發訊息(過去3個月有使用過服務的客戶)
         vip_customers: VIP客戶
         vip_customers_desc: 向所有VIP客戶群發訊息
         specific_menu_customers: 某預約項目的使用客戶
@@ -802,6 +802,10 @@ tw:
             title: 銷售PDF電子書
             line_title: 銷售PDF電子書
             description: "您可以銷售電子書PDF，或用PDF電子書吸引客戶加Line好友或Email"
+          ebook:
+            title: 電子書
+            line_title: 電子書
+            description: "您可以銷售電子書PDF，或用PDF電子書吸引客戶加Line好友或Email"
           free_lesson:
             title: 銷售影片
             line_title: 銷售影片
@@ -817,7 +821,7 @@ tw:
           course:
             title: 線上課程
             line_title: 線上課程
-            description: 建立提供『多個』視頻和PDF的所組成的線上課程
+            description: 建立影片和PDF的所組成的線上課程
           membership:
             title: 訂閱制服務
             line_title: 訂閱制服務

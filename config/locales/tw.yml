@@ -309,8 +309,8 @@ tw:
     tip_before_new_customer: 在新增客戶之前，請先搜尋是否已有現有資料。
     google_contact_missing_message_html: "目前僅顯示Toruya伺服器上的客戶資料。"
     customer_info_changed_message: 客戶資料需要更改
-    reminder_confirmation_message: 您確定要關閉分群發送嗎？
-    reminder_changed_message: 分群發送
+    reminder_confirmation_message: 您確定要關閉分眾傳播嗎？
+    reminder_changed_message: 分眾傳播
     filter:
       no_shop_warning: "若要使用進階搜尋功能來搜尋客戶的消費紀錄，請先設定店舖。"
       empty_content: "找不到符合條件的預約資料。"
@@ -459,7 +459,7 @@ tw:
         first_name: "名字"
         phonetic_last_name: "姓氏拼音"
         phonetic_first_name: "名字拼音"
-        phone_number: "電話號碼"
+        phone_number: "手機號碼"
         email: "電子郵件"
         address: "地址"
       staff_menu:
@@ -472,7 +472,7 @@ tw:
         company_name: "公司名稱"
         zip_code: "郵遞區號"
         address: "地址"
-        phone_number: "電話號碼"
+        phone_number: "手機號碼"
         website: "網站"
       staff_account:
         user: "使用者"
@@ -697,7 +697,7 @@ tw:
         identification_codes/verify_user:
           attributes:
             phone_number:
-              present: "^請勿輸入電話號碼"
+              present: "^請輸入手機號碼"
         social_messages/send:
           attributes:
             social_message:

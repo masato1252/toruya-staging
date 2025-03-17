@@ -24,7 +24,9 @@ module FeatureHelper
       support_menu_restrict_order: support_menu_restrict_order?,
       support_terms_and_privacy_display: support_terms_and_privacy_display?,
       support_official_support_display: support_official_support_display?,
-      support_booking_options_menu_concept: support_booking_options_menu_concept?
+      support_booking_options_menu_concept: support_booking_options_menu_concept?,
+      support_advance_broadcast: support_advance_broadcast?,
+      support_advance_customer_info: support_advance_customer_info?
     }
   end
 
@@ -47,6 +49,8 @@ module FeatureHelper
   alias_method :support_square_payment?, :japanese_only?
   alias_method :support_character_filter?, :japanese_only?
   alias_method :business_line_required?, :japanese_only?
+  alias_method :support_advance_broadcast?, :japanese_only?
+  alias_method :support_advance_customer_info?, :japanese_only?
 
   def support_skip_required_shop_info?
     if Current.business_owner.present?

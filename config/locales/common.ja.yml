@@ -299,3 +299,4 @@ ja:
     short_than_menu_minutes: "この価格は最低%{required_minutes}分メニューの所要時間が必要です。"
     selling_price_too_low: 100円以下の場合オンライン精算はご利用いただけません。
     please_answer_all_required_questions: "必須の質問をすべて回答してください"
+    this_service_is_line_integration_required: "このサービスはLINE連携が必要です。" 

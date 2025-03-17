@@ -136,11 +136,6 @@ const UserBotCustomerInfoForm = () => {
     name: "emails_details"
   });
 
-  useEffect(() => {
-    setValue("address_details[region]", address?.prefecture)
-    setValue("address_details[city]", address?.city)
-  }, [address.city])
-
   const find_duplicate_customers = async () => {
     setSimilarCustomers([])
     const [error, response] = await CustomerServices.find_duplicate_customers({ business_owner_id: props.business_owner_id, last_name: lastNameWatched, first_name: firstNameWatched })
@@ -153,6 +148,20 @@ const UserBotCustomerInfoForm = () => {
       find_duplicate_customers()
     }
   }, [firstNameWatched, lastNameWatched] )
+
+  // Ensure at least one empty phone number field if there are none
+  useEffect(() => {
+    if (phone_number_fields.fields.length === 0) {
+      phone_number_fields.append({type: "mobile", value: ""})
+    }
+  }, [phone_number_fields.fields.length])
+
+  // Ensure at least one empty email field if there are none
+  useEffect(() => {
+    if (email_fields.fields.length === 0) {
+      email_fields.append({type: "mobile", value: ""})
+    }
+  }, [email_fields.fields.length])
 
   const itemOptions = (items) => {
     var options = [
@@ -207,19 +216,23 @@ const UserBotCustomerInfoForm = () => {
             </div>
           )
         }
-        <div className="field-row" >
-          <span>{i18n.group}</span>
-          <select name="contact_group_id" ref={register({ required: true })}>
-            <option value="">{i18n.group_blank_option}</option>
-            <SelectOptions options={props.contact_groups} />
-          </select>
-        </div>
-        <div className="field-row" >
-          <span>{i18n.level_label}</span>
-          <select name="rank_id" ref={register({ required: true })}>
-            <SelectOptions options={props.ranks} />
-          </select>
-        </div>
+        {props.support_feature_flags.support_advance_customer_info && (
+          <>
+            <div className="field-row" >
+              <span>{i18n.group}</span>
+              <select name="contact_group_id" ref={register({ required: true })}>
+              <option value="">{i18n.group_blank_option}</option>
+              <SelectOptions options={props.contact_groups} />
+            </select>
+            </div>
+            <div className="field-row" >
+              <span>{i18n.level_label}</span>
+              <select name="rank_id" ref={register({ required: true })}>
+                <SelectOptions options={props.ranks} />
+              </select>
+            </div>
+          </>
+        )}
 
         <div className="field-header">{i18n.name}</div>
         <div className="field-row" >
@@ -286,6 +299,118 @@ const UserBotCustomerInfoForm = () => {
           </>
         )}
 
+        <div className="field-header">{i18n.phone_number}</div>
+        {phone_number_fields.fields.map((field, index) => (
+          <div key={field.id} className="field-row">
+            <span>{I18n.t("common.cellphone_number")}</span>
+            <input
+              type="hidden"
+              name={`phone_numbers_details[${index}].type`}
+              ref={register({})}
+              value="mobile"
+            />
+
+            <input
+              type="tel"
+              name={`phone_numbers_details[${index}].value`}
+              ref={register({
+                pattern: /^[0-9]*$/
+              })}
+              defaultValue={field.value}
+              className="full-width"
+              pattern="[0-9]*"
+              placeholder="00000000000"
+              inputMode="numeric"
+              onKeyPress={(e) => {
+                const charCode = e.which ? e.which : e.keyCode;
+                if (charCode < 48 || charCode > 57) {
+                  e.preventDefault();
+                }
+              }}
+            />
+            {phone_number_fields.fields.length > 1 && (
+              <button
+                className="btn btn-orange"
+                onClick={() => phone_number_fields.remove(index)}
+              >
+                <i className="fa fa-minus"></i>
+              </button>
+            )}
+          </div>
+        ))}
+
+        <div className="field-header">{i18n.email}</div>
+        {email_fields.fields.map((field, index) => (
+          <div key={field.id} className="field-row">
+            <span>{I18n.t("common.email")}</span>
+            <input
+              type="hidden"
+              name={`emails_details[${index}].type`}
+              ref={register({})}
+              value="mobile"
+            />
+
+            <input
+              type="email"
+              name={`emails_details[${index}].value`}
+              ref={register({})}
+              defaultValue={field.value}
+              className="full-width"
+            />
+
+            {email_fields.fields.length > 1 && (
+              <button
+                className="btn btn-orange"
+                onClick={() => email_fields.remove(index)}
+              >
+                <i className="fa fa-minus"></i>
+              </button>
+            )}
+          </div>
+        ))}
+
+        <div className="field-header">{i18n.others}</div>
+        <div className="field-row">
+          <span>{i18n.birthday}</span>
+          <input
+            ref={register}
+            name="birthday"
+            placeholder={i18n.birthday}
+            type="date"
+          />
+        </div>
+        <div className="field-row">
+          <span>{I18n.t("user_bot.dashboards.settings.membership.episodes.tag_input_placeholder")}</span>
+          <TagsInput
+            suggestions={props.customer_tags.map((tag) => ({
+              id: tag,
+              text: tag,
+              className: "tag"
+            }))}
+            tags={tags}
+            setTags={setTags}
+          />
+        </div>
+        <div className="field-row">
+          <span>{i18n.memo}</span>
+          <textarea
+            ref={register}
+            name="memo"
+            placeholder={i18n.memo}
+            rows="4"
+            colos="40"
+          />
+        </div>
+        <div className="field-row">
+          <span>{i18n.customer_id}</span>
+          <input
+            ref={register}
+            name="custom_id"
+            placeholder={i18n.customer_id}
+            type="text"
+          />
+        </div>
+
         <div className="field-header">{i18n.address}</div>
         <div className="field-row" >
           <span>{i18n.zip_code}</span>
@@ -333,97 +458,6 @@ const UserBotCustomerInfoForm = () => {
           />
         </div>
 
-        <div className="field-header">{i18n.phone_number}</div>
-        {phone_number_fields.fields.map((field, index) => (
-          <div key={field.id} className="field-row">
-            <select name={`phone_numbers_details[${index}].type`} ref={register({})} defaultValue={field.type}>
-              <SelectOptions options={itemOptions(phone_number_fields.fields)} />
-            </select>
-
-            <input
-              type="tel"
-              name={`phone_numbers_details[${index}].value`}
-              ref={register({})}
-              defaultValue={field.value}
-            />
-            <button className="btn btn-orange" onClick={() => phone_number_fields.remove(index)}>
-              <i className="fa fa-minus"></i>
-            </button>
-          </div>
-        ))}
-
-        <div className="field-row">
-          <button className="btn btn-yellow" onClick={() => phone_number_fields.append({type: "mobile", value: ""})}>
-            <i className="fa fa-plus"></i>
-          </button>
-        </div>
-
-        <div className="field-header">{i18n.email}</div>
-        {email_fields.fields.map((field, index) => (
-          <div key={field.id} className="field-row">
-            <select name={`emails_details[${index}].type`} ref={register({})} defaultValue={field.type}>
-              <SelectOptions options={itemOptions(email_fields.fields)} />
-            </select>
-
-            <input
-              type="email"
-              name={`emails_details[${index}].value`}
-              ref={register({})}
-              defaultValue={field.value}
-            />
-
-            <button className="btn btn-orange" onClick={() => email_fields.remove(index)}>
-              <i className="fa fa-minus"></i>
-            </button>
-          </div>
-        ))}
-        <div className="field-row">
-          <button className="btn btn-yellow" onClick={() => email_fields.append({type: "work", value: ""})}>
-            <i className="fa fa-plus"></i>
-          </button>
-        </div>
-
-        <div className="field-header">{i18n.others}</div>
-        <div className="field-row">
-          <span>{i18n.customer_id}</span>
-          <input
-            ref={register}
-            name="custom_id"
-            placeholder={i18n.customer_id}
-            type="text"
-          />
-        </div>
-        <div className="field-row">
-          <span>{i18n.birthday}</span>
-          <input
-            ref={register}
-            name="birthday"
-            placeholder={i18n.birthday}
-            type="date"
-          />
-        </div>
-        <div className="field-row">
-          <span>{I18n.t("user_bot.dashboards.settings.membership.episodes.tag_input_placeholder")}</span>
-          <TagsInput
-            suggestions={props.customer_tags.map((tag) => ({
-              id: tag,
-              text: tag,
-              className: "tag"
-            }))}
-            tags={tags}
-            setTags={setTags}
-          />
-        </div>
-        <div className="field-row">
-          <span>{i18n.memo}</span>
-          <textarea
-            ref={register}
-            name="memo"
-            placeholder={i18n.memo}
-            rows="4"
-            colos="40"
-          />
-        </div>
       </div>
 
       <BottomBar

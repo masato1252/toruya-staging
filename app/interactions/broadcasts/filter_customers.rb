@@ -6,7 +6,7 @@ module Broadcasts
       customers =
         case broadcast.query_type
         when "active_customers"
-          broadcast.user.customers.active_in(1.year.ago)
+          broadcast.user.customers.active_in(3.months.ago)
         when "online_service_for_active_customers"
           compose(Broadcasts::QueryActiveServiceCustomers, user: broadcast.user, query: broadcast.query)
         when "reservation_customers"

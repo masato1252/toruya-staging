@@ -68,10 +68,24 @@ class OnlineService < ApplicationRecord
       key: "collection",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.description"),
-      available_locales: [:ja, :tw],
+      available_locales: [:ja],
       enabled: true,
       single_content: true,
       stripe_required: false,
+      premium_member_required: false,
+      solutions: [
+        PDF_SOLUTION,
+      ]
+    },
+    {
+      key: "ebook",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.ebook.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.ebook.description"),
+      available_locales: [:tw],
+      enabled: true,
+      single_content: true,
+      stripe_required: true,
+      one_time_charge: true,
       premium_member_required: false,
       solutions: [
         PDF_SOLUTION,

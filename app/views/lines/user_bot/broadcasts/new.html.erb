@@ -1,8 +1,8 @@
 <%= jump_out_modal(trial_end_lines_user_bot_warnings_path(business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
-<%= jump_out_modal(line_verified_required_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.social_account&.line_settings_verified? %>
 
 <%= react_component("user_bot/broadcasts/creation_flow", {
   props: {
+    support_feature_flags: support_feature_flags,
     business_owner_id: business_owner_id,
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     customer_tags: Current.business_owner.customer_tags,
