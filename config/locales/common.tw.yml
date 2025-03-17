@@ -289,6 +289,7 @@ tw:
     welcome_to_toruya: 歡迎來到 Toruya
     url_copied: 網址已複製
     manual_booking: 手動預約
+    new_feature: 新功能
     line_verification:
       login_first_message: 請先使用LINE帳號登入
       service_content_message_html: 服務內容將
