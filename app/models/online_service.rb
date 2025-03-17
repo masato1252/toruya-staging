@@ -223,7 +223,7 @@ class OnlineService < ApplicationRecord
   scope :bundleable, -> { where(goal_type: ['collection', 'free_lesson', 'paid_lesson', 'free_course', 'course', 'membership']) }
   scope :course_like, -> { where(goal_type: ['course', 'free_course']) }
 
-  def self.goals
+  def self.goals(locale)
     goals = GOALS.map do |goal|
       {
         key: goal[:key],
@@ -247,7 +247,7 @@ class OnlineService < ApplicationRecord
       }
     end
 
-    goals.select { |goal| goal[:available_locales].include?(Current.business_owner.locale) }
+    goals.select { |goal| goal[:available_locales].include?(locale) }
   end
 
   def internal_product_name
@@ -259,7 +259,7 @@ class OnlineService < ApplicationRecord
   end
 
   def solution_options
-    self.class.goals.find {|solution| solution[:key] == goal_type}[:solutions]
+    self.class.goals(user.locale).find {|solution| solution[:key] == goal_type}&.dig(:solutions) || GOALS.find {|solution| solution[:key] == goal_type}&.dig(:solutions)
   end
 
   def course_like?
