@@ -45,7 +45,7 @@ module BookingPages
             attrs.merge!(
               start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil,
               end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil,
-              social_account_skippable: !booking_page.user.social_account&.line_settings_verified?
+              social_account_skippable: true
             ))
           booking_page.booking_page_special_dates.destroy_all
           booking_options.each do |k, v|
