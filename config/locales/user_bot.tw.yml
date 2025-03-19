@@ -185,7 +185,7 @@ tw:
         custom_message:
           auto_message_label: 自動發送訊息
           line_message_title: 自動發送訊息
-          auto_message_booking_label: 自動發送預約確認，服務後訊息
+          auto_message_booking_label: 自動發送訊息
           auto_message_service_label: 自動發送訊息
           send_message_label: 發送訊息
           content: 訊息內容
