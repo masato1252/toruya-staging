@@ -184,9 +184,9 @@ tw:
           auto_message: 自動發送訊息
         custom_message:
           auto_message_label: 自動發送訊息
-          line_message_title: 提醒訊息設定
-          auto_message_booking_label: 提醒發送
-          auto_message_service_label: 階段發送
+          line_message_title: 自動發送訊息
+          auto_message_booking_label: 自動發送預約確認，服務後訊息
+          auto_message_service_label: 自動發送訊息
           send_message_label: 發送訊息
           content: 訊息內容
           preview: 預覽
@@ -207,8 +207,8 @@ tw:
           booking_page:
             online_booking: 線上預約
             page_label: 預約頁面
-            booking_page_booked: 建立臨時預約
-            reservation_confirmed: 預約確認時
+            booking_page_booked: 當客戶送出預約請求時
+            reservation_confirmed: 當商家確認預約時
             booking_page_one_day_reminder: 24小時前提醒
             reservation_one_day_reminder: 24小時前提醒
             before_minutes_title: 何時發送此訊息？
@@ -785,10 +785,10 @@ tw:
           flow_introduction_html: "請說明從預約到使用服務的<br />流程。"
           flow_header: 服務流程
           flow_tips:
-            tip1: 首先，請從預約日曆中選擇您希望的日期和時間進行臨時預約。
+            tip1: 首先，請從預約日曆中選擇您希望的日期和時間進行預約。
             tip2: 請說明從預約到使用服務的第一個步驟。
           flow_default_steps:
-            step1: "從預約日曆中選擇\n希望的日期和時間進行臨時預約"
+            step1: "從預約日曆中選擇\n希望的日期和時間進行預約"
             step2: "預約獲得確認後即完成預約"
             step3: "預約當天請提前\n預留充足時間到店"
           sale_page_like_this: 銷售頁面將如下所示

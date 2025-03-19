@@ -88,7 +88,7 @@ tw:
       message2: 結束接受。
     booking_mailer:
       customer_reservation_notification:
-        title: "您已完成%{shop_name}的臨時預約"
+        title: "您已完成%{shop_name}的待確認的預約"
       shop_owner_reservation_booked_notification:
         title: 有新的線上預約
   booking:
