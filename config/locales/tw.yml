@@ -250,7 +250,7 @@ tw:
     notifications:
       noreply: "※請勿回覆"
       sms:
-        booking: "%{customer_name}您好，\n已為您在%{shop_name} %{booking_time}\n送出預約請求，請待商家確認。\n\n%{booking_info_url}"
+        booking: "%{customer_name}您好，\n已為您在%{shop_name} %{booking_time}\n送出預約請求，待商家確認後，將會通知您。\n\n%{booking_info_url}"
         confirmation: "%{customer_name}您好，\n已為您在%{shop_name}確認%{booking_time}的預約。\n\n%{booking_info_url}"
         reminder: "%{customer_name}您好，\n%{shop_name}期待您於%{booking_time}蒞臨。\n\n%{booking_info_url}\n\n"
         change_from_phone_number: "\n\n如需變更，請致電%{shop_phone_number}。"
