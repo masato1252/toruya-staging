@@ -94,7 +94,7 @@ module CustomMessages
           sheet = Google::Drive.spreadsheet(google_sheet_id: "1aKZ35SIno9Ia1B2q-m8SLej_rt_MK_SpjYYy0ebE1U0", gid: 2106564582)
           new_row_number = sheet.num_rows + 1
 
-          [receiver.id, schedule_at, user_scenario, nth_time_message].each_with_index do |data, index|
+          [receiver.class.to_s, receiver.id, schedule_at, user_scenario, nth_time_message].each_with_index do |data, index|
             sheet[new_row_number, index + 1] = data
           end
           sheet.save

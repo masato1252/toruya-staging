@@ -11,12 +11,12 @@ module BusinessHealthChecks
     object :subscription
 
     def execute
-      if !enough_messages_from_customer
-        Notifiers::Users::BusinessHealthChecks::NoEnoughMessage.run(receiver: user)
-      elsif !any_booking_page_visit_ever_over_criteria
+      if !any_booking_page_visit_ever_over_criteria
         Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughPageView.run(receiver: user)
       elsif any_booking_page_visit_ever_over_criteria && !any_booking_page_page_view_and_conversion_rate_ever_over_criteria
         Notifiers::Users::BusinessHealthChecks::BookingPageNotEnoughBooking.run(receiver: user)
+      elsif !enough_messages_from_customer
+        Notifiers::Users::BusinessHealthChecks::NoEnoughMessage.run(receiver: user)
       elsif any_booking_page_visit_ever_over_criteria && any_booking_page_page_view_and_conversion_rate_ever_over_criteria && !any_new_customer_for_a_period
         Notifiers::Users::BusinessHealthChecks::NoNewCustomer.run(receiver: user)
       end
