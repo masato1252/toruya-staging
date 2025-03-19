@@ -9,7 +9,16 @@ RSpec.describe BusinessHealthChecks::Deliver do
   let(:social_user) { FactoryBot.create(:social_user, user: user) }
   let(:booking_page) { FactoryBot.create(:booking_page, user: user, created_at: 31.days.ago) }
   let!(:sale_page) { FactoryBot.create(:sale_page, user: user, product: booking_page) }
-  before { user.create_user_metric }
+  before do
+    user.create_user_metric
+
+    # Mock Google::Drive to prevent OpenSSL errors
+    mock_worksheet = double("worksheet")
+    allow(mock_worksheet).to receive(:[]=)
+    allow(mock_worksheet).to receive(:num_rows).and_return(1)
+    allow(mock_worksheet).to receive(:save)
+    allow(Google::Drive).to receive(:spreadsheet).and_return(mock_worksheet)
+  end
 
   let(:args) do
     {
@@ -20,6 +29,15 @@ RSpec.describe BusinessHealthChecks::Deliver do
 
   describe "#execute" do
     context "when customer doesn't have enough messages" do
+      before do
+        # Make sure the booking page visit criteria is met, so the condition falls through to the messages check
+        stub_const("BusinessHealthChecks::Deliver::BOOKING_PAGE_VISIT_CRITERIA", 0)
+        stub_const("BusinessHealthChecks::Deliver::BOOKING_PAGE_CONVERSION_RATE_CRITERIA", 0)
+        # Create visits and a reservation to satisfy the previous conditions
+        FactoryBot.create(:ahoy_visit, product: sale_page.product, owner: user)
+        FactoryBot.create(:reservation_customer, reservation: FactoryBot.create(:reservation, user: user), booking_page: sale_page.product)
+      end
+
       it "delivers no enough message" do
         expect(Notifiers::Users::BusinessHealthChecks::NoEnoughMessage).to receive(:run).with(receiver: user)
 

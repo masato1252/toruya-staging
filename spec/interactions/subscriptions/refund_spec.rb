@@ -53,7 +53,7 @@ RSpec.describe Subscriptions::Refund do
       expect(subscription_charge).to be_refunded
       expect(stripe_charge.amount_refunded).to eq(subscription_charge.amount_cents)
       expect(stripe_charge.refunded).to eq(true)
-      expect(subscription).not_to be_active
+      expect(subscription).to be_active # we don't make it inactive immediately
       expect(subscription.expired_date).to eq(Subscription.today.yesterday)
       expect(subscription.next_plan).to be_nil
     end
