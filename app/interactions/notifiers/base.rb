@@ -143,7 +143,7 @@ module Notifiers
     end
 
     def send_sms
-      I18n.with_locale(user.locale || customer.locale || I18n.default_locale) do
+      I18n.with_locale(user&.locale || customer&.locale || I18n.default_locale) do
         Sms::Create.run(
           user: user,
           customer: customer,
