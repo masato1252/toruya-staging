@@ -34,7 +34,7 @@
       <div class="warning">
         <%= t("booking.cancel_modal.you_could_cancel_reservation_in_n_days_by_yourself", days: @reservation_customer.booking_page.customer_cancel_request_before_day, shop_name: @reservation_customer.booking_page.user.company_name) %>
       </div>
-    <% elsif @reservation_customer.booking_page.customer_cancel_request_before_day %>
+    <% elsif @reservation_customer.booking_page.customer_cancel_request && !@reservation_customer.allow_customer_cancel? %>
       <%= link_to t("action.cancel_reservation"), "#", class: "btn btn-danger", disabled: true %>
       <div class="warning">
         <%= t("booking.cancel_modal.you_couldnt_cancel_reservation_by_yourself", days: @reservation_customer.booking_page.customer_cancel_request_before_day, shop_name: @reservation_customer.booking_page.user.company_name) %>
