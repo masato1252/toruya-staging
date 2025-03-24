@@ -64,7 +64,7 @@ const BookingPageEdit =({props}) => {
     let error, response;
     [error, response] = await BookingPageServices.update({
       booking_page_id: props.booking_page.id,
-      data: _.assign({ survey_form: data }, { attribute: "survey" })
+      data: _.assign({ survey_form: data }, { attribute: "survey" }, { business_owner_id: props.business_owner_id })
     })
 
     if (response.data.status == "successful") {
