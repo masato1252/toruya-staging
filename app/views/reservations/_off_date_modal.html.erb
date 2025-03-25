@@ -13,6 +13,7 @@
         <div class="modal-body">
           <dl id="addWorkDay">
             <%= react_component("management/personal_schedules/datetime_fields", {
+              locale: Current.business_owner.locale,
               custom_schedule_id: local_assigns[:custom_schedule_id],
               staff_id: local_assigns[:staff].try(:id),
               open: false,

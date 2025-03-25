@@ -288,15 +288,16 @@ const Form = () => {
             </a>
 )}
           <span>
-            {zeroPad(props.reservation_form.reservation_id, 7)}
+            {props.reservation_form.reservation_id ? zeroPad(props.reservation_form.reservation_id, 7) : ""}
           </span>
           <button
 
             disabled={!_isValidToReserve() || processing}
             onClick={handleSubmit(onSubmit)}
-            className="btn btn-yellow btn-circle btn-save btn-extend-right"
+            className="btn btn-yellow btn-circle btn-save btn-extend-right btn-with-word"
           >
             <i className="fa fa-save fa-2x"></i>
+            <div className="word">{i18n.save}</div>
           </button>
         </>
       </BottomNavigationBar>

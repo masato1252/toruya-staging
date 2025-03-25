@@ -624,8 +624,8 @@ tw:
         overbooking: 重複預約
         overbooking_restriction: 重複預約限制
         overbooking_restriction_title: 重複預約限制
-        not_allow_overbooking_label: 達到滿座人數時停止接受預約（建議）
-        allow_overbooking_label: 不論滿座與否都接受預約
+        not_allow_overbooking_label: 達到額滿人數時停止接受預約（建議）
+        allow_overbooking_label: 不論額滿與否都接受預約
         social_account_skippable_title: 無需LINE登入即可預約
         social_account_skippable: 無需LINE登入即可預約
         social_account_skippable_label: 允許
