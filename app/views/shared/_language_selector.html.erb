@@ -1,0 +1,7 @@
+<div class="language-selector text-right mb-3">
+  <% if I18n.locale == :ja %>
+    <%= link_to "繁體中文", url_for(locale: :tw), class: "language-link" %>
+  <% else %>
+    <%= link_to "日本語", url_for(locale: :ja), class: "language-link" %>
+  <% end %>
+</div>
