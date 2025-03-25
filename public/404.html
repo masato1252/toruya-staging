@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>お探しのページは存在しません。</title>
+  <title>お探しのページは存在しません。 | 找不到您所查詢的頁面。</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
   body {
@@ -51,6 +52,12 @@
     color: #666;
     box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
   }
+
+  .lang-divider {
+    display: block;
+    margin: 10px 0;
+    border-top: 1px solid #ddd;
+  }
   </style>
 </head>
 
@@ -60,8 +67,12 @@
     <div>
       <h1>お探しのページは存在しません。</h1>
       <p>サイトURLが間違っているか、ページが削除されている可能性があります。</p>
+      <span class="lang-divider"></span>
+      <h1>找不到您所查詢的頁面。</h1>
+      <p>網站URL可能有誤或該頁面已被刪除。</p>
     </div>
-    <p>システム管理者へ通知する場合はエラー番号404とお伝えください。</p>
+    <p>システム管理者へ通知する場合はエラー番号404とお伝えください。<br>
+    若需通知系統管理員，請告知錯誤代碼404。</p>
   </div>
 </body>
 </html>

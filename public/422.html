@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>その変更はサーバー側で拒否されました。</title>
+  <title>その変更はサーバー側で拒否されました。 | 您的請求被服務器拒絕。</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
   body {
@@ -51,6 +52,12 @@
     color: #666;
     box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
   }
+
+  .lang-divider {
+    display: block;
+    margin: 10px 0;
+    border-top: 1px solid #ddd;
+  }
   </style>
 </head>
 
@@ -60,8 +67,12 @@
     <div>
       <h1>その変更はサーバー側で拒否されました。</h1>
       <p>あなたには、その変更をする権限がありません。</p>
+      <span class="lang-divider"></span>
+      <h1>您的請求被服務器拒絕。</h1>
+      <p>您沒有權限進行此更改。</p>
     </div>
-    <p>システム管理者へ通知する場合はエラー番号422とお伝えください。</p>
+    <p>システム管理者へ通知する場合はエラー番号422とお伝えください。<br>
+    若需通知系統管理員，請告知錯誤代碼422。</p>
   </div>
 </body>
 </html>
