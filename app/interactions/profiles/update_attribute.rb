@@ -38,6 +38,20 @@ module Profiles
           )
         when "company_name", "company_phone_number", "company_email", "website"
           profile.update(attrs.slice(update_attribute))
+
+          # Also update the user's shop with the same attribute
+          if shop = user.shops.first
+            case update_attribute
+            when "company_name"
+              shop.update(name: attrs[:company_name], short_name: attrs[:company_name])
+            when "company_phone_number"
+              shop.update(phone_number: attrs[:company_phone_number])
+            when "company_email"
+              shop.update(email: attrs[:company_email])
+            when "website"
+              shop.update(website: attrs[:website])
+            end
+          end
         when "company_address_details"
           address = Address.new(attrs[:company_address_details])
 
@@ -49,6 +63,15 @@ module Profiles
               company_zip_code: address.zip_code,
               company_address_details: address.as_json
             )
+
+            # Also update the user's shop with the same address details
+            if shop = user.shops.first
+              shop.update(
+                address: address.pure_address,
+                zip_code: address.zip_code,
+                address_details: address.as_json
+              )
+            end
           end
         when "logo"
           logo_params = attrs[:logo]
@@ -56,6 +79,11 @@ module Profiles
           if logo_params
             if logo_params.content_type.in?(Shops::Update::CONTENT_TYPES) && logo_params.size.between?(0, 0.1.megabyte)
               profile.logo.attach(logo_params)
+
+              # Also update the user's shop with the same logo
+              if shop = user.shops.first
+                shop.logo.attach(logo_params)
+              end
             else
               errors.add(:profile, :logo_invalid)
             end
@@ -68,6 +96,16 @@ module Profiles
 
         profile
       end
+    end
+
+    private
+
+    def user
+      @user ||= profile.user
+    end
+
+    def shop
+      @shop ||= user.shops.first
     end
   end
 end
