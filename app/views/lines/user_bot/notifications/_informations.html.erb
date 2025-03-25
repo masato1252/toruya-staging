@@ -29,7 +29,10 @@
       reservation_id: reservation.id
     ), class: "field-row with-next-arrow" do %>
     <div>
-      <h3><%= I18n.l(reservation.start_time, format: :date_with_wday) %> ~ <%= I18n.l(reservation.end_time, format: :time_only) %> <span class="border p-1 border-solid border-gray-500 text-gray-500 text-10px"><%= reservation.shop.name %></span></h3>
+      <h3><%= I18n.l(reservation.start_time, format: :date_with_wday) %> ~ <%= I18n.l(reservation.end_time, format: :time_only) %></h3>
+      <div class="my-2">
+        <span class="border p-1 border-solid border-gray-500 text-gray-500 text-10px"><%= reservation.shop.name %></span>
+      </div>
       <div class="desc dotdotdot"><%= customer_names_sentence(reservation) %></div>
     </div>
     <i class="fa fa-angle-right"></i>
