@@ -9,10 +9,28 @@
       </div>
       <div class="modal-body">
         <div class="edit-worktime">
-          <% if working_shop_options(shops: my_calendar ? Current.user.social_user.shops : Current.business_owner.shops).present? %>
-            <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="btn btn-yellow btn-tweak btn-big">
-              <%= I18n.t("action.new_reservation") %>
-            </a>
+          <% if my_calendar %>
+            <% if working_shop_options(shops: Current.user.social_user.shops).present? %>
+              <% if Current.user.social_user.shops.count == 1 %>
+                <%= link_to t("action.new_reservation"),
+                 SiteRouting.new(self).reservation_form_path(Current.user.social_user.shops.first.reservations.new, business_owner_id: Current.user.social_user.shops.first.user_id, start_time_date_part: @date), class: "btn btn-yellow btn-tweak btn-big" %>
+              <% else %>
+                <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="btn btn-yellow btn-tweak btn-big">
+                  <%= I18n.t("action.new_reservation") %>
+                </a>
+              <% end %>
+            <% end %>
+          <% else %>
+            <% if working_shop_options(shops: Current.business_owner.shops).present? %>
+              <% if Current.business_owner.shops.count == 1 %>
+                <%= link_to t("action.new_reservation"),
+                 SiteRouting.new(self).reservation_form_path(Current.business_owner.shops.first.reservations.new, business_owner_id: Current.business_owner.id, start_time_date_part: @date), class: "btn btn-yellow btn-tweak btn-big" %>
+              <% else %>
+                <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="btn btn-yellow btn-tweak btn-big">
+                  <%= I18n.t("action.new_reservation") %>
+                </a>
+              <% end %>
+            <% end %>
           <% end %>
 
           <% if my_calendar || Current.social_user&.single_owner? %>

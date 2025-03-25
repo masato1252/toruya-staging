@@ -199,7 +199,7 @@ tw:
       full_time_permission: 允許成員變更全職／兼職設定
       regular_working_time_permission: 允許成員變更固定工作時間設定
       temporary_working_time_permission: 允許成員變更臨時上班設定
-      block_schedule: 封鎖預約頁面
+      block_schedule: 封鎖預約頁面的時段
     staff_holiday_time:
       setting_title: 休假設定權限
       holiday_permission: 允許成員設定休假
