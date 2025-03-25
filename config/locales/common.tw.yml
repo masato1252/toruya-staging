@@ -290,6 +290,7 @@ tw:
     url_copied: 網址已複製
     manual_booking: 手動預約
     new_feature: 新功能
+    notify_user_customer_reservation_confirmation_message: 已為顧客發送預約確認的訊息
     line_verification:
       login_first_message: 請先使用LINE帳號登入
       service_content_message_html: 服務內容將

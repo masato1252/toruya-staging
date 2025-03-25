@@ -12,13 +12,15 @@ class Lines::UserBot::Reservations::StatesController < Lines::UserBotDashboardCo
   def accept
     outcome = ::Reservations::Accept.run(reservation: reservation, current_staff: current_user_staff)
 
-    redirect_back fallback_location: mine_lines_user_bot_schedules_path, notice: I18n.t("reservation.update_successfully_message")
+    notify_user_customer_reservation_confirmation_message
+    redirect_back fallback_location: mine_lines_user_bot_schedules_path
   end
 
   def accept_in_group
     outcome = ::Reservations::Accept.run(reservation: reservation, current_staff: current_user_staff)
 
     if outcome.valid?
+      notify_user_customer_reservation_confirmation_message
       recent_pending_reservations = NotificationsPresenter.new(view_context, current_user).recent_pending_reservations
 
       if recent_pending_reservations.exists?
@@ -26,7 +28,7 @@ class Lines::UserBot::Reservations::StatesController < Lines::UserBotDashboardCo
 
         redirect_to date_lines_user_bot_schedules_path(next_pending_reservation.user_id, next_pending_reservation.start_time.to_fs(:date), next_pending_reservation.id)
       else
-        redirect_back fallback_location: mine_lines_user_bot_schedules_path, notice: I18n.t("reservation.update_successfully_message")
+        redirect_back fallback_location: mine_lines_user_bot_schedules_path
       end
     else
       redirect_back fallback_location: mine_lines_user_bot_schedules_path

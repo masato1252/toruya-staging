@@ -288,6 +288,7 @@ ja:
     url_copied: コードをコピーしました
     manual_booking: 手動予約
     new_feature: 新機能
+    notify_user_customer_reservation_confirmation_message: 顧客に予約確認のメッセージを送信しました
     line_verification:
       login_first_message: まずはLINEでログインしてください
       service_content_message_html: サービスコンテンツは

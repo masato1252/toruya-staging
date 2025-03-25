@@ -8,6 +8,7 @@ module ReservationCustomers
 
     def execute
       reservation_customer.accepted!
+      Current.notify_user_customer_reservation_confirmation_message = true
       ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer)
 
       if reservation.customers.count == 1

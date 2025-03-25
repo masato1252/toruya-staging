@@ -66,4 +66,11 @@ class Lines::UserBotDashboardController < ActionController::Base
     I18n.locale = params[:locale].presence || Current.business_owner&.locale || I18n.default_locale
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
+
+  def notify_user_customer_reservation_confirmation_message
+    if Current.notify_user_customer_reservation_confirmation_message
+      Current.notify_user_customer_reservation_confirmation_message = false
+      flash[:notice] = I18n.t("common.notify_user_customer_reservation_confirmation_message")
+    end
+  end
 end

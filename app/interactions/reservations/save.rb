@@ -115,6 +115,7 @@ module Reservations
 
                 previous_state, current_state = reservation_customer.previous_changes[:state]
                 if current_state == 'accepted'
+                  Current.notify_user_customer_reservation_confirmation_message = true
                   ReservationConfirmationJob.perform_later(reservation, reservation_customer.customer)
                 end
               end

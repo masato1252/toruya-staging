@@ -132,6 +132,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     outcome = ::Reservations::Save.run(reservation: shop.reservations.new, params: reservation_params_hash)
 
     if outcome.valid?
+      notify_user_customer_reservation_confirmation_message
       render json: {
         status: "successful",
         redirect_to: SiteRouting.new(view_context).schedule_date_path(reservation_date: outcome.result.start_time.to_fs(:date))
@@ -152,6 +153,8 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     outcome = ::Reservations::Save.run(reservation: @reservation, params: reservation_params_hash)
 
     if outcome.valid?
+      notify_user_customer_reservation_confirmation_message
+
       if params[:from] == "customer_dashboard" && params[:customer_id].present?
         render json: {
           status: "successful",
