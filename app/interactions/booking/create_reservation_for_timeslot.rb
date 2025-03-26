@@ -356,14 +356,6 @@ module Booking
 
             ::RichMenus::BusinessSwitchRichMenu.run(owner: user)
             # send to customer
-            Rollbar.info("Booking::CreateReservationForTimeslot", {
-              customer: customer.attributes,
-              reservation: reservation.attributes,
-              email: email,
-              phone_number: phone_number,
-              booking_page: booking_page.attributes,
-              booking_options: booking_options.to_a
-            })
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_options.to_a)
 
             # notify pending reservations summary immediately for today & tomorrow's reservation

@@ -56,12 +56,6 @@ module Reservations
       end
 
       def notify_by_email
-        Rollbar.info("Reservations::Notifications::Notify", {
-          customer: customer.attributes,
-          reservation: reservation.attributes,
-          email: mail,
-          message: message
-        })
         CustomerMailer.with(
           customer: customer,
           email: mail,
