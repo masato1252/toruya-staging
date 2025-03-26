@@ -30,28 +30,28 @@ namespace :subscriptions do
   end
 
   task :trial_member_reminder => :environment do
-    today = Subscription.today
+    # today = Subscription.today
 
-    scope = User
-      .joins(:subscription)
-      .where("subscriptions.trial_expired_date < ? and subscriptions.trial_expired_date > ?", today.advance(days: 8), today)
+    # scope = User
+    #   .joins(:subscription)
+    #   .where("subscriptions.trial_expired_date < ? and subscriptions.trial_expired_date > ?", today.advance(days: 8), today)
 
-    scope.where("subscriptions.plan_id = ?", Subscription::FREE_PLAN_ID).or(
-      scope.where("subscriptions.expired_date < ?", today)
-    ).find_each do |user|
-      after_signup_days = (today - user.created_at.to_date).to_i
-      before_trial_expired_days = (user.trial_expired_date - today).to_i
+    # scope.where("subscriptions.plan_id = ?", Subscription::FREE_PLAN_ID).or(
+    #   scope.where("subscriptions.expired_date < ?", today)
+    # ).find_each do |user|
+    #   after_signup_days = (today - user.created_at.to_date).to_i
+    #   before_trial_expired_days = (user.trial_expired_date - today).to_i
 
-      case before_trial_expired_days
-      when 7
-        Notifiers::Users::Reminders::TrialMemberWeekAgoReminder.perform_later(receiver: user, user: user)
-      when 1
-        Notifiers::Users::Reminders::TrialMemberDayAgoReminder.perform_later(receiver: user, user: user)
-      end
-      sleep(0.01)
-    end
+    #   case before_trial_expired_days
+    #   when 7
+    #     Notifiers::Users::Reminders::TrialMemberWeekAgoReminder.perform_later(receiver: user, user: user)
+    #   when 1
+    #     Notifiers::Users::Reminders::TrialMemberDayAgoReminder.perform_later(receiver: user, user: user)
+    #   end
+    #   sleep(0.01)
+    # end
 
-    SlackClient.send(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
+    # SlackClient.send(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
   end
 
   task :renew_payment_access_token => :environment do
