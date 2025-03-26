@@ -10,7 +10,7 @@ class AddPrimaryPhoneNumberAndEmailToCustomers < ActiveRecord::Migration[7.0]
       )
     end
 
-    add_index :customers, [:user_id, :customer_email]
-    add_index :customers, [:user_id, :customer_phone_number], unique: true
+    add_index :customers, [:user_id, :customer_email] unless index_exists?(:customers, [:user_id, :customer_email])
+    add_index :customers, [:user_id, :customer_phone_number], unique: true unless index_exists?(:customers, [:user_id, :customer_phone_number])
   end
 end
