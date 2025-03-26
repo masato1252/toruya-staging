@@ -3,7 +3,7 @@
     social_customer: { social_user_id: current_social_customer&.social_user_id, customer_id: current_customer&.id, had_address: current_customer&.had_address? },
     customer: { user_id: current_owner.id }.merge(OwnerCustomerSerializer.new(current_customer).attributes_hash || {}),
     sale_page_slug: @sale_page.slug,
-    line_login_required: !!current_owner.social_account&.line_settings_verified?,
+    line_login_required: current_owner.prefer_line_login?,
     line_login_url: line_login_url(current_owner.social_account, request.url),
     add_friend_url: current_owner.social_accounts.first&.add_friend_url,
     sale_page: @sale_page.serializer(params).attributes_hash,

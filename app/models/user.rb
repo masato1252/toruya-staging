@@ -322,6 +322,10 @@ class User < ApplicationRecord
     locale.to_sym == _locale
   end
 
+  def prefer_line_login?
+    customer_notification_channel == "line"
+  end
+
   private
 
   def today_reservations
