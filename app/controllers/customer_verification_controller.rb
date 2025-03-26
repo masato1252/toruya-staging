@@ -32,6 +32,7 @@ class CustomerVerificationController < ActionController::Base
   def verify_code
     # Attempt to verify the code
     identification_code = IdentificationCodes::Verify.run(
+      user: User.find(params[:user_id]),
       uuid: params[:uuid],
       code: params[:code]
     )

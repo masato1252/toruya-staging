@@ -28,7 +28,7 @@ export const CustomerVerificationServices = {
         "X-CSRF-Token": Rails.csrfToken()
       },
       url: Routes.customer_verification_verify_code_path({format: "json"}),
-      data: _.pick(data, ['customer_phone_number', 'uuid', 'code']),
+      data: _.pick(data, ['user_id', 'customer_phone_number', 'uuid', 'code']),
       responseType: "json"
     })
   },

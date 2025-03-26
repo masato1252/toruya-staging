@@ -132,6 +132,7 @@ const CustomerVerificationForm = ({
 
     try {
       const [_error, response] = await CustomerVerificationServices.verifyCode({
+        user_id: user_id,
         customer_phone_number: customer_phone_number,
         uuid: verificationUuid,
         code: verificationCode
