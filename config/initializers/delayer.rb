@@ -13,6 +13,11 @@ Delayed::Worker.queue_attributes = {
   low_priority: { priority: 30 },
 }
 
+# Set the maximum time (in seconds) a job can run before it is automatically killed
+# If a job exceeds this time limit, it will be marked as failed
+Delayed::Worker.max_run_time = 120.minutes # Adjust this value based on your needs
+Delayed::Worker.max_attempts = 3 # Default is 25
+
 module Delayed
   module Backend
     module ActiveRecord
