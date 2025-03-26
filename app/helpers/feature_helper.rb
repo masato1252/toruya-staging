@@ -26,7 +26,8 @@ module FeatureHelper
       support_official_support_display: support_official_support_display?,
       support_booking_options_menu_concept: support_booking_options_menu_concept?,
       support_advance_broadcast: support_advance_broadcast?,
-      support_advance_customer_info: support_advance_customer_info?
+      support_advance_customer_info: support_advance_customer_info?,
+      support_online_payment: support_online_payment?
     }
   end
 
@@ -51,6 +52,7 @@ module FeatureHelper
   alias_method :business_line_required?, :japanese_only?
   alias_method :support_advance_broadcast?, :japanese_only?
   alias_method :support_advance_customer_info?, :japanese_only?
+  alias_method :support_online_payment?, :japanese_only?
 
   def support_skip_required_shop_info?
     if Current.business_owner.present?

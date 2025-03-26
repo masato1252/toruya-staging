@@ -138,10 +138,12 @@
         <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_available_period_label") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_available_period), title: I18n.t("settings.booking_page.form.booking_available_period", bookable_restriction_months: @booking_page.bookable_restriction_months, booking_limit_day: @booking_page.booking_limit_day) %>
 
-        <div class="field-group-header" id="payment_option"><%= I18n.t("settings.booking_page.form.payment_option") %></div>
-        <%= render "lines/user_bot/field_row",
-          path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :payment_option),
-          title: I18n.t("settings.booking_page.form.payment_option_options.#{@booking_page.payment_option}") %>
+        <% if support_online_payment? %>
+          <div class="field-group-header" id="payment_option"><%= I18n.t("settings.booking_page.form.payment_option") %></div>
+          <%= render "lines/user_bot/field_row",
+            path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :payment_option),
+            title: I18n.t("settings.booking_page.form.payment_option_options.#{@booking_page.payment_option}") %>
+        <% end %>
 
         <div class="field-group-header" id="note"><%= I18n.t("settings.booking_page.form.note_label") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :note), title: @booking_page.note %>
