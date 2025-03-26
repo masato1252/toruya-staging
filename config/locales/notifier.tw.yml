@@ -22,7 +22,7 @@ https://manager.toruya.com/tw/userlogin"
       pending_reservation_message:    "□新預約　                  %{number}件\n"
       pending_online_service_message: "□未批准服務客戶  %{number}件\n"
     pending_reservations_summary:
-      message: "%{user_name} 您好\n\n已建立需要確認的預約。\n\n請從日曆選單確認。\n\nToruya"
+      message: "%{user_name} 您好\n\n有客戶建立了待確認的預約。\n\n請從日曆選單確認。\n\nToruya"
     withdrawal_monthly_report:
       message:  "%{user_name} 您好\n\n最近的介紹費已確定。\n\n詳情請從設置畫面確認。\n\nToruya"
     customer_cancel_reservation:
