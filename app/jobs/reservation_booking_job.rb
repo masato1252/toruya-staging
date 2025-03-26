@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReservationBookingJob < ApplicationJob
-  queue_as :default
+  queue_as :high_priority
 
   def perform(customer, reservation, email, phone_number, booking_page, booking_options)
     # Pending reservation notification to customer
