@@ -15,8 +15,7 @@ class NotificationsPresenter
 
   def data
     Array.wrap(new_pending_reservations) +
-      Notifications::PendingCustomerReservationsPresenter.new(h, user).data +
-      Notifications::NonGroupCustomersPresenter.new(h, user).data
+      Notifications::PendingCustomerReservationsPresenter.new(h, user).data
   end
 
   def recent_pending_reservations

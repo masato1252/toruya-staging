@@ -24,7 +24,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     @total_customers_number = Current.business_owner.customers.count
 
     # Notifications START
-    @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, Current.business_owner).data.compact + Notifications::NonGroupCustomersPresenter.new(view_context, Current.business_owner).data.compact
+    @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, Current.business_owner).data.compact
     # Notifications END
 
     draft_message_content = Rails.cache.read(draft_message_content_hash_cache_key)

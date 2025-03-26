@@ -29,7 +29,7 @@ class CustomersController < DashboardController
     end
 
     # Notifications START
-    @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, current_user).data.compact + Notifications::NonGroupCustomersPresenter.new(view_context, current_user).data.compact
+    @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, current_user).data.compact
     # Notifications END
   end
 
