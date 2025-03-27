@@ -91,6 +91,7 @@ export const CustomerBasicInfoForm = ({
         onChange={(phone) => handleChange('customer_phone_number', phone)}
         autoFormat={false}
         placeholder="09012345678"
+        countryCodeEditable={false}
       />
 
       <div className="centerize">

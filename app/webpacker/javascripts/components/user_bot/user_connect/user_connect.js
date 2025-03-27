@@ -86,6 +86,7 @@ export const UserConnect = ({props, next}) => {
           onChange={ (phone) => setValue("phone_number", phone) }
           autoFormat={false}
           placeholder='09012345678'
+          countryCodeEditable={false}
         />
         <ErrorMessage error={errors.phone_number?.message} />
         {!watchIsUserMatched && (
