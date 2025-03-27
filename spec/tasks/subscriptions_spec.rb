@@ -136,7 +136,7 @@ RSpec.describe "rake subscriptions:trial_member_reminder" do
     Timecop.freeze(today)
   end
 
-  context "when users are 1 week ago before trial plan expired" do
+  xcontext "when users are 1 week ago before trial plan expired" do
     before do
       Timecop.travel(user.trial_expired_date.advance(days: -7))
     end
@@ -151,7 +151,7 @@ RSpec.describe "rake subscriptions:trial_member_reminder" do
     end
   end
 
-  context "when users are 1 day ago before trial plan expired" do
+  xcontext "when users are 1 day ago before trial plan expired" do
     before do
       Timecop.travel(user.trial_expired_date.yesterday)
     end

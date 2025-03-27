@@ -3,7 +3,7 @@
 module Notifiers
   module Users
     class PendingReservationsSummary < Base
-      deliver_by_priority [:line]
+      deliver_by_priority [:line, :email]
 
       time :start_time
       time :end_time
