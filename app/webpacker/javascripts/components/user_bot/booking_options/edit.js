@@ -60,6 +60,13 @@ const BookingOptionEdit =({props}) => {
       data[props.attribute] = displayName;
     }
 
+    // Ensure booking_page_ids is always an array, even if it's undefined, null, or a single value
+    if (!data.booking_page_ids) {
+      data.booking_page_ids = [];
+    } else if (!Array.isArray(data.booking_page_ids)) {
+      data.booking_page_ids = [data.booking_page_ids];
+    }
+
     [error, response] = await BookingOptionServices.update({
       booking_option_id: props.booking_option.id,
       data: _.assign( data, { attribute: props.attribute, business_owner_id: props.business_owner_id })
@@ -89,8 +96,8 @@ const BookingOptionEdit =({props}) => {
           <>
             <div className="field-row flex-start">
               <label>
-                <input 
-                  type="radio" 
+                <input
+                  type="radio"
                   checked={inputType === 'simple'}
                   onChange={() => {
                     handleInputTypeChange('simple');
@@ -100,19 +107,19 @@ const BookingOptionEdit =({props}) => {
                 /> {I18n.t("settings.booking_option.form.simple_text")}
               </label>
               {inputType === 'simple' ? (
-                <input 
+                <input
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  name="display_name" 
-                  type="text" 
+                  name="display_name"
+                  type="text"
                   className="extend"
                 />
               ) : null}
             </div>
             <div className="field-row flex-start">
               <label>
-                <input 
-                  type="radio" 
+                <input
+                  type="radio"
                   checked={inputType === 'editor'}
                   onChange={() => handleInputTypeChange('editor')}
                 /> {I18n.t("settings.booking_option.form.rich_text")}
@@ -133,9 +140,9 @@ const BookingOptionEdit =({props}) => {
                     },
                     colorPicker: {
                       colors: ['rgb(97,189,109)', 'rgb(26,188,156)', 'rgb(84,172,210)', 'rgb(44,130,201)',
-                        'rgb(147,101,184)', 'rgb(71,85,119)', 'rgb(204,204,204)', 'rgb(65,168,95)', 'rgb(0,168,133)', 
+                        'rgb(147,101,184)', 'rgb(71,85,119)', 'rgb(204,204,204)', 'rgb(65,168,95)', 'rgb(0,168,133)',
                         'rgb(61,142,185)', 'rgb(41,105,176)', 'rgb(85,57,130)', 'rgb(40,50,78)', 'rgb(0,0,0)',
-                        'rgb(255,0,0)', 'rgb(255,153,0)', 'rgb(255,255,0)', 'rgb(0,255,0)', 
+                        'rgb(255,0,0)', 'rgb(255,153,0)', 'rgb(255,255,0)', 'rgb(0,255,0)',
                         'rgb(0,255,255)', 'rgb(0,0,255)', 'rgb(153,0,255)', 'rgb(255,0,255)',
                         'rgb(244,67,54)', 'rgb(233,30,99)', 'rgb(156,39,176)', 'rgb(103,58,183)',
                         'rgb(63,81,181)', 'rgb(33,150,243)', 'rgb(0,188,212)', 'rgb(0,150,136)',
@@ -144,7 +151,7 @@ const BookingOptionEdit =({props}) => {
                     }
                   }}
                   toolbarClassName="toolbarClassName"
-                  wrapperClassName="wrapperClassName" 
+                  wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
                 />
               </div>

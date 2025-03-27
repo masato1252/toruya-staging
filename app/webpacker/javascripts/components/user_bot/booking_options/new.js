@@ -53,8 +53,10 @@ const NewBookingOption =({props}) => {
     console.log(data)
 
     // Ensure booking_page_ids is always an array, even with a single value
-    if (data.booking_page_ids && !Array.isArray(data.booking_page_ids)) {
-      data.booking_page_ids = [data.booking_page_ids]
+    if (!data.booking_page_ids) {
+      data.booking_page_ids = [];
+    } else if (!Array.isArray(data.booking_page_ids)) {
+      data.booking_page_ids = [data.booking_page_ids];
     }
 
     const [error, response] = await CommonServices.create({

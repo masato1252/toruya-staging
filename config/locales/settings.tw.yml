@@ -520,6 +520,7 @@ tw:
           no_available_shop: 由於此服務未設定可使用的店舖，預約頁面可能無法正確顯示。
           ticket_max_price_limit: 超過5萬元的情況下無法使用線上結帳。
           no_menu: 使用此預約項目時，至少需要建立一個服務。
+          no_booking_page: 至少需要設定一個預約頁面，此服務才會顯示在預約頁面上。
     booking_page:
       title: 預約頁面設定
       info_html: 設定預約頁面。<br>客戶將透過您在此設定的頁面進行線上預約。
