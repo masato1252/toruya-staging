@@ -26,7 +26,7 @@ const AddressView = ({save_btn_text, show_skip_btn, handleSubmitCallback, addres
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="address-form">
         <h4>
-          <RequiredLabel label={I18n.t("common.zip_code")} required_label={I18n.t("common.required_label")} />
+          <span>{I18n.t("common.zip_code")}</span>
         </h4>
         <div className="field">
           <input
@@ -37,7 +37,7 @@ const AddressView = ({save_btn_text, show_skip_btn, handleSubmitCallback, addres
           />
         </div>
         <h4>
-          <RequiredLabel label={I18n.t("common.address")} required_label={I18n.t("common.required_label")} />
+          <span>{I18n.t("common.address")}</span>
         </h4>
         <div className="field">
           <input
@@ -75,11 +75,9 @@ const AddressView = ({save_btn_text, show_skip_btn, handleSubmitCallback, addres
           />
         </div>
         <div className="action-block centerize">
-          {show_skip_btn ? (
-            <a href="#" className="btn btn-gray submit mr-2-5" onClick={handleSubmit(onSubmit)}>
-              { isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : I18n.t("action.no_need_setup") }
-            </a>
-          ) : <></> }
+          <a href="#" className="btn btn-gray submit mr-2-5" onClick={handleSubmit(onSubmit)}>
+            { isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : I18n.t("action.no_need_setup") }
+          </a>
           <a href="#" className="btn btn-yellow submit" onClick={handleSubmit(onSubmit)}>
             { isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : save_btn_text || I18n.t("action.next_step") }
           </a>

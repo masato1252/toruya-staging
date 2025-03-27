@@ -17,7 +17,6 @@ module FeatureHelper
   def support_feature_flags
     {
       support_phonetic_name: support_phonetic_name?,
-      support_skip_required_shop_info: support_skip_required_shop_info?,
       support_tax_include_display: support_tax_include_display?,
       support_japanese_asset: support_japanese_asset?,
       support_faq_display: support_faq_display?,
@@ -53,14 +52,6 @@ module FeatureHelper
   alias_method :support_advance_broadcast?, :japanese_only?
   alias_method :support_advance_customer_info?, :japanese_only?
   alias_method :support_online_payment?, :japanese_only?
-
-  def support_skip_required_shop_info?
-    if Current.business_owner.present?
-      !Current.business_owner.locale_is?(:ja)
-    else
-      I18n.locale != :ja
-    end
-  end
 
   def support_booking_options_menu_concept?
     Current.business_owner&.booking_options_menu_concept
