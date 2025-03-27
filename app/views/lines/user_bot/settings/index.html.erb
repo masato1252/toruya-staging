@@ -75,7 +75,7 @@
           <span><%= t("user_bot.dashboards.settings.dashboard.payments_label") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
-        <div class="field-header"><%= t("user_bot.dashboards.settings.dashboard.line_label") %></div>
+        <div class="field-header" id="line-integration"><%= t("user_bot.dashboards.settings.dashboard.line_label") %></div>
         <%= link_to message_api_lines_user_bot_settings_social_account_path(business_owner_id: business_owner_id), class: "field-row" do %>
           <span><%= t("user_bot.dashboards.settings.dashboard.line_message_api_label") %></span><i class="fa fa-angle-right"></i>
         <% end %>
