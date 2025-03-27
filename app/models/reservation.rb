@@ -145,8 +145,13 @@ class Reservation < ApplicationRecord
       meeting_url: meeting_url,
       product_name: reservation_customer.booking_options.any? ? reservation_customer.booking_options.map(&:present_name).join(", ") : menus_sentence,
       booking_page_url: reservation_customer&.booking_page ? Rails.application.routes.url_helpers.booking_page_url(reservation_customer.booking_page.slug, last_booking_option_ids: reservation_customer.booking_option_ids.join(",")) : "",
-      booking_info_url: reservation_customer ? Rails.application.routes.url_helpers.booking_url(reservation_customer.slug) : ""
+      booking_info_url: reservation_customer ? Rails.application.routes.url_helpers.booking_url(reservation_customer.slug) : "",
+      reservation_popup_url: reservation_popup_url
     )
+  end
+
+  def reservation_popup_url
+    Rails.application.routes.url_helpers.lines_user_bot_schedules_url(business_owner_id: user.id, reservation_id: id)
   end
 
   def notifiable?
@@ -162,7 +167,9 @@ class Reservation < ApplicationRecord
   end
 
   def booking_time
-    "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
+    Time.use_zone(user.timezone) do
+      "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
+    end
   end
 
   def menus_sentence

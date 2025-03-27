@@ -1,9 +1,9 @@
 tw:
   notifier:
     user_sign_up:
-      message: "感謝您註冊成為用戶。\n\n從今天起至%{trial_end_date}，您可以免費使用我們的服務。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁版管理介面。\nhttps://manager.toruya.com/tw/userlogin"
+      message: "感謝您註冊成為用戶。\n\n，您可以免費使用我們的服務。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁版管理介面。\nhttps://manager.toruya.com/tw/userlogin"
     staff_user_sign_up:
-      message: "感謝您註冊成為用戶。\n\n 您可以作為%{owner_name}的成員免費使用我們的服務。\n\n 如果您想將其用於自己的業務，您也可以從今天起至%{trial_end_date}免費試用，歡迎您體驗。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁管理介面。\n
+      message: "感謝您註冊成為用戶。\n\n 您可以作為%{owner_name}的成員免費使用我們的服務。\n\n 如果您想將其用於自己的業務，您也可以免費試用，歡迎您體驗。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁管理介面。\n
 https://manager.toruya.com/tw/userlogin"
     created_shop:
       message: "用戶註冊和店舖設置已完成！\n\n從今天起至%{trial_end_date}，您可以免費試用。"
@@ -23,6 +23,8 @@ https://manager.toruya.com/tw/userlogin"
       pending_online_service_message: "□未批准服務客戶  %{number}件\n"
     pending_reservations_summary:
       message: "%{user_name} 您好\n\n有客戶建立了待確認的預約。\n\n請從日曆選單確認。\n\nToruya"
+    pending_reservation:
+      message: "%{user_name} 您好\n\n有客戶建立了待確認的預約。\n\n預約時間：%{booking_time}\n客戶：%{customer_name}\n\n請從以下連結確認預約：\n%{reservation_popup_url}\n\nToruya"
     withdrawal_monthly_report:
       message:  "%{user_name} 您好\n\n最近的介紹費已確定。\n\n詳情請從設置畫面確認。\n\nToruya"
     customer_cancel_reservation:

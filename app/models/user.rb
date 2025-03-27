@@ -326,6 +326,10 @@ class User < ApplicationRecord
     customer_notification_channel == "line"
   end
 
+  def timezone
+    ::LOCALE_TIME_ZONE[locale] || "Asia/Tokyo"
+  end
+
   private
 
   def today_reservations

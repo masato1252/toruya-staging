@@ -357,6 +357,7 @@ module Booking
             ::RichMenus::BusinessSwitchRichMenu.run(owner: user)
             # send to customer
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_options.to_a)
+            ::Notifiers::Users::PendingReservation.perform_later(receiver: user, reservation_customer: reservation_customer)
 
             # notify pending reservations summary immediately for today & tomorrow's reservation
             # Send to user
