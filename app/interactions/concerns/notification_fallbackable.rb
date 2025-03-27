@@ -11,6 +11,16 @@ module NotificationFallbackable
     end
   end
 
+  # Send notifications to all available channels in the provided list
+  # without stopping after the first one
+  def send_notification_to_all_channels(channels)
+    channels.each do |channel|
+      next unless send_method_available?(channel)
+
+      send_notification_via(channel)
+    end
+  end
+
   def notification_priority_for(preferred_channel)
     case preferred_channel
     when "email", :email then %w[email]

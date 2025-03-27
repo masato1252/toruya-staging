@@ -3,6 +3,7 @@
 require "slack_client"
 
 namespace :notifications do
+  # notify pending tasks summary to business owner
   task :pending_tasks => :environment do
     current_time = Time.now.in_time_zone('Tokyo').beginning_of_hour
     hour = current_time.hour

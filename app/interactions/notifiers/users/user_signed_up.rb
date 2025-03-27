@@ -7,7 +7,7 @@ module Notifiers
       validate :receiver_should_be_user
 
       def message
-        I18n.t("notifier.user_sign_up.message", trial_end_date: receiver.subscription.trial_expired_date.to_s)
+        I18n.t("notifier.user_sign_up.message")
       end
 
       def execute

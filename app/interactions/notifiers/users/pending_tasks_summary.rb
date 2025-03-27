@@ -3,7 +3,7 @@
 module Notifiers
   module Users
     class PendingTasksSummary < Base
-      deliver_by_priority [:line, :sms, :email]
+      deliver_by_priority [:line]
 
       string :start_at
       string :end_at

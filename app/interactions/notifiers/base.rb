@@ -21,6 +21,14 @@ module Notifiers
         self.mailer_method = options[:mailer_method]
       end
 
+      def deliver_by_all(notifiers, *args)
+        options = args.extract_options!
+
+        self.delivered_by_all = notifiers
+        self.mailer = options[:mailer]
+        self.mailer_method = options[:mailer_method]
+      end
+
       # deliver_by :{deliver_solution} would use the way dine to notify users
       #
       # deliver_by_priority [:line, :sms, :email]
@@ -37,6 +45,7 @@ module Notifiers
     end
 
     class_attribute :delivered_by_priority, instance_writer: false
+    class_attribute :delivered_by_all, instance_writer: false
     class_attribute :deliver_by_sms, instance_writer: false
     class_attribute :deliver_by_line, instance_writer: false
     class_attribute :deliver_by_email, instance_writer: false
@@ -44,7 +53,6 @@ module Notifiers
     class_attribute :notifier, instance_writer: false
     class_attribute :mailer_method, instance_writer: false
     class_attribute :nth_time_scenario, instance_writer: false
-    delegate :email, to: :target_email_user
     delegate :phone_number, to: :target_phone_user
 
     # User, StaffAccount, ConsultantAccount, SocialUser, Customer, SocialCustomer
@@ -65,8 +73,14 @@ module Notifiers
         # send to staff or consultant decided by delivered_by :notifier
         send_notification_with_fallbacks(preferred_channel: notifier)
       else
-        # send to user decided by delivered_by_priority
-        send_notification_with_fallbacks(custom_priority: delivered_by_priority)
+        # send to user using either deliver_by_all or deliver_by_priority
+        if delivered_by_all.present?
+          # Send to all channels specified in delivered_by_all
+          send_notification_to_all_channels(delivered_by_all)
+        else
+          # Use fallback logic with delivered_by_priority
+          send_notification_with_fallbacks(custom_priority: delivered_by_priority)
+        end
       end
     end
 
@@ -158,7 +172,7 @@ module Notifiers
           ).custom.deliver_now
         else
           UserMailer.with(
-            email: email || social_user.email,
+            email: email,
             message: message,
             subject: I18n.t("user_mailer.custom.title")
           ).custom.deliver_now
@@ -191,6 +205,16 @@ module Notifiers
     end
 
     private
+
+    def email
+      if target_email_user.is_a?(Customer)
+        target_email_user.email || target_email_user.customer_email
+      elsif target_email_user.is_a?(User)
+        target_email_user.email || target_email_user.social_user.email
+      else
+        target_email_user.email
+      end
+    end
 
     def custom_message_id
       nil

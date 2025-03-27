@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :reservations do
-  # notify pending reservations summary to business owner
+  # notify pending reservations summary to reservation's responsible staff
   task :pending_notifications => :environment do
     current_time = Time.current.beginning_of_hour
     hour = current_time.hour
