@@ -29,6 +29,8 @@
 #
 
 # ready_time is end_time + menu.interval
+require "message_encryptor"
+
 class Reservation < ApplicationRecord
   include DateTimeAccessor
 
@@ -151,7 +153,7 @@ class Reservation < ApplicationRecord
   end
 
   def reservation_popup_url
-    Rails.application.routes.url_helpers.lines_user_bot_schedules_url(business_owner_id: user.id, reservation_id: id)
+    Rails.application.routes.url_helpers.lines_user_bot_schedules_url(business_owner_id: user.id, reservation_id: id, encrypted_user_id: MessageEncryptor.encrypt(user.id, expires_at: 1.week.from_now))
   end
 
   def notifiable?
