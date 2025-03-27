@@ -313,3 +313,4 @@ ja:
     this_service_is_line_integration_required: "このサービスはLINE連携が必要です。"
     email_mismatch: "メールアドレスが一致しません"
     code_required: "確認コードが必要です"
+    something_went_wrong_message: "発生錯誤，請稍後再試。もし問題が続く場合は、お問い合わせください。"

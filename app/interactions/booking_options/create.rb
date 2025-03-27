@@ -28,27 +28,28 @@ module BookingOptions
         if new_option_id
           new_booking_option = BookingOption.find(new_option_id)
         else
-          menu = if new_menu_id
-            Menu.find(new_menu_id)
-          else
+          menu =
+            if new_menu_id
+              Menu.find(new_menu_id)
+            else
               category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
               compose(
-              Menus::Update,
-              menu: user.menus.new,
-              attrs: {
-                name: new_menu_name,
-                short_name: new_menu_name,
-                minutes: new_menu_minutes,
-                online: new_menu_online_state,
-                interval: 0,
-                min_staffs_number: 1,
-                category_ids: [category.id],
-                shop_menus_attributes: [ { shop_id: shop.id, max_seat_number: new_menu_max_seat_number } ],
-                staff_menus_attributes: [ { staff_id: user.current_staff(user).id, priority: 0, max_customers: 1 } ]
-              },
-              reservation_setting_id: reservation_setting.id,
-              menu_reservation_setting_rule_attributes: { start_date: Date.today }
-            )
+                Menus::Update,
+                menu: user.menus.new,
+                attrs: {
+                  name: new_menu_name,
+                  short_name: new_menu_name,
+                  minutes: new_menu_minutes,
+                  online: new_menu_online_state,
+                  interval: 0,
+                  min_staffs_number: 1,
+                  category_ids: [category.id],
+                  shop_menus_attributes: [ { shop_id: shop.id, max_seat_number: new_menu_max_seat_number } ],
+                  staff_menus_attributes: [ { staff_id: user.current_staff(user).id, priority: 0, max_customers: 1 } ]
+                },
+                reservation_setting_id: reservation_setting.id,
+                menu_reservation_setting_rule_attributes: { start_date: Date.today }
+              )
           end
 
           default_booking_option_attrs = {

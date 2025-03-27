@@ -52,6 +52,11 @@ const NewBookingOption =({props}) => {
   const onSubmit = async (data) => {
     console.log(data)
 
+    // Ensure booking_page_ids is always an array, even with a single value
+    if (data.booking_page_ids && !Array.isArray(data.booking_page_ids)) {
+      data.booking_page_ids = [data.booking_page_ids]
+    }
+
     const [error, response] = await CommonServices.create({
       url: Routes.lines_user_bot_booking_options_path(props.business_owner_id, {format: "json"}),
       data: data

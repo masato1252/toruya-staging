@@ -10,11 +10,11 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   def create
     outcome = ::BookingOptions::Create.run(params.permit!.to_h.merge(user: Current.business_owner))
 
-    flash[:success] = I18n.t("common.create_successfully_message")
-
     if outcome.valid? && outcome.result&.id
+      flash[:success] = I18n.t("common.create_successfully_message")
       render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(outcome.result.id, business_owner_id: business_owner_id) })
     else
+      flash[:error] = I18n.t("common.something_went_wrong_message")
       render json: json_response(outcome, { redirect_to: lines_user_bot_booking_options_path(business_owner_id: business_owner_id) })
     end
   end

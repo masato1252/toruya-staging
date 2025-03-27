@@ -315,3 +315,4 @@ tw:
     this_service_is_line_integration_required: "此服務需要完成與LINE整合的設定。"
     email_mismatch: "請輸入相同的電子郵件地址"
     code_required: "需要驗證碼"
+    something_went_wrong_message: "發生錯誤，請稍後再試。如果問題持續發生，請聯繫我們。"
