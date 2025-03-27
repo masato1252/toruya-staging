@@ -63,6 +63,10 @@ class BookingOption < ApplicationRecord
       booking_option_menus.any?
   end
 
+  def expired?
+    end_at.present? && end_at < Time.current
+  end
+
   def sellable_on?(date)
     (start_at.nil? || start_at.to_date <= date) &&
       (end_at.nil? || end_at.to_date >= date) &&

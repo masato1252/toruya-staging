@@ -46,6 +46,11 @@
                     <%= I18n.t("settings.booking_page.form.form_errors.no_menu") %>
                   </div>
                 <% end %>
+                <% if booking_option.expired? %>
+                  <div class="warning">
+                    <%= I18n.t("settings.booking_option.form.form_errors.expired") %>
+                  </div>
+                <% end %>
 
                 <% booking_option.menus.each do |menu| %>
                   <% if menu.shop_menus.map(&:shop_id).exclude?(@booking_page.shop_id) %>
@@ -136,7 +141,12 @@
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_time), title: @booking_page.specific_booking_start_times.present? ? @booking_page.specific_booking_start_times.join(", ") : "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %>
 
         <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_available_period_label") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_available_period), title: I18n.t("settings.booking_page.form.booking_available_period", bookable_restriction_months: @booking_page.bookable_restriction_months, booking_limit_day: @booking_page.booking_limit_day) %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_available_period), klass: @booking_page.ended? ? "border-red border-solid" : "" do %>
+          <span><%= I18n.t("settings.booking_page.form.booking_available_period", bookable_restriction_months: @booking_page.bookable_restriction_months, booking_limit_day: @booking_page.booking_limit_day) %></span>
+          <% if @booking_page.ended? %>
+            <div class="danger"><%= I18n.t("settings.booking_page.form.form_errors.expired") %></div>
+          <% end %>
+        <% end %>
 
         <% if support_online_payment? %>
           <div class="field-group-header" id="payment_option"><%= I18n.t("settings.booking_page.form.payment_option") %></div>

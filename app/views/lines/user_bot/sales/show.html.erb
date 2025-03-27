@@ -22,8 +22,12 @@
             </div>
             <div class="desc">
               <%= t("user_bot.dashboards.online_service_creation.solutions.#{@sale_page.solution_type}.title") unless @sale_page.is_booking_page? %>
-              (<%= l(@sale_page.created_at) %>)
             </div>
+            <% if @sale_page.is_booking_page? && @sale_page.product.ended? %>
+              <div class="danger">
+                <%= I18n.t("settings.booking_page.form.form_errors.expired") %>
+              </div>
+            <% end %>
           </div>
         </div>
 

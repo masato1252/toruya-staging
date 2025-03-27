@@ -521,6 +521,7 @@ ja:
           ticket_max_price_limit: 5万円以上の場合オンライン精算はご利用いただけません。
           no_menu: この予約価格を使用するには、少なくとも1つのメニューを作成する必要があります
           no_booking_page: この予約価格を表示するには、少なくとも1つの予約ページを設定する必要があります。
+          expired: この予約価格は終了しています。
     booking_page:
       title: 予約ページの設定
       info_html: 予約ページを設定します。<br>お客様はここで設定したページからオンライン予約します。
@@ -706,6 +707,7 @@ ja:
           invalid_menu_html: "この予約価格に設定されているメニューには、%{shop_name}が利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。<a href=%{url}>メニュー設定</a>ページより%{shop_name}を利用店舗として設定してください。"
           no_booking_option: この予約ページを使用するには、少なくとも1つの予約価格を作成する必要があります
           no_menu: メニューが設定されていない予約価格があります。
+          expired: この予約ページは終了しています。
     social_rich_menus:
       action_types:
         incoming_reservations: 全ての予約

@@ -521,6 +521,7 @@ tw:
           ticket_max_price_limit: 超過5萬元的情況下無法使用線上結帳。
           no_menu: 使用此預約項目時，至少需要建立一個服務。
           no_booking_page: 至少需要設定一個預約頁面，此服務才會顯示在預約頁面上。
+          expired: 此預約項目已結束銷售。
     booking_page:
       title: 預約頁面設定
       info_html: 設定預約頁面。<br>客戶將透過您在此設定的頁面進行線上預約。
@@ -707,6 +708,7 @@ tw:
           invalid_menu_html: "此預約項目中設定的服務項目可能無法在%{shop_name}正確顯示，因為該店舖尚未被設定為可使用的店舖。請前往<a href=%{url}>服務設定</a>頁面，將%{shop_name}設定為可使用的店舖。"
           no_booking_option: 您需要至少設定一個預約項目才能開始使用此預約頁面。
           no_menu: 此預約項目未設定任何服務。
+          expired: 此預約頁面已結束銷售。
     social_rich_menus:
       action_types:
         incoming_reservations: 所有預約
