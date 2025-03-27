@@ -80,8 +80,8 @@ class LinesController < ActionController::Base
 
   def authenticate_social_user
     if user_bot_cookies(:social_service_user_id)
-      @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
-      redirect_to root_path
+      @social_user ||= SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+      redirect_to root_path if @social_user
     end
   end
 end
