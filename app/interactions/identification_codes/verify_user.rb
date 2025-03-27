@@ -27,9 +27,9 @@ module IdentificationCodes
             Notifiers::Users::LineUserSignedIn.run(receiver: social_user)
           end
         end
-      end
 
-      identification_code
+        identification_code
+      end
     end
 
     private

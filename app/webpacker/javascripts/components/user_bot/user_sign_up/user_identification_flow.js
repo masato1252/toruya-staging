@@ -270,7 +270,6 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
       <h2 className="centerize">
         {page_title}
       </h2>
-      <p className="centerize desc margin-around" dangerouslySetInnerHTML={{ __html: trial_info_html }} />
       {render()}
     </form>
   )

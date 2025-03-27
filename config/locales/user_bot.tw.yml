@@ -5,7 +5,6 @@ tw:
       user_sign_up:
         reminder_message: 使用者註冊已完成！
         page_title: 使用者註冊
-        trial_info_html: 從使用者註冊起30天內<br />可免費使用
         name: 姓名
         last_name: 姓
         first_name: 名

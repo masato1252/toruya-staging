@@ -5,7 +5,6 @@ ja:
       user_sign_up:
         reminder_message: ユーザー登録が完了しました！
         page_title: ユーザー登録
-        trial_info_html: ユーザー登録から30日間<br />無料でご利用いただけます
         name: お名前
         last_name: 姓
         first_name: 名
