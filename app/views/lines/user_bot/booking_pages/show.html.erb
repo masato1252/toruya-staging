@@ -21,6 +21,7 @@
         </div>
         <% @booking_page.booking_page_options.includes(booking_option: { menus: :shop_menus }).each do |booking_page_option| %>
           <% booking_option = booking_page_option.booking_option %>
+          <% next if booking_option.nil? %>
           <div class="field-row option-row">
             <div class="option-info">
               <%= link_to booking_option.name, lines_user_bot_booking_option_path(business_owner_id, booking_option, {
