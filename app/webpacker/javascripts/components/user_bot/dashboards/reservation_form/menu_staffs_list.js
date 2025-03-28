@@ -35,7 +35,14 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
             data[menu_index]["menu_required_time"] = option.minutes
             data[menu_index]["menu_interval_time"] = option.interval
             data[menu_index]["menu_online"] = option.online
-            data[menu_index]["staff_ids"] = arrayWithLength(Math.max(option.min_staffs_number, 1), { staff_id: "" })
+
+            // If there's only one staff option, automatically select it
+            if (props.reservation_properties.staff_options.length === 1) {
+              const onlyStaff = props.reservation_properties.staff_options[0];
+              data[menu_index]["staff_ids"] = [{ staff_id: onlyStaff.value }];
+            } else {
+              data[menu_index]["staff_ids"] = arrayWithLength(Math.max(option.min_staffs_number, 1), { staff_id: "" })
+            }
 
             dispatch({
               type: "UPDATE_MENU_STAFFS_LIST",
@@ -67,7 +74,8 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
 
         {menu_staffs_fields.staff_ids.map((staff_field, staff_index) => {
           return (
-            <div key={`${menu_index}-${staff_index}`}>
+            <div className="menu-staff-row" key={`${menu_index}-${staff_index}`}>
+              <div className="menu-staff-field-label">{props.i18n.select_a_staff}</div>
               <select
                 onChange={(event) => {
                   const data = [...menu_staffs_list];

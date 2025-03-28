@@ -49,11 +49,13 @@
           width: 98%;
         }
 
-        .menu-field-row {
+        .menu-field-row,
+        .menu-staff-row {
           display: flex;
           justify-content: space-between;
 
-          .menu-field-label {
+          .menu-field-label,
+          .menu-staff-field-label {
             padding: 6px;
           }
         }
