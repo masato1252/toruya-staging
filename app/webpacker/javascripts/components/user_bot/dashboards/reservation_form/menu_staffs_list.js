@@ -18,19 +18,6 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
       data-controller="collapse"
       data-collapse-status="open"
     >
-      <div
-        className="menu-option-header"
-        data-action="click->collapse#toggle">
-        <span className="menu-option-info-name">
-          <DragHandle />
-          {menu_staffs_fields.menu?.label || props.i18n.select_a_menu}
-        </span>
-        <span className="menu-option-details-toggler">
-          {menu_staffs_fields.menu_required_time}{props.i18n.minute}
-          <a className="toggler-link" data-target="collapse.openToggler"><i className="fa fa-chevron-up" aria-hidden="true"></i></a>
-          <a className="toggler-link" data-target="collapse.closeToggler"><i className="fa fa-chevron-down" aria-hidden="true"></i></a>
-        </span>
-      </div>
       <div className="menu-option-content" data-target="collapse.content">
         <ReactSelect
           className="menu-select-container"
@@ -64,7 +51,6 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
             <input
               type="tel"
               placeholder={props.i18n.required_time}
-              className="extend"
               value={menu_staffs_fields.menu_required_time || ""}
               onChange={((event) => {
                 const data = [...menu_staffs_list];
@@ -103,58 +89,64 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
                   </option>
                 ))}
               </select>
-              <div
-                className="delete-staff-block"
-                onClick={() => {
-                  const data = [...menu_staffs_list];
-                  data[menu_index]["staff_ids"] = [
-                    ...menu_staffs_list[menu_index]["staff_ids"].slice(0, staff_index),
-                    ...menu_staffs_list[menu_index]["staff_ids"].slice(staff_index + 1)
-                  ]
+              {menu_staffs_fields.staff_ids.length > 1 && (
+                <div
+                  className="delete-staff-block"
+                  onClick={() => {
+                    const data = [...menu_staffs_list];
+                    data[menu_index]["staff_ids"] = [
+                      ...menu_staffs_list[menu_index]["staff_ids"].slice(0, staff_index),
+                      ...menu_staffs_list[menu_index]["staff_ids"].slice(staff_index + 1)
+                    ]
 
-                  dispatch({
-                    type: "UPDATE_MENU_STAFFS_LIST",
-                    payload: [...data]
-                  })
-                }}>
+                    dispatch({
+                      type: "UPDATE_MENU_STAFFS_LIST",
+                      payload: [...data]
+                    })
+                  }}>
 
-                <button className="btn btn-orange">
-                  <i className="fa fa-minus"></i>
-                </button>
-              </div>
+                  <button className="btn btn-orange">
+                    <i className="fa fa-minus"></i>
+                  </button>
+                </div>
+              )}
               {displayErrors(reservation_errors, [`reservation_form[menu_staffs_list][${menu_index}]staff_ids[${staff_index}][staff_id]`])}
             </div>
           )
         })}
 
-          <div
-            className="add-staff-block"
-            onClick={() => {
-              const data = [...menu_staffs_list];
+          {props.reservation_properties.staff_options.length > 1 && (
+            <div
+              className="add-staff-block"
+              onClick={() => {
+                const data = [...menu_staffs_list];
 
-              data[menu_index]["staff_ids"] = [...data[menu_index]["staff_ids"], {staff_id: null}]
+                data[menu_index]["staff_ids"] = [...data[menu_index]["staff_ids"], {staff_id: null}]
 
-              dispatch({
-                type: "UPDATE_MENU_STAFFS_LIST",
-                payload: [...data]
-              })
-            }}>
-            <button className="btn btn-yellow">
-              <i className="fa fa-user-plus" aria-hidden="true"></i> <span>{props.i18n.add_a_staff}</span>
-            </button>
-          </div>
-          <div
-            className="remove-menu-block"
-            onClick={() => {
-              dispatch({
-                type: "UPDATE_MENU_STAFFS_LIST",
-                payload: [...menu_staffs_list.slice(0, menu_index), ...menu_staffs_list.slice(menu_index + 1)]
-              })
-            }}>
-            <button className="btn btn-orange">
-              <i className="fa fa-minus"></i> <span>{props.i18n.delete_a_menu}</span>
-            </button>
-          </div>
+                dispatch({
+                  type: "UPDATE_MENU_STAFFS_LIST",
+                  payload: [...data]
+                })
+              }}>
+              <button className="btn btn-yellow">
+                <i className="fa fa-user-plus" aria-hidden="true"></i> <span>{props.i18n.add_a_staff}</span>
+              </button>
+            </div>
+          )}
+          {menu_staffs_list.length > 1 && (
+            <div
+              className="remove-menu-block"
+              onClick={() => {
+                dispatch({
+                  type: "UPDATE_MENU_STAFFS_LIST",
+                  payload: [...menu_staffs_list.slice(0, menu_index), ...menu_staffs_list.slice(menu_index + 1)]
+                })
+              }}>
+              <button className="btn btn-orange">
+                <i className="fa fa-minus"></i> <span>{props.i18n.delete_a_menu}</span>
+              </button>
+            </div>
+          )}
       </div>
     </div>
   )

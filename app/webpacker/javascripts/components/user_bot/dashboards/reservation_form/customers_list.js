@@ -47,7 +47,7 @@ const ReservationCustomersList = () =>  {
   return (
     <>
       <div className="field-header space-between">
-        {i18n.reservation_customers_title}
+        &nbsp;
         <span className="customers-seats-state">
           <span>{i18n.reserved}</span>
           <span className={`number ${customers_number() > customer_max_load_capability ? "warning" : ""}`}>{customers_number()}</span>

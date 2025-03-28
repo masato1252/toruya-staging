@@ -58,7 +58,7 @@
   <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approval_flow: @reservations_approval_flow, date: @date, my_calendar: @my_calendar, related_user_ids: @related_user_ids %>
   <div class="margin-around centerize">
     <a href="#" data-toggle="modal" data-target="#schedule-modal" class="btn btn-yellow">
-      <%= I18n.t("user_bot.dashboards.schedules.new_schedule") %>
+      <%= t("user_bot.dashboards.schedules.new_schedule") %>
     </a>
   </div>
   <%= render "lines/user_bot/schedules/schedule_modal", my_calendar: @my_calendar %>

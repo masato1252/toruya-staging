@@ -1,46 +1,53 @@
-<%= react_component("user_bot/dashboards/reservation_form", {
-  props: {
-    business_owner_id: business_owner_id,
-    params: params,
-    from: request.referrer,
-    book_next_time: params[:book_next_time],
-    timezone: Time.zone.tzinfo.name,
-    locale: I18n.locale,
-    calendar: {
-      dayNames: I18n.t("date.abbr_day_names"),
-      monthNames: I18n.t("date.abbr_month_names").compact
-    },
-    reservation_properties: {
-      current_staff_name: current_user.current_staff.name,
-      is_editable: ability(@reservation.shop.user, @reservation.shop).can?(:edit, @reservation),
-      existing_staff_states: @staff_states,
-      menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number, :online),
-      staff_options: custom_options(@staff_options),
-      reservation_staff_states: {
-        pending_state: ReservationStaff::PENDING_STATE,
-        accepted_state: ReservationStaff::ACCEPTED_STATE
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <%= react_component("user_bot/dashboards/reservation_form", {
+        props: {
+          business_owner_id: business_owner_id,
+          params: params,
+          from: request.referrer,
+          book_next_time: params[:book_next_time],
+          timezone: Time.zone.tzinfo.name,
+          locale: I18n.locale,
+          calendar: {
+            dayNames: I18n.t("date.abbr_day_names"),
+            monthNames: I18n.t("date.abbr_month_names").compact
+          },
+          reservation_properties: {
+            current_staff_name: current_user.current_staff.name,
+            is_editable: ability(@reservation.shop.user, @reservation.shop).can?(:edit, @reservation),
+            existing_staff_states: @staff_states,
+            menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number, :online),
+            staff_options: custom_options(@staff_options),
+            reservation_staff_states: {
+              pending_state: ReservationStaff::PENDING_STATE,
+              accepted_state: ReservationStaff::ACCEPTED_STATE
+            },
+          },
+          reservation_form: @reservation.attributes.slice("id", "memo", 'meeting_url').merge!({
+            shop: @reservation.shop.attributes,
+            reservation_id: @reservation.id,
+            start_time_date_part: @reservation.start_time_date || @reservation.start_time_date_part,
+            start_time_time_part: @reservation.start_time_time || @reservation.start_time_time_part,
+            end_time_date_part: @reservation.end_time_date,
+            end_time_time_part: @reservation.end_time_time,
+            menu_staffs_list: @menu_staffs_list,
+            staff_states: @staff_states.uniq,
+            customers_list: @customers_list,
+            by_staff_id: @reservation.by_staff_id.presence || Current.user.current_staff.id
+          }),
+          i18n: {
+          }.merge!([
+            t("reservation"),
+            t("user_bot.dashboards.reservation"),
+            t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar, :meeting_url),
+            t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
+          ].inject(:merge))
+        }
       },
-    },
-    reservation_form: @reservation.attributes.slice("id", "memo", 'meeting_url').merge!({
-      shop: @reservation.shop.attributes,
-      reservation_id: @reservation.id,
-      start_time_date_part: @reservation.start_time_date || @reservation.start_time_date_part,
-      start_time_time_part: @reservation.start_time_time || @reservation.start_time_time_part,
-      end_time_date_part: @reservation.end_time_date,
-      end_time_time_part: @reservation.end_time_time,
-      menu_staffs_list: @menu_staffs_list,
-      staff_states: @staff_states.uniq,
-      customers_list: @customers_list,
-      by_staff_id: @reservation.by_staff_id.presence || Current.user.current_staff.id
-    }),
-    i18n: {
-    }.merge!([
-      t("reservation"),
-      t("user_bot.dashboards.reservation"),
-      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar, :meeting_url),
-      t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
-    ].inject(:merge))
-  }
-},
-{ camelize_props: false }
-) %>
+      { camelize_props: false }
+      ) %>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

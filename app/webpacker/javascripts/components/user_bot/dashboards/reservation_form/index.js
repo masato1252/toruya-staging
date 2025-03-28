@@ -206,7 +206,7 @@ const Form = () => {
         title={props.reservation_form.reservation_id ? `${i18n.edit_reservation} - ${props.reservation_form.shop.short_name}` : `${i18n.new_reservation} - ${props.reservation_form.shop.short_name}`}
       />
       <div className="form-body">
-        <div className="field-header">{i18n.reservation_time}</div>
+        <div className="field-header">&nbsp;</div>
         <div className="field-row"
           onClick={() => {
             $("#calendar-modal").modal("show");
@@ -248,7 +248,7 @@ const Form = () => {
             <StaffStates />
           </span>
         </div>
-        <div className="field-header">{i18n.reservation_content}</div>
+        <div className="field-header">&nbsp;</div>
         <MenuStaffsList
           useDragHandle
           onSortEnd = {({oldIndex, newIndex}) => {
@@ -269,7 +269,7 @@ const Form = () => {
         )}
 
         <ReservationCustomersList />
-        <div className="field-header">{i18n.memo}</div>
+        <div className="field-header">&nbsp;</div>
         <textarea
           ref={register}
           name="memo"
