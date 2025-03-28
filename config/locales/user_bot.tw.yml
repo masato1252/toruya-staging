@@ -185,7 +185,7 @@ tw:
           website_label: 網站
           logo_label: Logo
           logo_limit_description: 390×135像素以內，30KB以下的PNG或GIF格式圖片
-          info_hint: 顯示在銷售頁面、預約頁面和數位產品中
+          info_hint: 顯示在銷售頁面、預約頁面和數位商品中
           phone_number_hint_html: "如果留空，「聯絡我們」選單中的<br>「撥打電話」按鈕將不會顯示。"
         custom_messages:
           auto_message: 自動發送訊息
@@ -228,7 +228,7 @@ tw:
             after_days_word: 天後
             timing_required: 需要送信時間設定
           online_service:
-            section_title: 數位產品
+            section_title: 數位商品
             service_page_title: 產品頁面
             online_service_purchased: 服務註冊
             after_days: 服務註冊%{after_days}天後
@@ -380,7 +380,7 @@ tw:
         stripe:
           title: 線上付款
           connection_title: Stripe帳戶連結
-          stripe_desc1_html: 連結Stripe帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的數位產品。
+          stripe_desc1_html: 連結Stripe帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的數位商品。
           stripe_desc2_html: 如果您還沒有Stripe帳戶，<br />請先註冊一個帳戶。
           owner_warning: 成員帳戶無法連結Stripe。請聯繫帳戶擁有者進行連結設定。
           default_payment_button: 將此付款方式設為預設
@@ -388,7 +388,7 @@ tw:
         square:
           title: 線上結算
           connection_title: Square帳戶連結
-          square_desc1_html: 連結Square帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的數位產品。
+          square_desc1_html: 連結Square帳戶後，<br />您可以在預約時收取費用<br />或銷售付費的數位商品。
           square_desc2_html: 如果您還沒有Square帳戶，<br />請先註冊一個帳戶。
           owner_warning: 成員帳戶無法連結Square。請聯繫帳戶擁有者進行連結設定。
           default_payment_button: 將此付款方式設為預設
@@ -445,7 +445,7 @@ tw:
           schedule_at_title: 發送時間
           schedule_at_subtitle: 發送時間
       services:
-        online_service: 數位產品
+        online_service: 數位商品
         service_page: 產品頁面
         service_about: 服務概要
         service_item: 服務
@@ -522,7 +522,7 @@ tw:
         schedule_step: 發送時間
         what_is_your_audiences: 此訊息要發送給誰？
         target_reservation_customers: 依預約項目發送
-        target_service_customers: 依數位產品使用狀況發送
+        target_service_customers: 依數位商品使用狀況發送
         target_customers_by_data: 依客戶資料發送
         all_customers: 所有客戶
         all_customers_desc: 所有已連結客戶資訊的LINE好友
@@ -738,7 +738,7 @@ tw:
           what_to_sale: 你想行銷什麼產品
           online_booking: 線上預約服務
           add_sale_page_to_sell_more: 行銷頁面可以添加服務介紹，客戶評價，常見問題等等的相關資訊
-          online_service: 數位產品
+          online_service: 數位商品
           online_service_to_sell_more: 行銷頁面可以添加產品介紹，客戶評價，常見問題等等的相關資訊
           how_to_sell: 小提示：即使是相同的產品，也可以建立多個銷售頁面，在不同管道行銷。
         online_service_creation:
