@@ -86,6 +86,7 @@ ja:
         line_info: LINE名
         create_customer_manually_notice: お客様に予約ページを直接共有することで、手動での顧客データ作成が不要になります。
         share_booking_page: 予約ページを共有
+        new_schedule: 新しい予約・予定を追加
       settings:
         payment_required: 有料プランが必要です
         line_verification_required: LINE認証が必要です

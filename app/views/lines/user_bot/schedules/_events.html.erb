@@ -84,6 +84,7 @@
       <% end %>
     </div>
   <% end %>
+
 </div>
 <% #event used css table design, the off_date_modal used, either, that causes some conflict %>
 <% schedules.select{|s| s[:type] == :off_schedule || s[:type] == :open_schedule}.each do |schedule| %>
