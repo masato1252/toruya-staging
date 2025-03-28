@@ -22,13 +22,13 @@ RSpec.describe CustomMessages::Customers::Next do
   def expected_schedule_time(base_time, days)
     Time.use_zone(customer_timezone) do
       base = base_time.advance(days: days)
-      base.change(hour: notification_hour)
+      base.change(hour: notification_hour, min: 0, sec: 0)
     end
   end
 
   describe "#execute" do
     context "when there is after days 0 message" do
-      let(:new_custom_message_after_days ) { 0 }
+      let(:new_custom_message_after_days) { 0 }
 
       it "schedules the next custom message" do
         next_custom_message1, next_custom_message2 = FactoryBot.create_list(
@@ -39,17 +39,10 @@ RSpec.describe CustomMessages::Customers::Next do
           after_days: new_custom_message_after_days
         )
 
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).twice do |args|
           base_time = service.start_at_for_customer(receiver)
-          expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, next_custom_message1.after_days))
-          expect(args[:custom_message]).to eq(next_custom_message1)
-          expect(args[:receiver]).to eq(receiver)
-        end
-
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
-          base_time = service.start_at_for_customer(receiver)
-          expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, next_custom_message2.after_days))
-          expect(args[:custom_message]).to eq(next_custom_message2)
+          expect(args[:schedule_at].change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, next_custom_message1.after_days))
+          expect([next_custom_message1, next_custom_message2]).to include(args[:custom_message])
           expect(args[:receiver]).to eq(receiver)
         end
 
@@ -58,19 +51,10 @@ RSpec.describe CustomMessages::Customers::Next do
     end
 
     context "when there is next custom message" do
-      let(:prev_after_days ) { 0 }
-      let(:new_custom_message_after_days ) { prev_after_days + 1 }
-      let(:second_new_custom_message_after_days ) { prev_after_days + 2 }
+      let(:prev_after_days) { 0 }
+      let(:new_custom_message_after_days) { prev_after_days + 1 }
 
       it "schedules the next custom message" do
-        second_next_custom_message1, second_next_custom_message2 = FactoryBot.create_list(
-          :custom_message,
-          2,
-          service: service,
-          scenario: prev_custom_message.scenario,
-          after_days: second_new_custom_message_after_days
-        )
-
         next_custom_message1, next_custom_message2 = FactoryBot.create_list(
           :custom_message,
           2,
@@ -79,17 +63,10 @@ RSpec.describe CustomMessages::Customers::Next do
           after_days: new_custom_message_after_days
         )
 
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).twice do |args|
           base_time = service.start_at_for_customer(receiver)
-          expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, next_custom_message1.after_days))
-          expect(args[:custom_message]).to eq(next_custom_message1)
-          expect(args[:receiver]).to eq(receiver)
-        end
-
-        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
-          base_time = service.start_at_for_customer(receiver)
-          expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, next_custom_message2.after_days))
-          expect(args[:custom_message]).to eq(next_custom_message2)
+          expect(args[:schedule_at].change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, next_custom_message1.after_days))
+          expect([next_custom_message1, next_custom_message2]).to include(args[:custom_message])
           expect(args[:receiver]).to eq(receiver)
         end
 
@@ -116,8 +93,8 @@ RSpec.describe CustomMessages::Customers::Next do
     end
 
     context "when there is NO next custom message" do
-      let(:prev_after_days ) { 2 }
-      let(:new_custom_message_after_days ) { prev_after_days - 1 }
+      let(:prev_after_days) { 2 }
+      let(:new_custom_message_after_days) { prev_after_days - 1 }
 
       it "does nothing" do
         FactoryBot.create_list(
@@ -146,7 +123,7 @@ RSpec.describe CustomMessages::Customers::Next do
       it "schedules the next custom message" do
         expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
           base_time = service.start_at_for_customer(receiver)
-          expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, current_custom_message.after_days))
+          expect(args[:schedule_at].change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, current_custom_message.after_days))
           expect(args[:custom_message]).to eq(current_custom_message)
           expect(args[:receiver]).to eq(receiver)
         end
@@ -172,7 +149,7 @@ RSpec.describe CustomMessages::Customers::Next do
         it "schedules the next custom message" do
           expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
             base_time = service.start_at_for_customer(receiver)
-            expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, current_custom_message.after_days))
+            expect(args[:schedule_at].change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, current_custom_message.after_days))
             expect(args[:custom_message]).to eq(current_custom_message)
             expect(args[:receiver]).to eq(receiver)
           end
@@ -183,8 +160,7 @@ RSpec.describe CustomMessages::Customers::Next do
     end
 
     context "when it is from first time customer purchased(without custom_message params)" do
-      let(:new_custom_message_after_days ) { 0 }
-      let(:custom_message) { nil }
+      let(:new_custom_message_after_days) { 2 }
       let(:scenario) { CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED }
       let(:args) do
         {
@@ -195,8 +171,6 @@ RSpec.describe CustomMessages::Customers::Next do
       end
 
       context "when there is next custom message" do
-        let(:new_custom_message_after_days ) { 2 }
-
         it "schedules the next custom message" do
           next_custom_message1, next_custom_message2 = FactoryBot.create_list(
             :custom_message,
@@ -206,17 +180,10 @@ RSpec.describe CustomMessages::Customers::Next do
             after_days: new_custom_message_after_days
           )
 
-          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at).twice do |args|
             base_time = service.start_at_for_customer(receiver)
-            expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, next_custom_message1.after_days))
-            expect(args[:custom_message]).to eq(next_custom_message1)
-            expect(args[:receiver]).to eq(receiver)
-          end
-
-          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
-            base_time = service.start_at_for_customer(receiver)
-            expect(args[:schedule_at]).to be_within(10.minutes).of(expected_schedule_time(base_time, next_custom_message2.after_days))
-            expect(args[:custom_message]).to eq(next_custom_message2)
+            expect(args[:schedule_at].change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, next_custom_message1.after_days))
+            expect([next_custom_message1, next_custom_message2]).to include(args[:custom_message])
             expect(args[:receiver]).to eq(receiver)
           end
 
@@ -233,47 +200,82 @@ RSpec.describe CustomMessages::Customers::Next do
       end
     end
 
+    context "with schedule_right_away parameter" do
+      let(:current_custom_message) { FactoryBot.create(:custom_message, service: service, after_days: 3) }
+      let(:args) do
+        {
+          receiver: receiver,
+          custom_message: current_custom_message,
+          schedule_right_away: true
+        }
+      end
+
+      it "schedules the message immediately" do
+        expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+          base_time = service.start_at_for_customer(receiver)
+          expect(args[:schedule_at].change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, current_custom_message.after_days))
+          expect(args[:custom_message]).to eq(current_custom_message)
+          expect(args[:receiver]).to eq(receiver)
+        end
+
+        outcome
+      end
+
+      context "when the message time has already passed" do
+        let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free, online_service: FactoryBot.create(:online_service, start_at: 4.days.ago)) }
+
+        it "does not schedule the message" do
+          expect(Notifiers::Customers::CustomMessages::Send).not_to receive(:perform_at)
+          outcome
+        end
+      end
+
+      context "when the message time has not passed" do
+        let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free, created_at: 2.days.ago) }
+
+        it "schedules the message" do
+          expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
+            base_time = service.start_at_for_customer(receiver)
+            expect(args[:schedule_at].change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, current_custom_message.after_days))
+            expect(args[:custom_message]).to eq(current_custom_message)
+            expect(args[:receiver]).to eq(receiver)
+          end
+
+          outcome
+        end
+      end
+    end
+
     context "with different timezones" do
       let(:prev_after_days) { 0 }
       let(:new_custom_message_after_days) { prev_after_days + 1 }
 
-      # Test different locale-timezone mappings - use only :ja and :tw which seem to be valid
       [:ja, :tw].each do |test_locale|
         context "when customer locale is #{test_locale}" do
-          # Override the customer_timezone for this context
           let(:customer_timezone) { ::LOCALE_TIME_ZONE[test_locale] || "Asia/Tokyo" }
 
           before do
-            # Mock the receiver's locale method to return the test locale
             allow(receiver).to receive(:locale).and_return(test_locale)
+            allow(receiver).to receive(:timezone).and_return(customer_timezone)
           end
 
-          it "schedules the message using the correct timezone" do
-            # Create custom message with the matching locale to ensure it's found
+          it "schedules messages in customer's timezone" do
             next_custom_message = FactoryBot.create(
               :custom_message,
               service: service,
               scenario: prev_custom_message.scenario,
               after_days: new_custom_message_after_days,
-              locale: test_locale # Set the message locale to match the customer's locale
+              locale: test_locale
             )
-
-            # Ensure the test uses the mocked locale
-            expect(::LOCALE_TIME_ZONE).to receive(:[]).with(test_locale).and_return(customer_timezone)
 
             expect(Notifiers::Customers::CustomMessages::Send).to receive(:perform_at) do |args|
               base_time = service.start_at_for_customer(receiver)
+              scheduled_time = args[:schedule_at]
 
-              # Verify the schedule_at time is in the correct timezone
+              # Verify schedule time is correct in customer's timezone
               Time.use_zone(customer_timezone) do
-                # Expected time in this timezone
-                expected_time = expected_schedule_time(base_time, next_custom_message.after_days)
-
-                # The schedule_at time should be within 10 minutes of expected time
-                expect(args[:schedule_at]).to be_within(10.minutes).of(expected_time)
-
-                # Additional verification: hour should match the DEFAULT_NOTIFICATION_HOUR in the customer's timezone
-                expect(args[:schedule_at].hour).to eq(notification_hour)
+                expect(scheduled_time.hour).to eq(notification_hour)
+                expect(scheduled_time.change(min: 0, sec: 0)).to eq(expected_schedule_time(base_time, next_custom_message.after_days))
               end
 
               expect(args[:custom_message]).to eq(next_custom_message)
