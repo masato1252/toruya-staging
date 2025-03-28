@@ -36,6 +36,16 @@ class Customers::Store < ActiveInteraction::Base
       customer = user.customers.new(params.merge(updated_by_user_id: current_user.id))
     end
 
+    # Normalize email addresses in emails_details
+    if customer.emails_details.present?
+      customer.emails_details = customer.emails_details.map do |email_detail|
+        if email_detail["value"].present?
+          email_detail["value"] = normalize_email(email_detail["value"])
+        end
+        email_detail
+      end
+    end
+
     customer.contact_group_id = user.contact_groups.first&.id if customer.contact_group_id.nil?
     unless customer.save
       customer.errors.each do |error|
@@ -50,5 +60,11 @@ class Customers::Store < ActiveInteraction::Base
     end
 
     customer
+  end
+
+  private
+
+  def normalize_email(email)
+    email.to_s.gsub('＠', '@')
   end
 end
