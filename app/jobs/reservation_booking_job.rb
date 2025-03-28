@@ -15,10 +15,7 @@ class ReservationBookingJob < ApplicationJob
     )
 
     # Get the customer's timezone for scheduling
-    customer_timezone = ::LOCALE_TIME_ZONE[customer.locale] || "Asia/Tokyo"
-
-    # Use the customer's timezone for all time-based operations
-    Time.use_zone(customer_timezone) do
+    Time.use_zone(customer.timezone) do
       scope = CustomMessage.scenario_of(booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER)
 
       # Schedule messages for before the reservation

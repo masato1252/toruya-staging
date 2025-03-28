@@ -412,6 +412,10 @@ class Customer < ApplicationRecord
     user.locale
   end
 
+  def timezone
+    user.timezone
+  end
+
   private
 
   def primary_value(values)

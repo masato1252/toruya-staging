@@ -16,10 +16,7 @@ module CustomMessages
       DEFAULT_NOTIFICATION_HOUR = 9
 
       def execute
-        # Ensure all time operations use the customer's timezone
-        user_timezone = ::LOCALE_TIME_ZONE[receiver.locale] || "Asia/Tokyo"
-
-        Time.use_zone(user_timezone) do
+        Time.use_zone(receiver.timezone) do
           if schedule_right_away
             send_schedule_message(custom_message)
           elsif next_custom_messages.exists?

@@ -21,11 +21,8 @@ module Broadcasts
         schedule_time = broadcast.schedule_at
 
         if schedule_time
-          # Get the user's timezone
-          user_timezone = ::LOCALE_TIME_ZONE[user.locale] || "Asia/Tokyo"
-
           # Use the user's timezone for scheduling
-          Time.use_zone(user_timezone) do
+          Time.use_zone(user.timezone) do
             # Schedule the broadcast ensuring timezone is preserved
             Broadcasts::Send.perform_at(
               schedule_at: schedule_time,

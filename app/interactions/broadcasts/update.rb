@@ -19,10 +19,7 @@ module Broadcasts
 
       if broadcast.saved_change_to_attribute?(:schedule_at)
         # Get the user's timezone for proper scheduling
-        user_timezone = ::LOCALE_TIME_ZONE[broadcast.user.locale] || "Asia/Tokyo"
-
-        # Use the user's timezone for scheduling the broadcast
-        Time.use_zone(user_timezone) do
+        Time.use_zone(broadcast.user.timezone) do
           Broadcasts::Send.perform_at(
             schedule_at: broadcast.schedule_at,
             broadcast: broadcast
