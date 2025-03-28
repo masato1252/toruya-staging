@@ -84,6 +84,7 @@ class Subscription < ApplicationRecord
   def in_paid_plan
     charge_required && expired_date && expired_date >= self.class.today
   end
+  alias_method :in_paid_plan?, :in_paid_plan
 
   def in_free_plan?
     plan_id == FREE_PLAN_ID

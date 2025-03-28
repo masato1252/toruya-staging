@@ -66,6 +66,13 @@ const UserSettingsEdit =({props}) => {
                 ({I18n.t("user_bot.dashboards.settings.payment_required")}， {I18n.t("user_bot.dashboards.settings.line_verification_required")})
               </span>
             </label>
+            {!props.is_paid_user && (
+              <div className="margin-around centerize">
+                <a href={Routes.lines_user_bot_settings_plans_path(props.business_owner_id, { upgrade: "basic" })} className="btn btn-yellow">
+                  {I18n.t("warnings.over_free_limit.upgrade_button")}
+                </a>
+              </div>
+            )}
           </>
         )
       case "line_contact_customer_name_required":
