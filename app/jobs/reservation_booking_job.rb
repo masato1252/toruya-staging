@@ -20,7 +20,7 @@ class ReservationBookingJob < ApplicationJob
 
       # Schedule messages for before the reservation
       scope.where.not(before_minutes: nil).each do |custom_message|
-        reminder_time = reservation.start_time.in_time_zone(customer_timezone).advance(minutes: -custom_message.before_minutes)
+        reminder_time = reservation.start_time.in_time_zone(customer.timezone).advance(minutes: -custom_message.before_minutes)
 
         Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
           schedule_at: reminder_time,
@@ -32,7 +32,7 @@ class ReservationBookingJob < ApplicationJob
 
       # Schedule messages for after the reservation
       scope.where.not(after_days: nil).each do |custom_message|
-        reminder_time = reservation.start_time.in_time_zone(customer_timezone).advance(days: custom_message.after_days)
+        reminder_time = reservation.start_time.in_time_zone(customer.timezone).advance(days: custom_message.after_days)
 
         Notifiers::Customers::CustomMessages::ReservationReminder.perform_at(
           schedule_at: reminder_time,
