@@ -202,6 +202,9 @@ const UserBotCustomerInfoForm = () => {
             <div className="field-row">
               <span className="warning">
                 {I18n.t("common.hint")}: {I18n.t("user_bot.dashboards.customer.create_customer_manually_notice")}
+                <a href={Routes.lines_user_bot_booking_pages_path(props.business_owner_id)} className="btn btn-tarco ml-2">
+                  {I18n.t("user_bot.dashboards.customer.share_booking_page")}
+                </a>
               </span>
             </div>
           )
