@@ -4,17 +4,24 @@
       <div class="booking-page-show form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), title: @booking_page.name %>
 
-        <div class="field-group-header" id="draft"><%= I18n.t("settings.booking_page.form.privacy_status") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :draft), title: @booking_page.draft ? I18n.t("settings.booking_page.form.private") : I18n.t("settings.booking_page.form.public") %>
+        <div class="field-group-header" id="basic_info"><%= I18n.t("settings.booking_page.form.basic_info_header") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :draft) do %>
+          <span><span><%= I18n.t("settings.booking_page.form.privacy_status") %>:</span> <span class="text-gray-500"><%= @booking_page.draft ? I18n.t("settings.booking_page.form.private") : I18n.t("settings.booking_page.form.public") %></span></span>
+        <% end %>
 
-        <div class="field-header"><%= I18n.t("settings.booking_page.form.page_name") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :name), title: @booking_page.name %>
-
-        <div class="field-header" id="title"><%= I18n.t("settings.booking_page.form.title_title") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :title), title: @booking_page.title %>
-
-        <div class="field-header" id="greeting"><%= I18n.t("settings.booking_page.form.greeting") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :greeting), title: @booking_page.greeting %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :name) do %>
+          <span><%= I18n.t("settings.booking_page.form.page_name") %>:</span><span class="text-gray-500"><%= @booking_page.name %></span>
+        <% end %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :title) do %>
+          <span><%= I18n.t("settings.booking_page.form.title_title") %>:</span><span class="text-gray-500"><%= @booking_page.title %></span>
+        <% end %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :greeting) do %>
+          <span><%= I18n.t("settings.booking_page.form.greeting") %>:</span><span class="text-gray-500"><%= @booking_page.greeting %></span>
+        <% end %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :note) do %>
+          <span><%= I18n.t("settings.booking_page.form.note_label") %>:</span>
+          <span class="text-gray-500"><%= @booking_page.note ? @booking_page.note : I18n.t("settings.booking_page.form.no_note") %></span>
+        <% end %>
 
         <div class="field-group-header" id="new_option">
           <%= I18n.t("settings.booking_page.form.booking_option_header") %>
@@ -94,7 +101,7 @@
           <% end %>
         </div>
 
-        <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_dates_available_booking_date") %></div>
+        <div class="field-group-header" id="booking_dates_available_booking_date"><%= I18n.t("settings.booking_page.form.booking_period_header") %></div>
         <%= render "lines/user_bot/field_row",
           path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_type),
           title: I18n.t("settings.booking_page.form.#{@booking_page.booking_type}_label") %>
@@ -138,49 +145,29 @@
           </div>
         <% end %>
 
-        <div class="field-header" id="interval"><%= I18n.t("settings.booking_page.form.interval_period_header") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_time), title: @booking_page.specific_booking_start_times.present? ? @booking_page.specific_booking_start_times.join(", ") : "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %>
-
-        <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_available_period_label") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_time) do %>
+          <span><%= I18n.t("settings.booking_page.form.interval_period_header") %>:</span>
+          <span class="text-gray-500"><%= @booking_page.specific_booking_start_times.present? ? @booking_page.specific_booking_start_times.join(", ") : "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %></span>
+        <% end %>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_available_period), klass: @booking_page.ended? ? "border-red border-solid" : "" do %>
-          <span><%= I18n.t("settings.booking_page.form.booking_available_period", bookable_restriction_months: @booking_page.bookable_restriction_months, booking_limit_day: @booking_page.booking_limit_day) %></span>
+          <span><%= I18n.t("settings.booking_page.form.booking_available_period_label") %>:</span>
+          <span class="text-gray-500"><%= I18n.t("settings.booking_page.form.booking_available_period", bookable_restriction_months: @booking_page.bookable_restriction_months, booking_limit_day: @booking_page.booking_limit_day) %></span>
           <% if @booking_page.ended? %>
             <div class="danger"><%= I18n.t("settings.booking_page.form.form_errors.expired") %></div>
           <% end %>
         <% end %>
 
-        <% if support_online_payment? %>
-          <div class="field-group-header" id="payment_option"><%= I18n.t("settings.booking_page.form.payment_option") %></div>
-          <%= render "lines/user_bot/field_row",
-            path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :payment_option),
-            title: I18n.t("settings.booking_page.form.payment_option_options.#{@booking_page.payment_option}") %>
+
+        <div class="field-group-header" id="customer_cancel_request"><%= I18n.t("settings.booking_page.form.customer_related_settings") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_cancel_request) do %>
+          <span><%= I18n.t("settings.booking_page.form.customer_cancel_request") %>:</span>
+          <span class="text-gray-500"><%= @booking_page.customer_cancel_request ? "#{@booking_page.customer_cancel_request_before_day} #{I18n.t("common.before_day_word")}" : I18n.t("settings.booking_page.form.not_customer_cancel_request_label") %></span>
         <% end %>
 
-        <div class="field-group-header" id="note"><%= I18n.t("settings.booking_page.form.note_label") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :note), title: @booking_page.note %>
-
-        <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %><span class="new-feature-label"><%= t("common.new_feature") %></span></div>
-        <%= render "lines/user_bot/field_row", path: lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %>
-
-        <div class="field-group-header" id="survey">
-          <%= t("settings.booking_page.form.survey") %>
-          <span class="new-feature-label"><%= t("common.new_feature") %></span>
-        </div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :survey), title: @booking_page.survey&.questions&.count ? t("settings.booking_page.form.survey_questions_count", count: @booking_page.survey.questions.count) : t("settings.booking_page.form.survey_questions_count_empty") %>
-
-        <div class="field-group-header" id="customer_cancel_request"><%= I18n.t("settings.booking_page.form.customer_cancel_request") %></div>
-        <%= render "lines/user_bot/field_row",
-          path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_cancel_request),
-          title: @booking_page.customer_cancel_request ? "#{I18n.t("settings.booking_page.form.customer_cancel_request_label")} (#{@booking_page.customer_cancel_request_before_day} #{I18n.t("common.before_day_word")})" : I18n.t("settings.booking_page.form.not_customer_cancel_request_label")
-        %>
-
-        <div class="field-group-header" id="multiple_selection"><%= I18n.t("settings.booking_page.form.multiple_selection") %></div>
-        <%= render "lines/user_bot/field_row",
-          path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :multiple_selection),
-          title: @booking_page.multiple_selection ? I18n.t("settings.booking_page.form.multiple_selection_label") : I18n.t("settings.booking_page.form.not_multiple_selection_label")
-        %>
-
-        <div class="field-group-header" id="social_account_skippable"><%= I18n.t("settings.booking_page.form.social_account_skippable") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :multiple_selection) do %>
+          <span><%= I18n.t("settings.booking_page.form.multiple_selection") %>:</span>
+          <span class="text-gray-500"><%= @booking_page.multiple_selection ? I18n.t("settings.booking_page.form.multiple_selection_label") : I18n.t("settings.booking_page.form.not_multiple_selection_label") %></span>
+        <% end %>
         <% if Current.business_owner.social_account&.line_settings_verified? %>
           <%= render "lines/user_bot/field_row",
             path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :social_account_skippable),
@@ -197,14 +184,33 @@
           </div>
         <% end %>
 
-        <div class="field-group-header" id="customer_address_required"><%= I18n.t("settings.booking_page.form.customer_address_required") %></div>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_address_required), title: @booking_page.customer_address_required ? I18n.t("settings.booking_page.form.customer_address_required_label") : I18n.t("settings.booking_page.form.not_customer_address_required_label") %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :customer_address_required) do %>
+          <span><%= I18n.t("settings.booking_page.form.customer_address_required") %>:</span>
+          <span class="text-gray-500"><%= @booking_page.customer_address_required ? I18n.t("settings.booking_page.form.customer_address_required_label") : I18n.t("settings.booking_page.form.not_customer_address_required_label") %></span>
+        <% end %>
 
-        <div class="field-group-header" id="overbooking_restriction"><%= I18n.t("settings.booking_page.form.overbooking") %></div>
+        <div class="field-group-header" id="overbooking_restriction"><%= I18n.t("settings.booking_page.form.others_settings") %></div>
+        <% if support_online_payment? %>
+          <%= render "lines/user_bot/field_row",
+            path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :payment_option) do %>
+            <span><%= I18n.t("settings.booking_page.form.payment_option") %>: <span class="text-gray-500"><%= I18n.t("settings.booking_page.form.payment_option_options.#{@booking_page.payment_option}") %></span></span>
+          <% end %>
+        <% end %>
+
+        <%= render "lines/user_bot/field_row", path: lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id) do %>
+          <span><%= t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %><span class="new-feature-label"><%= t("common.new_feature") %></span></span>
+        <% end %>
+
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :survey) do %>
+            <span><%= t("settings.booking_page.form.survey") %>:<span class="new-feature-label"><%= t("common.new_feature") %></span></span>
+            <span class="text-gray-500"><%= @booking_page.survey&.questions&.count ? t("settings.booking_page.form.survey_questions_count", count: @booking_page.survey.questions.count) : t("settings.booking_page.form.survey_questions_count_empty") %></span>
+        <% end %>
+
         <%= render "lines/user_bot/field_row",
-          path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :overbooking_restriction),
-          title: @booking_page.overbooking_restriction ? I18n.t("settings.booking_page.form.not_allow_overbooking_label") : I18n.t("settings.booking_page.form.allow_overbooking_label")
-        %>
+          path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :overbooking_restriction) do %>
+          <span><%= t("settings.booking_page.form.overbooking_restriction") %></span>
+          <span class="text-gray-500"><%= @booking_page.overbooking_restriction ? I18n.t("settings.booking_page.form.not_allow_overbooking_label") : I18n.t("settings.booking_page.form.allow_overbooking_label") %></span>
+        <% end %>
 
         <div class="action-block">
           <%= link_to lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>

@@ -542,6 +542,7 @@ tw:
         name_top_bar_header: 頁面標題
         page_name_hint: 這是您用來管理預約頁面的名稱。
         name_hint: 這是您用來管理預約頁面的名稱。
+        basic_info_header: 基本資訊
         title: 頁面標題
         title_title: 頁面標題
         title_top_bar_header: 頁面標題
@@ -580,8 +581,9 @@ tw:
         booking_dates_available_booking_date: 可預約日期
         special_dates: 可預約日期
         booking_type_title: 可預約日期
+        booking_period_header: 預約時間
         booking_dates_available_booking_datetime: 可預約的日期和時間
-        any_label: 接受所有可預約日期（建議）
+        any_label: 依營業時間
         add_special_dates_btn: 新增指定日期
         only_special_dates_booking_label: 僅接受指定日期
         event_booking_label: 僅在舉辦活動時（優先保留時段）
@@ -630,8 +632,8 @@ tw:
         allow_overbooking_label: 不論額滿與否都接受預約
         social_account_skippable_title: 客戶要有LINE才可預約
         social_account_skippable: 客戶要有LINE才可預約
-        social_account_skippable_label: 不用LINE也可預約(有電話號碼即可)
-        not_social_account_skippable_label: 必須要LINE才可預約
+        social_account_skippable_label: 客戶不用LINE也可預約(有電話號碼即可)
+        not_social_account_skippable_label: 客戶必須要有LINE才可預約
         need_to_verify_line_settings_to_change_setting: 需要先完成您的LINE設定，才能變更此設定。
         note_label: 說明與注意事項
         note: 說明與注意事項
@@ -701,6 +703,9 @@ tw:
         survey_required: 必填
         survey_add_question: 新增預約表單問題
         survey_save: 儲存
+        no_note: 尚未設定
+        customer_related_settings: 客戶相關設定
+        others_settings: 其他設定
         form_errors:
           start_at_too_late: 根據上述設定，您只能設定{datetime}之前的日期和時間
           end_at_too_early: 根據上述設定，您只能設定{datetime}之後的日期和時間

@@ -542,6 +542,7 @@ ja:
         name_top_bar_header: ページヘッダ
         page_name_hint: あなたが予約ページを管理する際に使用する名前です。
         name_hint: あなたが予約ページを管理する際に使用する名前です。
+        basic_info_header: 基本情報
         title: ページタイトル
         title_title: ページタイトル
         title_top_bar_header: ページヘッダ
@@ -578,7 +579,9 @@ ja:
         booking_dates_working_date: 営業日
         booking_dates_available_booking_date: 予約可能日
         special_dates: 予約可能日
+        booking_available_period_header: 予約時間
         booking_type_title: 予約可能日
+        booking_period_header: 予約時間
         booking_dates_available_booking_datetime: 予約可能な日時
         any_label: 全ての予約可能日に受付ける(推奨)
         add_special_dates_btn: 指定日を追加
@@ -629,8 +632,8 @@ ja:
         allow_overbooking_label: 満席数に関わらず予約を受け付ける
         social_account_skippable_title:  LINEログインせず予約
         social_account_skippable: LINEログインせず予約
-        social_account_skippable_label: 許可する
-        not_social_account_skippable_label: 許可しない
+        social_account_skippable_label: LINEログインなしでも予約可能（電話番号のみで可）
+        not_social_account_skippable_label: LINEログインが必須
         need_to_verify_line_settings_to_change_setting: この設定を変更するには、先にLINE設定を完了する必要があります。
         note_label: 説明・注意事項
         note: 説明・注意事項
@@ -700,6 +703,9 @@ ja:
         survey_required: 必須
         survey_add_question: 預約表單問題を追加
         survey_save: 保存
+        no_note: 未設定
+        customer_related_settings: 顧客関連設定
+        others_settings: その他設定
         form_errors:
           start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
