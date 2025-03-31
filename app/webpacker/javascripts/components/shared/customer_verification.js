@@ -1,5 +1,8 @@
 import React from "react";
 import PhoneInput from 'react-phone-input-2';
+
+import I18n from 'i18n-js/index.js.erb';
+
 import { ErrorMessage } from "shared/components";
 
 // Basic information form
