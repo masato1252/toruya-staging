@@ -85,10 +85,10 @@ const CustomerVerificationForm = ({
         ...prev,
         errors: {
           ...prev.errors,
-          customer_last_name_failed_message: !customer_last_name ? i18n.required_field || "Required" : null,
-          customer_first_name_failed_message: !customer_first_name ? i18n.required_field || "Required" : null,
+          customer_last_name_failed_message: !customer_last_name ? I18n.t("booking_page.message.customer_last_name_failed_message") || "Required" : null,
+          customer_first_name_failed_message: !customer_first_name ? I18n.t("booking_page.message.customer_first_name_failed_message") || "Required" : null,
           customer_phonetic_name_failed_message: support_phonetic_name && (!customer_phonetic_last_name || !customer_phonetic_first_name) ?
-            i18n.required_field || "Required" : null
+            I18n.t("booking_page.message.customer_phonetic_name_failed_message") || "Required" : null
         }
       }));
       return;
