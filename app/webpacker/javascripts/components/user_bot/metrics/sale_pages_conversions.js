@@ -63,7 +63,7 @@ const SalePagesConversionsMetric = ({demo, metric_path, is_phone}) => {
   return (
     <div className="container table">
       <div className="row">
-        <div className="col-sm-3 col-xs-12">{I18n.t("user_bot.dashboards.metrics.sale_page")}</div>
+        <div className="col-sm-3 col-xs-12">{I18n.t(`user_bot.dashboards.metrics.${page_label_key}`)}</div>
         <div className="col-sm-1 col-xs-12">{I18n.t("user_bot.dashboards.metrics.visit_count")}</div>
         <div className="col-sm-1 col-xs-12">{I18n.t("user_bot.dashboards.metrics.purchased_count")}</div>
         <div className="col-sm-1 col-xs-12">{I18n.t("user_bot.dashboards.metrics.conversion_rate")}</div>

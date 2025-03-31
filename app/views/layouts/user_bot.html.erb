@@ -64,7 +64,7 @@
         </li>
 
         <li class="p-1">
-          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /booking|menu/ do %>
+          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics).*(booking|menu)/ do %>
             <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
           <% end %>
 
@@ -138,7 +138,9 @@
 
           <ul class='nav'>
             <li>
-              <%= active_link_to t("sidebar.metrics.dashboard_title"), lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id) %>
+              <%= active_link_to t("sidebar.metrics.dashboard_title"),
+                    lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id),
+                    active: /\/metrics(\?.+)?$/ %>
             </li>
             <li>
               <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>

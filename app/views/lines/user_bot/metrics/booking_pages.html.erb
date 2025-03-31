@@ -1,6 +1,8 @@
 <div class="booking-pages form with-top-bar">
   <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.metrics.title") %>
 
+  <h2><%= I18n.t("user_bot.dashboards.metrics.weekly_sale_page_visit_count") %></h2>
+
   <div class="margin-around date-range-selector mb-4">
     <% default_start_date = params[:start_date].presence || 30.days.ago.to_date.to_s %>
     <% default_end_date = params[:end_date].presence || Date.today.to_s %>
@@ -32,6 +34,7 @@
       end_date: default_end_date
     }),
     is_phone: is_phone?,
+    page_label_key: "booking_page"
   },
   { camelize_props: false }) %>
 </div>

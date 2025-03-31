@@ -571,9 +571,11 @@ ja:
         conversion_count: 成約数
         revenue: 売上合計
         title: アクセス解析
-        sale_page: 頁面
+        sale_page: ページ名
+        booking_page: ページ名
+        online_service: サービス名
         visit_count: 表示数
-        purchased_count: 登録数
+        purchased_count: 予約数
         conversion_rate: 成約率
         total_revenue: 売上合計
         weekly_sale_page_visit_count: 解析情報
