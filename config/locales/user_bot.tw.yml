@@ -220,15 +220,15 @@ tw:
             reservation_confirmed: 當商家確認預約時
             booking_page_one_day_reminder: 24小時前提醒
             reservation_one_day_reminder: 24小時前提醒
-            before_minutes_title: 何時發送此訊息？
+            auto_message_delivery_time: 何時發送此訊息？
             before_reservation: 預約前
             before_minutes_word: 分鐘
             before_minutes_reminder: "服務開始 %{before_minutes} 分鐘前提醒"
             after_days_reminder: "服務結束 %{after_days} 天後提醒"
-            after_days_title: 服務後幾天發送？
             after_reservation: 預約後
             after_days_word: 天後
             timing_required: 需要送信時間設定
+            use_after_days_default_template: "%{customer_name}您好\n感謝您使用%{product_name}的服務。\n\n下次預約請點擊以下連結：\n%{booking_page_url}"
           online_service:
             section_title: 數位商品
             service_page_title: 產品頁面

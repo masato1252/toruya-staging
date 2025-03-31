@@ -27,6 +27,16 @@ const CustomMessageEdit =({props}) => {
     textareaRef.current.focus()
   }, [template.length])
 
+  useEffect(() => {
+    if (useAfterDays && template.length === 0) {
+      setTemplate(I18n.t("user_bot.dashboards.settings.custom_message.booking_page.use_after_days_default_template", {
+        customer_name: "%{customer_name}",
+        product_name: "%{product_name}",
+        booking_page_url: "%{booking_page_url}"
+      }))
+    }
+  }, [useAfterDays])
+
   const onDemo = async (data) => {
     await CustomMessageServices.demo({
       data: _.assign( data, {
@@ -130,8 +140,10 @@ const CustomMessageEdit =({props}) => {
           <>
             {
               props.scenario == 'booking_page_custom_reminder' || props.scenario == 'shop_custom_reminder' ? (
-                <div className="field-row">
-                  <div className="radio-group">
+                <>
+                  <div className="field-row">
+                    <div className="radio-group">
+                    {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.auto_message_delivery_time")}
                     <div className="radio-option">
                       <input
                         type="radio"
@@ -141,7 +153,6 @@ const CustomMessageEdit =({props}) => {
                         onChange={() => setUseAfterDays(false)}
                       />
                       <label htmlFor="before_minutes">
-                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_title")}<br />
                         {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.before_reservation")}
                         <input
                           type='tel'
@@ -164,7 +175,6 @@ const CustomMessageEdit =({props}) => {
                         onChange={() => setUseAfterDays(true)}
                       />
                       <label htmlFor="after_days">
-                        {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.after_days_title")}<br />
                         {I18n.t("user_bot.dashboards.settings.custom_message.booking_page.after_reservation")}
                         <input
                           type='tel'
@@ -179,6 +189,7 @@ const CustomMessageEdit =({props}) => {
                     </div>
                   </div>
                 </div>
+                </>
               ) : (
                 <div className="field-row">{I18n.t(`user_bot.dashboards.settings.custom_message.booking_page.${props.scenario}`)}</div>
               )

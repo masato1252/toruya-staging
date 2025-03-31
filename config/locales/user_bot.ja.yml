@@ -221,15 +221,15 @@ ja:
             reservation_confirmed: 予約確定時
             booking_page_one_day_reminder: 24時間前リマインダ
             reservation_one_day_reminder: 24時間前リマインダ
-            before_minutes_title: このメッセージをいつ送信しますか？
+            auto_message_delivery_time: このメッセージをいつ送信しますか？
             before_reservation: 予約の
             before_minutes_word: 分前
             before_minutes_reminder: "%{before_minutes} 分前リマインダ"
             after_days_reminder: "%{after_days} 日後リマインダ"
-            after_days_title: サービス開催、何日後に送信しますか？
             after_reservation: 予約の
             after_days_word: 日後
             timing_required: 送信時間を設定してください
+            use_after_days_default_template: "%{customer_name}様\nこの度は%{product_name}のご利用ありがとうございました。\n\n 次回のご予約は、以下のリンクよりご予約いただけます。\n%{booking_page_url}"
           online_service:
             section_title: オンラインサービス
             service_page_title: サービスページ

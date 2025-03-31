@@ -38,7 +38,7 @@ module CustomMessages
                      I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message")
                    end
 
-        if product&.is_a?(BookingPage) && product.shop.phone_number.present?
+        if template.present? && product&.is_a?(BookingPage) && product.shop.phone_number.present?
           template = "#{template}#{I18n.t("customer.notifications.sms.change_from_phone_number")}"
         end
 
