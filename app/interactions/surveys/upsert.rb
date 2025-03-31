@@ -55,6 +55,11 @@ module Surveys
               position: question_params[:position],
               deleted_at: nil
             )
+
+            # If question type is changed to text, soft delete all options
+            if question_params[:question_type] == 'text'
+              question.options.update_all(deleted_at: Time.current)
+            end
           else
             # Create new question
             question = @survey.questions.create!(

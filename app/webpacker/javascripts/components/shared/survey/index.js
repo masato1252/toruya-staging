@@ -125,11 +125,15 @@ const SurveyBuilder = ({ onSubmit, initialData = {}, skip_header = false }) => {
     setQuestions(newQuestions)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (isSubmitting) return
     setIsSubmitting(true)
-    onSubmit({ title, description, questions })
+    try {
+      await onSubmit({ title, description, questions })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -171,8 +175,7 @@ const SurveyBuilder = ({ onSubmit, initialData = {}, skip_header = false }) => {
                 editorClassName="survey-editor"
                 editorStyle={{
                   height: 'auto',
-                  minHeight: '36px',
-                  maxHeight: '200px',
+                  minHeight: '100px',
                   border: '1px solid #ddd',
                   borderRadius: '4px',
                   padding: '0px 8px',
@@ -187,7 +190,7 @@ const SurveyBuilder = ({ onSubmit, initialData = {}, skip_header = false }) => {
                 }}
                 toolbarCustomButtons={[]}
                 toolbar={{
-                  options: ['inline', 'list', 'link', 'fontSize', 'colorPicker'],
+                  options: ['inline', 'list', 'link'],
                   inline: {
                     options: ['bold', 'italic', 'underline'],
                     className: 'compact-toolbar-item',
@@ -205,22 +208,6 @@ const SurveyBuilder = ({ onSubmit, initialData = {}, skip_header = false }) => {
                     options: ['link', 'unlink'],
                     className: 'compact-toolbar-item',
                     dropdownClassName: 'compact-toolbar-dropdown'
-                  },
-                  fontSize: {
-                    options: [12, 14, 16, 18, 24]
-                  },
-                  colorPicker: {
-                    colors: ['rgb(97,189,109)', 'rgb(26,188,156)', 'rgb(84,172,210)', 'rgb(44,130,201)',
-                      'rgb(147,101,184)', 'rgb(71,85,119)', 'rgb(204,204,204)', 'rgb(65,168,95)',
-                      'rgb(0,168,133)', 'rgb(61,142,185)', 'rgb(41,105,176)', 'rgb(85,57,130)',
-                      'rgb(40,50,78)', 'rgb(0,0,0)',
-                      'rgb(255,0,0)', 'rgb(255,153,0)', 'rgb(255,255,0)', 'rgb(0,255,0)',
-                      'rgb(0,255,255)', 'rgb(0,0,255)', 'rgb(153,0,255)', 'rgb(255,0,255)',
-                      'rgb(244,67,54)', 'rgb(233,30,99)', 'rgb(156,39,176)', 'rgb(103,58,183)',
-                      'rgb(63,81,181)', 'rgb(33,150,243)', 'rgb(0,188,212)', 'rgb(0,150,136)',
-                      'rgb(76,175,80)', 'rgb(139,195,74)', 'rgb(205,220,57)', 'rgb(255,235,59)',
-                      'rgb(255,193,7)', 'rgb(255,152,0)', 'rgb(255,87,34)', 'rgb(121,85,72)'
-                    ]
                   }
                 }}
                 placeholder={I18n.t('settings.booking_page.form.survey_input_placeholder')}
@@ -243,7 +230,6 @@ const SurveyBuilder = ({ onSubmit, initialData = {}, skip_header = false }) => {
                 onChange={(e) =>
                   updateQuestion(questionIndex, 'question_type', e.target.value)
                 }
-                className="form-select"
               >
                 {Object.entries(QUESTION_TYPES).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -334,17 +320,22 @@ const SurveyBuilder = ({ onSubmit, initialData = {}, skip_header = false }) => {
         </div>
       ))}
 
-      <div className="form-actions">
+      <div className="form-actions centerize pb-6 solid border-solid border-0 border-b border-gray-300">
         <button
           type="button"
           className="btn btn-yellow mx-2"
           onClick={addQuestion}
         >
-          {I18n.t('settings.booking_page.form.survey_add_question')}
+          <i className="fas fa-plus"></i> {I18n.t('settings.booking_page.form.survey_add_question')}
         </button>
+      </div>
+      <div className="form-actions centerize pt-6 mb-3">
+        <div className="form-actions-desc">
+          <div dangerouslySetInnerHTML={{ __html: I18n.t('settings.booking_page.form.survey_save_desc_html') }} />
+        </div>
         <button
           type="submit"
-          className="btn btn-tarco"
+          className="btn btn-yellow"
           disabled={isSubmitting}
         >
           {I18n.t('settings.booking_page.form.survey_save')}

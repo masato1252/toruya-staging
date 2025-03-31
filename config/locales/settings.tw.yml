@@ -686,11 +686,11 @@ tw:
         public: 公開
         private: 不公開
         delete_page: 刪除頁面
-        survey: 預約表單
-        survey_title: 預約表單
-        survey_questions_count: "預約表單題目數: %{count}題"
-        survey_questions_count_empty: 尚未設定預約表單題目
-        survey_input_placeholder: 請輸入預約表單問題
+        survey: 問卷表單
+        survey_title: 問卷表單
+        survey_questions_count: "問卷表單題目數: %{count}題"
+        survey_questions_count_empty: 尚未設定問卷表單題目
+        survey_input_placeholder: 請輸入問卷表單問題
         survey_question_type_text: 文字回答
         survey_question_type_single_selection: 單選
         survey_question_type_multiple_selection: 複選
@@ -698,10 +698,11 @@ tw:
         survey_delete_option: 刪除選項
         survey_option_placeholder: "選項 %{index}"
         survey_add_option: 新增選項
-        survey_delete_question: 刪除預約表單問題
-        survey_answer_placeholder: 文字回答
+        survey_delete_question: 刪除問題
+        survey_answer_placeholder: 客戶文字回答
         survey_required: 必填
-        survey_add_question: 新增預約表單問題
+        survey_add_question: 新增問題
+        survey_save_desc_html: 顧客在預約時會看到此表單。
         survey_save: 儲存
         no_note: 尚未設定
         customer_related_settings: 客戶相關設定

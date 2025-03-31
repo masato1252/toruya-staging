@@ -131,5 +131,52 @@ RSpec.describe Surveys::Upsert do
       expect(survey_question.description).to eq('Updated question text')
       expect(survey_question.required).to be false
     end
+
+    it 'soft deletes options when question type is changed to text' do
+      # First create a survey with a selection question that has options
+      survey = described_class.run!(
+        user: user,
+        owner: booking_page,
+        title: 'Test Survey',
+        questions: [
+          {
+            description: 'Selection Question',
+            question_type: 'single_selection',
+            position: 1,
+            required: true,
+            options: [
+              { content: 'Option 1', position: 1 },
+              { content: 'Option 2', position: 2 }
+            ]
+          }
+        ]
+      )
+
+      # Get the question and verify it has options
+      question = survey.questions.first
+      expect(question.options.count).to eq(2)
+      original_option_ids = question.options.pluck(:id)
+
+      # Update the question type to text
+      described_class.run!(
+        user: user,
+        owner: booking_page,
+        survey: survey,
+        questions: [
+          {
+            id: question.id,
+            description: 'Now a text question',
+            question_type: 'text',
+            position: 1,
+            required: true
+          }
+        ]
+      )
+
+      # Reload the question and verify options are soft deleted
+      question.reload
+      expect(question.options.count).to eq(0)
+      expect(question.options.unscoped.where(id: original_option_ids).where.not(deleted_at: nil).count).to eq(2)
+    end
   end
 end

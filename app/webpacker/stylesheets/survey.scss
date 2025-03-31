@@ -20,7 +20,7 @@ $transition-speed: 0.2s;
 .survey-form {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
 
   .form-group {
     margin-bottom: 1rem;
@@ -63,7 +63,7 @@ $transition-speed: 0.2s;
     background: #fff;
     border: 1px solid #e1e4e8;
     border-radius: 6px;
-    padding: 1.5rem;
+    padding: 1rem;
     margin-bottom: 1.5rem;
     @include card-shadow;
   }
@@ -83,6 +83,7 @@ $transition-speed: 0.2s;
       display: flex;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
+      align-items: center;
     }
   }
 
@@ -150,33 +151,6 @@ $transition-speed: 0.2s;
       outline: none;
       border-color: #4a90e2;
       box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
-    }
-  }
-
-  .form-select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: #fff;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 12px;
-    cursor: pointer;
-
-    &:focus {
-      outline: none;
-      border-color: #4a90e2;
-      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
-    }
-
-    &:disabled {
-      background-color: #f5f5f5;
-      cursor: not-allowed;
     }
   }
 

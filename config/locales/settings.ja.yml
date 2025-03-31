@@ -686,23 +686,24 @@ ja:
         public: 公開
         private: 非公開
         delete_page: ページを削除
-        survey: 預約表單
-        survey_title: 預約表單
+        survey: 予約時アンケート
+        survey_title: アンケートフォーム設定
         survey_questions_count: "預約表單題目数: %{count}題"
         survey_questions_count_empty: 預約表單題目数が設定されていません
-        survey_input_placeholder: 預約表單問題を入力
-        survey_question_type_text: 文字回答
-        survey_question_type_single_selection: 単選
-        survey_question_type_multiple_selection: 複選
-        survey_question_type_dropdown: 下拉選單
+        survey_input_placeholder: 質問を入力
+        survey_question_type_text: 記述式
+        survey_question_type_single_selection: ラジオボタン（一つだけ選択）
+        survey_question_type_multiple_selection: チェックボックス（複数選択可）
+        survey_question_type_dropdown: プルダウン（一つだけ選択）
         survey_delete_option: 選項を削除
-        survey_option_placeholder: "選項 %{index}"
-        survey_add_option: 選項を追加
+        survey_option_placeholder: "選択肢 %{index}"
+        survey_add_option: 選択肢を追加
         survey_delete_question: 預約表單問題を削除
-        survey_answer_placeholder: 文字回答
+        survey_answer_placeholder: 回答を入力してください
         survey_required: 必須
-        survey_add_question: 預約表單問題を追加
-        survey_save: 保存
+        survey_add_question: 質問を追加
+        survey_save_desc_html: 保存すると顧客情報入力前に<br>このアンケートが表示されます。
+        survey_save: アンケートを保存
         no_note: 未設定
         customer_related_settings: 顧客関連設定
         others_settings: その他設定
