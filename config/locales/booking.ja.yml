@@ -39,6 +39,7 @@ ja:
     last_selected_option: 前回ご利用のメニュー
     i_dont_use_line: LINEは持っていません
     owner_personal_schedule_warning: 予約不可にしたい場合は『Myカレンダー』より個人の予定を作成してください。
+    confirm_booking_option: 空き状況を確認
     booking_code:
       code: 確認コード
       resend: コード再送

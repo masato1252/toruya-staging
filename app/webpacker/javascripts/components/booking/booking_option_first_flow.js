@@ -110,7 +110,7 @@ const BookingOptionFirstFlow = ({
               }))
             }}
           >
-            {I18n.t("action.confirm")}
+            {I18n.t("booking_page.confirm_booking_option")}
           </a>
         </div>
       )}

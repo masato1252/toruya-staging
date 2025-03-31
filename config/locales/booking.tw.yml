@@ -39,6 +39,7 @@ tw:
     last_selected_option: 上次使用的項目
     i_dont_use_line: 我沒有使用LINE
     owner_personal_schedule_warning: 如果您想設定為不可預約，請在『我的日曆』中建立個人行程。
+    confirm_booking_option: 確認預約項目
     booking_code:
       code: 確認碼
       resend: 重新發送確認碼

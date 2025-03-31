@@ -107,6 +107,7 @@ tw:
     view_more: 查看更多
     verify_identity: 驗證
     complete: 完成
+    survey_save: 儲存
   common:
     why_need_phone_number: ""
     age: 年齡

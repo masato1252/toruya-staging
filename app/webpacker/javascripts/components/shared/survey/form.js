@@ -171,7 +171,7 @@ const SurveyForm = ({ survey, onSubmit, survey_answers }) => {
 
       <div className="form-actions centerize">
         <button type="submit" className="btn btn-tarco" onClick={handleSubmit}>
-          {I18n.t("action.save")}
+          {I18n.t("action.survey_save")}
         </button>
       </div>
     </div>
