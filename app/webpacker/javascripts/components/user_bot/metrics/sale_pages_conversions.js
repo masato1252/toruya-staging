@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { CommonServices } from "components/user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 
-const SalePagesConversionsMetric = ({demo, metric_path, is_phone}) => {
+const SalePagesConversionsMetric = ({demo, metric_path, is_phone, page_label_key}) => {
   const [data, setData] = useState([])
 
   const fetchData = async () => {
