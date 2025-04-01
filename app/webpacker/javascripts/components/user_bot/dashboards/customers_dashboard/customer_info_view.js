@@ -84,8 +84,8 @@ const PhoneIcon = ({phone}) => {
   }
   return (
     phone.value && (
-      <a href={`tel:${phone.value}`} className="btn btn-tarco btn-icon">
-        <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={phone.type}></i>
+      <a href={`tel:${phone.value}`} className="underline text-black">
+        {phone.value}
       </a>
     )
   )
@@ -109,8 +109,8 @@ const EmailIcon = ({email}) => {
   }
   return (
     email.value && (
-      <a href={`mailto:${email.value}`} className="btn btn-tarco btn-icon">
-        <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={email.type}></i>
+      <a href={`mailto:${email.value}`} className="underline text-black">
+        {email.value}
       </a>
     )
   )
