@@ -34,7 +34,9 @@
 
         <li class="flex justify-between">
           <span><i class="fa fa-user"></i> <%= Current.user&.name %></span>
-          <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
+          <% if support_multiple_accounts? %>
+            <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
+          <% end %>
         </li>
 
         <li class="p-1">
@@ -86,7 +88,7 @@
           </ul>
         </li>
 
-        <% if !Current.business_owner.locale_is?(:tw) %>
+        <% if support_online_service? %>
           <li class="p-1">
             <%= active_link_to lines_user_bot_services_path(business_owner_id: business_owner_id) do %>
               <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.services.online_service") %>
@@ -147,9 +149,11 @@
             <li>
               <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>
             </li>
-            <li>
-              <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path(business_owner_id: business_owner_id) %>
-            </li>
+            <% if support_online_service? %>
+              <li>
+                <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path(business_owner_id: business_owner_id) %>
+              </li>
+            <% end %>
             <li>
               <%= active_link_to t("sidebar.metrics.booking_page_title"), lines_user_bot_metrics_booking_pages_path(business_owner_id: business_owner_id) %>
             </li>
@@ -164,20 +168,22 @@
 
           <div class="dropdown open" data-controller="collapse" data-collapse-status="closed" data-action="click->collapse#toggle" >
             <span class="text-white"><%= Current.business_owner.company_name.presence || t("action.account_switch") %></span>
-            <i class="fas fa-caret-down text-white"></i>
-            <ul class="dropdown-menu dropdown-menu-right" data-target="collapse.content">
-              <% current_social_user.manage_accounts.each do |owner| %>
-                <%= link_to lines_user_bot_settings_path(business_owner_id: owner.id) do %>
-                  <li class="dropdown-header p-3 text-16px"><%= owner.company_name %></li>
+            <% if support_multiple_accounts? %>
+              <i class="fas fa-caret-down text-white"></i>
+              <ul class="dropdown-menu dropdown-menu-right" data-target="collapse.content">
+                <% current_social_user.manage_accounts.each do |owner| %>
+                  <%= link_to lines_user_bot_settings_path(business_owner_id: owner.id) do %>
+                    <li class="dropdown-header p-3 text-16px"><%= owner.company_name %></li>
+                  <% end %>
                 <% end %>
-              <% end %>
 
-              <li>
-                <%= link_to new_lines_user_bot_settings_social_account_path, class: "btn btn-tarco mx-1" do %>
-                  <%= t("user_bot.dashboards.settings.social_account.new") %>
-                <% end %>
-              </li>
-            </ul>
+                <li>
+                  <%= link_to new_lines_user_bot_settings_social_account_path, class: "btn btn-tarco mx-1" do %>
+                    <%= t("user_bot.dashboards.settings.social_account.new") %>
+                  <% end %>
+                </li>
+              </ul>
+            <% end %>
           </div>
         </div>
 

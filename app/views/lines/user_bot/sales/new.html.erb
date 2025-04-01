@@ -15,7 +15,7 @@
           <% end %>
 
         </div>
-        <% if !Current.business_owner.locale_is?(:tw) %>
+        <% if support_online_service? %>
           <div class="action-block centerize">
             <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
               <i class="fa fa-mobile-alt fa-4x"></i>
