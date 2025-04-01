@@ -64,7 +64,7 @@
         </li>
 
         <li class="p-1">
-          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics).*(booking|menu)/ do %>
+          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics|.*sales).*(booking|menu)/ do %>
             <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
           <% end %>
 
@@ -86,20 +86,22 @@
           </ul>
         </li>
 
-        <li class="p-1">
-          <%= active_link_to lines_user_bot_services_path(business_owner_id: business_owner_id) do %>
-            <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.services.online_service") %>
-          <% end %>
+        <% if !Current.business_owner.locale_is?(:tw) %>
+          <li class="p-1">
+            <%= active_link_to lines_user_bot_services_path(business_owner_id: business_owner_id) do %>
+              <i class="fa fa-mobile-alt fa-2x"></i> <%= t("user_bot.dashboards.services.online_service") %>
+            <% end %>
 
-          <ul class='nav'>
-            <li>
-              <%= link_to t("common.item.new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id) %>
-            </li>
-            <li>
-              <%= link_to t("common.item.list"), lines_user_bot_services_path(business_owner_id: business_owner_id) %>
-            </li>
-          </ul>
-        </li>
+            <ul class='nav'>
+              <li>
+                <%= link_to t("common.item.new"), new_lines_user_bot_service_path(business_owner_id: business_owner_id) %>
+              </li>
+              <li>
+                <%= link_to t("common.item.list"), lines_user_bot_services_path(business_owner_id: business_owner_id) %>
+              </li>
+            </ul>
+          </li>
+        <% end %>
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_sales_path(business_owner_id: business_owner_id) do %>

@@ -15,15 +15,17 @@
           <% end %>
 
         </div>
-        <div class="action-block centerize">
-          <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
-            <i class="fa fa-mobile-alt fa-4x"></i>
-            <h4><%= I18n.t("user_bot.dashboards.sales.new.online_service") %></h4>
-            <p class="break-line-content">
-            <%= I18n.t("user_bot.dashboards.sales.new.online_service_to_sell_more") %>
-            </p>
-          <% end %>
-        </div>
+        <% if !Current.business_owner.locale_is?(:tw) %>
+          <div class="action-block centerize">
+            <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
+              <i class="fa fa-mobile-alt fa-4x"></i>
+              <h4><%= I18n.t("user_bot.dashboards.sales.new.online_service") %></h4>
+              <p class="break-line-content">
+              <%= I18n.t("user_bot.dashboards.sales.new.online_service_to_sell_more") %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
 
         <div class="margin-around centerize warning">
           <%= t("user_bot.dashboards.sales.new.how_to_sell") %>
