@@ -37,19 +37,15 @@
           <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
         </li>
 
-        <li class="p-1">
-          <%= active_link_to mine_lines_user_bot_schedules_path do %>
-            <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.calendar.mine") %>
-          <% end %>
-        </li>
+        <% if !Current.social_user&.single_owner? %>
+          <li class="p-1">
+            <%= active_link_to mine_lines_user_bot_schedules_path do %>
+              <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.calendar.mine") %>
+            <% end %>
+          </li>
+        <% end %>
 
         <hr class="my-2" />
-
-        <li class="p-1">
-          <%= active_link_to lines_user_bot_settings_path(business_owner_id: business_owner_id) do %>
-            <i class="fa fa-wrench fa-2x"></i> <%= t("user_bot.dashboards.settings.dashboard.title") %>
-          <% end if admin? %>
-        </li>
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_schedules_path(business_owner_id: business_owner_id) do %>
@@ -62,6 +58,8 @@
             <i class="fa fa-address-card fa-2x"></i> <%= t("user_bot.dashboards.customer.title") %>
           <% end %>
         </li>
+
+        <hr class="my-2" />
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics|.*sales).*(booking|menu)/ do %>
@@ -131,6 +129,14 @@
               <%= link_to t("user_bot.dashboards.broadcasts.broadcast_conditions"), lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) %>
             </li>
           </ul>
+        </li>
+
+        <hr class="my-2" />
+
+        <li class="p-1">
+          <%= active_link_to lines_user_bot_settings_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-wrench fa-2x"></i> <%= t("user_bot.dashboards.settings.dashboard.title") %>
+          <% end if admin? %>
         </li>
 
         <li class="p-1">
