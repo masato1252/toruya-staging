@@ -5,7 +5,7 @@
     <div class="col-sm-6 px-0 settings-view">
       <div class="form with-top-bar">
         <div class="action-block centerize">
-          <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible", method: :post, data: { confirm: I18n.t("user_bot.dashboards.booking_page_creation.confirm_booking_page_message") } do %>
+          <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible", method: :post do %>
             <i class="fa fa-calendar-alt fa-4x"></i>
             <h3 class="p-1"><%= I18n.t("user_bot.dashboards.booking.booking_page_creation.label") %></h3>
             <p class="p-2 white-space-initial text-left">

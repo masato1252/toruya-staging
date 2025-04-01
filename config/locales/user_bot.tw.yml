@@ -509,7 +509,7 @@ tw:
           line_status: LINE預約
           no_option: 您還沒有設定任何預約項目，讓您的客戶預約
         form:
-          add_a_new_option: 新增此項目
+          add_a_new_option: 新增此項目在預約頁面
           new_option_with_existing_menu:
             select_from_existing_menu: 從現有服務建立價格
             create_from_a_new_menu: 用新服務建立價格
@@ -634,15 +634,14 @@ tw:
         create_sale_page_later_warning_html: 服務已建立，但由於<br>銷售頁面尚未建立，<br>客戶無法註冊服務
         remember_create_sale_page: 請記得建立銷售頁面
         create_sale_page_later_btn: 稍後建立
-        confirm_booking_page_message: 即使新的預約頁面已建立，在設定您的預約服務之前，客戶仍無法使用該頁面。
         create_booking_page_successfully: 預約頁面已成功建立。請在此處編輯您提供的服務，並與客戶分享預約頁面。
       booking:
         booking_page_creation:
           label: 建立預約頁面
           description: 建立一個預約頁面，來讓客戶可以線上預約您的服務。
         booking_option_creation:
-          label: 建立銷售服務
-          description: 建立是您所要銷售的服務內容。
+          label: 建立預約項目
+          description: 這是您要給客戶的預約選項。
       sales:
         modal:
           title: 確認銷售頁面

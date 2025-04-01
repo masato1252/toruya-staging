@@ -635,7 +635,6 @@ ja:
         create_sale_page_later_warning_html: サービスは作成できましたが<br>宣伝用LPが未作成のため<br>顧客がサービスに登録できません
         remember_create_sale_page: 忘れずに宣伝用LPを作成してください
         create_sale_page_later_btn: 後で作る
-        confirm_booking_page_message: 新しい予約ページが作成されても、予約価格を掲載するまではご利用いただけません。
         create_booking_page_successfully: 予約ページを作成しました。ただし予約価格を掲載するまでは顧客は予約できません。
       booking:
         booking_page_creation:

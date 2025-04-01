@@ -561,7 +561,7 @@ tw:
         add_new_option: 新增預約項目
         reorder_options: 變更顯示順序
         does_require_a_new_option: 需要新的預約項目嗎？
-        create_a_new_option: 我需要設定新的服務
+        create_a_new_option: 我需要設定新的預約項目
         create_a_new_option_from_existing_menu: 我要從『現有服務』建立預約項目
         create_a_new_option_from_existing_option: 從現有預約項目中選擇
         booking_option_introduction_html: "預約項目和服務的差別是什麼，服務是您提供的服務，而預約項目是您將單個或多個服務包裝成一個可以預約的項目。<br><br>我們日常最常見的例子就像是大腸包小腸，實際產品只有香腸和大腸，可是實際上大腸包小腸可以是另外一個可以獨立購買的項目，價格上也可能會有些不同。"
