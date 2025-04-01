@@ -173,12 +173,14 @@ const Plans = ({props}) => {
             "reservation_restriction",
             {header: I18n.t("plans.headers.online_booking")},
             "booking_page_number",
-            {header: I18n.t("plans.headers.online_service")},
-            "get_more_friends",
-            "free_lesson",
-            "premium_lesson",
-            "membership",
-            "external_service",
+            ...(props.support_feature_flags?.support_online_service ? [
+              {header: I18n.t("plans.headers.online_service")},
+              "get_more_friends",
+              "free_lesson",
+              "premium_lesson",
+              "membership",
+              "external_service",
+            ] : []),
             {header: I18n.t("plans.headers.sale_promotion")},
             "sale_page_number"
           ].map((labelName) => {

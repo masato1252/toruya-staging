@@ -34,9 +34,7 @@
 
         <li class="flex justify-between">
           <span><i class="fa fa-user"></i> <%= Current.user&.name %></span>
-          <% if support_multiple_accounts? %>
-            <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
-          <% end %>
+          <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
         </li>
 
         <li class="p-1">
