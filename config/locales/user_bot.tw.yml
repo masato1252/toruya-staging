@@ -572,7 +572,9 @@ tw:
         conversion_count: 成交數
         revenue: 銷售額
         title: 訪問分析
-        sale_page: 頁面
+        sale_page: 銷售頁面
+        online_service: 數位商品
+        booking_page: 預約頁面
         visit_count: 瀏覽次數
         purchased_count: 註冊數
         conversion_rate: 轉換率
