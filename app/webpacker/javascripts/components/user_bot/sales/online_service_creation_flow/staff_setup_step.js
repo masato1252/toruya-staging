@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ImageUploader from "react-images-upload";
 import ReactSelect from "react-select";
 import TextareaAutosize from 'react-autosize-textarea';
@@ -11,6 +11,20 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 const StaffSetupStep = ({step, next, prev, lastStep}) => {
   const [submitting, setSubmitting] = useState(false)
   const { props, selected_staff, dispatch, isStaffSetup, isReadyForPreview, createDraftSalesOnlineServicePage } = useGlobalContext()
+
+  useEffect(() => {
+    // Auto-select staff if there's only one staff member
+    if (props.staffs?.length === 1 && !selected_staff) {
+      const onlyStaff = props.staffs[0];
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "selected_staff",
+          value: onlyStaff.value
+        }
+      })
+    }
+  }, [])
 
   const onDrop = (picture, pictureDataUrl) => {
     dispatch({

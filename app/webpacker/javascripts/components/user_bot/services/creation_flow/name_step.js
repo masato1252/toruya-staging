@@ -4,9 +4,10 @@ import React from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
+import { SubmitButton } from "shared/components";
 
-const NameStep = ({next, step, step_key}) => {
-  const { props, dispatch, name } = useGlobalContext()
+const NameStep = ({next, step, lastStep, step_key}) => {
+  const { props, dispatch, name, selected_goal, createService } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
@@ -28,9 +29,17 @@ const NameStep = ({next, step, step_key}) => {
       />
 
       <div className="action-block">
-        <button onClick={next} className="btn btn-yellow" disabled={!name}>
-          {I18n.t("action.next_step")}
-        </button>
+        {(selected_goal === 'membership' || selected_goal === 'bundler') ? (
+          <SubmitButton
+            handleSubmit={createService}
+            submitCallback={lastStep}
+            btnWord={I18n.t("user_bot.dashboards.online_service_creation.create_by_this_setting")}
+          />
+        ) : (
+          <button onClick={next} className="btn btn-yellow" disabled={false}>
+            {I18n.t("action.next_step")}
+          </button>
+        )}
       </div>
     </div>
   )

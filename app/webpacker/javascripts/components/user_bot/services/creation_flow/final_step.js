@@ -24,7 +24,7 @@ const FinalStep = ({step, step_key}) => {
           <>
             <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.create_a_sale_page")}</h3>
             <div className="action-block">
-              <a href={Routes.new_lines_user_bot_sales_online_service_url({slug: online_service_slug})} className="btn btn-yellow btn-flexible">
+              <a href={Routes.new_lines_user_bot_sales_online_service_url({business_owner_id: props.business_owner_id, slug: online_service_slug})} className="btn btn-yellow btn-flexible">
                 <i className="fa fa-cart-arrow-down fa-4x"></i>
                 <h4>{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page_btn")}</h4>
               </a>
