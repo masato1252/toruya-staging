@@ -12,8 +12,10 @@ namespace :consultant do
         BusinessHealthChecks::Deliver.perform_at(schedule_at: Time.current.advance(minutes: rand(10)), subscription: subscription)
       end
 
-      Subscription.trial.find_each do |subscription|
-        BusinessHealthChecks::Deliver.perform_at(schedule_at: Time.current.advance(minutes: rand(10)), subscription: subscription)
+      User.business_active.includes(:subscription).find_each do |user|
+        if user.subscription&.in_free_plan?
+          BusinessHealthChecks::Deliver.perform_at(schedule_at: Time.current.advance(minutes: rand(10)), subscription: user.subscription)
+        end
       end
     end
   end

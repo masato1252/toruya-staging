@@ -124,6 +124,8 @@ class User < ApplicationRecord
 
   scope :admin, -> { joins(:social_user).where(social_service_user_id: SocialUser::ADMIN_IDS) }
   scope :not_admin, -> { where.not.admin }
+  scope :business_active, -> (period = 1.month.ago..Time.current) { where(customer_latest_activity_at: period) }
+
   before_validation(on: :create) do
     self.public_id ||= SecureRandom.uuid
   end

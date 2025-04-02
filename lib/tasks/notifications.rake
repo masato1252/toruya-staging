@@ -18,7 +18,7 @@ namespace :notifications do
       end
 
     if time_range
-      User.where(customer_latest_activity_at: time_range).find_each do |user|
+      User.business_active(time_range).find_each do |user|
         Notifiers::Users::PendingTasksSummary.perform_at(
           schedule_at: Time.current.in_time_zone(user.timezone).change(hour: 7, min: 10 + rand(20)),
           receiver: user,
