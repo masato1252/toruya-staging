@@ -46,7 +46,6 @@
         <% end %>
 
         <hr class="my-2" />
-
         <li class="p-1">
           <%= active_link_to lines_user_bot_schedules_path(business_owner_id: business_owner_id) do %>
             <i class="fa fa-calendar fa-2x"></i> <%= t("common.reservation_calendar") %>
@@ -60,7 +59,6 @@
         </li>
 
         <hr class="my-2" />
-
         <li class="p-1">
           <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics|.*sales).*(booking|menu)/ do %>
             <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
