@@ -5,7 +5,7 @@ require "utils"
 namespace :consultant do
   task :business_health_check do
     # send a slack message to let me know the task is running
-    if (Rails.configuration.x.env.production? && Utils.tokyo_current.to_date.monday?)
+    if (Rails.configuration.x.env.production? && Time.current.to_date.monday?)
       SlackClient.send(channel: 'development', text: "Business health check task is running")
 
       Subscription.charge_required.find_each do |subscription|

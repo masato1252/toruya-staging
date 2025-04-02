@@ -9,10 +9,6 @@ module Utils
     bi_weekly_monday = monday && bi_weekly
   end
 
-  def self.tokyo_current
-    Time.current.in_time_zone('Tokyo')
-  end
-
   def self.file_from_url(url)
     response = URI.open(url)
     filename = response.meta['content-disposition'].match(/filename=(["'])?([^'"]+)["']?/)[2] if response.meta['content-disposition']
