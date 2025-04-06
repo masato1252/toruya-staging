@@ -2683,8 +2683,8 @@ ALTER SEQUENCE public.social_customers_id_seq OWNED BY public.social_customers.i
 
 CREATE TABLE public.social_messages (
     id bigint NOT NULL,
-    social_account_id integer NOT NULL,
-    social_customer_id integer NOT NULL,
+    social_account_id integer,
+    social_customer_id integer,
     staff_id integer,
     raw_content text,
     created_at timestamp without time zone NOT NULL,
@@ -2694,7 +2694,10 @@ CREATE TABLE public.social_messages (
     schedule_at timestamp without time zone,
     sent_at timestamp without time zone,
     broadcast_id integer,
-    content_type character varying
+    content_type character varying,
+    channel character varying,
+    customer_id integer,
+    user_id integer
 );
 
 
@@ -5628,6 +5631,20 @@ CREATE INDEX index_social_messages_on_broadcast_id ON public.social_messages USI
 
 
 --
+-- Name: index_social_messages_on_customer_id_and_channel; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_messages_on_customer_id_and_channel ON public.social_messages USING btree (customer_id, channel);
+
+
+--
+-- Name: index_social_messages_on_user_id_and_channel; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_messages_on_user_id_and_channel ON public.social_messages USING btree (user_id, channel);
+
+
+--
 -- Name: index_social_rich_menus_on_social_account_id_and_social_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6483,6 +6500,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250218163447'),
 ('20250228004652'),
 ('20250306135657'),
-('20250311141530');
+('20250311141530'),
+('20250405223945');
 
 

@@ -13,6 +13,21 @@ module Sms
     def execute
       SmsClient.send(phone_number, message, user&.locale || customer&.locale || "ja")
 
+      if customer
+        SocialMessage.create!(
+          social_account: customer.social_customer&.social_account,
+          social_customer: customer.social_customer,
+          customer_id: customer.id,
+          user_id: customer.user_id,
+          raw_content: message,
+          content_type: "text",
+          readed_at: Time.current,
+          sent_at: Time.current,
+          message_type: "bot",
+          channel: SocialMessage.channels[:sms]
+        )
+      end
+
       Notification.create!(
         user: user,
         phone_number: phone_number,

@@ -4,6 +4,7 @@
 # Table name: social_messages
 #
 #  id                 :bigint           not null, primary key
+#  channel            :string
 #  content_type       :string
 #  message_type       :integer          default("bot")
 #  raw_content        :text
@@ -13,19 +14,25 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  broadcast_id       :integer
-#  social_account_id  :integer          not null
-#  social_customer_id :integer          not null
+#  customer_id        :integer
+#  social_account_id  :integer
+#  social_customer_id :integer
 #  staff_id           :integer
+#  user_id            :integer
 #
 # Indexes
 #
-#  index_social_messages_on_broadcast_id  (broadcast_id)
-#  social_message_customer_index          (social_account_id,social_customer_id)
+#  index_social_messages_on_broadcast_id             (broadcast_id)
+#  index_social_messages_on_customer_id_and_channel  (customer_id,channel)
+#  index_social_messages_on_user_id_and_channel      (user_id,channel)
+#  social_message_customer_index                     (social_account_id,social_customer_id)
 #
 
 class SocialMessage < ApplicationRecord
-  belongs_to :social_account
-  belongs_to :social_customer, touch: true
+  belongs_to :social_account, optional: true
+  belongs_to :social_customer, optional: true, touch: true
+  belongs_to :user, optional: true
+  belongs_to :customer, optional: true
   belongs_to :staff, optional: true
   belongs_to :broadcast, optional: true
   has_one_attached :image
@@ -46,6 +53,12 @@ class SocialMessage < ApplicationRecord
     staff: 1,
     customer: 2,
     customer_reply_bot: 3
+  }
+
+  enum channel: {
+    line: "line",
+    sms: "sms",
+    email: "email"
   }
 
   def unread?

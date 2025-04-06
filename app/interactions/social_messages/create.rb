@@ -35,7 +35,8 @@ module SocialMessages
         sent_at: is_message_from_customer || !send_line ? Time.current : nil,
         schedule_at: schedule_at,
         message_type: message_type,
-        broadcast: broadcast
+        broadcast: broadcast,
+        channel: "line"
       )
 
       if message.errors.present?
@@ -44,7 +45,7 @@ module SocialMessages
       end
 
       if image.present?
-        message.image.attach(io: image, filename: image.original_filename) 
+        message.image.attach(io: image, filename: image.original_filename)
         message.update(
           raw_content: {
             originalContentUrl: Images::Process.run!(image: message.image, resize: "750"),
