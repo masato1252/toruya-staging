@@ -8,6 +8,8 @@ import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "sha
 import { CommonServices } from "user_bot/api"
 import { responseHandler } from "libraries/helper";
 
+import LineVerificationWarning from 'shared/line_verification_warning';
+
 const UserSettingsEdit =({props}) => {
   const onSubmit = async (data) => {
     console.log(data)
@@ -71,6 +73,11 @@ const UserSettingsEdit =({props}) => {
                 <a href={Routes.lines_user_bot_settings_plans_path(props.business_owner_id, { upgrade: "basic" })} className="btn btn-yellow">
                   {I18n.t("warnings.over_free_limit.upgrade_button")}
                 </a>
+              </div>
+            )}
+            {!props.line_settings_verified && (
+              <div className="margin-around centerize">
+                <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
               </div>
             )}
           </>
