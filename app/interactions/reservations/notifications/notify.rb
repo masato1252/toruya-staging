@@ -56,12 +56,13 @@ module Reservations
       end
 
       def notify_by_email
-        CustomerMailer.with(
+        compose(
+          SocialMessages::CreateEmail,
           customer: customer,
           email: mail,
           message: message,
           subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name)
-        ).custom.deliver_now
+        )
       end
 
       def notify_by_sms

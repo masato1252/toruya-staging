@@ -165,11 +165,13 @@ module Notifiers
     def notify_by_email
       I18n.with_locale(target_email_user.locale) do
         if target_email_user.is_a?(Customer)
-          CustomerMailer.with(
+          compose(
+            SocialMessages::CreateEmail,
+            customer: target_email_user,
             email: email,
             message: message,
             subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name)
-          ).custom.deliver_now
+          )
         else
           UserMailer.with(
             email: email,
