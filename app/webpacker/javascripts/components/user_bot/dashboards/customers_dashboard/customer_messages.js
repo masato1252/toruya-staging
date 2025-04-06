@@ -53,10 +53,6 @@ const UserBotCustomerMessages = () => {
     messageListRef.current.scrollIntoView({ behavior: "auto" });
   }, [messages[messages.length - 1], temp_new_messages])
 
-  useEffect(() => {
-    $("#toruyaMessageReplyModal").modal("show");
-  }, []);
-
   if (has_more_messages === true) {
     more_message_view = (
       <div className="centerize">
@@ -70,19 +66,6 @@ const UserBotCustomerMessages = () => {
     more_message_view = (
       <div className="centerize warning">
         {I18n.t("action.no_more_message")}
-      </div>
-    )
-  }
-
-  if (props.block_toruya_message_reply) {
-    return (
-      <div className="customer-view">
-        <CustomerBasicInfo />
-        <CustomerNav />
-        <div
-          className="margin-around"
-          dangerouslySetInnerHTML={{__html: I18n.t("warnings.user_bot.toruya_message_reply_block_message_html", { upgrade_url: props.upgrade_url })}} />
-        <div ref={messageListRef} />
       </div>
     )
   }

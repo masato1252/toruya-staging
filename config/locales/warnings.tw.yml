@@ -11,21 +11,6 @@ tw:
           <br />
 
           請注意，透過Toruya發送的訊息都會計入官方的免費訊息額度。<br />
-
-          <br />
-          <br />
-          <div class='button-container'>
-            <a href='%{upgrade_url}' class='btn btn-tarco'>立即升級</a>
-          </div>
-          <br />
-
-          <h4>2024年1月10日後繼續使用基本方案的情況</h4>
-          <p>新方案轉換後，請使用LINE官方APP收發訊息。<br>
-          <br />
-          <div class='button-container'>
-            <button class='btn btn-gray' data-dismiss='modal'>不升級並關閉</button>
-          </div>
-          <br />
           "
       toruya_message_reply_block_message_html: "<p>透過Toruya收發LINE訊息是高級會員專屬功能。</p><br />
           <h3>使用Toruya LINE客戶管理的優點</h3>

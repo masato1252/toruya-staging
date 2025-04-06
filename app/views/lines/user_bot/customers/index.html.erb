@@ -53,3 +53,18 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="toruyaMessageReplyBlockModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+        <%= t("warnings.user_bot.toruya_message_reply.title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <%= t("warnings.user_bot.toruya_message_reply_block_message_html", upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL)) %>
+      </div>
+    </div>
+  </div>
+</div>

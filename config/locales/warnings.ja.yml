@@ -12,22 +12,6 @@ ja:
 
           但し、Toruya経由で送信したメッセージは全て無料メッセージとしてカウントされます。<br />
           <a target='_blank' href='https://toruya.com/help/line_messages'>詳しくはマニュアルをご確認ください。</a>
-
-          <br />
-          <br />
-          <div class='button-container'>
-            <a href='%{upgrade_url}' class='btn btn-tarco'>今すぐアップグレード</a>
-          </div>
-          <br />
-
-          <h4>2024年1月10日以降もベーシックプランで利用する場合</h4>
-          <p>新プラン移行後は、メッセージ送受信にはLINE公式アプリをご利用ください。<br>
-          <a target='_blank' href='https://toruya.com/help/line_messages#basic'>詳しい設定方法はマニュアルをご確認ください。</a></p>
-          <br />
-          <div class='button-container'>
-            <button class='btn btn-gray' data-dismiss='modal'>アップグレードせず閉じる</button>
-          </div>
-          <br />
           "
       toruya_message_reply_block_message_html: "<p>Toruya上からLINEの送受信ができる機能はプレミアム会員限定です。</p><br />
           <h3>Toruya顧客台帳LINEタブのメリット</h3>
