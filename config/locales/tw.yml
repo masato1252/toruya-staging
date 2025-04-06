@@ -286,6 +286,7 @@ tw:
       customer_info: 客戶資料
       customer_reservations: 消費紀錄
       customer_payments: 購買紀錄
+      customer_messages: 訊息
     printing_page_size:
       paper_size: 紙張大小
       a4: A4

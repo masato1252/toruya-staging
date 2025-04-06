@@ -4,11 +4,6 @@ class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardCon
   before_action :set_customer, only: [:index]
 
   def index
-    unless @customer.social_customer
-      render json: { messages: [] }
-      return
-    end
-
     render json: SocialMessages::Recent.run!(
       customer: @customer,
       oldest_message_at: params[:oldest_message_at],

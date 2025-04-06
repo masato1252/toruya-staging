@@ -286,6 +286,7 @@ ja:
       customer_info: 顧客情報
       customer_reservations: 利用履歴
       customer_payments: 購入履歴
+      customer_messages: 訊息
     printing_page_size:
       paper_size: 用紙サイズ
       a4: A4

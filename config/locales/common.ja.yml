@@ -305,6 +305,10 @@ ja:
     verification_code: 確認コード
     please_enter_verification_code: "確認コードを入力してください"
     resend_code: "再送信"
+    channels:
+      line: LINE
+      email: メール
+      sms: メッセージ
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

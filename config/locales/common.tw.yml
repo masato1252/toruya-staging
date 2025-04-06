@@ -307,6 +307,10 @@ tw:
     verification_code: 驗證碼
     please_enter_verification_code: "請輸入驗證碼"
     resend_code: "重新發送"
+    channels:
+      line: Line
+      email: 電子郵件
+      sms: 簡訊
   errors:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。

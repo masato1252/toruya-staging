@@ -2,18 +2,18 @@
 
 class MessageSerializer
   include JSONAPI::Serializer
-  attribute :id, :created_at, :message_type, :content_type
+  attribute :id, :created_at, :message_type, :content_type, :channel
 
   attribute :customer_id do |message|
-    message.social_customer.social_user_id
+    message.social_customer&.social_user_id || message.customer_id
   end
 
   attribute :toruya_customer_id do |message|
-    message.social_customer.customer_id
+    message.social_customer&.customer_id || message.customer_id
   end
 
   attribute :user_id do |message|
-    message.social_customer.user_id
+    message.social_customer&.user_id || message.user_id
   end
 
   attribute :is_image do |message|

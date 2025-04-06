@@ -19,13 +19,11 @@ const CustomerNav = () => {
           <i className="fa fa-calendar"></i> <span>{props.i18n.tab.customer_reservations}</span>
         </a>
       </li>
-      {selected_customer?.socialUserId && (
-        <li className={view == "customer_messages" ? "active" : ""}>
-          <a onClick={() => onHandleClick("customer_messages")}>
-            <i className="fa fa-comment"></i> <span>Line</span>
-          </a>
-        </li>
-      )}
+      <li className={view == "customer_messages" ? "active" : ""}>
+        <a onClick={() => onHandleClick("customer_messages")}>
+          <i className="fa fa-comment"></i> <span>{props.i18n.tab.customer_messages}</span>
+        </a>
+      </li>
       <li className={view == "customer_payments" ? "active" : ""}>
         <a onClick={() => onHandleClick("customer_payments")}>
           <i className="fas fa-money-bill-wave"></i> <span>{props.i18n.tab.customer_payments}</span>
