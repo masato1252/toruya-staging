@@ -1,4 +1,4 @@
-<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if !Current.business_owner.subscription.active? %>
+<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id: business_owner_id), static: true) if Current.business_owner.subscription.over_free_limit? %>
 
 <%= react_component("user_bot/services/creation_flow", {
   props: {
