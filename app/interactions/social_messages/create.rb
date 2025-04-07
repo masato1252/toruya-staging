@@ -28,6 +28,8 @@ module SocialMessages
       message = SocialMessage.create(
         social_account: social_account,
         social_customer: social_customer,
+        customer_id: social_customer.customer_id,
+        user_id: social_customer.user_id,
         staff: staff,
         raw_content: content,
         content_type: content_type,
