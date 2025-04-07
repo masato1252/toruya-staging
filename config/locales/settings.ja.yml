@@ -689,7 +689,7 @@ ja:
         survey: 予約時アンケート
         survey_title: アンケートフォーム設定
         survey_questions_count: "預約表單題目数: %{count}題"
-        survey_questions_count_empty: 預約表單題目数が設定されていません
+        survey_questions_count_empty: アンケート未設定
         survey_input_placeholder: 質問を入力
         survey_question_type_text: 記述式
         survey_question_type_single_selection: ラジオボタン（一つだけ選択）
