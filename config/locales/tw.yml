@@ -182,7 +182,7 @@ tw:
     become_overbooking: 將會超出預約人數上限！
     overbooking: 目前超出預約人數上限！
     reserved: 已確認
-    full_seat: 客滿
+    full_seat: 額滿
     add_customer_btn: 新增客戶
     no_manpower_tip: 最少需要0位成員
     add_working_schedule: 將此時段設為上班時間
