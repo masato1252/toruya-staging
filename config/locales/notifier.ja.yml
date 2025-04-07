@@ -82,7 +82,7 @@ https://manager.toruya.com/userlogin"
       paid_plan_close_customers_limit:
         message: "%{user_name}様\n\n間もなく顧客数が上限に達します。\n\n顧客数が%{current_max_customer_limit}を超えると、ご利用プランがランク%{next_max_customer_limit}に自動的に切り替わります。\n\n尚、新しいランクによるご請求は、次回ご請求からとなります。"
       paid_plan_reach_customers_limit:
-        message: "%{user_name}様\n\n顧客数が上限に達しました。\n\n次回ご請求からランク%{next_max_customer_limit}でご請求させていただきます。\n\n今後も、%{user_last_name}様の更なるご活躍をサポートできるよう、より良いサービス構築に勤めてまいります。"
+        message: "%{user_name}様\n\n顧客数が上限に達しました。\n\n次回ご請求からランク%{next_max_customer_limit}でご請求させていただきます。\n\n今後も、%{user_name}様の更なるご活躍をサポートできるよう、より良いサービス構築に勤めてまいります。"
       paid_plan_reach_whole_customers_limit:
         message: "%{user_name}様\n\n顧客数が上限に達しました。\n\nこれ以降、オンライン予約ページから作成された新規顧客の情報は確認できなくなります。\n\nこれまで通りご利用いただくために、特別なご利用プランをご案内差し上げますので、設定画面からお問い合わせください。"
     subscriptions:

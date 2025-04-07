@@ -12,7 +12,7 @@ module Notifiers
           elsif receiver.subscription.rank == Plan.max_legal_rank
             I18n.t("notifier.reminders.paid_plan_reach_whole_customers_limit.message", user_name: receiver.name)
           else
-            I18n.t("notifier.reminders.paid_plan_reach_customers_limit.message", user_name: receiver.name, next_max_customer_limit: Plan.max_customers_limit(receiver.subscription.plan.level, receiver.subscription.rank + 1), user_last_name: receiver.profile.last_name || receiver.profile.phonetic_last_name)
+            I18n.t("notifier.reminders.paid_plan_reach_customers_limit.message", user_name: receiver.name, next_max_customer_limit: Plan.max_customers_limit(receiver.subscription.plan.level, receiver.subscription.rank + 1))
           end
         end
       end

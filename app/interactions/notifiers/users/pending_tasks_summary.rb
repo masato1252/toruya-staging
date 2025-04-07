@@ -26,7 +26,7 @@ module Notifiers
           pending_payment_state.count
 
         if pending_reservations_count.positive? || pending_messages_count.positive? || pending_online_service_count.positive?
-          content = I18n.t("notifier.pending_tasks_summary.base_message", user_name: receiver.profile.last_name)
+          content = I18n.t("notifier.pending_tasks_summary.base_message", user_name: receiver.profile.name)
 
           if pending_messages_count.positive?
             content = "#{content}#{I18n.t("notifier.pending_tasks_summary.pending_customer_message", number: pending_messages_count)}"
