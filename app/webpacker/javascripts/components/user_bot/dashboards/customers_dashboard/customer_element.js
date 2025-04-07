@@ -6,7 +6,7 @@ const CustomerElement = ({customer, selected, onHandleClick, stateIcon}) => {
   return (
     <div
       key={customer.id}
-      className={`customer-option ${selected ? "here" : ""}`}
+      className={`customer-option ${selected ? "here" : ""} ${customer.state === "canceled" ? "canceled" : ""}`}
       onClick={onHandleClick}
     >
       <div className="customer-symbol">

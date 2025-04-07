@@ -56,7 +56,14 @@ const ReservationCustomersList = () =>  {
       </div>
 
       <div className="customers-list">
-        {customers_list.map((customer) => {
+        {customers_list.sort((a, b) => {
+          const stateOrder = {
+            'pending': 0,
+            'accepted': 1,
+            'canceled': 2
+          };
+          return stateOrder[a.state] - stateOrder[b.state];
+        }).map((customer) => {
           return (
             <CustomerElement
               key={`customer-id-${customer.id}`}

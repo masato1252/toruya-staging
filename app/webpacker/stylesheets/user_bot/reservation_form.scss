@@ -138,6 +138,11 @@
         background-color: $palette-color11;
       }
 
+      &.canceled {
+        background-color: $gray4;
+        color: $gray6;
+      }
+
       .customer-symbol {
         width: 30%;
 

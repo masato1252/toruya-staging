@@ -81,7 +81,11 @@ const CustomerModal = () => {
             <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             <h4 className="modal-title">
               <span className={`reservation-state ${selected_customer && selected_customer.state}`}>
-                  {selected_customer && selected_customer.state === pending_state ? props.i18n.pending_state : props.i18n.accepted_state}
+                  {selected_customer && selected_customer.state === "pending"
+                    ? props.i18n.pending_state
+                    : selected_customer && selected_customer.state === "canceled"
+                      ? props.i18n.canceled
+                      : props.i18n.accepted_state}
                </span>
                <span>{selected_customer && selected_customer.label}</span>
             </h4>
@@ -108,11 +112,13 @@ const CustomerModal = () => {
                   onClick={handleToggleCustomerState}>
                   {approved() ? pend : accept_customer}
                 </button>
-                <button
-                  className={`btn btn-orange ${is_editable ? "" : "disabled"}`}
-                  onClick={handleCustomerDelete}>
-                  {customer_cancel}
-                </button>
+                {selected_customer && selected_customer.state !== "canceled" && (
+                  <button
+                    className={`btn btn-orange ${is_editable ? "" : "disabled"}`}
+                    onClick={handleCustomerDelete}>
+                    {customer_cancel}
+                  </button>
+                )}
               </dd>
             </dl>
           </div>
