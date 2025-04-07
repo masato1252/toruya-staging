@@ -74,6 +74,7 @@ class PersonalScheduleDatetimeFields extends React.Component {
         <div className="flex items-center">
           <CommonDatepickerField
             date={this.state.endTimeDatePart}
+            locale={this.props.locale}
             name="custom_schedules[][end_time_date_part]"
             dataName="endTimeDatePart"
             handleChange={this._handleDateChange}
