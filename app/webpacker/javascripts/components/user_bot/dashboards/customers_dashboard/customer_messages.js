@@ -26,19 +26,21 @@ const BottomBar = () => {
         }>
         <i className="fas fa-question-circle fa-2x"></i>
       </button>
-      <button
-        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak btn-extend-right"
-        onClick={
-          () => {
-            if (confirm(I18n.t("user_bot.dashboards.customer.unread_confirmation_message"))) {
-              CustomerServices.unread_message({ business_owner_id: selected_customer.userId, customer_id: selected_customer.id })
-              dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_view" }})
-            }
-          }
-        }>
-        <i className="fas fa-user-clock fa-2x"></i>
-        <div className="word">{I18n.t("user_bot.dashboards.customer.reply_later")}</div>
-      </button>
+      {selected_customer.socialUserId && (
+        <button
+          className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak btn-extend-right"
+          onClick={
+            () => {
+              if (confirm(I18n.t("user_bot.dashboards.customer.unread_confirmation_message"))) {
+                CustomerServices.unread_message({ business_owner_id: selected_customer.userId, customer_id: selected_customer.id })
+                dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_view" }})
+              }
+              }
+          }>
+          <i className="fas fa-user-clock fa-2x"></i>
+          <div className="word">{I18n.t("user_bot.dashboards.customer.reply_later")}</div>
+        </button>
+      )}
     </BottomNavigationBar>
   )
 }
@@ -79,7 +81,11 @@ const UserBotCustomerMessages = () => {
         {more_message_view}
         {[...messages, ...temp_new_messages].map((message, index) => <Message message={message} key={`${message.id}-${index}`} />)}
         <div ref={messageListRef} />
-        <CustomerMessageForm />
+        {selected_customer.socialUserId ? <CustomerMessageForm /> : (
+          <div className="centerize warning">
+            {I18n.t("user_bot.dashboards.customer.message_form_disabled")}
+          </div>
+        )}
       </div>
 
       <BottomBar />
