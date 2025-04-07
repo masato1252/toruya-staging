@@ -26,6 +26,12 @@ ja:
           <div class='button-container'>
             <a href='%{upgrade_url}' class='btn btn-tarco'>今すぐアップグレード</a>
           </div>"
+      toruya_message_reply_block_channel_message_html: "<p>Toruya上からLINEの送受信ができる機能はプレミアム会員限定です。</p><br />
+          <p>お客様との連絡方法をLINEに変更する必要があります</p>
+          <br>
+          <div class='button-container'>
+            <a href='%{setting_url}' class='btn btn-tarco'>今すぐ設定</a>
+          </div>"
     create_reservation_content:
       upgrade_title: 顧客情報が上限に達しました
       upgrade_content_html: <p>既に%{customers_limit}以上の顧客情報をお持ちですね。Toruyaを気に入っていただけて嬉しいです。</p><p>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>

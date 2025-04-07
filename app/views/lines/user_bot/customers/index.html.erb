@@ -25,6 +25,7 @@
     block_toruya_message_reply: !Current.business_owner.support_toruya_message_reply?,
     upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL),
     support_feature_flags: support_feature_flags,
+    is_customer_notification_channel_line: Current.business_owner.customer_notification_channel == "line",
     locale: Current.business_owner.locale,
     i18n: {
     }.merge!([
@@ -64,6 +65,21 @@
     </div>
     <div class="modal-body">
       <%= t("warnings.user_bot.toruya_message_reply_block_message_html", upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL)) %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="toruyaMessageReplyBlockChannelModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+        <%= t("warnings.user_bot.toruya_message_reply.title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <%= t("warnings.user_bot.toruya_message_reply_block_channel_message_html", setting_url: edit_lines_user_bot_settings_user_setting_path(business_owner_id: business_owner_id, attribute: "customer_notification_channel", back_path: lines_user_bot_customers_path(business_owner_id: business_owner_id, customer_id: params[:customer_id]))) %>
       </div>
     </div>
   </div>

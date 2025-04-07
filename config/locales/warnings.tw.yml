@@ -24,6 +24,12 @@ tw:
           <div class='button-container'>
             <a href='%{upgrade_url}' class='btn btn-tarco'>立即升級</a>
           </div>"
+      toruya_message_reply_block_channel_message_html: "<p>透過Toruya收發LINE訊息是高級會員專屬功能。</p><br />
+          <p>您需要將與客戶的聯絡方式轉換成LINE。</p>
+          <br>
+          <div class='button-container'>
+            <a href='%{setting_url}' class='btn btn-tarco'>立即設定</a>
+          </div>"
     create_reservation_content:
       upgrade_title: 客戶資訊已達上限
       upgrade_content_html: <p>您已經擁有%{customers_limit}位以上的客戶資訊了。我們很高興您喜歡使用Toruya。</p><p>透過升級您的使用方案，我們可以繼續協助您的業務成長。</p>

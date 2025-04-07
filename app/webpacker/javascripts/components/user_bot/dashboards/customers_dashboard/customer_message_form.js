@@ -120,12 +120,22 @@ const CustomerMessageForm = () => {
           placeholder={I18n.t("common.delivery_content_placeholder")}
         />
       ) : (
-        <textarea
-          ref={ref}
-          defaultValue={draftMessageContent()}
-          className="extend with-border"
-          placeholder={I18n.t("common.delivery_content_placeholder")}
-        />
+        props.is_customer_notification_channel_line ? (
+          <textarea
+            ref={ref}
+            defaultValue={draftMessageContent()}
+            className="extend with-border"
+            placeholder={I18n.t("common.delivery_content_placeholder")}
+          />
+        ) : (
+          <textarea
+            readOnly={true}
+            onClick={() => $("#toruyaMessageReplyBlockChannelModal").modal("show")}
+            defaultValue={draftMessageContent()}
+            className="extend with-border"
+            placeholder={I18n.t("common.delivery_content_placeholder")}
+          />
+        )
       )}
       <div>
         <label className="flex flex-col">
