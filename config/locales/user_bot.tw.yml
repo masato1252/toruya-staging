@@ -439,7 +439,7 @@ tw:
         clone_successfully: 已複製
         tags_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
         no_broadcasts_title: 沒有分眾傳播過
-        no_broadcasts_desc: 此服務是用來發送訊息給你不同分眾的客戶。
+        no_broadcasts_desc: 這項服務可以幫助您將訊息精確地發送給不同群體的客戶，讓您的溝通更有針對性、更有效。
         form:
           query_title: 發送對象
           query_subtitle: 發送對象
