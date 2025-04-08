@@ -1,9 +1,14 @@
 <div class="survey-response">
+  <% if local_assigns[:show_customer_name] %>
+    <% customer = response.owner.customer %>
+    <h3 class="customer-name mb-3"><%= customer.name %></h3>
+  <% end %>
+
   <% if response.survey&.title.present? %>
     <div class="survey-header">
       <h2><%= response.survey.title %></h2>
       <% if response.survey.description.present? %>
-        <p class="survey-description"><%= response.survey.description %></p>
+        <p class="survey-description"><%= truncate(response.survey.description, length: 20) %></p>
       <% end %>
     </div>
   <% end %>
@@ -12,7 +17,7 @@
     <% response.question_answers.group_by(&:survey_question_id).each do |_, answers| %>
       <div class="question-container">
         <h3 class="question-text">
-          <%= answers.first.survey_question_snapshot %>
+          <%= truncate(answers.first.survey_question_snapshot, length: 20) %>
         </h3>
 
         <% if answers.present? %>
@@ -28,7 +33,7 @@
             <p class="answer-text"><%= answers.first.survey_option_snapshot %></p>
           <% end %>
         <% else %>
-          <p class="no-answer">No answer provided</p>
+          <p class="no-answer"><%= t("common.survey_response.no_answer") %></p>
         <% end %>
       </div>
     <% end %>

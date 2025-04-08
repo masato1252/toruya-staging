@@ -311,6 +311,8 @@ tw:
       line: Line
       email: 電子郵件
       sms: 簡訊
+    survey_response:
+      no_answer: 未回答
   errors:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。

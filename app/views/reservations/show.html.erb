@@ -25,6 +25,9 @@
         <% end %>
       </div>
       <%= render "reservations/show_modal/reservation_info", reservation: @reservation, sentences: @sentences, user_ability: @user_ability %>
+      <% @survey_responses.each do |survey_response| %>
+        <%= render "reservations/show_modal/survey_response", response: survey_response, show_customer_name: true %>
+      <% end %>
     </div>
     <% if params[:_from] != Lines::UserBot::ReservationsController::SCHEDULE_CHECKING %>
       <%= render "reservations/show_modal/buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>

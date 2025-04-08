@@ -17,10 +17,15 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @sentences = view_context.reservation_staff_sentences(@reservation)
     @shop_user = @reservation.shop.user
     @user_ability = ability(@shop_user, @reservation.shop)
-    @customer = Customer.find_by(id: params[:customer_id])
-    @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:customer_id])
-    @paid_payment = @reservation_customer&.paid_payment
-    @survey_response = @reservation_customer&.survey_response
+    if params[:customer_id]
+      @customer = Customer.find_by(id: params[:customer_id])
+      @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:customer_id])
+      @paid_payment = @reservation_customer&.paid_payment
+      @survey_response = @reservation_customer&.survey_response
+    else
+      @reservation_customers = @reservation.reservation_customers
+      @survey_responses = @reservation_customers.map(&:survey_response).compact
+    end
 
     template = params[:from] == "customer_dashboard" ? "reservations/customer_reservation_show" : "reservations/show"
 
