@@ -36,8 +36,28 @@ const ProductSelectionStep = ({next, step, prev}) => {
           }
         }
       })
-      } 
+      }
   }, [])
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_ATTRIBUTE",
+      payload: {
+        attribute: "query",
+        value:  {
+          operator: "or",
+          filters: _.uniqBy([
+            ...(query?.filters || []),
+            {
+              field: "online_service_ids",
+              condition: "contains",
+              value: selected_online_service.id
+            }
+          ], 'value')
+        }
+      }
+    })
+  }, [selected_online_service])
 
   useEffect(() => {
     fetchCustomersCount()
@@ -55,7 +75,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
                 type: "SET_ATTRIBUTE",
                 payload: {
                   attribute: "query",
-                  value: query_payload 
+                  value: query_payload
                 }
               })
             }}
@@ -179,7 +199,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
               <button
                 key={condition.value}
                 className="btn btn-gray mx-2 my-2"
-                onClick={() => 
+                onClick={() =>
                   {
                     dispatch({
                       type: "SET_ATTRIBUTE",
