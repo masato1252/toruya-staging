@@ -7,7 +7,7 @@ const CustomerWithBirthdayQuery = ({customers_count, query, setQuery}) => {
     return (
       <>
         <div className="margin-around centerize">
-          <div className="margin-around"> 
+          <div className="margin-around">
             {I18n.t("common.age")}
             <input
               className="w-10"
@@ -81,9 +81,11 @@ const CustomerWithBirthdayQuery = ({customers_count, query, setQuery}) => {
               </div>
             </div>
           )}
-          <a href='https://toruya.com/faq/broadcast_count-zero'>
-            <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
-          </a>
+          {props.support_feature_flags.support_faq_display && (
+            <a href='https://toruya.com/faq/broadcast_count-zero'>
+              <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
+            </a>
+          )}
         </div>
       </>
     )

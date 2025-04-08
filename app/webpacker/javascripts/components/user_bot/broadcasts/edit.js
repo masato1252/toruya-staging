@@ -299,11 +299,13 @@ const BroadcastEdit =({props}) => {
                       </div>
                     </div>
                   )}
-                  <div className="centerize">
-                    <a href='https://toruya.com/faq/broadcast_count-zero'>
-                      <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
-                    </a>
-                  </div>
+                  {props.support_feature_flags.support_faq_display && (
+                    <div className="centerize">
+                      <a href='https://toruya.com/faq/broadcast_count-zero'>
+                        <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
+                      </a>
+                    </div>
+                  )}
                 </>
               )
           }

@@ -37,7 +37,7 @@ const CustomerWithTagsQuery = ({customer_tags, customers_count, query, setQuery}
             <button
               key={condition.value}
               className="btn btn-gray mx-2 my-2"
-              onClick={() => 
+              onClick={() =>
                 {
                   setQuery({
                     operator: "and",
@@ -58,9 +58,11 @@ const CustomerWithTagsQuery = ({customer_tags, customers_count, query, setQuery}
               </div>
             </div>
           )}
-          <a href='https://toruya.com/faq/broadcast_count-zero'>
-            <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
-          </a>
+          {props.support_feature_flags.support_faq_display && (
+            <a href='https://toruya.com/faq/broadcast_count-zero'>
+              <i className='fa fa-question-circle' />{I18n.t("user_bot.dashboards.broadcast_creation.broadcast_help_tips")}
+            </a>
+          )}
         </div>
       </>
     )
