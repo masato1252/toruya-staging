@@ -725,7 +725,7 @@ tw:
           flow_header: 請說明從預約到使用服務的流程。
           faq_title: 銷售頁面內容
           faq_subtitle: 常見問題
-          faq_header: 請具體列出購買此產品的優點和好處。
+          faq_header: 這邊可以輸入客戶常見的問題和答案。
           faq_content_header: 常見問題
           faq_question_placeholder: 輸入問題
           faq_answer_placeholder: 輸入問題的答案
@@ -744,7 +744,7 @@ tw:
           add_sale_page_to_sell_more: 行銷頁面可以添加服務介紹，客戶評價，常見問題等等的相關資訊
           online_service: 數位商品
           online_service_to_sell_more: 行銷頁面可以添加產品介紹，客戶評價，常見問題等等的相關資訊
-          how_to_sell: 小提示：即使是相同的產品，也可以建立多個銷售頁面，在不同管道行銷。
+          how_to_sell_html: 小提示：即使是相同的產品，也可以建立多個銷售頁面，在不同管道行銷。<br />您可以在這邊看看見範例。<a href="https://manager.toruya.com/sale_pages/x6Ruybavt1" target="_blank" class="underline">行銷頁面範例</a>
         online_service_creation:
           service_step: 商品
           price_step: 銷售價格

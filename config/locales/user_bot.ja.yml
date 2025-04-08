@@ -724,7 +724,7 @@ ja:
           flow_header: 予約からご利用までの 流れを説明してください。
           faq_title: 宣伝用LPコンテンツ
           faq_subtitle: よくある質問
-          faq_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。
+          faq_header: ここにお客様からよくある質問と回答を入力できます。
           faq_content_header: よくある質問
           faq_question_placeholder: 質問を入力
           faq_answer_placeholder: 質問への答えを入力
@@ -743,7 +743,7 @@ ja:
           add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の宣伝用LPを作成
           online_service: オンラインサービス利用者募集
           online_service_to_sell_more: オンラインサービスの利用者を増やす為の宣伝用LPを作成
-          how_to_sell: ヒント：同じ商品でも、複数の宣伝用LPを作成して、異なるチャネルでマーケティングすることができます。
+          how_to_sell_html: ヒント：同じ商品でも、複数の宣伝用LPを作成して、異なるチャネルでマーケティングすることができます。
         online_service_creation:
           service_step: 商品
           price_step: 販売価格
