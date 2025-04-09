@@ -1,0 +1,6 @@
+  <div class="margin-around centerize">
+    <%= t("common.your_current_channel") %>: <span class="warning"><%= t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.#{Current.business_owner.customer_notification_channel}") %></span><br />
+    <%= link_to edit_lines_user_bot_settings_user_setting_path(business_owner_id: Current.business_owner.id, attribute: "customer_notification_channel", back_path: back_path), class: "btn btn-tarco" do %>
+      <%= t("action.change_channel") %>
+    <% end %>
+  </div>

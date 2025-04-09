@@ -47,6 +47,8 @@
     %>
   <% end %>
 
+  <%= render "lines/user_bot/shared/notification_channel_display", back_path: lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id) %>
+
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
     <span></span>
     <%= link_to edit_scenario_lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id, scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>

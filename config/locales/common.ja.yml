@@ -107,6 +107,7 @@ ja:
     verify_identity: 確認する
     complete: 完了
     survey_save: 保存して次へ
+    change_channel: 通知方式を変更する
   common:
     why_need_phone_number: ""
     age: 年齢
@@ -311,6 +312,7 @@ ja:
       sms: メッセージ
     survey_response:
       no_answer: 未回答
+    your_current_channel: 現在の通知方式は
   errors:
     invalid_url: 無効なURL
     invalid_jp_phone_number: 日本の携帯電話は「070」「080」「090」の何れかで始まる11桁の数字で入力してください。

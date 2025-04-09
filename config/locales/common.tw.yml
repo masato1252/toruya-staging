@@ -109,6 +109,7 @@ tw:
     verify_identity: 驗證
     complete: 完成
     survey_save: 儲存
+    change_channel: 變更通知方式
   common:
     why_need_phone_number: ""
     age: 年齡
@@ -313,6 +314,7 @@ tw:
       sms: 簡訊
     survey_response:
       no_answer: 未回答
+    your_current_channel: 您現在通知客戶的方式是
   errors:
     invalid_url: 無效的網址
     invalid_jp_phone_number: 請輸入以「070」、「080」或「090」開頭的11位數字日本手機號碼。
