@@ -132,7 +132,7 @@ const LineKeywordsBookingPages = ({props}) => {
       </DndContext>
       <div className="action-block">
         {booking_pages.length > props.line_columns_number_limit && <div className="warning">{I18n.t("user_bot.dashboards.settings.line_keywords.booking_pages.limit_desc")}</div>}
-        <button className="btn btn-yellow" onClick={handleSubmit} disabled={booking_pages.length === 0}>
+        <button className="btn btn-yellow" onClick={handleSubmit}>
           {I18n.t("action.save")}
         </button>
       </div>
