@@ -8,7 +8,7 @@ import I18n from 'i18n-js/index.js.erb';
 import { getMomentLocale } from "libraries/helper.js";
 
 const CustomerMessageForm = () => {
-  const { selected_customer, draft_message_content, dispatch, props } = useGlobalContext()
+  const { selected_customer, draft_message_content, temp_message_content, dispatch, props } = useGlobalContext()
   const locale = props?.locale || 'ja';
   moment.locale(getMomentLocale(locale));
   const ref = useRef()
@@ -17,6 +17,15 @@ const CustomerMessageForm = () => {
   const [schedule_at, setScheduleAt] = useState(null)
   const [images, setImages] = useState([])
   const [imageURLs, setImageURLs] = useState([])
+
+  const handleTextChange = (e) => {
+    dispatch({
+      type: "SET_TEMP_MESSAGE_CONTENT",
+      payload: {
+        message_content: e.target.value
+      }
+    })
+  }
 
   const handleSubmit = async () => {
     if (submitting || (!ref.current.value && !images[0])) return;
@@ -39,6 +48,10 @@ const CustomerMessageForm = () => {
         payload: {
           customer_id: selected_customer.id,
         }
+      })
+
+      dispatch({
+        type: "CLEAR_TEMP_MESSAGE_CONTENT",
       })
 
       if (response?.data?.redirect_to) {
@@ -123,7 +136,8 @@ const CustomerMessageForm = () => {
         props.is_customer_notification_channel_line ? (
           <textarea
             ref={ref}
-            defaultValue={draftMessageContent()}
+            defaultValue={draftMessageContent() || temp_message_content}
+            onChange={handleTextChange}
             className="extend with-border"
             placeholder={I18n.t("common.delivery_content_placeholder")}
           />

@@ -14,7 +14,8 @@ const initialState = {
   reservations: [],
   payments: [],
   temp_new_messages: [],
-  draft_message_content: {}
+  draft_message_content: {},
+  temp_message_content: ""
 }
 
 export default (state = initialState, action) => {
@@ -87,6 +88,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         draft_message_content: {...state.draft_message_content, [action.payload.customer_id.toString()]: action.payload.message_content},
+      }
+    case "SET_TEMP_MESSAGE_CONTENT":
+      return {
+        ...state,
+        temp_message_content: action.payload.message_content
+      }
+    case "CLEAR_TEMP_MESSAGE_CONTENT":
+      return {
+        ...state,
+        temp_message_content: ""
       }
     case "REMOVE_DRAFT_CUSTOMER_MESSAGE":
       new_draft_message_content = _.omit(state.draft_message_content, [action.payload.customer_id.toString()]);
