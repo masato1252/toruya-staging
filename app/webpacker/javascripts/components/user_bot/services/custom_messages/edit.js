@@ -1,6 +1,7 @@
 "use strict"
 
 import React, { useState, useRef, useEffect } from "react";
+import TextareaAutosize from 'react-autosize-textarea';
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
@@ -101,7 +102,7 @@ const CustomMessageEdit =({props}) => {
             )}
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.content")}</div>
             <div className="field-row">
-              <textarea
+              <TextareaAutosize
                 ref={textareaRef}
                 autoFocus={true}
                 className="extend with-border"

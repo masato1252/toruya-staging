@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import moment from "moment-timezone";
+import TextareaAutosize from 'react-autosize-textarea';
 import { debounce } from "lodash";
 
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
@@ -134,7 +135,7 @@ const CustomerMessageForm = () => {
         />
       ) : (
         props.is_customer_notification_channel_line ? (
-          <textarea
+          <TextareaAutosize
             ref={ref}
             defaultValue={draftMessageContent() || temp_message_content}
             onChange={handleTextChange}

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import _ from "lodash";
 import moment from "moment-timezone";
 import ReactSelect from "react-select";
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields } from "shared/components"
 import SurveyBuilder from "components/shared/survey";
@@ -157,13 +158,13 @@ const BookingPageEdit =({props}) => {
       case "greeting":
         return (
           <div className="field-row column-direction">
-            <textarea autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.greeting_placeholder} rows="4" colos="40" className="extend" />
+            <TextareaAutosize autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.greeting_placeholder} rows="4" colos="40" className="extend" />
           </div>
         );
       case "note":
         return (
           <div className="field-row column-direction">
-            <textarea autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.note_label} rows="4" colos="40" className="extend" />
+            <TextareaAutosize autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.note_label} rows="4" colos="40" className="extend" />
           </div>
             );
       case "shop_id":

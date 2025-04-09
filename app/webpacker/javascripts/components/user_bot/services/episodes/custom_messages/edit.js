@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { CustomMessageServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
@@ -69,7 +70,7 @@ const CustomMessageEdit =({props}) => {
             <div className="field-row">{I18n.t("user_bot.dashboards.settings.custom_message.episode.episode_watched", { episode_name: props.episode_name })}</div>
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.content")}</div>
             <div className="field-row">
-              <textarea
+              <TextareaAutosize
                 ref={textareaRef}
                 autoFocus={true}
                 className="extend with-border"
