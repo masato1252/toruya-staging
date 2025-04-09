@@ -206,7 +206,7 @@ class User < ApplicationRecord
   end
 
   def support_toruya_message_reply?
-    premium_member? && subscription.active?
+    (premium_member? || trial_member?) && subscription.active?
   end
 
   def valid_shop_ids

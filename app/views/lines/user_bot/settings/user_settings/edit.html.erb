@@ -8,6 +8,7 @@
     booking_option_introduction_asset_path: asset_pack_path("media/assets/user_bot/booking_option_introduction.png"),
     line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
     is_paid_user: Current.business_owner.subscription.active_paid_plan?,
+    is_trial_user: Current.business_owner.trial_member?,
     line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id))
   }
 },

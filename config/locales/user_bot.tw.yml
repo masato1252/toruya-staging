@@ -103,6 +103,7 @@ tw:
               enable_menu_concept: 啟用
               disable_menu_concept: 不啟用
           customer_notification_channel:
+            trial_user_warning: ※您還在試用期內所以可以變更通知方式，如果超過試用期，則需要付費方案才能變更通知方式。
             title: 客戶通知方式
             options:
               email: 電子郵件

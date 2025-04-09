@@ -103,6 +103,7 @@ ja:
               enable_menu_concept: 有効にする
               disable_menu_concept: 無効にする
           customer_notification_channel:
+            trial_user_warning: ※試用期間中は通知方式を変更できます。試用期間終了後は有料プランにアップグレードする必要があります。
             title: 顧客通知方式
             options:
               email: 電子メール

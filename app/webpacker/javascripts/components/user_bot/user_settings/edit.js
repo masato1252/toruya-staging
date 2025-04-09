@@ -48,7 +48,7 @@ const UserSettingsEdit =({props}) => {
                 type="radio"
                 value="sms"
                 ref={register({ required: true })}
-                disabled={!props.is_paid_user}
+                disabled={!(props.is_paid_user || props.is_trial_user)}
               />
               {I18n.t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.sms")}
               <span className="text-sm text-red-500 ml-2">
@@ -61,7 +61,7 @@ const UserSettingsEdit =({props}) => {
                 type="radio"
                 value="line"
                 ref={register({ required: true })}
-                disabled={!props.is_paid_user || !props.line_settings_verified}
+                disabled={!(props.is_paid_user || props.is_trial_user) || !props.line_settings_verified}
               />
               {I18n.t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.line")}
               <span className="text-sm text-red-500 ml-2">
@@ -78,6 +78,13 @@ const UserSettingsEdit =({props}) => {
             {!props.line_settings_verified && (
               <div className="margin-around centerize">
                 <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
+              </div>
+            )}
+            {props.is_trial_user && (
+              <div className="margin-around centerize warning">
+                <span className="text-sm text-red-500">
+                  {I18n.t("user_bot.dashboards.settings.user_settings.customer_notification_channel.trial_user_warning")}
+                </span>
               </div>
             )}
           </>
