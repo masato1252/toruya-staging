@@ -30,7 +30,7 @@ namespace :subscriptions do
   end
 
   task :trial_member_reminder => :environment do
-    # today = Subscription.today
+    today = Subscription.today
 
     # scope = User
     #   .joins(:subscription)
@@ -51,7 +51,17 @@ namespace :subscriptions do
     #   sleep(0.01)
     # end
 
-    # SlackClient.send(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
+    # change notification channel to email for trial users who was expired in 2 ~ 7 days
+    expired_trail_scope = User.joins(:subscription).where("subscriptions.trial_expired_date": today.advance(days: -2)..today.advance(days: -7)).where("subscriptions.plan_id = ?", Subscription::FREE_PLAN_ID)
+
+    expired_trail_scope.find_each do |user|
+      if user.user_setting.customer_notification_channel != "email"
+        user.user_setting.update(customer_notification_channel: "email")
+        Notifiers::Users::Reminders::TrialMemberChangeNotificationChannel.perform_later(receiver: user, user: user)
+      end
+    end
+
+    SlackClient.send(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
   end
 
   task :renew_payment_access_token => :environment do

@@ -75,6 +75,8 @@ https://manager.toruya.com/tw/userlogin"
         message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n試用期結束日期還有7天就到了。\n\n為了繼續使用相同的功能，請在%{trial_expired_date}之前完成付款手續。\n\n%{plan_url}\n\n我們非常希望能夠得到您的意見跟回饋，所以如果您對於我們服務有任何建議或問題都可以直接透過Line 送訊息與我們聯絡，感謝。\n\nToruya"
       trial_member_day_ago_reminder:
         message: "%{user_name} 您好\n\n感謝您一直以來使用預約管理系統Toruya。\n\n試用期已經結束。\n\n通過從設置畫面更改方案，您可以繼續使用相同的功能。\n\n%{plan_url}\n\nToruya"
+      trial_member_changed_notification_channel:
+        message: "%{user_name} 您好\n\n感謝您一直以來使用Toruya。\n\n試用期已經結束。\n\n我們已將您的客戶的通知方式更改為電子郵件。\n\n通過從設置畫面更改方案，您可以繼續使用相同的功能。\n\n%{plan_url}\n\nToruya"
       free_plan_reach_customers_limit:
         message:  "%{user_name}您好\n\n客戶數量已達到上限。\n\n從現在開始，您將無法確認從線上預約頁面建立的新客戶信息或批准預約。\n\n如果您想繼續像以前一樣使用，請從設置畫面更改您的使用方案。"
       free_plan_close_customers_limit:

@@ -75,6 +75,8 @@ https://manager.toruya.com/userlogin"
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間の終了日が７日後に迫ってまいりました。\n\n今後も引き続き同じ機能をご利用いただくためにも、%{trial_expired_date}までにお支払い手続きをお済ませください。\n\n%{plan_url}\n\nToruya"
       trial_member_day_ago_reminder:
         message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間が終了いたしました。\n\n設定画面からプラン変更をすることで、引き続き同じ機能をご利用いただけます。\n\n%{plan_url}\n\nToruya"
+      trial_member_changed_notification_channel:
+        message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間が終了いたしました。\n\nお客様への通知方法をメールに変更させていただきました。\n\n設定画面からプラン変更をすることで、引き続き同じ機能をご利用いただけます。\n\n%{plan_url}\n\nToruya"
       free_plan_reach_customers_limit:
         message:  "%{user_name}様\n\n顧客数が上限に達しました。\n\nこれ以降、オンライン予約ページから作成された新規顧客の情報確認や予約の承認が確認できなくなります。\n\nこれまで通りご利用いただくには、設定画面よりご利用プランを変更してください。"
       free_plan_close_customers_limit:
