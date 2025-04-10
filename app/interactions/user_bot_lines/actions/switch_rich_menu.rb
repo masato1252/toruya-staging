@@ -34,6 +34,6 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
   private
 
   def unread_messages_exists?(owner)
-    owner.social_account && owner.support_toruya_message_reply? && owner.social_account.social_messages.handleable.unread.exists?
+    owner.social_account && owner.social_account.social_messages.handleable.unread.exists?
   end
 end

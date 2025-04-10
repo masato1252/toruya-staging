@@ -39,11 +39,13 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
         before { FactoryBot.create(:social_message, social_account: social_account) }
 
         context "when user is basic plan user" do
-          it "switch to expected rich_menu" do
+          before { user.subscription.update(plan: Plan.basic_level.take) }
+
+          it "switch to notifications dashboard menu" do
             expect(RichMenus::Connect).to receive(:run).with(
               {
                 social_target: social_user,
-                social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+                social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
               }
             ).and_return(double(invalid?: false, result: double))
 
@@ -54,7 +56,7 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
         context "when user is premium plan user" do
           before { user.subscription.update(plan: Plan.premium_level.take, expired_date: Subscription.today.advance(days: 1)) }
 
-          it "switch to expected rich_menu" do
+          it "switch to notifications dashboard menu" do
             expect(RichMenus::Connect).to receive(:run).with(
               {
                 social_target: social_user,
@@ -67,8 +69,25 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
         end
       end
 
-      context "when there is no unread message" do
-        it "switch to expected rich_menu" do
+      context "when there is pending reservation" do
+        before {
+          allow_any_instance_of(User).to receive(:pending_reservations).and_return(double(exists?: true))
+        }
+
+        it "switch to notifications dashboard menu" do
+          expect(RichMenus::Connect).to receive(:run).with(
+            {
+              social_target: social_user,
+              social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::DashboardWithNotifications::KEY)
+            }
+          ).and_return(double(invalid?: false, result: double))
+
+          outcome
+        end
+      end
+
+      context "when there is no unread message or pending tasks" do
+        it "switch to basic dashboard menu" do
           expect(RichMenus::Connect).to receive(:run).with(
             {
               social_target: social_user,
