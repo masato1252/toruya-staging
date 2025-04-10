@@ -68,7 +68,7 @@ module Notifiers
         return unless business_owner.subscription.active?
         # send to customer decided by business owner
         # if message is a json string, send to line
-        if message.is_a?(String) && content_type != SocialUserMessages::Create::TEXT_TYPE
+        if content_type != SocialUserMessages::Create::TEXT_TYPE
           send_notification_with_fallbacks(preferred_channel: "line")
         else
           send_notification_with_fallbacks(preferred_channel: business_owner.customer_notification_channel)
