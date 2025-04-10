@@ -87,19 +87,35 @@ RSpec.describe Notifiers::Customers::OnlineServices::ActiveRelations, :with_line
     context "when testing notification channels" do
       include_context "notification setup"
 
-      context "when customer_notification_channel is email" do
+      context "when content_type is not TEXT_TYPE" do
         before do
-          user_setting.update(customer_notification_channel: "email")
+          allow_any_instance_of(described_class).to receive(:content_type).and_return("image")
         end
 
-        context "when all channels are available" do
+        context "when line is available" do
           before { all_channels_available }
 
-          it "sends only email notification and never SMS or LINE" do
-            # Key requirement: when channel is email, never send SMS or LINE
-            expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
+          it "sends line notification regardless of customer_notification_channel setting" do
+            # Set notification channel to email, but should still use LINE for non-text content
+            user_setting.update(customer_notification_channel: "email")
+
+            expect_any_instance_of(described_class).to receive(:notify_by_line).and_return(true)
             expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+
+            outcome
+          end
+        end
+
+        context "when line is not available but other channels are" do
+          before { set_availability(email: true, sms: true, line: false) }
+
+          it "falls back to sms when line is not available" do
+            user_setting.update(customer_notification_channel: "email")
+
             expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+            expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
+            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
 
             outcome
           end
@@ -108,147 +124,186 @@ RSpec.describe Notifiers::Customers::OnlineServices::ActiveRelations, :with_line
         context "when only email is available" do
           before { only_email_available }
 
-          it "sends only email notification" do
+          it "falls back to email when line and sms are not available" do
+            user_setting.update(customer_notification_channel: "sms")
+
+            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
             expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-
-            outcome
-          end
-        end
-
-        context "when email is not available" do
-          before { set_availability(email: false, sms: true, line: true) }
-
-          it "doesn't send any notification when email is not available" do
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
 
             outcome
           end
         end
       end
 
-      context "when customer_notification_channel is sms" do
+      context "when content_type is TEXT_TYPE" do
         before do
-          user_setting.update(customer_notification_channel: "sms")
+          allow_any_instance_of(described_class).to receive(:content_type).and_return(SocialUserMessages::Create::TEXT_TYPE)
         end
 
-        context "when all channels are available" do
-          before { all_channels_available }
+        context "when customer_notification_channel is email" do
+          before do
+            user_setting.update(customer_notification_channel: "email")
+          end
 
-          it "sends sms notification and never LINE" do
-            # Key requirement: when channel is sms, never send LINE
-            expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            # May not test email since it depends on implementation
+          context "when all channels are available" do
+            before { all_channels_available }
 
-            outcome
+            it "sends only email notification and never SMS or LINE" do
+              # Key requirement: when channel is email, never send SMS or LINE
+              expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+
+              outcome
+            end
+          end
+
+          context "when only email is available" do
+            before { only_email_available }
+
+            it "sends only email notification" do
+              expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+
+              outcome
+            end
+          end
+
+          context "when email is not available" do
+            before { set_availability(email: false, sms: true, line: true) }
+
+            it "doesn't send any notification when email is not available" do
+              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+
+              outcome
+            end
           end
         end
 
-        context "when only sms is available" do
-          before { only_sms_available }
+        context "when customer_notification_channel is sms" do
+          before do
+            user_setting.update(customer_notification_channel: "sms")
+          end
 
-          it "sends only sms notification" do
-            expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+          context "when all channels are available" do
+            before { all_channels_available }
 
-            outcome
+            it "sends sms notification and never LINE" do
+              # Key requirement: when channel is sms, never send LINE
+              expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+              # May not test email since it depends on implementation
+
+              outcome
+            end
+          end
+
+          context "when only sms is available" do
+            before { only_sms_available }
+
+            it "sends only sms notification" do
+              expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+
+              outcome
+            end
+          end
+
+          context "when sms is not available but email is" do
+            before { set_availability(email: true, sms: false, line: true) }
+
+            it "sends email notification as fallback but never LINE" do
+              # Key requirement: when channel is sms, never send LINE even as fallback
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+
+              outcome
+            end
+          end
+
+          context "when neither sms nor email is available" do
+            before { set_availability(email: false, sms: false, line: true) }
+
+            it "doesn't send any notification (not even LINE)" do
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+
+              outcome
+            end
           end
         end
 
-        context "when sms is not available but email is" do
-          before { set_availability(email: true, sms: false, line: true) }
-
-          it "sends email notification as fallback but never LINE" do
-            # Key requirement: when channel is sms, never send LINE even as fallback
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-
-            outcome
+        context "when customer_notification_channel is line" do
+          before do
+            user_setting.update(customer_notification_channel: "line")
           end
-        end
 
-        context "when neither sms nor email is available" do
-          before { set_availability(email: false, sms: false, line: true) }
+          context "when all channels are available" do
+            before { all_channels_available }
 
-          it "doesn't send any notification (not even LINE)" do
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+            it "sends line notification as highest priority" do
+              # Key requirement: when channel is line, line has highest priority
+              expect_any_instance_of(described_class).to receive(:notify_by_line).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
 
-            outcome
+              outcome
+            end
           end
-        end
-      end
 
-      context "when customer_notification_channel is line" do
-        before do
-          user_setting.update(customer_notification_channel: "line")
-        end
+          context "when only line is available" do
+            before { only_line_available }
 
-        context "when all channels are available" do
-          before { all_channels_available }
+            it "sends only line notification" do
+              expect_any_instance_of(described_class).to receive(:notify_by_line).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
 
-          it "sends line notification as highest priority" do
-            # Key requirement: when channel is line, line has highest priority
-            expect_any_instance_of(described_class).to receive(:notify_by_line).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
-
-            outcome
+              outcome
+            end
           end
-        end
 
-        context "when only line is available" do
-          before { only_line_available }
+          context "when line is not available but sms is" do
+            before { set_availability(email: true, sms: true, line: false) }
 
-          it "sends only line notification" do
-            expect_any_instance_of(described_class).to receive(:notify_by_line).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+            it "sends sms notification as first fallback" do
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+              expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
 
-            outcome
+              outcome
+            end
           end
-        end
 
-        context "when line is not available but sms is" do
-          before { set_availability(email: true, sms: true, line: false) }
+          context "when line and sms are not available but email is" do
+            before { set_availability(email: true, sms: false, line: false) }
 
-          it "sends sms notification as first fallback" do
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+            it "sends email notification as final fallback" do
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
 
-            outcome
+              outcome
+            end
           end
-        end
 
-        context "when line and sms are not available but email is" do
-          before { set_availability(email: true, sms: false, line: false) }
+          context "when no notification channels are available" do
+            before { set_availability(email: false, sms: false, line: false) }
 
-          it "sends email notification as final fallback" do
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
+            it "doesn't send any notification" do
+              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
+              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
 
-            outcome
-          end
-        end
-
-        context "when no notification channels are available" do
-          before { set_availability(email: false, sms: false, line: false) }
-
-          it "doesn't send any notification" do
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
-
-            outcome
+              outcome
+            end
           end
         end
       end
