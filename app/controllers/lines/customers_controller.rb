@@ -14,7 +14,13 @@ class Lines::CustomersController < ActionController::Base
   private
 
   def current_customer
-    current_social_customer&.customer || current_owner.customers.find_by(id: cookies[:verified_customer_id])
+    if params[:encrypted_customer_id].present?
+      _id = MessageEncryptor.decrypt(params[:encrypted_customer_id])
+      cookies.permanent[:verified_customer_id] = _id
+      current_owner.customers.find_by(id: _id)
+    else
+      current_social_customer&.customer || current_owner.customers.find_by(id: cookies[:verified_customer_id])
+    end
   end
   helper_method :current_customer
   before_action :set_locale

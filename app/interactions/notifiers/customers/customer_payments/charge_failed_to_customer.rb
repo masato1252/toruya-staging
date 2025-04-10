@@ -17,7 +17,8 @@ module Notifiers
             shop_phone: online_service.company.company_phone_number,
             customer_status_online_service_url: url_helpers.customer_status_online_service_url(
               slug: online_service.slug,
-              encrypted_social_service_user_id: MessageEncryptor.encrypt(customer_payment.customer.social_customer.social_user_id)
+              encrypted_social_service_user_id: MessageEncryptor.encrypt(customer_payment.customer&.social_customer&.social_user_id),
+              encrypted_customer_id: MessageEncryptor.encrypt(customer_payment.customer_id)
             )
           )
         end
