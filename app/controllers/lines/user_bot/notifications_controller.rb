@@ -10,7 +10,7 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
 
       {
         user: user,
-        messages: user.support_toruya_message_reply? ? user.social_account.social_messages.handleable.unread : [],
+        messages: user.social_account.social_messages.handleable.unread,
         reservations: user.pending_reservations || [],
         missing_sale_page_services: user.missing_sale_page_services || [],
         pending_customer_services: user.pending_customer_services || []
