@@ -85,6 +85,7 @@ tw:
       messages:
         incoming_reservations:
           desc: "如需變更或取消預約，請直接與我們聯繫。"
+          desc_allow_customer_cancel: "如需取消預約，請直接在『預約詳情頁面』中進行。"
           no_incoming_messages: 未找到可顯示的預約。
         booking_pages:
           no_available_pages: 很抱歉，目前沒有可顯示的預約頁面。

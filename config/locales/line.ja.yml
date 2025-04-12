@@ -85,6 +85,7 @@ ja:
       messages:
         incoming_reservations:
           desc: "ご予約の変更・キャンセルは、直接ご連絡ください。"
+          desc_allow_customer_cancel: "キャンセルは「予約詳細を確認する」ボタンから行えます。"
           no_incoming_messages: 表示できる予約は見つかりませんでした。
         booking_pages:
           no_available_pages: 申し訳ありませんが、現在、表示できる予約ページがありません。

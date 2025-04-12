@@ -38,7 +38,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)}~",
         title2: reservation.menus.map(&:display_name).join(", "),
         title3: shop.display_name,
-        body: I18n.t("line.bot.messages.incoming_reservations.desc", shop_phone_number: shop.phone_number),
+        body: reservation_customer.allow_customer_cancel? ? I18n.t("line.bot.messages.incoming_reservations.desc_allow_customer_cancel") : I18n.t("line.bot.messages.incoming_reservations.desc"),
         action_templates: action_templates
       )
     end
