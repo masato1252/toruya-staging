@@ -5,6 +5,7 @@ module Shops
     object :shop
 
     def execute
+      return errors.add(:profile, :not_found) unless shop.user
       profile = shop.user.profile
       return errors.add(:profile, :not_found) unless profile
 
