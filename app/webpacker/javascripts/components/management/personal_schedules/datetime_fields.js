@@ -1,7 +1,9 @@
 "use strict";
 
 import React from "react";
+import moment from "moment";
 import CommonDatepickerField from "shared/datepicker_field.js";
+import { CustomTimePicker } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
 
 class PersonalScheduleDatetimeFields extends React.Component {
@@ -10,9 +12,9 @@ class PersonalScheduleDatetimeFields extends React.Component {
 
     this.state = {
       startTimeDatePart: this.props.startTimeDatePart,
-      startTimeTimePart: this.props.startTimeTimePart,
+      startTimeTimePart: this.props.startTimeTimePart ? moment(this.props.startTimeTimePart, "HH:mm:ss") : null,
       endTimeDatePart: this.props.endTimeDatePart,
-      endTimeTimePart: this.props.endTimeTimePart
+      endTimeTimePart: this.props.endTimeTimePart ? moment(this.props.endTimeTimePart, "HH:mm:ss") : null
     }
   };
 
@@ -26,15 +28,19 @@ class PersonalScheduleDatetimeFields extends React.Component {
        ) {
      this.setState({
        startTimeDatePart: nextProps.startTimeDatePart,
-       startTimeTimePart: nextProps.startTimeTimePart,
+       startTimeTimePart: nextProps.startTimeTimePart ? moment(nextProps.startTimeTimePart, "HH:mm:ss") : null,
        endTimeDatePart: nextProps.endTimeDatePart,
-       endTimeTimePart: nextProps.endTimeTimePart
+       endTimeTimePart: nextProps.endTimeTimePart ? moment(nextProps.endTimeTimePart, "HH:mm:ss") : null
      });
     }
   }
 
   _handleChange = (event) => {
     this.setState({[event.target.dataset.name]: event.target.value})
+  };
+
+  _handleTimeChange = (time, fieldName) => {
+    this.setState({ [fieldName]: time });
   };
 
   _handleDateChange = (dateChange) => {
@@ -60,13 +66,11 @@ class PersonalScheduleDatetimeFields extends React.Component {
             calendarfieldPrefix={this.props.calendarfieldPrefix}
             hideCalendar={this.props.hideCalendar}
           />
-          <input
-            type="time"
+          <CustomTimePicker
+            value={this.state.startTimeTimePart}
+            onChange={(time) => this._handleTimeChange(time, 'startTimeTimePart')}
             name="custom_schedules[][start_time_time_part]"
-            data-name="startTimeTimePart"
-            value={this.state.startTimeTimePart || ""}
-            size="20"
-            onChange={this._handleChange} />
+          />
           <span>
             {I18n.t("common.from_when")}
           </span>
@@ -81,13 +85,11 @@ class PersonalScheduleDatetimeFields extends React.Component {
             calendarfieldPrefix={this.props.calendarfieldPrefix}
             hideCalendar={this.props.hideCalendar}
           />
-          <input
-            type="time"
+          <CustomTimePicker
+            value={this.state.endTimeTimePart}
+            onChange={(time) => this._handleTimeChange(time, 'endTimeTimePart')}
             name="custom_schedules[][end_time_time_part]"
-            data-name="endTimeTimePart"
-            value={this.state.endTimeTimePart || ""}
-            size="20"
-            onChange={this._handleChange} />
+          />
           <span>
             {I18n.t("common.until_when")}
           </span>

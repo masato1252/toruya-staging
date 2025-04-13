@@ -132,8 +132,16 @@ class BookingPage < ApplicationRecord
     Time.zone.now >= start_time
   end
 
+  def special_date_booking_period_ended?
+    (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at)
+  end
+
+  def booking_period_ended?
+    cut_off_time && Time.current > cut_off_time ||(end_at && Time.zone.now > end_at)
+  end
+
   def ended?
-    (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at) || deleted_at.present? || (cut_off_time && Time.current > cut_off_time)
+    booking_period_ended? || deleted_at.present? || special_date_booking_period_ended?
   end
 
   def booking_type

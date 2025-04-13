@@ -5,6 +5,9 @@ import _ from "lodash";
 import { sortableHandle } from "react-sortable-hoc";
 import Routes from 'js-routes.js'
 import { WithContext as ReactTags } from "react-tag-input";
+import TimePicker from 'rc-time-picker';
+import moment from 'moment';
+import { Controller } from "react-hook-form";
 
 const ErrorMessage = ({ error }) => (
   <p className="field-error-message" dangerouslySetInnerHTML={{ __html: error }} />
@@ -550,6 +553,58 @@ const TagsInput = ({ suggestions, tags, setTags }) => {
   )
 }
 
+const TimePickerController = ({name, control, defaultValue}) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={defaultValue}
+      render={({ onChange, value }) => (
+        <TimePicker
+          showSecond={false}
+          minuteStep={5}
+          value={value ? moment(value, 'HH:mm') : null}
+          onChange={(time) => onChange(time ? time.format('HH:mm') : null)}
+          format="HH:mm"
+          allowEmpty={false}
+          addon={(panel) => (
+            <button
+              className="btn btn-primary"
+              style={{ width: '100%', marginTop: '5px' }}
+              onClick={() => panel.close()}
+            >
+              OK
+            </button>
+          )}
+        />
+      )}
+    />
+  )
+}
+
+const CustomTimePicker = ({value, onChange, name}) => {
+  return (
+    <TimePicker
+      name={name}
+      showSecond={false}
+      minuteStep={5}
+      allowEmpty={false}
+      value={value}
+      onChange={(time) => onChange(time)}
+      format="HH:mm"
+      addon={(panel) => (
+        <button
+          className="btn btn-primary"
+          style={{ width: '100%', marginTop: '5px' }}
+          onClick={() => panel.close()}
+        >
+          OK
+        </button>
+      )}
+    />
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -582,5 +637,7 @@ export {
   TicketPriceDesc,
   TicketOptionsFields,
   CheckboxSearchFields,
-  TagsInput
+  TagsInput,
+  TimePickerController,
+  CustomTimePicker
 };

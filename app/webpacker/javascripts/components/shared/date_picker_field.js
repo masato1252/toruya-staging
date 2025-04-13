@@ -12,8 +12,8 @@ const MONTHS = {
   'zh-TW': ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
 };
 
-const DatePickerField = ({date, handleChange, hiddenWeekDate, isDisabled, locale = 'ja'}) => {
-  const momentLocale = getMomentLocale(locale);
+const DatePickerField = ({date, handleChange, hiddenWeekDate, isDisabled}) => {
+  const momentLocale = getMomentLocale(I18n.locale);
   moment.locale(momentLocale);
 
   const formatMonthTitle = (d, displayLocale = momentLocale) => {

@@ -3,11 +3,11 @@
 import React, { Fragment } from "react";
 import { useFieldArray, Controller } from "react-hook-form";
 import moment from "moment-timezone";
-
 import DatePickerField from "shared/date_picker_field"
+import { TimePickerController } from "shared/components"
 import I18n from 'i18n-js/index.js.erb';
 
-const SpecialDatesFields = ({special_dates_fields, register, control, setValue, i18n}) => {
+const SpecialDatesFields = ({special_dates_fields, register, control, watch, setValue, i18n}) => {
   return (
     special_dates_fields.fields.map((field, index) => (
       <div key={field.id} className="field-row flex-start date-row">
@@ -27,8 +27,16 @@ const SpecialDatesFields = ({special_dates_fields, register, control, setValue, 
           )}
         />
         <input type="date" name={`special_dates[${index}].end_at_date_part`} ref={register({ required: true })} defaultValue={field.end_at_date_part} className="display-hidden"/>
-        <input type="time" name={`special_dates[${index}].start_at_time_part`} ref={register({ required: true })} defaultValue={field.start_at_time_part} />
-        <input type="time" name={`special_dates[${index}].end_at_time_part`} ref={register({ required: true })} defaultValue={field.end_at_time_part} />
+        <TimePickerController
+          name={`special_dates[${index}].start_at_time_part`}
+          control={control}
+          defaultValue={watch(`special_dates[${index}].start_at_time_part`)}
+        /> ～
+        <TimePickerController
+          name={`special_dates[${index}].end_at_time_part`}
+          control={control}
+          defaultValue={watch(`special_dates[${index}].end_at_time_part`)}
+        />
         <button className="btn btn-orange" onClick={() => special_dates_fields.remove(index)}>
           <i className="fa fa-minus"></i>
           <span>{i18n.delete}</span>
@@ -38,7 +46,7 @@ const SpecialDatesFields = ({special_dates_fields, register, control, setValue, 
   )
 }
 
-const WeekdayBusinessSchedules = ({register, weekday, business_schedule_fields}) => {
+const WeekdayBusinessSchedules = ({register, weekday, business_schedule_fields, control, watch}) => {
   const weekday_business_schedule_fields = business_schedule_fields.fields
 
   return (
@@ -50,7 +58,17 @@ const WeekdayBusinessSchedules = ({register, weekday, business_schedule_fields})
         return (
           <div key={field.id} className="field-row flex-start">
             <input type="hidden" name={`business_schedules[${index}].day_of_week`} defaultValue={field.day_of_week} ref={register({ required: true })} />
-            <input type="time" name={`business_schedules[${index}].start_time`} defaultValue={field.start_time} ref={register({ required: true })} /> 〜 <input type="time" name={`business_schedules[${index}].end_time`} defaultValue={field.end_time} ref={register({ required: true })} />
+            <TimePickerController
+              name={`business_schedules[${index}].start_time`}
+              control={control}
+              defaultValue={watch(`business_schedules[${index}].start_time`)}
+            />
+            〜
+            <TimePickerController
+              name={`business_schedules[${index}].end_time`}
+              control={control}
+              defaultValue={watch(`business_schedules[${index}].end_time`)}
+            />
             {weekday_business_schedule_fields.filter((field) => field.day_of_week == weekday).length > 0 && (
               <button className="btn btn-orange" onClick={() => business_schedule_fields.remove(index)}>
                 <i className="fa fa-minus"></i>
@@ -107,7 +125,7 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
               <span>{I18n.t('settings.booking_page.form.add_special_dates_btn')}</span>
             </button>
           </div>
-          <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} i18n={i18n} />
+          <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} watch={watch} setValue={setValue} i18n={i18n} />
         </>
       }
       <label className="field-row flex-start">
@@ -122,7 +140,10 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
               key={weekday}
               register={register}
               weekday={weekday}
-              business_schedule_fields={business_schedule_fields} />
+              business_schedule_fields={business_schedule_fields}
+              control={control}
+              watch={watch}
+            />
           )
         })}
       </>}
@@ -140,7 +161,7 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
               <span>{I18n.t('settings.booking_page.form.add_special_dates_btn')}</span>
             </button>
           </div>
-          <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} i18n={i18n} />
+          <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} watch={watch} setValue={setValue} i18n={i18n} />
           <div>{I18n.t("settings.booking_page.form.event_booking_hint")}</div>
         </>
       }

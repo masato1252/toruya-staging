@@ -4,7 +4,6 @@ import React from "react";
 import moment from "moment-timezone";
 import DayPickerInput from 'react-day-picker//DayPickerInput';
 import MomentLocaleUtils, { parseDate } from 'react-day-picker/moment';
-import 'moment/locale/ja';
 import { getMomentLocale } from "libraries/helper.js";
 
 class CommonDatepickerField extends React.Component {
@@ -25,6 +24,8 @@ class CommonDatepickerField extends React.Component {
   }
 
   render() {
+    moment.locale(getMomentLocale(this.props.locale));
+
     return(
       <div className={`datepicker-field ${this.props.dataName}`}>
         <DayPickerInput

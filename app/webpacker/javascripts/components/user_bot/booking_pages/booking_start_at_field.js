@@ -5,6 +5,7 @@ import { Controller } from "react-hook-form";
 import moment from "moment-timezone";
 
 import DatePickerField from "shared/date_picker_field"
+import { TimePickerController } from "shared/components"
 
 const BookingStartAtField = ({i18n, register, watch, control}) => {
   return (
@@ -32,7 +33,11 @@ const BookingStartAtField = ({i18n, register, watch, control}) => {
               />
             )}
           />
-          <input type="time" name={`start_at_time_part`} ref={register({ required: true })} />
+          <TimePickerController
+            control={control}
+            defaultValue={watch(`start_at_time_part`)}
+            name={`start_at_time_part`}
+          />
         </div>
       }
     </>

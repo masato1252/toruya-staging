@@ -104,7 +104,12 @@
         <div class="field-group-header" id="booking_dates_available_booking_date"><%= I18n.t("settings.booking_page.form.booking_period_header") %></div>
         <%= render "lines/user_bot/field_row",
           path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_type),
-          title: I18n.t("settings.booking_page.form.#{@booking_page.booking_type}_label") %>
+          klass: @booking_page.special_date_booking_period_ended? ? "border-red border-solid" : "" do %>
+          <span><%= I18n.t("settings.booking_page.form.#{@booking_page.booking_type}_label") %></span>
+          <% if @booking_page.special_date_booking_period_ended? %>
+            <div class="danger"><%= I18n.t("settings.booking_page.form.form_errors.expired") %></div>
+          <% end %>
+        <% end %>
         <% if @booking_page.booking_type == "any" %>
           <%= render "lines/user_bot/field_row",
             path: index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id, booking_page_id: @booking_page.id),
@@ -149,10 +154,10 @@
           <span><%= I18n.t("settings.booking_page.form.interval_period_header") %>:</span>
           <span class="text-gray-500"><%= @booking_page.specific_booking_start_times.present? ? @booking_page.specific_booking_start_times.join(", ") : "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %></span>
         <% end %>
-        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_available_period), klass: @booking_page.ended? ? "border-red border-solid" : "" do %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :booking_available_period), klass: @booking_page.booking_period_ended? ? "border-red border-solid" : "" do %>
           <span><%= I18n.t("settings.booking_page.form.booking_available_period_label") %>:</span>
           <span class="text-gray-500"><%= I18n.t("settings.booking_page.form.booking_available_period", bookable_restriction_months: @booking_page.bookable_restriction_months, booking_limit_day: @booking_page.booking_limit_day) %></span>
-          <% if @booking_page.ended? %>
+          <% if @booking_page.booking_period_ended? %>
             <div class="danger"><%= I18n.t("settings.booking_page.form.form_errors.expired") %></div>
           <% end %>
         <% end %>

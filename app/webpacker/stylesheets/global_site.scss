@@ -344,3 +344,8 @@ textarea {
 .public-DraftStyleDefault-block {
   margin: 0 !important;
 }
+
+// overwrite rc-time-picker-input default style
+.rc-time-picker-input {
+  width: 85px !important;
+}

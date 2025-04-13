@@ -9,7 +9,7 @@ import Popup from 'reactjs-popup';
 
 import { ReservationServices } from "user_bot/api";
 import ProcessingBar from "shared/processing_bar.js"
-import { TopNavigationBar, BottomNavigationBar } from "shared/components"
+import { TopNavigationBar, BottomNavigationBar, TimePickerController } from "shared/components"
 import CalendarModal from "./calendar_modal";
 import ScheduleModal from "./schedule_modal";
 import CustomerModal from "./customer_modal";
@@ -223,12 +223,11 @@ const Form = () => {
         <div className="field-row" >
           <span>{i18n.start_time}</span>
           <span>
-            <input
-              ref={register({ required: true })}
+            <TimePickerController
               name="start_time_time_part"
-              placeholder="start_time_time_part"
-              type="time"
               className={`start-time-input ${previousReservationOverlap() ? "field-warning" : ""}`}
+              control={control}
+              defaultValue={watch("start_time_time_part")}
             />
           </span>
           {startTimeError()}

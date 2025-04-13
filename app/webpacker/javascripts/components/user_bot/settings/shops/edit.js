@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 
-import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton, TimePickerController } from "shared/components"
 import { ShopServices } from "user_bot/api"
 import useAddress from "libraries/use_address";
 import I18n from 'i18n-js/index.js.erb';
@@ -215,7 +215,17 @@ const SocialAccountEdit =({props}) => {
                 {business_schedule_fields.fields.map((field, index) => {
                   return (
                     <div key={index} className="field-row flex-start">
-                      <input type="time" name={`business_schedules[${index}].start_time`} defaultValue={field.start_time} ref={register({ required: true })} /> 〜 <input type="time" name={`business_schedules[${index}].end_time`} defaultValue={field.end_time} ref={register({ required: true })} />
+                      <TimePickerController
+                        control={control}
+                        defaultValue={watch(`business_schedules[${index}].start_time`)}
+                          name={`business_schedules[${index}].start_time`}
+                      />
+                      <span>〜</span>
+                      <TimePickerController
+                        control={control}
+                        defaultValue={watch(`business_schedules[${index}].end_time`)}
+                        name={`business_schedules[${index}].end_time`}
+                      />
                       {business_schedule_fields.fields.length > 1 && (
                         <button className="btn btn-orange" onClick={() => business_schedule_fields.remove(index)}>
                           <i className="fa fa-minus"></i>

@@ -8,13 +8,17 @@ import I18n from 'i18n-js/index.js.erb';
 import useDatetimeFieldsRow from "shared/use_datetime_fields_row"
 import DatePickerField from "shared/date_picker_field"
 import BookingIntervalField from "./booking_interval_field";
-
+import { TimePickerController } from "shared/components";
 const SpecificBookingTimeFields = ({specific_booking_time_fields, register, control, setValue}) => {
   return (
     specific_booking_time_fields.fields.map((field, index) => {
       return (
         <div key={field.id} className="field-row flex-start date-row no-border">
-          <input type="time" name={`booking_start_times[${index}].start_time`} ref={register({ required: true })} defaultValue={field.start_time} />～
+          <TimePickerController
+            name={`booking_start_times[${index}].start_time`}
+            control={control}
+            defaultValue={field.start_time}
+          />
           <button className="btn btn-orange" onClick={() => specific_booking_time_fields.remove(index)}>
             <i className="fa fa-minus"></i>
             <span>{I18n.t("action.delete")}</span>
