@@ -3,7 +3,7 @@
 class TwUserBotSocialAccount
   class << self
     def client(locale = 'ja')
-      @@client ||= Line::Bot::Client.new { |config|
+      @@tw_client ||= Line::Bot::Client.new { |config|
         config.channel_token = Rails.application.secrets[:tw][:toruya_user_bot_token]
         config.channel_secret = Rails.application.secrets[:tw][:toruya_user_bot_secret]
       }
