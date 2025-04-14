@@ -8,7 +8,7 @@ module Profiles
       begin
         worksheet = Google::Drive.spreadsheet(
           google_sheet_id: "1aKZ35SIno9Ia1B2q-m8SLej_rt_MK_SpjYYy0ebE1U0",
-          worksheet: 1
+          gid: 1331600224
         )
         new_row_number = worksheet.num_rows + 1
         new_row_data = [
