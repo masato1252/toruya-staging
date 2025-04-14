@@ -40,10 +40,11 @@ const ProductSelectionStep = ({next, step, prev}) => {
   }, [])
 
   useEffect(() => {
-    dispatch({
-      type: "SET_ATTRIBUTE",
-      payload: {
-        attribute: "query",
+    if (selected_online_service?.id) {
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "query",
         value:  {
           operator: "or",
           filters: _.uniqBy([
@@ -51,12 +52,13 @@ const ProductSelectionStep = ({next, step, prev}) => {
             {
               field: "online_service_ids",
               condition: "contains",
-              value: selected_online_service.id
+              value: selected_online_service?.id
             }
           ], 'value')
+          }
         }
-      }
-    })
+      })
+    }
   }, [selected_online_service])
 
   useEffect(() => {
