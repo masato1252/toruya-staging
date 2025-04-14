@@ -9,9 +9,14 @@ module UserBotLines
 
       string :locale
 
+      # JP
       # 2500x1686
       # | 1 | 2 | 3 |
       # | 4 | 5 | 6 |
+      # TW
+      # 2500x1686
+      # |  1  |  2  |
+      # | 3 | 4 | 5 |
       def execute
         I18n.with_locale(locale) do
           compose(
@@ -42,7 +47,7 @@ module UserBotLines
               "bounds": {
                 "x": 0,
                 "y": 0,
-                "width": 833,
+                "width": 1250,
                 "height": 843
               },
               "action": LineActions::Uri.template(
@@ -53,9 +58,9 @@ module UserBotLines
             {
               # 2
               "bounds": {
-                "x": 834,
+                "x": 1250,
                 "y": 0,
-                "width": 833,
+                "width": 1250,
                 "height": 843
               },
               "action": LineActions::Uri.template(
@@ -65,19 +70,6 @@ module UserBotLines
             },
             {
               # 3
-              "bounds": {
-                "x": 1667,
-                "y": 0,
-                "width": 833,
-                "height": 843
-              },
-              "action": LineActions::Uri.template(
-                label: I18n.t("toruya_line.actions.label.settings"),
-                url: LiffRouting.liff_url(:settings, locale)
-              )
-            },
-            {
-              # 4
               "bounds": {
                 "x": 0,
                 "y": 843,
@@ -90,7 +82,7 @@ module UserBotLines
               )
             },
             {
-              # 5
+              # 4
               "bounds": {
                 "x": 834,
                 "y": 843,
@@ -98,12 +90,12 @@ module UserBotLines
                 "height": 843
               },
               "action": LineActions::Uri.template(
-                label: I18n.t("toruya_line.actions.label.online_service"),
-                url: LiffRouting.liff_url(:online_services, locale)
+                label: I18n.t("toruya_line.actions.label.broadcasts"),
+                url: LiffRouting.liff_url(:broadcasts, locale)
               )
             },
             {
-              # 6
+              # 5
               "bounds": {
                 "x": 1667,
                 "y": 843,
@@ -111,8 +103,8 @@ module UserBotLines
                 "height": 843
               },
               "action": LineActions::Uri.template(
-                label: I18n.t("toruya_line.actions.label.broadcasts"),
-                url: LiffRouting.liff_url(:broadcasts, locale)
+                label: I18n.t("toruya_line.actions.label.settings"),
+                url: LiffRouting.liff_url(:settings, locale)
               )
             }
           ]
