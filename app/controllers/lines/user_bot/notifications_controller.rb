@@ -16,6 +16,11 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
     end.compact
 
     ::UserBotLines::Actions::SwitchRichMenu.run(social_user: current_social_user)
+
+    if @user_notifications.blank?
+      redirect_to lines_user_bot_schedules_path(business_owner_id: current_user.id)
+      return
+    end
   end
 
   private
