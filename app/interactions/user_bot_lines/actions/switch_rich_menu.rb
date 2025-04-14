@@ -13,7 +13,6 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
       social_user.manage_accounts.each do |owner|
         if (unread_messages_exists?(owner) ||
             owner.pending_reservations.exists? ||
-            owner.missing_sale_page_services.exists? ||
             owner.pending_customer_services.exists?)
           menu_key = UserBotLines::RichMenus::DashboardWithNotifications::KEY
         end

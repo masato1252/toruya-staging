@@ -10,14 +10,18 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
         user: user,
         messages: user.social_account ? user.social_account.social_messages.handleable.unread : [],
         reservations: user.pending_reservations || [],
-        missing_sale_page_services: user.missing_sale_page_services || [],
+        missing_sale_page_services: [],
         pending_customer_services: user.pending_customer_services || []
       }
     end.compact
 
     ::UserBotLines::Actions::SwitchRichMenu.run(social_user: current_social_user)
 
-    if @user_notifications.blank?
+    if @user_notifications.blank? || @user_notifications.all? { |notification|
+      notification[:messages].empty? &&
+      notification[:reservations].empty? &&
+      notification[:pending_customer_services].empty?
+    }
       redirect_to lines_user_bot_schedules_path(business_owner_id: current_user.id)
       return
     end
