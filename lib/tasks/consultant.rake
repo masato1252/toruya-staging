@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
+require "slack_client"
 require "utils"
 
 namespace :consultant do
-  task :business_health_check do
+  task :business_health_check => :environment do
     # send a slack message to let me know the task is running
+    Rollbar.info("Business health check task is running", {
+      environment: Rails.configuration.x.env,
+      time: Time.current.to_date.monday?
+    })
     if (Rails.configuration.x.env.production? && Time.current.to_date.monday?)
       SlackClient.send(channel: 'development', text: "Business health check task is running")
 
