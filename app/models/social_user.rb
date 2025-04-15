@@ -62,7 +62,7 @@ class SocialUser < ApplicationRecord
   end
 
   def same_social_user_scope
-    SocialUser.where(social_service_user_id: social_service_user_id)
+    SocialUser.where(social_service_user_id: social_service_user_id).where.not(user_id: nil)
   end
 
   def current_users
