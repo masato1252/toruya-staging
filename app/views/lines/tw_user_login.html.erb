@@ -1,3 +1,18 @@
+<%= content_for :meta_tags do %>
+  <meta name="title" content="Toruya - 一人公司的最佳助手">
+  <meta name="description" content="專為一人公司打造的全方位管理系統，整合預約、線上課程、客戶管理等功能。適合家教、顧問、美業、沙龍、教練使用。">
+  <meta name="keywords" content="一人公司, 預約系統, 線上課程, 客戶管理, 家教, 顧問, 美業, 沙龍, 教練">
+  <meta property="og:site_name" content="Toruya">
+  <meta property="og:title" content="Toruya - 一人公司的最佳助手">
+  <meta property="og:url" content="https://toruya.tw">
+  <meta property="og:description" content="專為一人公司打造的全方位管理系統，整合預約、線上課程、客戶管理等功能。適合家教、顧問、美業、沙龍、教練使用。">
+  <meta property="og:image" content="https://www.toruya.tw/company/toruya_logo.png">
+<% end %>
+
+<%= content_for :title do %>
+  <title>Toruya - 一人公司的最佳助手</title>
+<% end %>
+
 <div id="login">
   <%= render 'shared/language_selector' %>
   <h3><%= t("common.welcome_to_toruya") %></h3>
