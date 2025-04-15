@@ -52,7 +52,7 @@ module ViewHelpers
         write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
         _social_user
       elsif respond_to?(:user_bot_cookies) && user_bot_cookies(:social_service_user_id)
-        SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+        SocialUser.where.not(user_id: nil).find_by(social_service_user_id: user_bot_cookies(:social_service_user_id)) || SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
       end
   end
   alias_method :current_social_user, :social_user
