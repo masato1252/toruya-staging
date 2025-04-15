@@ -69,6 +69,8 @@ module ViewHelpers
     @current_user ||=
       begin
         user = current_user_of_owner(business_owner)
+        Rollbar.debug("business_owner debug", business_owner: business_owner.id, user: user&.id, social_user: social_user&.id)
+
         if !user && social_user&.user&.super_admin?
           user = business_owner
           Current.admin_debug = true
