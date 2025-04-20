@@ -141,6 +141,12 @@ class LineClient
     end
   end
 
+  def self.delete_default_rich_menu(social_account)
+    error_handler(__method__, social_account.id) do
+      social_account.client.unset_default_rich_menu
+    end
+  end
+
   def self.delete_rich_menu(social_rich_menu)
     error_handler(__method__, social_rich_menu.id) do
       social_rich_menu.account.client.delete_rich_menu(social_rich_menu.social_rich_menu_id)
