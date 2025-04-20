@@ -9,13 +9,8 @@ module SocialAccounts
         return if social_account.current_rich_menu&.official?
 
         social_account.transaction do
-          social_account.social_rich_menus.default.find_each do |rich_menu|
+          social_account.social_rich_menus.find_each do |rich_menu|
             compose(::RichMenus::Delete, social_rich_menu: rich_menu)
-          end
-
-          if social_account.current_rich_menu
-            social_account.current_rich_menu.update(current: nil)
-            ::RichMenus::Unlink.perform_later(social_rich_menu: social_account.current_rich_menu)
           end
 
           new_current_rich_menu = social_account.social_rich_menus.find_or_create_by(social_name: SocialRichMenu::LINE_OFFICIAL_RICH_MENU_KEY)
