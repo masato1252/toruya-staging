@@ -16,7 +16,7 @@ class Lines::UserBot::Settings::RichMenusController < Lines::UserBotDashboardCon
       end
 
       if !rich_menu_id
-        SocialAccounts::RichMenus::SwitchBackToruya.run(social_account: Current.business_owner.social_account)
+        SocialAccounts::RichMenus::SwitchToOfficial.run(social_account: Current.business_owner.social_account)
         @current_rich_menu = Current.business_owner.social_account.current_rich_menu
       end
     end
