@@ -582,12 +582,23 @@ namespace :analytic do
     if current.wday == 1
       google_worksheet = Google::Drive.spreadsheet(gid: 203455717)
 
+      date_period = current.advance(weeks: -2)..current
+      date_period_formatted = "#{date_period.begin.to_date} to #{date_period.end.to_date}"
+      user_sign_up_in_previous_week = User.where(created_at: date_period).count
+      user_has_booking_page_ids = BookingPage.where(user_id: user_sign_up_in_previous_week_ids).pluck(:user_id)
+      reservation_count = Reservation.where(user_id: user_sign_up_in_previous_week_ids).count
+      paid_user_ids = Subscription.where(user_id: user_sign_up_in_previous_week_ids).charge_required.pluck(:user_id)
+
       # Date,
       new_row_number = google_worksheet.num_rows + 1
       new_row_data = [
-        current.to_date,
-        SocialUserMessage.from_user.where(created_at: current.advance(weeks: -1)..current).count,
-        SocialMessage.from_customer.where(created_at: current.advance(weeks: -1)..current).count
+        date_period_formatted,
+        user_sign_up_in_previous_week,
+        user_has_booking_page_ids.uniq.count,
+        reservation_count,
+        paid_user_ids.count,
+        user_has_booking_page_ids.uniq.join(", "),
+        paid_user_ids.uniq.join(", ")
       ]
       new_row_data.each_with_index do |data, index|
         google_worksheet[new_row_number, index + 1] = data
