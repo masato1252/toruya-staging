@@ -7,6 +7,12 @@ import FlowController from "shared/flow_controller";
 
 const SignUpSuccessfulView = ({props}) => {
   useEffect(() => {
+    // Send GA4 sign_up_success event
+    window.gtag('event', 'sign_up_success', {
+      'event_category': 'user',
+      'event_label': 'sign_up'
+    });
+
     if (props.is_not_phone) {
       window.location.href = "/";
     } else {
