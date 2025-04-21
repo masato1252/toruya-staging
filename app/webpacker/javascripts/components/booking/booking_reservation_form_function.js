@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import moment from 'moment-timezone';
 import axios from "axios";
 import _ from "lodash";
@@ -31,6 +31,16 @@ import { getMomentLocale } from "libraries/helper.js";
 const BookingReservationFormFunction = ({props}) => {
   moment.locale(getMomentLocale(props.locale));
   let findCustomerCall;
+
+  useEffect(() => {
+    // Send GA4 page_view event for booking page
+    window.gtag('event', 'page_view', {
+      'event_category': 'booking_page',
+      'event_label': window.location.pathname,
+      'page_title': document.title,
+      'page_location': window.location.href
+    });
+  }, []);
 
   const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(props.booking_reservation_form)
   const stripe_token_ref = useRef();
@@ -305,6 +315,12 @@ const BookingReservationFormFunction = ({props}) => {
       const { status, errors } = response.data;
 
       if (status === "successful") {
+        // Send GA4 booking_complete event
+        window.gtag('event', 'booking_complete', {
+          'event_category': 'booking_page',
+          'event_label': window.location.pathname,
+        });
+
         set_booking_reservation_form_values(prev => ({...prev, is_done: true, submitting: false }))
       }
       else if (status === "failed") {
