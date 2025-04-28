@@ -428,6 +428,64 @@ ja:
           new_page_desc: スタッフ登録ページをSMS送信します
           cellphone_input_placeholder: スタッフの携帯電話番号
           new_page_methods_html: <b>【スタッフ登録方法】</b><br /> ①スタッフ登録ページをSMS送信<br /> ②スタッフ自信で登録ページからスタッフ登録<br /> ③スタッフとしてToruyaを利用
+      surveys:
+        title: アンケート
+        new_page_title: 新規アンケート
+        new_page_header: アンケート名
+        new_page_desc: アンケートページをSMS送信します
+        question_desc: お客様への質問を設定してください
+        description_desc: アンケートの説明を設定してください
+        introduction_message_html: アンケートは<br><span class="warning">イベント申し込み、コース予約、お客様の意見調査</span>などに<br>ご利用いただけます。
+        edit:
+          active_title: ページ状態
+          active_subtitle: ページ状態
+        broadcasts:
+          title: 一括送信
+        custom_messages:
+          title: カスタムメッセージ
+          activty_type: 活動状態
+          reminder: リマインダー
+          survey_pending_response: アンケート回答待ち
+          activity_pending_response: イベント申し込み待ち
+          activity_accepted_response: イベント申し込み承認
+          activity_canceled_response: イベント申し込みキャンセル
+          activity_one_day_reminder: イベント24時間前リマインダー
+          activity_custom_message: イベントカスタムメッセージ
+          survey_pending_response: アンケート回答
+          survey_name: アンケート名
+          activity_name: イベント名
+          reply_survey_url: 回答リンク
+          survey_url: アンケートリンク
+          shop_name: 店舗名
+          shop_phone_number: 店舗電話番号
+          booking_time: 予約時間
+          customer_name: お客様名
+          reminder_message: リマインダーメッセージは指定日の前日に送信されます
+          activity_slot_time_period: イベント時間帯
+        settings:
+          title: 設定
+        responses:
+          title: 回答一覧
+        activities:
+          title: 申し込み一覧
+          responses_title: 申し込み一覧
+          responses: 申し込み一覧
+          settings_title: 設定
+          settings: 設定
+          accept_and_notify_customer: 承認
+          cancel_and_notify_customer: キャンセル
+          pending_and_notify_customer: 保留に戻す
+          accept_and_notify_customer_confirmation: この申し込みを承認し、お客様に通知します
+          cancel_and_notify_customer_confirmation: この申し込みをキャンセルし、お客様に通知します
+          pending_and_notify_customer_confirmation: この申し込みを保留に戻し、お客様に通知します
+          accept_successfully_message: 承認完了、お客様に通知しました
+          cancel_successfully_message: キャンセル完了、お客様に通知しました
+          pending_successfully_message: 保留に戻しました、お客様に通知しました
+          state: 状態
+          states:
+            accepted: 承認済み
+            canceled: キャンセル済み
+            pending: 保留中
       broadcasts:
         broadcast_title: 配信条件
         broadcast_conditions: 配信条件一覧
@@ -451,6 +509,8 @@ ja:
           content_subtitle: メッセージ内容
           schedule_at_title: 配信時間
           schedule_at_subtitle: 配信時間
+          manual_assignment_title: 指定送信先
+          manual_assignment_subtitle: 指定送信先
       services:
         online_service: オンラインサービス
         service_page: サービスページ

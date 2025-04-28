@@ -9,6 +9,7 @@ module Broadcasts
       hash :query, strip: false, default: nil
       string :query_type, default: nil
       time :schedule_at, default: nil
+      array :receiver_ids, default: nil
     end
 
     validate :validate_broadcast

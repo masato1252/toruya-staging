@@ -23,7 +23,8 @@ export const GlobalProvider = ({ props, children }) => {
       {
         broadcast_creation_states: {
           ...props.broadcast,
-          selected_online_service: props.selected_online_service
+          selected_online_service: props.selected_online_service,
+          selected_customer_ids: (props.candidate_customers ? props.candidate_customers.filter(customer => customer.checked).map(customer => customer.id) : [])
         },
       }
     )
@@ -32,9 +33,10 @@ export const GlobalProvider = ({ props, children }) => {
 
   const broadcastData = () => {
     return _.assign(
-      _.pick(state.broadcast_creation_states, ["query", "content", "schedule_at", "query_type"]),
+      _.pick(state.broadcast_creation_states, ["query", "content", "schedule_at", "query_type", "selected_customers", "builder_type", "builder_id"]),
       {
-        business_owner_id: props.business_owner_id
+        business_owner_id: props.business_owner_id,
+        receiver_ids: state.broadcast_creation_states.selected_customer_ids
       }
     )
   }
@@ -76,7 +78,7 @@ export const GlobalProvider = ({ props, children }) => {
     else {
       [error, response] = await CommonServices.create(
         {
-          url: Routes.lines_user_bot_broadcasts_path(props.business_owner_id, {format: "json"}),
+          url: props.create_broadcast_path || Routes.lines_user_bot_broadcasts_path(props.business_owner_id, {format: "json"}),
           data: broadcastData()
         }
       )

@@ -3,29 +3,32 @@
 #
 # Table name: reservations
 #
-#  id                 :integer          not null, primary key
-#  aasm_state         :string           not null
-#  count_of_customers :integer          default(0)
-#  deleted_at         :datetime
-#  end_time           :datetime         not null
-#  meeting_url        :string
-#  memo               :text
-#  online             :boolean          default(FALSE)
-#  prepare_time       :datetime
-#  ready_time         :datetime         not null
-#  start_time         :datetime         not null
-#  with_warnings      :boolean          default(FALSE), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  by_staff_id        :integer
-#  menu_id            :integer
-#  shop_id            :integer          not null
-#  user_id            :integer
+#  id                      :integer          not null, primary key
+#  aasm_state              :string           not null
+#  count_of_customers      :integer          default(0)
+#  deleted_at              :datetime
+#  end_time                :datetime         not null
+#  meeting_url             :string
+#  memo                    :text
+#  online                  :boolean          default(FALSE)
+#  prepare_time            :datetime
+#  ready_time              :datetime         not null
+#  start_time              :datetime         not null
+#  with_warnings           :boolean          default(FALSE), not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  by_staff_id             :integer
+#  menu_id                 :integer
+#  shop_id                 :integer          not null
+#  survey_activity_id      :integer
+#  survey_activity_slot_id :integer
+#  user_id                 :integer
 #
 # Indexes
 #
-#  reservation_query_index      (user_id,shop_id,aasm_state,menu_id,start_time,ready_time)
-#  reservation_user_shop_index  (user_id,shop_id,deleted_at)
+#  idx_reservations_on_activity_and_slot  (survey_activity_id,survey_activity_slot_id)
+#  reservation_query_index                (user_id,shop_id,aasm_state,menu_id,start_time,ready_time)
+#  reservation_user_shop_index            (user_id,shop_id,deleted_at)
 #
 
 # ready_time is end_time + menu.interval
@@ -49,8 +52,10 @@ class Reservation < ApplicationRecord
   belongs_to :user
   belongs_to :shop
   belongs_to :by_staff, class_name: "Staff", required: false
-  has_one :reservation_booking_option
-  has_one :booking_option, through: :reservation_booking_option
+  # has_one :reservation_booking_option
+  # has_one :booking_option, through: :reservation_booking_option
+  belongs_to :survey_activity, optional: true
+  belongs_to :survey_activity_slot, optional: true
   has_many :reservation_staffs, dependent: :destroy
   has_many :reservation_menus, -> { order("position") }, dependent: :destroy
   has_many :menus, through: :reservation_menus, dependent: :destroy
@@ -72,7 +77,7 @@ class Reservation < ApplicationRecord
     state :reserved, :noshow, :checked_in, :checked_out, :canceled
 
     event :pend do
-      transitions from: [:checked_out, :checked_in, :reserved, :noshow], to: :pending
+      transitions from: [:checked_out, :checked_in, :reserved, :noshow, :canceled], to: :pending
     end
 
     event :accept do
@@ -88,7 +93,7 @@ class Reservation < ApplicationRecord
     end
 
     event :cancel do
-      transitions from: [:pending, :reserved, :noshow, :checked_in, :checked_out], to: :canceled
+      transitions from: [:pending, :reserved, :noshow, :checked_in, :checked_out, :reserved], to: :canceled
     end
   end
 
@@ -139,21 +144,26 @@ class Reservation < ApplicationRecord
   def message_template_variables(customer)
     reservation_customer = ReservationCustomer.find_by(reservation: self, customer: customer)
 
-    Templates::ReservationVariables.run!(
+    variables = Templates::ReservationVariables.run!(
       receiver: customer,
       shop: shop,
       start_time: start_time,
       end_time: end_time,
       meeting_url: meeting_url,
-      product_name: reservation_customer.booking_options.any? ? reservation_customer.booking_options.map(&:present_name).join(", ") : menus_sentence,
+      product_name: reservation_customer.booking_options.any? ? reservation_customer.booking_options.map(&:present_name).join(", ") : products_sentence,
       booking_page_url: reservation_customer&.booking_page ? Rails.application.routes.url_helpers.booking_page_url(reservation_customer.booking_page.slug, last_booking_option_ids: reservation_customer.booking_option_ids.join(",")) : "",
-      booking_info_url: reservation_customer ? Rails.application.routes.url_helpers.booking_url(reservation_customer.slug) : "",
+      booking_info_url: reservation_customer ? reservation_customer.booking_info_url : "",
       reservation_popup_url: reservation_popup_url
     )
+
+    if survey_activity
+      variables.merge!(survey_activity.survey.message_template_variables(customer, reservation_customer))
+    else
+      variables
+    end
   end
 
   def reservation_popup_url
-    Rails.application.routes.url_helpers.lines_user_bot_schedules_url(business_owner_id: user.id, reservation_id: id, encrypted_user_id: MessageEncryptor.encrypt(user.id, expires_at: 1.week.from_now))
   end
 
   def notifiable?
@@ -175,7 +185,12 @@ class Reservation < ApplicationRecord
   end
 
   def menus_sentence
-    menus.map(&:display_name).join(", ")
+    menus.map(&:display_name).join(", ").presence || survey_activity&.name
+  end
+  alias_method :products_sentence, :menus_sentence
+
+  def from_activity?
+    survey_activity_id.present?
   end
 
   private

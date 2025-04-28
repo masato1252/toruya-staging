@@ -3,8 +3,9 @@ import { Controller } from "stimulus"
 export default class CollapseController extends Controller {
   static targets = [
     "content",
+    "simpleContent",
     "openToggler",
-    "closeToggler"
+    "closeToggler",
   ];
 
   connect() {
@@ -30,6 +31,10 @@ export default class CollapseController extends Controller {
       this.contentTarget.classList.add("display-hidden");
     }
 
+    if (this.hasSimpleContentTarget) {
+      this.simpleContentTarget.classList.remove("display-hidden");
+    }
+
     if (this.hasOpenTogglerTarget) {
       this.openTogglerTarget.classList.add("display-hidden");
     }
@@ -44,6 +49,10 @@ export default class CollapseController extends Controller {
 
     if (this.hasContentTarget) {
       this.contentTarget.classList.remove("display-hidden");
+    }
+
+    if (this.hasSimpleContentTarget) {
+      this.simpleContentTarget.classList.add("display-hidden");
     }
 
     if (this.hasOpenTogglerTarget) {

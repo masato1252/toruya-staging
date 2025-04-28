@@ -686,35 +686,68 @@ ja:
         public: 公開
         private: 非公開
         delete_page: ページを削除
-        survey: 予約時アンケート
-        survey_title: アンケートフォーム設定
-        survey_questions_count: "預約表單題目数: %{count}題"
-        survey_questions_count_empty: アンケート未設定
-        survey_input_placeholder: 質問を入力
-        survey_question_type_text: 記述式
-        survey_question_type_single_selection: ラジオボタン（一つだけ選択）
-        survey_question_type_multiple_selection: チェックボックス（複数選択可）
-        survey_question_type_dropdown: プルダウン（一つだけ選択）
-        survey_delete_option: 選項を削除
+        survey: アンケート
+        survey_title: アンケートフォーム
+        survey_questions_count: "アンケート質問数: %{count}問"
+        survey_questions_count_empty: アンケートが未設定です
+        survey_input_placeholder: 質問を入力してください
+        survey_delete_option: 選択肢を削除
         survey_option_placeholder: "選択肢 %{index}"
         survey_add_option: 選択肢を追加
-        survey_delete_question: 預約表單問題を削除
+        survey_delete_question: 質問を削除
         survey_answer_placeholder: 回答を入力してください
         survey_required: 必須
         survey_add_question: 質問を追加
-        survey_save_desc_html: 保存すると顧客情報入力前に<br>このアンケートが表示されます。
-        survey_save: アンケートを保存
+        survey_save_desc_html: 予約時に顧客に表示されます。
+        survey_save: 保存
         no_note: 未設定
         customer_related_settings: 顧客関連設定
-        others_settings: その他設定
+        others_settings: その他の設定
         form_errors:
-          start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
-          end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
-          unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
-          invalid_menu_html: "この予約価格に設定されているメニューには、%{shop_name}が利用店舗が設定されていない為、予約ページが正しく表示されない可能性があります。<a href=%{url}>メニュー設定</a>ページより%{shop_name}を利用店舗として設定してください。"
-          no_booking_option: この予約ページを使用するには、少なくとも1つの予約価格を作成する必要があります
-          no_menu: メニューが設定されていない予約価格があります。
-          expired: この予約ページは終了しています。
+          start_at_too_late: 上記の設定により、{datetime}より前の日時のみ設定可能です
+          end_at_too_early: 上記の設定により、{datetime}より後の日時のみ設定可能です
+          unavailable_booking_option: "{shop_name}に販売できないサービスが含まれています。"
+          invalid_menu_html: "この予約項目に設定されたサービスは、%{shop_name}が使用可能な店舖として設定されていないため、正しく表示されない可能性があります。<a href=%{url}>サービス設定</a>ページで%{shop_name}を使用可能な店舖として設定してください。"
+          no_booking_option: この予約ページを使用するには、少なくとも1つの予約項目を設定する必要があります。
+          no_menu: この予約項目にはサービスが設定されていません。
+          expired: この予約ページは販売終了しました。
+    survey:
+      title: アンケート
+      description: 説明
+      questions_count: "アンケート質問数: %{count}問"
+      questions_count_empty: アンケートが未設定です
+      input_placeholder: 質問を入力してください
+      question_type_text: テキスト入力 - テキスト型ブロック
+      question_type_single_selection: 単一選択 - ラジオボタン
+      question_type_multiple_selection: 複数選択 - チェックボックス
+      question_type_dropdown: ドロップダウン選択 - ドロップダウン
+      question_type_activity: アクティビティ選択 - アクティビティ
+      question_type_empty_block: 空白ブロック - 追加情報を入力できます
+      period_name_placeholder: 期間名を入力してください（例：第1期、春期など）
+      delete_period: 期間を削除
+      start_date: 開始日
+      end_date: 終了日
+      min_participants: 最小参加人数
+      max_participants: 最大参加人数
+      add_period: アクティビティ選択を追加
+      select_period: このアクティビティを選択
+      date_range: "%{start} ～ %{end}"
+      participants_range: "定員：%{max}名"
+      no_participants_range: 定員なし
+      datetime_slot: "時間枠 %{number}"
+      delete_datetime_slot: 時間枠を削除
+      add_datetime_slot: 時間枠を追加
+      preview_title: プレビュー
+      option_placeholder: "選択肢 %{index}"
+      add_option: 選択肢を追加
+      answer_placeholder: 回答を入力してください
+      required: 必須
+      add_question: ブロックを追加
+      save: 保存
+      price: 料金
+      price_display: "料金：%{price}円"
+      period_id: アクティビティID
+      only_one_activity_allowed: アクティビティ型ブロックは1つしか設定できません。
     social_rich_menus:
       action_types:
         incoming_reservations: 全ての予約

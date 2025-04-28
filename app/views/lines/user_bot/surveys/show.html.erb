@@ -1,0 +1,12 @@
+<%= react_component("user_bot/surveys/index", {
+  props: {
+    mode: "activity",
+    preview: false,
+    initialData: SurveySerializer.new(@survey).attributes_hash,
+    business_owner_id: business_owner_id,
+    currency: Current.business_owner.currency,
+    has_activities: @activities.present?
+  }
+},
+{ camelize_props: false }
+) %>

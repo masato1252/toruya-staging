@@ -1,0 +1,71 @@
+.manual-assignment-step {
+  .customer-selection-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+  }
+
+  .flex {
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: #f9f9f9;
+    }
+  }
+
+  .justify-evenly {
+    justify-content: space-between;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .w-6-12 {
+    width: 50%;
+  }
+
+  .customer-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    .btn {
+      margin-left: 10px;
+    }
+  }
+
+  .customer-info {
+    flex: 1;
+
+    .customer-name {
+      font-weight: 500;
+      margin: 0;
+      color: #333;
+    }
+
+    .customer-address {
+      margin: 4px 0 0;
+      font-size: 0.9em;
+      color: #666;
+    }
+  }
+
+  .action-block {
+    margin-top: 20px;
+    text-align: center;
+  }
+}

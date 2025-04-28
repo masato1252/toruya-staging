@@ -37,6 +37,7 @@ body {
   &.extend,
   &.sale_pages,
   &.online_service_purchases,
+  &.surveys,
   &.online_services {
     padding: 0;
   }
@@ -44,6 +45,13 @@ body {
   @include media-breakpoint-up(tablet) {
     width: 500px;
     margin-top: 36px;
+
+    &.surveys {
+      width: 770px;
+      max-width: 770px;
+      padding: 0;
+      background: $gray10;
+    }
   }
 }
 
@@ -62,8 +70,18 @@ body {
   font-size: 12px;
   color: $gray8;
 
+  &.surveys {
+    background-color: $gray10;
+  }
+
   @include media-breakpoint-up(tablet) {
     width: 500px;
+
+    &.surveys {
+      width: 770px;
+      max-width: 770px;
+      background-color: $gray10;
+    }
   }
 }
 

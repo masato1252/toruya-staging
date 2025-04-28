@@ -759,7 +759,10 @@ CREATE TABLE public.broadcasts (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     query_type character varying,
-    customers_permission_warning boolean DEFAULT false
+    customers_permission_warning boolean DEFAULT false,
+    receiver_ids jsonb DEFAULT '[]'::jsonb,
+    builder_type character varying,
+    builder_id bigint
 );
 
 
@@ -1282,7 +1285,9 @@ CREATE TABLE public.customers (
     square_customer_id character varying,
     tags character varying[] DEFAULT '{}'::character varying[],
     customer_email character varying,
-    customer_phone_number character varying
+    customer_phone_number character varying,
+    line_user_id character varying,
+    status character varying DEFAULT 'active'::character varying
 );
 
 
@@ -2004,7 +2009,8 @@ CREATE TABLE public.question_answers (
     survey_option_snapshot text,
     text_answer text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    survey_activity_id bigint
 );
 
 
@@ -2149,7 +2155,8 @@ CREATE TABLE public.reservation_customers (
     cancel_reason character varying,
     function_access_id bigint,
     booking_option_ids jsonb DEFAULT '[]'::jsonb,
-    customer_tickets_quota jsonb DEFAULT '{}'::jsonb
+    customer_tickets_quota jsonb DEFAULT '{}'::jsonb,
+    survey_activity_id integer
 );
 
 
@@ -2335,7 +2342,9 @@ CREATE TABLE public.reservations (
     prepare_time timestamp without time zone,
     user_id integer,
     online boolean DEFAULT false,
-    meeting_url character varying
+    meeting_url character varying,
+    survey_activity_id integer,
+    survey_activity_slot_id integer
 );
 
 
@@ -3070,6 +3079,76 @@ ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 
 
 --
+-- Name: survey_activities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_activities (
+    id bigint NOT NULL,
+    survey_question_id bigint NOT NULL,
+    name character varying NOT NULL,
+    "position" integer,
+    max_participants integer,
+    price_cents integer,
+    currency character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    survey_id bigint
+);
+
+
+--
+-- Name: survey_activities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_activities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_activities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_activities_id_seq OWNED BY public.survey_activities.id;
+
+
+--
+-- Name: survey_activity_slots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.survey_activity_slots (
+    id bigint NOT NULL,
+    survey_activity_id bigint NOT NULL,
+    start_time timestamp without time zone NOT NULL,
+    end_time timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: survey_activity_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.survey_activity_slots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: survey_activity_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.survey_activity_slots_id_seq OWNED BY public.survey_activity_slots.id;
+
+
+--
 -- Name: survey_options; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3149,7 +3228,10 @@ CREATE TABLE public.survey_responses (
     owner_type character varying,
     owner_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    survey_activity_id integer,
+    uuid character varying,
+    state integer DEFAULT 0
 );
 
 
@@ -3186,7 +3268,9 @@ CREATE TABLE public.surveys (
     owner_id bigint,
     scenario character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    slug character varying,
+    deleted_at timestamp without time zone
 );
 
 
@@ -4039,6 +4123,20 @@ ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: survey_activities id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_activities ALTER COLUMN id SET DEFAULT nextval('public.survey_activities_id_seq'::regclass);
+
+
+--
+-- Name: survey_activity_slots id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_activity_slots ALTER COLUMN id SET DEFAULT nextval('public.survey_activity_slots_id_seq'::regclass);
+
+
+--
 -- Name: survey_options id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4764,6 +4862,22 @@ ALTER TABLE ONLY public.subscriptions
 
 
 --
+-- Name: survey_activities survey_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_activities
+    ADD CONSTRAINT survey_activities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: survey_activity_slots survey_activity_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.survey_activity_slots
+    ADD CONSTRAINT survey_activity_slots_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: survey_options survey_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4970,6 +5084,20 @@ CREATE INDEX delayed_jobs_priority ON public.delayed_jobs USING btree (priority,
 --
 
 CREATE INDEX filtered_outcome_index ON public.filtered_outcomes USING btree (user_id, aasm_state, outcome_type, created_at);
+
+
+--
+-- Name: idx_reservations_on_activity_and_slot; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_reservations_on_activity_and_slot ON public.reservations USING btree (survey_activity_id, survey_activity_slot_id);
+
+
+--
+-- Name: idx_survey_responses_on_activity_and_owner; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_survey_responses_on_activity_and_owner ON public.survey_responses USING btree (survey_activity_id, owner_type, owner_id);
 
 
 --
@@ -5204,6 +5332,13 @@ CREATE UNIQUE INDEX index_booking_pages_on_slug ON public.booking_pages USING bt
 
 
 --
+-- Name: index_broadcasts_on_builder; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_broadcasts_on_builder ON public.broadcasts USING btree (builder_type, builder_id);
+
+
+--
 -- Name: index_broadcasts_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5337,6 +5472,13 @@ CREATE UNIQUE INDEX index_customers_on_user_id_and_customer_phone_number ON publ
 
 
 --
+-- Name: index_customers_on_user_id_and_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_customers_on_user_id_and_line_user_id ON public.customers USING btree (user_id, line_user_id);
+
+
+--
 -- Name: index_delayed_jobs_on_signature; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5456,6 +5598,13 @@ CREATE INDEX index_query_filters_on_user_id ON public.query_filters USING btree 
 
 
 --
+-- Name: index_question_answers_on_survey_activity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_question_answers_on_survey_activity_id ON public.question_answers USING btree (survey_activity_id);
+
+
+--
 -- Name: index_question_answers_on_survey_option_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5530,6 +5679,13 @@ CREATE INDEX index_reservation_customers_on_sale_page_id_and_created_at ON publi
 --
 
 CREATE UNIQUE INDEX index_reservation_customers_on_slug ON public.reservation_customers USING btree (slug);
+
+
+--
+-- Name: index_reservation_customers_on_survey_activity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservation_customers_on_survey_activity_id ON public.reservation_customers USING btree (survey_activity_id);
 
 
 --
@@ -5750,6 +5906,27 @@ CREATE UNIQUE INDEX index_subscriptions_on_user_id ON public.subscriptions USING
 
 
 --
+-- Name: index_survey_activities_on_survey_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_activities_on_survey_id ON public.survey_activities USING btree (survey_id);
+
+
+--
+-- Name: index_survey_activities_on_survey_question_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_activities_on_survey_question_id ON public.survey_activities USING btree (survey_question_id);
+
+
+--
+-- Name: index_survey_activity_slots_on_survey_activity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_survey_activity_slots_on_survey_activity_id ON public.survey_activity_slots USING btree (survey_activity_id);
+
+
+--
 -- Name: index_survey_options_on_survey_question_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5778,10 +5955,24 @@ CREATE INDEX index_survey_responses_on_survey_id ON public.survey_responses USIN
 
 
 --
+-- Name: index_survey_responses_on_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_survey_responses_on_uuid ON public.survey_responses USING btree (uuid);
+
+
+--
 -- Name: index_surveys_on_owner; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_surveys_on_owner ON public.surveys USING btree (owner_type, owner_id);
+
+
+--
+-- Name: index_surveys_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_surveys_on_slug ON public.surveys USING btree (slug);
 
 
 --
@@ -6453,6 +6644,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240311145252'),
 ('20240314114811'),
 ('20240318014002'),
+('20240321000000'),
 ('20240412022437'),
 ('20240415014225'),
 ('20240417023711'),
@@ -6501,6 +6693,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250228004652'),
 ('20250306135657'),
 ('20250311141530'),
-('20250405223945');
+('20250405223945'),
+('20250415114430'),
+('20250423000000'),
+('20250510071219');
 
 

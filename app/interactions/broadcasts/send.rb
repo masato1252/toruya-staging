@@ -21,9 +21,7 @@ module Broadcasts
 
         return unless broadcast.active?
 
-        # Get customers and respect their timezones when sending notifications
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
-
         customers.each do |customer|
           # Use the application's timezone since this is an immediate job
           Notifiers::Customers::Broadcast.perform_later(receiver: customer, broadcast: broadcast)

@@ -9,7 +9,6 @@
           <span><%= @available_count %>/<%= @relations.select(:customer_id).distinct.count %><%= t("common.person_unit") %></span>
         </div>
 
-
         <% @relations.each do |relation| %>
           <%= render "lines/user_bot/field_state", state: relation.state do %>
             <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: @online_service.id, id: relation.id) do %>
@@ -55,16 +54,16 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+
       <div class="modal-body">
         <%= form_tag assign_lines_user_bot_service_customers_path(business_owner_id: business_owner_id, service_id: @online_service.id), method: :post, remote: false, class: 'assign-customer-form' do %>
           <div class="form-group">
-            <%= select_tag :customer_id, 
+            <%= select_tag :customer_id,
                 options_from_collection_for_select(@available_customers, :id, :name),
                 class: 'form-control',
                 prompt: t("user_bot.dashboards.settings.service_customer_relation.select_customer_prompt") %>
           </div>
-          
+
           <div class="modal-footer flex items-center justify-between">
             <button type="button" class="btn btn-gray" data-dismiss="modal"><%= t("common.close") %></button>
             <%= submit_tag t("action.approve"), class: 'btn btn-tarco' %>

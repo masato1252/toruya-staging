@@ -8,7 +8,7 @@ import ReactSelect from "react-select";
 import TextareaAutosize from 'react-autosize-textarea';
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields } from "shared/components"
-import SurveyBuilder from "components/shared/survey";
+import SurveyBuilder from "components/shared/survey/builder";
 import { BookingPageServices } from "user_bot/api"
 
 import BookingTimeField from "./booking_time_field";

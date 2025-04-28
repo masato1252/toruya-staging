@@ -24,7 +24,7 @@
       <div class="mobile-content booking-content <%= controller_name %>">
         <%= yield %>
       </div>
-      <div class="footer" id="footer">
+      <div class="footer <%= controller_name %>" id="footer">
         Powered by <%= link_to "Toruya", data_by_locale(:official_site_url) %>
       </div>
     </div>

@@ -156,7 +156,7 @@ module OptionsHelper
       month_date: I18n.l(r.start_time, format: :month_day_wday),
       start_time: I18n.l(r.start_time, format: :hour_minute),
       end_time: I18n.l(r.end_time, format: :hour_minute),
-      menu: r.menus.map(&:display_name).join(", "),
+      menu: r.menus.map(&:display_name).join(", ").presence || (r.survey_activity ? r.survey_activity.name : nil),
       shop: r.shop.display_name,
       state: r.aasm_state,
       shop_id: r.shop_id,

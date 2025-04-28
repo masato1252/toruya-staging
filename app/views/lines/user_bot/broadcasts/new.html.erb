@@ -6,25 +6,15 @@
     business_owner_id: business_owner_id,
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     customer_tags: Current.business_owner.customer_tags,
-    line_settings_verified: Current.business_owner.social_account&.line_settings_verified?,
-    line_verification_url: lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(Current.business_owner.social_user.social_service_user_id), encrypted_business_owner_id: MessageEncryptor.encrypt(Current.business_owner.id)),
+    candidate_customers: @candidate_customers,
     online_services: @online_services,
+    previous_path: params[:previous_path],
+    customer_status_type: params[:customer_status_type],
     message: {
       customer_name: Current.business_owner.message_name,
     },
     selected_online_service: params[:online_service_id] ? @online_services.find { |service| service[:value][:id] == params[:online_service_id].to_i }[:value] : nil,
-    broadcast: params[:online_service_id] ? Broadcast.new(
-      query_type: "online_service_for_active_customers",
-      query: {
-        "filters" => [{
-          "field" => "online_service_ids",
-          "value" => params[:online_service_id],
-          "condition" => "contains"
-        }],
-        "operator" => "or"
-      },
-      content: "",
-    ).attributes : {}
+    broadcast: @broadcast
   }
 },
 { camelize_props: false }

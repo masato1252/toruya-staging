@@ -1,0 +1,13 @@
+<%= react_component("surveys/show", {
+  props: {
+    survey: SurveySerializer.new(@survey).attributes_hash,
+    line_login_required: current_owner.prefer_line_login?,
+    line_login_url: line_login_url(current_owner.social_account, request.url),
+    add_friend_url: current_owner.social_accounts.first&.add_friend_url,
+    social_customer: { social_user_id: current_social_customer&.social_user_id, customer_id: current_customer&.id, had_address: current_customer&.had_address? },
+    customer: { user_id: current_owner.id }.merge(OwnerCustomerSerializer.new(current_customer).attributes_hash || {}),
+    support_feature_flags: support_feature_flags,
+  }
+},
+{ camelize_props: false }
+) %>

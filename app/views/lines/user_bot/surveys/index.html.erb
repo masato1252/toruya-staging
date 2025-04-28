@@ -1,0 +1,69 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-pages form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", title: t("user_bot.dashboards.surveys.title") %>
+
+        <div class="booking-pages-list">
+          <% @surveys.each do |survey| %>
+            <%= content_tag :div, class: "field-row with-next-arrow" do %>
+              <%= link_to lines_user_bot_survey_path(survey, business_owner_id: business_owner_id), class: "w-8-12" do %>
+                <h3 class="text-gray-700 underline"><%= survey.title %></h3>
+              <% end %>
+
+              <div class="w-3-12 flex">
+                  <%= button_tag type: 'button',
+                      class: 'btn btn-icon btn-tarco mr-2',
+                      data: {
+                        clipboard_text: survey_url(survey.slug || survey.id, subdomain: request.subdomain),
+                        controller: 'clipboard',
+                        action: 'clipboard#copy',
+                        clipboard_popup_text: I18n.t("common.url_copied")
+                      } do %>
+                    <i class="far fa-clone"></i>
+                  <% end %>
+                  <%= link_to survey_url(survey.slug || survey.id, subdomain: request.subdomain),
+                      target: '_blank',
+                      class: 'btn btn-icon btn-tarco' do %>
+                    <i class="fas fa-external-link-alt"></i>
+                  <% end %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <div class="margin-around centerize">
+            <%= link_to new_lines_user_bot_survey_path(business_owner_id: business_owner_id), class: "btn btn-yellow", data: {
+              controller: "gtag",
+              action: "click->gtag#sendEvent",
+              gtag_event_value: "add_survey",
+              gtag_event_category: "surveys",
+              gtag_event_label: "add_more"
+            } do %>
+              <i class="fa fa-plus"></i>
+              <%= t("action.add_more") %>
+            <% end %>
+          </div>
+
+          <div class="margin-around centerize">
+            <%= t("user_bot.dashboards.surveys.introduction_message_html") %>
+          </div>
+        </div>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+          <%= link_to new_lines_user_bot_survey_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: {
+            controller: "gtag",
+            action: "click->gtag#sendEvent",
+            gtag_event_value: "add_survey",
+            gtag_event_category: "surveys",
+            gtag_event_label: "add_more_circle"
+          } do %>
+            <i class="fas fa-plus fa-2x"></i>
+            <div class="word"><%= t("action.add_more") %></div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

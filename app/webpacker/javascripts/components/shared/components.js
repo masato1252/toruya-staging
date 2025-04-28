@@ -228,12 +228,27 @@ const BookingOptionElement = ({onClick, booking_option, i18n}) => (
   </div>
 )
 
+const UrlCopyInput = ({url}) => {
+  return (
+    <input
+      type="text"
+      readOnly
+      className="extend"
+      data-controller="clipboard"
+      data-action="click->clipboard#copy"
+      data-clipboard-text={url}
+      data-clipboard-popup-text={`${I18n.t("common.copied")}`}
+      value={url}
+    />
+  )
+}
+
 const UrlCopyBtn = ({url}) => {
   return (
     <button
       className="btn btn-tarco"
       data-controller="clipboard"
-      data-action="click->clipboard#copy"
+      data-a
       data-clipboard-text={url}
       data-clipboard-popup-text={`${I18n.t("common.copied")}`}>
       {I18n.t("action.copy_url2")}
@@ -564,6 +579,7 @@ const TimePickerController = ({name, control, defaultValue}) => {
           showSecond={false}
           minuteStep={5}
           value={value ? moment(value, 'HH:mm') : null}
+          defaultOpenValue={value ? moment(value, 'HH:mm') : moment().minutes(0)}
           onChange={(time) => onChange(time ? time.format('HH:mm') : null)}
           format="HH:mm"
           allowEmpty={false}
@@ -583,14 +599,17 @@ const TimePickerController = ({name, control, defaultValue}) => {
 }
 
 const CustomTimePicker = ({value, onChange, name}) => {
+  const defaultTimeValue = value ? moment(value, 'HH:mm', true) : moment().minutes(0);
+
   return (
     <TimePicker
       name={name}
       showSecond={false}
       minuteStep={5}
       allowEmpty={false}
-      value={value}
-      onChange={(time) => onChange(time)}
+      value={value ? moment(value, 'HH:mm') : null}
+      defaultOpenValue={value ? moment(value, 'HH:mm') : moment().minutes(0)}
+      onChange={(time) => onChange(time ? time.format('HH:mm') : null)}
       format="HH:mm"
       addon={(panel) => (
         <button
@@ -604,6 +623,35 @@ const CustomTimePicker = ({value, onChange, name}) => {
     />
   )
 }
+
+const CustomerSelectionList = ({
+  candidateCustomers,
+  selectedCustomerIds,
+  onCustomerToggle,
+  customerStatusType
+}) => {
+  return (
+    <div className="customer-selection-list p-6">
+      {candidateCustomers && candidateCustomers.map((customer) => (
+        <div className="flex justify-evenly items-center text-left" key={customer.id}>
+          <div className="w-1-12 text-left">
+            <label className="customer-checkbox">
+              <input
+                type="checkbox"
+                checked={selectedCustomerIds.includes(customer.id)}
+                onChange={() => onCustomerToggle(customer.id)}
+              />
+            </label>
+          </div>
+          <div className="w-7-12 text-left">{customer.name}</div>
+          <div className={`w-4-12 text-white text-left reservation-state ${customer.state}`}>
+            {I18n.t(`common.customer_status.${customerStatusType}.${customer.state}`)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export {
   Input,
@@ -624,6 +672,7 @@ export {
   CircleButtonWithWord,
   BookingOptionElement,
   UrlCopyBtn,
+  UrlCopyInput,
   BookingPageButtonCopyBtn,
   SubmitButton,
   DemoEditButton,
@@ -639,5 +688,6 @@ export {
   CheckboxSearchFields,
   TagsInput,
   TimePickerController,
-  CustomTimePicker
+  CustomTimePicker,
+  CustomerSelectionList
 };

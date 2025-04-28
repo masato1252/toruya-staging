@@ -51,6 +51,8 @@ const CustomMessageEdit =({props}) => {
         after_days: after_days
       })
     })
+
+    toastr.success(I18n.t("common.deliveried_please_check_message"))
   }
 
   const onSubmit = async (data) => {

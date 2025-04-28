@@ -759,6 +759,7 @@ DEPENDENCIES
   magic_frozen_string_literal
   marginalia
   memory_profiler
+  mini_magick
   mixpanel-ruby
   money-rails
   next_rails

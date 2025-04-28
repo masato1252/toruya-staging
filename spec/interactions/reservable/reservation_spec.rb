@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-
 RSpec.describe Reservable::Reservation do
   before do
     Timecop.freeze(Time.local(2016, 12, 22, 10))

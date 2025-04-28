@@ -10,19 +10,28 @@ module Surveys
         integer :survey_question_id
         string :text_answer, default: nil
         array :survey_option_ids, default: [] # Change to array for multiple selection
+        integer :survey_activity_id, default: nil
       end
     end
 
     validate :validate_required_questions
     validate :validate_answer_formats
+    validate :validate_activity_participants
 
     def execute
       survey_response = nil
 
-      Survey.transaction do
+      owner.with_lock do
+        # Check for duplicate activities inside the lock
+        if has_duplicate_activities?
+          errors.add(:survey, :duplicate_activity, url: existing_survey_response_url)
+          return nil
+        end
+
         survey_response = SurveyResponse.create!(
           survey: survey,
-          owner: owner
+          owner: owner,
+          uuid: SecureRandom.uuid
         )
 
         answers.each do |answer|
@@ -40,6 +49,21 @@ module Surveys
                 survey_option_snapshot: option_content
               )
             end
+          elsif question.activity?
+            # For activity questions
+            activity = question.activities.find(answer[:survey_activity_id])
+
+            compose(Surveys::ReplyActivity,
+              survey: survey,
+              owner: owner,
+              survey_response: survey_response,
+              question: question,
+              activity: activity,
+              question_description: question_description
+            )
+
+            Notifiers::Customers::Surveys::ActivityPendingResponse.perform_later(survey_response: survey_response, receiver: owner)
+            Notifiers::Users::Surveys::ActivityPendingResponse.perform_later(survey_response: survey_response, receiver: survey.user)
           else
             # For single selection and text questions
             option_content = answer[:survey_option_ids]&.first ?
@@ -53,6 +77,8 @@ module Surveys
               survey_option_snapshot: option_content,
               text_answer: answer[:text_answer].presence
             )
+
+            Notifiers::Customers::Surveys::SurveyPendingResponse.perform_later(survey_response: survey_response, receiver: owner)
           end
         end
       end
@@ -64,14 +90,67 @@ module Surveys
 
     private
 
+    def has_duplicate_activities?
+      if activity_ids.any?
+        SurveyResponse.where(
+          survey: survey,
+          owner: owner,
+          survey_activity_id: activity_ids
+        ).exists?
+      end
+    end
+
+    def activity_ids
+      @activity_ids ||= answers.map { |answer| answer[:survey_activity_id] }.compact
+    end
+
+    def existing_survey_response
+      @existing_survey_response ||= SurveyResponse.where(
+        survey: survey,
+        owner: owner,
+        survey_activity_id: activity_ids
+      ).order(created_at: :desc).first
+    end
+
+    def existing_survey_response_url
+      Rails.application.routes.url_helpers.reply_survey_url(survey.slug, existing_survey_response.uuid)
+    end
+
     def validate_required_questions
-      required_question_ids = survey.questions.where(required: true).pluck(:id)
+      return false if activity_ids.empty?
+
+      # Check if owner has already responded to any of these activities
+      QuestionAnswer.joins(:survey_response)
+        .where(survey_activity_id: activity_ids)
+        .where(survey_responses: { owner_id: owner.id, owner_type: owner.class.name })
+        .exists?
+    end
+
+    def validate_required_questions
+      required_questions = survey.questions.where(required: true)
       answered_question_ids = answers.map { |a| a[:survey_question_id] }
 
-      missing_required = required_question_ids - answered_question_ids
+      missing_required = required_questions.reject { |q| answered_question_ids.include?(q.id) }
 
       if missing_required.any?
-        errors.add(:answers, "Missing answers for required questions: #{missing_required.join(', ')}")
+        errors.add(:survey, :missing_required)
+      end
+    end
+
+    def validate_activity_participants
+      activity_answers = answers.select { |answer|
+        question = survey.questions.find(answer[:survey_question_id])
+        question.activity? && answer[:survey_activity_id].present?
+      }
+
+      activity_answers.each do |answer|
+        activity = SurveyActivity.find(answer[:survey_activity_id])
+        next unless activity.max_participants
+
+        current_participants = activity.survey_responses.active.count
+        if current_participants >= activity.max_participants
+          errors.add(:survey, :activity_full)
+        end
       end
     end
 
@@ -82,42 +161,56 @@ module Surveys
         case question.question_type
         when 'text'
           if answer[:text_answer].blank?
-            errors.add(:answers, "Text answer required for question #{question.id}")
+            errors.add(:survey, :invalid_text_answer)
           end
           if answer[:survey_option_ids].present?
-            errors.add(:answers, "Survey options should not be present for text question #{question.id}")
+            errors.add(:survey, :options_not_allowed)
+          end
+          if answer[:survey_activity_id].present?
+            errors.add(:survey, :activity_not_allowed)
           end
         when 'single_selection'
           if answer[:survey_option_ids].blank? || answer[:survey_option_ids].size != 1
-            errors.add(:answers, "Single option selection required for question #{question.id}")
+            errors.add(:survey, :invalid_single_selection)
           end
           if answer[:text_answer].present?
-            errors.add(:answers, "Text answer should not be present for single selection question #{question.id}")
+            errors.add(:survey, :text_answer_not_allowed)
+          end
+          if answer[:survey_activity_id].present?
+            errors.add(:survey, :activity_not_allowed)
           end
           unless question.options.exists?(id: answer[:survey_option_ids].first)
-            errors.add(:answers, "Invalid option selected for question #{question.id}")
+            errors.add(:survey, :invalid_option)
           end
         when 'multiple_selection'
           if answer[:survey_option_ids].blank?
-            errors.add(:answers, "At least one option must be selected for multiple selection question #{question.id}")
+            errors.add(:survey, :invalid_multiple_selection)
           end
           if answer[:text_answer].present?
-            errors.add(:answers, "Text answer should not be present for multiple selection question #{question.id}")
+            errors.add(:survey, :text_answer_not_allowed)
+          end
+          if answer[:survey_activity_id].present?
+            errors.add(:survey, :activity_not_allowed)
           end
           answer[:survey_option_ids].each do |option_id|
             unless question.options.exists?(id: option_id)
-              errors.add(:answers, "Invalid option selected for question #{question.id}")
+              errors.add(:survey, :invalid_option)
             end
           end
-        when 'dropdown'
-          if answer[:survey_option_ids].blank? || answer[:survey_option_ids].size != 1
-            errors.add(:answers, "Single option selection required for question #{question.id}")
+        when 'activity'
+          if answer[:survey_option_ids].present?
+            errors.add(:survey, :options_not_allowed)
           end
           if answer[:text_answer].present?
-            errors.add(:answers, "Text answer should not be present for dropdown question #{question.id}")
+            errors.add(:survey, :text_answer_not_allowed)
           end
-          unless question.options.exists?(id: answer[:survey_option_ids].first)
-            errors.add(:answers, "Invalid option selected for question #{question.id}")
+          if answer[:survey_activity_id].blank?
+            errors.add(:survey, :invalid_activity_selection)
+          end
+          if answer[:survey_activity_id].present?
+            unless question.activities.exists?(id: answer[:survey_activity_id])
+              errors.add(:survey, :invalid_option)
+            end
           end
         end
       end

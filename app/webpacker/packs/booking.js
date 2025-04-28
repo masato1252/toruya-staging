@@ -6,7 +6,7 @@ import I18n from 'i18n-js/index.js.erb';
 import ahoy from "ahoy.js";
 import toastr from 'toastr';
 
-var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared|lines|user_bot\/sales|user_bot\/services|user_bot\/user_sign_up|user_bot\/user_connect)/)
+var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|surveys|shared|lines|user_bot\/sales|user_bot\/services|user_bot\/user_sign_up|user_bot\/user_connect)/)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(BookingcomponentRequireContext)
 

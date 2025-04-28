@@ -4,6 +4,9 @@
     broadcast: BroadcastSerializer.new(@broadcast).attributes_hash,
     customer_tags: Current.business_owner.customer_tags,
     attribute: @attribute,
+    candidate_customers: @candidate_customers,
+    previous_path: params[:previous_path],
+    customer_status_type: params[:customer_status_type],
     menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     online_services: @online_services,
     message: {

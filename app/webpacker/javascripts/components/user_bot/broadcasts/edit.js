@@ -6,7 +6,7 @@ import moment from "moment-timezone";
 import ReactSelect from "react-select";
 import _ from "lodash";
 
-import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
+import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, CustomerSelectionList } from "shared/components"
 import { Translator, getMomentLocale } from "libraries/helper";
 import { CommonServices } from "user_bot/api"
 import CustomerWithTagsQuery from "user_bot/broadcasts/creation_flow/customer_with_tags_query";
@@ -31,6 +31,9 @@ const BroadcastEdit =({props}) => {
   const [selected_menu, setMenu] = useState(props.broadcast.query)
   const [selected_online_service, setService] = useState(props.broadcast.query)
   const [customers_count, setCustomerCount] = useState(0)
+  const [selected_customers, setSelectedCustomers] = useState(props.candidate_customers?.filter(customer =>
+    props.broadcast.receiver_ids?.includes(String(customer.id))
+  ) || [])
 
   useEffect(() => {
     textareaRef.current?.focus()
@@ -75,6 +78,8 @@ const BroadcastEdit =({props}) => {
         break
       case "query":
         request_data = { query: query, query_type: props.broadcast.query_type }
+      case "manual_assignment":
+        request_data = { receiver_ids: selected_customers.map(customer => customer.id) }
         break
     }
 
@@ -85,7 +90,7 @@ const BroadcastEdit =({props}) => {
     let error, response;
 
     [error, response] = await CommonServices.update({
-      url: Routes.lines_user_bot_broadcast_path(props.business_owner_id, props.broadcast.id, {format: 'json'}),
+      url: props.broadcast_update_path || Routes.lines_user_bot_broadcast_path(props.business_owner_id, props.broadcast.id, {format: 'json'}),
       data: _.assign( data, {
         attribute: props.attribute,
         business_owner_id: props.business_owner_id,
@@ -100,6 +105,20 @@ const BroadcastEdit =({props}) => {
       window.location = response.data.redirect_to;
     }
   }
+
+  const handleCustomerToggle = (customerId) => {
+    const customer = props.candidate_customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    setSelectedCustomers(prevSelected => {
+      const isSelected = prevSelected.some(c => c.id === customerId);
+      if (isSelected) {
+        return prevSelected.filter(c => c.id !== customerId);
+      } else {
+        return [...prevSelected, customer];
+      }
+    });
+  };
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
@@ -175,6 +194,15 @@ const BroadcastEdit =({props}) => {
               </div>
             </div>
           </>
+        )
+      case "manual_assignment":
+        return (
+          <CustomerSelectionList
+            candidateCustomers={props.candidate_customers}
+            selectedCustomerIds={selected_customers.map(customer => customer.id)}
+            onCustomerToggle={handleCustomerToggle}
+            customerStatusType={props.customer_status_type}
+          />
         )
       case "query":
         {
@@ -320,7 +348,7 @@ const BroadcastEdit =({props}) => {
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={
-                <a href={Routes.lines_user_bot_broadcast_path(props.business_owner_id, props.broadcast.id)}>
+                <a href={props.previous_path || Routes.lines_user_bot_broadcasts_path(props.business_owner_id)}>
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }

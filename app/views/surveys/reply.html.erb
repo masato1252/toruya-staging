@@ -1,0 +1,19 @@
+<div class="survey-response">
+  <div class="survey-header">
+    <h2><%= @survey.title %></h2>
+  </div>
+
+  <h3 class="margin-around centerize"><%= @survey_response.owner.name %></h3>
+  <% if @survey.activities.any? %>
+    <h3 class="margin-around centerize">
+      <%= t("survey.state.#{@survey_response.state}_sentence") %>
+    </h3>
+  <% end %>
+
+  <%= render partial: 'activity_answers', locals: { activity_answers: @survey_response.activity_answers } %>
+  <%= render partial: 'non_activity_answers', locals: { non_activity_answers: @survey_response.non_activity_answers } %>
+
+  <div class="margin-around centerize">
+    <%= link_to t("survey.back_to_survey"), survey_url(@survey.slug), class: "btn btn-tarco" %>
+  </div>
+</div>

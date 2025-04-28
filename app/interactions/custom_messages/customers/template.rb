@@ -13,8 +13,14 @@ module CustomMessages
       SHOP_CUSTOM_REMINDER = 'shop_custom_reminder'
       LESSON_WATCHED = 'lesson_watched'
       EPISODE_WATCHED = 'episode_watched'
+      ACTIVITY_PENDING_RESPONSE = 'activity_pending_response'
+      ACTIVITY_ACCEPTED_RESPONSE = 'activity_accepted_response'
+      ACTIVITY_CANCELED_RESPONSE = 'activity_canceled_response'
+      ACTIVITY_ONE_DAY_REMINDER = 'activity_one_day_reminder'
+      ACTIVITY_CUSTOM_MESSAGE = 'activity_custom_message'
+      SURVEY_PENDING_RESPONSE = 'survey_pending_response'
 
-      SCENARIOS = [ONLINE_SERVICE_PURCHASED, ONLINE_SERVICE_MESSAGE_TEMPLATE, BOOKING_PAGE_BOOKED, RESERVATION_CONFIRMED, BOOKING_PAGE_ONE_DAY_REMINDER, RESERVATION_ONE_DAY_REMINDER, BOOKING_PAGE_CUSTOM_REMINDER, LESSON_WATCHED, EPISODE_WATCHED, SHOP_CUSTOM_REMINDER].freeze
+      SCENARIOS = [ONLINE_SERVICE_PURCHASED, ONLINE_SERVICE_MESSAGE_TEMPLATE, BOOKING_PAGE_BOOKED, RESERVATION_CONFIRMED, BOOKING_PAGE_ONE_DAY_REMINDER, RESERVATION_ONE_DAY_REMINDER, BOOKING_PAGE_CUSTOM_REMINDER, LESSON_WATCHED, EPISODE_WATCHED, SHOP_CUSTOM_REMINDER, SURVEY_PENDING_RESPONSE, ACTIVITY_PENDING_RESPONSE, ACTIVITY_ACCEPTED_RESPONSE, ACTIVITY_CANCELED_RESPONSE, ACTIVITY_ONE_DAY_REMINDER, ACTIVITY_CUSTOM_MESSAGE].freeze
 
       object :product, class: ApplicationRecord, default: nil
       string :scenario
@@ -36,6 +42,16 @@ module CustomMessages
                      I18n.t("customer.notifications.sms.reminder")
                    when ONLINE_SERVICE_PURCHASED
                      I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message")
+                   when SURVEY_PENDING_RESPONSE
+                     I18n.t("notifier.survey.reply.survey_pending_message")
+                   when ACTIVITY_PENDING_RESPONSE
+                     I18n.t("notifier.survey.reply.activity_pending_message")
+                   when ACTIVITY_ACCEPTED_RESPONSE
+                     I18n.t("notifier.survey.reply.activity_accepted_message")
+                   when ACTIVITY_CANCELED_RESPONSE
+                     I18n.t("notifier.survey.reply.activity_canceled_message")
+                   when ACTIVITY_ONE_DAY_REMINDER
+                     I18n.t("notifier.survey.reply.activity_one_day_reminder_message")
                    end
 
         if template.present? && product&.is_a?(BookingPage) && product.shop.phone_number.present?
@@ -48,7 +64,7 @@ module CustomMessages
       private
 
       def validate_product_type
-        if product.present? && [OnlineService, BookingPage, Shop].exclude?(product.class)
+        if product.present? && [OnlineService, BookingPage, Shop, SurveyActivity, Survey].exclude?(product.class)
           errors.add(:product, :invalid_type)
         end
       end

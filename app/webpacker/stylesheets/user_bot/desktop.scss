@@ -72,6 +72,11 @@
     margin-top: 0;
     margin-bottom: 20px;
     overflow: scroll;
+
+    &.surveys {
+      width: 770px;
+      max-width: 770px;
+    }
   }
 }
 
@@ -173,6 +178,10 @@
 
     &:has(form.form) {
       background-color: #eeeeee;
+    }
+
+    &.surveys {
+      background-color: $gray10;
     }
   }
 

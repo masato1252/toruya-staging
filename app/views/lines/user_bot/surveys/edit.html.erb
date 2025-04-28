@@ -1,0 +1,9 @@
+<%= react_component("user_bot/surveys/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    survey: @survey.attributes.slice("id", "active"),
+    attribute: @attribute,
+  }
+},
+{ camelize_props: false }
+) %>

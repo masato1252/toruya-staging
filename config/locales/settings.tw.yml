@@ -61,12 +61,12 @@ tw:
       info_2: Toruya將根據這些設定接受預約。
       new_info_1: 設定服務資訊。
       new_info_2: Toruya將根據這些設定接受預約。
-      name: 店鋪名稱
+      name: 商家名稱
       create_successfully_message: 已成功儲存服務資訊。
       update_successfully_message: 已成功更新服務資訊。
       delete_successfully_message: 已成功刪除服務資訊。
       logo_area:
-        title: 店鋪標誌
+        title: 商家標誌
         description_about_logo: 在線預約時會顯示在預約頁面上。
         description_about_image: 390×135像素以內，30KB以下的PNG或GIF格式圖片
         upload_button_text: 上傳
@@ -686,22 +686,18 @@ tw:
         public: 公開
         private: 不公開
         delete_page: 刪除頁面
-        survey: 問卷表單
+        survey: 表單
         survey_title: 問卷表單
         survey_questions_count: "問卷表單題目數: %{count}題"
         survey_questions_count_empty: 尚未設定問卷表單題目
         survey_input_placeholder: 請輸入問卷表單問題
-        survey_question_type_text: 文字回答
-        survey_question_type_single_selection: 單選
-        survey_question_type_multiple_selection: 複選
-        survey_question_type_dropdown: 下拉選單
         survey_delete_option: 刪除選項
         survey_option_placeholder: "選項 %{index}"
         survey_add_option: 新增選項
         survey_delete_question: 刪除問題
         survey_answer_placeholder: 客戶文字回答
         survey_required: 必填
-        survey_add_question: 新增問題
+        survey_add_question: 新增區塊
         survey_save_desc_html: 顧客在預約時會看到此表單。
         survey_save: 儲存
         no_note: 尚未設定
@@ -715,6 +711,43 @@ tw:
           no_booking_option: 您需要至少設定一個預約項目才能開始使用此預約頁面。
           no_menu: 此預約項目未設定任何服務。
           expired: 此預約頁面已結束銷售。
+    survey:
+      title: 表單
+      description: 描述
+      questions_count: "表單題目數: %{count}題"
+      questions_count_empty: 尚未設定表單題目
+      input_placeholder: 請輸入表單問題
+      question_type_text: 讓客戶用文字回覆 - 文字型區塊
+      question_type_single_selection: 讓客戶選擇其中一個選項 - 單選
+      question_type_multiple_selection: 讓客戶選擇多個選項 - 複選
+      question_type_dropdown: 讓客戶從下拉選單中選擇 - 下拉選單
+      question_type_activity: 讓客戶選擇活動或課程 - 活動或課程
+      question_type_empty_block: 空白區塊 - 你可以在這邊補充更多資訊
+      period_name_placeholder: 請輸入期間名稱（例：第一期、春季班等）
+      delete_period: 刪除期間
+      start_date: 開始日期
+      end_date: 結束日期
+      min_participants: 最少參加人數
+      max_participants: 最多參加人數
+      add_period: 新增活動選擇
+      select_period: 選擇此活動
+      date_range: "%{start} ~ %{end}"
+      participants_range: "人數上限：%{max}人"
+      no_participants_range: 不限制人數
+      datetime_slot: "時段 %{number}"
+      delete_datetime_slot: 刪除時段
+      add_datetime_slot: 新增時段
+      preview_title: 預覽
+      option_placeholder: "選項 %{index}"
+      add_option: 新增選項
+      answer_placeholder: 客戶請在此輸入回答
+      required: 必填
+      add_question: 新增區塊
+      save: 儲存
+      price: 價格
+      price_display: "費用：%{price} 元"
+      period_id: 活動ID
+      only_one_activity_allowed: 活動型區塊一次只能設定一個。
     social_rich_menus:
       action_types:
         incoming_reservations: 所有預約

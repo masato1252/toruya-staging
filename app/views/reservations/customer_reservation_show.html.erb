@@ -35,61 +35,12 @@
       <%= render "reservations/show_modal/customer_info_changed", reservation_customer: @reservation_customer if @reservation_customer %>
       <%= render "reservations/show_modal/survey_response", response: @survey_response if @survey_response %>
       <%= render "reservations/show_modal/booking_from", reservation_customer: @reservation_customer, reservation: @reservation if @reservation_customer %>
+
+      <% if @reservation.from_activity? %>
+        <%= render "reservations/show_modal/activity_buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>
+      <% else %>
+        <%= render "reservations/show_modal/buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>
+      <% end %>
     </div>
-
-    <% if @reservation_customer %>
-      <div class="modal-footer">
-        <dl>
-          <% if @reservation_customer.pending? && @reservation.responsible_by_staff?(current_user.current_staff(@shop_user)) %>
-            <dd>
-            <% if @user_ability.can?(:edit, @reservation) %>
-              <%= link_to t("reservation.accept_customer"), site_routing_helper.accept_customer_user_reservations_path(@reservation, @customer), class: "btn enhanced BTNtarco" %>
-            <% else %>
-              <%= link_to t("reservation.accept_customer"), "#", class: "btn enhanced BTNtarco disabled" %>
-            <% end %>
-            </dd>
-          <% end %>
-
-          <% if @reservation_customer.accepted? %>
-            <dd>
-            <% if @user_ability.can?(:edit, @reservation) %>
-              <%= link_to t("reservation.pend"), site_routing_helper.pend_customer_user_reservations_path(@reservation, @customer), class: "btn enhanced BTNgray" %>
-            <% else %>
-              <%= link_to t("reservation.pend"), "#", class: "btn enhanced BTNgray disabled" %>
-            <% end %>
-            </dd>
-          <% end %>
-
-          <% if !(@reservation_customer.canceled? || @reservation_customer.customer_canceled?) %>
-            <dd>
-              <% if @user_ability.can?(:edit, @reservation) %>
-                <%= link_to t("reservation.customer_cancel"), site_routing_helper.cancel_customer_user_reservations_path(@reservation, @customer), class: "btn enhanced BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
-              <% else %>
-                <%= link_to t("reservation.customer_cancel"), "#", class: "btn enhanced BTNorange disabled" %>
-              <% end %>
-            </dd>
-          <% end %>
-
-          <% if @paid_payment && @reservation_customer.payment_paid? && @user_ability.can?(:refund, @reservation) %>
-            <dd>
-              <%= modal_link_to(
-                t("reservation.refund"),
-                refund_modal_lines_user_bot_customer_reservations_path(@reservation.user_id, @reservation, @customer),
-                class: "btn enhanced BTNorange",
-                modal_target: "#dummyModal2"
-              ) %>
-            </dd>
-          <% end %>
-
-          <dd>
-            <% if @user_ability.can?(:manage_shop_reservations, @reservation.shop) && @user_ability.can?(:edit, @reservation) %>
-            <%= link_to t("action.details"), site_routing_helper.reservation_form_path(@reservation, business_owner_id: business_owner_id, from: "customer_dashboard", from_customer_id: @customer.id, customer_id: @customer.id), class: "btn enhanced BTNtarco" %>
-          <% else %>
-            <%= link_to t("action.details"), "#", class: "btn BTNtarco enhanced disabled" %>
-          <% end %>
-          </dd>
-        </dl>
-      </div>
-    <% end %>
   </div>
 </div>

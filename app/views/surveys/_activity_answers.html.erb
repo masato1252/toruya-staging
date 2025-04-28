@@ -1,0 +1,36 @@
+<% activity_answers.each do |answer| %>
+  <% activity = answer.survey_activity %>
+  <div class="activity-selection mb-3">
+    <div class="activity-period">
+      <h4><%= activity.name %></h4>
+      <div class="time-slot-display">
+        <div class="time-slots">
+          <% activity.activity_slots.each do |slot| %>
+            <% if local_assigns[:link_reservation] && slot.reservation.present? %>
+              <%= link_to lines_user_bot_schedules_path(business_owner_id: business_owner_id, reservation_id: slot.reservation.id), class: "underline" do %>
+                <div class="datetime-slot">
+                  <div class="time-info">
+                    <%= slot.slot_time_period %>
+                </div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="datetime-slot">
+                <div class="time-info">
+                  <%= slot.slot_time_period %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="activity-info">
+          <% if activity.price_cents && activity.price_cents > 0 %>
+            <p class="price-info">
+              <%= t('settings.survey.price_display', price: activity.price_cents) %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,49 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="service-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_survey_activity_path(business_owner_id, @survey, @activity),
+          title: t("user_bot.dashboards.surveys.activities.title") %>
+
+        <div class="field-group-header" id="name"><%= t("common.customer_name") %></div>
+        <%= render "lines/user_bot/field_row", title: @survey_response.customer.try(:name), path: lines_user_bot_customers_path(business_owner_id: business_owner_id, customer_id: @survey_response.customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations], from: FROM[:survey_response_show]) %>
+
+        <div class="survey-response">
+          <%= render partial: 'surveys/activity_answers', locals: { activity_answers: @survey_response.activity_answers, link_reservation: true } %>
+          <%= render partial: 'surveys/non_activity_answers', locals: { non_activity_answers: @survey_response.non_activity_answers } %>
+        </div>
+
+        <div class="field-group-header" id="state"><%= t("user_bot.dashboards.surveys.activities.state") %></div>
+        <%= render "lines/user_bot/field_state", state: @survey_response.state do %>
+          <%= render "lines/user_bot/field_row", title: t("user_bot.dashboards.surveys.activities.states.#{@survey_response.state}") %>
+        <% end %>
+
+        <div class="margin-around">
+          <%= button_to accept_lines_user_bot_survey_activity_survey_response_path(business_owner_id, @survey, @activity, @survey_response),
+            method: :post,
+            data: { confirm: t("user_bot.dashboards.surveys.activities.accept_and_notify_customer_confirmation") },
+            class: "btn btn-tarco survey-action-btn" do %>
+            <%= t('user_bot.dashboards.surveys.activities.accept_and_notify_customer') %>
+          <% end %>
+        </div>
+        <div class="margin-around flex justify-between">
+          <%= button_to pending_lines_user_bot_survey_activity_survey_response_path(business_owner_id, @survey, @activity, @survey_response),
+            method: :post,
+            data: { confirm: t("user_bot.dashboards.surveys.activities.pending_and_notify_customer_confirmation") },
+            class: "btn btn-orange survey-action-btn" do %>
+            <%= t('user_bot.dashboards.surveys.activities.pending_and_notify_customer') %>
+          <% end %>
+          <%= button_to cancel_lines_user_bot_survey_activity_survey_response_path(business_owner_id, @survey, @activity, @survey_response),
+            method: :post,
+            data: { confirm: t("user_bot.dashboards.surveys.activities.cancel_and_notify_customer_confirmation") },
+            class: "btn btn-gray survey-action-btn" do %>
+            <%= t('user_bot.dashboards.surveys.activities.cancel_and_notify_customer') %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

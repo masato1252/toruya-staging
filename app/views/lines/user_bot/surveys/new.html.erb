@@ -1,0 +1,10 @@
+<%= react_component("user_bot/surveys/index", {
+  props: {
+    mode: "activity",
+    preview: true,
+    business_owner_id: Current.business_owner.id,
+    currency: Current.business_owner.currency
+  }
+},
+{ camelize_props: false }
+) %>

@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-pages form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_survey_path(business_owner_id, @survey),
+          title: t("user_bot.dashboards.surveys.responses.title") %>
+
+        <div class="booking-pages-list">
+          <% @survey_responses.each do |response| %>
+            <%= content_tag :div, class: "field-row with-next-arrow" do %>
+              <%= link_to lines_user_bot_survey_response_path(business_owner_id, @survey, response), class: "w-8-12" do %>
+                <h3 class="text-gray-700 underline"><%= response.owner.name %></h3>
+                <div class="text-gray-500 text-14px">
+                  <%= response.answer_sentences.join(', ') %>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

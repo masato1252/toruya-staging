@@ -28,14 +28,14 @@
                   <%= button_tag type: 'button',
                       class: 'btn btn-icon btn-tarco mr-2',
                       data: {
-                        clipboard_text: booking_page_url(booking_page),
+                        clipboard_text: booking_page_url(booking_page.slug, subdomain: request.subdomain),
                         controller: 'clipboard',
                         action: 'clipboard#copy',
                         clipboard_popup_text: I18n.t("common.url_copied")
                       } do %>
                     <i class="far fa-clone"></i>
                   <% end %>
-                  <%= link_to booking_page_url(booking_page),
+                  <%= link_to booking_page_url(booking_page.slug, subdomain: request.subdomain),
                       target: '_blank',
                       class: 'btn btn-icon btn-tarco' do %>
                     <i class="fas fa-external-link-alt"></i>

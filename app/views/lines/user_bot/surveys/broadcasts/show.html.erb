@@ -1,0 +1,64 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_survey_activity_path(business_owner_id, @survey, @activity), title: t("user_bot.dashboards.broadcasts.broadcast_conditions") %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.content") %></div>
+        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_survey_activity_broadcast_path(@survey, @activity, @broadcast, business_owner_id: business_owner_id, attribute: :content, customer_status_type: params[:customer_status_type], previous_path: params[:previous_path]) : nil do %>
+          <p class="p10 bg-gray rounded break-line-content w-full"><%= @broadcast.content %></p>
+        <% end %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.audiences") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_survey_activity_broadcast_path(@survey, @activity, @broadcast, business_owner_id: business_owner_id, attribute: :manual_assignment) do %>
+          <div class="w-full"><%= I18n.t("user_bot.dashboards.broadcast_creation.manual_assignment") %></div>
+        <% end %>
+        <%= render "lines/user_bot/field_row" do %>
+          <div>
+            <% Current.business_owner.customers.where(id: @broadcast.receiver_ids).each do |customer| %>
+              <%= link_to customer.name, lines_user_bot_customers_path(customer_id: customer.id, business_owner_id: business_owner_id) %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.recipients_count") %></div>
+        <%= render "lines/user_bot/field_row" do %>
+          <div>
+            <%= @broadcast.receiver_ids.count %>
+          </div>
+        <% end %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.state") %></div>
+        <%= render "lines/user_bot/field_row", title: t("broadcast.states.#{@broadcast.state}") %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.broadcasts.time") %></div>
+        <%= render "lines/user_bot/field_row", path: @broadcast.draft? ? edit_lines_user_bot_survey_activity_broadcast_path(@survey, @activity, @broadcast, business_owner_id: business_owner_id, attribute: :schedule_at) : nil, title: broadcast_deliver_at(@broadcast) %>
+
+        <p class="action-block break-line-content warning">
+        <% if @broadcast.active? %>
+          <%= t("user_bot.dashboards.broadcasts.stop_desc") %>
+        <% elsif @broadcast.draft? %>
+          <%= t("user_bot.dashboards.broadcasts.active_desc") %>
+        <% end %>
+        </p>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+          <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@broadcast.updated_at, format: :long_date) %></span>
+          <% if @broadcast.active? %>
+            <%= link_to  draft_lines_user_bot_survey_activity_broadcast_path(@survey, @activity, @broadcast, business_owner_id: business_owner_id), method: :put , data: { confirm: t("user_bot.dashboards.broadcasts.are_you_sure_to_stop") }, class: "btn btn-orange btn-circle btn-save btn-tweak btn-with-word" do %>
+              <i class="fa fa-ban fa-2x"></i>
+              <div class="word"><%= t("user_bot.dashboards.broadcasts.stop_send") %></div>
+            <% end %>
+          <% elsif @broadcast.draft? %>
+            <%= link_to activate_lines_user_bot_survey_activity_broadcast_path(@survey, @activity, @broadcast, business_owner_id: business_owner_id), method: :put, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+              <i class="fa fa-envelope fa-2x"></i>
+              <div class="word"><%= t("action.activate") %></div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

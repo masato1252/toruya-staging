@@ -21,10 +21,10 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       @customer = Customer.find_by(id: params[:customer_id])
       @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:customer_id])
       @paid_payment = @reservation_customer&.paid_payment
-      @survey_response = @reservation_customer&.survey_response
+      @survey_response = @reservation_customer&.survey_response || @reservation_customer&.activity_survey_response
     else
       @reservation_customers = @reservation.reservation_customers
-      @survey_responses = @reservation_customers.map(&:survey_response).compact
+      @survey_responses = (@reservation_customers.map(&:survey_response) + @reservation_customers.map(&:activity_survey_response)).compact
     end
 
     template = params[:from] == "customer_dashboard" ? "reservations/customer_reservation_show" : "reservations/show"

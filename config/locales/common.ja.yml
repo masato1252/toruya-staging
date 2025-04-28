@@ -6,8 +6,10 @@ ja:
     delete2: "削　除"
     delete_reservation: 予約を削除
     edit: 編集
+    back_to_survey: アンケートに戻る
     create_new: 新規作成
     details: 詳細
+    activity_details: 活動詳細
     cancel: キャンセル
     repurchase: 再購入
     cancel_reservation: 予約をキャンセルする
@@ -15,6 +17,9 @@ ja:
     log_out: ログアウト
     save: 保存
     submit: 送信
+    pending: 確認待ち
+    accept: 承認
+    cancel: キャンセル
     save_pending: 未承認で保存
     save_as_draft: 下書きとして保存
     save_and_publish: 保存して公開
@@ -109,6 +114,11 @@ ja:
     survey_save: 保存して次へ
     change_channel: 通知方式を変更する
   common:
+    customer_status:
+      activity_status:
+        pending: 確認待ち
+        accepted: 確認済み
+        cancelled: キャンセル済み
     why_need_phone_number: ""
     why_need_email: ""
     age: 年齢
@@ -136,6 +146,7 @@ ja:
     address: 住所
     phone_number: 電話番号
     cellphone_number: 携帯電話番号
+    participants_full: 額滿
     email: メール
     birthday: 生年月日
     memo: メモ
@@ -149,11 +160,14 @@ ja:
     company_name: 社名・屋号
     company_email: メールアドレス
     website: Webサイト
+    public: 公開
+    private: 非公開
     update_failed_message: 更新失敗
     update_successfully_message: 更新完了
     create_successfully_message: 作成完了
     delete_successfully_message: 削除完了
     save_draft_successfully_message: 下書き保存完了
+    deliveried_please_check_message: 送信完了，ご確認ください
     are_you_sure_message: 完全に削除されますがよろしいですか？
     are_you_sure_cancel_message: キャンセルしますがよろしいですか？
     send: 送信
@@ -243,6 +257,7 @@ ja:
     need_support_btn: サポートが必要ですか？
     send_now_label: 今すぐ送信
     message_delete_confirmation_message: このメッセージを削除してよろしいですか？
+    delete_confirmation_message: 確定要削除嗎？
     customer_name: 顧客氏名
     person_unit: 名
     mr: さん

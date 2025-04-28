@@ -8,6 +8,9 @@ module Broadcasts
       hash :query, strip: false, default: {}
       string :query_type
       time :schedule_at, default: nil
+      string :builder_type, default: nil
+      integer :builder_id, default: nil
+      array :receiver_ids, default: nil
     end
 
     def execute

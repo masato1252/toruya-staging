@@ -19,7 +19,6 @@ module Kasaike
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     Dotenv.overload Rails.root.join(".env.#{Rails.env}")
-    config.i18n.default_locale = 'ja'
     config.i18n.available_locales = [:ja, :tw]
     config.time_zone = "Tokyo"
     config.active_job.queue_adapter = :delayed_job

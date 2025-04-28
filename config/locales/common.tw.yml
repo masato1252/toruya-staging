@@ -6,8 +6,10 @@ tw:
     delete2: "刪　除"
     delete_reservation: 刪除預約
     edit: 編輯
+    back_to_survey: 返回表單
     create_new: 新增
     details: 詳細資訊
+    activity_details: 活動詳細資訊
     cancel: 取消
     repurchase: 重新購買
     cancel_reservation: 取消預約
@@ -15,6 +17,9 @@ tw:
     log_out: 登出
     save: 儲存
     submit: 送出
+    pending: 待審核
+    accept: 核准
+    cancel: 取消
     save_pending: 儲存為待審核
     save_as_draft: 儲存為草稿
     save_and_publish: 儲存並發布
@@ -111,6 +116,11 @@ tw:
     survey_save: 儲存
     change_channel: 變更通知方式
   common:
+    customer_status:
+      activity_status:
+        pending: 報名待確認
+        accepted: 報名已確認
+        cancelled: 報名已取消
     why_need_phone_number: ""
     why_need_email: ""
     age: 年齡
@@ -138,6 +148,7 @@ tw:
     address: 地址
     phone_number: 電話號碼
     cellphone_number: 手機號碼
+    participants_full: 已額滿
     email: 電子郵件
     birthday: 生日
     memo: 備註
@@ -151,11 +162,14 @@ tw:
     company_name: 公司名稱
     company_email: 公司電子郵件
     website: 網站
+    public: 公開
+    private: 不公開
     update_failed_message: 更新失敗
     update_successfully_message: 更新成功
     create_successfully_message: 建立成功
     delete_successfully_message: 刪除成功
     save_draft_successfully_message: 草稿儲存成功
+    deliveried_please_check_message: 已發送，請檢查您的LINE或信箱
     are_you_sure_message: 確定要完全刪除嗎？
     are_you_sure_cancel_message: 確定要取消嗎？
     send: 傳送
@@ -245,6 +259,7 @@ tw:
     need_support_btn: 需要協助嗎？
     send_now_label: 立即傳送
     message_delete_confirmation_message: 確定要刪除此訊息嗎？
+    delete_confirmation_message: 確定要刪除嗎？
     customer_name: 顧客姓名
     person_unit: 位
     mr: 先生/小姐

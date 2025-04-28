@@ -1,0 +1,72 @@
+<div class="booking-page-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_survey_path(@survey, business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.surveys.title") %></div>
+  <%= render "lines/user_bot/field_row", title: @survey.title %>
+
+  <% if @survey.activities.any? %>
+    <div class="field-group-header" id="name"><%= t("user_bot.dashboards.surveys.custom_messages.activty_type") %></div>
+    <%= render "lines/user_bot/field_row",
+      title: t("user_bot.dashboards.surveys.custom_messages.activity_pending_response"),
+      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
+        @survey,
+        business_owner_id: business_owner_id,
+        scenario: ::CustomMessages::Customers::Template::ACTIVITY_PENDING_RESPONSE,
+        custom_message_id: @pending_message&.id
+      )
+    %>
+
+    <%= render "lines/user_bot/field_row",
+      title: t("user_bot.dashboards.surveys.custom_messages.activity_accepted_response"),
+      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
+        @survey,
+        business_owner_id: business_owner_id,
+        scenario: ::CustomMessages::Customers::Template::ACTIVITY_ACCEPTED_RESPONSE,
+        custom_message_id: @accepted_message&.id
+      )
+    %>
+    <%= render "lines/user_bot/field_row",
+      title: t("user_bot.dashboards.surveys.custom_messages.activity_canceled_response"),
+      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
+        @survey,
+        business_owner_id: business_owner_id,
+        scenario: ::CustomMessages::Customers::Template::ACTIVITY_CANCELED_RESPONSE,
+        custom_message_id: @canceled_message&.id
+      )
+    %>
+
+    <div class="field-group-header" id="name"><%= t("user_bot.dashboards.surveys.custom_messages.reminder") %></div>
+
+    <%= render "lines/user_bot/field_row",
+      title: t("user_bot.dashboards.surveys.custom_messages.activity_one_day_reminder"),
+      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
+        @survey,
+        business_owner_id: business_owner_id,
+        scenario: ::CustomMessages::Customers::Template::ACTIVITY_ONE_DAY_REMINDER,
+        custom_message_id: @one_day_reminder_message&.id
+      )
+    %>
+  <% end %>
+  <%= render "lines/user_bot/field_row",
+    title: t("user_bot.dashboards.surveys.custom_messages.survey_pending_response"),
+    path: edit_scenario_lines_user_bot_survey_custom_messages_path(
+      @survey,
+      business_owner_id: business_owner_id,
+      scenario: ::CustomMessages::Customers::Template::SURVEY_PENDING_RESPONSE,
+      custom_message_id: @survey_pending_message&.id
+    )
+  %>
+  <% @sequence_messages.each do |message| %>
+    <%= render "lines/user_bot/field_row",
+      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
+        @survey,
+        business_owner_id: business_owner_id,
+        scenario: message.scenario,
+        custom_message_id: message.id
+      ),
+      title: message.after_days.present? ? t("user_bot.dashboards.settings.custom_message.booking_page.after_days_reminder", after_days: message.after_days) : t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_reminder", before_minutes: message.before_minutes)
+    %>
+  <% end %>
+
+  <%= render "lines/user_bot/shared/notification_channel_display", back_path: lines_user_bot_survey_custom_messages_path(@survey, business_owner_id: business_owner_id) %>
+</div>

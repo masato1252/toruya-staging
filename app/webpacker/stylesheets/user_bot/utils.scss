@@ -407,6 +407,18 @@ $line-margin: 20px;
   margin-bottom: 2rem;
 }
 
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
+.mb-14 {
+  margin-bottom: 3.5rem;
+}
+
 .mb-6px {
   margin-bottom: 6px;
 }
@@ -443,6 +455,10 @@ $line-margin: 20px;
 
 .text-white {
   color: #ffffff;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
 }
 
 .no-underline {

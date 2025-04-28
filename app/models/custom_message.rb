@@ -35,7 +35,7 @@ class CustomMessage < ApplicationRecord
   scope :scenario_of, -> (service, scenario, nth_time = 1) { where(service: service, scenario: scenario, nth_time: nth_time) }
   scope :right_away, -> { where(after_days: nil) }
   scope :sequence, -> { where.not(after_days: nil) }
-  validates :service_type, inclusion: { in: %w(OnlineService BookingPage Shop Lesson Episode) }, allow_nil: true
+  validates :service_type, inclusion: { in: %w(OnlineService BookingPage Shop Lesson Episode SurveyActivity Survey) }, allow_nil: true
   validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
   validates :scenario, inclusion: { in: CustomMessages::Users::Template::SCENARIOS + CustomMessages::Customers::Template::SCENARIOS }, allow_nil: true
   validates :flex_template, inclusion: { in: ::LineMessages::FlexTemplateContent.singleton_methods(false).map(&:to_s) }, allow_nil: true

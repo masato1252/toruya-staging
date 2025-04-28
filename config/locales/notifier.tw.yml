@@ -102,3 +102,12 @@ https://manager.toruya.com/tw/userlogin"
           %{customer_status_online_service_url}\n\n如果更改後的付款方式沒有問題，您可以從結算完成日重新開始使用。在這種情況下，使用期間將從付款完成日開始計算。\n\n※無法獲得卡片授權的原因可能是您輸入的卡片已失效。\n\n如果您有任何問題，請聯繫%{shop_phone}。"
       not_first_time_charge_successfully:
         message: "%{customer_name} 您好\n\n感謝您一直以來使用%{shop_name}。\n\n今天，%{service_title}的使用費用已成功收取。\n\n今後也請繼續支持我們。\n\n %{customer_status_online_service_url}"
+    survey:
+      reply:
+        activity_pending_message: "已報名活動 %{survey_name} 的 %{activity_name}，現為『待確認』狀態，請待商家確認後，您可以從以下連結查看報名結果。\n\n%{reply_survey_url}"
+        activity_accepted_message: "已確認您的報名 %{survey_name} 的 %{activity_name}，您可以從以下連結查看報名結果。\n\n%{reply_survey_url}"
+        activity_canceled_message: "很抱歉，您的活動報名 %{survey_name} 的 %{activity_name} 已被取消，請您見諒。\n\n%{reply_survey_url}"
+        survey_pending_message: "感謝您抽空填寫調查資料，您的意見對我們非常寶貴。您可以透過以下連結查看填寫結果：\n\n%{reply_survey_url}"
+        activity_one_day_reminder_message: "您報名了 %{survey_name} 的 %{activity_name}，活動將在 %{activity_slot_time_period} 舉行，請您記得參加。\n\n%{reply_survey_url}"
+      users:
+        activity_pending_message: "%{user_name} 您好\n\n有客戶報名了 %{survey_name} 的 %{activity_name}。\n\n請從以下連結查看此客戶報名：\n%{survey_response_url}\n\nToruya"

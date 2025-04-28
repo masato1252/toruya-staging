@@ -12,7 +12,7 @@ class Schedules::Events < ActiveInteraction::Base
     # Mix off custom schedules and reservations
     reservations = Reservation.where(shop_id: working_shop_ids)
       .uncanceled
-      .includes(:menus, :customers, :staffs, shop: :user)
+      .includes(:menus, :customers, :staffs, shop: :user, survey_activity: :survey_responses)
       .order("reservations.start_time ASC")
     off_schedules = CustomSchedule.closed.where(user_id: user_ids).includes(user: :profile)
     open_schedules = CustomSchedule.opened.where(user_id: user_ids).includes(user: :profile)
@@ -35,7 +35,7 @@ class Schedules::Events < ActiveInteraction::Base
       reservations: reservations,
       booking_page_holder_schedules: booking_page_holder_schedules,
       off_schedules: off_schedules,
-      open_schedules: open_schedules  
+      open_schedules: open_schedules
     }
   end
 end

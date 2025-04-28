@@ -1,6 +1,6 @@
 <div>
   <% reservation_customers.each do |reservation_customer| %>
-    <%= link_to booking_url(reservation_customer.slug), class: "text-gray-700 no-underline" do %>
+    <%= link_to reservation_customer.booking_info_url, class: "text-gray-700 no-underline" do %>
       <div class="p-6 border border-solid border-gray-500 rounded-md my-1">
         <h3 class="text-lg font-bold mb-2">
           <%= reservation_customer.reservation.booking_time %>
@@ -11,7 +11,7 @@
         </div>
 
         <div class="text-sm text-gray-500 mb-2">
-          <%= reservation_customer.reservation.menus_sentence %>
+          <%= reservation_customer.reservation.products_sentence %>
         </div>
         <div class="text-sm text-gray-500 mb-2">
           <%= reservation_customer.reservation.shop.display_name %>

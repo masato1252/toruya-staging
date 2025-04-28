@@ -4,27 +4,33 @@
 # Table name: broadcasts
 #
 #  id                           :bigint           not null, primary key
+#  builder_type                 :string
 #  content                      :text             not null
 #  customers_permission_warning :boolean          default(FALSE)
 #  query                        :jsonb
 #  query_type                   :string
+#  receiver_ids                 :jsonb
 #  recipients_count             :integer          default(0)
 #  schedule_at                  :datetime
 #  sent_at                      :datetime
 #  state                        :integer          default("active")
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
+#  builder_id                   :bigint
 #  user_id                      :bigint           not null
 #
 # Indexes
 #
+#  index_broadcasts_on_builder  (builder_type,builder_id)
 #  index_broadcasts_on_user_id  (user_id)
 #
 
 class Broadcast < ApplicationRecord
   belongs_to :user
-  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers", "customers_with_tags", "customers_with_birthday", "active_customers"]
-  NORMAL_TYPES = TYPES - ["reservation_customers"]
+  belongs_to :builder, polymorphic: true, optional: true
+
+  TYPES = ["menu", "online_service", "online_service_for_active_customers", "vip_customers", "reservation_customers", "customers_with_tags", "customers_with_birthday", "active_customers", "manual_assignment"]
+  NORMAL_TYPES = TYPES - ["reservation_customers", "manual_assignment"]
 
   scope :ordered, -> { order(Arel.sql("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC"))  }
   scope :normal, -> { where(query_type: NORMAL_TYPES) }
@@ -45,14 +51,20 @@ class Broadcast < ApplicationRecord
     reservation_customers: "reservation_customers",
     customers_with_tags: "customers_with_tags",
     customers_with_birthday: "customers_with_birthday",
-    active_customers: "active_customers"
+    active_customers: "active_customers",
+    manual_assignment: "manual_assignment"
   }
 
   def broadcast_at
     sent_at || schedule_at || created_at
   end
 
+  def recipients
+    @recipients ||= Broadcasts::FilterCustomers.run!(broadcast: self)
+  end
+
   def target
+    return I18n.t("broadcast.targets.manual_assignment") if manual_assignment?
     return I18n.t("broadcast.targets.all_customers") if query.blank?
     return I18n.t("broadcast.targets.vip_customers") if vip_customers?
     return I18n.t("broadcast.targets.active_customers") if active_customers?
@@ -81,6 +93,7 @@ class Broadcast < ApplicationRecord
   end
 
   def targets
+    return [I18n.t("broadcast.targets.manual_assignment")] if manual_assignment?
     return [I18n.t("broadcast.targets.all_customers")] if query.blank?
     return [I18n.t("broadcast.targets.vip_customers")] if vip_customers?
     return [I18n.t("broadcast.targets.active_customers")] if active_customers?

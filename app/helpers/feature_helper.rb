@@ -71,6 +71,10 @@ module FeatureHelper
     Current.business_owner&.booking_options_menu_concept
   end
 
+  def support_survey_display?
+    Current.business_owner&.can_admin_chat?
+  end
+
   def money_sample(locale)
     case locale
     when :tw

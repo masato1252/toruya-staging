@@ -23,7 +23,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
       action_templates = [
         LineActions::Uri.new(
           label: I18n.t("line.actions.label.reservation_info"),
-          url: Rails.application.routes.url_helpers.booking_url(reservation_customer.slug),
+          url: reservation.booking_info_url,
           btn: "secondary",
           key: social_customer.social_rich_menu_key
         ).template,
@@ -36,7 +36,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
       ::LineMessages::FlexTemplateContent.icon_three_header_body_card(
         asset_url: reservation.pending? ? PENDING_ASSET_URL : ACCEPTED_ASSET_URL,
         title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)}~",
-        title2: reservation.menus.map(&:display_name).join(", "),
+        title2: reservation.products_sentence,
         title3: shop.display_name,
         body: reservation_customer.allow_customer_cancel? ? I18n.t("line.bot.messages.incoming_reservations.desc_allow_customer_cancel") : I18n.t("line.bot.messages.incoming_reservations.desc"),
         action_templates: action_templates

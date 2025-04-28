@@ -25,7 +25,8 @@ STRIPE_SUBSCRIPTION_STATUS = {
 STRIPE_DESCRIPTION_LIMIT = 20
 
 FROM = {
-  service_customer_show: "service_customer_show"
+  service_customer_show: "service_customer_show",
+  survey_response_show: "survey_response_show"
 }
 
 LOCALE_TIME_ZONE = {

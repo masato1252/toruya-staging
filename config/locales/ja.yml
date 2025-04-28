@@ -11,6 +11,7 @@ ja:
     targets:
       all_customers: "全ての顧客"
       vip_customers: "VIP顧客"
+      manual_assignment: "手動選択"
       conditions:
         contains: 是
   requirement:
@@ -142,6 +143,11 @@ ja:
   tours:
     line_settings_required_for_online_service_html: "オンラインサービス機能を利用するには、あなたのLINE公式アカウントを連携する必要があります。<br /><br />設定メニューから連携設定をしてください。<br /><br />▶︎連携方法<br />"
     line_settings_required_for_booking_page_html: "オンライン予約機能を利用するには、あなたのLINE公式アカウントを連携する必要があります。<br /><br />設定メニューから連携設定をしてください。<br /><br />▶︎連携方法<br />"
+  survey:
+    state:
+      pending: 承認待ち
+      accepted: 承認済
+      canceled: キャンセル
   reservation:
     business_time_suggestion: "※営業時間"
     no_valid_menu_alert: メニューを入力してください。
@@ -411,6 +417,13 @@ ja:
           has_one: "%{record}が存在しているので削除できません"
           has_many: "%{record}が存在しているので削除できません"
       models:
+        survey_question:
+          attributes:
+            required: "^この問題は必須です"
+        survey_activity_slot:
+          attributes:
+            end_time:
+              invalid_end_time_before_start_time: "^終了時間は開始時間より後にしてください"
         booking_option_menu:
           attributes:
             required_time:
@@ -431,6 +444,21 @@ ja:
       user: ユーザー
       staff: スタッフ
     attributes:
+      survey:
+        title: "タイトル"
+        description: "説明"
+      survey_question:
+        description: "問題説明"
+        question_type: "問題タイプ"
+        required: "必須"
+        options: "選択肢"
+        activities: "活動"
+      survey_activity:
+        name: "活動名"
+        max_participants: "最大参加者数"
+        price_cents: "価格"
+        currency: "通貨"
+        datetime_slots: "時間帯"
       user:
         password: "パスワード"
         email: "E-mail"
@@ -554,6 +582,7 @@ ja:
       short: "%y/%m/%d %H:%M"
       date: "%Y/%m/%d(%a)"
       long_date: "%Y年%m月%d日(%a)"
+      long_date_full: "%Y/%m/%d (%a)"
       hour_minute: "%H:%M"
       month_day_wday: "%m/%d(%a)"
       local_time: "%Y-%m-%dT%H:%M:%S"
@@ -880,3 +909,18 @@ ja:
               refund_disputed_payment: ^不正請求の申請がされた返金
               return_intent_already_processed: ^既に返金手続き中
               else: ^何らかの理由で返金エラー
+        surveys/reply:
+          attributes:
+            survey:
+              duplicate_activity: "^すでに回答済みの活動です。以下のリンクから回答済みの資料を確認できます。<br />
+              <a href='%{url}'>回答済みの資料を確認</a>"
+              missing_required: "^必須の問題が回答されていません。"
+              activity_full: "^この活動はすでに額滿です。"
+              invalid_text_answer: "^問題はテキストで回答してください。"
+              invalid_single_selection: "^問題は1個の選択肢を選択してください。"
+              invalid_multiple_selection: "^問題は1個以上の選択肢を選択してください。"
+              invalid_activity_selection: "^問題は活動を選択してください。"
+              invalid_option: "^問題選択無効な選択肢"
+              text_answer_not_allowed: "^問題はテキストで回答してください。"
+              options_not_allowed: "^問題は選択肢を選択してください。"
+              activity_not_allowed: "^問題は活動を選択してください。"

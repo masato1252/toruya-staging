@@ -145,3 +145,13 @@ tw:
       title: 已發送
       content_html: 您的訊息已發送。<br>請等待負責人的回覆。
       line_content: "您的訊息已發送。\n\n請等待負責人的回覆。"
+  survey:
+    success_title: 已經完成
+    success_message: 非常感謝您的參與。
+    error_title: 發生錯誤
+    back_to_survey: 返回表單
+    service_closed: 此服務已關閉
+    state:
+      pending_sentence: 已替您報名活動，現為『待確認』狀態，請待商家確認
+      accepted_sentence: 您的報名已確認
+      canceled_sentence: 您的報名已取消

@@ -114,6 +114,7 @@ class User < ApplicationRecord
   has_many :all_sale_pages, class_name: "SalePage"
   has_many :online_services
   has_many :tickets
+  has_many :surveys
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, :company_name, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :display_last_name, :display_first_name, :message_name, to: :profile, allow_nil: true
@@ -338,6 +339,10 @@ class User < ApplicationRecord
 
   def timezone
     ::LOCALE_TIME_ZONE[locale] || "Asia/Tokyo"
+  end
+
+  def fallback_email
+    email.presence || social_user&.email
   end
 
   private

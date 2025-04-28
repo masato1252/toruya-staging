@@ -52,6 +52,7 @@ gem "carrierwave"
 gem "fog-aws", "~> 3.5.2"
 gem "aws-sdk-s3" # for activestorage
 gem "image_processing", "~> 1.2"
+gem "mini_magick"
 gem "bitly", "~> 1.0.0"
 gem "lograge"
 gem "stripe"

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-
 RSpec.describe Booking::Calendar do
   before do
     # Sunday, one day before booking date

@@ -3,6 +3,7 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
   string :email
   string :message
   string :subject
+  object :broadcast, default: nil
 
   def execute
     SocialMessage.create!(
@@ -15,7 +16,8 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
       readed_at: Time.current,
       sent_at: Time.current,
       message_type: "bot",
-      channel: SocialMessage.channels[:email]
+      channel: SocialMessage.channels[:email],
+      broadcast: broadcast
     )
 
     CustomerMailer.with(

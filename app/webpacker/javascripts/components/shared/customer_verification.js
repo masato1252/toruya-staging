@@ -96,7 +96,7 @@ export const CustomerBasicInfoForm = ({
       <ErrorMessage error={customer_email_failed_message} />
       {verificationError && <div className="danger">{verificationError}</div>}
 
-      <div className="centerize">
+      <div className="centerize mt-2">
         {shouldShowVerifyButton && (
           <a
             href="#"

@@ -183,11 +183,11 @@ tw:
           staffs: 成員
           consultants: 官方支持者
         shop:
-          shop_management: 店舖管理
-          shop_info_label: 店舖資訊
-          name_label: 店名
-          address_label: 店舖地址
-          phone_number_label: 手機號碼
+          shop_management: 商家管理
+          shop_info_label: 商家資訊
+          name_label: 商家名稱
+          address_label: 商家地址
+          phone_number_label: 商家電話號碼
           email_label: 電子郵件
           website_label: 網站
           logo_label: Logo
@@ -206,8 +206,8 @@ tw:
           preview: 預覽
           buttons:
             customer_name: 客戶姓名
-            shop_name: 店舖名稱
-            shop_phone_number: 店舖電話號碼
+            shop_name: 商家名稱
+            shop_phone_number: 商家電話號碼
             reservation_time: 預約時間
             service_title: 服務名稱
             send_me_mock_message: 發送測試訊息給自己
@@ -429,8 +429,66 @@ tw:
           new_page_desc: 我們將通過簡訊發送成員註冊頁面
           cellphone_input_placeholder: 成員的手機號碼
           new_page_methods_html: <b>【成員註冊方法】</b><br /> ①通過簡訊發送成員註冊頁面<br /> ②成員自行從註冊頁面完成成員註冊<br /> ③以成員身份使用Toruya
+      surveys:
+        title: 表單
+        new_page_title: 新增表單
+        new_page_header: 表單名稱
+        new_page_desc: 我們將通過簡訊發送表單頁面
+        question_desc: 請設置給客戶的問題
+        description_desc: 請設置表單的描述
+        introduction_message_html: 表單可用於建立<br><span class="warning">活動報名、課程預約或客戶意見調查</span>，<br>幫助您更有效地收集和管理資訊。
+        edit:
+          active_title: 頁面狀態
+          active_subtitle: 頁面狀態
+        broadcasts:
+          title: 群發訊息
+        custom_messages:
+          title: 自訂訊息
+          activty_type: 活動狀態
+          reminder: 提醒
+          survey_pending_response: 表單待確認
+          activity_pending_response: 客戶報名活動待確認
+          activity_accepted_response: 確認客戶報名活動
+          activity_canceled_response: 取消客戶報名活動
+          activity_one_day_reminder: 活動服務24小時前提醒
+          activity_custom_message: 活動自訂訊息
+          survey_pending_response: 客戶填寫後的回應
+          survey_name: 表單名稱
+          activity_name: 活動名稱
+          reply_survey_url: 客戶回答的連結
+          survey_url: 表單連結
+          shop_name: 商家名稱
+          shop_phone_number: 商家電話
+          booking_time: 預約時間
+          customer_name: 客戶名稱
+          reminder_message: 提醒訊息將在這些日期的前一天發送
+          activity_slot_time_period: 活動時段
+        settings:
+          title: 設定
+        responses:
+          title: 回應列表
+        activities:
+          title: 報名列表
+          responses_title: 報名列表
+          responses: 報名列表
+          settings_title: 設定
+          settings: 設定
+          accept_and_notify_customer: 核准
+          cancel_and_notify_customer: 取消
+          pending_and_notify_customer: 恢復為待處理
+          accept_and_notify_customer_confirmation: 將核准此報名，並通知客戶
+          cancel_and_notify_customer_confirmation: 將取消此報名，並通知客戶
+          pending_and_notify_customer_confirmation: 將恢復為待處理，並通知客戶
+          accept_successfully_message: 核准成功，並通知客戶
+          cancel_successfully_message: 取消成功，並通知客戶
+          pending_successfully_message: 恢復為待處理成功，並通知客戶
+          state: 狀態
+          states:
+            accepted: 已核准
+            canceled: 已取消
+            pending: 待處理
       broadcasts:
-        broadcast_title: 分眾傳播
+        broadcast_title: 群發訊息
         broadcast_conditions: 列表
         content: 訊息內容
         audiences: 發送對象
@@ -443,7 +501,7 @@ tw:
         are_you_sure_to_stop: 您確定要停止發送嗎？
         clone_successfully: 已複製
         tags_usage_desc: 要取消選擇，請點擊已設置的服務名稱。
-        no_broadcasts_title: 沒有分眾傳播過
+        no_broadcasts_title: 沒有群發訊息過
         no_broadcasts_desc: 這項服務可以幫助您將訊息精確地發送給不同群體的客戶，讓您的溝通更有針對性、更有效。
         form:
           query_title: 發送對象
@@ -452,6 +510,8 @@ tw:
           content_subtitle: 訊息內容
           schedule_at_title: 發送時間
           schedule_at_subtitle: 發送時間
+          manual_assignment_title: 指定發送對象
+          manual_assignment_subtitle: 指定發送對象
       services:
         online_service: 數位商品
         service_page: 產品頁面
@@ -553,6 +613,8 @@ tw:
         customers_with_tags_no_data_desc: 目前還沒有客戶標籤。您可以在客戶編輯頁面建立標籤。
         customers_with_birthday: 生日的客戶
         customers_with_birthday_desc: 向生日的客戶群發訊息
+        manual_assignment: 指定發送對象
+        manual_assignment_desc: 您可以指定要發送訊息的客戶。
         approximate_customers_count: 預計發送數量
         what_menu_do_you_want: 您想向哪個項目的使用客戶發送訊息？
         what_service_do_you_want: 您想向哪個產品的使用客戶發送訊息？
@@ -745,7 +807,7 @@ tw:
           review_content_header: 客戶評價
           review_content_placeholder: 輸入客戶評價
           review_customer_name_placeholder: 客戶姓名
-          add_faq: 新增問題
+          add_faq: 新增區塊
           add_review: 新增客戶評價
           customer_picture_requirement_tip: 客戶照片
         new:

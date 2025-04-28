@@ -481,8 +481,6 @@ const BookingReservationFormFunction = ({props}) => {
               console.log("survey data", data)
               set_booking_reservation_form_values(prev => ({...prev, is_survey_done: true, survey_answers: data}))
             }}
-            booking_reservation_form_values={booking_reservation_form_values}
-            i18n={props.i18n}
           />
         )}
         {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer) && (!props.booking_page.survey || is_survey_done) && !submitting && (

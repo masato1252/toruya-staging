@@ -1,0 +1,18 @@
+<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id), static: true) if Current.business_owner.subscription.over_free_limit? %>
+
+<%= react_component("user_bot/broadcasts/creation_flow", {
+  props: {
+    support_feature_flags: support_feature_flags,
+    business_owner_id: business_owner_id,
+    candidate_customers: @candidate_customers,
+    create_broadcast_path: lines_user_bot_survey_activity_broadcasts_path(@survey, @activity, business_owner_id: business_owner_id),
+    previous_path: lines_user_bot_survey_activity_path(business_owner_id, @survey, @activity),
+    customer_status_type: "activity_status",
+    message: {
+      customer_name: Current.business_owner.message_name,
+    },
+    broadcast: @broadcast
+  }
+},
+{ camelize_props: false }
+) %>

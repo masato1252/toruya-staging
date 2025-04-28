@@ -36,7 +36,7 @@ const SurveyResponse = ({ response }) => {
           <div className="survey-header">
             <h2>{response.survey.title}</h2>
             {response.survey.description && (
-              <p className="survey-description">{response.survey.description}</p>
+              <p className="survey-description" dangerouslySetInnerHTML={{ __html: response.survey.description }}></p>
             )}
           </div>
         </>
@@ -49,7 +49,7 @@ const SurveyResponse = ({ response }) => {
           return (
             <div key={question.id} className="question-container">
               <h3 className="question-text">
-                {question.description}
+                <span dangerouslySetInnerHTML={{ __html: question.description }}></span>
                 {question.required && <span className="required-marker">*</span>}
               </h3>
               {answers.length > 0 ? (

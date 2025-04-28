@@ -1,41 +1,24 @@
-<div class="survey-response">
-  <% if local_assigns[:show_customer_name] %>
-    <% customer = response.owner.customer %>
-    <h3 class="customer-name mb-3"><%= customer.name %></h3>
-  <% end %>
-
-  <% if response.survey&.title.present? %>
-    <div class="survey-header">
-      <h2><%= response.survey.title %></h2>
-      <% if response.survey.description.present? %>
-        <p class="survey-description"><%= truncate(response.survey.description, length: 20) %></p>
-      <% end %>
-    </div>
-  <% end %>
-
-  <div class="questions-container">
-    <% response.question_answers.group_by(&:survey_question_id).each do |_, answers| %>
-      <div class="question-container">
-        <h3 class="question-text">
-          <%= truncate(answers.first.survey_question_snapshot, length: 20) %>
-        </h3>
-
-        <% if answers.present? %>
-          <% if answers.first.text_answer.present? %>
-            <p class="answer-text"><%= answers.first.text_answer %></p>
-          <% elsif answers.length > 1 %>
-            <ul class="answer-list">
-              <% answers.each do |answer| %>
-                <li><%= answer.survey_option_snapshot %></li>
-              <% end %>
-            </ul>
-          <% else %>
-            <p class="answer-text"><%= answers.first.survey_option_snapshot %></p>
-          <% end %>
-        <% else %>
-          <p class="no-answer"><%= t("common.survey_response.no_answer") %></p>
-        <% end %>
+<div class="survey-response" data-controller="collapse" data-collapse-status="closed">
+  <div class="survey-header" data-action="click->collapse#toggle" style="cursor: pointer;">
+    <h3 class="customer-name mb-3">
+      <%= response.customer.name %>
+      <i class="fa fa-chevron-down text-gray-300" data-target="collapse.openToggler"></i>
+      <i class="fa fa-chevron-up text-gray-300" data-target="collapse.closeToggler"></i>
+    </h3>
+  </div>
+  <div data-target="collapse.simpleContent" data-action="click->collapse#toggle">
+    <%= response.survey&.title %>
+  </div>
+  <div data-target="collapse.content" data-action="click->collapse#toggle">
+    <% if response.survey&.title.present? %>
+      <div class="survey-header">
+        <h2><%= response.survey.title %></h2>
       </div>
     <% end %>
+
+    <div class="questions-container">
+      <%= render partial: 'surveys/activity_answers', locals: { activity_answers: response.activity_answers } %>
+      <%= render partial: 'surveys/non_activity_answers', locals: { non_activity_answers: response.non_activity_answers } %>
+    </div>
   </div>
 </div>

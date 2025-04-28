@@ -28,9 +28,9 @@ class PersonalScheduleDatetimeFields extends React.Component {
        ) {
      this.setState({
        startTimeDatePart: nextProps.startTimeDatePart,
-       startTimeTimePart: nextProps.startTimeTimePart ? moment(nextProps.startTimeTimePart, "HH:mm:ss") : null,
+       startTimeTimePart: nextProps.startTimeTimePart ? moment(nextProps.startTimeTimePart, "HH:mm") : null,
        endTimeDatePart: nextProps.endTimeDatePart,
-       endTimeTimePart: nextProps.endTimeTimePart ? moment(nextProps.endTimeTimePart, "HH:mm:ss") : null
+       endTimeTimePart: nextProps.endTimeTimePart ? moment(nextProps.endTimeTimePart, "HH:mm") : null
      });
     }
   }

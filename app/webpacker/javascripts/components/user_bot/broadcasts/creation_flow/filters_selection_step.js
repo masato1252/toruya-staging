@@ -29,7 +29,6 @@ const FiltersSelectionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
-      <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_is_your_audiences")}</h3>
       {props.support_feature_flags.support_advance_broadcast && (
         <>
@@ -46,7 +45,6 @@ const FiltersSelectionStep = ({next, step}) => {
 
               next()
             }}
-            disabled={!props.line_settings_verified}
             className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
             >
             <h4>{I18n.t("user_bot.dashboards.broadcast_creation.specific_menu_customers")}</h4>
@@ -67,7 +65,6 @@ const FiltersSelectionStep = ({next, step}) => {
 
               next()
             }}
-            disabled={!props.line_settings_verified}
             className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
             >
             <h4>{I18n.t("user_bot.dashboards.broadcast_creation.specific_service_customers")}</h4>
@@ -87,7 +84,6 @@ const FiltersSelectionStep = ({next, step}) => {
 
               next()
             }}
-            disabled={!props.line_settings_verified}
             className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
             >
             <h4>{I18n.t("user_bot.dashboards.broadcast_creation.specific_available_service_customers")}</h4>
@@ -112,7 +108,6 @@ const FiltersSelectionStep = ({next, step}) => {
 
           next()
         }}
-        disabled={!props.line_settings_verified}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
         <h4>{I18n.t("user_bot.dashboards.broadcast_creation.active_customers")}</h4>
@@ -150,7 +145,6 @@ const FiltersSelectionStep = ({next, step}) => {
 
             next()
           }}
-          disabled={!props.line_settings_verified}
           className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
           >
           <h4>{I18n.t("user_bot.dashboards.broadcast_creation.vip_customers")}</h4>
@@ -171,7 +165,6 @@ const FiltersSelectionStep = ({next, step}) => {
 
           next()
         }}
-        disabled={!props.line_settings_verified}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
         <h4>{I18n.t("user_bot.dashboards.broadcast_creation.customers_with_birthday")}</h4>
@@ -191,7 +184,6 @@ const FiltersSelectionStep = ({next, step}) => {
 
           next()
         }}
-        disabled={!props.line_settings_verified}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
         <h4>{I18n.t("user_bot.dashboards.broadcast_creation.customers_with_tags")}</h4>

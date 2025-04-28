@@ -83,12 +83,13 @@ RSpec.describe Notifiers::Customers::Broadcast, :with_line do
       expect(SocialMessages::Create).to receive(:run).with(
         social_customer: receiver.social_customer,
         content: broadcast.content,
+        content_type: SocialUserMessages::Create::TEXT_TYPE,
         message_type: SocialMessage.message_types[:bot],
         readed: true,
         broadcast: broadcast
       ) do
         # Create the SocialMessage record directly
-        SocialMessage.create!(
+        message = SocialMessage.create!(
           social_customer: receiver.social_customer,
           social_account: receiver.social_customer.social_account,
           raw_content: broadcast.content,
@@ -96,7 +97,7 @@ RSpec.describe Notifiers::Customers::Broadcast, :with_line do
           readed_at: Time.current,
           broadcast: broadcast
         )
-        true
+        double(invalid?: false, result: message)
       end
 
       # Allow message method to return the broadcast content
@@ -134,20 +135,22 @@ RSpec.describe Notifiers::Customers::Broadcast, :with_line do
         expect(SocialMessages::Create).to receive(:run).with(
           social_customer: receiver.social_customer,
           content: broadcast.content,
+          content_type: SocialUserMessages::Create::TEXT_TYPE,
           message_type: SocialMessage.message_types[:bot],
           readed: true,
           broadcast: broadcast
         ) do
           # Create the SocialMessage record directly
-          SocialMessage.create!(
+          message =SocialMessage.create!(
             social_customer: receiver.social_customer,
             social_account: receiver.social_customer.social_account,
             raw_content: broadcast.content,
+            content_type: SocialUserMessages::Create::TEXT_TYPE,
             message_type: SocialMessage.message_types[:bot],
             readed_at: Time.current,
             broadcast: broadcast
           )
-          true
+          double(invalid?: false, result: message)
         end
 
         # Allow message method to return the broadcast content

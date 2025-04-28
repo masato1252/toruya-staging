@@ -26,6 +26,7 @@
 #  function_access_id      :bigint
 #  reservation_id          :integer          not null
 #  sale_page_id            :integer
+#  survey_activity_id      :integer
 #
 # Indexes
 #
@@ -33,6 +34,7 @@
 #  index_reservation_customers_on_reservation_id_and_customer_id  (reservation_id,customer_id) UNIQUE
 #  index_reservation_customers_on_sale_page_id_and_created_at     (sale_page_id,created_at)
 #  index_reservation_customers_on_slug                            (slug) UNIQUE
+#  index_reservation_customers_on_survey_activity_id              (survey_activity_id)
 #
 
 require "hashie_serializer"
@@ -61,6 +63,8 @@ class ReservationCustomer < ApplicationRecord
   belongs_to :customer, touch: true
   belongs_to :booking_page, required: false
   belongs_to :booking_option, required: false
+  belongs_to :survey_activity, required: false
+
   serialize :customer_tickets_quota, HashieSerializer
   serialize :details, HashieSerializer
   has_one :survey_response, as: :owner
@@ -103,7 +107,7 @@ class ReservationCustomer < ApplicationRecord
   end
 
   def allow_customer_cancel?
-    if booking_page&.customer_cancel_request
+    if booking_page&.customer_cancel_request && !reservation.from_activity?
       (reservation.start_time.to_date >= Time.current.advance(days: booking_page.customer_cancel_request_before_day).to_date) && (pending? || accepted? && (reservation.pending? || reservation.reserved?))
     else
       false
@@ -179,6 +183,18 @@ class ReservationCustomer < ApplicationRecord
       else
         reason
       end
+    end
+  end
+
+  def activity_survey_response
+    @activity_survey_response ||= survey_activity_id ? SurveyResponse.where(survey_activity_id: survey_activity_id, owner: customer).first : nil
+  end
+
+  def booking_info_url
+    if reservation.from_activity?
+      Rails.application.routes.url_helpers.reply_survey_url(survey_activity.survey.slug, activity_survey_response.uuid)
+    else
+      Rails.application.routes.url_helpers.booking_url(slug)
     end
   end
 

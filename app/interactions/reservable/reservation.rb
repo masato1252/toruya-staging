@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # validate single booking option booking, it validates, shop menu capacity and staff ability
+# [Redudent]
 module Reservable
   class Reservation < ActiveInteraction::Base
     include SharedMethods
@@ -67,6 +68,7 @@ module Reservable
       end
 
       validate_booking_events
+      validate_activity_reservation
       validate_interval_time if validate_overlap?
       # validate_menu_schedules
       validate_seats_for_customers if overbooking_restriction
@@ -195,6 +197,12 @@ module Reservable
         if overlap_special_date_booking_page_ids.exclude?(booking_page.id) && overlap_special_date_booking_page_ids.present?
           errors.add(:booking_page, :overlap_event_booking, overlap_special_date_booking_page_ids: overlap_special_date_booking_page_ids)
         end
+      end
+    end
+
+    def validate_activity_reservation
+      if shop.user.reservations.where(deleted_at: nil).where.not(survey_activity_id: nil).where.not(aasm_state: "canceled").where("start_time < ? and end_time > ?", end_time, start_time).exists?
+        errors.add(:shop, :overlap_activity_reservation)
       end
     end
 

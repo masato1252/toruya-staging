@@ -31,7 +31,7 @@ const CustomerBasicInfo = () => {
     <div>
       <NotificationMessages notification_messages={notification_messages} dispatch={dispatch} />
       <div className="customer-basic-info">
-        {props.from_options.service_customer_show != props.from && (
+        {props.from_options.service_customer_show != props.from && props.from_options.survey_response_show != props.from && (
           <CustomerTopActions
             leading={
               <a onClick={() => {

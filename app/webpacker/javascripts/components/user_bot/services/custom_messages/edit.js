@@ -30,7 +30,7 @@ const CustomMessageEdit =({props}) => {
   const onDemo = async (data) => {
     if (!isSendRightAway() && after_days === '') return;
 
-    [error, response] = await CustomMessageServices.demo({
+    await CustomMessageServices.demo({
       data: _.assign( data, {
         id: props.message.id,
         business_owner_id: props.business_owner_id,
@@ -43,6 +43,8 @@ const CustomMessageEdit =({props}) => {
         locale: I18n.locale
       })
     })
+
+    toastr.success(I18n.t("common.deliveried_please_check_message"))
   }
 
   const onSubmit = async (data) => {

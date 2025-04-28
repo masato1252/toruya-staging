@@ -442,20 +442,55 @@ Rails.application.routes.draw do
             end
           end
 
+          resources :surveys, only: [:index, :show, :new, :edit, :update, :destroy] do
+            collection do
+              post :upsert
+            end
+
+            member do
+              get :settings
+
+              resources :custom_messages, only: [:index], as: :survey_custom_messages, module: :surveys do
+                collection do
+                  get "/:scenario(/:custom_message_id)", action: "edit_scenario", as: :edit_scenario
+                end
+              end
+
+              resources :responses, only: [:index, :show], param: :survey_response_id, module: :surveys, as: :survey_responses
+            end
+
+            resources :activities, only: [:index, :show], module: :surveys do
+              resources :survey_responses, only: [:show] do
+                member do
+                  post :accept
+                  post :cancel
+                  post :pending
+                end
+              end
+
+              resources :broadcasts do
+                member do
+                  put :activate
+                  put :draft
+                end
+              end
+            end
+          end
+
           scope module: :tours, path: :tours, as: :tours do
             get :line_settings_required_for_online_service
             get :line_settings_required_for_booking_page
           end
-        end
-        # business owner scope END
+          # business owner scope END
 
-        resources :notifications, only: [:index] do
-          collection do
-            get "/social_service_user_id/:social_service_user_id", action: "index"
+          resources :notifications, only: [:index] do
+            collection do
+              get "/social_service_user_id/:social_service_user_id", action: "index"
+            end
           end
-        end
 
-        resources :social_user_messages, only: [:new, :create]
+          resources :social_user_messages, only: [:new, :create]
+        end
       end
     end
 
@@ -762,22 +797,27 @@ Rails.application.routes.draw do
         get "booking_times"
       end
     end
-    resources :bookings, param: :slug, only: [:show, :destroy]
-    resources :sale_pages, param: :slug, only: [:show]
-    resources :online_services, param: :slug, only: [:show] do
-      member do
-        put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
-        put "/episodes/:episode_id", action: :watch_episode, as: :watch_episode
-        get "/episodes(/:tag)", action: :tagged_episodes, as: :tagged_episodes
-        get "/search/:keyword", action: :search_episodes, as: :search_episodes
-        get "/customer_status/:encrypted_social_service_user_id", action: :customer_status, as: :customer_status
+  end
+  resources :bookings, param: :slug, only: [:show, :destroy]
+  resources :sale_pages, param: :slug, only: [:show]
+  resources :surveys, param: :slug, only: [:show, :create] do
+    member do
+      get "reply/:uuid", action: "reply", as: :reply
+    end
+  end
+  resources :online_services, param: :slug, only: [:show] do
+    member do
+      put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
+      put "/episodes/:episode_id", action: :watch_episode, as: :watch_episode
+      get "/episodes(/:tag)", action: :tagged_episodes, as: :tagged_episodes
+      get "/search/:keyword", action: :search_episodes, as: :search_episodes
+      get "/customer_status/:encrypted_social_service_user_id", action: :customer_status, as: :customer_status
 
-        scope module: :online_services do
-          resources :customer_payments, only: [:create] do
-            collection do
-              get "/:encrypted_social_service_user_id/new(/:order_id)", action: :new, as: :new
-              put :change_card
-            end
+      scope module: :online_services do
+        resources :customer_payments, only: [:create] do
+          collection do
+            get "/:encrypted_social_service_user_id/new(/:order_id)", action: :new, as: :new
+            put :change_card
           end
         end
       end
@@ -793,9 +833,13 @@ Rails.application.routes.draw do
       end
     end
 
-    # Mount letter_opener web interface in development
-    if Rails.env.development?
-      mount LetterOpenerWeb::Engine, at: "/letter_opener"
-    end
+  end
+
+  # Mount letter_opener web interface in development
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+  namespace :api do
+    resources :images, only: [:create]
   end
 end

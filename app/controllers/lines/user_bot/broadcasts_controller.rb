@@ -23,6 +23,23 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
         value: OnlineServiceOptionSerializer.new(service).attributes_hash
       }
     }
+    @broadcast =
+      if params[:online_service_id]
+        Broadcast.new(
+          query_type: "online_service_for_active_customers",
+          query: {
+            "filters" => [{
+              "field" => "online_service_ids",
+              "value" => params[:online_service_id],
+              "condition" => "contains"
+            }],
+            "operator" => "or"
+          },
+          content: "",
+        )
+      else
+        {}
+      end
   end
 
   def edit
@@ -43,8 +60,8 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
 
   def create
     outcome = Broadcasts::Create.run(user: Current.business_owner, params: params.permit!.to_h)
-
     flash[:notice] = I18n.t("common.create_successfully_message")
+
     return_json_response(outcome, { redirect_to: lines_user_bot_broadcast_path(outcome.result, business_owner_id: business_owner_id) })
   end
 
@@ -52,6 +69,8 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
     outcome = Broadcasts::Update.run(broadcast: Current.business_owner.broadcasts.find(params[:id]), params: params.permit!.to_h, update_attribute: params[:attribute])
 
     if outcome.valid?
+      flash[:notice] = I18n.t("common.update_successfully_message")
+
       return_json_response(outcome, { redirect_to: lines_user_bot_broadcast_path(outcome.result, business_owner_id: business_owner_id) })
     else
       return_json_response(outcome)
@@ -61,6 +80,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def draft
     broadcast = Current.business_owner.broadcasts.find(params[:id])
     Broadcasts::Draft.run(broadcast: broadcast)
+    flash[:notice] = I18n.t("common.update_successfully_message")
 
     redirect_to lines_user_bot_broadcast_path(broadcast, business_owner_id: business_owner_id)
   end
@@ -68,6 +88,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def activate
     broadcast = Current.business_owner.broadcasts.find(params[:id])
     Broadcasts::Activate.run(broadcast: broadcast)
+    flash[:notice] = I18n.t("common.update_successfully_message")
 
     redirect_to lines_user_bot_broadcast_path(broadcast, business_owner_id: business_owner_id)
   end

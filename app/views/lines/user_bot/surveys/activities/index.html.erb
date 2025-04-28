@@ -1,0 +1,22 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-pages form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_survey_path(business_owner_id, @survey),
+          title: t("user_bot.dashboards.surveys.activities.title") %>
+
+        <div class="booking-pages-list">
+          <% @activities.each do |activity| %>
+            <%= content_tag :div, class: "field-row with-next-arrow" do %>
+              <%= link_to lines_user_bot_survey_activity_path(activity.survey, activity, business_owner_id: business_owner_id), class: "w-8-12" do %>
+                <h3 class="text-gray-700 underline"><%= activity.name %></h3>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

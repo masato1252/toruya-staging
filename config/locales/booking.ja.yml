@@ -145,3 +145,13 @@ ja:
       title: 送信されました
       content_html: メッセージが送信されました。<br>担当者からの返信をお待ちください。
       line_content: "メッセージが送信されました。\n\n担当者からの返信をお待ちください。"
+  survey:
+    success_title: 完了しました
+    success_message: ご回答ありがとうございました。
+    error_title: エラーが発生しました
+    back_to_survey: アンケートに戻る
+    service_closed: このサービスは終了しました
+    state:
+      pending_sentence: ご応募いただきありがとうございます。現在『確認待ち』の状態です。店舗の確認をお待ちください。
+      accepted_sentence: ご応募が確定しました
+      canceled_sentence: ご応募はキャンセルされました

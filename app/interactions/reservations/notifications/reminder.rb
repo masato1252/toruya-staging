@@ -16,13 +16,26 @@ module Reservations
 
       def message
         @message ||= begin
-          booking_page = ReservationCustomer.find_by!(customer: customer, reservation: reservation).booking_page
-          template = compose(
-            ::CustomMessages::Customers::Template,
-            product: booking_page,
-            scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
-            custom_message_only: true
-          )
+          reservation_customer = ReservationCustomer.find_by!(customer: customer, reservation: reservation)
+          booking_page = reservation_customer.booking_page
+          activity = reservation_customer.survey_activity
+
+          if booking_page
+            template = compose(
+              ::CustomMessages::Customers::Template,
+              product: booking_page,
+              scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
+              custom_message_only: true
+            )
+          end
+
+          if activity
+            template ||= compose(
+              ::CustomMessages::Customers::Template,
+              product: activity.survey,
+              scenario: ::CustomMessages::Customers::Template::ACTIVITY_ONE_DAY_REMINDER
+            )
+          end
 
           template ||= compose(
             ::CustomMessages::Customers::Template,

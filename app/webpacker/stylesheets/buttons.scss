@@ -84,46 +84,23 @@ a.btn {
 }
 
 .btn-tarco {
-  background: $palette-color2;
-  border-color: $palette-color2-1 !important;
-
-  &:enabled:hover {
-    background: $palette-color2-1;
-    border-color: $palette-color2-2 !important;
-  }
+  background: $palette-color2-1;
+  border-color: $palette-color2-2 !important;
 }
 
 .btn-orange {
-  background: $palette-color4;
-  border-color: $palette-color4-1 !important;
-
-  &:enabled:hover {
-    background: $palette-color4-1;
-    border-color: $palette-color4-2 !important;
-    opacity: 0.7;
-  }
+  background: $palette-color4-1;
+  border-color: $palette-color4-2 !important;
 }
 
 .btn-yellow {
-  background: $palette-color1;
-  border-color: $palette-color1-1 !important;
-
-  &:enabled:hover {
-    background: $palette-color1-1;
-    border-color: $palette-color1-2 !important;
-    opacity: 0.7;
-  }
+  background: $palette-color1-1;
+  border-color: $palette-color1-2 !important;
 }
 
 .btn-gray {
-  background: $palette-color3;
+  background: $palette-color3-1;
   border-color: $palette-color3-1 !important;
-
-  &:enabled:hover {
-    background: $gray5;
-    border-color: $gray7;
-    opacity: 0.7;
-  }
 }
 
 .google-button {
@@ -207,4 +184,8 @@ a.btn {
   height: auto !important;
   line-height: initial !important;
   padding: 10px !important;
+}
+
+.btn.disabled, .btn[disabled] {
+  opacity: 0.35 !important;
 }

@@ -1,8 +1,12 @@
-<div class="booking-from reservation-info-row">
-  <i class="fa fa-clock"></i>
   <% if reservation_customer.booking_page %>
-    <span><%= I18n.l(reservation_customer.booking_at.to_date, format: :year_month_date) %> <%= reservation_customer.booking_page.name %>
-  <% else %>
-    0000-00-00 by <%= reservation.by_staff&.name %>
+    <div class="booking-from reservation-info-row">
+      <i class="fa fa-clock"></i>
+      <span><%= I18n.l(reservation_customer.booking_at.to_date, format: :year_month_date) %> <%= reservation_customer.booking_page.name %></span>
+    </div>
+  <% elsif reservation.by_staff %>
+    <div class="booking-from reservation-info-row">
+      <i class="fa fa-clock"></i>
+      <span>0000-00-00 by <%= reservation.by_staff&.name %></span>
+    </div>
   <% end %>
 </div>

@@ -1,0 +1,15 @@
+<%= react_component("user_bot/surveys/custom_messages/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    scenario: params[:scenario],
+    activities_start_dates: @survey.activities.flat_map(&:activity_slots).select {|slot| slot.start_time > Time.current }.map {|slot| I18n.l(slot.start_time, format: :long_date_full) },
+    message: {
+      id: @custom_message&.id,
+      service_id: @survey.id,
+      service_type: @survey.class.name,
+      template: @template.presence || '',
+    }.merge!(@survey.message_template_variables(current_user))
+  }
+},
+{ camelize_props: false }
+) %>

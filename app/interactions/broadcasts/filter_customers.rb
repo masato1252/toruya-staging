@@ -5,6 +5,8 @@ module Broadcasts
     def execute
       customers =
         case broadcast.query_type
+        when "manual_assignment"
+          return broadcast.user.customers.where(id: broadcast.receiver_ids)
         when "active_customers"
           broadcast.user.customers.active_in(3.months.ago)
         when "online_service_for_active_customers"

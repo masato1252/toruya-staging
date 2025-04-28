@@ -1,0 +1,16 @@
+<%= react_component("user_bot/broadcasts/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    broadcast: BroadcastSerializer.new(@broadcast).attributes_hash,
+    attribute: @attribute,
+    candidate_customers: @candidate_customers,
+    broadcast_update_path: lines_user_bot_survey_activity_broadcast_path(@survey, @activity, @broadcast, business_owner_id: business_owner_id),
+    previous_path: lines_user_bot_survey_activity_path(business_owner_id, @survey, @activity),
+    customer_status_type: "activity_status",
+    message: {
+      customer_name: Current.business_owner.message_name,
+    }
+  }
+},
+{ camelize_props: false }
+) %>

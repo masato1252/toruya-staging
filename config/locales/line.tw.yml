@@ -14,7 +14,7 @@ tw:
     message_api_notification_message: "您已加入與Toruya連結的LINE官方帳號為好友，並且在Toruya上建立了您的客戶資訊。\n\n如果LINE登入設定正確，您應該會收到來自Toruya的以下類似訊息。"
     channel_secret_incorrect_message: "我們發現LINE登入的頻道密鑰設定有誤。\n\n即使設定項目名稱相同，Messaging API和LINE登入的設定也不可能完全相同。\n\n請再次確認設定內容。\n\nhttps://toruya.tw/help/line_sync/#setting03_02"
   new_line_account:
-    successful_message: 已成功建立額外帳號。請設定店舖資訊和要連結的LINE官方帳號的API資訊。
+    successful_message: 已成功建立額外帳號。請設定商家資訊和要連結的LINE官方帳號的API資訊。
   toruya_line:
     keywords:
       settings: 設定
@@ -43,7 +43,7 @@ tw:
           street1: 街道地址
           street2: 大樓名稱／房間號碼
           location: 地址
-          save_btn: 儲存店舖資訊
+          save_btn: 儲存商家資訊
   line:
     customer_identifications:
       successful_message_html: 非常感謝您！<br/ ><br />客戶資訊連結已完成。
@@ -52,7 +52,7 @@ tw:
     actions:
       label:
         booking_pages: 新增預約
-        shop_phone: 店舖電話
+        shop_phone: 商家電話
         one_on_one: 一對一
         identify_shop_customer: 連結客戶資訊
         incoming_reservations: 所有預約

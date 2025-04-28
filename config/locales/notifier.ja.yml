@@ -102,3 +102,12 @@ https://manager.toruya.com/userlogin"
           %{customer_status_online_service_url}\n\n変更後のお支払い方法に問題がなければ、決済完了日よりご利用を再開できます。また、その場合のご利用期間はお支払い完了日より起算されます。\n\n※カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます。\n\nご質問等がございましたら%{shop_phone}までご連絡ください。"
       not_first_time_charge_successfully:
         message: "%{customer_name} 様\n\n日頃より、%{shop_name}をご利用いただきまして、誠にありがとうございます。\n\n本日、%{service_title}のご利用料金のご請求が完了いたしました。\n\n今後ともご愛顧の程よろしくお願い申し上げます。\n\n %{customer_status_online_service_url}"
+    survey:
+      reply:
+        activity_pending_message: "アクティビティに登録されました。現在「確認待ち」の状態です。店舗の確認後、以下のリンクから登録結果を確認できます。\n\n%{reply_survey_url}"
+        activity_accepted_message: "あなたの登録が確認されました。以下のリンクから登録結果を確認できます。\n\n%{reply_survey_url}"
+        activity_canceled_message: "ご登録いただいたアクティビティがキャンセルされました。ご不便、ご迷惑をおかけいたしました。\n\n%{reply_survey_url}"
+        survey_pending_message: "アンケートにご回答いただき、ありがとうございます。あなたのご意見は私たちにとって非常に貴重です。以下のリンクから回答結果を確認できます：\n\n%{reply_survey_url}"
+        activity_one_day_reminder_message: "%{customer_name} 様\n\n%{survey_name} の %{activity_name} にご登録いただきありがとうございます。\n\n活動は %{activity_slot_time_period} に開催されます。ご参加をお忘れなくお願いいたします。\n\n%{reply_survey_url}"
+      users:
+        activity_pending_message: "%{user_name} 様\n\n%{survey_name} の %{activity_name} に%{customer_name} 様が登録しました。\n\n以下のリンクから登録結果を確認できます。\n%{survey_response_url}\n\nToruya"

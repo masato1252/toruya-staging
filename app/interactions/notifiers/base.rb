@@ -146,7 +146,8 @@ module Notifiers
             content: message,
             content_type: content_type,
             message_type: SocialMessage.message_types[:bot],
-            readed: true
+            readed: true,
+            broadcast: try(:broadcast)
           )
           errors.merge!(outcome.errors) if outcome.invalid?
         else
@@ -174,7 +175,8 @@ module Notifiers
             customer: target_email_user,
             email: email,
             message: message,
-            subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name)
+            subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name),
+            broadcast: try(:broadcast)
           )
         else
           UserMailer.with(

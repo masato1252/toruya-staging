@@ -11,6 +11,7 @@ tw:
     targets:
       all_customers: "所有客戶"
       vip_customers: "VIP客戶"
+      manual_assignment: "手動指定"
       conditions:
         contains: 包含
   requirement:
@@ -48,7 +49,7 @@ tw:
     calendar:
       mine: 我的日曆
     broadcast:
-      title: 分眾傳播
+      title: 群發訊息
     booking_pages:
       title: 線上預約
       list: 預約頁面
@@ -142,6 +143,11 @@ tw:
   tours:
     line_settings_required_for_online_service_html: "若要使用數位商品功能，您需要連結您的 LINE 官方帳號。<br /><br />請從設定選單中進行連結設定。<br /><br />▶︎連結方法<br />"
     line_settings_required_for_booking_page_html: "若要使用線上預約功能，您需要連結您的 LINE 官方帳號。<br /><br />請從設定選單中進行連結設定。<br /><br />▶︎連結方法<br />"
+  survey:
+    state:
+      pending: 待確認
+      accepted: 已確認
+      canceled: 已取消
   reservation:
     business_time_suggestion: "※營業時間"
     no_valid_menu_alert: 請輸入服務項目。
@@ -310,8 +316,8 @@ tw:
     tip_before_new_customer: 在新增客戶之前，請先搜尋是否已有現有資料。
     google_contact_missing_message_html: "目前僅顯示Toruya伺服器上的客戶資料。"
     customer_info_changed_message: 客戶資料需要更改
-    reminder_confirmation_message: 您確定要關閉分眾傳播嗎？
-    reminder_changed_message: 分眾傳播
+    reminder_confirmation_message: 您確定要關閉群發訊息嗎？
+    reminder_changed_message: 群發訊息
     filter:
       no_shop_warning: "若要使用進階搜尋功能來搜尋客戶的消費紀錄，請先設定店舖。"
       empty_content: "找不到符合條件的預約資料。"
@@ -417,6 +423,13 @@ tw:
           has_one: "無法刪除，因為存在相關的%{record}"
           has_many: "無法刪除，因為存在相關的%{record}"
       models:
+        survey_question:
+          attributes:
+            required: "^此問題是必填的"
+        survey_activity_slot:
+          attributes:
+            end_time:
+              invalid_end_time_before_start_time: "^結束時間必須在開始時間之後"
         booking_option_menu:
           attributes:
             required_time:
@@ -437,6 +450,21 @@ tw:
       user: 用戶
       staff: 成員
     attributes:
+      survey:
+        title: "標題"
+        description: "描述"
+      survey_question:
+        description: "問題描述"
+        question_type: "問題類型"
+        required: "必填"
+        options: "選項"
+        activities: "活動"
+      survey_activity:
+        name: "活動名稱"
+        max_participants: "最大參與者數"
+        price_cents: "價格"
+        currency: "貨幣"
+        datetime_slots: "時段"
       user:
         password: "密碼"
         email: "電子郵件"
@@ -494,35 +522,35 @@ tw:
         login_channel_secret: "頻道密鑰"
   date:
     abbr_day_names:
-    - 日
-    - 一
-    - 二
-    - 三
-    - 四
-    - 五
-    - 六
+      - 日
+      - 一
+      - 二
+      - 三
+      - 四
+      - 五
+      - 六
     abbr_month_names:
-    -
-    - 1月
-    - 2月
-    - 3月
-    - 4月
-    - 5月
-    - 6月
-    - 7月
-    - 8月
-    - 9月
-    - 10月
-    - 11月
-    - 12月
+      -
+      - 1月
+      - 2月
+      - 3月
+      - 4月
+      - 5月
+      - 6月
+      - 7月
+      - 8月
+      - 9月
+      - 10月
+      - 11月
+      - 12月
     day_names:
-    - 星期日
-    - 星期一
-    - 星期二
-    - 星期三
-    - 星期四
-    - 星期五
-    - 星期六
+      - 星期日
+      - 星期一
+      - 星期二
+      - 星期三
+      - 星期四
+      - 星期五
+      - 星期六
     formats:
       default: "%Y/%m/%d"
       long: "%Y年%m月%d日(%a)"
@@ -530,25 +558,26 @@ tw:
       year_month: "%Y年%m月"
       short: "%m/%d"
     month_names:
-    -
-    - 1月
-    - 2月
-    - 3月
-    - 4月
-    - 5月
-    - 6月
-    - 7月
-    - 8月
-    - 9月
-    - 10月
-    - 11月
-    - 12月
+      -
+      - 1月
+      - 2月
+      - 3月
+      - 4月
+      - 5月
+      - 6月
+      - 7月
+      - 8月
+      - 9月
+      - 10月
+      - 11月
+      - 12月
     order:
-    - :year
-    - :month
-    - :day
+      - :year
+      - :month
+      - :day
   time:
     am: AM
+    pm: PM
     formats:
       default: "%Y/%m/%d %H:%M"
       date_with_wday: "%Y/%m/%d(%a) %H:%M"
@@ -560,11 +589,11 @@ tw:
       short: "%y/%m/%d %H:%M"
       date: "%Y/%m/%d(%a)"
       long_date: "%Y年%m月%d日(%a)"
+      long_date_full: "%Y/%m/%d (%a)"
       hour_minute: "%H:%M"
       month_day_wday: "%m/%d(%a)"
       local_time: "%Y-%m-%dT%H:%M:%S"
       short_date: "'%y/%m/%d"
-    pm: PM
   datetime:
     distance_in_words:
       about_x_hours:
@@ -854,3 +883,18 @@ tw:
               refund_disputed_payment: ^已申請不正當收費的退款
               return_intent_already_processed: ^退款程序已在進行中
               else: ^因某些原因退款失敗
+        surveys/reply:
+          attributes:
+            survey:
+              duplicate_activity: "^您已經報名過此活動。您可以從以下連結查看您先前的報名資料。<br />
+              <a href='%{url}'>查看報名資料</a>"
+              missing_required: "^必須的問題未回答"
+              activity_full: "^此活動已經額滿"
+              invalid_text_answer: "^問題需要以文字回答"
+              invalid_single_selection: "^問題需要選擇1個選項"
+              invalid_multiple_selection: "^問題需要選擇1個以上的選項"
+              invalid_activity_selection: "^問題需要選擇活動"
+              invalid_option: "^問題選擇無效的選項"
+              text_answer_not_allowed: "^問題需要以文字回答"
+              options_not_allowed: "^問題需要選擇選項"
+              activity_not_allowed: "^問題需要選擇活動"

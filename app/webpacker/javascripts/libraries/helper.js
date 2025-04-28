@@ -2,6 +2,7 @@
 
 import _ from "lodash";
 import React from "react";
+import moment from 'moment-timezone';
 
 const composeValidators = (component, ...validators) => value =>
   validators.reduce((error, validator) => error || validator(component, value), undefined)
@@ -182,7 +183,7 @@ const responseHandler = (error, response) => {
   if (error) {
     toastr.error(error.response.data.error_message)
   }
-  else {
+  else if (response.data.redirect_to) {
     window.location = response.data.redirect_to
   }
 }
@@ -204,6 +205,75 @@ const getMomentLocale = (appLocale = "tw") => {
 
   return localeMap[appLocale] || 'zh-TW'; // Default to zh-TW if locale not found
 }
+
+// Format activity slot date/time range for survey display
+function formatActivitySlotRange(slot) {
+  const startDateObj = slot.start_date ? new Date(slot.start_date) : null;
+  const startDate = startDateObj ? moment(startDateObj).format('YYYY-MM-DD') : '';
+  const startDay = startDateObj ? moment(startDateObj).format('dd') : '';
+  const startTime = slot.start_time ? moment(slot.start_time, 'HH:mm:ss').format('HH:mm') : '';
+
+  const endDateObj = slot.end_date ? new Date(slot.end_date) : null;
+  const endDate = endDateObj ? moment(endDateObj).format('YYYY-MM-DD') : '';
+  const endDay = endDateObj ? moment(endDateObj).format('dd') : '';
+  const endTime = slot.end_time ? moment(slot.end_time, 'HH:mm:ss').format('HH:mm') : '';
+
+  const start = startDate ? `${startDate} (${startDay}) ${startTime}` : '';
+  let end = '';
+
+  if (endDate) {
+    if (startDate === endDate) {
+      end = endTime;
+    } else {
+      end = `${endDate} (${endDay}) ${endTime}`;
+    }
+  }
+
+  if (start || end) {
+    return I18n.t('settings.survey.date_range', { start, end });
+  } else {
+    return '';
+  }
+}
+
+// Convert YouTube and Vimeo URLs to embed format
+const getEmbedUrl = (url) => {
+  try {
+    const urlObj = new URL(url);
+
+    // Handle YouTube URLs
+    if (urlObj.hostname.includes('youtube.com') || urlObj.hostname.includes('youtu.be')) {
+      let videoId;
+
+      if (urlObj.hostname.includes('youtube.com')) {
+        // Handle youtube.com URLs
+        const searchParams = new URLSearchParams(urlObj.search);
+        videoId = searchParams.get('v');
+      } else {
+        // Handle youtu.be URLs
+        videoId = urlObj.pathname.slice(1);
+      }
+
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
+
+    // Handle Vimeo URLs
+    if (urlObj.hostname.includes('vimeo.com')) {
+      const videoId = urlObj.pathname.split('/').pop();
+      if (videoId) {
+        return `https://player.vimeo.com/video/${videoId}`;
+      }
+    }
+
+    // Return original URL if not YouTube or Vimeo
+    return url;
+  } catch (e) {
+    console.error('Error parsing URL:', e);
+    return url;
+  }
+};
 
 export {
   requiredValidation,
@@ -229,5 +299,7 @@ export {
   responseHandler,
   currencyFormat,
   ticketExpireDate,
-  getMomentLocale
+  getMomentLocale,
+  formatActivitySlotRange,
+  getEmbedUrl,
 };
