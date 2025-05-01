@@ -48,7 +48,7 @@ https://manager.toruya.com/tw/userlogin"
         message: "由於LINE訊息數量已達到上限，無法向客戶發送訊息。\n請到您的Line 官方帳號的後台去增加額度"
     booking:
       shop_owner_reservation_booked_notification:
-        message: "%{user_name} 您好\n\n從%{booking_page_title}收到了新的預約。\n\n請從預約日曆確認。\n\nToruya"
+        message: "%{user_name} 您好\n\n從%{booking_page_title}收到了新的預約。\n\n請從行事曆確認。\n\nToruya"
     tickets:
       unused_ticket_left:
         message: "感謝您使用票卷『%{product_name}』。\n\n票卷還剩下%{ticket_remaining_quota}次，使用期限到%{ticket_expire_date}為止。\n\n 您可以在期限日之前的預約中使用，請盡快預約。\n %{booking_page_url}\n\n＜如果您已經預約＞\n如果您已經完成下次預約但仍收到此提醒，可能是因為未能使用票卷進行預約。\n\n請從以下專用預約頁面重新預約，或通過LINE聯繫我們。\n%{booking_page_url}"

@@ -281,7 +281,7 @@ tw:
     until_when: 至
     price: 價格
     no_data: 未登記
-    reservation_calendar: 預約日曆
+    reservation_calendar: 行事曆
     not_paid_payment: 這是未付款的項目。
     expire_date: 有效期限
     personal_schedule: 個人行程

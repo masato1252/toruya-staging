@@ -30,7 +30,7 @@ tw:
           unmatch_phone_number: 找不到與此號碼相關的使用者。
           booking_code_message: 請輸入我們發送到您手機的確認碼。
           booking_code_failed_message: 確認碼錯誤
-          redirect_to_schedule_page: 正在載入預約日曆。
+          redirect_to_schedule_page: 正在載入行事曆。
       user_connect:
         page_title: 使用者登入
         message:
@@ -166,12 +166,12 @@ tw:
           holiday_label: 假日
           national_holiday_label: 國定假日
           business_time_introduction1: 此設定是用於線上預約頁面的預約接受時間設定。
-          business_time_introduction2: 從預約日曆中，即使是休息日也可以建立預約。
+          business_time_introduction2: 從行事曆中，即使是休息日也可以建立預約。
           open_shop_time: 開店時間
           close_shop_time: 關店時間
-          shop_open_introduction_html: 在設定的營業時間內<br />可以從線上預約頁面<br />接受預約。<br /><br />從預約日曆中，即使是非營業時間也可以建立預約。
+          shop_open_introduction_html: 在設定的營業時間內<br />可以從線上預約頁面<br />接受預約。<br /><br />從行事曆中，即使是非營業時間也可以建立預約。
           shop_close_introduction1: 設定為CLOSE的日子會在線上預約頁面顯示為休息日。
-          shop_close_introduction2: 從預約日曆中，即使是休息日也可以建立預約。
+          shop_close_introduction2: 從行事曆中，即使是休息日也可以建立預約。
           holiday_working_option: 假日營業
           business_schedule_overlap_holiday_using_holiday_schedule: 如果國定假日是營業日，則營業並使用假日時間表
           holiday_schedule_without_business_schedule: 即使國定假日不是營業日，也營業
