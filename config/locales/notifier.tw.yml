@@ -6,7 +6,7 @@ tw:
       message: "感謝您註冊成為用戶。\n\n 您可以作為%{owner_name}的成員免費使用我們的服務。\n\n 如果您想將其用於自己的業務，您也可以免費試用，歡迎您體驗。\n\n如果您想從電腦或平板設備使用Toruya，請使用網頁管理介面。\n
 https://manager.toruya.com/tw/userlogin"
     created_shop:
-      message: "用戶註冊和店舖設置已完成！\n\n從今天起至%{trial_end_date}，您可以免費試用。"
+      message: "用戶註冊和店舖設置已完成！\n\n，您可以免費試用。"
     line_api_settings_finished:
       message: "LINE連接設置已完成！\n\n接下來，請點擊我們剛剛發送的「開始確認設置」按鈕，確認LINE連接是否正確。"
       card_button: "開始確認設置"
@@ -15,7 +15,7 @@ https://manager.toruya.com/tw/userlogin"
     line_verification_failed:
       message: "訊息測試發送失敗。\n\nLINE Developers上的設置可能有誤。\n\n請在LINE Developers上確認以下幾點：\n\n✅LINE登入是否在與Messaging API相同的提供者上？\n✅LINE登入的「已連結的LINE官方帳號」中顯示的以「＠」開頭的字符是否與Toruya連接的Messaging API的基本ID相同？\n\n在LINE Developers上重新設置後，請從Toruya的設置畫面點擊「操作測試」按鈕，再次進行測試。"
     shop_settings_reminder:
-      message: "⚠️看起來您尚未完成Toruya註冊時的設置！\n\n請在試用期結束前（%{trial_end_date}）完成設置。\n%{setting_url}"
+      message: "⚠️看起來您尚未完成Toruya註冊時的設置！\n\n%{setting_url}"
     pending_tasks_summary:
       base_message: "%{user_name} 您好\n\n有需要確認的資料，請從用戶選單確認。\n\n"
       pending_customer_message:       "□未處理訊息　  %{number}件\n"

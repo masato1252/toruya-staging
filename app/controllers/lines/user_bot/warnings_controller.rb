@@ -12,12 +12,7 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
   def check_reservation_content
     write_user_bot_cookies(:redirect_to, request.referrer)
 
-    if Current.business_owner.trial_member?
-      render template: "warnings/check_reservation_content"
-    else
-      # free member
-      render template: "warnings/trial_end"
-    end
+    render template: "warnings/check_reservation_content"
   end
 
   def create_reservation
