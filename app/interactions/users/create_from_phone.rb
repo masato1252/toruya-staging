@@ -35,8 +35,7 @@ module Users
 
       ApplicationRecord.transaction do
         if user.new_record? &&
-            referral_token && (referee = User.find_by(referral_token: referral_token)) &&
-            referee.business_member?
+            referral_token && (referee = User.find_by(referral_token: referral_token))
           compose(Referrals::Build, referee: referee, referrer: user)
         end
         compose(Users::BuildDefaultData, user: user)
