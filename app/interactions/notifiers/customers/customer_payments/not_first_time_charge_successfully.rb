@@ -11,7 +11,7 @@ module Notifiers
         def message
           I18n.t(
             "notifier.customer_payments.not_first_time_charge_successfully.message",
-            customer_name: receiver.name,
+            customer_name: receiver.message_name,
             service_title: sale_page.product_name,
             shop_name: online_service.company.company_name,
             customer_status_online_service_url: url_helpers.customer_status_online_service_url(

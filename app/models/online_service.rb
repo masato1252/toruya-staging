@@ -387,7 +387,7 @@ class OnlineService < ApplicationRecord
       end
 
     {
-      customer_name: customer_or_user.name,
+      customer_name: customer_or_user.message_name,
       service_title: name,
       service_start_date: service_start_date,
       service_end_date: service_end_date,

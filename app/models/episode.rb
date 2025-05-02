@@ -93,7 +93,7 @@ class Episode < ApplicationRecord
   def message_template_variables(customer_or_user)
     online_service.message_template_variables(customer_or_user).merge!(
       {
-        customer_name: customer_or_user.name,
+        customer_name: customer_or_user.message_name,
         episode_name: name,
         episode_end_date: end_time_text
       }

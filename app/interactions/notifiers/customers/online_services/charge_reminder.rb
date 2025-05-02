@@ -13,7 +13,7 @@ module Notifiers
         def message
           I18n.t(
             "notifier.online_service.charge_reminder.message",
-            customer_name: receiver.name,
+            customer_name: receiver.message_name,
             service_title: online_service.name,
             charge_date: charge_date,
             shop_name: online_service.company.company_name,

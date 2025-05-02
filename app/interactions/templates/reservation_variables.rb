@@ -17,7 +17,7 @@ module Templates
       booking_time = "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
 
       {
-        customer_name: receiver.name,
+        customer_name: receiver.message_name,
         shop_name: shop.display_name,
         shop_phone_number: shop.phone_number,
         booking_time: booking_time,
