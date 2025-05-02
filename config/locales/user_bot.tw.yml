@@ -210,6 +210,7 @@ tw:
             send_me_mock_message: 發送測試訊息給自己
             service_start_date: 服務開始日期
             service_end_date: 服務結束日期
+            service_url: 服務連結
             episode_end_date: 內容公開結束日期
             lesson_name: 課程名稱
             episode_name: 內容名稱

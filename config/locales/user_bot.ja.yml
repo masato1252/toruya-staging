@@ -211,6 +211,7 @@ ja:
             send_me_mock_message: 自分にテスト送信
             service_start_date: サービス開始日
             service_end_date: サービス終了日
+            service_url: サービスページURL
             episode_end_date: コンテンツ公開終了日
             lesson_name: レッスン名
             episode_name: コンテンツ名

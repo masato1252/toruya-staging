@@ -123,6 +123,7 @@ const CustomMessageEdit =({props}) => {
               <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_title}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_title")} </button>
               <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_start_date}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_start_date")} </button>
               <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_end_date}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_end_date")} </button>
+              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_url}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_url")} </button>
             </div>
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.preview")}</div>
             <div className="field-row hint no-border">
