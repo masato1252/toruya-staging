@@ -252,7 +252,13 @@ class User < ApplicationRecord
   end
 
   def hi_message
-    "👩 New user joined, user_id: #{id}"
+    referral = Referral.find_by(referrer: self)
+
+    if referral
+      "👩 New user joined, user_id: #{id} from #{referral.referee.referral_token}"
+    else
+      "👩 New user joined, user_id: #{id}"
+    end
   end
 
   def pending_reservations

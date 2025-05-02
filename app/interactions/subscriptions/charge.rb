@@ -57,7 +57,15 @@ module Subscriptions
 
             if Rails.configuration.x.env.production?
               if user.subscription_charges.finished.count == 1
-                text = "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} new Paid user"
+                referral = Referral.find_by(referrer: user)
+
+                text = if referral
+                  referral.update(state: :active)
+                  "💭 `🎉 user_id: #{user.id} from #{referral.referee.referral_token}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} new Paid user"
+                else
+                  "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} new Paid user"
+                end
+
                 SlackClient.send(channel: 'new_paid_users', text: text)
               elsif manual
                 text = "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} user upgraded"

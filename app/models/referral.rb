@@ -23,7 +23,7 @@ class Referral < ApplicationRecord
 
   enum state: {
     pending: 0, # Sign up, free plan
-    active: 1, # subscribed child basic/premium plan
+    active: 1, # subscribed paid plan
     referrer_canceled: 2, # ever subscribed others plan whatever a free/regular/business
   }
 

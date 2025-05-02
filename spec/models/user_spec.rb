@@ -41,4 +41,23 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "#hi_message" do
+    let(:user) { FactoryBot.create(:user) }
+
+    context "when the user has a referral" do
+      let(:referee) { FactoryBot.create(:user, referral_token: "ref123") }
+      let!(:referral) { FactoryBot.create(:referral, referrer: user, referee: referee) }
+
+      it "returns a message with the referee's referral token" do
+        expect(user.hi_message).to eq("👩 New user joined, user_id: #{user.id} from ref123")
+      end
+    end
+
+    context "when the user does not have a referral" do
+      it "returns a message without a referral token" do
+        expect(user.hi_message).to eq("👩 New user joined, user_id: #{user.id}")
+      end
+    end
+  end
 end
