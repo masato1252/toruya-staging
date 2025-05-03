@@ -68,6 +68,13 @@ ja:
         booking_options: 予約価格で受付
         contacts: お問い合わせ
         services: 利用中サービス
+      keyword_descriptions:
+        hint: 異なるキーワードを使用して、異なる機能を使用できます。
+        incoming_reservations: 顧客の未来の予約を返信
+        booking_pages: LINE予約がONに設定されている予約ページを返信
+        booking_options: LINE予約がONに設定されている予約価格を返信
+        contacts: 問い合わせバブルを返信
+        services: 利用可能なオンラインサービスを返信
       legacy_keyowords:
         booking_pages: 新たに予約する
       thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"

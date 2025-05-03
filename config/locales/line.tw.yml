@@ -68,6 +68,13 @@ tw:
         booking_options: 預約項目
         contacts: 聯絡我們
         services: 使用中的服務
+      keyword_descriptions:
+        hint: 你可以使用LINE關鍵字來讓客戶使用Toruya的功能
+        incoming_reservations: 客戶可以查看先前的預約
+        booking_pages: 客戶可以查看您可預約的頁面
+        booking_options: 客戶可以查看您可預約的項目
+        contacts: 客戶可以查看聯絡您的資訊
+        services: 客戶可以查看您可使用的線上服務
       legacy_keyowords:
         booking_pages: 新增預約
       thanks_follow: "感謝您加入好友。\n\n 您可以使用此LINE帳號進行預約確認、變更等線上預約服務。"

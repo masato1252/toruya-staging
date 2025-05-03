@@ -38,6 +38,45 @@
             <i class="fa fa-lightbulb"></i><%= link_to t("user_bot.dashboards.settings.rich_menu.help_link"), "https://toruya.com/help/richmenu_setting/" %>
           </div>
         <% end %>
+        <% if @social_account.using_line_official_account? %>
+          <div class="margin-around">
+            <div class="mt-2"><%= t("line.bot.keyword_descriptions.hint") %></div>
+            <% if support_faq_display? %>
+              <i class="fa fa-lightbulb"></i><%= link_to t("user_bot.dashboards.settings.rich_menu.help_link"), "https://toruya.com/help/richmenu_toruya-bot/" %>
+            <% end %>
+
+            <div class="mt-2">
+              <div class="container table border border-solid border-gray-500">
+                <div class="row">
+                  <div class="col-sm-6 col-xs-6 font-weight-bold">
+                    <%= t("user_bot.dashboards.settings.rich_menu.keyword") %>
+                  </div>
+                  <div class="col-sm-6 col-xs-6 font-weight-bold">
+                    <%= t("user_bot.dashboards.settings.rich_menu.toruya_bot_operation") %>
+                  </div>
+                </div>
+                <% [
+                  "incoming_reservations",
+                  "booking_pages",
+                  "booking_options",
+                  "contacts",
+                  "services"
+                ].each do |keyword| %>
+                  <% if public_send("support_line_keyword_#{keyword}?") %>
+                    <div class="row">
+                      <div class="col-sm-6 col-xs-6 text-clip">
+                        <%= t("line.bot.keywords.#{keyword}") %>
+                      </div>
+                      <div class="col-sm-6 col-xs-6">
+                        <%= t("line.bot.keyword_descriptions.#{keyword}") %>
+                      </div>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
 

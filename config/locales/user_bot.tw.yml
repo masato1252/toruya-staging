@@ -148,6 +148,9 @@ tw:
           auto_description_html: "切換到自動模式後，<br />您可以使用與Toruya功能連動的圖文選單，<br />以及活動選單等，<br />讓圖文選單管理更加便利。"
           auto_switch_btn: 切換到自動模式
           help_link: Toruya圖文選單使用技巧
+          keyword_link: 從圖文選單中加入Toruya的功能
+          keyword: LINE 關鍵字
+          toruya_bot_operation: Toruya bot的動作
         line_keywords:
           booking_pages:
             title: 透過LINE發送的預約頁面

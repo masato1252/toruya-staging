@@ -149,6 +149,9 @@ ja:
           auto_description_html: "自動に切り替えることで<br />Toruyaの機能と連動させたリッチメニューや<br />キャンペーンメニューなど<br />リッチメニュー管理がより便利になります。"
           auto_switch_btn: 自動に切り替える
           help_link: Toruyaのリッチメニュー活用法
+          keyword_link: 自作リッチメニューにToruyaの顧客リッチメニュー機能を追加する
+          keyword: 設定キーワード
+          toruya_bot_operation: Toruyaボットの動作
         line_keywords:
           booking_pages:
             title: LINE送信する予約ページ

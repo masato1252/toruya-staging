@@ -40,6 +40,10 @@ module FeatureHelper
     end
   end
 
+  def all_locale_available?
+    true
+  end
+
   alias_method :support_faq_display?, :japanese_only?
   alias_method :support_terms_and_privacy_display?, :japanese_only?
   alias_method :support_official_support_display?, :japanese_only?
@@ -56,6 +60,11 @@ module FeatureHelper
   alias_method :support_online_payment?, :japanese_only?
   alias_method :support_online_service?, :japanese_only?
   alias_method :support_multiple_accounts?, :japanese_only?
+  alias_method :support_line_keyword_incoming_reservations?, :all_locale_available?
+  alias_method :support_line_keyword_booking_pages?, :all_locale_available?
+  alias_method :support_line_keyword_booking_options?, :japanese_only?
+  alias_method :support_line_keyword_contacts?, :japanese_only?
+  alias_method :support_line_keyword_services?, :japanese_only?
 
   def support_booking_options_menu_concept?
     Current.business_owner&.booking_options_menu_concept
