@@ -60,6 +60,7 @@ module FeatureHelper
   alias_method :support_online_payment?, :japanese_only?
   alias_method :support_online_service?, :japanese_only?
   alias_method :support_multiple_accounts?, :japanese_only?
+  alias_method :support_sales_page?, :japanese_only?
   alias_method :support_line_keyword_incoming_reservations?, :all_locale_available?
   alias_method :support_line_keyword_booking_pages?, :all_locale_available?
   alias_method :support_line_keyword_booking_options?, :japanese_only?

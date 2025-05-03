@@ -582,6 +582,9 @@ tw:
         online_service: 數位商品
         booking_page: 預約頁面
         visit_count: 瀏覽次數
+        sale_page_purchased_count: 成交數
+        booking_page_purchased_count: 預約數
+        online_service_purchased_count: 註冊數
         purchased_count: 註冊數
         conversion_rate: 轉換率
         total_revenue: 總收入

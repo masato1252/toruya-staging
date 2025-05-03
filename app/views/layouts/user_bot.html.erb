@@ -99,20 +99,22 @@
           </li>
         <% end %>
 
-        <li class="p-1">
-          <%= active_link_to lines_user_bot_sales_path(business_owner_id: business_owner_id) do %>
-            <i class="fa fa-bullhorn fa-2x"></i> <%= t("user_bot.dashboards.sales.edit.sale_pages") %>
-          <% end %>
+        <% if support_sales_page? %>
+          <li class="p-1">
+            <%= active_link_to lines_user_bot_sales_path(business_owner_id: business_owner_id) do %>
+              <i class="fa fa-bullhorn fa-2x"></i> <%= t("user_bot.dashboards.sales.edit.sale_pages") %>
+            <% end %>
 
-          <ul class='nav'>
-            <li>
-              <%= link_to t("common.item.new"), new_lines_user_bot_sale_path(business_owner_id: business_owner_id) %>
-            </li>
-            <li>
-              <%= link_to t("common.item.list"), lines_user_bot_sales_path(business_owner_id: business_owner_id) %>
-            </li>
-          </ul>
-        </li>
+            <ul class='nav'>
+              <li>
+                <%= link_to t("common.item.new"), new_lines_user_bot_sale_path(business_owner_id: business_owner_id) %>
+              </li>
+              <li>
+                <%= link_to t("common.item.list"), lines_user_bot_sales_path(business_owner_id: business_owner_id) %>
+              </li>
+            </ul>
+          </li>
+        <% end %>
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) do %>
@@ -148,9 +150,11 @@
                     lines_user_bot_metrics_dashboard_path(business_owner_id: business_owner_id),
                     active: /\/metrics(\?.+)?$/ %>
             </li>
-            <li>
-              <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>
-            </li>
+            <% if support_sales_page? %>
+              <li>
+                <%= active_link_to t("sidebar.metrics.sale_page_title"), lines_user_bot_metrics_sale_pages_path(business_owner_id: business_owner_id) %>
+              </li>
+            <% end %>
             <% if support_online_service? %>
               <li>
                 <%= active_link_to t("sidebar.metrics.service_title"), lines_user_bot_metrics_online_services_path(business_owner_id: business_owner_id) %>
