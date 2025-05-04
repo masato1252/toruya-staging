@@ -22,12 +22,13 @@ export const CustomerIdentification = ({
     customer_phonetic_first_name: customer?.customer_phonetic_first_name,
     customer_phone_number: customer?.customer_phone_number,
     customer_email: customer?.customer_email,
+    customer_verified: customer?.is_identified,
     user_id: customer?.user_id || '',
     customer_social_user_id: social_customer?.social_user_id || '',
     errors: {}
   });
 
-  if (!!customer_values.customer_id) {
+  if (!!customer_values.customer_id && customer_values.customer_verified) {
     return (
       <div className="whole-page-center final">
         <div dangerouslySetInnerHTML={{ __html: i18n.successful_message_html }} />
@@ -40,15 +41,16 @@ export const CustomerIdentification = ({
       <CustomerVerificationForm
         setCustomerValues={setCustomerValues}
         customerValues={customer_values}
-        found_customer={!!customer_values.customer_id}
+        found_customer={customer_values.customer_verified}
         setCustomerFound={({customer_id}) => {
           setCustomerValues(prev => ({
             ...prev,
-            customer_id: customer_id
+            customer_id: customer_id,
+            customer_verified: true
           }));
 
           if (identifiedCallback) {
-            identifiedCallback({customer_id});
+            identifiedCallback({customer_id, customer_verified: true});
           }
         }}
         i18n={i18n}

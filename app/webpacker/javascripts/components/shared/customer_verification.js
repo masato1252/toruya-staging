@@ -96,6 +96,7 @@ export const CustomerBasicInfoForm = ({
         placeholder="09012345678"
         countryCodeEditable={false}
       />
+      {verificationError && <div className="danger">{verificationError}</div>}
 
       <div className="centerize">
         {shouldShowVerifyButton && (

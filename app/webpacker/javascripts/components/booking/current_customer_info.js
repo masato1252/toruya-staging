@@ -22,7 +22,7 @@ const CurrentCustomerInfo = ({booking_reservation_form_values, i18n, isCustomerT
             </div>
           )}
           <div className="customer-full-name">
-            {last_name || customer_last_name} {first_name || customer_first_name} {sir}
+            {customer_last_name || last_name} {customer_first_name || first_name} {sir}
           </div>
         </div>
         <div className="edit-customer-info">
@@ -30,7 +30,7 @@ const CurrentCustomerInfo = ({booking_reservation_form_values, i18n, isCustomerT
         </div>
         <div className="not-me">
           <a href="#" onClick={not_me_callback}>
-            {last_name || customer_last_name} {first_name || customer_first_name} {not_me}
+            {customer_last_name || last_name} {customer_first_name || first_name} {not_me}
           </a>
         </div>
       </div>

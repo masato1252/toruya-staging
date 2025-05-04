@@ -63,7 +63,7 @@
     booking_reservation_form: {
       regular: @customer ? "yes" : nil,
       use_default_customer: !!(@customer && @customer.mobile_phone_number),
-      found_customer: @customer && @customer.mobile_phone_number ? true : nil,
+      found_customer: @customer&.is_identified?,
       booking_flow: "booking_option_first",
       remember_me: true,
       booking_options: custom_options(page_booking_options),

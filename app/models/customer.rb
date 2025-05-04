@@ -404,6 +404,10 @@ class Customer < ApplicationRecord
     Address.new(address_details).exists?
   end
 
+  def is_identified?
+    (customer_email.present? || customer_phone_number.present?) && (last_name.present? || first_name.present?)
+  end
+
   def in_blacklist?
     BLACKLIST_IDS.include?(id)
   end

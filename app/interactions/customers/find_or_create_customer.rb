@@ -89,6 +89,14 @@ module Customers
         customer_attrs[:phonetic_first_name] = phonetic_first_name
       end
 
+      if last_name.present? && customer.last_name != last_name
+        customer_attrs[:last_name] = last_name
+      end
+
+      if first_name.present? && customer.first_name != first_name
+        customer_attrs[:first_name] = first_name
+      end
+
       # Update the customer if we have any attributes to update
       customer.update(customer_attrs) if customer_attrs.present?
 

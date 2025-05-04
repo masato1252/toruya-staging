@@ -191,6 +191,7 @@ const CustomerVerificationForm = ({
         // Call the setCustomerFound function to proceed with the booking
         setCustomerFound({
           customer_id: response.data.customer_id,
+          customer_verified: true
         });
       }
 
@@ -224,7 +225,6 @@ const CustomerVerificationForm = ({
     handleChange,
     isSubmitting,
     handleVerifyIdentity: generateVerificationCode,
-    verificationError,
     isPhoneVerified,
     isBasicInfoValid,
     verificationStep,
@@ -264,7 +264,7 @@ const CustomerVerificationForm = ({
         );
       case 'basic_info':
       default:
-        return <CustomerBasicInfoForm {...commonBasicInfoProps} />;
+        return <CustomerBasicInfoForm {...commonBasicInfoProps} verificationError={verificationError}/>;
     }
   };
 

@@ -74,7 +74,7 @@ const FinalPaidPage = ({props, purchase_data}) => {
 
 export const CustomerPurchases = ({props}) => {
   const { social_user_id, customer_id, had_address } = props.social_customer;
-  const [identified_customer, setIdentifiedCustomer] = useState(customer_id)
+  const [identified_customer, setIdentifiedCustomer] = useState(props.customer.is_identified ? { customer_id: customer_id, customer_verified: true } : null)
   const [is_customer_address_created, setCustomerAddressCreated] = useState(had_address)
 
   const handleCustomerAddressSubmit = async (address_details) => {
@@ -104,7 +104,7 @@ export const CustomerPurchases = ({props}) => {
     )
   }
 
-  if (identified_customer && !props.sale_page.is_free && props.is_customer_address_required && !is_customer_address_created) {
+  if (identified_customer && props.is_customer_address_required && !is_customer_address_created) {
     return (
       <div className="sale-page">
         <CompanyHeader shop={props.sale_page.company_info || props.sale_page.shop}>
@@ -117,7 +117,7 @@ export const CustomerPurchases = ({props}) => {
     )
   }
 
-  if (identified_customer) {
+  if (identified_customer && identified_customer.customer_verified) {
     return (
       <div className="sale-page">
         <CompanyHeader shop={props.sale_page.company_info || props.sale_page.shop}>
@@ -126,7 +126,7 @@ export const CustomerPurchases = ({props}) => {
             purchase_data={
               {
                 slug: props.sale_page_slug,
-                customer_id: identified_customer
+                customer_id: identified_customer.customer_id
               }
             }
           />
@@ -149,7 +149,7 @@ export const CustomerPurchases = ({props}) => {
           locale={props.locale}
           identifiedCallback={
             (customer) => {
-              setIdentifiedCustomer(customer.customer_id)
+              setIdentifiedCustomer({ customer_id: customer.customer_id, customer_verified: customer.customer_verified })
             }
           }
         />

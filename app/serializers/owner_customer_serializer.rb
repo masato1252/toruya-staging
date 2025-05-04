@@ -7,4 +7,8 @@ class OwnerCustomerSerializer
   attribute :customer_id do |object|
     object.id
   end
+
+  attribute :is_identified do |object|
+    object.is_identified?
+  end
 end
