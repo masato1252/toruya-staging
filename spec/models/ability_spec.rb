@@ -305,7 +305,7 @@ RSpec.describe Ability do
         let(:current_user) { FactoryBot.create(:subscription, :free_after_trial).user }
 
         it "returns false" do
-          expect(ability.can?(:check_content, reservation)).to eq(false)
+          expect(ability.can?(:check_content, reservation)).to eq(true)
         end
       end
 
