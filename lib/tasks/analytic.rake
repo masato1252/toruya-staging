@@ -585,6 +585,7 @@ namespace :analytic do
       date_period = current.advance(weeks: -2)..current
       date_period_formatted = "#{date_period.begin.to_date} to #{date_period.end.to_date}"
       user_sign_up_in_previous_week = User.where(created_at: date_period).count
+      user_sign_up_in_previous_week_ids = User.where(created_at: date_period).pluck(:id)
       user_has_booking_page_ids = BookingPage.where(user_id: user_sign_up_in_previous_week_ids).pluck(:user_id)
       reservation_count = Reservation.where(user_id: user_sign_up_in_previous_week_ids).count
       paid_user_ids = Subscription.where(user_id: user_sign_up_in_previous_week_ids).charge_required.pluck(:user_id)
