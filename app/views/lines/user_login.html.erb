@@ -2,7 +2,7 @@
   <%= render 'shared/language_selector' %>
   <h2><%= I18n.t("common.login") %></h2>
   <main id="socialLogin">
-    <p><%= I18n.t("common.toruya_user_login_html") %></p>
+    <p><%= t("common.toruya_user_login_html") %></p>
 
     <%= button_to toruya_line_login_url(root_path),
                   class: "btn line-button with-wording only-word",
