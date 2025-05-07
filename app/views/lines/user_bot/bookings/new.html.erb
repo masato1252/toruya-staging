@@ -14,15 +14,17 @@
           <% end %>
         </div>
 
-        <div class="action-block centerize">
-          <%= link_to new_lines_user_bot_booking_option_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
-            <i class="fa fa-list fa-4x"></i>
-            <h3 class="p-1"><%= I18n.t("user_bot.dashboards.booking.booking_option_creation.label") %></h3>
-            <p class="p-2 white-space-initial text-left">
-            <%= I18n.t("user_bot.dashboards.booking.booking_option_creation.description") %>
-            </p>
-          <% end %>
-        </div>
+        <% if Current.business_owner.booking_pages.exists? %>
+          <div class="action-block centerize">
+            <%= link_to new_lines_user_bot_booking_option_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
+              <i class="fa fa-list fa-4x"></i>
+              <h3 class="p-1"><%= I18n.t("user_bot.dashboards.booking.booking_option_creation.label") %></h3>
+              <p class="p-2 white-space-initial text-left">
+              <%= I18n.t("user_bot.dashboards.booking.booking_option_creation.description") %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
       </div>
     </div>
 

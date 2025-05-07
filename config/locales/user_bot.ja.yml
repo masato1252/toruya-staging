@@ -508,6 +508,7 @@ ja:
           broadcast_to_customers: 利用中の顧客に一斉配信
       booking_pages:
         introduction_message_html: ここは予約ページを作成して、顧客に共有する場所です。<br>異なるサービスを整理したり、銷售するために複数の予約ページを作成できます。
+        new_user_tour_message_html: たった5分で、お客様がオンラインで予約できる予約ページを作成できます。
         index:
           title: オンライン予約ページ
           field_header: 予約ページ
@@ -644,10 +645,11 @@ ja:
         remember_create_sale_page: 忘れずに宣伝用LPを作成してください
         create_sale_page_later_btn: 後で作る
         create_booking_page_successfully: 予約ページを作成しました。ただし予約価格を掲載するまでは顧客は予約できません。
+        create_booking_page_successfully_with_one_option: おめでとうございます！予約ページを顧客とシェアして、予約の受付を開始できます！
       booking:
         booking_page_creation:
           label: 予約ページを作成
-          description: ホームページにリンクしたり、SNSでシェアする予約ページを作成します。より詳細に受付方法を調節したい場合も、予約ページを使用してください
+          description: たった5分で予約ページを作成でき、お客様がオンラインであなたのサービスを予約できるようになります。
         booking_option_creation:
           label: 予約価格を作成
           description: 顧客にメニューを販売する予約価格を作成します。既に購入を決めた顧客に、LINEなどから直接予約を受け付ける場合も、予約価格を使用できます。

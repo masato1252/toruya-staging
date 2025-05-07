@@ -59,7 +59,11 @@
           </div>
 
           <div class="margin-around centerize">
-            <%= t("user_bot.dashboards.booking_pages.introduction_message_html") %>
+            <% if Current.business_owner.booking_pages.empty? %>
+              <%= t("user_bot.dashboards.booking_pages.new_user_tour_message_html") %>
+            <% else %>
+              <%= t("user_bot.dashboards.booking_pages.introduction_message_html") %>
+            <% end %>
           </div>
         </div>
 

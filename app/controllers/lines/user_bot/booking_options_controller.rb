@@ -11,7 +11,11 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     outcome = ::BookingOptions::Create.run(params.permit!.to_h.merge(user: Current.business_owner))
 
     if outcome.valid?
-      flash[:success] = I18n.t("common.create_successfully_message")
+      if outcome.result&.id && outcome.result.booking_options.count == 1
+        flash[:success] = I18n.t("user_bot.dashboards.booking_page_creation.create_booking_page_successfully_with_one_option")
+      else
+        flash[:success] = I18n.t("common.create_successfully_message")
+      end
     else
       flash[:error] = I18n.t("common.something_went_wrong_message")
     end

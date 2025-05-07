@@ -509,6 +509,7 @@ tw:
           broadcast_to_customers: 向使用中的客戶群發訊息
       booking_pages:
         introduction_message_html: 這裡是您建立預約頁面並分享給客戶的地方。<br>您可以建立多個的預約頁面來整理或銷售不同的服務。
+        new_user_tour_message_html: 只要5分鐘，就可以建立一個預約頁面，來讓客戶可以線上預約您的服務。
         index:
           title: 線上預約頁面
           field_header: 預約頁面
@@ -646,10 +647,11 @@ tw:
         remember_create_sale_page: 請記得建立銷售頁面
         create_sale_page_later_btn: 稍後建立
         create_booking_page_successfully: 預約頁面已成功建立。請在此處編輯您提供的服務，並與客戶分享預約頁面。
+        create_booking_page_successfully_with_one_option: 恭喜您，您可以分享預約頁面給客戶，開始接受預約了！
       booking:
         booking_page_creation:
           label: 建立預約頁面
-          description: 建立一個預約頁面，來讓客戶可以線上預約您的服務。
+          description: 只要5分鐘，就可以建立一個預約頁面，來讓客戶可以線上預約您的服務。
         booking_option_creation:
           label: 建立預約項目
           description: 這是您要給客戶的預約選項。

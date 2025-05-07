@@ -47,6 +47,12 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
     outcome = ::BookingPages::Update.run(booking_page: @booking_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
+    if @booking_page.booking_options.count == 1 && params[:attribute] == "new_option"
+      flash[:success] = I18n.t("user_bot.dashboards.booking_page_creation.create_booking_page_successfully_with_one_option")
+    else
+      flash[:success] = I18n.t("common.update_successfully_message")
+    end
+
     render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(@booking_page.id, business_owner_id: business_owner_id, anchor: params[:attribute]) })
   end
 
