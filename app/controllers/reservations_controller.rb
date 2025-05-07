@@ -121,7 +121,7 @@ class ReservationsController < DashboardController
     ]
 
     Rails.cache.delete(reservation_params_hash_cache_key)
-    cookies.delete(:reservation_form_hash)
+    cookies.delete(:reservation_form_hash, domain: :all)
 
     if params[:customer_id]
       customer = super_user.customers.find(params[:customer_id])
@@ -273,7 +273,10 @@ class ReservationsController < DashboardController
   end
 
   def set_current_dashboard_mode
-    cookies[:dashboard_mode] = shop.id
+    cookies[:dashboard_mode] = {
+      value: shop.id,
+      domain: :all
+    }
   end
 
   def reservation_params_hash

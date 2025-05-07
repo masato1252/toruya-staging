@@ -207,7 +207,10 @@ module ViewHelpers
   def member_shop_ids
     @member_shop_ids ||= begin
       if cookies[:member_shops].nil?
-        cookies[:member_shops] = manage_shop_options(include_user_own: true).map(&:shop_id).join(",")
+        cookies[:member_shops] = {
+          value: manage_shop_options(include_user_own: true).map(&:shop_id).join(","),
+          domain: :all
+        }
       end
 
       @member_shop_ids ||= cookies[:member_shops].split(",") & manage_shop_options(include_user_own: true).map { |o| o.shop_id.to_s }

@@ -63,7 +63,11 @@ class CustomerVerificationController < ActionController::Base
       end
     end
 
-    cookies.permanent[:verified_customer_id] = customer.id
+    cookies[:verified_customer_id] = {
+      value: customer.id,
+      domain: :all,
+      expires: 20.years.from_now
+    }
 
     render json: {
       customer_id: customer.id,

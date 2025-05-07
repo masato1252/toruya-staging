@@ -164,7 +164,11 @@ class BookingPagesController < ActionController::Base
       result = outcome.result
       customer = result[:customer]
 
-      cookies.permanent[:booking_customer_id] = customer&.id
+      cookies[:booking_customer_id] = {
+        value: customer&.id,
+        domain: :all,
+        expires: 20.years.from_now
+      }
 
       Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
 
