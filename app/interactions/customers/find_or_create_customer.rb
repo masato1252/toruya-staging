@@ -8,7 +8,7 @@ module Customers
     string :first_name
     string :phonetic_last_name, default: nil
     string :phonetic_first_name, default: nil
-    string :phone_number
+    string :phone_number, default: nil
     string :email, default: nil
 
     def execute
