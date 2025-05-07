@@ -11,28 +11,27 @@ export const CustomerBasicInfoForm = ({
   customer_first_name,
   customer_phonetic_last_name,
   customer_phonetic_first_name,
-  customer_phone_number,
+  customer_email,
   errors,
   support_phonetic_name,
   handleChange,
   isSubmitting,
   handleVerifyIdentity,
   verificationError,
-  isPhoneVerified,
+  isEmailVerified,
   isBasicInfoValid,
   verificationStep,
   locale
 }) => {
-  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
-
   const {
     customer_phonetic_name_failed_message,
     customer_last_name_failed_message,
-    customer_first_name_failed_message
+    customer_first_name_failed_message,
+    customer_email_failed_message
   } = errors || {};
 
   // Determine if the verify button should be shown
-  const shouldShowVerifyButton = !isPhoneVerified && verificationStep !== 'verification_code';
+  const shouldShowVerifyButton = !isEmailVerified && verificationStep !== 'verification_code';
 
   return (
     <div className="customer-type-options">
@@ -85,17 +84,16 @@ export const CustomerBasicInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.phone_number")}{I18n.t("common.why_need_phone_number")}
+        {I18n.t("common.email")}{I18n.t("common.why_need_email")}
       </h4>
-      <PhoneInput
-        country={phone_countries.includes(locale) ? locale : 'jp'}
-        onlyCountries={phone_countries}
-        value={customer_phone_number || ""}
-        onChange={(phone) => handleChange('customer_phone_number', phone)}
-        autoFormat={false}
-        placeholder="09012345678"
-        countryCodeEditable={false}
+      <input
+        type="email"
+        className="form-control"
+        value={customer_email || ""}
+        onChange={(e) => handleChange('customer_email', e.target.value)}
+        placeholder="example@example.com"
       />
+      <ErrorMessage error={customer_email_failed_message} />
       {verificationError && <div className="danger">{verificationError}</div>}
 
       <div className="centerize">
@@ -111,9 +109,9 @@ export const CustomerBasicInfoForm = ({
               (I18n.t("action.verify_identity"))}
           </a>
         )}
-        {isPhoneVerified && (
-          <span className="phone-verified">
-            <i className="fa fa-check-circle"></i> {I18n.t("common.phone_verified")}
+        {isEmailVerified && (
+          <span className="email-verified">
+            <i className="fa fa-check-circle"></i> {I18n.t("common.email_verified")}
           </span>
         )}
       </div>
@@ -165,16 +163,111 @@ export const VerificationCodeForm = ({
 
 // Verified customer form
 export const VerifiedCustomerForm = ({
-  customer_email,
-  customer_email_confirmation,
+  customer_phone_number,
   handleChange,
   handleSubmit,
   isSubmitting,
 }) => {
+  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
+
   return (
     <div className="customer-type-options">
       <h4>
-        {I18n.t("common.email")}
+        {I18n.t("common.phone_number")}
+      </h4>
+      <PhoneInput
+        country={phone_countries.includes(I18n.locale) ? I18n.locale : 'jp'}
+        onlyCountries={phone_countries}
+        value={customer_phone_number || ""}
+        onChange={(phone) => handleChange('customer_phone_number', phone)}
+        autoFormat={false}
+        placeholder="09012345678"
+        countryCodeEditable={false}
+      />
+
+      <div className="centerize">
+        <a
+          href="#"
+          className="btn btn-tarco submit"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ?
+            <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
+            (I18n.t("action.complete"))}
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export const CustomerInfoForm = ({
+  customer_last_name,
+  customer_first_name,
+  customer_phonetic_last_name,
+  customer_phonetic_first_name,
+  customer_email,
+  customer_phone_number,
+  support_phonetic_name,
+  handleChange,
+  handleSubmit,
+  isSubmitting,
+  errors,
+}) => {
+  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
+
+  return (
+    <div className="customer-type-options">
+      <h4>
+        {I18n.t("common.name")}
+      </h4>
+      <div>
+        <input
+          name="customer_last_name"
+          type="text"
+          placeholder={I18n.t("common.last_name")}
+          value={customer_last_name || ""}
+          onChange={(e) => handleChange('customer_last_name', e.target.value)}
+        />
+        <ErrorMessage error={errors?.customer_last_name_failed_message} />
+        <input
+          name="customer_first_name"
+          type="text"
+          placeholder={I18n.t("common.first_name")}
+          value={customer_first_name || ""}
+          onChange={(e) => handleChange('customer_first_name', e.target.value)}
+        />
+        <ErrorMessage error={errors?.customer_first_name_failed_message} />
+      </div>
+
+      {support_phonetic_name && (
+        <>
+          <br />
+          <div>
+            <input
+              id="customer_phonetic_last_name"
+              name="customer_phonetic_last_name"
+              type="text"
+              placeholder={I18n.t("common.phonetic_last_name")}
+              value={customer_phonetic_last_name || ""}
+              onChange={(e) => handleChange('customer_phonetic_last_name', e.target.value)}
+            />
+            <p></p>
+            <input
+              id="customer_phonetic_first_name"
+              name="customer_phonetic_first_name"
+              type="text"
+              placeholder={I18n.t("common.phonetic_first_name")}
+              value={customer_phonetic_first_name || ""}
+              onChange={(e) => handleChange('customer_phonetic_first_name', e.target.value)}
+            />
+            <ErrorMessage error={errors?.customer_phonetic_name_failed_message} />
+          </div>
+        </>
+      )}
+
+      <h4>
+        {I18n.t("common.email")}{I18n.t("common.why_need_email")}
       </h4>
       <input
         type="email"
@@ -183,21 +276,19 @@ export const VerifiedCustomerForm = ({
         onChange={(e) => handleChange('customer_email', e.target.value)}
         placeholder="example@example.com"
       />
-      <input
-        type="email"
-        className="form-control"
-        style={{ marginTop: '10px' }}
-        value={customer_email_confirmation || ""}
-        onChange={(e) => handleChange('customer_email_confirmation', e.target.value)}
-        placeholder={I18n.t("common.repeat_email")}
+
+      <h4>
+        {I18n.t("common.phone_number")}
+      </h4>
+      <PhoneInput
+        country={phone_countries.includes(I18n.locale) ? I18n.locale : 'jp'}
+        onlyCountries={phone_countries}
+        value={customer_phone_number || ""}
+        onChange={(phone) => handleChange('customer_phone_number', phone)}
+        autoFormat={false}
+        placeholder="09012345678"
+        countryCodeEditable={false}
       />
-      {customer_email &&
-       customer_email_confirmation &&
-       customer_email !== customer_email_confirmation && (
-        <div className="danger">
-          {I18n.t("errors.email_mismatch")}
-        </div>
-      )}
 
       <div className="centerize">
         <a

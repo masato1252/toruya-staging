@@ -5,7 +5,8 @@ import { CustomerVerificationServices } from "components/shared/customer_verific
 import {
   CustomerBasicInfoForm,
   VerificationCodeForm,
-  VerifiedCustomerForm
+  VerifiedCustomerForm,
+  CustomerInfoForm
 } from "components/shared/customer_verification";
 
 const CustomerVerificationForm = ({
@@ -14,6 +15,7 @@ const CustomerVerificationForm = ({
   found_customer,
   setCustomerFound,
   support_phonetic_name,
+  verification_required,
   locale
 }) => {
   const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
@@ -26,6 +28,8 @@ const CustomerVerificationForm = ({
   const [verificationError, setVerificationError] = useState(null);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [lastVerifiedPhoneNumber, setLastVerifiedPhoneNumber] = useState('');
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [lastVerifiedEmail, setLastVerifiedEmail] = useState('');
 
   const {
     customer_last_name,
@@ -33,8 +37,8 @@ const CustomerVerificationForm = ({
     customer_phonetic_last_name,
     customer_phonetic_first_name,
     customer_phone_number,
+    customer_phone_number_confirmation,
     customer_email,
-    customer_email_confirmation,
     user_id,
     customer_social_user_id
   } = customerValues;
@@ -63,11 +67,29 @@ const CustomerVerificationForm = ({
     }
   }, [customer_phone_number, isPhoneVerified, lastVerifiedPhoneNumber]);
 
+  // Effect to reset verification if email changes after verification
+  useEffect(() => {
+    if (isEmailVerified && lastVerifiedEmail && customer_email !== lastVerifiedEmail) {
+      // Reset verification state
+      setVerificationStep('basic_info');
+      setIsEmailVerified(false);
+      setVerificationUuid('');
+      setVerificationCode('');
+      setVerificationError(I18n.t("common.email_changed_message") || "Email has changed. Verification required.");
+
+      // Update form values to indicate not verified
+      setCustomerValues(prev => ({
+        ...prev,
+        is_verified: false
+      }));
+    }
+  }, [customer_email, isEmailVerified, lastVerifiedEmail]);
+
   if (found_customer) return <></>;
 
   // Check if form is valid
   const isBasicInfoValid = () => {
-    let isValid = customer_last_name && customer_first_name && customer_phone_number;
+    let isValid = customer_last_name && customer_first_name && customer_email;
 
     if (support_phonetic_name) {
       isValid = isValid && customer_phonetic_last_name && customer_phonetic_first_name;
@@ -99,7 +121,7 @@ const CustomerVerificationForm = ({
 
     try {
       const [_error, response] = await CustomerVerificationServices.generateVerificationCode({
-        customer_phone_number: customer_phone_number,
+        customer_email: customer_email,
         user_id: user_id
       });
 
@@ -133,7 +155,7 @@ const CustomerVerificationForm = ({
     try {
       const [_error, response] = await CustomerVerificationServices.verifyCode({
         user_id: user_id,
-        customer_phone_number: customer_phone_number,
+        customer_email: customer_email,
         uuid: verificationUuid,
         code: verificationCode
       });
@@ -141,9 +163,9 @@ const CustomerVerificationForm = ({
       const { verification_successful } = response.data;
 
       if (verification_successful) {
-        setIsPhoneVerified(true);
+        setIsEmailVerified(true);
         setVerificationStep('verified');
-        setLastVerifiedPhoneNumber(customer_phone_number);
+        setLastVerifiedEmail(customer_email);
 
         // Update form values to indicate verified
         setCustomerValues(prev => ({
@@ -165,12 +187,6 @@ const CustomerVerificationForm = ({
   // Submit verified customer
   const submitVerifiedCustomer = async (e) => {
     e.preventDefault();
-
-    // Check email match if provided
-    if (customer_email && customer_email_confirmation && customer_email !== customer_email_confirmation) {
-      // Email mismatch
-      return;
-    }
 
     setIsSubmitting(true);
 
@@ -219,13 +235,14 @@ const CustomerVerificationForm = ({
     customer_first_name,
     customer_phonetic_last_name,
     customer_phonetic_first_name,
+    customer_email,
     customer_phone_number,
     errors: customerValues.errors,
     support_phonetic_name,
     handleChange,
     isSubmitting,
     handleVerifyIdentity: generateVerificationCode,
-    isPhoneVerified,
+    isEmailVerified,
     isBasicInfoValid,
     verificationStep,
     locale
@@ -254,8 +271,7 @@ const CustomerVerificationForm = ({
           <>
             <CustomerBasicInfoForm {...commonBasicInfoProps} />
             <VerifiedCustomerForm
-              customer_email={customer_email}
-              customer_email_confirmation={customer_email_confirmation}
+              customer_phone_number={customer_phone_number}
               handleChange={handleChange}
               handleSubmit={submitVerifiedCustomer}
               isSubmitting={isSubmitting}
@@ -268,7 +284,11 @@ const CustomerVerificationForm = ({
     }
   };
 
-  return renderCurrentStep();
+  if (verification_required) {
+    return renderCurrentStep();
+  } else {
+    return <CustomerInfoForm {...commonBasicInfoProps} handleSubmit={submitVerifiedCustomer} isSubmitting={isSubmitting} />;
+  }
 }
 
 export default CustomerVerificationForm;

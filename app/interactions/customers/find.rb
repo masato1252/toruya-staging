@@ -10,8 +10,8 @@ module Customers
 
     def execute
       user_customers = user.customers.order("id")
-      customers = user_customers.where(customer_phone_number: Phonelib.parse(phone_number).international(false)) if phone_number.present?
-      customers = customers.presence || user_customers.where(customer_email: email) if email.present?
+      customers = user_customers.where(customer_email: email) if email.present?
+      customers = customers.presence || user_customers.where(customer_phone_number: Phonelib.parse(phone_number).international(false)) if phone_number.present?
 
       if customers.present?
         return {

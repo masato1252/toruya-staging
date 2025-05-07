@@ -4,22 +4,11 @@ class CustomerVerificationController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   skip_before_action :verify_authenticity_token, only: [:generate_verification_code, :verify_code, :create_or_update_customer]
 
-  # Generate a verification code and send it via SMS
+  # Generate a verification code and send it via email
   def generate_verification_code
-    # Validate phone number format
-    if I18n.locale == :ja && (Phonelib.invalid_for_country?(params[:customer_phone_number], 'JP') && Phonelib.invalid?(params[:customer_phone_number]))
-      Rollbar.error("Customer verification invalid phone number", phone_number: params[:customer_phone_number])
-      render json: {
-        errors: {
-          message: I18n.t("errors.invalid_jp_phone_number")
-        }
-      }
-      return
-    end
-
     # Create identification code
     identification_code = IdentificationCodes::Create.run!(
-      phone_number: params[:customer_phone_number],
+      email: params[:customer_email],
       user: User.find(params[:user_id])
     )
 

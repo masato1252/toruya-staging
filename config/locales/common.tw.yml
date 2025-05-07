@@ -112,6 +112,7 @@ tw:
     change_channel: 變更通知方式
   common:
     why_need_phone_number: ""
+    why_need_email: ""
     age: 年齡
     years_old: 歲
     default: 預設
@@ -304,7 +305,9 @@ tw:
         <br />
         透過LINE訊息發送
     phone_number_changed_message: "手機號碼已變更"
+    email_changed_message: "電子郵件已變更"
     phone_verified: "手機號碼已驗證"
+    email_verified: "電子郵件已驗證"
     verification_code: 驗證碼
     please_enter_verification_code: "請輸入驗證碼"
     resend_code: "重新發送"

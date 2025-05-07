@@ -110,6 +110,7 @@ ja:
     change_channel: 通知方式を変更する
   common:
     why_need_phone_number: ""
+    why_need_email: ""
     age: 年齢
     years_old: 歳
     default: デフォルト
@@ -302,7 +303,9 @@ ja:
         <br />
         LINEメッセージでお送りします
     phone_number_changed_message: "電話番号が変更されました"
+    email_changed_message: "メールアドレスが変更されました"
     phone_verified: "電話番号が確認されました"
+    email_verified: "メールアドレスが確認されました"
     verification_code: 確認コード
     please_enter_verification_code: "確認コードを入力してください"
     resend_code: "再送信"

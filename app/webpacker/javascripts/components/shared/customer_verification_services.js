@@ -14,7 +14,7 @@ export const CustomerVerificationServices = {
       },
       url: Routes.customer_verification_generate_verification_code_path({format: "json"}),
       data: {
-        customer_phone_number: data.customer_phone_number,
+        customer_email: data.customer_email,
         user_id: data.user_id
       },
       responseType: "json"
@@ -28,7 +28,7 @@ export const CustomerVerificationServices = {
         "X-CSRF-Token": Rails.csrfToken()
       },
       url: Routes.customer_verification_verify_code_path({format: "json"}),
-      data: _.pick(data, ['user_id', 'customer_phone_number', 'uuid', 'code']),
+      data: _.pick(data, ['user_id', 'customer_email', 'uuid', 'code']),
       responseType: "json"
     })
   },
