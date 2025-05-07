@@ -53,7 +53,7 @@ tw:
       reservation_restriction: 無限制
       customer_number: "最多%{customer_limit}位"
       line_tab: X
-      customer_notification: E-mail, 簡訊, LINE
+      customer_notification: E-mail, LINE
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O
@@ -72,7 +72,7 @@ tw:
       reservation_restriction: 無限制
       customer_number: 無限制
       line_tab: O
-      customer_notification: E-mail, 簡訊, LINE
+      customer_notification: E-mail, LINE
       booking_page_number: 無限制
       get_more_friends: O
       free_lesson: O

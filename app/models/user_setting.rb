@@ -20,9 +20,8 @@ class UserSetting < ApplicationRecord
     s.boolean :toruya_message_reply, default: false, null: false
     s.boolean :booking_options_menu_concept, default: true, null: false
     # default is email
-    # paid user can choose email, sms, line
-    # Paid user default change to sms
+    # paid user can choose email, line
     # line verified user change to line
-    s.string :customer_notification_channel, default: "email", null: false # email, sms, line
+    s.string :customer_notification_channel, default: "email", null: false # email, line
   end
 end

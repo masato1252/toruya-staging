@@ -24,9 +24,8 @@ module NotificationFallbackable
   def notification_priority_for(preferred_channel)
     case preferred_channel
     when "email", :email then %w[email]
-    when "sms", :sms then %w[sms email]
-    when "line", :line then %w[line sms email]
-    else %w[line sms email]
+    when "line", :line then %w[line email]
+    else %w[line email]
     end
   end
 
@@ -34,7 +33,6 @@ module NotificationFallbackable
   def send_method_available?(channel)
     case channel
     when "email", :email then available_to_send_email?
-    when "sms", :sms then available_to_send_sms?
     when "line", :line then available_to_send_line?
     end
   end
@@ -43,7 +41,6 @@ module NotificationFallbackable
   def send_notification_via(channel)
     case channel
     when "email", :email then notify_by_email
-    when "sms", :sms then notify_by_sms
     when "line", :line then notify_by_line
     end
   end

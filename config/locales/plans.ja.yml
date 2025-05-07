@@ -52,7 +52,7 @@ ja:
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       line_tab: 'X<br><a href="https://toruya.com/help/line_messages/#basic" target="_blank" style="font-size: 14px;">公式アプリをご利用ください</a>'
-      customer_notification: E-mail, SMS, LINE
+      customer_notification: E-mail, LINE
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O
@@ -71,7 +71,7 @@ ja:
       reservation_restriction: 無制限
       customer_number: 無制限
       line_tab: 無限制
-      customer_notification: E-mail, SMS, LINE
+      customer_notification: E-mail, LINE
       booking_page_number: 無制限
       get_more_friends:  O
       free_lesson:  O
