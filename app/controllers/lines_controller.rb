@@ -56,7 +56,7 @@ class LinesController < ActionController::Base
   def user_logout
     delete_user_bot_cookies(:social_service_user_id)
 
-    if params[:locale] == "tw"
+    if I18n.locale == "tw"
       redirect_to "https://toruya.tw"
     else
       redirect_to "https://toruya.com"

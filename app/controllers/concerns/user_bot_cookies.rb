@@ -17,6 +17,7 @@ module UserBotCookies
 
   def delete_user_bot_cookies(key)
     cookies.delete(prepend_key(key), domain: :all)
+    cookies.delete(prepend_key(key), domain: :manager)
   end
 
   def prepend_key(key)

@@ -83,7 +83,12 @@ class Lines::CustomersController < ActionController::Base
   helper_method :business_owner_id
 
   def set_locale
-    I18n.locale = current_owner.locale
+    I18n.locale = current_owner.locale || cookies[:locale] || I18n.default_locale
+    cookies[:locale] = {
+      value: I18n.locale,
+      domain: :all,
+      expires: 20.years.from_now
+    }
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
 end

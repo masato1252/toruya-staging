@@ -39,7 +39,12 @@ class Lines::UserBotController < ActionController::Base
   helper_method :current_user
 
   def set_locale
-    I18n.locale = params[:locale].presence || current_social_user&.locale || I18n.default_locale
+    I18n.locale = params[:locale].presence || current_social_user&.locale || cookies[:locale] || I18n.default_locale
+    cookies[:locale] = {
+      value: I18n.locale,
+      domain: :all,
+      expires: 20.years.from_now
+    }
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
 

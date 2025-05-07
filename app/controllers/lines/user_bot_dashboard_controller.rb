@@ -63,7 +63,12 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = params[:locale].presence || Current.business_owner&.locale || I18n.default_locale
+    I18n.locale = params[:locale].presence || Current.business_owner&.locale || cookies[:locale] || I18n.default_locale
+    cookies[:locale] = {
+      value: I18n.locale,
+      domain: :all,
+      expires: 20.years.from_now
+    }
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
 
