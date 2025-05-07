@@ -239,11 +239,11 @@
     </div>
 
     <div class="col-sm-6 px-0 hidden-xs preview-view">
-      <%= text_field_tag :booking_url, booking_page_url(@booking_page.slug), read_only: true, class: 'extend',
+      <%= text_field_tag :booking_url, booking_page_url(@booking_page.slug, subdomain: request.subdomain), read_only: true, class: 'extend',
         data: {
           controller: "clipboard",
           action: "click->clipboard#copy",
-          clipboard_text: booking_page_url(@booking_page.slug),
+          clipboard_text: booking_page_url(@booking_page.slug, subdomain: request.subdomain),
           clipboard_popup_text: t("common.copied")
         }
       %>
@@ -252,7 +252,7 @@
         <%= button_tag t("action.copy_code"), class: "btn btn-tarco", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") } %>
       </div>
       <div class="centerize margin-around">
-        <%= qrcode_img(booking_page_url(@booking_page.slug)) %>
+        <%= qrcode_img(booking_page_url(@booking_page.slug, subdomain: request.subdomain)) %>
       </div>
       <div class="fake-mobile-layout">
         <%= render "lines/user_bot/booking_pages/booking_page_preview", booking_page: @booking_page, booking_option: @booking_option %>
