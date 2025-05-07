@@ -38,6 +38,7 @@ class Lines::CustomersController < ActionController::Base
           domain: :all,
           expires: 20.years.from_now
         }
+        _id
       elsif params[:temp_encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:temp_encrypted_social_service_user_id])
 
@@ -45,6 +46,7 @@ class Lines::CustomersController < ActionController::Base
           value: _id,
           expires: 5.minutes
         }
+        _id
       elsif params[:social_service_user_id].present?
         params[:social_service_user_id]
       else
