@@ -13,12 +13,6 @@ Rails.application.routes.draw do
         get "booking_times"
       end
     end
-
-    scope module: :lines, path: :lines, as: :lines do
-      scope module: :customers, path: :customers, as: :customers do
-        devise_for :users, controllers: { omniauth_callbacks: "lines/user_bot/callbacks", sessions: "lines/user_bot/sessions", passwords: "lines/user_bot/passwords" }
-      end
-    end
   end
 
   constraints(->(req) { req.subdomain != 'booking' }) do
