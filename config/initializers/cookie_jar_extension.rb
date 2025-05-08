@@ -13,16 +13,16 @@ module CookieJarExtension
       ]
 
       cookie_names.each do |cookie_name|
-        # Clear for all domains
-        delete(cookie_name, domain: :all)
+        # Clear for all domains with all possible options
+        delete(cookie_name, domain: :all, path: '/', secure: true, httponly: true)
 
         # Clear for specific domains
         domains.each do |domain|
-          delete(cookie_name, domain: domain)
+          delete(cookie_name, domain: domain, path: '/', secure: true, httponly: true)
         end
 
         # Clear without domain (for current domain)
-        delete(cookie_name)
+        delete(cookie_name, path: '/', secure: true, httponly: true)
       end
     end
   end
