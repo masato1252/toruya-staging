@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  constraints subdomain: 'booking' do
-    get '/:id', to: 'booking_pages#show', as: :subdomain_booking_page
-    resources :booking_pages, only: [:show] do
-      member do
-        post "booking_reservation"
-        get "find_customer"
-        get "ask_confirmation_code"
-        get "confirm_code"
-        get "calendar"
-        get "booking_times"
-      end
-    end
-  end
+  # constraints subdomain: 'booking' do
+  #   get '/:id', to: 'booking_pages#show', as: :subdomain_booking_page
+  #   resources :booking_pages, only: [:show] do
+  #     member do
+  #       post "booking_reservation"
+  #       get "find_customer"
+  #       get "ask_confirmation_code"
+  #       get "confirm_code"
+  #       get "calendar"
+  #       get "booking_times"
+  #     end
+  #   end
+  # end
 
   mount ActionCable.server => '/cable'
   get "(/:locale)/userlogin", to: "lines#user_login", as: :user_login

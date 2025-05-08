@@ -49,7 +49,7 @@
       start_at: I18n.l(@booking_page.start_time, format: :date_with_wday),
       draft: @booking_page.draft,
       regions: regions,
-      url: request.subdomain == 'booking' ? subdomain_booking_page_url(@booking_page.slug) : booking_page_url(@booking_page.slug),
+      url: booking_page_url(@booking_page.slug),
       is_customer_address_required: @booking_page.customer_address_required,
       survey: @booking_page.survey ? SurveySerializer.new(@booking_page.survey).attributes_hash : nil,
     }),
