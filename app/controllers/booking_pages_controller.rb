@@ -14,6 +14,7 @@ class BookingPagesController < ActionController::Base
   layout "booking"
 
   def show
+    cookies.clear_across_domains(:oauth_social_account_id, :who)
     if !booking_page.user.subscription.active?
       render inline: t("common.no_service_warning_html")
       return
