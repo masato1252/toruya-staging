@@ -30,5 +30,6 @@ module ControllerHelpers
 
   def clean_previous_cookie(cookie_name)
     cookies.delete("current_scope_#{cookie_name}", domain: :all)
+    cookies.delete("current_scope_#{cookie_name}")
   end
 end

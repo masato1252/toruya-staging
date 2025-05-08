@@ -116,9 +116,11 @@ module ApplicationHelper
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
     cookies[:oauth_social_account_id] = {
       value: encrypted_id,
-      expires: 100.year
+      expires: 100.year,
+      domain: :all
     }
     cookies.delete(:who, domain: :all)
+    cookies.delete(:who)
 
     if social_account&.is_login_available?
       options.merge!(
@@ -154,7 +156,8 @@ module ApplicationHelper
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
     cookies[:who] = {
       value: encrypted_content,
-      expires: 100.year
+      expires: 100.year,
+      domain: :all,
     }
 
     options.merge!(
