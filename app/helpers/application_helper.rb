@@ -120,6 +120,7 @@ module ApplicationHelper
       domain: :all
     }
     cookies.delete(:who, domain: :all)
+    cookies.delete(:who, domain: :manager)
     cookies.delete(:who)
 
     if social_account&.is_login_available?
