@@ -120,7 +120,7 @@ module ApplicationHelper
       domain: :all
     }
     cookies.delete(:who, domain: :all)
-    cookies.delete(:who, domain: :manager)
+    cookies.delete(:who, domain: %w[.toruya.com manager.toruya.com booking.toruya.com])
     cookies.delete(:who)
 
     if social_account&.is_login_available?
