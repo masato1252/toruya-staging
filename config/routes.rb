@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
+
   constraints subdomain: 'booking' do
     get '/:id', to: 'booking_pages#show', as: :subdomain_booking_page
     resources :booking_pages, only: [] do
@@ -456,8 +458,6 @@ Rails.application.routes.draw do
         resources :social_user_messages, only: [:new, :create]
       end
     end
-
-    devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
 
     resource :member, only: [:show] do
       get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
