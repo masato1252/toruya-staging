@@ -207,6 +207,7 @@ module ViewHelpers
   def member_shop_ids
     @member_shop_ids ||= begin
       if cookies[:member_shops].nil?
+        cookies.clear_across_domains(:member_shops)
         cookies[:member_shops] = {
           value: manage_shop_options(include_user_own: true).map(&:shop_id).join(","),
           domain: :all

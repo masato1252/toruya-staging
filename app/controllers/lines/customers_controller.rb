@@ -16,6 +16,7 @@ class Lines::CustomersController < ActionController::Base
   def current_customer
     if params[:encrypted_customer_id].present?
       _id = MessageEncryptor.decrypt(params[:encrypted_customer_id])
+      cookies.clear_across_domains(:verified_customer_id)
       cookies[:verified_customer_id] = {
         value: _id,
         domain: :all,
@@ -33,6 +34,7 @@ class Lines::CustomersController < ActionController::Base
     social_user_id =
       if params[:encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:encrypted_social_service_user_id])
+        cookies.clear_across_domains(:line_social_user_id_of_customer)
         cookies[:line_social_user_id_of_customer] = {
           value: _id,
           domain: :all,
@@ -42,6 +44,7 @@ class Lines::CustomersController < ActionController::Base
       elsif params[:temp_encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:temp_encrypted_social_service_user_id])
 
+        cookies.clear_across_domains(:temp_line_social_user_id_of_customer)
         cookies[:temp_line_social_user_id_of_customer] = {
           value: _id,
           expires: 5.minutes

@@ -7,6 +7,7 @@ class MembersController < DashboardController
     @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
     if request.post?
+      cookies.clear_across_domains(:member_shops)
       cookies[:member_shops] = {
         value: params[:member_shops]&.join(",") || "",
         domain: :all
@@ -61,6 +62,7 @@ class MembersController < DashboardController
   private
 
   def set_current_dashboard_mode
+    cookies.clear_across_domains(:dashboard_mode)
     cookies[:dashboard_mode] = {
       value: "user",
       domain: :all

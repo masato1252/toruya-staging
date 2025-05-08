@@ -22,6 +22,7 @@ module ControllerHelpers
   end
 
   def set_up_previous_cookie(cookie_name, value)
+    cookies.clear_across_domains("current_scope_#{cookie_name}")
     cookies["current_scope_#{cookie_name}"] = {
       value: value,
       domain: :all
@@ -29,7 +30,6 @@ module ControllerHelpers
   end
 
   def clean_previous_cookie(cookie_name)
-    cookies.delete("current_scope_#{cookie_name}", domain: :all)
-    cookies.delete("current_scope_#{cookie_name}")
+    cookies.clear_across_domains("current_scope_#{cookie_name}")
   end
 end

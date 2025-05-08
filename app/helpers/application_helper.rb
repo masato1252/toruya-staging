@@ -114,14 +114,12 @@ module ApplicationHelper
   def line_login_url(social_account, oauth_redirect_to_url, *args)
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
+    cookies.clear_across_domains(:oauth_social_account_id, :who)
     cookies[:oauth_social_account_id] = {
       value: encrypted_id,
       expires: 100.year,
       domain: :all
     }
-    cookies.delete(:who, domain: :all)
-    cookies.delete(:who, domain: %w[.toruya.com manager.toruya.com booking.toruya.com])
-    cookies.delete(:who)
 
     if social_account&.is_login_available?
       options.merge!(
@@ -138,6 +136,7 @@ module ApplicationHelper
     options = args.extract_options!
     toruya_user = Current.business_owner.locale_is?(:tw) ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
+    cookies.clear_across_domains(:who)
     cookies[:who] = {
       value: encrypted_content,
       domain: :all,
@@ -155,6 +154,7 @@ module ApplicationHelper
     options = args.extract_options!
     toruya_user = params[:locale] == 'tw' ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
+    cookies.clear_across_domains(:who)
     cookies[:who] = {
       value: encrypted_content,
       expires: 100.year,

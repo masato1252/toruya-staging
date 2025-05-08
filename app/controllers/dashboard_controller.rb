@@ -24,6 +24,7 @@ class DashboardController < ActionController::Base
   def profile_required
     unless current_user.profile
       # default is stay in personal dashboard
+      cookies.clear_across_domains(:dashboard_mode)
       cookies[:dashboard_mode] = {
         value: "user",
         domain: :all

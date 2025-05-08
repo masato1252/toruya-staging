@@ -63,6 +63,7 @@ class CustomerVerificationController < ActionController::Base
       end
     end
 
+    cookies.clear_across_domains(:verified_customer_id)
     cookies[:verified_customer_id] = {
       value: customer.id,
       domain: :all,

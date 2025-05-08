@@ -8,6 +8,7 @@ module UserBotCookies
   end
 
   def write_user_bot_cookies(key, value)
+    cookies.clear_across_domains(prepend_key(key))
     cookies.encrypted[prepend_key(key)] = {
       value: value,
       domain: :all,
@@ -16,8 +17,7 @@ module UserBotCookies
   end
 
   def delete_user_bot_cookies(key)
-    cookies.delete(prepend_key(key), domain: :all)
-    cookies.delete(prepend_key(key))
+    cookies.clear_across_domains(prepend_key(key))
   end
 
   def prepend_key(key)

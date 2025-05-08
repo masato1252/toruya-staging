@@ -24,7 +24,6 @@ class OmniauthSetup
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
     who = @request.parameters["who"].presence || @request.cookies["who"]
-    Rollbar.info("LineLogin3", who: who ? MessageEncryptor.decrypt(who) : nil, oauth_social_account_id: @request.parameters["oauth_social_account_id"] || @request.cookies["oauth_social_account_id"])
 
     if who && MessageEncryptor.decrypt(who) == CallbacksController::TORUYA_USER
       {

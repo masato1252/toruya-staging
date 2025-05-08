@@ -121,8 +121,7 @@ class ReservationsController < DashboardController
     ]
 
     Rails.cache.delete(reservation_params_hash_cache_key)
-    cookies.delete(:reservation_form_hash, domain: :all)
-    cookies.delete(:reservation_form_hash)
+    cookies.clear_across_domains(:reservation_form_hash)
 
     if params[:customer_id]
       customer = super_user.customers.find(params[:customer_id])

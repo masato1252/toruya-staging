@@ -164,6 +164,7 @@ class BookingPagesController < ActionController::Base
       result = outcome.result
       customer = result[:customer]
 
+      cookies.clear_across_domains(:booking_customer_id)
       cookies[:booking_customer_id] = {
         value: customer&.id,
         domain: :all,
