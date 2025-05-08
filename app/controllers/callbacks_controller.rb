@@ -123,6 +123,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
           redirect_to lines_user_bot_settings_path(user.id, consultant_connect_result: consultant_connect_outcome.valid?)
         else
+          Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: param["oauth_redirect_to_url"])
           redirect_to Addressable::URI.new(path: param.delete("oauth_redirect_to_url")).to_s
         end
       elsif outcome.valid? && outcome.result.user.nil?
