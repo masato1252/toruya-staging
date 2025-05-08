@@ -19,6 +19,7 @@
   page_booking_options = @booking_page_options.filter { |booking_page_option| booking_page_option.booking_option&.bookable? }.map { |booking_page_option| booking_page_option_item(booking_page_option) }
   customer_info_hash = customer_info_as_json(@customer)
   booking_option_ids = @is_single_booking_option ? [custom_options(page_booking_options)[0][:id]] : (params[:booking_option_ids].present? ? params[:booking_option_ids].split(",").map(&:to_i) : [])
+  booking_url = request.subdomain == 'booking' ? subdomain_booking_page_url(@booking_page.slug) : booking_page_url(@booking_page.slug)
 %>
 
 <%= react_component("booking/booking_reservation_form_function", {
@@ -26,7 +27,7 @@
     timezone: Time.zone.tzinfo.name,
     toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
     social_account_add_friend_url: @social_account&.add_friend_url,
-    social_account_login_url: line_login_url(@social_account, booking_page_url(@booking_page.slug), customer_id: @customer&.id),
+    social_account_login_url: line_login_url(@social_account, booking_url, customer_id: @customer&.id),
     social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
     social_account_skippable: @booking_page.social_account_skippable,
     payment_solution: @booking_page.payment_solution,
@@ -49,7 +50,7 @@
       start_at: I18n.l(@booking_page.start_time, format: :date_with_wday),
       draft: @booking_page.draft,
       regions: regions,
-      url: request.subdomain == 'booking' ? subdomain_booking_page_url(@booking_page.slug) : booking_page_url(@booking_page.slug),
+      url: booking_url,
       is_customer_address_required: @booking_page.customer_address_required,
       survey: @booking_page.survey ? SurveySerializer.new(@booking_page.survey).attributes_hash : nil,
     }),
