@@ -122,6 +122,10 @@ module ApplicationHelper
     cookies.delete(:who, domain: :all)
     cookies.delete(:who, domain: %w[.toruya.com manager.toruya.com booking.toruya.com])
     cookies.delete(:who)
+    Rollbar.info("cookie who", {
+      cookies: cookies.to_h,
+      who: cookies[:who]
+    })
 
     if social_account&.is_login_available?
       options.merge!(
