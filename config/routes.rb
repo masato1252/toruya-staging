@@ -13,11 +13,11 @@ Rails.application.routes.draw do
         get "booking_times"
       end
     end
+  end
 
-    scope module: :lines, path: :lines, as: :lines do
-      scope module: :customers, path: :customers, as: :customers do
-        devise_for :users, controllers: { omniauth_callbacks: "lines/user_bot/callbacks", sessions: "lines/user_bot/sessions", passwords: "lines/user_bot/passwords" }
-      end
+  scope module: :lines, path: :lines, as: :lines do
+    scope module: :user_bot, path: :user_bot, as: :user_bot do
+      devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
     end
   end
 
@@ -463,7 +463,6 @@ Rails.application.routes.draw do
       end
     end
 
-    devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
 
     resource :member, only: [:show] do
       get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
