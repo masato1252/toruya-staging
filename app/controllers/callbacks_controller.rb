@@ -74,6 +74,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
   def line
     param = request.env["omniauth.params"]
 
+    Rollbar.info("LineLogin1", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
+
     if param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
@@ -133,7 +135,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_path
       end
     else
-      Rollbar.info("LineLogin", who: MessageEncryptor.decrypt(param["who"]), oauth_redirect_to_url: param["oauth_redirect_to_url"])
+      Rollbar.info("LineLogin2", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
       outcome = ::SocialCustomers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
