@@ -273,10 +273,7 @@ class ReservationsController < DashboardController
   end
 
   def set_current_dashboard_mode
-    cookies[:dashboard_mode] = {
-      value: shop.id,
-      domain: :all
-    }
+    cookies.set_across_domains(:dashboard_mode, shop.id, expires: 20.years.from_now)
   end
 
   def reservation_params_hash

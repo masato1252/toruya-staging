@@ -157,11 +157,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
       if outcome.result.social_user_id.present?
         cookies.clear_across_domains(:line_social_user_id_of_customer)
-        cookies[:line_social_user_id_of_customer] = {
-          value: outcome.result.social_user_id,
-          domain: :all,
-          expires: 20.years.from_now
-        }
+        cookies.set_across_domains(:line_social_user_id_of_customer, outcome.result.social_user_id, expires: 20.years.from_now)
       end
 
       redirect_to uri.to_s

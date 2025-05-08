@@ -279,10 +279,8 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def set_current_dashboard_mode
-    cookies[:dashboard_mode] = {
-      value: shop.id,
-      domain: :all
-    }
+    cookies.clear_across_domains(:dashboard_mode)
+    cookies.set_across_domains(:dashboard_mode, shop.id, expires: 20.years.from_now)
   end
 
   def reservation_params_hash

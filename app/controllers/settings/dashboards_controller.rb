@@ -32,11 +32,8 @@ class Settings::DashboardsController < ActionController::Base
 
   def hide_tour_warning
     cookies.clear_across_domains(:basic_settings_tour_warning_hidden)
-    cookies[:basic_settings_tour_warning_hidden] = {
-      value: true,
-      expires: Time.current.advance(months: 1),
-      domain: :all
-    }
+    cookies.set_across_domains(:basic_settings_tour_warning_hidden, true, expires: Time.current.advance(months: 1))
+
 
     redirect_to member_path
   end

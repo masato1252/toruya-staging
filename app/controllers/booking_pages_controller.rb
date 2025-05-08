@@ -166,11 +166,7 @@ class BookingPagesController < ActionController::Base
       customer = result[:customer]
 
       cookies.clear_across_domains(:booking_customer_id)
-      cookies[:booking_customer_id] = {
-        value: customer&.id,
-        domain: :all,
-        expires: 20.years.from_now
-      }
+      cookies.set_across_domains(:booking_customer_id, customer&.id, expires: 20.years.from_now)
 
       Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
 

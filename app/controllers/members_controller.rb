@@ -8,10 +8,8 @@ class MembersController < DashboardController
 
     if request.post?
       cookies.clear_across_domains(:member_shops)
-      cookies[:member_shops] = {
-        value: params[:member_shops]&.join(",") || "",
-        domain: :all
-      }
+      cookies.set_across_domains(:member_shops, params[:member_shops]&.join(",") || "", expires: 20.years.from_now)
+
 
       if params[:reservation_date]
         redirect_to date_member_path(reservation_date: @date.to_fs(:date))
@@ -63,9 +61,6 @@ class MembersController < DashboardController
 
   def set_current_dashboard_mode
     cookies.clear_across_domains(:dashboard_mode)
-    cookies[:dashboard_mode] = {
-      value: "user",
-      domain: :all
-    }
+    cookies.set_across_domains(:dashboard_mode, "user", expires: 20.years.from_now)
   end
 end

@@ -17,11 +17,7 @@ class Lines::CustomersController < ActionController::Base
     if params[:encrypted_customer_id].present?
       _id = MessageEncryptor.decrypt(params[:encrypted_customer_id])
       cookies.clear_across_domains(:verified_customer_id)
-      cookies[:verified_customer_id] = {
-        value: _id,
-        domain: :all,
-        expires: 20.years.from_now
-      }
+      cookies.set_across_domains(:verified_customer_id, _id, expires: 20.years.from_now)
       current_owner.customers.find_by(id: _id)
     else
       current_social_customer&.customer || current_owner.customers.find_by(id: cookies[:verified_customer_id])
@@ -35,11 +31,7 @@ class Lines::CustomersController < ActionController::Base
       if params[:encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:encrypted_social_service_user_id])
         cookies.clear_across_domains(:line_social_user_id_of_customer)
-        cookies[:line_social_user_id_of_customer] = {
-          value: _id,
-          domain: :all,
-          expires: 20.years.from_now
-        }
+        cookies.set_across_domains(:line_social_user_id_of_customer, _id, expires: 20.years.from_now)
         _id
       elsif params[:temp_encrypted_social_service_user_id].present?
         _id = MessageEncryptor.decrypt(params[:temp_encrypted_social_service_user_id])
@@ -89,11 +81,8 @@ class Lines::CustomersController < ActionController::Base
 
   def set_locale
     I18n.locale = current_owner.locale || cookies[:locale] || I18n.default_locale
-    cookies[:locale] = {
-      value: I18n.locale,
-      domain: :all,
-      expires: 20.years.from_now
-    }
+    cookies.clear_across_domains(:locale)
+    cookies.set_across_domains(:locale, I18n.locale, expires: 20.years.from_now)
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
   end
 end

@@ -9,11 +9,7 @@ module UserBotCookies
 
   def write_user_bot_cookies(key, value)
     cookies.clear_across_domains(prepend_key(key))
-    cookies.encrypted[prepend_key(key)] = {
-      value: value,
-      domain: :all,
-      expires: 20.years.from_now
-    }
+    cookies.encrypted[prepend_key(key)] = { value: value, expires: 20.years.from_now }
   end
 
   def delete_user_bot_cookies(key)

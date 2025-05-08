@@ -64,11 +64,8 @@ class CustomerVerificationController < ActionController::Base
     end
 
     cookies.clear_across_domains(:verified_customer_id)
-    cookies[:verified_customer_id] = {
-      value: customer.id,
-      domain: :all,
-      expires: 20.years.from_now
-    }
+    cookies.set_across_domains(:verified_customer_id, customer.id, expires: 20.years.from_now)
+
 
     render json: {
       customer_id: customer.id,

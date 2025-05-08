@@ -115,8 +115,8 @@ module ApplicationHelper
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
     cookies.clear_across_domains(:oauth_social_account_id, :who)
-    cookies[:oauth_social_account_id] = { value: encrypted_id, expires: 100.year, domain: :all }
-    cookies[:oauth_social_account_id] = { value: encrypted_id, expires: 100.year }
+    cookies.set_across_domains(:oauth_social_account_id, encrypted_id, expires: 100.year)
+    cookies.set_across_domains(:who, encrypted_content, expires: 1.day.ago)
 
     if social_account&.is_login_available?
       options.merge!(
@@ -134,8 +134,7 @@ module ApplicationHelper
     toruya_user = Current.business_owner.locale_is?(:tw) ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
     cookies.clear_across_domains(:who)
-    cookies[:who] = { value: encrypted_content, domain: :all, expires: 100.year }
-    cookies[:who] = { value: encrypted_content, expires: 100.year }
+    cookies.set_across_domains(:who, encrypted_content, expires: 100.year)
 
     options.merge!(
       prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content, existing_owner_id: root_user.id, locale: params[:locale]
@@ -149,11 +148,7 @@ module ApplicationHelper
     toruya_user = params[:locale] == 'tw' ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
     cookies.clear_across_domains(:who)
-    cookies[:who] = {
-      value: encrypted_content,
-      expires: 100.year,
-      domain: :all,
-    }
+    cookies.set_across_domains(:who, encrypted_content, expires: 100.year)
 
     options.merge!(
       prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content, locale: params[:locale]

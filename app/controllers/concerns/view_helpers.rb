@@ -208,10 +208,7 @@ module ViewHelpers
     @member_shop_ids ||= begin
       if cookies[:member_shops].nil?
         cookies.clear_across_domains(:member_shops)
-        cookies[:member_shops] = {
-          value: manage_shop_options(include_user_own: true).map(&:shop_id).join(","),
-          domain: :all
-        }
+        cookies.set_across_domains(:member_shops, manage_shop_options(include_user_own: true).map(&:shop_id).join(","), expires: 20.years.from_now)
       end
 
       @member_shop_ids ||= cookies[:member_shops].split(",") & manage_shop_options(include_user_own: true).map { |o| o.shop_id.to_s }

@@ -22,10 +22,7 @@ class SettingsController < ActionController::Base
     unless current_user.profile
       # default is stay in personal dashboard
       cookies.clear_across_domains(:dashboard_mode)
-      cookies[:dashboard_mode] = {
-        value: "user",
-        domain: :all
-      }
+      cookies.set_across_domains(:dashboard_mode, "user", expires: 20.years.from_now)
       redirect_to new_profile_path
     end
   end
