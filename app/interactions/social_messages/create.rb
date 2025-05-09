@@ -66,6 +66,7 @@ module SocialMessages
           Notifiers::Users::LineSettingsVerified.perform_debounce(receiver: social_user.user)
 
           if social_account.line_settings_verified?
+            social_user.user_setting.update(customer_notification_channel: "line")
             SocialAccounts::RichMenus::CustomerReservations.perform_debounce(social_account: social_account)
           end
         end
