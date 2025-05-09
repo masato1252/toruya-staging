@@ -63,9 +63,9 @@ module SocialMessages
 
         # Shop owner customer self send a confirmation message to toruya shop owner user
         if social_customer.is_owner && content == social_user.social_service_user_id && social_customer.customer
-          Notifiers::Users::LineSettings::VerifiedMessage.perform_later!(receiver: social_user)
-          Notifiers::Users::LineSettings::VerifiedVideo.perform_later!(receiver: social_user)
-          Notifiers::Users::LineSettingsVerified.perform_at(schedule_at: 1.minute.from_now, receiver: social_user.user)
+          Notifiers::Users::LineSettings::VerifiedMessage.perform_debounce(receiver: social_user)
+          Notifiers::Users::LineSettings::VerifiedVideo.perform_debounce(receiver: social_user)
+          Notifiers::Users::LineSettingsVerified.perform_debounce(receiver: social_user.user)
 
           if social_account.line_settings_verified?
             SocialAccounts::RichMenus::CustomerReservations.perform_debounce(social_account: social_account)
