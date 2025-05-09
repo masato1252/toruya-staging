@@ -10,8 +10,6 @@ https://manager.toruya.com/tw/userlogin"
     line_api_settings_finished:
       message: "LINE連接設置已完成！\n\n接下來，請點擊我們剛剛發送的「開始確認設置」按鈕，確認LINE連接是否正確。"
       card_button: "開始確認設置"
-    line_api_settings_verified:
-      message: "恭喜所有LINE設定已完成。"
     line_verification_failed:
       message: "訊息測試發送失敗。\n\nLINE Developers上的設置可能有誤。\n\n請在LINE Developers上確認以下幾點：\n\n✅LINE登入是否在與Messaging API相同的提供者上？\n✅LINE登入的「已連結的LINE官方帳號」中顯示的以「＠」開頭的字符是否與Toruya連接的Messaging API的基本ID相同？\n\n在LINE Developers上重新設置後，請從Toruya的設置畫面點擊「操作測試」按鈕，再次進行測試。"
     shop_settings_reminder:

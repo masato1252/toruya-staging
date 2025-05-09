@@ -10,8 +10,6 @@ https://manager.toruya.com/userlogin"
     line_api_settings_finished:
       message: "LINE連携の設定が完了しました！\n\n次に、今お送りした「設定確認を始める」ボタンをクリックして、LINE連携が正しくできているか確認してください。"
       card_button: "設定確認を始める"
-    line_api_settings_verified:
-      message: "LINE連携の設定が完了しました！\n\nユーザーメニューからLINEマーケティングを始めましょう。\n\n💡オフィシャルYouTube\nToruyaの使い方や活用法、onLINE集客の方法などを解説しています。\nhttps://www.youtube.com/channel/UCXgU7ZUCDSEQMUp85WeyR0g?openExternalBrowser=1"
     line_verification_failed:
       message: "メッセージのテスト送信に失敗しました。\n\nLINEデベロッパーズ上の設定が間違っている可能性があります。\n\n以下の点をLINEデベロッパーズで確認してください。\n\n✅LINEログインが、Messaging APIと同じプロバイダ上にありますか？\n✅LINEログインの「リンクされたLINE公式アカウント」に表示されている「＠」から始まる文字は、Toruyaと連携したMessaging APIのベーシックIDと同じですか？\n\nLINEデベロッパーズで設定し直せたら、Toruyaの設定画面から「動作テスト」ボタンをクリックして、もう一度テストし直してください。"
     shop_settings_reminder:
