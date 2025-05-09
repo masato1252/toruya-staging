@@ -248,7 +248,9 @@ class User < ApplicationRecord
   end
 
   def message_template_variables
-    {}
+    {
+      plan_url: Rails.application.routes.url_helpers.lines_user_bot_settings_plans_url(business_owner_id: id, encrypted_user_id: MessageEncryptor.encrypt(id, expires_at: 2.week.from_now))
+    }
   end
 
   def hi_message
