@@ -39,6 +39,7 @@ export const CustomerIdentification = ({
   return (
     <div className="margin-around">
       <CustomerVerificationForm
+        verification_required={true}
         setCustomerValues={setCustomerValues}
         customerValues={customer_values}
         found_customer={customer_values.customer_verified}
