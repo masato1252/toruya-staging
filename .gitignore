@@ -21,3 +21,5 @@
 yarn-debug.log*
 .yarn-integrity
 dump.rdb
+.solargraph.yml
+.vscode
