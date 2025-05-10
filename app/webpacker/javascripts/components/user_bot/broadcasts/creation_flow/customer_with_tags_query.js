@@ -3,7 +3,7 @@ import _ from "lodash"
 
 import I18n from 'i18n-js/index.js.erb';
 
-const CustomerWithTagsQuery = ({customer_tags, customers_count, query, setQuery}) => {
+const CustomerWithTagsQuery = ({customer_tags, customers_count, query, setQuery, props}) => {
     return (
       <>
         <div className="margin-around centerize">

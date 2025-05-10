@@ -70,6 +70,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
       case "customers_with_birthday":
         return (
           <CustomerWithBirthdayQuery
+            props={props}
             customers_count={customers_count}
             query={query}
             setQuery={(query_payload) => {
@@ -86,6 +87,7 @@ const ProductSelectionStep = ({next, step, prev}) => {
       case "customers_with_tags":
         return (
           <CustomerWithTagsQuery
+            props={props}
             customer_tags={props.customer_tags}
             customers_count={customers_count}
             query={query}
