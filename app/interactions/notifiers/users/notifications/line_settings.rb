@@ -25,15 +25,7 @@ module Notifiers
         private
 
         def deliverable
-          if receiver.social_account&.line_settings_finished?
-            false
-          else
-            if Rails.env.production?
-              SlackClient.send(channel: 'toruya_users_support', text: "🚑 user: #{receiver.id}, doesn't finished their line setting yet. #{url_helpers.admin_chats_url(user_id: receiver.id)}")
-            end
-
-            true
-          end
+          !receiver.social_account&.line_settings_finished?
         end
 
         self.nth_time_scenario = ::CustomMessages::Users::Template::NO_LINE_SETTINGS
