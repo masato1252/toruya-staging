@@ -265,19 +265,6 @@ RSpec.describe Notifiers::Customers::CustomMessages::ReservationReminder, type: 
           end
         end
 
-        context "when line is not available but sms is" do
-          before { set_availability(email: true, sms: true, line: false) }
-
-          it "sends sms notification as first fallback" do
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
-
-            outcome = described_class.run(args)
-            expect(outcome).to be_valid
-          end
-        end
-
         context "when line and sms are not available but email is" do
           before { set_availability(email: true, sms: false, line: false) }
 

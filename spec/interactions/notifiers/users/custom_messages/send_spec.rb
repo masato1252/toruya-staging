@@ -54,7 +54,7 @@ RSpec.describe Notifiers::Users::CustomMessages::Send, :with_line do
       it "does NOT sends line" do
         expect {
           outcome
-        }.not_to change {
+        }.to not_change {
           SocialUserMessage.where(
             social_user: receiver.social_user,
             scenario: custom_message.scenario,

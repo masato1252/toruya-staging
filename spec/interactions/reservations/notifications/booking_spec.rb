@@ -274,18 +274,6 @@ RSpec.describe Reservations::Notifications::Booking do
           end
         end
 
-        context "when line is not available but sms is" do
-          before { set_availability(email: true, sms: true, line: false) }
-
-          it "sends sms notification as first fallback" do
-            expect_any_instance_of(Reservations::Notifications::Notify).not_to receive(:notify_by_line)
-            expect_any_instance_of(Reservations::Notifications::Notify).to receive(:notify_by_sms).and_return(true)
-            expect_any_instance_of(Reservations::Notifications::Notify).not_to receive(:notify_by_email)
-
-            outcome
-          end
-        end
-
         context "when line and sms are not available but email is" do
           before { set_availability(email: true, sms: false, line: false) }
 

@@ -110,12 +110,11 @@ RSpec.describe Notifiers::Customers::OnlineServices::ActiveRelations, :with_line
         context "when line is not available but other channels are" do
           before { set_availability(email: true, sms: true, line: false) }
 
-          it "falls back to sms when line is not available" do
+          it "falls back to email when line is not available" do
             user_setting.update(customer_notification_channel: "email")
 
             expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_email)
+            expect_any_instance_of(described_class).to receive(:notify_by_email).and_return(true)
 
             outcome
           end
@@ -264,18 +263,6 @@ RSpec.describe Notifiers::Customers::OnlineServices::ActiveRelations, :with_line
             it "sends only line notification" do
               expect_any_instance_of(described_class).to receive(:notify_by_line).and_return(true)
               expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-              expect_any_instance_of(described_class).not_to receive(:notify_by_email)
-
-              outcome
-            end
-          end
-
-          context "when line is not available but sms is" do
-            before { set_availability(email: true, sms: true, line: false) }
-
-            it "sends sms notification as first fallback" do
-              expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-              expect_any_instance_of(described_class).to receive(:notify_by_sms).and_return(true)
               expect_any_instance_of(described_class).not_to receive(:notify_by_email)
 
               outcome

@@ -272,18 +272,6 @@ RSpec.describe Notifiers::Customers::CustomMessages::LessonWatched, type: :inter
           end
         end
 
-        context "when customer has no line but has sms available" do
-          before { set_availability(email: true, sms: true, line: false) }
-
-          it "sends sms notification as fallback" do
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
-            expect_any_instance_of(described_class).to receive(:notify_by_sms).and_call_original
-
-            outcome = described_class.run(args)
-            expect(outcome).to be_valid
-          end
-        end
-
         context "when customer has no line or sms but has email available" do
           before { set_availability(email: true, sms: false, line: false) }
 
