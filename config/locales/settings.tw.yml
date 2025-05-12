@@ -502,9 +502,9 @@ tw:
         start_at_title: 開始銷售
         sale_end: 結束銷售
         end_at_title: 結束銷售
-        note_label: 說明及注意事項
-        memo_title: 說明及注意事項
-        note_hint: 顯示給客戶有關此價格預約的注意事項。
+        note_label: 說明
+        memo_title: 說明
+        note_hint: 顯示給客戶有關此預約項目的說明。
         delete_option: 刪除項目
         from_purchase: 購買後
         after_month: 個月後

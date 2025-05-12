@@ -7,12 +7,16 @@ import { CommonServices } from "user_bot/api"
 import { SelectOptions, BottomNavigationBar, TopNavigationBar,CircleButtonWithWord, TicketOptionsFields, CheckboxSearchFields } from "shared/components"
 import { responseHandler } from "libraries/helper";
 import ExistingMenuField from "components/user_bot/booking_options/existing_menu_field";
+import TextareaAutosize from 'react-autosize-textarea';
 
 const NewMenuOptionFields = ({register}) => {
   return (
     <>
       <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</div>
-      <input ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
+      <input autoFocus={true} ref={register({ required: true })} name="new_menu_name" className="extend" type="text" />
+
+      <div className="field-header">{I18n.t("settings.booking_option.form.note_label")}</div>
+      <TextareaAutosize ref={register} name="new_memo" placeholder={I18n.t("settings.booking_option.form.note_hint")} style={{ minHeight: 20 }} rows="2" colos="40" className="extend" />
 
       <div className="field-header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</div>
       <label className="field-row flex-start">

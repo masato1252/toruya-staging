@@ -6,6 +6,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, CheckboxSearchFields } from "shared/components"
 import { BookingOptionServices } from "user_bot/api"
@@ -178,7 +179,7 @@ const BookingOptionEdit =({props}) => {
       case "memo":
         return (
           <div className="field-row column-direction">
-            <textarea autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.note_hint} rows="4" colos="40" className="extend" />
+            <TextareaAutosize autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.note_hint} style={{ minHeight: 20 }} rows="2" colos="40" className="extend" />
           </div>
         );
       case "menu_required_time":

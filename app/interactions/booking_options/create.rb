@@ -8,6 +8,7 @@ module BookingOptions
 
     # For adding a new menu
     string :new_menu_name, default: nil
+    string :new_memo, default: nil
     integer :new_menu_minutes, default: nil
     integer :new_menu_price, default: nil
     boolean :new_menu_online_state, default: false
@@ -60,6 +61,7 @@ module BookingOptions
             ticket_quota: ticket_quota,
             ticket_expire_month: ticket_expire_month,
             tax_include: true,
+            memo: new_memo,
             menus: {
               "0" => { 'value' => menu.id, "priority" => 0, "required_time" => menu.minutes },
             }
