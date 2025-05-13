@@ -295,7 +295,7 @@ export const CustomerInfoForm = ({
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !customer_last_name || !customer_first_name }
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
