@@ -69,4 +69,12 @@ class CustomerPayment < ApplicationRecord
   rescue JSON::ParserError, ActionView::Template::Error
     nil
   end
+
+  def invoice_id
+    if stripe_connect? && stripe_charge_details.present?
+      "Stripe Invoice ID: #{stripe_charge_details.dig("data", "object", "number")}"
+    end
+  rescue => e
+    nil
+  end
 end

@@ -53,6 +53,7 @@
           <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %> <%= "(#{payment.memo})"if payment.memo.present? %>
         <% end %>
         <%= I18n.l(payment.charge_at || payment.created_at) %>
+        <%= payment.invoice_id %>
       </span>
       <% if @relation.online_service.recurring_charge_required? %>
         <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id]), class: "btn btn-yellow" if !@is_owner && payment.failed? && !@relation.payment_legal_to_access? %>
