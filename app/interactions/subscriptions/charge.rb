@@ -67,7 +67,7 @@ module Subscriptions
                 end
 
                 SlackClient.send(channel: 'new_paid_users', text: text)
-              elsif manual
+              elsif manual && plan.premium_level?
                 text = "💭 `🎉 user_id: #{user.id}` #{"<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|chat link>"} user upgraded"
                 SlackClient.send(channel: 'new_paid_users', text: text)
               else
