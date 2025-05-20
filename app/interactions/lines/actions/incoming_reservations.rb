@@ -23,7 +23,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
       action_templates = [
         LineActions::Uri.new(
           label: I18n.t("line.actions.label.reservation_info"),
-          url: reservation.booking_info_url,
+          url: reservation_customer.booking_info_url,
           btn: "secondary",
           key: social_customer.social_rich_menu_key
         ).template,
