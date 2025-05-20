@@ -35,14 +35,8 @@ class Api::ImagesController < ApplicationController
         )
       end
 
-      # Generate a permanent URL for the image
-      image_url = if Rails.env.production?
-        # Use CloudFront or S3 public URL in production
-        blob.service_url(expires_in: nil)
-      else
-        # Use local URL in development
-        url_for(blob)
-      end
+      # Generate URL for the image
+      image_url = url_for(blob)
 
       render json: { success: true, data: { link: image_url } }
     else
