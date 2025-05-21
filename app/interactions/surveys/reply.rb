@@ -62,8 +62,6 @@ module Surveys
               question_description: question_description
             )
 
-            Notifiers::Customers::Surveys::ActivityPendingResponse.perform_later(survey_response: survey_response, receiver: owner)
-            Notifiers::Users::Surveys::ActivityPendingResponse.perform_later(survey_response: survey_response, receiver: survey.user)
           else
             # For single selection and text questions
             option_content = answer[:survey_option_ids]&.first ?
@@ -78,9 +76,15 @@ module Surveys
               text_answer: answer[:text_answer].presence
             )
 
-            Notifiers::Customers::Surveys::SurveyPendingResponse.perform_later(survey_response: survey_response, receiver: owner)
           end
         end
+      end
+
+      if survey_response.is_activity?
+        Notifiers::Customers::Surveys::ActivityPendingResponse.perform_later(survey_response: survey_response, receiver: owner)
+        Notifiers::Users::Surveys::ActivityPendingResponse.perform_later(survey_response: survey_response, receiver: survey.user)
+      else
+        Notifiers::Customers::Surveys::SurveyPendingResponse.perform_later(survey_response: survey_response, receiver: owner)
       end
 
       survey_response
