@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { LocalStorageManager } from 'libraries/local_storage';
 
 import SurveyForm from 'components/shared/survey/form';
 import SurveyResponsePreview from 'components/shared/survey/response_preview';
@@ -14,24 +15,73 @@ import CustomerIdentification from "components/lines/customer_identifications"
 // The SurveyForm -> SurveyResponse -> LineIdentificationView(If line_login_required is true AND social_customer.social_user_id is nil) -> CustomerIdentification(If line_login_required is false and social_customer.social_user_id is not nil) -> Final Success Page
 
 const SURVEY_ANSWERS_KEY = 'survey_answers';
+const EXPIRATION_MINUTES = 30;
+
+// Move getInitialAnswers outside component
+const getInitialAnswers = () => {
+  return LocalStorageManager.getWithExpiry(SURVEY_ANSWERS_KEY) || [];
+};
 
 const SurveyShow = ({ props }) => {
   const { social_user_id, customer_id, had_address } = props.social_customer;
   const [identified_customer, setIdentifiedCustomer] = useState(customer_id)
-  const [surveyAnswers, setSurveyAnswers] = useState(getInitialAnswers);
+  const [surveyAnswers, setSurveyAnswers] = useState([]);
   const [answersConfirmed, setAnswersConfirmed] = useState(false);
   const [replySuccess, setReplySuccess] = useState(false);
   const [error, setError] = useState("");
   const [step, setStep] = useState('survey');
 
-  // Initialize from localStorage if available
-  const getInitialAnswers = () => {
-    try {
-      const stored = localStorage.getItem(SURVEY_ANSWERS_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch (e) {
-      return [];
+  // Initialize answers on component mount
+  useEffect(() => {
+    const initialAnswers = getInitialAnswers();
+    if (initialAnswers.length > 0) {
+      setSurveyAnswers(initialAnswers);
+      if (areAllRequiredQuestionsAnswered(initialAnswers)) {
+        setStep(getNextStep());
+      }
     }
+  }, []);
+
+  useEffect(() => {
+    if (step === 'final') {
+      handleSubmitSurvey(surveyAnswers);
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (answersConfirmed) {
+      setStep(getNextStep());
+    }
+  }, [answersConfirmed]);
+
+  const handleSubmitSurvey = async (formattedAnswers) => {
+    const [error, response] = await CommonServices.create({
+      url: Routes.surveys_path({ slug: props.survey.slug }),
+      data: { survey_answers: formattedAnswers }
+    });
+
+    if (error) {
+      setReplySuccess(false);
+      setError(error.response.data.error_message)
+    } else {
+      setReplySuccess(true);
+    }
+
+    LocalStorageManager.remove(SURVEY_ANSWERS_KEY);
+    responseHandler(error, response)
+  }
+
+  // SurveyForm submit handler
+  const handleSurveySubmit = async (formattedAnswers) => {
+    setSurveyAnswers(formattedAnswers);
+    LocalStorageManager.setWithExpiry(SURVEY_ANSWERS_KEY, formattedAnswers, EXPIRATION_MINUTES);
+    setStep(getNextStep());
+  };
+
+  // CustomerIdentification completion handler
+  const handleCustomerIdentified = (customer) => {
+    setIdentifiedCustomer(customer.customer_id)
+    setStep('final');
   };
 
   // Helper to determine next step after survey
@@ -64,61 +114,6 @@ const SurveyShow = ({ props }) => {
           return true;
       }
     });
-  };
-
-  // On mount, auto-jump to correct step if answers exist
-  useEffect(() => {
-    if (surveyAnswers && surveyAnswers.length > 0) {
-      if (areAllRequiredQuestionsAnswered(surveyAnswers)) {
-        setStep(getNextStep());
-      } else {
-        setStep('survey');
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.survey]);
-
-  useEffect(() => {
-    if (step === 'final') {
-      handleSubmitSurvey(surveyAnswers);
-    }
-  }, [step]);
-
-  useEffect(() => {
-    if (answersConfirmed) {
-      setStep(getNextStep());
-    }
-  }, [answersConfirmed]);
-
-  const handleSubmitSurvey = async (formattedAnswers) => {
-    const [error, response] = await CommonServices.create({
-      url: Routes.surveys_path({ slug: props.survey.slug }),
-      data: { survey_answers: formattedAnswers }
-    });
-
-    if (error) {
-      setReplySuccess(false);
-      setError(error.response.data.error_message)
-    } else {
-      setReplySuccess(true);
-    }
-
-    responseHandler(error, response)
-  }
-
-  // SurveyForm submit handler
-  const handleSurveySubmit = async (formattedAnswers) => {
-    setSurveyAnswers(formattedAnswers);
-    localStorage.setItem(SURVEY_ANSWERS_KEY, JSON.stringify(formattedAnswers));
-    setStep(getNextStep());
-    // Optionally, send answers to backend here
-  };
-
-  // CustomerIdentification completion handler
-  const handleCustomerIdentified = (customer) => {
-    setIdentifiedCustomer(customer.customer_id)
-    setStep('final');
-    localStorage.removeItem(SURVEY_ANSWERS_KEY);
   };
 
   // Render step
