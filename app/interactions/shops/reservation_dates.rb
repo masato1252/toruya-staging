@@ -6,7 +6,7 @@ module Shops
     object :date_range, class: Range
 
     def execute
-      shop.reservations.uncanceled.where("reservations.start_time" => date_range).pluck(:start_time).map { |start_time| start_time.to_date }
+      shop.reservations.uncanceled.where("reservations.start_time" => date_range).map(&:dates).flatten.uniq
     end
   end
 end

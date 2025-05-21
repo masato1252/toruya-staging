@@ -25,7 +25,7 @@ class Schedules::Events < ActiveInteraction::Base
       open_schedules = open_schedules.where("start_time <= ? and end_time >= ?", month_date.end_of_month, month_date.beginning_of_month)
       booking_page_holder_schedules = booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", month_date.beginning_of_month, month_date.end_of_month)
     else
-      reservations = reservations.in_date(date)
+      reservations = reservations.where("start_time <= ? and end_time >= ?", date.end_of_day, date.beginning_of_day)
       off_schedules = off_schedules.where("start_time <= ? and end_time >= ?", date.end_of_day, date.beginning_of_day)
       open_schedules = open_schedules.where("start_time <= ? and end_time >= ?", date.end_of_day, date.beginning_of_day)
       booking_page_holder_schedules = booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", date.beginning_of_day, date.end_of_day)

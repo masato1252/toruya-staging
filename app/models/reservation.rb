@@ -193,6 +193,10 @@ class Reservation < ApplicationRecord
     survey_activity_id.present?
   end
 
+  def dates
+    (start_time.to_date..end_time.to_date).to_a
+  end
+
   private
 
   def end_time_larger_than_start_time
