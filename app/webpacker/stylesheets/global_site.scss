@@ -217,7 +217,7 @@ input[type="file"],
   border-radius: 4px;
   margin: 0 3px;
   padding: 8px;
-  font-size: 14px;
+  font-size: 16px;
   min-height: 38px;
 
   &.extend {
@@ -348,5 +348,5 @@ textarea {
 
 // overwrite rc-time-picker-input default style
 .rc-time-picker-input {
-  width: 56px !important;
+  width: 60px !important;
 }

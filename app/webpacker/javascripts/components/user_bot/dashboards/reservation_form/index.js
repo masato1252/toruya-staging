@@ -229,16 +229,16 @@ const Form = () => {
               control={control}
               defaultValue={watch("start_time_time_part")}
             />
+            {startTimeError()}
           </span>
-          {startTimeError()}
         </div>
         <div className="field-row" >
           <span>{i18n.end_time}</span>
           <span>
             {end_at() ? end_at().locale('en').format("HH:mm") : i18n.no_ending_time_message}
+            {displayIntervalOverlap()}
+            {endTimeError()}
           </span>
-          {displayIntervalOverlap()}
-          {endTimeError()}
         </div>
 
         <div className="field-row" >
