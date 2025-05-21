@@ -5,6 +5,8 @@ require "line_client"
 class Lines::Actions::IncomingReservations < ActiveInteraction::Base
   PENDING_ASSET_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/reservation_pending.png"
   ACCEPTED_ASSET_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/reservation_reserved.png"
+  TW_PENDING_ASSET_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/tw_reservation_pending.png"
+  TW_ACCEPTED_ASSET_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/tw_reservation_reserved.png"
 
   object :social_customer
 
@@ -34,7 +36,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
       end
 
       ::LineMessages::FlexTemplateContent.icon_three_header_body_card(
-        asset_url: reservation.pending? ? PENDING_ASSET_URL : ACCEPTED_ASSET_URL,
+        asset_url: reservation_asset_url(reservation),
         title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)}~",
         title2: reservation.products_sentence,
         title3: shop.display_name,
@@ -98,5 +100,13 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
 
   def user
     @user ||= social_customer.social_account.user
+  end
+
+  def reservation_asset_url(reservation)
+    if reservation.user.locale_is?(:tw)
+      reservation.pending? ? TW_PENDING_ASSET_URL : TW_ACCEPTED_ASSET_URL
+    else
+      reservation.pending? ? PENDING_ASSET_URL : ACCEPTED_ASSET_URL
+    end
   end
 end
