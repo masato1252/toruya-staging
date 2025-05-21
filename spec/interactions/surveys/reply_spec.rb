@@ -61,7 +61,8 @@ RSpec.describe Surveys::Reply do
               datetime_slots: [
                 {
                   start_time: Time.current + 1.day,
-                  end_time: Time.current + 1.day + 1.hour
+                  end_time: Time.current + 1.day + 1.hour,
+                  end_date: Time.current.tomorrow.to_date.to_s
                 }
               ]
             }

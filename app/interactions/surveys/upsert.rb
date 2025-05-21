@@ -34,6 +34,7 @@ module Surveys
                 integer :id, default: nil
                 time :start_time
                 time :end_time
+                string :end_date
               end
             end
           end
@@ -135,11 +136,28 @@ module Surveys
                 slot = activity.activity_slots.find_by(id: slot_params[:id]) if slot_params[:id].present?
 
                 if slot
-                  slot.update!(start_time: slot_params[:start_time], end_time: slot_params[:end_time])
+                  # Ensure end_time uses end_date's date part
+                  end_time = slot_params[:end_time]
+                  if end_time && slot_params[:end_date]
+                    end_date = Date.parse(slot_params[:end_date])
+                    end_time = Time.new(end_date.year, end_date.month, end_date.day, end_time.hour, end_time.min)
+                  end
+
+                  slot.update!(
+                    start_time: slot_params[:start_time],
+                    end_time: end_time
+                  )
                 else
+                  # Ensure end_time uses end_date's date part
+                  end_time = slot_params[:end_time]
+                  if end_time && slot_params[:end_date]
+                    end_date = Date.parse(slot_params[:end_date])
+                    end_time = Time.new(end_date.year, end_date.month, end_date.day, end_time.hour, end_time.min)
+                  end
+
                   slot = activity.activity_slots.create!(
                     start_time: slot_params[:start_time],
-                    end_time: slot_params[:end_time]
+                    end_time: end_time
                   )
                 end
 

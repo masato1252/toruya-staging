@@ -241,7 +241,8 @@ RSpec.describe Surveys::Upsert do
                   datetime_slots: [
                     {
                       start_time: Time.current + 1.day,
-                      end_time: Time.current + 1.day + 1.hour
+                      end_time: Time.current + 1.day + 1.hour,
+                      end_date: Time.current.tomorrow.to_date.to_s
                     }
                   ]
                 }
@@ -281,7 +282,8 @@ RSpec.describe Surveys::Upsert do
                 datetime_slots: [
                   {
                     start_time: Time.current + 1.day,
-                    end_time: Time.current + 1.day + 1.hour
+                    end_time: Time.current + 1.day + 1.hour,
+                    end_date: Time.current.tomorrow.to_date.to_s
                   }
                 ]
               }
@@ -335,7 +337,8 @@ RSpec.describe Surveys::Upsert do
             datetime_slots: [{
               id: slot1.id,
               start_time: slot1.start_time,
-              end_time: slot1.end_time
+              end_time: slot1.end_time,
+              end_date: slot1.end_time.to_date.to_s
             }]
           }]
         }]
@@ -396,16 +399,19 @@ RSpec.describe Surveys::Upsert do
                 {
                   id: slot1.id,
                   start_time: slot1.start_time,
-                  end_time: slot1.end_time
+                  end_time: slot1.end_time,
+                  end_date: slot1.end_time.to_date.to_s
                 },
                 {
                   id: slot2.id,
                   start_time: slot2.start_time,
-                  end_time: slot2.end_time
+                  end_time: slot2.end_time,
+                  end_date: slot2.end_time.to_date.to_s
                 },
                 {
                   start_time: 1.day.from_now,
-                  end_time: 1.day.from_now + 1.hour
+                  end_time: 1.day.from_now + 1.hour,
+                  end_date: 1.day.from_now.to_date.to_s
                 }
               ]
             }]
