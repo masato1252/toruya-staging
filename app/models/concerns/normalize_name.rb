@@ -14,7 +14,12 @@ module NormalizeName
   end
 
   def name
-    "#{last_name} #{first_name}".presence || phonetic_name
+    if try(:deleted_at).present?
+      display_name = "#{last_name} #{first_name}".presence || phonetic_name
+      "#{display_name} (#{I18n.t("action.deleted")})"
+    else
+      "#{last_name} #{first_name}".presence || phonetic_name
+    end
   end
 
   def display_last_name

@@ -4,6 +4,7 @@ ja:
     activate: 有効化
     delete: 削除
     delete2: "削　除"
+    deleted: 削除済み
     delete_reservation: 予約を削除
     edit: 編集
     back_to_survey: アンケートに戻る

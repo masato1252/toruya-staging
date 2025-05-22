@@ -4,6 +4,7 @@ tw:
     activate: 啟用
     delete: 刪除
     delete2: "刪　除"
+    deleted: 已刪除
     delete_reservation: 刪除預約
     edit: 編輯
     back_to_survey: 返回表單
