@@ -142,7 +142,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def hi_message
-    "🖥 New online_service purchased, id: #{id}, online_service: #{online_service.slug}, sale_page: #{sale_page.slug}, customer_id: #{customer_id}, user_id: #{customer.user_id}, payment_state: #{payment_state}, permission_state: #{permission_state}, expire_at: #{expire_at ? I18n.l(expire_at, format: :long_date_with_wday) : ""}"
+    "🖥 New online_service purchased, id: #{id}, online_service: #{online_service.slug}, sale_page: #{sale_page&.slug}, customer_id: #{customer_id}, user_id: #{customer.user_id}, payment_state: #{payment_state}, permission_state: #{permission_state}, expire_at: #{expire_at ? I18n.l(expire_at, format: :long_date_with_wday) : ""}"
   end
 
   def price_details
