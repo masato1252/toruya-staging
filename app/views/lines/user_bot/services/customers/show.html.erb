@@ -10,7 +10,7 @@
       <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></div>
       <%= render "lines/user_bot/services/customers/info" %>
 
-      <% if @is_owner && Current.admin_debug %>
+      <% if @is_owner && Current.admin_debug && @relation.customer.social_customer&.social_user_id %>
         <div class="action-block margin-around">
           <%= link_to t("user_bot.dashboards.settings.service_customer_relation.check_product_as_customer"), online_service_path(@online_service.slug, temp_encrypted_social_service_user_id: MessageEncryptor.encrypt(@relation.customer.social_customer.social_user_id, expires_at: 5.minutes.from_now)), class: "btn btn-yellow", target: "_blank" %>
 
