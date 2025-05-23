@@ -15,14 +15,15 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
 
     outcome =
       if new_plan.business_level?
-        Plans::SubscribeBusinessPlan.run(user: Current.business_owner, authorize_token: params[:token])
+        Plans::SubscribeBusinessPlan.run(user: Current.business_owner, authorize_token: params[:token], payment_intent_id: params[:payment_intent_id])
       elsif new_plan.is_child?
         Plans::SubscribeChildPlan.run(
           user: Current.business_owner,
           plan: new_plan,
           rank: params[:rank],
           authorize_token: params[:token],
-          change_immediately: params[:change_immediately]
+          change_immediately: params[:change_immediately],
+          payment_intent_id: params[:payment_intent_id]
         )
       else
         Plans::Subscribe.run(
@@ -30,7 +31,8 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
           plan: new_plan,
           rank: params[:rank],
           authorize_token: params[:token],
-          change_immediately: params[:change_immediately]
+          change_immediately: params[:change_immediately],
+          payment_intent_id: params[:payment_intent_id]
         )
       end
 
@@ -42,7 +44,10 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
         params: params
       )
 
-      render json: { message: outcome.errors.full_messages.join("") }, status: :unprocessable_entity
+      render json: {
+         message: outcome.errors.full_messages.join(""),
+         client_secret: outcome.errors.details.dig(:plan)&.first&.dig(:client_secret),
+      }, status: :unprocessable_entity
     else
       render json: { redirect_path: lines_user_bot_settings_path(business_owner_id: business_owner_id) }
     end

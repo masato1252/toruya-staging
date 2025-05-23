@@ -2,9 +2,13 @@
 
 class CustomerPayments::SubscribeOnlineService < ActiveInteraction::Base
   object :online_service_customer_relation
+  string :stripe_subscription_id, default: nil
 
   def execute
-    subscribe_outcome = OnlineServiceCustomerRelations::Subscribe.run(relation: online_service_customer_relation)
+    subscribe_outcome = OnlineServiceCustomerRelations::Subscribe.run(
+      relation: online_service_customer_relation,
+      stripe_subscription_id: stripe_subscription_id
+    )
 
     if subscribe_outcome.valid?
       outcome =

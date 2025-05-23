@@ -133,6 +133,7 @@ class BookingPagesController < ActionController::Base
       stripe_token: params[:stripe_token],
       square_token: params[:square_token],
       square_location_id: params[:square_location_id],
+      payment_intent_id: params[:payment_intent_id],
       sale_page_id: params[:sale_page_id],
       survey_answers: params[:survey_answers],
       function_access_id: params[:function_access_id]
@@ -151,17 +152,29 @@ class BookingPagesController < ActionController::Base
         status: "successful"
       }
     else
-      booking_page.touch
-      Rollbar.error("#{outcome.class} service failed", {
-        errors: outcome.errors.details,
-        user_id: booking_page.user_id
-      })
-      render json: {
-        status: "failed",
-        errors: {
-          message: I18n.t("booking_page.message.booking_unexpected_failed_message")
+      # Check if it's a 3DS-related error - any error containing client_secret needs frontend handling
+      payment_errors = outcome.errors.details[:base] || []
+      error_with_client_secret = payment_errors.find { |error| error[:client_secret].present? }
+
+      if error_with_client_secret
+        render json: {
+          status: "requires_action",
+          client_secret: error_with_client_secret[:client_secret]
         }
-      }
+      else
+        booking_page.touch
+
+        Rollbar.error("#{outcome.class} service failed", {
+          errors: outcome.errors.details,
+          user_id: booking_page.user_id
+        })
+        render json: {
+          status: "failed",
+          errors: {
+            message: I18n.t("booking_page.message.booking_unexpected_failed_message")
+          }
+        }
+      end
     end
   end
 

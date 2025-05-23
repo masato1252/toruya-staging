@@ -7,8 +7,10 @@ module Subscriptions
     def execute
       user = subscription.user
 
+      # Use next_plan if it exists, otherwise use current plan
       charging_plan = subscription.next_plan || subscription.plan
 
+      # Check if it's a free plan
       if compose(Plans::Price, user: user, plan: charging_plan)[0].zero?
         # Downgrade to free plan
         Subscriptions::Unsubscribe.run(user: user)
@@ -17,11 +19,20 @@ module Subscriptions
           compose(Referrals::ReferrerCharged, referral: referral, plan: charging_plan)
         end
       else
+        # Paid plan, need to process charge
         subscription.with_lock do
-          charge_outcome = Subscriptions::Charge.run(user: user, plan: charging_plan, rank: subscription.rank, manual: false)
+          # Reuse Charge service, but set manual: false to trigger recurring charge logic
+          charge_outcome = Subscriptions::Charge.run(
+            user: user,
+            plan: charging_plan,
+            rank: subscription.rank,
+            manual: false  # Trigger recurring charge logic
+          )
 
           if charge_outcome.valid?
             charge = charge_outcome.result
+
+            # Update subscription plan and settings
             subscription.plan = charging_plan
             subscription.rank = charge.rank
             subscription.next_plan = nil
@@ -45,6 +56,7 @@ module Subscriptions
 
             Notifiers::Users::Subscriptions::ChargeSuccessfully.run(receiver: subscription.user, user: subscription.user)
           else
+            # Merge Charge errors and pass them through
             errors.merge!(charge_outcome.errors)
           end
         end

@@ -42,6 +42,10 @@ class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardC
 
     outcome = ::Sales::OnlineServices::Create.run(args)
 
-    return_json_response(outcome, { sale_page_id: outcome.result&.slug, redirect_to: lines_user_bot_sales_path})
+    if outcome.valid?
+      return_json_response(outcome, { sale_page_id: outcome.result&.slug, redirect_to: lines_user_bot_sales_path})
+    else
+      return_json_response(outcome)
+    end
   end
 end

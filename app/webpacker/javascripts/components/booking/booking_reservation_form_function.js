@@ -252,7 +252,7 @@ const BookingReservationFormFunction = ({props}) => {
     return props.money_sample.replace(/[\d]+/, total_price.toLocaleString())
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, paymentIntentId) => {
     if (e) e.preventDefault();
     const { is_paying_booking } = booking_reservation_form_values
 
@@ -292,6 +292,7 @@ const BookingReservationFormFunction = ({props}) => {
       {
         stripe_token,
         square_token,
+        payment_intent_id: paymentIntentId,
         function_access_id: props.function_access_id
       }
     )
@@ -312,7 +313,7 @@ const BookingReservationFormFunction = ({props}) => {
 
       bookingReservationLoading_ref.current = false
 
-      const { status, errors } = response.data;
+      const { status, errors, requires_action, client_secret } = response.data;
 
       if (status === "successful") {
         // Send GA4 booking_complete event
@@ -322,6 +323,7 @@ const BookingReservationFormFunction = ({props}) => {
         });
 
         set_booking_reservation_form_values(prev => ({...prev, is_done: true, submitting: false }))
+        return { status: "successful" };
       }
       else if (status === "failed") {
         set_booking_reservation_form_values(prev => ({...prev, booking_failed: true, submitting: false}))
@@ -330,14 +332,23 @@ const BookingReservationFormFunction = ({props}) => {
           set_booking_reservation_form_values(prev => ({...prev, errors: { ...prev.errors, booking_failed_message: errors.message}}))
           setTimeout(() => scrollToTarget("footer"), 200)
         }
+        throw new Error(errors?.message || '預約失敗');
+      }
+      else if (status === "requires_action" && client_secret) {
+        // Need 3DS verification
+        return { requires_action: true, client_secret };
       }
       else if (status === "invalid_authenticity_token") {
         location.reload()
       }
     }
     catch(error) {
+      bookingReservationLoading_ref.current = false
       console.error(error)
-      location.reload()
+      if (error.message && error.message !== '預約失敗') {
+        location.reload()
+      }
+      throw error;
     }
   }
 
@@ -387,11 +398,11 @@ const BookingReservationFormFunction = ({props}) => {
       return (
         <div>
           <ChargingView
-            booking_date={booking_reservation_form_values.booking_date}
-            booking_at={booking_reservation_form_values.booking_at}
-            time_from={props.i18n.time_from}
+            booking_details={`${moment.tz(`${booking_reservation_form_values.booking_date} ${booking_reservation_form_values.booking_at}`, "YYYY-MM-DD HH:mm", props.timezone).format("llll")} ${props.i18n.time_from}`}
+            product_name={selected_booking_options_need_to_pay().map(option => option.name).join("<br />")}
+            product_price={selected_booking_options_need_to_pay_price()}
             payment_solution={props.payment_solution}
-            handleTokenCallback={async (token) => {
+            handleTokenCallback={async (token, paymentIntentId) => {
               if (props.payment_solution.solution == "stripe_connect") {
                 stripe_token_ref.current = token
               }
@@ -399,11 +410,9 @@ const BookingReservationFormFunction = ({props}) => {
                 square_token_ref.current = token
               }
 
-              handleSubmit()
+              return await handleSubmit(null, paymentIntentId)
             }}
-            product_name={selected_booking_options_need_to_pay().map(option => option.name).join("<br />")}
-            booking_details={`${moment.tz(`${booking_reservation_form_values.booking_date} ${booking_reservation_form_values.booking_at}`, "YYYY-MM-DD HH:mm", props.timezone).format("llll")} ${props.i18n.time_from}`}
-            product_price={selected_booking_options_need_to_pay_price()}
+            business_owner_id={props.business_owner_id}
           />
           <BookingFailedArea
             booking_failed={booking_reservation_form_values.booking_failed}

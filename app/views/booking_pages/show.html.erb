@@ -40,6 +40,7 @@
     function_access_id: params[:function_access_id],
     money_sample: money_sample(I18n.locale),
     locale: @booking_page.user.locale,
+    business_owner_id: @booking_page.user_id,
     customer_notification_channel: @booking_page.user.customer_notification_channel,
     booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled", "multiple_selection", "payment_option").merge!({
       shop_logo_url: shop_logo_url(@booking_page.shop, "260"),

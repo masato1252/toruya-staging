@@ -8,7 +8,7 @@ import CustomerIdentification from "components/lines/customer_identifications"
 import { SaleServices, CommonServices } from "user_bot/api";
 import CompanyHeader from "shared/company_header";
 import { CheckInLineBtn } from "shared/booking";
-import ServiceCheckoutForm from "shared/service_checkout_form";
+import ChargingView from "components/booking/charging_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purchase_data}) => {
@@ -36,14 +36,43 @@ const FinalPaidPage = ({props, purchase_data}) => {
         <h3 className="title">
           {I18n.t("common.pay_the_payment")}
         </h3>
-        <ServiceCheckoutForm
-          stripe_key={props.stripe_key}
-          purchase_data={purchase_data}
-          company_name={props.sale_page.company_info.name}
-          service_name={props.sale_page.product.name}
-          price={props.sale_page.paying_amount_format}
-          payment_type={props.sale_page.payment_type}
-          function_access_id={props.function_access_id}
+        <ChargingView
+          booking_details={props.sale_page.product.name}
+          payment_solution={{
+            solution: "stripe_connect",
+            stripe_key: props.stripe_key
+          }}
+          handleTokenCallback={async (token, paymentIntentId, stripeSubscriptionId) => {
+            const [error, response] = await SaleServices.purchase({
+              data: {
+                ...purchase_data,
+                token,
+                payment_type: props.sale_page.payment_type,
+                payment_intent_id: paymentIntentId,
+                stripe_subscription_id: stripeSubscriptionId,
+                function_access_id: props.function_access_id
+              }
+            })
+
+            if (response.data.status === "successful") {
+              window.location = response.data.redirect_to;
+              return { status: "successful" };
+            }
+            else if (response.data.status === "requires_action") {
+              return {
+                requires_action: true,
+                client_secret: response.data.client_secret,
+                stripe_subscription_id: response.data.stripe_subscription_id
+              }
+            }
+            else if (response.data.status === "failed") {
+              alert(response.data.error_message || 'Purchase failed');
+            }
+          }}
+          product_name={props.sale_page.company_info.name}
+          product_price={props.sale_page.paying_amount_format}
+          business_owner_id={props.business_owner_id}
+          is_subscription={props.sale_page.recurring_charge_required}
         />
       </div>
     )

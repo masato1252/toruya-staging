@@ -20,6 +20,7 @@ module Booking
     string :stripe_token, default: nil
     string :square_token, default: nil
     string :square_location_id, default: nil
+    string :payment_intent_id, default: nil
     boolean :customer_reminder_permission, default: true
     # customer_info format might like
     # {
@@ -326,7 +327,8 @@ module Booking
               compose(Customers::StorePaymentCustomer, customer: customer, authorize_token: stripe_token, payment_provider: user.stripe_provider)
               purchase_outcome = CustomerPayments::PayReservation.run(
                 reservation_customer: reservation_customer,
-                payment_provider: user.stripe_provider
+                payment_provider: user.stripe_provider,
+                payment_intent_id: payment_intent_id
               )
 
               if purchase_outcome.valid?

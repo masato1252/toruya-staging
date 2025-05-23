@@ -6,27 +6,28 @@ module Payments
     string :authorize_token
 
     def execute
-      stripe_customer_id = user.subscription.stripe_customer_id
+      begin
+        stripe_customer = Stripe::Customer.create(
+          email: user.email,
+          phone: user.phone_number,
+          payment_method: authorize_token,
+          invoice_settings: {
+            default_payment_method: authorize_token
+          }
+        )
 
-      if stripe_customer_id
-        # update customer a new card
-        begin
-          Stripe::Customer.update(stripe_customer_id, {
-            source: authorize_token,
-          })
-          return stripe_customer_id
-        rescue => e
-          Rollbar.error(e)
-          # errors.add(:base, e.message)
-          # return
-          # raise e if e.code != "resource_missing"
+        user.subscription.update!(
+          stripe_customer_id: stripe_customer.id
+        )
+      rescue Stripe::CardError => error
+        errors.add(:user, :auth_failed)
+        Rollbar.error(error, toruya_user: user.id, stripe_charge: error.json_body[:error])
+      rescue Stripe::StripeError => error
+        if !error.message.include?("already been attached")
+          errors.add(:user, :processor_failed)
+          Rollbar.error(error, toruya_user: user.id, stripe_charge: error.json_body[:error])
         end
       end
-
-      stripe_customer = Stripe::Customer.create(source: authorize_token, email: user.email, phone: user.phone_number)
-      user.subscription.stripe_customer_id = stripe_customer.id
-      user.subscription.save
-      stripe_customer.id
     end
   end
 end

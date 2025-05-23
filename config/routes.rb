@@ -30,6 +30,9 @@ Rails.application.routes.draw do
       post :create_or_update_customer
     end
 
+    # Stripe payment status route
+    get 'stripe_payment_status', to: 'stripe_payment_status#show'
+
     scope module: :lines, path: :lines, as: :lines do
       # customer sesson new
       get "/identify_shop_customer/(:social_service_user_id)", action: "identify_shop_customer", as: :identify_shop_customer

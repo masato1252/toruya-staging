@@ -93,20 +93,28 @@ RSpec.describe Subscriptions::Charge do
     end
 
     context "when charge failed" do
-      it "create a auth_failed subscription charges record" do
-        StripeMock.prepare_card_error(:card_declined)
+      let(:failed_intent) do
+        double(
+          as_json: { "error" => { "message" => "Your card was declined." } },
+          status: "requires_payment_method"
+        )
+      end
 
+      before do
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(failed_intent)
+      end
+
+      it "create a auth_failed subscription charges record" do
         outcome
 
         charge = user.subscription_charges.where(
           plan: plan,
-          amount_cents: plan.cost(rank),
-          amount_currency: Money.default_currency.to_s,
-          charge_date: Subscription.today,
           manual: true
-        ).last
+        ).order(created_at: :desc).first
 
+        expect(charge).to be_present
         expect(charge).to be_auth_failed
+        expect(charge.stripe_charge_details).to be_a(Hash)
       end
 
       context "when charge is automatically" do
@@ -114,7 +122,6 @@ RSpec.describe Subscriptions::Charge do
         before { user.update(phone_number: nil) }
 
         it "notfiy users" do
-          StripeMock.prepare_card_error(:card_declined)
           expect(Notifiers::Users::Subscriptions::ChargeFailed).to receive(:run).and_call_original
 
           mailer_double = double(deliver_now: true)

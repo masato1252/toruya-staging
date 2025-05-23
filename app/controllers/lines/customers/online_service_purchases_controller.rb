@@ -38,17 +38,46 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
       customer: current_customer,
       authorize_token: params[:token],
       payment_type: params[:payment_type],
+      payment_intent_id: params[:payment_intent_id],
+      stripe_subscription_id: params[:stripe_subscription_id],
       function_access_id: params[:function_access_id]
     )
 
-    if outcome.invalid?
-      Rollbar.error("Sales::OnlineServices::Purchase failed", {
-        errors: outcome.errors.details,
-        params: params
-      })
-    end
+    if outcome.valid?
+      render json: {
+        status: "successful",
+        redirect_to: @sale_page.external? ? @sale_page.product.external_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type])
+      }
+    else
+      # Check if it's a 3DS-related error - any error containing client_secret needs frontend handling
+      payment_errors = outcome.errors.details[:base] || []
+      error_with_client_secret = payment_errors.find { |error| error[:client_secret].present? }
 
-    return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.external_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type]) })
+      if error_with_client_secret
+        response_data = {
+          status: "requires_action",
+          client_secret: error_with_client_secret[:client_secret]
+        }
+
+        error_with_subscription_id = payment_errors.find { |error| error[:stripe_subscription_id].present? }
+        # For subscription payments, also include subscription_id if available
+        if @sale_page.recurring? && error_with_subscription_id
+          response_data[:stripe_subscription_id] = error_with_subscription_id[:stripe_subscription_id]
+        end
+
+        render json: response_data
+      else
+        Rollbar.error("Sales::OnlineServices::Purchase failed", {
+          errors: outcome.errors.details,
+          params: params
+        })
+
+        render json: {
+          status: "failed",
+          redirect_to: @sale_page.external? ? @sale_page.product.external_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type])
+        }
+      end
+    end
   end
 
   private

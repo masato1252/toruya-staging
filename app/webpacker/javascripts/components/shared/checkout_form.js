@@ -7,7 +7,19 @@ import {
 
 const CARD_ELEMENT_OPTIONS = {
   iconStyle: "solid",
-  hidePostalCode: true
+  hidePostalCode: true,
+  style: {
+    base: {
+      fontSize: '16px',
+      color: '#424770',
+      '::placeholder': {
+        color: '#aab7c4',
+      },
+    },
+    invalid: {
+      color: '#9e2146',
+    },
+  },
 };
 
 const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleFailure}) => {
@@ -24,13 +36,16 @@ const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleF
     }
 
     const card = elements.getElement(CardElement)
-    const result = await stripe.createToken(card);
+    const {error, paymentMethod} = await stripe.createPaymentMethod({
+      type: 'card',
+      card: card,
+    });
 
-    if (result.error) {
-      setProcessing(false)
-      if (handleFailure) handleFailure(result.error);
+    setProcessing(false);
+    if (error) {
+      if (handleFailure) handleFailure(error);
     } else {
-      handleToken(result.token.id)
+      await handleToken(paymentMethod.id);
     }
   };
 

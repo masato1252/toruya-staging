@@ -14,6 +14,7 @@
     is_customer_address_required: @sale_page.product.customer_address_required,
     locale: @sale_page.user.locale,
     channel: current_owner.customer_notification_channel,
+    business_owner_id: @sale_page.user.id,
     i18n: {
     }.merge!([
       t("booking_page"),

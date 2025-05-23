@@ -6,6 +6,7 @@ module Subscriptions
     object :plan
     integer :rank
     string :authorize_token
+    string :payment_intent_id, default: nil
 
     validate :validate_plan_downgraade
 
@@ -38,7 +39,8 @@ module Subscriptions
           plan: plan,
           rank: charging_rank,
           manual: true,
-          charge_amount: charge_amount
+          charge_amount: charge_amount,
+          payment_intent_id: payment_intent_id
         )
 
         if charge_outcome.valid?

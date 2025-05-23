@@ -49,6 +49,7 @@ class SubscriptionCharge < ApplicationRecord
 
   monetize :amount_cents
   validates :order_id, uniqueness: true
+  attribute :client_secret
 
   scope :manual, -> { where(manual: true) }
   scope :finished, -> { where(state: [:completed, :refunded]) }
