@@ -46,7 +46,8 @@ module Templates
     def customer_status_online_service_url
       Rails.application.routes.url_helpers.customer_status_online_service_url(
         slug: online_service.slug,
-        encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)
+        encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id),
+        encrypted_customer_id: MessageEncryptor.encrypt(social_customer.customer_id)
       )
     end
 

@@ -54,11 +54,31 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def change_card
-    outcome = Payments::StoreStripeCustomer.run(user: Current.business_owner, authorize_token: params[:token])
+    outcome = Payments::StoreStripeCustomer.run(
+      user: Current.business_owner,
+      authorize_token: params[:token],
+      setup_intent_id: params[:setup_intent_id]
+    )
 
-    return_json_response(outcome, {
-      redirect_to: lines_user_bot_settings_path(business_owner_id: business_owner_id)
-    })
+    if outcome.invalid?
+      # Check if this is a 3DS case requiring client-side action
+      if outcome.errors.details.dig(:user)&.any? { |error| error[:error] == :requires_action }
+        user_error = outcome.errors.details[:user].find { |error| error[:error] == :requires_action }
+        render json: {
+          message: outcome.errors.full_messages.join(""),
+          client_secret: user_error[:client_secret],
+          setup_intent_id: user_error[:setup_intent_id]
+        }, status: :unprocessable_entity
+      else
+        render json: {
+          message: outcome.errors.full_messages.join("")
+        }, status: :unprocessable_entity
+      end
+    else
+      render json: {
+        redirect_to: lines_user_bot_settings_path(business_owner_id: business_owner_id)
+      }
+    end
   end
 
   def refund

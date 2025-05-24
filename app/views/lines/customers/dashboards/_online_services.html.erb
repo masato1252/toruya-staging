@@ -1,6 +1,6 @@
 <div>
   <% online_service_relations.each do |online_service_relation| %>
-    <%= link_to customer_status_online_service_url( slug: online_service_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(current_social_customer.social_user_id)), class: "text-gray-700 no-underline" do %>
+    <%= link_to customer_status_online_service_url( slug: online_service_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(current_social_customer.social_user_id), encrypted_customer_id: MessageEncryptor.encrypt(current_social_customer.customer_id) ), class: "text-gray-700 no-underline" do %>
       <div class="p-6 border border-solid border-gray-500 rounded-md my-1">
         <h3 class="text-lg font-bold mb-2" data-id="<%= online_service_relation.id %>">
           <%= online_service_relation.online_service.name %>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="mt-2 border-0 border-t border-solid border-gray-300 py-3">
-          <%= link_to t("common.status"), customer_status_online_service_url(slug: online_service_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(current_social_customer.social_user_id)), class: "btn btn-tarco my-1" %>
+          <%= link_to t("common.status"), customer_status_online_service_url(slug: online_service_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(current_social_customer.social_user_id), encrypted_customer_id: MessageEncryptor.encrypt(current_social_customer.customer_id)), class: "btn btn-tarco my-1" %>
 
           <% if online_service_relation.accessible? %>
             <% content_url = online_service_relation.online_service.product_content_url(online_service_relation.customer) %>

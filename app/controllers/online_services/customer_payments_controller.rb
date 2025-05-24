@@ -34,16 +34,36 @@ module OnlineServices
         end
 
       return_json_response(outcome, {
-        redirect_to: customer_status_online_service_path(slug: params[:slug], encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
+        redirect_to: customer_status_online_service_path(slug: params[:slug], encrypted_social_service_user_id: params[:encrypted_social_service_user_id], encrypted_customer_id: MessageEncryptor.encrypt(current_customer.id) )
       })
     end
 
     def change_card
-      outcome = Customers::StoreStripeCustomer.run(customer: current_customer, authorize_token: params[:token])
+      outcome = Customers::StoreStripeCustomer.run(
+        customer: current_customer,
+        authorize_token: params[:token],
+        setup_intent_id: params[:setup_intent_id]
+      )
 
-      return_json_response(outcome, {
-        redirect_to: customer_status_online_service_path(slug: params[:slug], encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
-      })
+      if outcome.invalid?
+        # Check if this is a 3DS case requiring client-side action
+        if outcome.errors.details.dig(:customer)&.any? { |error| error[:error] == :requires_action }
+          customer_error = outcome.errors.details[:customer].find { |error| error[:error] == :requires_action }
+          render json: {
+            message: outcome.errors.full_messages.join(""),
+            client_secret: customer_error[:client_secret],
+            setup_intent_id: customer_error[:setup_intent_id]
+          }, status: :unprocessable_entity
+        else
+          render json: {
+            message: outcome.errors.full_messages.join("")
+          }, status: :unprocessable_entity
+        end
+      else
+        render json: {
+          redirect_to: customer_status_online_service_path(slug: params[:slug], encrypted_social_service_user_id: params[:encrypted_social_service_user_id], encrypted_customer_id: MessageEncryptor.encrypt(current_customer.id))
+        }
+      end
     end
   end
 end

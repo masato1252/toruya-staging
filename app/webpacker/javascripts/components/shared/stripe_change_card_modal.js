@@ -9,7 +9,7 @@ import I18n from 'i18n-js/index.js.erb';
 const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) => {
   const [processing, setProcessing] = useState(false)
 
-  const handleToken = async (paymentMethodId, paymentIntentId = null) => {
+  const handleToken = async (paymentMethodId, setupIntentId = null) => {
     setProcessing(true)
     try {
       const [error, response] = await CommonServices.update({
@@ -17,16 +17,16 @@ const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) =
         data: {
           token: paymentMethodId,
           business_owner_id,
-          payment_intent_id: paymentIntentId
+          setup_intent_id: setupIntentId
         }
       })
       setProcessing(false)
 
       if (error) {
         if (error.response?.data?.client_secret) {
-          // Handle cases that require 3DS verification
+          // Handle cases that require 3DS verification with SetupIntent
           const stripe = await loadStripe(rest.stripe_key);
-          const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(
+          const { error: confirmError, setupIntent } = await stripe.confirmCardSetup(
             error.response.data.client_secret,
             {
               payment_method: paymentMethodId
@@ -35,14 +35,14 @@ const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) =
 
           if (confirmError) {
             alert(I18n.t("common.update_failed_message"));
-          } else if (paymentIntent.status === 'succeeded') {
-            // Payment successful, retry API call
+          } else if (setupIntent.status === 'succeeded') {
+            // Setup successful, retry API call with setup_intent_id
             const [retryError, retryResponse] = await CommonServices.update({
               url: change_card_path,
               data: {
                 token: paymentMethodId,
                 business_owner_id,
-                payment_intent_id: paymentIntent.id
+                setup_intent_id: setupIntent.id
               }
             });
 
@@ -52,9 +52,9 @@ const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) =
               alert(I18n.t("common.update_successfully_message"));
               window.location = retryResponse.data.redirect_to;
             }
-          } else if (paymentIntent.status === 'processing') {
-            // Start polling payment status
-            pollPaymentStatus(paymentIntent.id);
+          } else if (setupIntent.status === 'processing') {
+            // Start polling setup status
+            pollSetupStatus(setupIntent.id, paymentMethodId);
           }
         } else {
           alert(I18n.t("common.update_failed_message"));
@@ -69,9 +69,11 @@ const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) =
     }
   }
 
-  const pollPaymentStatus = async (paymentIntentId) => {
+  const pollSetupStatus = async (setupIntentId, paymentMethodId) => {
     try {
-      const response = await fetch(`/stripe_payment_status?payment_intent_id=${paymentIntentId}&type=change_card`, {
+      const typeParam = business_owner_id ? 'change_card' : 'customer_change_card';
+      const additionalParams = business_owner_id ? `&business_owner_id=${business_owner_id}` : '';
+      const response = await fetch(`/stripe_setup_status?setup_intent_id=${setupIntentId}&type=${typeParam}${additionalParams}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -86,8 +88,22 @@ const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) =
         switch (result.status) {
           case 'succeeded':
             setProcessing(false);
-            alert(I18n.t("common.update_successfully_message"));
-            window.location = result.redirect_path;
+            // Setup completed, retry the original API call
+            const [retryError, retryResponse] = await CommonServices.update({
+              url: change_card_path,
+              data: {
+                token: paymentMethodId,
+                business_owner_id,
+                setup_intent_id: setupIntentId
+              }
+            });
+
+            if (retryError) {
+              alert(I18n.t("common.update_failed_message"));
+            } else {
+              alert(I18n.t("common.update_successfully_message"));
+              window.location = retryResponse.data.redirect_to;
+            }
             break;
           case 'failed':
             setProcessing(false);
@@ -95,23 +111,23 @@ const StripeChangeCardModal = ({change_card_path, business_owner_id, ...rest}) =
             break;
           case 'processing':
             // Continue polling
-            setTimeout(() => pollPaymentStatus(paymentIntentId), 2000);
+            setTimeout(() => pollSetupStatus(setupIntentId, paymentMethodId), 2000);
             break;
           case 'requires_action':
             // Handle cases that require additional actions
             const stripe = await loadStripe(rest.stripe_key);
-            const { error, paymentIntent } = await stripe.handleCardAction(result.client_secret);
+            const { error, setupIntent } = await stripe.handleCardSetup(result.client_secret);
 
             if (error) {
               setProcessing(false);
               alert(I18n.t("common.update_failed_message"));
-            } else if (paymentIntent.status === 'succeeded') {
+            } else if (setupIntent.status === 'succeeded') {
               setProcessing(false);
               alert(I18n.t("common.update_successfully_message"));
               window.location = result.redirect_path;
             } else {
               // Continue polling
-              setTimeout(() => pollPaymentStatus(paymentIntentId), 2000);
+              setTimeout(() => pollSetupStatus(setupIntentId, paymentMethodId), 2000);
             }
             break;
         }

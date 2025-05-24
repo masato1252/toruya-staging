@@ -32,6 +32,8 @@ Rails.application.routes.draw do
 
     # Stripe payment status route
     get 'stripe_payment_status', to: 'stripe_payment_status#show'
+    # Stripe setup status route for 3DS verification
+    get 'stripe_setup_status', to: 'stripe_setup_status#show'
 
     scope module: :lines, path: :lines, as: :lines do
       # customer sesson new

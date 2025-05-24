@@ -30,7 +30,7 @@
         <%= link_to t("action.purchase_info"), lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: @relation.bundler_relation.online_service.id, id: @relation.bundler_relation.id), class: "btn btn-yellow" %>
       <% else %>
         <%= @relation.bundler_relation.online_service.name %>
-        <%= link_to t("action.purchase_info"), customer_status_online_service_path(slug: @relation.bundler_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(@customer.social_customer.social_user_id)), class: "btn btn-yellow" %>
+        <%= link_to t("action.purchase_info"), customer_status_online_service_path(slug: @relation.bundler_relation.online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(@customer.social_customer.social_user_id), encrypted_customer_id: MessageEncryptor.encrypt(@customer.id)), class: "btn btn-yellow" %>
       <% end %>
     <% else %>
       <%= @relation.selling_prices_text %>
