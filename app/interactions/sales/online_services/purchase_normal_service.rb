@@ -41,13 +41,12 @@ module Sales
             if payment_type == SalePage::PAYMENTS[:assignment] || sale_page.free?
               ::Sales::OnlineServices::Approve.run(relation: relation)
             elsif sale_page.recurring?
-              compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
+              customer_outcome = Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, stripe_subscription_id: stripe_subscription_id)
 
               # credit card charge is synchronous request, it would return final status immediately
               compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation, stripe_subscription_id: stripe_subscription_id)
             elsif !sale_page.external?
-              compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
-
+              customer_outcome = Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, payment_intent_id: payment_intent_id)
               # credit card charge is synchronous request, it would return final status immediately
               if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true, payment_intent_id: payment_intent_id)
                 Sales::OnlineServices::Approve.run(relation: relation)

@@ -4,46 +4,57 @@ import React, { useState } from "react";
 import I18n from 'i18n-js/index.js.erb';
 
 import { CommonServices } from "user_bot/api";
-import ProcessingBar from "shared/processing_bar";
-import StripeCheckoutForm from "shared/stripe_checkout_form"
+import ChargingView from "components/booking/charging_view";
 
 export const NewCustomerPayment = ({props}) => {
-  const [processing, setProcessing] = useState(false)
-
-  const handleToken = async (token) => {
-    setProcessing(true)
+  const handleTokenCallback = async (paymentMethodId, paymentIntentId, stripeSubscriptionId) => {
     const [error, response] = await CommonServices.create({
       url: Routes.customer_payments_path(props.slug, {format: "json"}),
-      data: { token, order_id: props.order_id, encrypted_social_service_user_id: props.encrypted_social_service_user_id }
+      data: {
+        token: paymentMethodId,
+        order_id: props.order_id,
+        encrypted_social_service_user_id: props.encrypted_social_service_user_id,
+        payment_intent_id: paymentIntentId,
+        stripe_subscription_id: stripeSubscriptionId
+      }
     })
-    setProcessing(false)
 
     if (error) {
-      toastr.error(error.response.data.error_message)
+      throw new Error(error.response.data.error_message || 'Payment failed');
     }
-    else {
-      window.location = response.data.redirect_to;
-    }
-  }
 
-  const handleFailure = (error) => {
-    toastr.error(error.message)
+    if (response.data.status === "successful") {
+      window.location = response.data.redirect_to;
+      return { status: "successful" };
+    }
+    else if (response.data.status === "requires_action") {
+      return {
+        requires_action: true,
+        client_secret: response.data.client_secret,
+        stripe_subscription_id: response.data.stripe_subscription_id
+      }
+    }
+    else if (response.data.status === "failed") {
+      throw new Error(response.data.error_message || 'Payment failed');
+    }
   }
 
   return (
     <div className="done-view">
-      <ProcessingBar processing={processing} />
       <h3 className="title">
         {I18n.t("common.pay_the_payment")}
       </h3>
-      <StripeCheckoutForm
-        stripe_key={props.stripe_key}
-        handleToken={handleToken}
-        handleFailure={handleFailure}
-        header={props.company_name}
-        desc={props.service_name}
-        pay_btn={I18n.t("action.pay")}
-        details_desc={props.price}
+      <ChargingView
+        booking_details={props.service_name}
+        payment_solution={{
+          solution: "stripe_connect",
+          stripe_key: props.stripe_key
+        }}
+        handleTokenCallback={handleTokenCallback}
+        product_name={props.company_name}
+        product_price={props.price}
+        business_owner_id={props.business_owner_id}
+        is_subscription={props.is_subscription}
       />
     </div>
   )

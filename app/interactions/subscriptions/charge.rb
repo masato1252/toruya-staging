@@ -71,7 +71,7 @@ module Subscriptions
                   SlackClient.send(channel: 'sayhi', text: "[OK] 🎉#{charge_type} Stripe charge user: #{user.id} 💰")
                 end
               end
-            when "requires_payment_method", "requires_source", "requires_confirmation", "requires_action", "processing", "requires_capture"
+            when "requires_payment_method", "requires_source", "requires_confirmation", "requires_action", "processing", "requires_capture", "requires_source_action"
               charge.stripe_charge_details = payment_intent.as_json
               charge.save!
               errors.add(:plan, :requires_payment_method, client_secret: payment_intent.client_secret)
@@ -81,6 +81,7 @@ module Subscriptions
               charge.save!
               errors.add(:plan, :canceled, client_secret: payment_intent.client_secret)
             else
+              Rollbar.error("Payment intent failed", status: payment_intent.status, toruya_charge: charge.id, stripe_charge: payment_intent.as_json)
               charge.stripe_charge_details = payment_intent.as_json
               charge.auth_failed!
               charge.save!
@@ -154,12 +155,31 @@ module Subscriptions
     private
 
     def create_payment_intent(amount, description, charge, charging_rank, order_id)
+      # Check if user has a stripe customer ID
+      stripe_customer_id = user.subscription&.stripe_customer_id
+      if stripe_customer_id.blank?
+        charge.auth_failed!
+        errors.add(:plan, :no_stripe_customer)
+        return nil
+      end
+
       if manual
-        # Manual payment - first time payment or user-initiated payment
+        # Manual payment - get customer's default payment method
+        begin
+          customer = Stripe::Customer.retrieve(stripe_customer_id)
+          default_payment_method = customer.invoice_settings&.default_payment_method ||
+                                   get_latest_payment_method(customer.id)
+        rescue Stripe::StripeError => e
+          charge.auth_failed!
+          errors.add(:plan, :stripe_customer_not_found)
+          Rollbar.error(e, user_id: user.id, stripe_customer_id: stripe_customer_id)
+          return nil
+        end
+
         payment_intent_params = {
           amount: amount.fractional * amount.currency.default_subunit_to_unit,
           currency: amount.currency.iso_code,
-          customer: user.subscription.stripe_customer_id,
+          customer: stripe_customer_id,
           description: description,
           statement_descriptor: "Toruya #{description}",
           metadata: {
@@ -175,12 +195,25 @@ module Subscriptions
           payment_method_types: ['card']
         }
 
+        # Add payment method and confirm if available
+        if default_payment_method.present?
+          payment_intent_params[:payment_method] = default_payment_method
+          payment_intent_params[:confirm] = true
+        end
+
         Stripe::PaymentIntent.create(payment_intent_params)
       else
         # Automatic recurring charge - use saved payment method
-        customer = Stripe::Customer.retrieve(user.subscription.stripe_customer_id)
-        default_payment_method = customer.invoice_settings.default_payment_method ||
-                                 get_latest_payment_method(customer.id)
+        begin
+          customer = Stripe::Customer.retrieve(stripe_customer_id)
+          default_payment_method = customer.invoice_settings&.default_payment_method ||
+                                   get_latest_payment_method(customer.id)
+        rescue Stripe::StripeError => e
+          charge.auth_failed!
+          errors.add(:plan, :stripe_customer_not_found)
+          Rollbar.error(e, user_id: user.id, stripe_customer_id: stripe_customer_id)
+          return nil
+        end
 
         if default_payment_method.nil?
           charge.auth_failed!
@@ -191,7 +224,7 @@ module Subscriptions
         Stripe::PaymentIntent.create({
           amount: amount.fractional * amount.currency.default_subunit_to_unit,
           currency: amount.currency.iso_code,
-          customer: user.subscription.stripe_customer_id,
+          customer: stripe_customer_id,
           payment_method: default_payment_method,  # Use saved payment method
           description: description,
           statement_descriptor: "Toruya #{description}",
@@ -211,12 +244,17 @@ module Subscriptions
     end
 
     def get_latest_payment_method(customer_id)
-      payment_methods = Stripe::PaymentMethod.list({
-        customer: customer_id,
-        type: 'card',
-        limit: 1
-      })
-      payment_methods.data.first&.id
+      begin
+        payment_methods = Stripe::PaymentMethod.list({
+          customer: customer_id,
+          type: 'card',
+          limit: 1
+        })
+        payment_methods.data.first&.id
+      rescue Stripe::StripeError => e
+        Rollbar.error(e, customer_id: customer_id, context: 'get_latest_payment_method')
+        nil
+      end
     end
   end
 end

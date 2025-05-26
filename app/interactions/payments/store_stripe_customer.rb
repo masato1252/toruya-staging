@@ -5,6 +5,7 @@ module Payments
     object :user
     string :authorize_token
     string :setup_intent_id, default: nil
+    string :payment_intent_id, default: nil
 
     def execute
       begin
@@ -31,8 +32,44 @@ module Payments
             end
 
             return payment_method_id
-          when 'requires_action', 'requires_payment_method', 'requires_confirmation'
-            errors.add(:customer, :requires_action, client_secret: setup_intent.client_secret, )
+          when 'requires_action', 'requires_payment_method', 'requires_confirmation', "requires_source", "processing", "requires_source_action"
+            errors.add(:customer, :requires_action, client_secret: setup_intent.client_secret, payment_intent_id: setup_intent.id)
+            return nil
+          else
+            errors.add(:user, :failed)
+            return nil
+          end
+        end
+
+        if payment_intent_id.present?
+          # Handle PaymentIntent completion after 3DS
+          payment_intent = Stripe::PaymentIntent.retrieve(payment_intent_id)
+
+          case payment_intent.status
+          when 'succeeded'
+            # Payment is succeeded, get the payment method and set as default
+            if payment_intent.payment_method
+              payment_method_id = payment_intent.payment_method
+
+              # Ensure this payment method is set as customer's default
+              if subscription.stripe_customer_id.present?
+                Stripe::Customer.update(
+                  subscription.stripe_customer_id,
+                  {
+                    invoice_settings: {
+                      default_payment_method: payment_method_id
+                    }
+                  }
+                )
+              end
+
+              return payment_method_id
+            else
+              errors.add(:user, :no_payment_method)
+              return nil
+            end
+          when 'requires_action', 'requires_payment_method', 'requires_confirmation', "requires_source", "processing", "requires_source_action"
+            errors.add(:user, :requires_action, client_secret: payment_intent.client_secret, payment_intent_id: payment_intent_id)
             return nil
           else
             errors.add(:user, :failed)

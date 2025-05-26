@@ -14,7 +14,7 @@ module Subscriptions
       user = subscription.user
 
       subscription.with_lock do
-        compose(Payments::StoreStripeCustomer, user: user, authorize_token: authorize_token)
+        Payments::StoreStripeCustomer.run(user: user, authorize_token: authorize_token, payment_intent_id: payment_intent_id)
 
         new_plan_price, charging_rank = compose(Plans::Price, user: user, plan: plan, rank: rank)
         residual_value = compose(Subscriptions::ResidualValue, user: user)

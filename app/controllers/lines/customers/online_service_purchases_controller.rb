@@ -50,20 +50,16 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
       }
     else
       # Check if it's a 3DS-related error - any error containing client_secret needs frontend handling
-      payment_errors = outcome.errors.details[:base] || []
-      error_with_client_secret = payment_errors.find { |error| error[:client_secret].present? }
+      error_with_client_secret = find_error_with_client_secret(outcome)
 
       if error_with_client_secret
         response_data = {
           status: "requires_action",
-          client_secret: error_with_client_secret[:client_secret]
+          client_secret: error_with_client_secret[:client_secret],
+          setup_intent_id: error_with_client_secret[:setup_intent_id],
+          payment_intent_id: error_with_client_secret[:payment_intent_id],
+          stripe_subscription_id: error_with_client_secret[:stripe_subscription_id]
         }
-
-        error_with_subscription_id = payment_errors.find { |error| error[:stripe_subscription_id].present? }
-        # For subscription payments, also include subscription_id if available
-        if @sale_page.recurring? && error_with_subscription_id
-          response_data[:stripe_subscription_id] = error_with_subscription_id[:stripe_subscription_id]
-        end
 
         render json: response_data
       else

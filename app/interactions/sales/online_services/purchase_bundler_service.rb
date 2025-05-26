@@ -38,7 +38,7 @@ module Sales
 
           case payment_type
           when SalePage::PAYMENTS[:one_time], SalePage::PAYMENTS[:multiple_times]
-            compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
+            Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, payment_intent_id: payment_intent_id)
 
             # credit card charge is synchronous request, it would return final status immediately
             if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true, payment_intent_id: payment_intent_id)
@@ -48,7 +48,7 @@ module Sales
               relation.failed_payment_state!
             end
           when SalePage::PAYMENTS[:month], SalePage::PAYMENTS[:year]
-            compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token, stripe_subscription_id: stripe_subscription_id)
+            Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, stripe_subscription_id: stripe_subscription_id)
 
             # credit card charge is synchronous request, it would return final status immediately
             compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation, stripe_subscription_id: stripe_subscription_id)

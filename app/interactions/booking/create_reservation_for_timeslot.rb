@@ -324,7 +324,7 @@ module Booking
             end
 
             if stripe_token.present?
-              compose(Customers::StorePaymentCustomer, customer: customer, authorize_token: stripe_token, payment_provider: user.stripe_provider)
+              Customers::StorePaymentCustomer.run(customer: customer, authorize_token: stripe_token, payment_provider: user.stripe_provider, payment_intent_id: payment_intent_id)
               purchase_outcome = CustomerPayments::PayReservation.run(
                 reservation_customer: reservation_customer,
                 payment_provider: user.stripe_provider,

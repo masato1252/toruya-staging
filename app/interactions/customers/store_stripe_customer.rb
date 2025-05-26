@@ -5,6 +5,7 @@ module Customers
     object :customer
     string :authorize_token
     string :payment_intent_id, default: nil
+    string :stripe_subscription_id, default: nil
     string :setup_intent_id, default: nil
 
     def execute
@@ -47,7 +48,56 @@ module Customers
       if stripe_customer_id
         # update customer a new card
         begin
-          if payment_intent_id
+          if stripe_subscription_id
+            # Handle subscription completion after 3DS
+            stripe_subscription = Stripe::Subscription.retrieve(
+              stripe_subscription_id,
+              stripe_account: customer.user.stripe_provider.uid
+            )
+
+            case stripe_subscription.status
+            when 'active'
+              # Subscription is now active, get the payment method from the subscription
+              if stripe_subscription.default_payment_method
+                payment_method_id = stripe_subscription.default_payment_method
+
+                # Ensure this payment method is set as customer's default
+                Stripe::Customer.update(
+                  stripe_customer_id,
+                  {
+                    invoice_settings: {
+                      default_payment_method: payment_method_id
+                    }
+                  },
+                  stripe_account: customer.user.stripe_provider.uid
+                )
+
+                return payment_method_id
+              else
+                errors.add(:customer, :no_payment_method)
+                return nil
+              end
+            when 'incomplete'
+              # Still incomplete, check latest invoice for 3DS requirements
+              if stripe_subscription.latest_invoice&.payment_intent
+                payment_intent = stripe_subscription.latest_invoice.payment_intent
+                case payment_intent.status
+                when 'requires_action', 'requires_payment_method', 'requires_confirmation'
+                  errors.add(:customer, :requires_action, client_secret: payment_intent.client_secret, stripe_subscription_id: stripe_subscription_id)
+                  return nil
+                else
+                  errors.add(:customer, :subscription_incomplete)
+                  return nil
+                end
+              else
+                errors.add(:customer, :subscription_incomplete)
+                return nil
+              end
+            else
+              errors.add(:customer, :subscription_failed)
+              return nil
+            end
+          elsif payment_intent_id
             payment_intent = Stripe::PaymentIntent.retrieve(
               payment_intent_id,
               stripe_account: customer.user.stripe_provider.uid
@@ -55,10 +105,28 @@ module Customers
 
             case payment_intent.status
             when 'succeeded'
-              # Payment method is already attached to the customer
-              return stripe_customer_id
+              # Payment is succeeded, get the payment method and set as default
+              if payment_intent.payment_method
+                payment_method_id = payment_intent.payment_method
+
+                # Ensure this payment method is set as customer's default
+                Stripe::Customer.update(
+                  stripe_customer_id,
+                  {
+                    invoice_settings: {
+                      default_payment_method: payment_method_id
+                    }
+                  },
+                  stripe_account: customer.user.stripe_provider.uid
+                )
+
+                return payment_method_id
+              else
+                errors.add(:customer, :no_payment_method)
+                return nil
+              end
             when 'requires_action', 'requires_payment_method', 'requires_confirmation'
-              errors.add(:customer, :requires_action, client_secret: payment_intent.client_secret)
+              errors.add(:customer, :requires_action, client_secret: payment_intent.client_secret, payment_intent_id: payment_intent_id)
               return nil
             else
               errors.add(:customer, :failed)

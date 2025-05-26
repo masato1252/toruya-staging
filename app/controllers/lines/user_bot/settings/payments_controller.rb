@@ -44,9 +44,12 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
         params: params
       )
 
+      error_with_client_secret = find_error_with_client_secret(outcome)
+
       render json: {
          message: outcome.errors.full_messages.join(""),
-         client_secret: outcome.errors.details.dig(:plan)&.first&.dig(:client_secret),
+         client_secret: error_with_client_secret[:client_secret],
+         payment_intent_id: error_with_client_secret[:payment_intent_id]
       }, status: :unprocessable_entity
     else
       render json: { redirect_path: lines_user_bot_settings_path(business_owner_id: business_owner_id) }

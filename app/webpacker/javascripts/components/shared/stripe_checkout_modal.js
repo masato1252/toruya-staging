@@ -25,12 +25,7 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
         if (error.response?.data?.client_secret) {
           // Handle 3DS authentication case
           const stripe = await loadStripe(props.stripe_key);
-          const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(
-            error.response.data.client_secret,
-            {
-              payment_method: paymentMethodId,
-            }
-          );
+          const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(error.response.data.client_secret);
 
           setProcessing(true)
 

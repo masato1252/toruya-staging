@@ -34,29 +34,68 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
 
     begin
       payment_intent = if payment_intent_id.present?
-        Stripe::PaymentIntent.retrieve(
+        retrieved_intent = Stripe::PaymentIntent.retrieve(
           payment_intent_id,
           stripe_account: customer.user.stripe_provider.uid
         )
+
+                # If Payment Intent is already succeeded (after 3DS completion),
+        # handle the success immediately without recreating
+        if retrieved_intent.status == 'succeeded'
+          handle_payment_success(payment, retrieved_intent)
+          return payment
+        end
+
+        retrieved_intent
       else
-        Stripe::PaymentIntent.create(
-          {
-            amount: charging_price_amount.fractional * charging_price_amount.currency.default_subunit_to_unit,
-            currency: customer.user.currency,
-            customer: customer.stripe_customer_id,
-            description: sale_page.product_name.first(STRIPE_DESCRIPTION_LIMIT),
-            metadata: {
-              relation: online_service_customer_relation.id,
-              sale_page: sale_page.slug,
-              customer_id: customer.id,
-              customer_name: customer.name,
-              service_id: online_service.id
-            },
-            setup_future_usage: 'off_session',
-            confirmation_method: 'automatic',
-            capture_method: 'automatic',
-            payment_method_types: ['card'],
+        # Check if customer has a stripe customer ID
+        if customer.stripe_customer_id.blank?
+          payment.auth_failed!
+          errors.add(:online_service_customer_relation, :no_stripe_customer)
+          return payment
+        end
+
+        # Get customer's default payment method
+        begin
+          stripe_customer = Stripe::Customer.retrieve(
+            customer.stripe_customer_id,
+            stripe_account: customer.user.stripe_provider.uid
+          )
+          default_payment_method = stripe_customer.invoice_settings&.default_payment_method ||
+                                   get_latest_payment_method(customer.stripe_customer_id)
+        rescue Stripe::StripeError => e
+          payment.auth_failed!
+          errors.add(:online_service_customer_relation, :stripe_customer_not_found)
+          Rollbar.error(e, customer_id: customer.id, stripe_customer_id: customer.stripe_customer_id)
+          return payment
+        end
+
+        payment_intent_params = {
+          amount: charging_price_amount.fractional * charging_price_amount.currency.default_subunit_to_unit,
+          currency: customer.user.currency,
+          customer: customer.stripe_customer_id,
+          description: sale_page.product_name.first(STRIPE_DESCRIPTION_LIMIT),
+          metadata: {
+            relation: online_service_customer_relation.id,
+            sale_page: sale_page.slug,
+            customer_id: customer.id,
+            customer_name: customer.name,
+            service_id: online_service.id
           },
+          setup_future_usage: 'off_session',
+          confirmation_method: 'automatic',
+          capture_method: 'automatic',
+          payment_method_types: ['card'],
+        }
+
+        # Add payment method and confirm if available
+        if default_payment_method.present?
+          payment_intent_params[:payment_method] = default_payment_method
+          payment_intent_params[:confirm] = true
+        end
+
+        Stripe::PaymentIntent.create(
+          payment_intent_params,
           stripe_account: customer.user.stripe_provider.uid
         )
       end
@@ -65,31 +104,23 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
 
       case payment_intent.status
       when 'succeeded'
-        payment.completed!
-        if online_service_customer_relation.paid_completed?
-          online_service_customer_relation.paid_payment_state!
-        else
-          online_service_customer_relation.partial_paid_payment_state!
-        end
-
-        unless first_time_charge
-          Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully.run(
-            receiver: customer,
-            customer_payment: payment
-          )
-        end
-
-        if Rails.configuration.x.env.production?
-          HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Sale Page #{Rails.application.routes.url_helpers.sale_page_url(sale_page.slug)} customer_id: #{customer.id} Stripe charge💰")
-        end
-      when 'requires_action', 'requires_payment_method', 'requires_confirmation', "requires_source", "processing"
+        handle_payment_success(payment, payment_intent)
+      # All statuses that require frontend handling with client_secret:
+      # - requires_action: 3DS authentication, redirects, etc.
+      # - requires_payment_method: Payment failed, need new payment method
+      # - requires_confirmation: Manual confirmation required
+      # - requires_source: Legacy API support
+      # - requires_source_action: Legacy API support
+      # - processing: Payment submitted but not yet complete (some payment methods)
+      when 'requires_action', 'requires_payment_method', 'requires_confirmation', "requires_source", "processing", "requires_source_action"
         payment.stripe_charge_details = payment_intent.as_json
         payment.save!
-        errors.add(:online_service_customer_relation, :requires_action, client_secret: payment_intent.client_secret)
+        errors.add(:online_service_customer_relation, :requires_action, client_secret: payment_intent.client_secret, payment_intent_id: payment_intent.id)
       when 'canceled'
         payment.auth_failed!
         errors.add(:online_service_customer_relation, :canceled)
       else
+        Rollbar.error("Payment intent failed", status: payment_intent.status, toruya_charge: payment.id, stripe_charge: payment_intent.as_json)
         payment.auth_failed!
         errors.add(:online_service_customer_relation, :failed)
       end
@@ -119,6 +150,28 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
   end
 
   private
+
+  def handle_payment_success(payment, payment_intent)
+    payment.stripe_charge_details = payment_intent.as_json
+    payment.completed!
+
+    if online_service_customer_relation.paid_completed?
+      online_service_customer_relation.paid_payment_state!
+    else
+      online_service_customer_relation.partial_paid_payment_state!
+    end
+
+    unless first_time_charge
+      Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully.run(
+        receiver: customer,
+        customer_payment: payment
+      )
+    end
+
+    if Rails.configuration.x.env.production?
+      HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Sale Page #{Rails.application.routes.url_helpers.sale_page_url(sale_page.slug)} customer_id: #{customer.id} Stripe charge💰")
+    end
+  end
 
   def failed_charge_notification(payment)
     unless manual

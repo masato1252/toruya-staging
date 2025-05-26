@@ -6,6 +6,7 @@ require "flow_backtracer"
 class BookingPagesController < ActionController::Base
   include MixpanelHelper
   include ProductLocale
+  include ControllerHelpers
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
   protect_from_forgery with: :exception, prepend: true
@@ -153,13 +154,13 @@ class BookingPagesController < ActionController::Base
       }
     else
       # Check if it's a 3DS-related error - any error containing client_secret needs frontend handling
-      payment_errors = outcome.errors.details[:base] || []
-      error_with_client_secret = payment_errors.find { |error| error[:client_secret].present? }
+      error_with_client_secret = find_error_with_client_secret(outcome)
 
       if error_with_client_secret
         render json: {
           status: "requires_action",
-          client_secret: error_with_client_secret[:client_secret]
+          client_secret: error_with_client_secret[:client_secret],
+          payment_intent_id: error_with_client_secret[:payment_intent_id]
         }
       else
         booking_page.touch

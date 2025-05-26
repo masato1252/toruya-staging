@@ -56,9 +56,9 @@
         <%= payment.invoice_id %>
       </span>
       <% if @relation.online_service.recurring_charge_required? %>
-        <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id]), class: "btn btn-yellow" if !@is_owner && payment.failed? && !@relation.payment_legal_to_access? %>
+        <%= link_to t("action.pay_now"), new_customer_payments_path(slug: @relation.sale_page_service_slug, encrypted_social_service_user_id: params[:encrypted_social_service_user_id], encrypted_customer_id: MessageEncryptor.encrypt(@customer.id)), class: "btn btn-yellow" if !@is_owner && payment.failed? && !@relation.payment_legal_to_access? %>
       <% else %>
-        <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], order_id: payment.order_id), class: "btn btn-yellow" if !@is_owner && !@relation.order_completed.fetch(payment.order_id) && payment.order_id %>
+        <%= link_to t("action.pay_now"), new_customer_payments_path(slug: @relation.sale_page_service_slug, encrypted_social_service_user_id: params[:encrypted_social_service_user_id], encrypted_customer_id: MessageEncryptor.encrypt(@customer.id), order_id: payment.order_id), class: "btn btn-yellow" if !@is_owner && !@relation.order_completed.fetch(payment.order_id) && payment.order_id %>
       <% end %>
     <% end %>
   </div>

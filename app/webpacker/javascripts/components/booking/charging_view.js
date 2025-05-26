@@ -33,13 +33,11 @@ const ChargingView = ({booking_details, payment_solution, handleTokenCallback, p
             // Start polling subscription status
             return await pollPaymentStatus({ stripeSubscriptionId: result.stripe_subscription_id, paymentMethodId });
           }
-        } else {
+        }
+        else {
           // Handle payment intent 3DS
           const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(
-            result.client_secret,
-            {
-              payment_method: paymentMethodId,
-            }
+            result.client_secret
           );
 
           if (confirmError) {
@@ -61,7 +59,8 @@ const ChargingView = ({booking_details, payment_solution, handleTokenCallback, p
 
       setProcessing(false)
       return result;
-    } catch (error) {
+    }
+     catch (error) {
       setProcessing(false)
       throw error;
     }

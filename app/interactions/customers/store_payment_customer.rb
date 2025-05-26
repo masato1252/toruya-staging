@@ -5,6 +5,7 @@ module Customers
     object :customer
     string :authorize_token
     object :payment_provider, class: AccessProvider
+    string :payment_intent_id, default: nil
 
     validate :validate_payment_providers
 
