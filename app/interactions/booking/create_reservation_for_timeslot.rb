@@ -328,7 +328,8 @@ module Booking
               purchase_outcome = CustomerPayments::PayReservation.run(
                 reservation_customer: reservation_customer,
                 payment_provider: user.stripe_provider,
-                payment_intent_id: payment_intent_id
+                payment_intent_id: payment_intent_id,
+                payment_method_id: stripe_token
               )
 
               if purchase_outcome.valid?

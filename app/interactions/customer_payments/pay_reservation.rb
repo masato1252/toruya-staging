@@ -9,6 +9,7 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
   string :source_id, default: nil
   string :location_id, default: nil
   string :payment_intent_id, default: nil
+  string :payment_method_id, default: nil
 
   def execute
     order_id = OrderId.generate
@@ -24,7 +25,7 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
 
     case payment_provider.provider
     when AccessProvider.providers[:stripe_connect]
-      compose(CustomerPayments::StripePayReservation, reservation_customer: reservation_customer, payment: payment, payment_intent_id: payment_intent_id)
+      compose(CustomerPayments::StripePayReservation, reservation_customer: reservation_customer, payment: payment, payment_intent_id: payment_intent_id, payment_method_id: payment_method_id)
     when AccessProvider.providers[:square]
       compose(CustomerPayments::SquarePayReservation, reservation_customer: reservation_customer, payment: payment, source_id: source_id, location_id: location_id)
     end

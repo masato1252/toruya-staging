@@ -41,7 +41,7 @@ module Sales
             Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, payment_intent_id: payment_intent_id)
 
             # credit card charge is synchronous request, it would return final status immediately
-            if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true, payment_intent_id: payment_intent_id)
+            if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true, payment_intent_id: payment_intent_id, payment_method_id: authorize_token)
               Sales::OnlineServices::ApproveBundlerService.run(relation: relation)
               Sales::OnlineServices::ScheduleCharges.run(relation: relation)
             else
@@ -51,7 +51,7 @@ module Sales
             Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, stripe_subscription_id: stripe_subscription_id)
 
             # credit card charge is synchronous request, it would return final status immediately
-            compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation, stripe_subscription_id: stripe_subscription_id)
+            compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation, stripe_subscription_id: stripe_subscription_id, payment_method_id: authorize_token)
           end
         end
 

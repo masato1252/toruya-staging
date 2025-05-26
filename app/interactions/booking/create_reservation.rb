@@ -92,7 +92,7 @@ module Booking
       #     if not allow overlap, show error message
       #
       # else reservation doesn't exist
-      #  use Booking::SharedMethods loop_for_reserable_spot to find the available staffs 
+      #  use Booking::SharedMethods loop_for_reserable_spot to find the available staffs
 
       Reservation.transaction do
         ActiveRecord::Base.with_advisory_lock("customer_booking_in_user_#{user.id}") do
@@ -318,7 +318,8 @@ module Booking
               compose(Customers::StorePaymentCustomer, customer: customer, authorize_token: stripe_token, payment_provider: user.stripe_provider)
               purchase_outcome = CustomerPayments::PayReservation.run(
                 reservation_customer: reservation_customer,
-                payment_provider: user.stripe_provider
+                payment_provider: user.stripe_provider,
+                payment_method_id: stripe_token
               )
 
               if purchase_outcome.valid?

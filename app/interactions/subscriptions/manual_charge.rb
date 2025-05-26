@@ -40,7 +40,8 @@ module Subscriptions
           rank: charging_rank,
           manual: true,
           charge_amount: charge_amount,
-          payment_intent_id: payment_intent_id
+          payment_intent_id: payment_intent_id,
+          payment_method_id: authorize_token
         )
 
         if charge_outcome.valid?

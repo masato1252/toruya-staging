@@ -132,7 +132,7 @@ class User < ApplicationRecord
   end
 
   def super_admin?
-    ADMIN_IDS.include?(id) || social_user.super_admin?
+    ADMIN_IDS.include?(id) || social_user&.super_admin?
   end
 
   def can_admin_chat?

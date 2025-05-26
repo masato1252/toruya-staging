@@ -3,11 +3,13 @@
 require "slack_client"
 
 class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
+  include StripePaymentMethodHandler
   object :online_service_customer_relation
   object :online_service_customer_price, class: OnlineServiceCustomerPrice, default: nil
   boolean :first_time_charge, default: false
   boolean :manual, default: false
   string :payment_intent_id, default: nil
+  string :payment_method_id, default: nil
 
   validate :validate_online_service_customer_relation_state
 
@@ -55,18 +57,17 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
           return payment
         end
 
-        # Get customer's default payment method
-        begin
-          stripe_customer = Stripe::Customer.retrieve(
-            customer.stripe_customer_id,
-            stripe_account: customer.user.stripe_provider.uid
-          )
-          default_payment_method = stripe_customer.invoice_settings&.default_payment_method ||
-                                   get_latest_payment_method(customer.stripe_customer_id)
-        rescue Stripe::StripeError => e
+        # Get selected payment method using shared logic
+        default_payment_method = get_selected_payment_method(
+          customer.stripe_customer_id,
+          payment_method_id,
+          customer.user.stripe_provider.uid
+        )
+
+        if default_payment_method.nil?
           payment.auth_failed!
           errors.add(:online_service_customer_relation, :stripe_customer_not_found)
-          Rollbar.error(e, customer_id: customer.id, stripe_customer_id: customer.stripe_customer_id)
+          Rollbar.error("No payment method available", customer_id: customer.id, stripe_customer_id: customer.stripe_customer_id)
           return payment
         end
 
@@ -204,4 +205,6 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       errors.add(:online_service_customer_relation, :was_paid)
     end
   end
+
+
 end

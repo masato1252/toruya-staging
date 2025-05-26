@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
+  include StripePaymentMethodHandler
   object :relation, class: OnlineServiceCustomerRelation
   string :stripe_subscription_id, default: nil
+  string :payment_method_id, default: nil
 
   def execute
     price_details = relation.price_details.first
@@ -29,27 +31,41 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
             )
           end
 
+          # Get selected payment method using shared logic
+          selected_payment_method = get_selected_payment_method(
+            customer.stripe_customer_id,
+            payment_method_id,
+            customer.user.stripe_provider.uid
+          )
+
+          subscription_params = {
+            customer: customer.stripe_customer_id,
+            items: [
+              { price: price_details.stripe_price_id },
+            ],
+            metadata: {
+              relation: relation.id,
+              customer_id: customer.id,
+              customer_name: customer.name,
+              service_id: relation.online_service_id
+            },
+            # Important: Set payment_behavior to handle 3DS properly
+            payment_behavior: 'default_incomplete',
+            payment_settings: {
+              save_default_payment_method: 'on_subscription',
+              payment_method_types: ['card']
+            },
+            expand: ['latest_invoice.payment_intent']
+          }
+
+          # Add specific payment method if available
+          if selected_payment_method.present?
+            subscription_params[:default_payment_method] = selected_payment_method
+          end
+
           # Create new subscription
           stripe_subscription = Stripe::Subscription.create(
-            {
-              customer: customer.stripe_customer_id,
-              items: [
-                { price: price_details.stripe_price_id },
-              ],
-              metadata: {
-                relation: relation.id,
-                customer_id: customer.id,
-                customer_name: customer.name,
-                service_id: relation.online_service_id
-              },
-              # Important: Set payment_behavior to handle 3DS properly
-              payment_behavior: 'default_incomplete',
-              payment_settings: {
-                save_default_payment_method: 'on_subscription',
-                payment_method_types: ['card']
-              },
-              expand: ['latest_invoice.payment_intent']
-            },
+            subscription_params,
             stripe_account: customer.user.stripe_provider.uid
           )
         end

@@ -26,7 +26,8 @@ module OnlineServices
 
           CustomerPayments::SubscribeOnlineService.run(
             online_service_customer_relation: relation,
-            stripe_subscription_id: params[:stripe_subscription_id]
+            stripe_subscription_id: params[:stripe_subscription_id],
+            payment_method_id: params[:token]
           )
         else
           customer_outcome = Customers::StoreStripeCustomer.run(
@@ -41,6 +42,7 @@ module OnlineServices
             online_service_customer_relation: relation,
             online_service_customer_price: price,
             payment_intent_id: params[:payment_intent_id],
+            payment_method_id: params[:token],
             manual: true
           )
         end

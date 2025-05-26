@@ -3,9 +3,11 @@
 require "slack_client"
 
 class CustomerPayments::StripePayReservation < ActiveInteraction::Base
+  include StripePaymentMethodHandler
   object :reservation_customer
   object :payment, class: CustomerPayment
   string :payment_intent_id, default: nil
+  string :payment_method_id, default: nil
 
   def execute
     customer.reload
@@ -35,18 +37,17 @@ class CustomerPayments::StripePayReservation < ActiveInteraction::Base
           return payment
         end
       else
-        # Get customer's default payment method
-        begin
-          stripe_customer = Stripe::Customer.retrieve(
-            customer.stripe_customer_id,
-            stripe_account: customer.user.stripe_provider.uid
-          )
-          default_payment_method = stripe_customer.invoice_settings&.default_payment_method ||
-                                   get_latest_payment_method(customer.stripe_customer_id)
-        rescue Stripe::StripeError => e
+        # Get selected payment method using shared logic
+        selected_payment_method = get_selected_payment_method(
+          customer.stripe_customer_id,
+          payment_method_id,
+          customer.user.stripe_provider.uid
+        )
+
+        if selected_payment_method.nil?
           payment.auth_failed!
           errors.add(:payment, :stripe_customer_not_found)
-          Rollbar.error(e, customer_id: customer.id, stripe_customer_id: customer.stripe_customer_id)
+          Rollbar.error("No payment method available", customer_id: customer.id, stripe_customer_id: customer.stripe_customer_id)
           return payment
         end
 
@@ -68,8 +69,8 @@ class CustomerPayments::StripePayReservation < ActiveInteraction::Base
         }
 
         # Add payment method and confirm if available
-        if default_payment_method.present?
-          payment_intent_params[:payment_method] = default_payment_method
+        if selected_payment_method.present?
+          payment_intent_params[:payment_method] = selected_payment_method
           payment_intent_params[:confirm] = true
         end
 
@@ -130,20 +131,5 @@ class CustomerPayments::StripePayReservation < ActiveInteraction::Base
     @reservation ||= reservation_customer.reservation
   end
 
-  def get_latest_payment_method(customer_id)
-    begin
-      payment_methods = Stripe::PaymentMethod.list(
-        {
-          customer: customer_id,
-          type: 'card',
-          limit: 1
-        },
-        stripe_account: customer.user.stripe_provider.uid
-      )
-      payment_methods.data.first&.id
-    rescue Stripe::StripeError => e
-      Rollbar.error(e, customer_id: customer_id, context: 'get_latest_payment_method')
-      nil
-    end
-  end
+
 end
