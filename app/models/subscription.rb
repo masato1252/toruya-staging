@@ -87,7 +87,7 @@ class Subscription < ApplicationRecord
   alias_method :in_paid_plan?, :in_paid_plan
 
   def in_free_plan?
-    current_plan.id == FREE_PLAN_ID
+    plan_id == FREE_PLAN_ID
   end
 
   def active?
