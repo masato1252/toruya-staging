@@ -91,7 +91,9 @@ class Subscription < ApplicationRecord
   end
 
   def active?
-    (in_free_plan? && trial_expired_date >= self.class.today) || !!(expired_date && expired_date >= self.class.today.advance(days: INACTIVE_BUFFER_DAYS)) || (in_free_plan? && !over_free_limit?)
+    trial_expired_date >= self.class.today ||
+      !!(expired_date && expired_date >= self.class.today.advance(days: INACTIVE_BUFFER_DAYS)) ||
+      (user.customers.count <= customers_limit)
   end
 
   def chargeable?
