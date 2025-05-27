@@ -9,7 +9,7 @@ module OnlineServices
         if @relation.online_service.recurring_charge_required?
           @relation.price_details.first
         else
-          @relation.price_details.find { |price| price.order_id == params[:order_id] }
+          @relation.price_details.find { |price| price.order_id == params[:order_id] } || @relation.price_details.first
         end
     end
 
@@ -36,7 +36,7 @@ module OnlineServices
             payment_intent_id: params[:payment_intent_id]
           )
 
-          price = relation.price_details.find { |price| price.order_id == params[:order_id] }
+          price = relation.price_details.find { |price| price.order_id == params[:order_id] } || relation.price_details.first
 
           CustomerPayments::PurchaseOnlineService.run(
             online_service_customer_relation: relation,

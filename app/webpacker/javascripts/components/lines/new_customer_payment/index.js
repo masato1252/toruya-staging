@@ -31,7 +31,8 @@ export const NewCustomerPayment = ({props}) => {
       return {
         requires_action: true,
         client_secret: response.data.client_secret,
-        stripe_subscription_id: response.data.stripe_subscription_id
+        stripe_subscription_id: response.data.stripe_subscription_id,
+        payment_intent_id: response.data.payment_intent_id
       }
     }
     else if (response.data.status === "failed") {

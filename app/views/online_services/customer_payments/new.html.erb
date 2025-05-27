@@ -6,7 +6,9 @@
     order_id: params[:order_id],
     company_name: @relation.online_service.company.company_name,
     service_name: @relation.online_service.name,
-    price: @price.amount_with_currency.format
+    price: @price.amount_with_currency.format,
+    is_subscription: @relation.online_service.recurring_charge_required?,
+    business_owner_id: current_owner.id
   }
 },
 { camelize_props: false }

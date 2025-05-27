@@ -81,12 +81,9 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
           # Check if 3DS is required
           payment_intent = stripe_subscription.latest_invoice.payment_intent
 
-          if payment_intent && payment_intent.status == 'requires_action'
+          if payment_intent && ['requires_action', 'requires_payment_method', 'requires_confirmation', "requires_source", "processing", "requires_source_action"].include?(payment_intent.status)
             # 3DS verification required
             errors.add(:relation, :requires_action, client_secret: payment_intent.client_secret, stripe_subscription_id: stripe_subscription.id)
-          elsif payment_intent && payment_intent.status == 'requires_payment_method'
-            # Payment method failed
-            errors.add(:relation, :payment_failed, client_secret: payment_intent.client_secret, stripe_subscription_id: stripe_subscription.id)
           else
             # Other incomplete status
             errors.add(:relation, :subscription_incomplete, client_secret: payment_intent.client_secret, stripe_subscription_id: stripe_subscription.id)

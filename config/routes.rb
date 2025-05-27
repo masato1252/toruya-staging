@@ -816,7 +816,7 @@ Rails.application.routes.draw do
       put "/episodes/:episode_id", action: :watch_episode, as: :watch_episode
       get "/episodes(/:tag)", action: :tagged_episodes, as: :tagged_episodes
       get "/search/:keyword", action: :search_episodes, as: :search_episodes
-      get "/customer_status/:encrypted_social_service_user_id", action: :customer_status, as: :customer_status
+      get "/customer_status/(:encrypted_social_service_user_id)", action: :customer_status, as: :customer_status
 
       scope module: :online_services do
         resources :customer_payments, only: [:create] do
