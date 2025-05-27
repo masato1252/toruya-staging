@@ -90,6 +90,11 @@ class Subscription < ApplicationRecord
     plan_id == FREE_PLAN_ID
   end
 
+  def is_paid_plan_in_free_level?
+    # Usually happen when user charged failed
+    charge_required && current_plan.level == Plan::FREE_LEVEL
+  end
+
   def active?
     trial_expired_date >= self.class.today ||
       !!(expired_date && expired_date >= self.class.today.advance(days: INACTIVE_BUFFER_DAYS)) ||

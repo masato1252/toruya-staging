@@ -128,6 +128,7 @@ ja:
     non_group_customers: "顧客台帳が設定されていない顧客情報が %{number} 個見つかりました。"
     next_non_group_customer: "台帳を設定"
     non_group_customers_alert_message: この顧客に顧客台帳を設定してください。
+    failed_user_reminder_message_html: "あなたは無料プランに降格されました。\n\n続けて進階機能を利用するには、<a href='%{plan_url}'>設定画面</a>からプランを変更してください。"
   filter:
     modal:
       saved_filter:

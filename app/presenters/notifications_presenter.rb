@@ -15,7 +15,8 @@ class NotificationsPresenter
 
   def data
     Array.wrap(new_pending_reservations) +
-      Notifications::PendingCustomerReservationsPresenter.new(h, user).data
+      Notifications::PendingCustomerReservationsPresenter.new(h, user).data +
+      failed_user_reminder_messages
   end
 
   def recent_pending_reservations
@@ -29,6 +30,14 @@ class NotificationsPresenter
   end
 
   private
+
+  def failed_user_reminder_messages
+    if user.subscription.is_paid_plan_in_free_level?
+      [I18n.t("notifications.failed_user_reminder_message_html", plan_url: Rails.application.routes.url_helpers.lines_user_bot_settings_plans_path(user.id, upgrade: user.subscription.plan.level))]
+    else
+      []
+    end
+  end
 
   def new_pending_reservations
     @new_pending_reservations_message ||= if recent_pending_reservations.present?
