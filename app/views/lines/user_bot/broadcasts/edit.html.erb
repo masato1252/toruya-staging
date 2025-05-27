@@ -1,5 +1,6 @@
 <%= react_component("user_bot/broadcasts/edit", {
   props: {
+    support_feature_flags: support_feature_flags,
     business_owner_id: business_owner_id,
     broadcast: BroadcastSerializer.new(@broadcast).attributes_hash,
     customer_tags: Current.business_owner.customer_tags,
