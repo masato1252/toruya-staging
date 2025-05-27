@@ -23,7 +23,7 @@ module NotificationFallbackable
 
   def notification_priority_for(preferred_channel)
     case preferred_channel
-    when "email", :email then %w[email]
+    when "email", :email then %w[email line]
     when "sms", :sms then %w[sms email]
     when "line", :line then %w[line email]
     else %w[line email]
