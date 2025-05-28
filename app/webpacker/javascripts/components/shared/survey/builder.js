@@ -5,7 +5,7 @@ import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import ActivityQuestion from './ActivityQuestion';
-import { getEmbedUrl } from 'libraries/helper';
+import { getEmbedUrl, getEditorLocale } from 'libraries/helper';
 
 const QUESTION_TYPES = {
   text: 'Text',
@@ -360,6 +360,9 @@ const SurveyBuilder = ({
                   dropdownClassName: 'compact-toolbar-dropdown'
                 }
               }}
+              localization={{
+                locale: getEditorLocale(I18n.locale),
+              }}
             />
           </div>
         </div>
@@ -435,6 +438,9 @@ const SurveyBuilder = ({
                     className: 'compact-toolbar-item',
                     dropdownClassName: 'compact-toolbar-dropdown'
                   }
+                }}
+                localization={{
+                  locale: getEditorLocale(I18n.locale),
                 }}
               />
             </div>

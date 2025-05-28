@@ -206,6 +206,15 @@ const getMomentLocale = (appLocale = "tw") => {
   return localeMap[appLocale] || 'zh-TW'; // Default to zh-TW if locale not found
 }
 
+const getEditorLocale = (appLocale = "tw") => {
+  const localeMap = {
+    'tw': 'zh_tw', // Map Rails "tw" to moment's "zh_tw"
+    'ja': 'ja'     // Japanese uses the same code
+  };
+
+  return localeMap[appLocale] || 'zh-TW'; // Default to zh-TW if locale not found
+}
+
 // Format activity slot date/time range for survey display
 function formatActivitySlotRange(slot) {
   const startDateObj = slot.start_date ? new Date(slot.start_date) : null;
@@ -302,4 +311,5 @@ export {
   getMomentLocale,
   formatActivitySlotRange,
   getEmbedUrl,
+  getEditorLocale,
 };
