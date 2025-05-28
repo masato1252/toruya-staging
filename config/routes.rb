@@ -450,6 +450,10 @@ Rails.application.routes.draw do
           resources :surveys, only: [:index, :show, :new, :edit, :update, :destroy] do
             collection do
               post :upsert
+              get 'activities', action: :index, defaults: { mode: 'activity' }
+              get 'forms', action: :index, defaults: { mode: 'form' }
+              get 'activities/new', action: :new, defaults: { mode: 'activity' }
+              get 'forms/new', action: :new, defaults: { mode: 'form' }
             end
 
             member do

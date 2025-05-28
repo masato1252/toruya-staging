@@ -430,6 +430,8 @@ ja:
           new_page_methods_html: <b>【スタッフ登録方法】</b><br /> ①スタッフ登録ページをSMS送信<br /> ②スタッフ自信で登録ページからスタッフ登録<br /> ③スタッフとしてToruyaを利用
       surveys:
         title: アンケート
+        activity_title: イベント申し込み表
+        activity_description: イベント申し込みページを作成し、顧客が参加したいイベントを選択できるようにします。複数日のイベントもサポートし、複数時間帯をまとめて申し込み可能です。
         new_page_title: 新規アンケート
         new_page_header: アンケート名
         new_page_desc: アンケートページをSMS送信します

@@ -25,6 +25,16 @@
             <% end %>
           </div>
         <% end %>
+
+        <div class="action-block centerize">
+          <%= button_to activities_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible", method: :get do %>
+            <i class="fa fa-clipboard-list fa-4x"></i>
+            <h3 class="p-1"><%= I18n.t("user_bot.dashboards.surveys.activity_title") %><span class="new-feature-label"><%= t("common.new_feature") %></span></h3>
+            <p class="p-2 white-space-initial text-left">
+            <%= I18n.t("user_bot.dashboards.surveys.activity_description") %>
+            </p>
+          <% end %>
+        </div>
       </div>
     </div>
 

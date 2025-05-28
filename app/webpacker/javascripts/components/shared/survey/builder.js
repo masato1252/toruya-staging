@@ -311,7 +311,7 @@ const SurveyBuilder = ({
                 overflow: 'hidden'
               }}
               toolbarStyle={{
-                border: '1px solid #ddd',
+                border: '0px',
                 borderRadius: '4px',
                 marginBottom: '4px',
                 padding: '1px',
@@ -369,6 +369,22 @@ const SurveyBuilder = ({
         <div key={questionIndex} className="question-card">
           <div className="question-controls">
             <div className="form-group">
+              <select
+                value={question.question_type}
+                onChange={(e) => updateQuestion(questionIndex, 'question_type', e.target.value)}
+                className="form-select"
+              >
+                {Object.entries(QUESTION_TYPES)
+                  .filter(([value]) => mode === 'activity' || value !== 'activity')
+                  .map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {I18n.t(`settings.survey.question_type_${value}`)}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            <div className="form-group">
               <Editor
                 editorState={editorStates[questionIndex]}
                 placeholder={I18n.t('user_bot.dashboards.surveys.question_desc')}
@@ -382,7 +398,7 @@ const SurveyBuilder = ({
                   overflow: 'hidden'
                 }}
                 toolbarStyle={{
-                  border: '1px solid #ddd',
+                  border: '0px',
                   borderRadius: '4px',
                   marginBottom: '4px',
                   padding: '1px',
@@ -423,21 +439,6 @@ const SurveyBuilder = ({
               />
             </div>
 
-            <div className="form-group">
-              <select
-                value={question.question_type}
-                onChange={(e) => updateQuestion(questionIndex, 'question_type', e.target.value)}
-                className="form-select"
-              >
-                {Object.entries(QUESTION_TYPES)
-                  .filter(([value]) => mode === 'activity' || value !== 'activity')
-                  .map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {I18n.t(`settings.survey.question_type_${value}`)}
-                    </option>
-                  ))}
-              </select>
-            </div>
           </div>
 
           {question.question_type === 'activity' && (

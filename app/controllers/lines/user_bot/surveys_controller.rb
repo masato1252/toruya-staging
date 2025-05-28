@@ -2,8 +2,25 @@
 
 class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   def index
-    @surveys = Survey.active.includes(:questions, questions: [:options, :activities, { activities: :activity_slots }])
-                    .where(owner: Current.business_owner).order(updated_at: :desc)
+    if params[:mode] == "activity"
+      @surveys = Survey.active
+                      .joins(:questions)
+                      .where(questions: { question_type: 'activity' })
+                      .where(owner: Current.business_owner)
+                      .includes(:questions, questions: [:options, :activities, { activities: :activity_slots }])
+                      .order(updated_at: :desc)
+                      .distinct
+    else
+      @surveys = Survey.active
+                      .where(owner: Current.business_owner)
+                      .where.not(id: Survey.active
+                                      .joins(:questions)
+                                      .where(questions: { question_type: 'activity' })
+                                      .where(owner: Current.business_owner)
+                                      .select(:id))
+                      .includes(:questions, questions: [:options, :activities, { activities: :activity_slots }])
+                      .order(updated_at: :desc)
+    end
   end
 
   def new

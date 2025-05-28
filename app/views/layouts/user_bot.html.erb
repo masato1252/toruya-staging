@@ -60,13 +60,15 @@
 
         <hr class="my-2" />
         <li class="p-1">
-          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics|.*sales).*(booking|menu)/ do %>
-            <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
+          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics|.*sales).*(booking|menu|surveys\/activities)/ do %>
+            <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %><span class="new-feature-label"><%= t("common.new_feature") %></span>
           <% end %>
 
           <ul class='nav'>
             <li>
-              <%= active_link_to t("common.item.new"), new_lines_user_bot_booking_path(business_owner_id: business_owner_id) %>
+              <%= active_link_to new_lines_user_bot_booking_path(business_owner_id: business_owner_id) do %>
+                <%= t("common.item.new") %><span class="new-feature-label"><%= t("common.new_feature") %></span>
+              <% end %>
             </li>
             <li>
               <%= active_link_to t("sidebar.booking_pages.list"), lines_user_bot_booking_pages_path(business_owner_id: business_owner_id) %>
@@ -79,6 +81,11 @@
                 <%= active_link_to t("common.menu"), lines_user_bot_settings_menus_path(business_owner_id: business_owner_id) %>
               </li>
             <% end %>
+            <li>
+              <%= active_link_to activities_lines_user_bot_surveys_path(business_owner_id: business_owner_id) do %>
+                <%= t("user_bot.dashboards.surveys.activity_title") %><span class="new-feature-label"><%= t("common.new_feature") %></span>
+              <% end %>
+            </li>
           </ul>
         </li>
 
@@ -116,22 +123,20 @@
           </li>
         <% end %>
 
-        <% if support_survey_display? %>
-          <li class="p-1">
-            <%= active_link_to lines_user_bot_surveys_path(business_owner_id: business_owner_id) do %>
-              <i class="fa fa-bullhorn fa-2x"></i> <%= t("user_bot.dashboards.surveys.title") %>
-            <% end %>
+        <li class="p-1">
+          <%= active_link_to forms_lines_user_bot_surveys_path(business_owner_id: business_owner_id) do %>
+            <i class="fa fa-clipboard-list fa-2x"></i> <%= t("user_bot.dashboards.surveys.title") %><span class="new-feature-label"><%= t("common.new_feature") %></span>
+          <% end %>
 
-            <ul class='nav'>
-              <li>
-                <%= link_to t("common.item.new"), new_lines_user_bot_survey_path(business_owner_id: business_owner_id) %>
-              </li>
-              <li>
-                <%= link_to t("common.item.list"), lines_user_bot_surveys_path(business_owner_id: business_owner_id) %>
-              </li>
-            </ul>
-          </li>
-        <% end %>
+          <ul class='nav'>
+            <li>
+              <%= link_to t("common.item.new"), forms_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id) %>
+            </li>
+            <li>
+              <%= link_to t("common.item.list"), forms_lines_user_bot_surveys_path(business_owner_id: business_owner_id) %>
+            </li>
+          </ul>
+        </li>
 
         <li class="p-1">
           <%= active_link_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id) do %>

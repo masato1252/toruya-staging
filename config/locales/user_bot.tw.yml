@@ -431,6 +431,8 @@ tw:
           new_page_methods_html: <b>【成員註冊方法】</b><br /> ①通過簡訊發送成員註冊頁面<br /> ②成員自行從註冊頁面完成成員註冊<br /> ③以成員身份使用Toruya
       surveys:
         title: 表單
+        activity_title: 活動報名表單
+        activity_description: 建立活動報名頁面，讓客戶選擇想參加的活動項目。支援多日活動安排，一次報名多個時段。
         new_page_title: 新增表單
         new_page_header: 表單名稱
         new_page_desc: 我們將通過簡訊發送表單頁面
