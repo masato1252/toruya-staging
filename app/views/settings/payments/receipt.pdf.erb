@@ -13,7 +13,7 @@
 
     <div class="charge-date"><%= I18n.t("settings.subscription.receipt.date") %> <%= l(@charge.charge_date) %></div>
     <div class="transaction-id"><%= I18n.t("settings.subscription.receipt.transaction_id") %> <%= @charge.order_id %></div>
-    <div class="user-name"><%= @charge.details["user_name"] %> 様</div>
+    <div class="user-name"><%= @receipient_name %> 様</div>
 
     <div class="center">
     <div class="plan-amount">

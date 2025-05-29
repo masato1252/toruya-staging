@@ -98,7 +98,9 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
 
   def receipt
     user_id = MessageEncryptor.decrypt(params[:encrypted_user_id])
-    @charge = User.find(user_id).subscription_charges.find(params[:id])
+    user = User.find(user_id)
+    @charge = user.subscription_charges.find(params[:id])
+    @receipient_name = user.name
 
     options = {
       template: "settings/payments/receipt",
