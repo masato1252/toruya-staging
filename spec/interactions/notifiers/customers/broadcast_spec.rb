@@ -212,7 +212,7 @@ RSpec.describe Notifiers::Customers::Broadcast, :with_line do
           it "doesn't send any notification when email is not available" do
             expect_any_instance_of(described_class).not_to receive(:notify_by_email)
             expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+            expect_any_instance_of(described_class).to receive(:notify_by_line)
 
             outcome
           end

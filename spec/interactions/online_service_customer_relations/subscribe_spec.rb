@@ -16,6 +16,25 @@ RSpec.describe OnlineServiceCustomerRelations::Subscribe do
   end
   let(:outcome) { described_class.run(args) }
 
+  # Mock Stripe subscriptions to handle payment_settings parameter that StripeMock doesn't support
+  before do
+    original_create = Stripe::Subscription.method(:create)
+    allow(Stripe::Subscription).to receive(:create) do |params, *args|
+      # Remove payment_settings parameter which StripeMock doesn't support
+      cleaned_params = params.dup
+      cleaned_params.delete(:payment_settings)
+
+      # Call the original StripeMock implementation
+      subscription = original_create.call(cleaned_params, *args)
+
+      # Ensure it has the properties our interaction expects
+      allow(subscription).to receive(:status).and_return('active')
+      allow(subscription).to receive(:latest_invoice).and_return(double('Invoice', payment_intent: nil))
+
+      subscription
+    end
+  end
+
   describe "#execute" do
     it "updates relation payment state to paid" do
       outcome

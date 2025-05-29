@@ -23,6 +23,24 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    before do
+      # Mock successful PaymentIntent creation for most tests
+      successful_payment_intent = double(
+        id: "pi_test_123",
+        status: "succeeded",
+        as_json: {
+          "id" => "pi_test_123",
+          "status" => "succeeded",
+          "amount" => relation.price_details.first.amount_with_currency.fractional,
+          "currency" => customer.user.currency
+        }
+      )
+      allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_payment_intent)
+
+      # Mock payment method retrieval
+      allow_any_instance_of(described_class).to receive(:get_selected_payment_method).and_return("pm_test_123")
+    end
+
     context "when it is first time charge" do
       let(:first_time_charge) { true }
       let(:manual) { true }
@@ -117,7 +135,15 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
     end
 
     context "when charge failed" do
-      before { StripeMock.prepare_card_error(:card_declined) }
+      before do
+        # Mock failed PaymentIntent creation that raises a Stripe error
+        allow(Stripe::PaymentIntent).to receive(:create).and_raise(
+          Stripe::CardError.new("Your card was declined.", "card_declined", json_body: { error: { code: "card_declined", message: "Your card was declined." } })
+        )
+
+        # Mock payment method retrieval
+        allow_any_instance_of(described_class).to receive(:get_selected_payment_method).and_return("pm_test_123")
+      end
 
       it "create a auth_failed payment record" do
         outcome
@@ -140,9 +166,11 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           allow(Notifiers::Users::CustomerPayments::ChargeFailedToOwner).to receive(:run)
 
           outcome
+
+          payment = CustomerPayment.auth_failed.last
           expect(Notifiers::Users::CustomerPayments::ChargeFailedToOwner).to have_received(:run).with(
             receiver: customer.user,
-            customer_payment: CustomerPayment.auth_failed.last
+            customer_payment: payment
           )
         end
 
@@ -150,9 +178,11 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           allow(Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer).to receive(:run)
 
           outcome
+
+          payment = CustomerPayment.auth_failed.last
           expect(Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer).to have_received(:run).with(
             receiver: customer,
-            customer_payment: CustomerPayment.auth_failed.last
+            customer_payment: payment
           )
         end
       end

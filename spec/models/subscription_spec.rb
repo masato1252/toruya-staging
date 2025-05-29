@@ -29,7 +29,7 @@ RSpec.describe Subscription do
           # Make sure the trial has expired
           subscription.update(trial_expired_date: Date.new(2022, 5, 10))
           # Explicitly stub both conditions that could make a free plan active
-          allow(subscription).to receive(:over_free_limit?).and_return(true)
+          allow(subscription).to receive(:customers_count_over_free_limit?).and_return(true)
           allow(subscription).to receive(:in_free_plan?).and_return(true)
           # Ensure we don't have a valid expiration date condition either
           subscription.update(expired_date: nil)
@@ -91,6 +91,8 @@ RSpec.describe Subscription do
 
       context "when expired_date is before the buffer period" do
         before do
+          subscription.update(trial_expired_date: Date.new(2022, 5, 10)) # make trial expired
+          allow(subscription).to receive(:customers_count_over_free_limit?).and_return(true)
           subscription.update(expired_date: Date.new(2022, 5, 12))
         end
 
@@ -101,6 +103,8 @@ RSpec.describe Subscription do
 
       context "when expired_date is nil" do
         before do
+          subscription.update(trial_expired_date: Date.new(2022, 5, 10)) # make trial expired
+          allow(subscription).to receive(:customers_count_over_free_limit?).and_return(true)
           subscription.update(expired_date: nil)
         end
 

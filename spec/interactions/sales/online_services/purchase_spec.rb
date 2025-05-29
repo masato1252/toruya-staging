@@ -47,6 +47,24 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
     context "when sale page was paid version" do
       let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :one_time_payment) }
 
+      before do
+        # Mock successful PaymentIntent creation for paid purchases
+        successful_payment_intent = double(
+          id: "pi_test_123",
+          status: "succeeded",
+          as_json: {
+            "id" => "pi_test_123",
+            "status" => "succeeded",
+            "amount" => sale_page.selling_price_amount.fractional,
+            "currency" => sale_page.selling_price_amount.currency.iso_code
+          }
+        )
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_payment_intent)
+
+        # Mock payment method retrieval for purchase processing
+        allow_any_instance_of(CustomerPayments::PurchaseOnlineService).to receive(:get_selected_payment_method).and_return("pm_test_123")
+      end
+
       it "create a paid relation" do
         expect {
           outcome
@@ -156,6 +174,24 @@ RSpec.describe Sales::OnlineServices::Purchase, :with_line do
     context "when sale page has function_access_id" do
       let(:function_access) { FactoryBot.create(:function_access) }
       let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :one_time_payment, user: user) }
+
+      before do
+        # Mock successful PaymentIntent creation for function access purchases
+        successful_payment_intent = double(
+          id: "pi_test_123",
+          status: "succeeded",
+          as_json: {
+            "id" => "pi_test_123",
+            "status" => "succeeded",
+            "amount" => sale_page.selling_price_amount.fractional,
+            "currency" => sale_page.selling_price_amount.currency.iso_code
+          }
+        )
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_payment_intent)
+
+        # Mock payment method retrieval for purchase processing
+        allow_any_instance_of(CustomerPayments::PurchaseOnlineService).to receive(:get_selected_payment_method).and_return("pm_test_123")
+      end
 
       it "creates relation with function_access" do
         args[:function_access_id] = function_access.id

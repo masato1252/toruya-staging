@@ -28,9 +28,20 @@ RSpec.describe CustomerPayments::PayReservation do
     end
 
     context "when charge failed" do
-      it "create a auth_failed payment record" do
-        StripeMock.prepare_card_error(:card_declined)
+      before do
+        # Mock Stripe::PaymentIntent.create to raise a card error
+        card_error = Stripe::CardError.new("Your card was declined.", "card_declined", code: "card_declined")
+        allow(card_error).to receive(:json_body).and_return({
+          error: {
+            type: "card_error",
+            code: "card_declined",
+            message: "Your card was declined."
+          }
+        })
+        allow(Stripe::PaymentIntent).to receive(:create).and_raise(card_error)
+      end
 
+      it "create a auth_failed payment record" do
         outcome
 
         payment = CustomerPayment.where(

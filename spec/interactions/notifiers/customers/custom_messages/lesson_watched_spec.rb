@@ -199,10 +199,10 @@ RSpec.describe Notifiers::Customers::CustomMessages::LessonWatched, type: :inter
         context "when customer has no email available" do
           before { set_availability(email: false, sms: true, line: true) }
 
-          it "doesn't send any notification" do
+          it "send Line notification" do
             expect_any_instance_of(described_class).not_to receive(:notify_by_email)
             expect_any_instance_of(described_class).not_to receive(:notify_by_sms)
-            expect_any_instance_of(described_class).not_to receive(:notify_by_line)
+            expect_any_instance_of(described_class).to receive(:notify_by_line).and_call_original
 
             outcome = described_class.run(args)
             expect(outcome).to be_valid

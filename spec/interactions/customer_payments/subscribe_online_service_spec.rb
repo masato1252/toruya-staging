@@ -17,6 +17,25 @@ RSpec.describe CustomerPayments::SubscribeOnlineService do
   let(:outcome) { described_class.run(args) }
 
   context "when subscribes successfully" do
+    before do
+      # Mock successful Stripe subscription creation
+      stripe_subscription = double(
+        id: "sub_test_123",
+        status: "active",
+        latest_invoice: double(
+          payment_intent: double(
+            status: "succeeded",
+            client_secret: "pi_test_secret"
+          )
+        )
+      )
+      allow(Stripe::Subscription).to receive(:create).and_return(stripe_subscription)
+      allow(Stripe::Subscription).to receive(:retrieve).and_return(stripe_subscription)
+
+      # Mock payment method retrieval for the Subscribe interaction
+      allow_any_instance_of(OnlineServiceCustomerRelations::Subscribe).to receive(:get_selected_payment_method).and_return("pm_test_123")
+    end
+
     it "changes to expected state" do
       allow(Sales::OnlineServices::SendLineCard).to receive(:run)
       outcome
@@ -39,9 +58,25 @@ RSpec.describe CustomerPayments::SubscribeOnlineService do
   end
 
   context "when subscribes failed" do
-    it "changes to expected state" do
-      allow(OnlineServiceCustomerRelations::Subscribe).to receive(:run).and_return(double(valid?: false, errors: spy))
+    before do
+      # Mock failed Stripe subscription creation
+      stripe_subscription = double(
+        id: "sub_test_failed",
+        status: "incomplete",
+        latest_invoice: double(
+          payment_intent: double(
+            status: "requires_payment_method",
+            client_secret: "pi_test_failed_secret"
+          )
+        )
+      )
+      allow(Stripe::Subscription).to receive(:create).and_return(stripe_subscription)
 
+      # Mock payment method retrieval for the Subscribe interaction
+      allow_any_instance_of(OnlineServiceCustomerRelations::Subscribe).to receive(:get_selected_payment_method).and_return("pm_test_123")
+    end
+
+    it "changes to expected state" do
       outcome
 
       expect(relation).to be_failed_payment_state

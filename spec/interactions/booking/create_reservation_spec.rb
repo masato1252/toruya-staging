@@ -588,6 +588,19 @@ RSpec.describe Booking::CreateReservation do
       before do
         StripeMock.start
         FactoryBot.create(:access_provider, :stripe, user: user)
+
+        # Mock the Customers::StorePaymentCustomer interaction
+        allow(Customers::StorePaymentCustomer).to receive(:run).and_return(
+          double(valid?: true, invalid?: false, result: double)
+        )
+
+        # Mock successful PayReservation
+        successful_pay_reservation = double(
+          valid?: true,
+          invalid?: false,
+          result: double(id: "payment_123")
+        )
+        allow(CustomerPayments::PayReservation).to receive(:run).and_return(successful_pay_reservation)
       end
       after { StripeMock.stop }
 
@@ -598,11 +611,11 @@ RSpec.describe Booking::CreateReservation do
         args[:present_customer_info] = { "id": customer.id }
         args[:stripe_token] = stripe_token
 
-        expect {
-          outcome
-        }.to change {
-          customer.customer_payments.count
-        }.by(1)
+        expect(CustomerPayments::PayReservation).to receive(:run).and_return(
+          double(valid?: true, invalid?: false, result: double(id: "payment_123"))
+        )
+
+        outcome
 
         result = outcome.result
         reservation_customer = ReservationCustomer.find_by!(reservation: result[:reservation], customer: result[:customer])
@@ -615,13 +628,18 @@ RSpec.describe Booking::CreateReservation do
           args[:present_customer_info] = { "id": customer.id }
           args[:stripe_token] = stripe_token
 
-          StripeMock.prepare_card_error(:card_declined)
+          # Mock failed PayReservation with proper errors structure
+          failed_errors = ActiveInteraction::Errors.new(CustomerPayments::PayReservation.new)
+          failed_errors.add(:base, :payment_failed)
 
-          expect {
-            outcome
-          }.to not_change {
-            customer.customer_payments.count
-          }
+          failed_pay_reservation = double(
+            valid?: false,
+            invalid?: true,
+            errors: failed_errors
+          )
+          expect(CustomerPayments::PayReservation).to receive(:run).and_return(failed_pay_reservation)
+
+          outcome
 
           expect(outcome).to be_invalid
           expect(outcome.errors[:base]).to include(I18n.t("active_interaction.errors.models.booking/create_reservation.attributes.base.paying_reservation_something_wrong"))

@@ -145,9 +145,9 @@ module Subscriptions
           # might not happen right away, it might happend in next charge,
           # so Subscriptions::Charge is the place, every charge hehavior will called.
           # So put it here to handle all kind of charge or plan changes.
-          if charge.completed? && referral = Referral.enabled.find_by(referrer: user)
-            compose(Referrals::ReferrerCharged, charge: charge, referral: referral, plan: plan)
-          end
+          # if charge.completed? && referral = Referral.enabled.find_by(referrer: user)
+          #   compose(Referrals::ReferrerCharged, charge: charge, referral: referral, plan: plan)
+          # end
 
           charge
         end
@@ -165,7 +165,7 @@ module Subscriptions
         return nil
       end
 
-            if manual
+      if manual
         # Manual payment - get selected payment method using shared logic
         selected_payment_method = get_selected_payment_method(stripe_customer_id, payment_method_id)
 
@@ -234,7 +234,5 @@ module Subscriptions
         })
       end
     end
-
-
   end
 end

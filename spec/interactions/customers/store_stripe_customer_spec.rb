@@ -6,12 +6,7 @@ RSpec.describe Customers::StoreStripeCustomer do
   before { StripeMock.start }
   after { StripeMock.stop }
 
-  let(:customer) { FactoryBot.create(:customer) }
-
-  before do
-    # Create the necessary access provider for Stripe
-    FactoryBot.create(:access_provider, :stripe, user: customer.user)
-  end
+  let(:customer) { FactoryBot.create(:customer, with_stripe: true) }
   let(:authorize_token) { StripeMock.create_test_helper.generate_card_token }
   let(:args) do
     {
@@ -23,17 +18,7 @@ RSpec.describe Customers::StoreStripeCustomer do
 
   describe "#execute" do
     context "when customer already has stripe_customer_id" do
-      let!(:stripe_customer_id) do
-        stripe_customer = Stripe::Customer.create(
-          {
-            email: customer.email,
-            phone: customer.phone_number
-          },
-          stripe_account: customer.user.stripe_provider.uid
-        )
-        customer.update!(stripe_customer_id: stripe_customer.id)
-        stripe_customer.id
-      end
+      let(:stripe_customer_id) { customer.stripe_customer_id }
 
       context "when SetupIntent succeeds immediately" do
         before do
@@ -83,6 +68,13 @@ RSpec.describe Customers::StoreStripeCustomer do
     end
 
     context "when customer doesn't have stripe_customer_id" do
+      let(:customer) { FactoryBot.create(:customer) }
+
+      before do
+        # Create the necessary access provider for Stripe
+        FactoryBot.create(:access_provider, :stripe, user: customer.user)
+      end
+
       context "when SetupIntent succeeds immediately" do
         before do
           # Mock a successful SetupIntent
@@ -126,20 +118,7 @@ RSpec.describe Customers::StoreStripeCustomer do
         }
       end
 
-      let!(:stripe_customer_id) do
-        stripe_customer = Stripe::Customer.create(
-          {
-            email: customer.email,
-            phone: customer.phone_number
-          },
-          stripe_account: customer.user.stripe_provider.uid
-        )
-        customer.update!(stripe_customer_id: stripe_customer.id)
-        stripe_customer.id
-      end
-
       before do
-        stripe_customer_id  # Ensure customer is created
         # Mock successful SetupIntent retrieval
         allow(Stripe::SetupIntent).to receive(:retrieve).and_return(
           double('SetupIntent',
@@ -165,7 +144,11 @@ RSpec.describe Customers::StoreStripeCustomer do
     end
 
     context "when there are stripe errors" do
+      let(:customer) { FactoryBot.create(:customer) }
+
       before do
+        # Create the necessary access provider for Stripe
+        FactoryBot.create(:access_provider, :stripe, user: customer.user)
         allow(Stripe::PaymentMethod).to receive(:create).and_raise(
           Stripe::CardError.new("Card error", "card_declined")
         )

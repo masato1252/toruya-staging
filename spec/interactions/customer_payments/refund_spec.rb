@@ -5,6 +5,36 @@ require "rails_helper"
 RSpec.describe CustomerPayments::Refund do
   before do
     StripeMock.start
+
+    # Mock successful PaymentIntent creation for initial payment
+    successful_payment_intent = double(
+      id: "pi_test_123",
+      status: "succeeded",
+      as_json: {
+        "id" => "pi_test_123",
+        "status" => "succeeded",
+        "amount" => booking_amount.fractional,
+        "currency" => booking_amount.currency.iso_code
+      }
+    )
+    allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_payment_intent)
+
+    # Mock payment method retrieval for initial payment
+    allow_any_instance_of(CustomerPayments::StripePayReservation).to receive(:get_selected_payment_method).and_return("pm_test_123")
+
+    # Mock successful refund creation
+    successful_refund = double(
+      status: "succeeded",
+      as_json: {
+        "id" => "re_test_123",
+        "status" => "succeeded",
+        "amount" => booking_amount.fractional,
+        "charge" => "ch_test_123"
+      }
+    )
+    allow(Stripe::Refund).to receive(:create).and_return(successful_refund)
+
+    # Create the initial payment
     CustomerPayments::PayReservation.run(reservation_customer: reservation_customer, payment_provider: user.stripe_provider)
   end
   after { StripeMock.stop }
@@ -35,6 +65,22 @@ RSpec.describe CustomerPayments::Refund do
 
     context 'when refund a bundler service' do
       before do
+        # Mock successful PaymentIntent for online service purchase
+        online_service_payment_intent = double(
+          id: "pi_service_123",
+          status: "succeeded",
+          as_json: {
+            "id" => "pi_service_123",
+            "status" => "succeeded",
+            "amount" => booking_amount.fractional,
+            "currency" => booking_amount.currency.iso_code
+          }
+        )
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(online_service_payment_intent)
+
+        # Mock payment method retrieval for online service purchase
+        allow_any_instance_of(CustomerPayments::PurchaseOnlineService).to receive(:get_selected_payment_method).and_return("pm_test_123")
+
         CustomerPayments::PurchaseOnlineService.run(online_service_customer_relation: relation, manual: true, first_time_charge: true)
       end
       let(:bundler_service) { FactoryBot.create(:online_service, :bundler, :with_stripe, user: user) }

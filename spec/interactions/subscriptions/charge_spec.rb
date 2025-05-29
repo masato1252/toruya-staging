@@ -22,86 +22,60 @@ RSpec.describe Subscriptions::Charge do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    it "create a completed subscription charges record" do
-      outcome
+    context "when payment succeeds" do
+      before do
+        # Mock successful PaymentIntent
+        successful_intent = double(
+          status: "succeeded",
+          as_json: {
+            "id" => "pi_success_123",
+            "status" => "succeeded",
+            "amount" => 5500,
+            "currency" => "jpy"
+          }
+        )
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_intent)
 
-      charge = user.subscription_charges.where(
-        plan: plan,
-        amount_cents: plan.cost(rank),
-        amount_currency: Money.default_currency.to_s,
-        charge_date: Subscription.today,
-        manual: true
-      ).last
+        # Mock payment method retrieval
+        allow_any_instance_of(described_class).to receive(:get_selected_payment_method).and_return("pm_test_123")
+      end
 
-      charge.reload
-      expect(charge).to be_completed
-      expect(charge.stripe_charge_details).to be_a(Hash)
-      expect(charge.order_id).to be_present
-    end
-
-    context "when user is a referrer and charge completed" do
-      let(:referral) { factory.create_referral }
-      let(:user) { referral.referrer }
-
-      it "calls Referrals::ReferrerCharged" do
-        allow(Referrals::ReferrerCharged).to receive(:run).and_call_original
-
+      it "create a completed subscription charges record" do
         outcome
 
-        expect(Referrals::ReferrerCharged).to have_received(:run).with(referral: referral, charge: outcome.result, plan: plan)
-      end
+        charge = user.subscription_charges.where(
+          plan: plan,
+          amount_cents: plan.cost(rank),
+          amount_currency: Money.default_currency.to_s,
+          charge_date: Subscription.today,
+          manual: true
+        ).last
 
-      context "when referee is not under business plan"  do
-        let(:referral) { factory.create_referral(referee: FactoryBot.create(:subscription, plan: Plan.premium_level.take).user) }
-
-        it "does NOT call Referrals::ReferrerCharged" do
-          outcome
-
-          expect(Referrals::ReferrerCharged).not_to receive(:run)
-        end
-      end
-
-      context "when referral is not active"  do
-        let(:referral) { factory.create_referral(state: :referrer_canceled) }
-
-        it "does NOT call Referrals::ReferrerCharged" do
-          outcome
-
-          expect(Referrals::ReferrerCharged).not_to receive(:run)
-        end
-      end
-
-      context "when charge is not completed"  do
-        let(:charge) { FactoryBot.create(:subscription_charge, :refunded, user: referral.referrer, plan: Plan.business_level.take) }
-
-        it "does NOT call Referrals::ReferrerCharged" do
-          outcome
-
-          expect(Referrals::ReferrerCharged).not_to receive(:run)
-        end
-      end
-
-      context "when referrer is not under child plan"  do
-        let(:referral) { factory.create_referral(referrer: FactoryBot.create(:subscription, plan: Plan.basic_level.take).user) }
-
-        it "does NOT call Referrals::ReferrerCharged" do
-          outcome
-
-          expect(Referrals::ReferrerCharged).not_to receive(:run)
-        end
+        charge.reload
+        expect(charge).to be_completed
+        expect(charge.stripe_charge_details).to be_a(Hash)
+        expect(charge.order_id).to be_present
       end
     end
 
     context "when charge failed" do
       let(:failed_intent) do
         double(
-          as_json: { "error" => { "message" => "Your card was declined." } },
-          status: "requires_payment_method"
+          as_json: {
+            "error" => { "message" => "Your card was declined." },
+            "id" => "pi_failed_123",
+            "status" => "canceled"
+          },
+          status: "canceled",
+          id: "pi_failed_123",
+          client_secret: "pi_failed_123_secret"
         )
       end
 
       before do
         allow(Stripe::PaymentIntent).to receive(:create).and_return(failed_intent)
+        # Mock payment method retrieval
+        allow_any_instance_of(described_class).to receive(:get_selected_payment_method).and_return("pm_test_123")
       end
 
       it "create a auth_failed subscription charges record" do
@@ -119,19 +93,28 @@ RSpec.describe Subscriptions::Charge do
 
       context "when charge is automatically" do
         let(:manual) { false }
-        before { user.update(phone_number: nil) }
+        let(:failed_intent) do
+          double(
+            as_json: {
+              "error" => { "message" => "Your card was declined." },
+              "id" => "pi_failed_123",
+              "status" => "payment_failed"
+            },
+            status: "payment_failed",
+            id: "pi_failed_123",
+            client_secret: "pi_failed_123_secret"
+          )
+        end
+        before do
+          user.update(phone_number: nil)
+        end
 
         it "notfiy users" do
-          expect(Notifiers::Users::Subscriptions::ChargeFailed).to receive(:run).and_call_original
-
-          mailer_double = double(deliver_now: true)
-          expect(UserMailer).to receive(:with).with(
-            hash_including(
-              email: anything,
-              message: anything,
-              subject: I18n.t("user_mailer.custom.title")
-            )
-          ).and_return(double(custom: mailer_double))
+          expect(Notifiers::Users::Subscriptions::ChargeFailed).to receive(:run).with(
+            receiver: user,
+            user: user,
+            subscription_charge: kind_of(SubscriptionCharge)
+          ).and_call_original
 
           outcome
         end

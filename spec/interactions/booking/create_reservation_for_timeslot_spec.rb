@@ -525,6 +525,23 @@ RSpec.describe Booking::CreateReservationForTimeslot do
       before do
         StripeMock.start
         FactoryBot.create(:access_provider, :stripe, user: user)
+
+        # Mock successful PaymentIntent creation for reservation payments
+        successful_payment_intent = double(
+          id: "pi_test_123",
+          status: "succeeded",
+          client_secret: "pi_test_123_secret_test",
+          as_json: {
+            "id" => "pi_test_123",
+            "status" => "succeeded",
+            "amount" => booking_option.amount.fractional,
+            "currency" => booking_option.amount.currency.iso_code
+          }
+        )
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_payment_intent)
+
+        # Mock payment method retrieval for StripePayReservation
+        allow_any_instance_of(CustomerPayments::StripePayReservation).to receive(:get_selected_payment_method).and_return("pm_test_123")
       end
       after { StripeMock.stop }
 
@@ -552,7 +569,17 @@ RSpec.describe Booking::CreateReservationForTimeslot do
           args[:present_customer_info] = { "id": customer.id }
           args[:stripe_token] = stripe_token
 
-          StripeMock.prepare_card_error(:card_declined)
+          # Mock failed PaymentIntent
+          failed_payment_intent = double(
+            id: "pi_failed_123",
+            status: "canceled",
+            client_secret: "pi_failed_123_secret_test",
+            as_json: {
+              "id" => "pi_failed_123",
+              "status" => "canceled"
+            }
+          )
+          allow(Stripe::PaymentIntent).to receive(:create).and_return(failed_payment_intent)
 
           expect {
             outcome

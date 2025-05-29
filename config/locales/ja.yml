@@ -403,7 +403,7 @@ ja:
         minutes: "所要時間(分)"
         min_staffs_number: "最低担当者数"
       staff_menus:
-        max_customers: "最高客戶数"
+        max_customers: "最高客戸数"
     select:
       prompt: 選択してください
     submit:
@@ -492,7 +492,7 @@ ja:
         email: メール
         address: 住所
       staff_menu:
-        max_customers: "最高客戶数"
+        max_customers: "最高客戸数"
       profile:
         last_name: 姓
         first_name: 名
@@ -810,8 +810,22 @@ ja:
               duplicate: "同じメニューは追加できません。予約時間を変更したい場合は所要時間を編集してください。"
         customers/store_stripe_customer:
           attributes:
+            customer:
+              requires_action: "^3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+              failed: "^支払いに失敗しました。しばらく時間をおいてもう一度お試しください。"
+              no_payment_method: "^有効な支払い方法が見つかりません。"
+              subscription_incomplete: "^サブスクリプションの設定が完了していません。"
+              subscription_failed: "^サブスクリプションの処理に失敗しました。"
             authorize_token:
               something_wrong: "^支払いに失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+        customer_payments/stripe_pay_reservation:
+          attributes:
+            payment:
+              stripe_customer_not_found: "^有効な支払い方法が見つかりません。"
+              no_stripe_customer: "^Stripe顧客IDが設定されていません。"
+              requires_action: "^3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+              canceled: "^支払いがキャンセルされました。"
+              failed: "^支払いに失敗しました。"
         customer_payments/purchase_online_service:
           attributes:
             customer:

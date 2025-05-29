@@ -80,6 +80,12 @@ FactoryBot.define do
 
     trait :stripe_subscribed do
       stripe_subscription_id do
+        # Customer should already have Stripe setup (use with_stripe: true when creating customer)
+        unless customer.stripe_customer_id
+          raise "Customer must have Stripe setup. Create customer with 'with_stripe: true'"
+        end
+
+        # Create the subscription
         Stripe::Subscription.create(
           {
             customer: customer.stripe_customer_id,

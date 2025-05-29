@@ -41,9 +41,24 @@ RSpec.describe Subscriptions::RecurringCharge do
         StripeMock.start
       end
       after { StripeMock.stop }
-      let(:subscription) { FactoryBot.create(:subscription, :premium) }
+      let(:subscription) { FactoryBot.create(:subscription, :premium, :with_stripe) }
 
       it "charges user" do
+        # Mock successful payment intent for recurring charges
+        successful_intent = double(
+          status: "succeeded",
+          as_json: {
+            "id" => "pi_success_123",
+            "status" => "succeeded",
+            "amount" => 5500,
+            "currency" => "jpy"
+          }
+        )
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_intent)
+
+        # Mock payment method retrieval for Charge interaction
+        allow_any_instance_of(Subscriptions::Charge).to receive(:get_selected_payment_method).and_return("pm_test_123")
+
         allow(Notifiers::Users::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
         outcome
 
@@ -72,9 +87,24 @@ RSpec.describe Subscriptions::RecurringCharge do
       end
 
       context "when charging users failed" do
-        let(:subscription) { FactoryBot.create(:subscription, :basic, next_plan: Plan.premium_level.take) }
+        let(:subscription) { FactoryBot.create(:subscription, :basic, :with_stripe, next_plan: Plan.premium_level.take) }
+
         before do
-          StripeMock.prepare_card_error(:card_declined)
+          # Mock failed payment intent for recurring charges
+          failed_intent = double(
+            as_json: {
+              "error" => { "message" => "Your card was declined." },
+              "id" => "pi_failed_123",
+              "status" => "payment_failed"
+            },
+            status: "payment_failed",
+            id: "pi_failed_123",
+            client_secret: "pi_failed_123_secret"
+          )
+          allow(Stripe::PaymentIntent).to receive(:create).and_return(failed_intent)
+
+          # Mock payment method retrieval for Charge interaction
+          allow_any_instance_of(Subscriptions::Charge).to receive(:get_selected_payment_method).and_return("pm_test_123")
         end
 
         it "doesn't change subscription and create failed charge" do
@@ -94,7 +124,7 @@ RSpec.describe Subscriptions::RecurringCharge do
       end
 
       context "when user got more customers" do
-        let(:subscription) { FactoryBot.create(:subscription, :basic, rank: 0) }
+        let(:subscription) { FactoryBot.create(:subscription, :basic, :with_stripe, rank: 0) }
         let(:basic_customer_limit) { 2 }
         let(:basic_customer_max_limit) { 5 }
         before do
@@ -112,10 +142,26 @@ RSpec.describe Subscriptions::RecurringCharge do
               },
               {
                 rank: 2,
-                max_customers_limit: Float::INFINITY
+                max_customers_limit: Float::INFINITY,
+                cost: 4_000,
               },
             ]
           })
+
+          # Mock successful payment intent for recurring charges
+          successful_intent = double(
+            status: "succeeded",
+            as_json: {
+              "id" => "pi_success_123",
+              "status" => "succeeded",
+              "amount" => 3000,
+              "currency" => "jpy"
+            }
+          )
+          allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_intent)
+
+          # Mock payment method retrieval for Charge interaction
+          allow_any_instance_of(Subscriptions::Charge).to receive(:get_selected_payment_method).and_return("pm_test_123")
         end
 
         it "upgrades user's rank automatically" do
@@ -155,7 +201,7 @@ RSpec.describe Subscriptions::RecurringCharge do
       end
 
       after { StripeMock.stop }
-      let!(:referral) { factory.create_referral(referrer: user) }
+      let!(:referral) { FactoryBot.create(:referral, referrer: user) }
       let(:subscription) { FactoryBot.create(:subscription, :child_basic, :with_stripe, next_plan: next_plan) }
 
       context "when referee was still busienss member" do

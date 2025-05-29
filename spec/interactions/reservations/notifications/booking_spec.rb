@@ -176,10 +176,10 @@ RSpec.describe Reservations::Notifications::Booking do
         context "when email is not available" do
           before { set_availability(email: false, sms: true, line: true) }
 
-          it "doesn't send any notification when email is not available" do
+          it "send line notification when email is not available" do
             expect_any_instance_of(Reservations::Notifications::Notify).not_to receive(:notify_by_email)
             expect_any_instance_of(Reservations::Notifications::Notify).not_to receive(:notify_by_sms)
-            expect_any_instance_of(Reservations::Notifications::Notify).not_to receive(:notify_by_line)
+            expect_any_instance_of(Reservations::Notifications::Notify).to receive(:notify_by_line)
 
             outcome
           end

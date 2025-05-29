@@ -811,8 +811,22 @@ tw:
               duplicate: "無法新增相同的服務項目。如果您想更改預約時間，請編輯所需時間。"
         customers/store_stripe_customer:
           attributes:
+            customer:
+              requires_action: "^需要3D認證。請完成發卡機構的認證。"
+              failed: "^付款失敗。請稍後再試。"
+              no_payment_method: "^找不到有效的付款方式。"
+              subscription_incomplete: "^訂閱設定未完成。"
+              subscription_failed: "^訂閱處理失敗。"
             authorize_token:
               something_wrong: "^付款失敗。請確認您輸入的是有效的信用卡號碼，然後再試一次。"
+        customer_payments/stripe_pay_reservation:
+          attributes:
+            payment:
+              stripe_customer_not_found: "^找不到有效的付款方式。"
+              no_stripe_customer: "^未設定Stripe客戶ID。"
+              requires_action: "^需要3D認證。請完成發卡機構的認證。"
+              canceled: "^付款已取消。"
+              failed: "^付款失敗。"
         customer_payments/purchase_online_service:
           attributes:
             customer:

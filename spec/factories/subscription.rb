@@ -44,11 +44,32 @@ FactoryBot.define do
     trait :with_stripe do
       user { FactoryBot.create(:user, skip_default_data: true, with_stripe_user: true) }
       stripe_customer_id do
-        Stripe.api_key = Rails.application.secrets.stripe_secret_key
-        Stripe::Customer.create({
+        # Create Stripe customer
+        customer = Stripe::Customer.create({
           email: user.email,
-          source: StripeMock.create_test_helper.generate_card_token
-        }).id
+        }, stripe_account: user.stripe_provider.uid)
+
+        # Create and attach payment method
+        payment_method = Stripe::PaymentMethod.create({
+          type: 'card',
+          card: {
+            token: StripeMock.create_test_helper.generate_card_token
+          },
+        }, stripe_account: user.stripe_provider.uid)
+
+        # Attach payment method to customer
+        payment_method.attach({
+          customer: customer.id,
+        }, stripe_account: user.stripe_provider.uid)
+
+        # Set as default payment method
+        Stripe::Customer.update(customer.id, {
+          invoice_settings: {
+            default_payment_method: payment_method.id,
+          },
+        }, stripe_account: user.stripe_provider.uid)
+
+        customer.id
       end
     end
 
