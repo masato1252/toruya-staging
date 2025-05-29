@@ -582,7 +582,7 @@ namespace :analytic do
     if current.wday == 1
       google_worksheet = Google::Drive.spreadsheet(gid: 203455717)
 
-      date_period = current.advance(weeks: -2)..current
+      date_period = current.advance(weeks: -1)..current
       date_period_formatted = "#{date_period.begin.to_date} to #{date_period.end.to_date}"
       user_sign_up_in_previous_week = User.where(created_at: date_period).count
       user_sign_up_in_previous_week_ids = User.where(created_at: date_period).pluck(:id)
