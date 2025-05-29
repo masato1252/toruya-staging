@@ -33,7 +33,7 @@ namespace :consultant do
         "<#{Rails.application.routes.url_helpers.admin_chats_url(user_id: user.id)}|#{user.id}>"
       end.join(", ")
 
-      SlackClient.send(channel: 'reports', text: "Candidate users: #{candidate_users_message}")
+      SlackClient.send(channel: 'reports', text: "Non premium users who have many customer messages in a row: #{candidate_users_message}")
     end
   end
 end
