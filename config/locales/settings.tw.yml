@@ -632,7 +632,7 @@ tw:
         allow_overbooking_label: 不論額滿與否都接受預約
         social_account_skippable_title: 客戶要有LINE才可預約
         social_account_skippable: 客戶要有LINE才可預約
-        social_account_skippable_label: 客戶不用LINE也可預約(有電話號碼即可)
+        social_account_skippable_label: 客戶不用LINE也可預約(有Email即可)
         not_social_account_skippable_label: 客戶必須要有LINE才可預約
         need_to_verify_line_settings_to_change_setting: 需要先完成您的LINE設定，才能變更此設定。
         note_label: 說明與注意事項
