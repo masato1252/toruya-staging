@@ -10,5 +10,9 @@ FactoryBot.define do
     trait :customer do
       message_type { :customer }
     end
+
+    trait :staff do
+      message_type { :staff }
+    end
   end
 end

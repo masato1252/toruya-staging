@@ -345,6 +345,33 @@ class User < ApplicationRecord
     email.presence || social_user&.email
   end
 
+  # Returns true if there are customer messages from any customer to the same user for m consecutive days within the past n days
+  def customer_message_in_a_row?(n, m)
+    # Get the date range for the past n days (excluding today)
+    date_range = (1..n).map { |i| i.days.ago.to_date }
+
+    customer_messages = SocialMessage.where(
+      user_id: id,
+      message_type: SocialMessage.message_types[:customer],
+      created_at: n.days.ago.beginning_of_day..Time.current
+    )
+
+    # Group messages by date and get the list of dates with messages
+    messages_by_date = customer_messages.group_by { |msg| msg.created_at.to_date }
+    message_dates = date_range.select { |date| messages_by_date[date]&.any? }
+
+    # Check if there are at least m days with messages
+    return false if message_dates.length < m
+
+    # Sort dates and check for consecutiveness
+    sorted_dates = message_dates.sort
+    (0..sorted_dates.length - m).any? do |i|
+      consecutive_dates = sorted_dates[i, m]
+      # Check if these m dates are consecutive
+      consecutive_dates.each_cons(2).all? { |prev, curr| (curr - prev).to_i == 1 }
+    end
+  end
+
   private
 
   def today_reservations
