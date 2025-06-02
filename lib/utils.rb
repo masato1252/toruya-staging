@@ -12,6 +12,17 @@ module Utils
   def self.file_from_url(url)
     response = URI.open(url)
     filename = response.meta['content-disposition'].match(/filename=(["'])?([^'"]+)["']?/)[2] if response.meta['content-disposition']
+
+    # Provide fallback filename if extraction failed or no content-disposition header
+    if filename.nil? || filename.empty?
+      # Try to extract filename from URL path
+      uri_path = URI.parse(url).path
+      filename = File.basename(uri_path) if uri_path && !uri_path.empty? && uri_path != '/'
+
+      # Final fallback to generic filename
+      filename = 'downloaded_file' if filename.nil? || filename.empty?
+    end
+
     content_type = response.meta['content-type']
     tempfile = Tempfile.new([filename, File.extname(filename)])
     tempfile.binmode
