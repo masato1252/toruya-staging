@@ -52,13 +52,13 @@ module RichMenus
 
     def log_error(response)
       error_data = { response: response.body, url: file_url_or_path }
-      
+
       if social_rich_menu.image.attached?
         error_data[:base64_image] = Base64.encode64(
           URI.open(file_url_or_path) { |io| io.read }
         )
       end
-      
+
       Rollbar.error("Invalid Rich Menu image", error_data)
     end
   end
