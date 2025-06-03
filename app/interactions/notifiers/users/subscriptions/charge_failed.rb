@@ -16,7 +16,8 @@ module Notifiers
             charge_date: I18n.l(next_period.first, format: :year_month_date),
             period_start: I18n.l(next_period.first, format: :year_month_date),
             period_end: I18n.l(next_period.last, format: :year_month_date),
-            cost: cost
+            cost: cost,
+            plan_url: Rails.application.routes.url_helpers.lines_user_bot_settings_plans_url(user.id, upgrade: user.subscription.plan.level)
           )
         end
 
