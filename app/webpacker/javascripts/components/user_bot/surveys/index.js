@@ -63,19 +63,19 @@ const SurveyIndex = ({ props }) => {
         <div className="col-sm-6 px-0 settings-view surveys">
             <div className="p-3">
               {props.has_activities && (
-                <a href={Routes.lines_user_bot_survey_activities_path({ business_owner_id: props.business_owner_id, survey_id: surveyData?.id })} className="btn btn-yellow mr-2">
+                <a href={Routes.lines_user_bot_survey_activities_path(props.business_owner_id, surveyData?.id)} className="btn btn-yellow mr-2">
                   {I18n.t('user_bot.dashboards.surveys.activities.title')}
                 </a>
               )}
 
               {!props.has_activities && surveyData?.id && (
-                <a href={Routes.lines_user_bot_survey_responses_path({ business_owner_id: props.business_owner_id, id: surveyData?.id })} className="btn btn-yellow mr-2">
+                <a href={Routes.lines_user_bot_survey_responses_path(props.business_owner_id, surveyData?.id)} className="btn btn-yellow mr-2">
                   {I18n.t('user_bot.dashboards.surveys.responses.title')}
                 </a>
               )}
 
               {surveyData?.id && (
-                <a href={Routes.settings_lines_user_bot_survey_path({ business_owner_id: props.business_owner_id, id: surveyData?.id })} className="btn btn-yellow mr-2">
+                <a href={Routes.settings_lines_user_bot_survey_path(props.business_owner_id, surveyData?.id)} className="btn btn-yellow mr-2">
                   {I18n.t('user_bot.dashboards.surveys.settings.title')}
                 </a>
               )}
