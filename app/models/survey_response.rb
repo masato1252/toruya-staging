@@ -52,7 +52,11 @@ class SurveyResponse < ApplicationRecord
   end
 
   def survey_response_url
-    Rails.application.routes.url_helpers.lines_user_bot_survey_activity_survey_response_url(survey, survey_activity, self, business_owner_id: survey.user.id, encrypted_user_id: MessageEncryptor.encrypt(survey.user.id, expires_at: 1.week.from_now))
+    if is_activity?
+      Rails.application.routes.url_helpers.lines_user_bot_survey_activity_survey_response_url(survey, survey_activity, self, business_owner_id: survey.user.id, encrypted_user_id: MessageEncryptor.encrypt(survey.user.id, expires_at: 1.week.from_now))
+    else
+      Rails.application.routes.url_helpers.lines_user_bot_survey_response_url(survey, self, business_owner_id: survey.user.id, encrypted_user_id: MessageEncryptor.encrypt(survey.user.id, expires_at: 1.week.from_now))
+    end
   end
 
   def activity_answers

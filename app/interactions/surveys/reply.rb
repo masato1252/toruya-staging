@@ -85,6 +85,7 @@ module Surveys
         Notifiers::Users::Surveys::ActivityPendingResponse.perform_later(survey_response: survey_response, receiver: survey.user)
       else
         Notifiers::Customers::Surveys::SurveyPendingResponse.perform_later(survey_response: survey_response, receiver: owner)
+        Notifiers::Users::Surveys::SurveyPendingResponse.perform_later(survey_response: survey_response, receiver: survey.user)
       end
 
       survey_response

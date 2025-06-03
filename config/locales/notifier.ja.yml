@@ -112,3 +112,4 @@ https://manager.toruya.com/userlogin"
         activity_one_day_reminder_message: "%{customer_name} 様\n\n%{survey_name} の %{activity_name} にご登録いただきありがとうございます。\n\n活動は %{activity_slot_time_period} に開催されます。ご参加をお忘れなくお願いいたします。\n\n%{reply_survey_url}"
       users:
         activity_pending_message: "%{user_name} 様\n\n%{survey_name} の %{activity_name} に%{customer_name} 様が登録しました。\n\n以下のリンクから登録結果を確認できます。\n%{survey_response_url}\n\nToruya"
+        survey_pending_message: "%{user_name} 様\n\n%{survey_name} に%{customer_name} 様がご回答いただきました。\n\n以下のリンクから回答結果を確認できます。\n%{survey_response_url}\n\nToruya"

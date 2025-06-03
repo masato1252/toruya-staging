@@ -111,3 +111,4 @@ https://manager.toruya.com/tw/userlogin"
         activity_one_day_reminder_message: "您報名了 %{survey_name} 的 %{activity_name}，活動將在 %{activity_slot_time_period} 舉行，請您記得參加。\n\n%{reply_survey_url}"
       users:
         activity_pending_message: "%{user_name} 您好\n\n有客戶報名了 %{survey_name} 的 %{activity_name}。\n\n請從以下連結查看此客戶報名：\n%{survey_response_url}\n\nToruya"
+        survey_pending_message: "%{user_name} 您好\n\n有客戶填寫了 %{survey_name} 的調查資料。\n\n請從以下連結查看此客戶填寫的調查資料：\n%{survey_response_url}\n\nToruya"
