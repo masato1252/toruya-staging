@@ -150,7 +150,7 @@ class Reservation < ApplicationRecord
       start_time: start_time,
       end_time: end_time,
       meeting_url: meeting_url,
-      product_name: reservation_customer.booking_options.any? ? reservation_customer.booking_options.map(&:present_name).join(", ") : products_sentence,
+      product_name: reservation_customer&.booking_options&.any? ? reservation_customer.booking_options.map(&:present_name).join(", ") : products_sentence,
       booking_page_url: reservation_customer&.booking_page ? Rails.application.routes.url_helpers.booking_page_url(reservation_customer.booking_page.slug, last_booking_option_ids: reservation_customer.booking_option_ids.join(",")) : "",
       booking_info_url: reservation_customer ? reservation_customer.booking_info_url : "",
       reservation_popup_url: reservation_popup_url
