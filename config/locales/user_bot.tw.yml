@@ -668,6 +668,7 @@ tw:
         booking_revenue: 預約收入
         booking_option: 預約項目
         bookings_count: 預約數量
+        rich_menu_introduction_message_html: 這是您圖文選單的訪問分析。<br>您可以查看圖文選單的點擊數、轉換數、銷售額等數據。您可以看到類似下面的圖片的分析。<br><br> 但是因為您使用的是LINE官方手動管理圖文選單，所以Toruya無法得知圖文選單的訪問分析。<br> 如果您有興趣，您可以從<a href="%{setting_path}">這裡</a>設定，由Toruya管理圖文選單。
       booking_page_creation:
         default_label: "%{name}預約頁面"
         default_greeting: "接受%{name}的預約。"

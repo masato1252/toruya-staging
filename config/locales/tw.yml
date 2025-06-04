@@ -59,6 +59,7 @@ tw:
       sale_page_title: 銷售頁面
       service_title: 數位商品
       booking_page_title: 預約頁面
+      rich_menu_title: 圖文選單
   top_navigation_bar:
     menu: ""
   invitation:

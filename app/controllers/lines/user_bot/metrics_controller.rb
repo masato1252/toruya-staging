@@ -45,6 +45,16 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
     @online_services = Current.business_owner.online_services.order("updated_at DESC")
   end
 
+  def rich_menus
+    if !Current.business_owner.social_account.using_line_official_account?
+      @start_date = params[:start_date] || 2.week.ago.to_date
+      @end_date = params[:end_date] || Time.current.to_date
+      @rich_menu = Current.business_owner.social_account.current_rich_menu
+      @metrics = FunctionAccess.metrics_for(source_id: @rich_menu.social_name, start_date: @start_date, end_date: @end_date)
+
+      render template: "lines/user_bot/settings/social_rich_menus/show"
+    end
+  end
 
   def booking_page
     @booking_page = Current.business_owner.booking_pages.find(params[:id])

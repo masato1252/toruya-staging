@@ -122,6 +122,7 @@ Rails.application.routes.draw do
             get :sale_pages
             get :booking_pages
             get :online_services
+            get :rich_menus
             get "/online_services/:id", action: "online_service", as: :online_service, constraints: { id: /\d+/ }
 
             namespace :booking_pages do
