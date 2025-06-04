@@ -31,6 +31,11 @@ class Survey < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
 
+  # not under booking page, or others
+  def regular?
+    owner == user
+  end
+
   def message_template_variables(current_user, reservation_customer = nil)
     if reservation_customer
       reservation = reservation_customer.reservation
