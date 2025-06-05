@@ -438,7 +438,8 @@ tw:
         new_page_desc: 我們將通過簡訊發送表單頁面
         question_desc: 請設置給客戶的問題
         description_desc: 請設置表單的描述
-        introduction_message_html: 表單可用於建立<br><span class="warning">活動報名、課程預約或客戶意見調查</span>，<br>幫助您更有效地收集和管理資訊。
+        introduction_message_html: 表單可用於建立<br><span class="warning">客戶意見調查</span>，<br>幫助您更有效地收集和管理資訊。
+        activity_introduction_message_html: 活動報名頁面可用於建立<br><span class="warning">活動報名、課程預約</span>，<br>幫助您更有效地管理訂單資訊。<br>您可以建立類似下面的表單，讓客戶可以一次報名預約多個時段的活動課程。
         edit:
           active_title: 頁面狀態
           active_subtitle: 頁面狀態

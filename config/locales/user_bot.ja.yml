@@ -438,6 +438,7 @@ ja:
         question_desc: お客様への質問を設定してください
         description_desc: アンケートの説明を設定してください
         introduction_message_html: アンケートは<br><span class="warning">イベント申し込み、コース予約、お客様の意見調査</span>などに<br>ご利用いただけます。
+        activity_introduction_message_html: イベント申し込みページは<br><span class="warning">イベント申し込み、コース予約</span>の<br>作成にご利用いただけます。<br>以下のようなフォームを作成し、お客様が複数の時間帯をまとめて申し込み予約できるようになります。
         edit:
           active_title: ページ状態
           active_subtitle: ページ状態

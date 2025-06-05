@@ -62,7 +62,12 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
     )
 
     flash[:notice] = t("common.update_successfully_message")
-    return_json_response(outcome, { redirect_to: lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
+
+    if outcome.result.activities.exists?
+      return_json_response(outcome, { redirect_to: activities_lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
+    else
+      return_json_response(outcome, { redirect_to: lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
+    end
   end
 
   def destroy

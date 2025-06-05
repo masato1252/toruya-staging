@@ -45,7 +45,15 @@
           </div>
 
           <div class="margin-around centerize">
-            <%= t("user_bot.dashboards.surveys.introduction_message_html") %>
+
+            <% if params[:mode] == "activity" %>
+              <%= t("user_bot.dashboards.surveys.activity_introduction_message_html") %>
+              <div class="margin-around centerize mt-4">
+                <%= image_pack_tag "media/assets/user_bot/survey_activity_sample_#{Current.business_owner.locale}.png", class: "w-full" %>
+              </div>
+            <% else %>
+              <%= t("user_bot.dashboards.surveys.introduction_message_html") %>
+            <% end %>
           </div>
         </div>
 
