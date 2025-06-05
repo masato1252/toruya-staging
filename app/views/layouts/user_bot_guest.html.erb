@@ -15,7 +15,7 @@
     <%= javascript_packs_with_chunks_tag "user_bot_stylesheets" if Rails.env.development? %>
     <%= yield :script if content_for?(:script) %>
     <link rel="manifest" href="/manifest.json" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <%= render "layouts/google_analytics" %>
   </head>
 
