@@ -3,6 +3,16 @@
 
 <%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.user_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
 
+<%= react_component(
+  "user_bot/shared/view_toggle_button", {
+    props: {
+      current_mode: "list",
+      business_owner_id: business_owner_id
+    }
+  },
+  { camelize_props: false }
+) %>
+
 <div class="schedule-dashboard">
   <div class="schedule-dates">
     <a href="#" data-toggle="modal" data-target="#calendar-modal" class="btn btn-yellow btn-icon calendar-btn">

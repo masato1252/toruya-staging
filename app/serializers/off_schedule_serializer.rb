@@ -8,6 +8,9 @@ class OffScheduleSerializer
   attribute :start_time_time_part, &:start_time_time
   attribute :end_time_date_part, &:end_time_date
   attribute :end_time_time_part, &:end_time_time
+  attribute :full_start_time, &:start_time
+  attribute :full_end_time, &:end_time
+  attribute :title, &:reason
 
   attribute :type do |_|
     :off_schedule
@@ -15,6 +18,10 @@ class OffScheduleSerializer
 
   attribute :time do |schedule|
     schedule.start_time
+  end
+
+  attribute :title do |schedule|
+    schedule.reason.presence || I18n.t("common.off_schedule")
   end
 
   attribute :reason do |schedule|

@@ -199,11 +199,12 @@ const ticketExpireDate = (start_time, expire_month) => {
 // Map Rails locale codes to moment.js locale codes
 const getMomentLocale = (appLocale = "tw") => {
   const localeMap = {
-    'tw': 'zh-TW', // Map Rails "tw" to moment's "zh-TW"
-    'ja': 'ja'     // Japanese uses the same code
+    'tw': 'zh-tw', // Map Rails "tw" to moment's "zh-tw"
+    'ja': 'ja',    // Japanese uses the same code
+    'en': 'en'     // English uses the same code
   };
 
-  return localeMap[appLocale] || 'zh-TW'; // Default to zh-TW if locale not found
+  return localeMap[appLocale] || 'en'; // Default to English if locale not found
 }
 
 const getEditorLocale = (appLocale = "tw") => {

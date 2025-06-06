@@ -5,8 +5,10 @@ class Schedules::Events < ActiveInteraction::Base
   array :user_ids do
     integer
   end
-  date :date
+  date :date, default: nil
   date :month_date, default: nil
+  date :period_start_date, default: nil
+  date :period_end_date, default: nil
 
   def execute
     # Mix off custom schedules and reservations
@@ -24,6 +26,14 @@ class Schedules::Events < ActiveInteraction::Base
       off_schedules = off_schedules.where("start_time <= ? and end_time >= ?", month_date.end_of_month, month_date.beginning_of_month)
       open_schedules = open_schedules.where("start_time <= ? and end_time >= ?", month_date.end_of_month, month_date.beginning_of_month)
       booking_page_holder_schedules = booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", month_date.beginning_of_month, month_date.end_of_month)
+    elsif period_start_date && period_end_date
+      reservations = reservations.where("start_time <= ? and start_time >= ?", period_end_date.end_of_day, period_start_date.beginning_of_day)
+      # show all the off_schedules overlap with the period
+      off_schedules = off_schedules.where("start_time <= ? AND end_time >= ?", period_end_date.end_of_day, period_start_date.beginning_of_day)
+      # show all the open_schedules overlap with the period
+      open_schedules = open_schedules.where("start_time <= ? AND end_time >= ?", period_end_date.end_of_day, period_start_date.beginning_of_day)
+      # show all the booking_page_holder_schedules overlap with the period
+      booking_page_holder_schedules = booking_page_holder_schedules.where("start_at >= ? and end_at <= ?", period_start_date.end_of_day, period_end_date.beginning_of_day)
     else
       reservations = reservations.where("start_time <= ? and end_time >= ?", date.end_of_day, date.beginning_of_day)
       off_schedules = off_schedules.where("start_time <= ? and end_time >= ?", date.end_of_day, date.beginning_of_day)

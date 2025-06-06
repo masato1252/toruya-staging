@@ -108,6 +108,8 @@ Rails.application.routes.draw do
             collection do
               get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
               get "/social_service_user_id/:social_service_user_id", action: "index"
+              get :events
+              post :toggle_mode
             end
           end
 
@@ -435,7 +437,8 @@ Rails.application.routes.draw do
           end
 
           resources :online_service_customer_relations, only: [:show]
-          resources :custom_schedules, only: [:create, :update, :destroy]
+          resources :custom_schedules, only: [:show, :create, :update, :destroy]
+          resources :booking_page_special_dates, only: [:show]
 
           resources :warnings, only: [], constraints: ::XhrConstraint do
             collection do
@@ -688,7 +691,7 @@ Rails.application.routes.draw do
         resources :social_accounts
       end
     end
-    resources :custom_schedules, only: [:create, :update, :destroy]
+    resources :custom_schedules, only: [:show, :create, :update, :destroy]
 
     namespace :callbacks do
       resources :staff_accounts, only: [] do

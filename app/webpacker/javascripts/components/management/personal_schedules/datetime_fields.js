@@ -2,9 +2,8 @@
 
 import React from "react";
 import moment from "moment";
-import CommonDatepickerField from "shared/datepicker_field.js";
-import { CustomTimePicker } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
+import { CustomTimePicker } from 'shared/components';
 
 class PersonalScheduleDatetimeFields extends React.Component {
   constructor(props) {
@@ -40,7 +39,14 @@ class PersonalScheduleDatetimeFields extends React.Component {
   };
 
   _handleTimeChange = (time, fieldName) => {
-    this.setState({ [fieldName]: time });
+    const newState = { [fieldName]: time };
+
+    // 如果開始時間設置為 00:00，自動設置結束時間為 23:59 (整天)
+    if (fieldName === 'startTimeTimePart' && time && time.format('HH:mm') === '00:00') {
+      newState.endTimeTimePart = moment('23:59', 'HH:mm');
+    }
+
+    this.setState(newState);
   };
 
   _handleDateChange = (dateChange) => {
@@ -57,38 +63,32 @@ class PersonalScheduleDatetimeFields extends React.Component {
           defaultValue={this.props.open}
           />
         <div className="flex items-center">
-          <CommonDatepickerField
-            date={this.state.startTimeDatePart}
-            locale={this.props.locale}
+          <input
+            type="date"
             name="custom_schedules[][start_time_date_part]"
-            dataName="startTimeDatePart"
-            handleChange={this._handleDateChange}
-            calendarfieldPrefix={this.props.calendarfieldPrefix}
-            hideCalendar={this.props.hideCalendar}
+            value={this.state.startTimeDatePart || ''}
+            onChange={(e) => this._handleDateChange({ startTimeDatePart: e.target.value })}
           />
           <CustomTimePicker
-            value={this.state.startTimeTimePart}
-            onChange={(time) => this._handleTimeChange(time, 'startTimeTimePart')}
             name="custom_schedules[][start_time_time_part]"
+            value={this.state.startTimeTimePart ? this.state.startTimeTimePart.format('HH:mm') : ''}
+            onChange={(timeString) => this._handleTimeChange(timeString ? moment(timeString, 'HH:mm') : null, 'startTimeTimePart')}
           />
           <span>
             {I18n.t("common.from_when")}
           </span>
         </div>
         <div className="flex items-center">
-          <CommonDatepickerField
-            date={this.state.endTimeDatePart}
-            locale={this.props.locale}
+          <input
+            type="date"
             name="custom_schedules[][end_time_date_part]"
-            dataName="endTimeDatePart"
-            handleChange={this._handleDateChange}
-            calendarfieldPrefix={this.props.calendarfieldPrefix}
-            hideCalendar={this.props.hideCalendar}
+            value={this.state.endTimeDatePart || ''}
+            onChange={(e) => this._handleDateChange({ endTimeDatePart: e.target.value })}
           />
           <CustomTimePicker
-            value={this.state.endTimeTimePart}
-            onChange={(time) => this._handleTimeChange(time, 'endTimeTimePart')}
             name="custom_schedules[][end_time_time_part]"
+            value={this.state.endTimeTimePart ? this.state.endTimeTimePart.format('HH:mm') : ''}
+            onChange={(timeString) => this._handleTimeChange(timeString ? moment(timeString, 'HH:mm') : null, 'endTimeTimePart')}
           />
           <span>
             {I18n.t("common.until_when")}

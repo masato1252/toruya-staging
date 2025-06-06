@@ -44,7 +44,10 @@ class CommonDatepickerField extends React.Component {
           placeholder="yyyy/mm/dd"
           value={this.props.date && moment(this.props.date, [ "YYYY/M/D", "YYYY-M-D" ]).format("YYYY/M/D")}
           inputProps={{
-            disabled: this.props.isDisabled
+            disabled: this.props.isDisabled,
+            id: this.props.inputId,
+            'data-id': this.props.dataId,
+            'data-field-type': this.props.fieldType
           }}
         />
         <input

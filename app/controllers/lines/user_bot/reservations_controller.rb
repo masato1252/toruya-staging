@@ -52,7 +52,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       @reservation = shop.reservations.find_by(id: params[:id] || params[:reservation_id])
       @reservation ||= shop.reservations.new(
         start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_fs(:date),
-        start_time_time_part: Time.zone.now.to_fs(:time),
+        start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_fs(:time),
         end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_fs(:date),
         end_time_time_part: Time.zone.now.advance(hours: 2).to_fs(:time),
       )

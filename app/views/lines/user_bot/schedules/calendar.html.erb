@@ -1,0 +1,38 @@
+<%= notification_messages %>
+<%= t("user_bot.dashboards.change_logs.notification_message_html", change_log_path: lines_user_bot_change_log_path) %>
+
+<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.user_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
+
+<%= react_component(
+  "user_bot/shared/view_toggle_button", {
+    props: {
+      current_mode: "calendar",
+      business_owner_id: business_owner_id
+    }
+  },
+  { camelize_props: false }
+) %>
+<%= react_component(
+  "user_bot/dashboards/schedules_dashboard/calendar", {
+    props: {
+      month_date: @month_date,
+      timezone: Current.business_owner.timezone,
+      business_owner_id: business_owner_id,
+      schedules: @schedules_for_calendar,
+      params: params,
+      queried_start_date: @month_date.beginning_of_month.to_fs(:date),
+      queried_end_date: @month_date.end_of_month.to_fs(:date),
+      reservations_approval_flow: @reservations_approval_flow,
+      _from: params[:_from],
+      request_url: request.url
+    }
+  },
+  { camelize_props: false }
+) %>
+
+
+<div class="schedule-dashboard">
+  <%= render "lines/user_bot/schedules/schedule_modal", my_calendar: @my_calendar %>
+  <%= render "reservations/new_modal", date: @date, my_calendar: @my_calendar %>
+  <%= render "reservations/off_date_modal", date: @date %>
+</div>

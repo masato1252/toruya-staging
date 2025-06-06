@@ -3,6 +3,8 @@
 class BookingPageSpecialDateSerializer
   include JSONAPI::Serializer
 
+  attribute :full_start_time, &:start_at
+  attribute :full_end_time, &:end_at
   attributes :id, :booking_page_id
 
   attribute :type do |_|
@@ -23,6 +25,10 @@ class BookingPageSpecialDateSerializer
 
   attribute :time do |schedule|
     schedule.start_at
+  end
+
+  attribute :title do |schedule|
+    schedule.booking_page.name
   end
 
   attribute :reason do |schedule|

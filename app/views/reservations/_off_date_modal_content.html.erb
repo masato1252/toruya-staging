@@ -1,0 +1,52 @@
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+          <%= I18n.t("action.new_off_schedule") %>
+        </h4>
+      </div>
+      <%= form_with url: local_assigns[:custom_schedule_id] ? SiteRouting.new(self).custom_schedule_path(business_owner_id, local_assigns[:custom_schedule_id]) : SiteRouting.new(self).custom_schedules_path(business_owner_id),
+        local: true,
+        method: local_assigns[:custom_schedule_id] ? :patch : :post do %>
+        <div class="modal-body">
+          <dl id="addWorkDay">
+            <%= react_component("management/personal_schedules/datetime_fields", {
+              locale: Current.business_owner.locale,
+              custom_schedule_id: local_assigns[:custom_schedule_id],
+              staff_id: local_assigns[:staff].try(:id),
+              open: false,
+              start_time_date_part: local_assigns[:start_time_date_part] || date.to_s,
+              start_time_time_part: local_assigns[:start_time_time_part] || "00:00",
+              end_time_date_part: local_assigns[:end_time_date_part] || date.to_s,
+              end_time_time_part: local_assigns[:end_time_time_part] || "23:59",
+              calendarfield_prefix: local_assigns[:calendarfield_prefix] || "temp_leaving_schedule",
+              hideCalendar: true
+            }) %>
+            <div class="closeReason">
+              <input
+                type="text"
+                name="custom_schedules[][reason]"
+                placeholder=<%= t("settings.staff_working_time.closing_reason") %>
+                size="20"
+                value="<%= local_assigns[:reason] %>"
+              />
+            </div>
+            <div class="my-2">
+              <%= label_tag do %>
+                <%= check_box_tag "custom_schedules_closed", true, local_assigns[:open].present? ? !local_assigns[:open] : true %>
+                <%= t("settings.staff_working_time.block_schedule") %>
+              <% end %>
+            </div>
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <div>
+            <%= link_to t("action.delete"),
+              SiteRouting.new(self).custom_schedule_path(business_owner_id, local_assigns[:custom_schedule_id]), class: "btn btn-orange", method: "delete", data: { confirm: I18n.t("common.are_you_sure_message"), disable_with: t("common.processing") } if local_assigns[:custom_schedule_id] %>
+            <%= submit_tag t("action.save"), class: "btn btn-yellow", data: { disable_with: t("common.processing") } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>

@@ -1,6 +1,28 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardController
+    # show action for dynamic modal loading
+  def show
+    custom_schedule = current_user.custom_schedules.find(params[:id])
+
+    if custom_schedule_permission(custom_schedule)
+      render partial: 'reservations/off_date_modal_content', locals: {
+        modal_id: "off-date-modal-#{custom_schedule.id}",
+        custom_schedule_id: custom_schedule.id,
+        date: custom_schedule.start_time&.to_date || Date.current,
+        start_time_date_part: custom_schedule.start_time_date_part,
+        start_time_time_part: custom_schedule.start_time_time_part,
+        end_time_date_part: custom_schedule.end_time_date_part,
+        end_time_time_part: custom_schedule.end_time_time_part,
+        calendarfield_prefix: "temp_leaving_schedule_#{custom_schedule.id}",
+        reason: custom_schedule.reason,
+        open: custom_schedule.open
+      }
+    else
+      head :unprocessable_entity
+    end
+  end
+
   def create
     # create from personal schedule
     CustomSchedules::PersonalCreate.run!(

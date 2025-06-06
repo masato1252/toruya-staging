@@ -23,5 +23,6 @@ class UserSetting < ApplicationRecord
     # paid user can choose email, line
     # line verified user change to line
     s.string :customer_notification_channel, default: "email", null: false # email, line
+    s.string :schedule_mode, default: "list", null: false # calendar, list
   end
 end

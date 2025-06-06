@@ -9,6 +9,9 @@ class ReservationSerializer
   attribute :start_time_time_part, &:start_time_time
   attribute :end_time_date_part, &:end_time_date
   attribute :end_time_time_part, &:end_time_time
+  attribute :full_start_time, &:start_time
+  attribute :full_end_time, &:end_time
+  attribute :title, &:products_sentence
 
   attribute :state, &:aasm_state
 

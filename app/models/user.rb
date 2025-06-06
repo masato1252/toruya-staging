@@ -121,7 +121,7 @@ class User < ApplicationRecord
   delegate :current_plan, :trial_expired_date, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :square_client, to: :square_provider
-  delegate :line_keyword_booking_page_ids, :line_keyword_booking_option_ids, :line_contact_customer_name_required, :customer_tags, :toruya_message_reply, :booking_options_menu_concept, :customer_notification_channel, to: :user_setting, allow_nil: true
+  delegate :line_keyword_booking_page_ids, :line_keyword_booking_option_ids, :line_contact_customer_name_required, :customer_tags, :toruya_message_reply, :booking_options_menu_concept, :customer_notification_channel, :schedule_mode, to: :user_setting, allow_nil: true
 
   scope :admin, -> { joins(:social_user).where(social_service_user_id: SocialUser::ADMIN_IDS) }
   scope :not_admin, -> { where.not.admin }
