@@ -204,103 +204,6 @@ const SchedulesCalendar = ({ props }) => {
     setMomentLocaleAndTimezone(timezone);
   }, [I18n.locale, timezone]);
 
-    // Add CSS for proper event clicking and scrolling in all views
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.id = 'calendar-event-fix';
-    style.textContent = `
-      /* Ensure proper scrolling for all calendar views */
-      .big-calendar {
-        height: 100% !important;
-        overflow: hidden !important;
-      }
-
-      .big-calendar .rbc-time-view {
-        overflow-y: auto !important;
-        height: 100% !important;
-      }
-
-      .big-calendar .rbc-time-content {
-        overflow-y: auto !important;
-        flex: 1 !important;
-      }
-
-      .big-calendar .rbc-calendar {
-        height: 100% !important;
-      }
-
-      /* Ensure events are clickable with highest priority */
-      .big-calendar .rbc-event {
-        position: relative !important;
-        z-index: 999 !important;
-        pointer-events: auto !important;
-        cursor: pointer !important;
-      }
-
-      .big-calendar .rbc-event:hover,
-      .big-calendar .rbc-event:active {
-        z-index: 1000 !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
-      }
-
-      .big-calendar .rbc-event-content {
-        pointer-events: auto !important;
-        cursor: pointer !important;
-        user-select: none !important;
-      }
-
-      /* Fix event container interference */
-      .big-calendar .rbc-event-container {
-        pointer-events: none !important;
-      }
-
-      .big-calendar .rbc-event-container > * {
-        pointer-events: auto !important;
-      }
-
-            /* Ensure time slots are visually responsive but don't interfere with scrolling */
-      .big-calendar .rbc-time-slot,
-      .big-calendar .rbc-day-slot {
-        min-height: 30px !important;
-        position: relative !important;
-      }
-
-      /* Visual feedback on hover (desktop only) */
-      @media (hover: hover) {
-        .big-calendar .rbc-time-slot:hover,
-        .big-calendar .rbc-day-slot:hover {
-          background-color: rgba(0, 123, 255, 0.05) !important;
-        }
-      }
-
-      /* Mobile specific improvements */
-      @media (max-width: 768px) {
-        .big-calendar .rbc-time-slot,
-        .big-calendar .rbc-day-slot {
-          min-height: 40px !important;
-        }
-
-        .big-calendar .rbc-event {
-          padding: 2px 4px !important;
-          border-radius: 3px !important;
-        }
-      }
-    `;
-
-    const existingStyle = document.getElementById('calendar-event-fix');
-    if (existingStyle) {
-      document.head.removeChild(existingStyle);
-    }
-
-    document.head.appendChild(style);
-
-    return () => {
-      if (document.head.contains(style)) {
-        document.head.removeChild(style);
-      }
-    };
-  }, []);
-
   // Force calendar re-render to fix CSS issues on initial load
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -309,12 +212,43 @@ const SchedulesCalendar = ({ props }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Convert time strings to Date objects using correct timezone
-  const convertedSchedules = schedules.map(schedule => ({
-    ...schedule,
-    start: timezone ? moment.tz(schedule.full_start_time, timezone).toDate() : moment(schedule.full_start_time).toDate(),
-    end: timezone ? moment.tz(schedule.full_end_time, timezone).toDate() : moment(schedule.full_end_time).toDate()
-  }));
+    // Convert time strings to Date objects using correct timezone
+  const convertedSchedules = schedules.map(schedule => {
+    // Debug: log original time strings
+    console.log('🕐 Original times for schedule:', schedule.id || schedule.title, {
+      full_start_time: schedule.full_start_time,
+      full_end_time: schedule.full_end_time,
+      timezone: timezone
+    });
+
+        // Check if time string already contains timezone info (ends with +XX:XX or -XX:XX)
+    const hasTimezone = /[+-]\d{2}:\d{2}$/.test(schedule.full_start_time);
+
+    const startTime = hasTimezone ?
+      moment(schedule.full_start_time).toDate() :
+      (timezone ? moment.tz(schedule.full_start_time, timezone).toDate() : moment(schedule.full_start_time).toDate());
+
+    const endTime = hasTimezone ?
+      moment(schedule.full_end_time).toDate() :
+      (timezone ? moment.tz(schedule.full_end_time, timezone).toDate() : moment(schedule.full_end_time).toDate());
+
+    // Debug: log converted times
+    console.log('🕐 Converted times:', {
+      hasTimezone: hasTimezone,
+      start: startTime.toISOString(),
+      end: endTime.toISOString(),
+      startLocal: startTime.toLocaleString(),
+      endLocal: endTime.toLocaleString(),
+      startHour: startTime.getHours(),
+      startMinute: startTime.getMinutes()
+    });
+
+    return {
+      ...schedule,
+      start: startTime,
+      end: endTime
+    };
+  });
 
   // Fetch new event data
   const fetchEvents = async (startDate, endDate) => {
@@ -696,7 +630,7 @@ const SchedulesCalendar = ({ props }) => {
         onNavigate={handleNavigate}
         selectable={true}
         longPressThreshold={250}
-        scrollToTime={new Date(1970, 1, 1, 9, 0, 0)}
+        scrollToTime={moment().hour(9).minute(0).second(0).toDate()}
         step={30}
         timeslots={2}
         popup
