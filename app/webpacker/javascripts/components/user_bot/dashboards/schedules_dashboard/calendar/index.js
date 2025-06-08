@@ -374,9 +374,9 @@ const SchedulesCalendar = ({ props }) => {
     } else {
       switch (event.type) {
         case 'booking_page_holder_schedule':
-          backgroundColor = '#ffc107';
-          borderColor = '#d39e00';
-          color = 'black';
+          backgroundColor = '#d0d0d0'; // $gray5
+          borderColor = '#b3b3b3'; // $gray7
+          color = '#333333'; // $black
           break;
         case 'off_schedule':
           backgroundColor = 'white'
