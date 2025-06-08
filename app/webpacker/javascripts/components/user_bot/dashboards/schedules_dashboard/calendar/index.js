@@ -214,14 +214,7 @@ const SchedulesCalendar = ({ props }) => {
 
     // Convert time strings to Date objects using correct timezone
   const convertedSchedules = schedules.map(schedule => {
-    // Debug: log original time strings
-    console.log('🕐 Original times for schedule:', schedule.id || schedule.title, {
-      full_start_time: schedule.full_start_time,
-      full_end_time: schedule.full_end_time,
-      timezone: timezone
-    });
-
-        // Check if time string already contains timezone info (ends with +XX:XX or -XX:XX)
+    // Check if time string already contains timezone info (ends with +XX:XX or -XX:XX)
     const hasTimezone = /[+-]\d{2}:\d{2}$/.test(schedule.full_start_time);
 
     const startTime = hasTimezone ?
@@ -231,17 +224,6 @@ const SchedulesCalendar = ({ props }) => {
     const endTime = hasTimezone ?
       moment(schedule.full_end_time).toDate() :
       (timezone ? moment.tz(schedule.full_end_time, timezone).toDate() : moment(schedule.full_end_time).toDate());
-
-    // Debug: log converted times
-    console.log('🕐 Converted times:', {
-      hasTimezone: hasTimezone,
-      start: startTime.toISOString(),
-      end: endTime.toISOString(),
-      startLocal: startTime.toLocaleString(),
-      endLocal: endTime.toLocaleString(),
-      startHour: startTime.getHours(),
-      startMinute: startTime.getMinutes()
-    });
 
     return {
       ...schedule,

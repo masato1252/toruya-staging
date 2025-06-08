@@ -7,8 +7,7 @@ class Lines::UserBot::BookingPageSpecialDatesController < Lines::UserBotDashboar
 
     # Check permission - user must be the owner of the shop
     if booking_page_special_date.booking_page.shop.user_id == Current.business_owner.id
-      render partial: 'reservations/holder_modal', locals: {
-        modal_id: "booking-page-holder-modal-#{booking_page_special_date.id}",
+      render partial: 'special_date_modal', locals: {
         booking_page_id: booking_page_special_date.booking_page_id,
         start_time_date_part: booking_page_special_date.start_at_date,
         start_time_time_part: booking_page_special_date.start_at_time,

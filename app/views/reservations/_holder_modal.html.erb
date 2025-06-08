@@ -1,21 +1,8 @@
 <div class="modal fade off-date-modal" id=<%= local_assigns[:modal_id] %> tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title" id="myModalLabel">
-
-          <span class="reservation-state reserved"><%= I18n.t("common.event") %></span><%= local_assigns[:start_time_date_part] %> <%= local_assigns[:start_time_time_part] %> ~ <%= local_assigns[:end_time_time_part] %>
-        </h4>
-      </div>
-      <div class="modal-body">
-        <%= local_assigns[:reason] %>
-      </div>
-      <div class="modal-footer">
-        <div>
-          <%= link_to t("action.booking_page_edit"), edit_lines_user_bot_booking_page_path(id: local_assigns[:booking_page_id], attribute: "booking_type"), class: "btn btn-tarco" %>
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= render 'lines/user_bot/booking_page_special_dates/special_date_modal',
+      start_time_date_part: local_assigns[:start_time_date_part],
+      start_time_time_part: local_assigns[:start_time_time_part],
+      end_time_time_part: local_assigns[:end_time_time_part],
+      reason: local_assigns[:reason],
+      booking_page_id: local_assigns[:booking_page_id] %>
 </div>
