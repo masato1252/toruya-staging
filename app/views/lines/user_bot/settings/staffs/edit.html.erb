@@ -6,7 +6,9 @@
       phone_number: @staff.phone_number
     ),
     attribute: params[:attribute],
-    title: t("user_bot.dashboards.settings.staffs.list_page_header")
+    title: t("user_bot.dashboards.settings.staffs.list_page_header"),
+    staff_menus_options: defined?(@staff_menus_options) ? @staff_menus_options : nil,
+    support_feature_flags: support_feature_flags
   }
 },
 { camelize_props: false }

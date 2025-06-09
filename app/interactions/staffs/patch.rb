@@ -12,6 +12,7 @@ module Staffs
     string :phone_number, default: nil
     file :picture, default: nil
     string :introduction, default: nil
+    array :staff_menus, default: nil
 
     def execute
       staff.with_lock do
@@ -34,6 +35,16 @@ module Staffs
 
           staff.introduction = introduction
           staff.save!
+        when "staff_menus"
+          staff.transaction do
+            staff.staff_menus.destroy_all
+            checked_staff_menus = staff_menus.select{ |attribute| attribute["checked"] == "true" }
+            new_menu_attrs = checked_staff_menus.map do |attr|
+              { menu_id: attr["menu_id"], max_customers: attr["max_customers"].presence || 1 }
+            end
+
+            staff.staff_menus.create(new_menu_attrs)
+          end
         end
 
         if staff.errors.present?

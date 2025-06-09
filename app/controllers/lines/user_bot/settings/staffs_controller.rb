@@ -14,6 +14,27 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def edit
+    case params[:attribute]
+    when "staff_menus"
+      staff_menus = @staff.staff_menus.includes(:menu).to_a
+      @staff_menus_options = Current.business_owner.menus.active.order(:name).map do |menu|
+        if staff_menu = staff_menus.find { |staff_menu| staff_menu.menu_id == menu.id }
+          Option.new(
+            name: menu.name,
+            menu_id: menu.id,
+            max_customers: staff_menu.max_customers,
+            checked: true
+          )
+        else
+          Option.new(
+            name: menu.name,
+            menu_id: menu.id,
+            max_customers: 1,
+            checked: false
+          )
+        end
+      end
+    end
   end
 
   def create
@@ -36,7 +57,8 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
       phonetic_first_name: params[:phonetic_first_name],
       phone_number: params[:phone_number],
       picture: params[:picture],
-      introduction: params[:introduction]
+      introduction: params[:introduction],
+      staff_menus: params[:staff_menus]
     )
 
     return_json_response(outcome, { redirect_to: lines_user_bot_settings_staff_path(Current.business_owner, @staff) })
@@ -49,7 +71,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
     if outcome.valid?
       redirect_to lines_user_bot_settings_staffs_path(Current.business_owner), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_settings_staffs_path(Current.business_owner)
+      redirect_to lines_user_bot_settings_staffs_path(Current.business_owner), alert: outcome.errors.full_messages.join(", ")
     end
   end
 

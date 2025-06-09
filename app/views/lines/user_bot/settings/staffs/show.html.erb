@@ -15,6 +15,9 @@
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.staffs.introduction") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_staff_path(business_owner_id: business_owner_id, id: staff.id, attribute: :staff_info), title: @staff.introduction.presence || t("common.no_data") %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.staffs.staff_menus") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_staff_path(business_owner_id: business_owner_id, id: staff.id, attribute: :staff_menus), title: @staff.staff_menus.map(&:menu).map(&:name).join(", ") %>
       </div>
       <div class="centerize">
         <%= link_to t("action.sms_resend"), resend_activation_sms_lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id, id: staff.id), class: "btn btn-tarco" %>

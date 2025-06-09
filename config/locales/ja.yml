@@ -940,3 +940,7 @@ ja:
               text_answer_not_allowed: "^問題はテキストで回答してください。"
               options_not_allowed: "^問題は選択肢を選択してください。"
               activity_not_allowed: "^問題は活動を選択してください。"
+        staffs/delete:
+          attributes:
+            staff:
+              undeleteable: "^責任者は削除できません"

@@ -420,6 +420,7 @@ tw:
           delete: 刪除成員
           authority: 權限
           introduction: 介紹
+          staff_menus: 可提供的服務項目
           authorities:
             admin: 管理員
             owner: 擁有者

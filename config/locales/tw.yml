@@ -914,3 +914,7 @@ tw:
               text_answer_not_allowed: "^問題需要以文字回答"
               options_not_allowed: "^問題需要選擇選項"
               activity_not_allowed: "^問題需要選擇活動"
+        staffs/delete:
+          attributes:
+            staff:
+              undeleteable: "^無法刪除負責人"
