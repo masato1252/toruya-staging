@@ -28,11 +28,13 @@ class OnlineServicesController < Lines::CustomersController
     # authorize owner and customer
     @relation = online_service.online_service_customer_relations.where(customer: current_customer).last
 
-    @customer = current_customer
-    @is_owner = false
-    @able_to_change_credit_card = OnlineServiceCustomerRelations::ChangeCreditCardAbility.run!(relation: @relation)
+    if @relation.present?
+      @customer = current_customer
+      @is_owner = false
+      @able_to_change_credit_card = OnlineServiceCustomerRelations::ChangeCreditCardAbility.run!(relation: @relation)
 
-    render layout: "customer_user_bot"
+      render layout: "customer_user_bot"
+    end
   end
 
   def watch_lesson

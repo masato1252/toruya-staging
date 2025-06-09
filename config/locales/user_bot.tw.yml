@@ -516,6 +516,11 @@ tw:
           manual_assignment_title: 指定發送對象
           manual_assignment_subtitle: 指定發送對象
       services:
+        customers:
+          not_found:
+            title: 找不到客戶
+            description: 指定的客戶不存在或您沒有訪問權限。
+            contact_business_owner: 請聯繫商家
         online_service: 數位商品
         service_page: 產品頁面
         service_about: 服務概要

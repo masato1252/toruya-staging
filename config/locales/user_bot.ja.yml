@@ -515,6 +515,11 @@ ja:
           manual_assignment_title: 指定送信先
           manual_assignment_subtitle: 指定送信先
       services:
+        customers:
+          not_found:
+            title: 顧客が見つかりません
+            description: 指定された顧客は存在しないか、アクセス権限がありません。
+            contact_business_owner: 事業主にお問い合わせください
         online_service: オンラインサービス
         service_page: サービスページ
         service_about: サービス概要

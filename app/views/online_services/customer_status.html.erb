@@ -11,7 +11,11 @@
     <h1><%= t("common.usage_status") %></h1>
   </div>
 
-  <%= render "lines/user_bot/services/customers/info" %>
+  <% if @relation %>
+    <%= render "lines/user_bot/services/customers/info" %>
+  <% else %>
+    <%= render "lines/user_bot/services/customers/not_found" %>
+  <% end %>
 </div>
 
 <%= react_component("shared/stripe_change_card_modal", {
