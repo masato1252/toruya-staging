@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import _ from "lodash";
 import moment from "moment-timezone"
 
@@ -24,7 +24,27 @@ const Calendar = ({locale = 'ja', ...props}) => {
     selectedDate: props.skip_default_date ? null : startDate.clone()
   })
 
-  const scheduleParams = _.merge({ date: state.month.clone().startOf('month').format("YYYY-MM-DD"), staff_id: staff_id }, props.scheduleParams || {})
+  const prevParamsRef = useRef(null);
+
+  const scheduleParams = useMemo(() => {
+    const newParams = _.merge({
+      date: state.month.clone().startOf('month').format("YYYY-MM-DD"),
+      staff_id: staff_id
+    }, props.scheduleParams || {});
+
+    // Convert to string for comparison
+    const paramsString = JSON.stringify(newParams);
+
+    // Only return new params if they're actually different
+    if (prevParamsRef.current !== paramsString) {
+      prevParamsRef.current = paramsString;
+      return newParams;
+    }
+
+    // Return the previous params object to maintain reference equality
+    return JSON.parse(prevParamsRef.current);
+  }, [state.month.format('YYYY-MM'), staff_id, props.scheduleParams]);
+
   const { isLoading, schedules } = useSchedule({url: props.schedulePath, scheduleParams: scheduleParams});
 
   useEffect(() => {
@@ -52,7 +72,12 @@ const Calendar = ({locale = 'ja', ...props}) => {
   };
 
   const select = (day) => {
-    setState({...state, month: day.date, selectedDate: day.date });
+    // Only update month if the selected date is in a different month
+    const newMonth = day.date.month() !== state.month.month() || day.date.year() !== state.month.year()
+      ? day.date.clone().startOf('month')
+      : state.month;
+
+    setState({...state, month: newMonth, selectedDate: day.date });
 
     if (props.dateSelectedCallback) {
       props.dateSelectedCallback(day.date.format("YYYY-MM-DD"))
