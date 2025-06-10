@@ -71,7 +71,7 @@
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
 
-        <% if Current.business_owner.shops.count == 1 %>
+        <% if Current.business_owner.has_single_shop? %>
           <% shop = Current.business_owner.shops.first %>
           <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>

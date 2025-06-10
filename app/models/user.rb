@@ -372,6 +372,10 @@ class User < ApplicationRecord
     end
   end
 
+  def has_single_shop?
+    shops.count == 1
+  end
+
   private
 
   def today_reservations

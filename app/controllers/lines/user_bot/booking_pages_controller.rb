@@ -53,7 +53,11 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
       flash[:success] = I18n.t("common.update_successfully_message")
     end
 
-    render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(@booking_page.id, business_owner_id: business_owner_id, anchor: params[:attribute]) })
+    if params[:attribute] == "use_shop_default_message"
+      render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_custom_messages_path(@booking_page.id, business_owner_id: business_owner_id) })
+    else
+      render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(@booking_page.id, business_owner_id: business_owner_id, anchor: params[:attribute]) })
+    end
   end
 
   def delete_option

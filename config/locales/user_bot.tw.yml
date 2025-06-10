@@ -200,10 +200,16 @@ tw:
           auto_message_label: 自動發送訊息
           line_message_title: 自動發送訊息
           auto_message_booking_label: 自動發送訊息
+          auto_message_booking_label_with_current_setting: 自動發送訊息 (%{current_setting})
           auto_message_service_label: 自動發送訊息
           send_message_label: 發送訊息
           content: 訊息內容
           preview: 預覽
+          message_source_setting_label: 訊息來源設定
+          using_shop_default: 目前使用：商家預設通知
+          using_custom_message: 目前使用：此預約頁面下自訂通知
+          using_shop_default_message_html: 目前使用<a class='underline align-baseline' href='%{default_message_path}'>商家預設通知</a>。如要設定預約頁面專屬通知，請先切換為「<a class='underline align-baseline' href='%{custom_message_path}'>使用預約頁面自訂通知</a>」。
+          using_shop_default_message_hint: 小提示：使用商家預設通知的預約頁面，都會使用相同的通知訊息，而非專屬預約頁面的通知訊息。
           buttons:
             customer_name: 客戶姓名
             shop_name: 商家名稱

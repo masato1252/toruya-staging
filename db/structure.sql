@@ -720,7 +720,8 @@ CREATE TABLE public.booking_pages (
     booking_limit_hours integer DEFAULT 0 NOT NULL,
     cut_off_time timestamp(6) without time zone DEFAULT NULL::timestamp without time zone,
     multiple_selection boolean DEFAULT false,
-    settings jsonb DEFAULT '{}'::jsonb NOT NULL
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    use_shop_default_message boolean DEFAULT true NOT NULL
 );
 
 
@@ -6696,6 +6697,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250405223945'),
 ('20250415114430'),
 ('20250423000000'),
-('20250510071219');
+('20250510071219'),
+('20250610000000');
 
 

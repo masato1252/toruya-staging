@@ -1,59 +1,88 @@
 <div class="booking-page-show form with-top-bar">
   <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %>
 
-  <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.custom_message.booking_page.online_booking") %></div>
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.booking_page.page_label") %></div>
-  <%= render "lines/user_bot/field_row", title: @booking_page.name %>
-
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.message_source_setting_label") %></div>
+  <%
+    if @booking_page.use_shop_default_message
+      preference_title = I18n.t("user_bot.dashboards.settings.custom_message.using_shop_default")
+    else
+      preference_title = I18n.t("user_bot.dashboards.settings.custom_message.using_custom_message")
+    end
+  %>
   <%= render "lines/user_bot/field_row",
-    title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked"),
-    path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+    title: preference_title,
+    path: edit_lines_user_bot_booking_page_path(
       @booking_page,
       business_owner_id: business_owner_id,
-      scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED,
-      id: @booked_message&.id
+      attribute: "use_shop_default_message"
     )
   %>
 
-  <%= render "lines/user_bot/field_row",
-    title: t("user_bot.dashboards.settings.custom_message.booking_page.reservation_confirmed"),
-    path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
-      @booking_page,
-      business_owner_id: business_owner_id,
-      scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
-      id: @reservation_confirmed_message&.id
-    )
-  %>
-
-  <%= render "lines/user_bot/field_row",
-    title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_one_day_reminder"),
-    path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
-      @booking_page,
-      business_owner_id: business_owner_id,
-      scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
-      id: @one_day_reminder_message&.id
-    )
-  %>
-  <% @sequence_messages.each.with_index do |message, index| %>
+  <% if @booking_page.use_shop_default_message %>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %></div>
+    <div class="field-row flex-col">
+      <div class="alert alert-info">
+        <%= t("user_bot.dashboards.settings.custom_message.using_shop_default_message_html",
+         default_message_path: Current.business_owner.has_single_shop? ? lines_user_bot_settings_shop_custom_messages_path(shop_id: Current.business_owner.shops.first.id, business_owner_id: business_owner_id) : lines_user_bot_settings_path(business_owner_id: business_owner_id),
+         custom_message_path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: "use_shop_default_message")) %>
+      </div>
+      <div class="warning">
+        <%= t("user_bot.dashboards.settings.custom_message.using_shop_default_message_hint") %>
+      </div>
+    </div>
+  <% else %>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
     <%= render "lines/user_bot/field_row",
+      title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked"),
       path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
         @booking_page,
         business_owner_id: business_owner_id,
-        scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER,
-        id: message.id
-        ),
-        title: message.after_days.present? ? t("user_bot.dashboards.settings.custom_message.booking_page.after_days_reminder", after_days: message.after_days) : t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_reminder", before_minutes: message.before_minutes)
+        scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED,
+        id: @booked_message&.id
+      )
     %>
+
+    <%= render "lines/user_bot/field_row",
+      title: t("user_bot.dashboards.settings.custom_message.booking_page.reservation_confirmed"),
+      path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+        @booking_page,
+        business_owner_id: business_owner_id,
+        scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
+        id: @reservation_confirmed_message&.id
+      )
+    %>
+
+    <%= render "lines/user_bot/field_row",
+      title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_one_day_reminder"),
+      path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+        @booking_page,
+        business_owner_id: business_owner_id,
+        scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
+        id: @one_day_reminder_message&.id
+      )
+    %>
+    <% @sequence_messages.each.with_index do |message, index| %>
+      <%= render "lines/user_bot/field_row",
+        path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+          @booking_page,
+          business_owner_id: business_owner_id,
+          scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER,
+          id: message.id
+          ),
+          title: message.after_days.present? ? t("user_bot.dashboards.settings.custom_message.booking_page.after_days_reminder", after_days: message.after_days) : t("user_bot.dashboards.settings.custom_message.booking_page.before_minutes_reminder", before_minutes: message.before_minutes)
+      %>
+    <% end %>
   <% end %>
 
   <%= render "lines/user_bot/shared/notification_channel_display", back_path: lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id) %>
 
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-    <span></span>
-    <%= link_to edit_scenario_lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id, scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
-      <i class="fas fa-plus fa-2x"></i>
-      <div class="word"><%= I18n.t("action.add_more") %></div>
+  <% unless @booking_page.use_shop_default_message %>
+    <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+      <span></span>
+      <%= link_to edit_scenario_lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id, scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+        <i class="fas fa-plus fa-2x"></i>
+        <div class="word"><%= I18n.t("action.add_more") %></div>
+      <% end %>
     <% end %>
   <% end %>
 </div>

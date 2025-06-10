@@ -29,6 +29,7 @@ module BookingPages
       end
       boolean :overbooking_restriction, default: true
       boolean :multiple_selection, default: false
+      boolean :use_shop_default_message, default: false
 
       string :payment_option, default: "offline"
       boolean :customer_address_required, default: true
@@ -232,7 +233,7 @@ module BookingPages
             start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil,
             cut_off_time: attrs[:cut_off_time_date_part] ? Time.zone.parse("#{attrs[:cut_off_time_date_part]}-#{attrs[:cut_off_time_time_part]}") : nil
           )
-        when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable", "multiple_selection"
+        when "name", "title", "draft", "shop_id", "greeting", "note", "overbooking_restriction", "social_account_skippable", "multiple_selection", "use_shop_default_message"
           booking_page.update(attrs.slice(update_attribute))
         when "customer_cancel_request"
           booking_page.update(

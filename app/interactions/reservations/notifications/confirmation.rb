@@ -15,18 +15,20 @@ module Reservations
 
       def message
         reservation_customer = ReservationCustomer.where(reservation: reservation, customer: customer).first
-        template = compose(
-          ::CustomMessages::Customers::Template,
-          product: reservation_customer.booking_page,
-          scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
-          custom_message_only: true
-        )
-
-        template ||= compose(
-          ::CustomMessages::Customers::Template,
-          product: reservation.shop,
-          scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED
-        )
+        template = if reservation_customer.booking_page.present? && !reservation_customer.booking_page.use_shop_default_message
+          compose(
+            ::CustomMessages::Customers::Template,
+            product: reservation_customer.booking_page,
+            scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
+            custom_message_only: true
+          )
+        else
+          compose(
+            ::CustomMessages::Customers::Template,
+            product: reservation.shop,
+            scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED
+          )
+        end
 
         Translator.perform(template, reservation.message_template_variables(customer))
       end

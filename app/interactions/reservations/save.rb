@@ -135,7 +135,7 @@ module Reservations
         if reservation.saved_change_to_start_time?
           reservation.reservation_customers.each do |reservation_customer|
 
-            custom_messages_scope = if reservation_customer.booking_page_id.present?
+            custom_messages_scope = if reservation_customer.booking_page_id.present? && !reservation_customer.booking_page.use_shop_default_message
               CustomMessage.scenario_of(reservation_customer.booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER)
             else
               CustomMessage.scenario_of(reservation.shop, CustomMessages::Customers::Template::SHOP_CUSTOM_REMINDER)

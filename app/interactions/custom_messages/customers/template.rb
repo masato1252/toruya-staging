@@ -3,14 +3,17 @@
 module CustomMessages
   module Customers
     class Template < ActiveInteraction::Base
-      ONLINE_SERVICE_PURCHASED = "online_service_purchased"
-      ONLINE_SERVICE_MESSAGE_TEMPLATE = "online_service_message_template"
       BOOKING_PAGE_BOOKED = "booking_page_booked" # only for booking_page_booked
       RESERVATION_CONFIRMED = "reservation_confirmed"
+
       BOOKING_PAGE_ONE_DAY_REMINDER = "booking_page_one_day_reminder"
       RESERVATION_ONE_DAY_REMINDER = 'reservation_one_day_reminder'
+
       BOOKING_PAGE_CUSTOM_REMINDER = 'booking_page_custom_reminder'
       SHOP_CUSTOM_REMINDER = 'shop_custom_reminder'
+
+      ONLINE_SERVICE_PURCHASED = "online_service_purchased"
+      ONLINE_SERVICE_MESSAGE_TEMPLATE = "online_service_message_template"
       LESSON_WATCHED = 'lesson_watched'
       EPISODE_WATCHED = 'episode_watched'
       ACTIVITY_PENDING_RESPONSE = 'activity_pending_response'

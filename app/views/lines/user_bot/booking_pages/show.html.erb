@@ -203,7 +203,7 @@
         <% end %>
 
         <%= render "lines/user_bot/field_row", path: lines_user_bot_booking_page_custom_messages_path(@booking_page, business_owner_id: business_owner_id) do %>
-          <span><%= t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %></span>
+          <span><%= t("user_bot.dashboards.settings.custom_message.auto_message_booking_label_with_current_setting", current_setting: @booking_page.use_shop_default_message ? t("user_bot.dashboards.settings.custom_message.using_shop_default") : t("user_bot.dashboards.settings.custom_message.using_custom_message")) %></span>
         <% end %>
 
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, business_owner_id: business_owner_id, attribute: :survey) do %>

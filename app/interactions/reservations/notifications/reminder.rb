@@ -21,12 +21,23 @@ module Reservations
           activity = reservation_customer.survey_activity
 
           if booking_page
+            # Determine which message to use based on the setting
+            if booking_page.use_shop_default_message
+              # Use shop default message
+              template = compose(
+                ::CustomMessages::Customers::Template,
+                product: reservation.shop,
+                scenario: ::CustomMessages::Customers::Template::RESERVATION_ONE_DAY_REMINDER
+              )
+            else
+              # Use booking page custom message
             template = compose(
               ::CustomMessages::Customers::Template,
               product: booking_page,
               scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
               custom_message_only: true
             )
+            end
           end
 
           if activity
@@ -37,6 +48,7 @@ module Reservations
             )
           end
 
+          # Only use shop default message as fallback when no template is set above
           template ||= compose(
             ::CustomMessages::Customers::Template,
             product: reservation.shop,

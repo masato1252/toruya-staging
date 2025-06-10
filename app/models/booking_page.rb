@@ -31,6 +31,7 @@
 #  specific_booking_start_times       :string           is an Array
 #  start_at                           :datetime
 #  title                              :string
+#  use_shop_default_message           :boolean          default(TRUE), not null
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  shop_id                            :bigint           not null

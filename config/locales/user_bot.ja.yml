@@ -201,10 +201,16 @@ ja:
           auto_message_label: 自動送信メッセージ
           line_message_title: LINEメッセージ設定
           auto_message_booking_label: リマインド配信
+          auto_message_booking_label_with_current_setting: リマインド配信 (%{current_setting})
           auto_message_service_label: ステップ配信
           send_message_label: 送信メッセージ
           content: メッセージ内容
           preview: プレビュー
+          message_source_setting_label: メッセージソース設定
+          using_shop_default: 現在使用中：店舗デフォルトメッセージ
+          using_custom_message: 現在使用中：この予約ページのカスタムメッセージ
+          using_shop_default_message_html: 現在<a class='underline align-baseline' href='%{default_message_path}'>店舗デフォルト通知</a>を使用しています。専用通知を設定するには、まず「<a class='underline align-baseline' href='%{custom_message_path}'>予約ページのカスタムメッセージを使用</a>」に切り替えてください。
+          using_shop_default_message_hint: ヒント：店舗デフォルトメッセージを使用する予約ページは、すべて同じ通知メッセージを使用し、予約ページ専用の通知メッセージではありません。
           buttons:
             customer_name: 顧客名字
             shop_name: 店舗名

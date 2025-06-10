@@ -18,17 +18,20 @@ module Reservations
       private
 
       def message
-        template = compose(
-          ::CustomMessages::Customers::Template,
-          product: booking_page,
-          scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED,
-          custom_message_only: true
-        )
-        template = compose(
-          ::CustomMessages::Customers::Template,
-          product: booking_page.shop,
-          scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED
-        ) if template.blank?
+        template = if booking_page.use_shop_default_message
+            compose(
+              ::CustomMessages::Customers::Template,
+              product: booking_page.shop,
+              scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED
+            )
+          else
+            compose(
+              ::CustomMessages::Customers::Template,
+              product: booking_page,
+              scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED,
+              custom_message_only: true
+            )
+          end
 
         Translator.perform(template, reservation.message_template_variables(customer))
       end

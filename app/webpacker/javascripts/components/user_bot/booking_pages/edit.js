@@ -132,6 +132,7 @@ const BookingPageEdit =({props}) => {
       online_payment_enabled: String(props.booking_page.online_payment_enabled),
       draft: String(props.booking_page.draft),
       social_account_skippable: String(props.booking_page.social_account_skippable),
+      use_shop_default_message: String(props.booking_page.use_shop_default_message),
       booking_limit_day: String(props.booking_page.booking_limit_day),
       booking_type: props.booking_page.booking_type,
       had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
@@ -482,6 +483,19 @@ const BookingPageEdit =({props}) => {
         )
       case "social_account_skippable":
         return <SocialAccountSkippableField i18n={i18n} register={register} />
+      case "use_shop_default_message":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input name="use_shop_default_message" type="radio" value="true" ref={register({ required: true })} />
+              {i18n.use_shop_default_message_label}
+            </label>
+            <label className="field-row flex-start">
+              <input name="use_shop_default_message" type="radio" value="false" ref={register({ required: true })} />
+              {i18n.use_booking_page_message_label}
+            </label>
+          </>
+        )
       case "draft":
         return <DraftField i18n={i18n} register={register} />
     }
