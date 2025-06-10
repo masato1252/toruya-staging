@@ -6,6 +6,7 @@ import moment from "moment-timezone";
 import DatePickerField from "shared/date_picker_field"
 import { TimePickerController } from "shared/components"
 import I18n from 'i18n-js/index.js.erb';
+import { generateNextSpecialDate } from "libraries/helper"
 
 const SpecialDatesFields = ({special_dates_fields, register, control, watch, setValue, i18n}) => {
   return (
@@ -119,7 +120,8 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
         <>
           <div className="field-row date-row flex-start">
             <button className="btn btn-yellow" onClick={() => {
-              special_dates_fields.append({})
+              const nextSpecialDate = generateNextSpecialDate(special_dates_fields.fields);
+              special_dates_fields.append(nextSpecialDate);
             }}>
               <i className="fa fa-plus"></i>
               <span>{I18n.t('settings.booking_page.form.add_special_dates_btn')}</span>
@@ -155,7 +157,8 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
         <>
           <div className="field-row date-row flex-start">
             <button className="btn btn-yellow" onClick={() => {
-              special_dates_fields.append({})
+              const nextSpecialDate = generateNextSpecialDate(special_dates_fields.fields);
+              special_dates_fields.append(nextSpecialDate);
             }}>
               <i className="fa fa-plus"></i>
               <span>{I18n.t('settings.booking_page.form.add_special_dates_btn')}</span>

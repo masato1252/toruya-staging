@@ -285,6 +285,180 @@ const getEmbedUrl = (url) => {
   }
 };
 
+// Analyze existing special dates pattern and generate next suitable date/time
+const generateNextSpecialDate = (existingDates) => {
+  if (!existingDates || existingDates.length === 0) {
+    // If no existing data, return default values
+    const tomorrow = moment().add(1, 'day').format("YYYY-MM-DD");
+    return {
+      start_at_date_part: tomorrow,
+      end_at_date_part: tomorrow,
+      start_at_time_part: "09:00",
+      end_at_time_part: "17:00"
+    };
+  }
+
+  if (existingDates.length === 1) {
+    // Only one record, copy time settings, add one day to date
+    const lastDate = existingDates[0];
+    const nextDate = moment(lastDate.start_at_date_part).add(1, 'day').format("YYYY-MM-DD");
+    return {
+      start_at_date_part: nextDate,
+      end_at_date_part: nextDate,
+      start_at_time_part: lastDate.start_at_time_part || "09:00",
+      end_at_time_part: lastDate.end_at_time_part || "17:00"
+    };
+  }
+
+  // Multiple records, analyze patterns
+  const sortedDates = [...existingDates]
+    .filter(date => date.start_at_date_part)
+    .sort((a, b) => moment(a.start_at_date_part).diff(moment(b.start_at_date_part)));
+
+  if (sortedDates.length >= 2) {
+    const lastDate = sortedDates[sortedDates.length - 1];
+
+    // Find actual date interval pattern, ignore duplicate entries on same day
+    const uniqueDates = [];
+    const seenDates = new Set();
+
+    for (let i = sortedDates.length - 1; i >= 0; i--) {
+      const dateStr = sortedDates[i].start_at_date_part;
+      if (dateStr && !seenDates.has(dateStr)) {
+        uniqueDates.unshift(sortedDates[i]);
+        seenDates.add(dateStr);
+      }
+      if (uniqueDates.length >= 3) break; // We need at most 3 unique dates to analyze pattern
+    }
+
+    let nextDate;
+
+    if (uniqueDates.length >= 2) {
+      const lastUniqueDate = uniqueDates[uniqueDates.length - 1];
+      const secondLastUniqueDate = uniqueDates[uniqueDates.length - 2];
+
+      // Calculate actual date interval
+      const daysDiff = moment(lastUniqueDate.start_at_date_part).diff(moment(secondLastUniqueDate.start_at_date_part), 'days');
+
+      // Predict next date based on interval
+      nextDate = moment(lastUniqueDate.start_at_date_part).add(daysDiff, 'days').format("YYYY-MM-DD");
+    } else {
+      // Only one unique date, default to add one day
+      nextDate = moment(lastDate.start_at_date_part).add(1, 'day').format("YYYY-MM-DD");
+    }
+
+    // Check if times are consistent
+    const timesConsistent = sortedDates.every(date =>
+      date.start_at_time_part === lastDate.start_at_time_part &&
+      date.end_at_time_part === lastDate.end_at_time_part
+    );
+
+    let predictedStartTime = "09:00";
+    let predictedEndTime = "17:00";
+
+    if (timesConsistent) {
+      // All times are consistent, use same time
+      predictedStartTime = lastDate.start_at_time_part;
+      predictedEndTime = lastDate.end_at_time_part;
+    } else {
+      // Check for alternating patterns (works for 2 or more records)
+      const timePattern = sortedDates.map(date => ({
+        start: date.start_at_time_part,
+        end: date.end_at_time_part
+      }));
+
+            // Check for cyclic patterns (can be 2, 3, or more time slots)
+      const uniqueTimes = [...new Set(timePattern.map(t => `${t.start}-${t.end}`))];
+
+      if (uniqueTimes.length >= 2 && uniqueDates.length >= uniqueTimes.length) {
+        // Build the time pattern sequence from uniqueDates
+        const timeSequence = uniqueDates.map(date => ({
+          start: date.start_at_time_part,
+          end: date.end_at_time_part,
+          key: `${date.start_at_time_part}-${date.end_at_time_part}`
+        }));
+
+        // Try to detect the cycle length by finding repeating patterns
+        let cycleLength = uniqueTimes.length;
+
+        // Verify if the detected cycle length actually repeats
+        let isValidCycle = true;
+        if (timeSequence.length >= cycleLength * 2) {
+          for (let i = 0; i < cycleLength && i < timeSequence.length - cycleLength; i++) {
+            if (timeSequence[i].key !== timeSequence[i + cycleLength].key) {
+              isValidCycle = false;
+              break;
+            }
+          }
+        }
+
+        if (isValidCycle) {
+          // Calculate which position in the cycle the next entry should be
+          const currentPosition = (timeSequence.length) % cycleLength;
+
+          if (currentPosition < timeSequence.length) {
+            // Use the pattern from the cycle
+            const nextPattern = timeSequence[currentPosition];
+            predictedStartTime = nextPattern.start || "09:00";
+            predictedEndTime = nextPattern.end || "17:00";
+          } else {
+            // Fallback to first pattern
+            predictedStartTime = timeSequence[0].start || "09:00";
+            predictedEndTime = timeSequence[0].end || "17:00";
+          }
+        } else {
+          // Not a perfect cycle, try simple alternating
+          const lastTimeKey = timeSequence[timeSequence.length - 1].key;
+          const otherPattern = timeSequence.find(pattern => pattern.key !== lastTimeKey);
+
+          if (otherPattern) {
+            predictedStartTime = otherPattern.start || "09:00";
+            predictedEndTime = otherPattern.end || "17:00";
+          } else {
+            predictedStartTime = timeSequence[0].start || "09:00";
+            predictedEndTime = timeSequence[0].end || "17:00";
+          }
+        }
+      } else if (sortedDates.length >= 3) {
+        // Not a simple alternating pattern, check recent trends
+        const thirdLastDate = sortedDates[sortedDates.length - 3];
+        const secondLastDate = sortedDates[sortedDates.length - 2];
+        // If third-to-last and last have same time, next might follow second-to-last
+        if (thirdLastDate.start_at_time_part === lastDate.start_at_time_part) {
+          predictedStartTime = secondLastDate.start_at_time_part || "09:00";
+          predictedEndTime = secondLastDate.end_at_time_part || "17:00";
+        } else {
+          // Otherwise use the last time
+          predictedStartTime = lastDate.start_at_time_part || "09:00";
+          predictedEndTime = lastDate.end_at_time_part || "17:00";
+        }
+      } else {
+        // Only two records with different times, alternate
+        const secondLastDate = sortedDates[sortedDates.length - 2];
+        predictedStartTime = secondLastDate.start_at_time_part || "09:00";
+        predictedEndTime = secondLastDate.end_at_time_part || "17:00";
+      }
+    }
+
+    return {
+      start_at_date_part: nextDate,
+      end_at_date_part: nextDate,
+      start_at_time_part: predictedStartTime,
+      end_at_time_part: predictedEndTime
+    };
+  }
+
+  // Fallback option
+  const lastDate = existingDates[existingDates.length - 1];
+  const nextDate = moment(lastDate.start_at_date_part).add(1, 'day').format("YYYY-MM-DD");
+  return {
+    start_at_date_part: nextDate,
+    end_at_date_part: nextDate,
+    start_at_time_part: lastDate.start_at_time_part || "09:00",
+    end_at_time_part: lastDate.end_at_time_part || "17:00"
+  };
+};
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -313,4 +487,5 @@ export {
   formatActivitySlotRange,
   getEmbedUrl,
   getEditorLocale,
+  generateNextSpecialDate,
 };
