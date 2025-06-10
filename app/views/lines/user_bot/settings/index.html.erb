@@ -43,12 +43,9 @@
         <%= link_to lines_user_bot_settings_profile_path(business_owner_id: business_owner_id), class: "field-row" do %>
           <span><%= t("settings.profile.user_info") %></span><i class="fa fa-angle-right"></i>
         <% end %>
+
         <%= link_to company_lines_user_bot_settings_profile_path(business_owner_id: business_owner_id), class: "field-row" do %>
           <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
-        <% end %>
-
-        <%= link_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), class: "field-row" do %>
-          <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
         <% if support_official_support_display? %>
@@ -56,9 +53,6 @@
             <span><%= t("user_bot.dashboards.settings.company.consultants") %></span><i class="fa fa-angle-right"></i>
           <% end %>
         <% end %>
-
-        <div class="field-header"><%= t("settings.plans.plan_info.caption") %></div>
-
         <%= link_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id), class: "field-row" do %>
           <div>
             <%= t("settings.plans.plan_info.plan_member", plan_name: Current.business_owner.member_plan_name) %><br />
@@ -73,6 +67,34 @@
 
         <%= link_to lines_user_bot_settings_payments_path(business_owner_id: business_owner_id), class: "field-row" do %>
           <span><%= t("user_bot.dashboards.settings.dashboard.payments_label") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
+
+        <% if Current.business_owner.shops.count == 1 %>
+          <% shop = Current.business_owner.shops.first %>
+          <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+          <%= link_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+          <%= link_to lines_user_bot_settings_shop_custom_messages_path(shop_id: shop.id, business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+        <% else %>
+          <%= link_to company_lines_user_bot_settings_profile_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+          <%= link_to company_lines_user_bot_settings_profile_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+          <%= link_to shops_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
+          <%= link_to custom_messages_lines_user_bot_settings_shops_path(business_owner_id: business_owner_id), class: "field-row" do %>
+            <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
+          <% end %>
         <% end %>
 
         <div class="field-header" id="line-integration"><%= t("user_bot.dashboards.settings.dashboard.line_label") %></div>
@@ -91,25 +113,6 @@
               </span>
               <i class="fa fa-angle-right"></i>
             </span>
-          <% end %>
-        <% end %>
-
-        <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
-
-        <% if Current.business_owner.shops.count == 1 %>
-          <% shop = Current.business_owner.shops.first %>
-          <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
-          <%= link_to lines_user_bot_settings_shop_custom_messages_path(shop_id: shop.id, business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
-        <% else %>
-          <%= link_to shops_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
-          <%= link_to custom_messages_lines_user_bot_settings_shops_path(business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
           <% end %>
         <% end %>
 

@@ -238,8 +238,11 @@ a {
   top: 0;
   padding: 0 12px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+
+  @include media-breakpoint-down(tablet) {
+    justify-content: space-between;
+  }
   z-index: 901;
   font-size: 20px;
 }
@@ -653,6 +656,22 @@ h3.header {
 .dropdown-menu {
   max-height: 600px;
   overflow-y: auto;
+
+  // Desktop: use left alignment
+  @include media-breakpoint-up(tablet) {
+    &.dropdown-menu-right {
+      right: auto;
+      left: 0;
+    }
+  }
+
+  // Mobile: use right alignment
+  @include media-breakpoint-down(tablet) {
+    &.dropdown-menu-left {
+      left: auto;
+      right: 0;
+    }
+  }
 }
 
 .new-feature-label {

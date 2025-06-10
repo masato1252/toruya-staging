@@ -203,10 +203,10 @@
 
           <div class="dropdown open" data-controller="collapse" data-collapse-status="closed" data-action="click->collapse#toggle" >
             <span class="text-white"><%= Current.business_owner.company_name.presence || t("action.account_switch") %></span>
-            <% if support_multiple_accounts? %>
+            <% if support_multiple_accounts? || !Current.social_user.single_owner? %>
               <i class="fas fa-caret-down text-white"></i>
-              <ul class="dropdown-menu dropdown-menu-right" data-target="collapse.content">
-                <% current_social_user.manage_accounts.each do |owner| %>
+              <ul class="dropdown-menu dropdown-menu-left dropdown-menu-right" data-target="collapse.content">
+                <% Current.social_user.manage_accounts.each do |owner| %>
                   <%= link_to lines_user_bot_settings_path(business_owner_id: owner.id) do %>
                     <li class="dropdown-header p-3 text-16px"><%= owner.company_name %></li>
                   <% end %>
