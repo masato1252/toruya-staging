@@ -50,6 +50,7 @@ module SettingsHelper
       end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
       is_free: booking_option.amount.zero?,
       is_online_payment: booking_page_option.is_online_payment?,
+      option_type: booking_option.option_type,
       memo: booking_option.memo,
       menu_ids: booking_option.menu_relations.pluck(:menu_id)
     )
@@ -67,7 +68,8 @@ module SettingsHelper
       is_free: booking_option.amount.zero?,
       cash_pay_required: booking_option.cash_pay_required?,
       memo: booking_option.memo,
-      menu_ids: booking_option.menu_relations.pluck(:menu_id)
+      menu_ids: booking_option.menu_relations.pluck(:menu_id),
+      option_type: booking_option.option_type
     )
   end
 

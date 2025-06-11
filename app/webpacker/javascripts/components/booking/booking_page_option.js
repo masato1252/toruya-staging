@@ -75,6 +75,13 @@ const BookingPageOption = ({
             )}
           </div>
 
+          {booking_option_value.option_type === 'secondary' && (
+            <div className="secondary-option-hint text-12px text-gray-600 mt-1 icon-text-aligned">
+              <i className="fa fa-info-circle"></i>
+              <span>{I18n.t("booking_page.secondary_option_hint")}</span>
+            </div>
+          )}
+
           {option_content}
         </div>
 

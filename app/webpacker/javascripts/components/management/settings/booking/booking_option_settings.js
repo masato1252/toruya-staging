@@ -304,6 +304,34 @@ class BookingOptionSettings extends React.Component {
     );
   };
 
+  renderOptionTypeFields = () => {
+    const { option_type_setting_header, option_type, primary_option, secondary_option, option_type_hint } = this.props.i18n;
+
+    return (
+      <div>
+        <h3>{option_type_setting_header}</h3>
+        <div className="formRow">
+          <dl>
+            <dt>{option_type}</dt>
+            <dd>
+              <div className="radio">
+                <Field name="booking_option[option_type]" type="radio" value="primary" component={Radio}>
+                  {primary_option}
+                </Field>
+              </div>
+              <div className="radio">
+                <Field name="booking_option[option_type]" type="radio" value="secondary" component={Radio}>
+                  {secondary_option}
+                </Field>
+              </div>
+              <div className="hint">{option_type_hint}</div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    );
+  };
+
   renderMemoFields = () => {
     const { note_label, note_hint } = this.props.i18n;
 
@@ -401,6 +429,7 @@ class BookingOptionSettings extends React.Component {
               {this.renderTimeFields()}
               {this.renderPriceFields()}
               {this.renderSellingTimeFields()}
+              {this.renderOptionTypeFields()}
               {this.renderMemoFields()}
 
               <ul id="footerav">

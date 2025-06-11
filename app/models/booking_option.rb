@@ -14,6 +14,7 @@
 #  menu_restrict_order :boolean          default(FALSE), not null
 #  minutes             :integer          not null
 #  name                :string           not null
+#  option_type         :string           default("primary"), not null
 #  start_at            :datetime
 #  tax_include         :boolean          not null
 #  ticket_expire_month :integer          default(1), not null
@@ -34,6 +35,12 @@ class BookingOption < ApplicationRecord
 # attr_accessor :start_at_date_part, :start_at_time_part
   LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT = 100 # 100 yen. amount < 100, always go cash
   MAXIMUM_TICKET_REQUIRED_AMOUNT = 50000 # 50,000 yen. amount > 50,000, always go cash
+
+  # Option type constants
+  OPTION_TYPES = %w[primary secondary].freeze
+
+  # Validations
+  validates :option_type, inclusion: { in: OPTION_TYPES }
 
   belongs_to :user
 
@@ -120,4 +127,20 @@ class BookingOption < ApplicationRecord
       first_start_time.advance(months: ticket_expire_month)
     end
   end
+
+  # Check if option is primary
+  def primary?
+    option_type == 'primary'
+  end
+
+  # Check if option is secondary
+  def secondary?
+    option_type == 'secondary'
+  end
+
+  # Scope for primary options
+  scope :primary, -> { where(option_type: 'primary') }
+
+  # Scope for secondary options
+  scope :secondary, -> { where(option_type: 'secondary') }
 end

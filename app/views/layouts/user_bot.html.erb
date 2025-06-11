@@ -74,7 +74,9 @@
               <%= active_link_to t("sidebar.booking_pages.list"), lines_user_bot_booking_pages_path(business_owner_id: business_owner_id) %>
             </li>
             <li>
-              <%= active_link_to t("common.booking_price"), lines_user_bot_booking_options_path(business_owner_id: business_owner_id) %>
+              <%= active_link_to lines_user_bot_booking_options_path(business_owner_id: business_owner_id) do %>
+                <%= t("common.booking_price") %><span class="new-feature-label"><%= t("common.new_feature") %></span>
+              <% end %>
             </li>
             <% if support_booking_options_menu_concept? %>
               <li>

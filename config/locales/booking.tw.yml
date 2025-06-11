@@ -40,6 +40,7 @@ tw:
     i_dont_use_line: 我沒有使用LINE
     owner_personal_schedule_warning: 如果您想設定為不可預約，請在『我的日曆』中建立個人行程。
     confirm_booking_option: 確認預約項目
+    secondary_option_hint: 需要與主要選項搭配
     booking_code:
       code: 確認碼
       resend: 重新發送確認碼
@@ -96,6 +97,9 @@ tw:
       shop_owner_reservation_booked_notification:
         title: 有新的線上預約
   booking:
+    validation:
+      cannot_select_only_secondary_options: 無法僅選擇附加選項。請與主要選項一起選擇。
+      cannot_have_only_secondary_options: 需要主要選項。無法僅使用附加選項進行預約。
     cancel_modal:
       title: 取消預約
       description: 請告訴我們取消的原因。

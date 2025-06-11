@@ -232,6 +232,22 @@ RSpec.describe BookingPages::Update do
           expect(BookingOption.last.minutes).to eq(123)
           expect(BookingOptionMenu.last.required_time).to eq(123)
         end
+
+        context "with option_type specified" do
+          context "when option_type is secondary" do
+            before do
+              args[:attrs][:option_type] = "secondary"
+            end
+
+            it "creates a secondary booking option with existing menu" do
+              outcome
+
+              created_option = BookingOption.last
+              expect(created_option.option_type).to eq("secondary")
+              expect(created_option.secondary?).to be true
+            end
+          end
+        end
       end
 
       context "when adding a new menu" do
@@ -260,6 +276,45 @@ RSpec.describe BookingPages::Update do
           expect(new_menu.name).to eq("foo")
           expect(new_menu.minutes).to eq(100)
           expect(new_menu.online).to eq(true)
+        end
+
+        context "with option_type specified" do
+          context "when option_type is primary" do
+            before do
+              args[:attrs][:option_type] = "primary"
+            end
+
+            it "creates a primary booking option" do
+              outcome
+
+              created_option = BookingOption.last
+              expect(created_option.option_type).to eq("primary")
+              expect(created_option.primary?).to be true
+            end
+          end
+
+          context "when option_type is secondary" do
+            before do
+              args[:attrs][:option_type] = "secondary"
+            end
+
+            it "creates a secondary booking option" do
+              outcome
+
+              created_option = BookingOption.last
+              expect(created_option.option_type).to eq("secondary")
+              expect(created_option.secondary?).to be true
+            end
+          end
+        end
+
+        context "without option_type specified" do
+          it "defaults to primary" do
+            outcome
+
+            created_option = BookingOption.last
+            expect(created_option.option_type).to eq("primary")
+          end
         end
 
         context "when booking_page payment_option is online" do
@@ -298,7 +353,7 @@ RSpec.describe BookingPages::Update do
 
             expect(booking_page.booking_page_options.last.online_payment_enabled).to eq(true)
           end
-        end 
+        end
       end
     end
 

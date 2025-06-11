@@ -10,12 +10,21 @@ FactoryBot.define do
     start_at { Time.new(2016, 6, 8) }
     end_at { nil }
     menu_restrict_order { false }
+    option_type { "primary" }
 
     transient do
       menus { [FactoryBot.create(:menu, :with_reservation_setting, user: user)] }
       booking_pages { [] }
       shops { [] }
       staffs { [] }
+    end
+
+    trait :primary do
+      option_type { "primary" }
+    end
+
+    trait :secondary do
+      option_type { "secondary" }
     end
 
     trait :single_menu do

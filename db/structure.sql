@@ -596,7 +596,8 @@ CREATE TABLE public.booking_options (
     menu_restrict_order boolean DEFAULT false NOT NULL,
     delete_at timestamp without time zone,
     ticket_quota integer DEFAULT 1 NOT NULL,
-    ticket_expire_month integer DEFAULT 1 NOT NULL
+    ticket_expire_month integer DEFAULT 1 NOT NULL,
+    option_type character varying DEFAULT 'primary'::character varying NOT NULL
 );
 
 
@@ -6698,6 +6699,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250415114430'),
 ('20250423000000'),
 ('20250510071219'),
-('20250610000000');
+('20250610000000'),
+('20250611000001');
 
 

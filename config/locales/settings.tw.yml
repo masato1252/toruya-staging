@@ -514,6 +514,12 @@ tw:
         booking_pages: 預約頁面
         simple_text: 基本
         rich_text: 客製化
+        option_type_setting_header: 選項類型設定
+        option_type: 選項類型
+        option_type_title: 選項類型
+        primary_option: 主要選項
+        secondary_option: 附加選項
+        option_type_hint: 主要選項可以單獨預約，但附加選項必須與主要選項一起選擇。
         form_errors:
           enough_time_for_menu: 請為設定的服務設定足夠的時間長度。
           reached_the_menus_limit: 最多只能設定兩個服務。

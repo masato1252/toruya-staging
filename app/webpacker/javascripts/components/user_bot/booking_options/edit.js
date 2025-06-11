@@ -44,6 +44,7 @@ const BookingOptionEdit =({props}) => {
       ...props.booking_option,
       menu_restrict_order: String(props.booking_option.menu_restrict_order),
       tax_include: String(props.booking_option.tax_include),
+      option_type: props.booking_option.option_type || 'primary',
       menu_required_time: props.editing_menu?.required_time,
       menu_id: props.editing_menu?.menu_id
     }
@@ -245,6 +246,34 @@ const BookingOptionEdit =({props}) => {
         return <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />
       case "end_at":
         return <BookingEndAtField i18n={i18n} register={register} watch={watch} control={control} />
+      case "option_type":
+        return (
+          <>
+            <label className="field-row flex-start">
+              <input
+                name="option_type"
+                type="radio"
+                value="primary"
+                ref={register({ required: true })}
+                defaultChecked={props.booking_option.option_type === 'primary'}
+              />
+              {I18n.t("settings.booking_option.form.primary_option")}
+            </label>
+            <label className="field-row flex-start">
+              <input
+                name="option_type"
+                type="radio"
+                value="secondary"
+                ref={register({ required: true })}
+                defaultChecked={props.booking_option.option_type === 'secondary'}
+              />
+              {I18n.t("settings.booking_option.form.secondary_option")}
+            </label>
+            <div className="field-row hint no-border">
+              {I18n.t("settings.booking_option.form.option_type_hint")}
+            </div>
+          </>
+        );
     }
   }
 

@@ -246,6 +246,20 @@ const BookingPageEdit =({props}) => {
               ticket_expire_date_desc_path={props.ticket_expire_date_desc_path}
               price={watch("new_menu_price")}
             />
+
+            <h3 className="header centerize">{I18n.t("settings.booking_option.form.option_type_setting_header")}</h3>
+            <div className="field-header">{I18n.t("settings.booking_option.form.option_type")}</div>
+            <label className="field-row flex-start">
+              <input name="option_type" type="radio" value="primary" ref={register({ required: true })} defaultChecked />
+              {I18n.t("settings.booking_option.form.primary_option")}
+            </label>
+            <label className="field-row flex-start">
+              <input name="option_type" type="radio" value="secondary" ref={register({ required: true })} />
+              {I18n.t("settings.booking_option.form.secondary_option")}
+            </label>
+            <div className="field-row hint no-border">
+              {I18n.t("settings.booking_option.form.option_type_hint")}
+            </div>
           </div>
         )
       case "new_option_menu":
@@ -293,6 +307,20 @@ const BookingPageEdit =({props}) => {
               ticket_expire_date_desc_path={props.ticket_expire_date_desc_path}
               price={watch("new_menu_price")}
             />
+
+            <h3 className="header centerize">{I18n.t("settings.booking_option.form.option_type_setting_header")}</h3>
+            <div className="field-header">{I18n.t("settings.booking_option.form.option_type")}</div>
+            <label className="field-row flex-start">
+              <input name="option_type" type="radio" value="primary" ref={register({ required: true })} defaultChecked />
+              {I18n.t("settings.booking_option.form.primary_option")}
+            </label>
+            <label className="field-row flex-start">
+              <input name="option_type" type="radio" value="secondary" ref={register({ required: true })} />
+              {I18n.t("settings.booking_option.form.secondary_option")}
+            </label>
+            <div className="field-row hint no-border">
+              {I18n.t("settings.booking_option.form.option_type_hint")}
+            </div>
           </div>
         )
       case "new_option":

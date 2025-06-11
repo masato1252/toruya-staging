@@ -13,6 +13,7 @@
       end_at_type: @booking_option.end_at ? "date" : "now",
       end_at_date_part: @booking_option.end_at_date,
       end_at_time_part: @booking_option.end_at_time,
+      option_type: @booking_option.option_type || "primary",
       menus: @booking_option.booking_option_menus.order("priority").map { |booking_option_menu|
         booking_option_menu.attributes.slice("priority", "required_time").reverse_merge!(all_menu_options.find { |option| option["value"] == booking_option_menu.menu_id })},
     ),

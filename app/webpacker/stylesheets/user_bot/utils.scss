@@ -336,6 +336,16 @@ $line-margin: 20px;
   color: rgba(55, 65, 81, var(--tw-text-opacity));
 }
 
+.text-gray-600 {
+  color: #666;
+}
+
+.icon-text-aligned {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .rounded-md {
   border-radius: 0.375rem;
 }

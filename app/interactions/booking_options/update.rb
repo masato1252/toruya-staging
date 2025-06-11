@@ -10,6 +10,7 @@ module BookingOptions
       string :display_name, default: nil
       string :memo, default: nil
       boolean :menu_restrict_order, default: false
+      string :option_type, default: "primary"
 
       integer :amount_cents, default: nil
       integer :ticket_quota, default: 1
@@ -57,7 +58,7 @@ module BookingOptions
           if user.line_keyword_booking_option_ids.include?(booking_option.id.to_s)
             compose(BookingOptions::SyncBookingPage, booking_option: booking_option)
           end
-        when "menu_restrict_order"
+        when "menu_restrict_order", "option_type"
           booking_option.update(attrs.slice(update_attribute))
         when "booking_page_ids"
           # find the booking page's of booking option that have rich_menu_only enabled

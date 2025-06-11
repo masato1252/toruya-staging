@@ -50,6 +50,7 @@ module BookingPages
       integer :new_menu_max_seat_number, default: 1
       integer :ticket_quota, default: 1
       integer :ticket_expire_month, default: 1
+      string :option_type, default: "primary"
 
       string :start_at_date_part, default: nil
       string :start_at_time_part, default: nil
@@ -196,6 +197,7 @@ module BookingPages
               ticket_quota: attrs[:ticket_quota],
               ticket_expire_month: attrs[:ticket_expire_month],
               tax_include: true,
+              option_type: attrs[:option_type] || "primary",
               menus: {
                 "0" => { 'value' => menu.id, "priority" => 0, "required_time" => attrs[:new_menu_required_time] || menu.minutes },
               }

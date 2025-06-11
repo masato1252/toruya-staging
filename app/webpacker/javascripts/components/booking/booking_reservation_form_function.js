@@ -62,6 +62,15 @@ const BookingReservationFormFunction = ({props}) => {
     })
   }
 
+  const hasSelectedPrimaryOption = () => {
+    return selected_booking_options().some(option => option.option_type === 'primary')
+  }
+
+  const hasOnlySecondaryOptions = () => {
+    const selectedOptions = selected_booking_options()
+    return selectedOptions.length > 0 && selectedOptions.every(option => option.option_type === 'secondary')
+  }
+
   const isOnlinePayment= () => {
     return _.some(selected_booking_options(), option => option?.is_online_payment)
   }
@@ -227,6 +236,21 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const selectBookingOption = async (booking_option_id) => {
+    // Find the option being selected
+    const selectedOption = booking_reservation_form_values.booking_options.find(option => option.id === booking_option_id)
+
+    // Check if trying to select only secondary options
+    if (selectedOption?.option_type === 'secondary') {
+      const currentlySelected = selected_booking_options()
+      const willHavePrimary = currentlySelected.some(option => option.option_type === 'primary')
+
+      if (!willHavePrimary) {
+        // Show warning - cannot select only secondary options
+        toastr.error(I18n.t("booking.validation.cannot_select_only_secondary_options"))
+        return
+      }
+    }
+
     if (props.booking_page.multiple_selection) {
       set_booking_reservation_form_values(prev => ({...prev, booking_option_ids: [...new Set([...prev.booking_option_ids, booking_option_id])]}))
     }
@@ -236,6 +260,22 @@ const BookingReservationFormFunction = ({props}) => {
   }
 
   const unselectBookingOption = async (booking_option_id) => {
+    // Find the option being unselected
+    const unselectedOption = booking_reservation_form_values.booking_options.find(option => option.id === booking_option_id)
+
+    // Check if unselecting the last primary option while secondary options remain
+    if (unselectedOption?.option_type === 'primary') {
+      const remainingOptions = selected_booking_options().filter(option => option.id !== booking_option_id)
+      const remainingPrimary = remainingOptions.filter(option => option.option_type === 'primary')
+      const remainingSecondary = remainingOptions.filter(option => option.option_type === 'secondary')
+
+      if (remainingPrimary.length === 0 && remainingSecondary.length > 0) {
+        // Show warning - cannot have only secondary options
+        toastr.error(I18n.t("booking.validation.cannot_have_only_secondary_options"))
+        return
+      }
+    }
+
     set_booking_reservation_form_values(prev => ({...prev, booking_option_ids: prev.booking_option_ids.filter(id => id !== booking_option_id)}))
   }
 

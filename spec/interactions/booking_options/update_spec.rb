@@ -63,6 +63,41 @@ RSpec.describe BookingOptions::Update do
       end
     end
 
+    context "update_attribute is option_type" do
+      it_behaves_like "updates booking option normal attribute", "option_type", "primary"
+      it_behaves_like "updates booking option normal attribute", "option_type", "secondary"
+
+      context "when changing from primary to secondary" do
+        let(:update_attribute) { "option_type" }
+        before do
+          booking_option.update!(option_type: "primary")
+          args[:attrs][:option_type] = "secondary"
+        end
+
+        it "updates option_type successfully" do
+          outcome
+
+          expect(booking_option.reload.option_type).to eq("secondary")
+          expect(booking_option.secondary?).to be true
+        end
+      end
+
+      context "when changing from secondary to primary" do
+        let(:update_attribute) { "option_type" }
+        before do
+          booking_option.update!(option_type: "secondary")
+          args[:attrs][:option_type] = "primary"
+        end
+
+        it "updates option_type successfully" do
+          outcome
+
+          expect(booking_option.reload.option_type).to eq("primary")
+          expect(booking_option.primary?).to be true
+        end
+      end
+    end
+
     context "update_attribute is new_pure_menu" do
       let!(:staff_account) { FactoryBot.create(:staff_account, owner: user, user: user) }
       let(:update_attribute) { "new_pure_menu" }

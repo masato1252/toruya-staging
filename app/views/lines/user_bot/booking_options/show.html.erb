@@ -17,6 +17,9 @@
     <% end %>
   <% end %>
 
+  <div class="field-header" id="option_type"><%= I18n.t("settings.booking_option.form.option_type") %><span class="new-feature-label"><%= t("common.new_feature") %></span></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :option_type), title: I18n.t("settings.booking_option.form.#{@booking_option.option_type}_option") %>
+
   <% if support_booking_options_menu_concept? %>
     <div class="field-group-header" id="new_menu"><%= I18n.t("settings.booking_option.form.menu_for_sale_label") %></div>
     <div class="field-header"><%= I18n.t("common.menu") %></div>

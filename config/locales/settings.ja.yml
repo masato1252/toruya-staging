@@ -514,6 +514,12 @@ ja:
         simple_text: シンプル
         rich_text: カスタム
         booking_pages: 予約ページ
+        option_type_setting_header: オプションタイプ設定
+        option_type: オプションタイプ
+        option_type_title: オプションタイプ
+        primary_option: メインオプション
+        secondary_option: サブオプション
+        option_type_hint: メインオプションは単体で予約可能ですが、サブオプションは必ずメインオプションと一緒に選択する必要があります。
         form_errors:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
           reached_the_menus_limit: メニューは２つまで設定できます
