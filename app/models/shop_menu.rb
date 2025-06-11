@@ -16,6 +16,9 @@
 #  index_shop_menus_on_shop_id_and_menu_id  (shop_id,menu_id) UNIQUE
 #
 
+# max_seat_number is the maximum number of customers that can be seated at the shop for this menu,
+# it is also kind of equivalent to the number of seats for the menu
+
 class ShopMenu < ApplicationRecord
   default_value_for :max_seat_number, 1
   belongs_to :shop
