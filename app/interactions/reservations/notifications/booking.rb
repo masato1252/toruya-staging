@@ -26,18 +26,19 @@ module Reservations
               scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED
             )
           end
-        template ||= compose(
+
+        template = compose(
           ::CustomMessages::Customers::Template,
           product: booking_page,
           scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED,
           custom_message_only: true
-        )
+        ) if template.blank?
 
-        template ||= compose(
+        template = compose(
           ::CustomMessages::Customers::Template,
           product: booking_page.shop,
           scenario: ::CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED
-        )
+        ) unless template.present?
 
         Translator.perform(template, reservation.message_template_variables(customer))
       end
