@@ -350,7 +350,7 @@ tw:
             interval_subtitle: 間隔
             menu_shops_subtitle: 上限人數
             online_subtitle: 舉辦方式
-            hint: 在線上預約頁面中<br>此處設定的座位數量<br>將可供預約。
+            hint: 請指定此成員可服務的項目。
         service_customer_relation:
           service_register: 服務使用者
           register: 使用者
@@ -422,7 +422,7 @@ tw:
           thanks_application: 感謝您的申請。我們將在近期內與您聯繫。
         staffs:
           list_page_title: 成員
-          list_page_header: 已註冊成員
+          list_page_header: 成員
           delete: 刪除成員
           authority: 權限
           introduction: 介紹

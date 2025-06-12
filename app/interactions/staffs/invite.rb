@@ -28,6 +28,8 @@ module Staffs
 
         # All the staff be invited was admin currently.
         compose(StaffAccounts::Create, staff: staff, params: { phone_number: phone_number, level: level }, consultant: consultant)
+
+        staff
       end
     end
   end

@@ -167,7 +167,7 @@ const StaffEdit = ({props}) => {
                 </div>
               )
             })}
-            <div className="field-row hint no-border margin-around justify-center">
+            <div className="field-row warning no-border margin-around justify-center">
               <div className="centerize" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.menu.form.hint") }} />
             </div>
           </>

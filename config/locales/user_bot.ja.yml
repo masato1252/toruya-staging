@@ -351,7 +351,7 @@ ja:
             interval_subtitle: インターバル
             menu_shops_subtitle: 利用店舗（満席数）
             online_subtitle: 開催方法
-            hint: オンライン予約ページで<br>こちらで設定した席数分が<br>予約可能となります。
+            hint: このスタッフが担当できるメニューを指定してください。
         service_customer_relation:
           service_register: サービス利用者
           register: 利用者
@@ -421,7 +421,7 @@ ja:
           thanks_application: 申し込みありがとうございます。近日中にご連絡させていただきます。
         staffs:
           list_page_title: スタッフ
-          list_page_header: 登録スタッフ
+          list_page_header: スタッフ
           delete: スタッフを削除
           authority: 権限
           introduction: 紹介文
