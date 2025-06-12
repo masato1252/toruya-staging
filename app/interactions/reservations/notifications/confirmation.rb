@@ -22,13 +22,13 @@ module Reservations
             scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
             custom_message_only: true
           )
-        else
-          compose(
-            ::CustomMessages::Customers::Template,
-            product: reservation.shop,
-            scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED
-          )
         end
+
+        template ||= compose(
+          ::CustomMessages::Customers::Template,
+          product: reservation.shop,
+          scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED
+        )
 
         Translator.perform(template, reservation.message_template_variables(customer))
       end
