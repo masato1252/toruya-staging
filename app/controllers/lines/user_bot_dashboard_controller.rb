@@ -18,6 +18,7 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   skip_before_action :track_ahoy_visit
   before_action :set_locale
+  before_action :save_business_owner_preference
   before_action :redirect_from_rich_menu
 
   def from_line_bot
@@ -55,6 +56,22 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   def redirect_from_rich_menu
     if params[:redirect_from_rich_menu] && current_social_user && current_social_user.manage_accounts.size > 1
+      # Check if user has a saved business owner preference
+      saved_business_owner_id = user_bot_cookies(:preferred_business_owner_id)
+
+      if saved_business_owner_id.present?
+        # Verify the saved business owner is still valid for this user
+        if valid_business_owner_id?(saved_business_owner_id)
+          # Auto-redirect to saved business owner
+          redirect_to url_for(controller: controller_name, action: action_name, business_owner_id: saved_business_owner_id, **request.query_parameters.except(:redirect_from_rich_menu))
+          return
+        else
+          # Clear invalid saved preference
+          delete_user_bot_cookies(:preferred_business_owner_id)
+        end
+      end
+
+      # Show business owner selection page
       @redirect_controller = controller_name
       @redirect_action = action_name
       render template: "lines/user_bot/business_owners"
@@ -75,4 +92,29 @@ class Lines::UserBotDashboardController < ActionController::Base
       flash[:notice] = I18n.t("common.notify_user_customer_reservation_confirmation_message")
     end
   end
+
+  private
+
+    def save_business_owner_preference
+    return unless params[:business_owner_id].present? && current_social_user
+
+    current_business_owner_id = params[:business_owner_id]
+    saved_business_owner_id = user_bot_cookies(:preferred_business_owner_id)
+
+    # Only save if the business_owner_id has changed and is valid
+    if current_business_owner_id != saved_business_owner_id &&
+       valid_business_owner_id?(current_business_owner_id)
+      write_user_bot_cookies(:preferred_business_owner_id, current_business_owner_id)
+    end
+  end
+
+  def valid_business_owner_id?(business_owner_id)
+    @valid_business_owner_ids ||= current_social_user.manage_accounts.pluck(:id).map(&:to_s)
+    @valid_business_owner_ids.include?(business_owner_id.to_s)
+  end
+
+  def clear_business_owner_preference
+    delete_user_bot_cookies(:preferred_business_owner_id)
+  end
+  helper_method :clear_business_owner_preference
 end
