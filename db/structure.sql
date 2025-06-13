@@ -1537,6 +1537,39 @@ ALTER SEQUENCE public.menu_categories_id_seq OWNED BY public.menu_categories.id;
 
 
 --
+-- Name: menu_equipments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.menu_equipments (
+    id bigint NOT NULL,
+    menu_id bigint NOT NULL,
+    equipment_id bigint NOT NULL,
+    required_quantity integer DEFAULT 1 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: menu_equipments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.menu_equipments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: menu_equipments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.menu_equipments_id_seq OWNED BY public.menu_equipments.id;
+
+
+--
 -- Name: menu_reservation_setting_rules; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3817,6 +3850,13 @@ ALTER TABLE ONLY public.episodes ALTER COLUMN id SET DEFAULT nextval('public.epi
 
 
 --
+-- Name: equipments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.equipments ALTER COLUMN id SET DEFAULT nextval('public.equipments_id_seq'::regclass);
+
+
+--
 -- Name: filtered_outcomes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3842,6 +3882,13 @@ ALTER TABLE ONLY public.lessons ALTER COLUMN id SET DEFAULT nextval('public.less
 --
 
 ALTER TABLE ONLY public.menu_categories ALTER COLUMN id SET DEFAULT nextval('public.menu_categories_id_seq'::regclass);
+
+
+--
+-- Name: menu_equipments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_equipments ALTER COLUMN id SET DEFAULT nextval('public.menu_equipments_id_seq'::regclass);
 
 
 --
@@ -4504,6 +4551,14 @@ ALTER TABLE ONLY public.episodes
 
 
 --
+-- Name: equipments equipments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.equipments
+    ADD CONSTRAINT equipments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: filtered_outcomes filtered_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4533,6 +4588,14 @@ ALTER TABLE ONLY public.lessons
 
 ALTER TABLE ONLY public.menu_categories
     ADD CONSTRAINT menu_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: menu_equipments menu_equipments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_equipments
+    ADD CONSTRAINT menu_equipments_pkey PRIMARY KEY (id);
 
 
 --
@@ -5495,6 +5558,27 @@ CREATE INDEX index_episodes_on_online_service_id ON public.episodes USING btree 
 
 
 --
+-- Name: index_equipments_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_equipments_on_name ON public.equipments USING btree (name);
+
+
+--
+-- Name: index_equipments_on_shop_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_equipments_on_shop_id ON public.equipments USING btree (shop_id);
+
+
+--
+-- Name: index_equipments_on_shop_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_equipments_on_shop_id_and_deleted_at ON public.equipments USING btree (shop_id, deleted_at);
+
+
+--
 -- Name: index_function_accesses_on_content_source_and_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5527,6 +5611,27 @@ CREATE INDEX index_lessons_on_chapter_id ON public.lessons USING btree (chapter_
 --
 
 CREATE INDEX index_menu_categories_on_menu_id_and_category_id ON public.menu_categories USING btree (menu_id, category_id);
+
+
+--
+-- Name: index_menu_equipments_on_equipment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_equipments_on_equipment_id ON public.menu_equipments USING btree (equipment_id);
+
+
+--
+-- Name: index_menu_equipments_on_menu_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_equipments_on_menu_id ON public.menu_equipments USING btree (menu_id);
+
+
+--
+-- Name: index_menu_equipments_on_menu_id_and_equipment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_menu_equipments_on_menu_id_and_equipment_id ON public.menu_equipments USING btree (menu_id, equipment_id);
 
 
 --
@@ -6700,6 +6805,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250423000000'),
 ('20250510071219'),
 ('20250610000000'),
-('20250611000001');
+('20250611000001'),
+('20250612140711'),
+('20250612140730');
 
 

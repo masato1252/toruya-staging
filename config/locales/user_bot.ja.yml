@@ -435,6 +435,24 @@ ja:
           new_page_desc: スタッフ登録ページをSMS送信します
           cellphone_input_placeholder: スタッフの携帯電話番号
           new_page_methods_html: <b>【スタッフ登録方法】</b><br /> ①スタッフ登録ページをSMS送信<br /> ②スタッフ自信で登録ページからスタッフ登録<br /> ③スタッフとしてToruyaを利用
+        equipments:
+          title: 機器管理
+          list_page_title: 機器管理
+          list_page_header: 機器一覧
+          new_page_title: 機器追加
+          new_page_header: 機器情報
+          edit_page_title: 機器編集
+          edit_page_header: 機器情報
+          name: 機器名
+          name_placeholder: 機器名を入力してください
+          description: 機器説明
+          description_placeholder: 機器の説明を入力してください
+          quantity: 数量
+          related_menus: 関連サービス
+          required_quantity: 必要数量
+          no_equipments: まだ設備がありません
+          hint_html: この機器に関連するサービスを指定してください。<br>お客様がそのサービスを予約した際に、この機器が使用されます。<br>サービスに必要な機器が全て使用中の場合は、スタッフの空きがあっても予約できません。
+          hint_2_html: サービスに必要な機器を指定することができます。<br>サービスに必要な機器が全て使用中の場合は、スタッフの空きがあっても予約できません。
       surveys:
         title: アンケート
         activity_title: イベント申し込み表
@@ -1012,3 +1030,5 @@ ja:
         pending_reservations_label: 確認が必要な予約
         missing_sale_page_service_label: 宣伝用LPが未作成のサービス
         pending_customer_services_label: 確認が必要なサービス
+      booking_page:
+        required_equipments: "所需設備"

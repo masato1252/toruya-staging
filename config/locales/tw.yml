@@ -448,6 +448,10 @@ tw:
           attributes:
             customer_phone_number:
               taken: "^此手機號碼已有客戶使用，請使用其他手機號碼"
+        menu_equipment:
+          attributes:
+            equipment:
+              must_belong_to_menu_shop: "設備必須屬於服務項目所屬的店家"
     models:
       user: 用戶
       staff: 成員

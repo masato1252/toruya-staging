@@ -46,6 +46,8 @@ class Menu < ApplicationRecord
   has_many :shop_menu_repeating_dates, dependent: :destroy
   has_many :booking_option_menus
   has_many :booking_options, -> { undeleted }, through: :booking_option_menus
+  has_many :menu_equipments, dependent: :destroy
+  has_many :equipments, -> { active }, through: :menu_equipments
 
   has_one :reservation_setting_menu, dependent: :destroy
   has_one :reservation_setting, through: :reservation_setting_menu

@@ -349,6 +349,8 @@ Rails.application.routes.draw do
                   get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
                 end
               end
+
+              resources :equipments
             end
 
             resources :staffs do

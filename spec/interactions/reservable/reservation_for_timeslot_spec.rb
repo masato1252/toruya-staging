@@ -597,6 +597,182 @@ RSpec.describe Reservable::ReservationForTimeslot do
           expect(other_shop_error).to eq(error: :incapacity_menu, staff_id: staff2.id, menu_id: menu1.id)
         end
       end
+
+      # validate_equipment_availability
+      context "when equipment validation" do
+        let(:equipment1) { FactoryBot.create(:equipment, shop: shop, quantity: 3) }
+        let(:equipment2) { FactoryBot.create(:equipment, shop: shop, quantity: 2) }
+        let!(:menu_equipment1) { FactoryBot.create(:menu_equipment, menu: menu1, equipment: equipment1, required_quantity: 2) }
+        let!(:menu_equipment2) { FactoryBot.create(:menu_equipment, menu: menu1, equipment: equipment2, required_quantity: 1) }
+
+        before do
+          FactoryBot.create(:business_schedule, shop: shop,
+                            start_time: now.beginning_of_day.advance(weeks: -1),
+                            end_time: now.end_of_day.advance(weeks: -1))
+          FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+        end
+
+        context "when equipment is available" do
+          it "is valid" do
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when equipment quantity is insufficient" do
+          let!(:existing_reservation) do
+            # Create a reservation that uses 2 units of equipment1, leaving only 1 available
+            FactoryBot.create(:reservation,
+                             shop: shop,
+                             menus: [menu1],
+                             start_time: start_time.advance(minutes: -30),
+                             end_time: end_time.advance(minutes: -30),
+                             staffs: [staff1])
+          end
+
+          it "is invalid when trying to reserve more equipment than available" do
+            # The existing reservation uses 2 units of equipment1
+            # The new reservation also needs 2 units of equipment1
+            # But equipment1 only has 3 units total, so 2 + 2 = 4 > 3
+            expect(outcome).to be_invalid
+            insufficient_equipment_error = outcome.errors.details[:menu_ids].find { |error_hash| error_hash[:error] == :insufficient_equipment }
+            expect(insufficient_equipment_error).to include(
+              error: :insufficient_equipment,
+              menu_id: menu1.id,
+              equipment_name: equipment1.name,
+              required: 2,
+              available: 1
+            )
+          end
+        end
+
+        context "when multiple equipments have conflicts" do
+          let!(:existing_reservation) do
+            FactoryBot.create(:reservation,
+                             shop: shop,
+                             menus: [menu1],
+                             start_time: start_time.advance(minutes: -30),
+                             end_time: end_time.advance(minutes: -30),
+                             staffs: [staff1])
+          end
+
+          before do
+            # Make equipment2 also insufficient
+            equipment2.update(quantity: 1)
+          end
+
+          it "shows all equipment conflicts" do
+            expect(outcome).to be_invalid
+            equipment_errors = outcome.errors.details[:menu_ids].select { |error_hash| error_hash[:error] == :insufficient_equipment }
+            expect(equipment_errors.length).to eq(2)
+
+            equipment1_error = equipment_errors.find { |error| error[:equipment_name] == equipment1.name }
+            expect(equipment1_error).to include(
+              error: :insufficient_equipment,
+              equipment_name: equipment1.name,
+              required: 2,
+              available: 1
+            )
+
+            equipment2_error = equipment_errors.find { |error| error[:equipment_name] == equipment2.name }
+            expect(equipment2_error).to include(
+              error: :insufficient_equipment,
+              equipment_name: equipment2.name,
+              required: 1,
+              available: 0
+            )
+          end
+        end
+
+        context "when equipment belongs to different shop" do
+          let(:other_shop) { FactoryBot.create(:shop) }
+          let(:other_equipment) { FactoryBot.create(:equipment, shop: other_shop, quantity: 5) }
+          let!(:menu_equipment_other_shop) { FactoryBot.create(:menu_equipment, menu: menu1, equipment: other_equipment, required_quantity: 1) }
+
+          it "skips validation for equipment from other shops" do
+            # Even though other_equipment belongs to other_shop,
+            # the validation should skip it and the reservation should be valid
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when updating existing reservation" do
+          let!(:existing_reservation) do
+            FactoryBot.create(:reservation,
+                             shop: shop,
+                             menus: [menu1],
+                             start_time: start_time,
+                             end_time: end_time,
+                             staffs: [staff1])
+          end
+
+          it "excludes current reservation from equipment availability calculation" do
+            args[:reservation_id] = existing_reservation.id
+
+            # The existing reservation uses 2 units of equipment1
+            # When updating the same reservation, it should not count against itself
+            # So it should be valid even though it looks like it would exceed capacity
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when no overlap in time" do
+          let!(:existing_reservation) do
+            FactoryBot.create(:reservation,
+                             shop: shop,
+                             menus: [menu1],
+                             start_time: start_time.advance(hours: -3),
+                             end_time: start_time.advance(hours: -2),
+                             staffs: [staff1])
+          end
+
+          it "is valid when reservations don't overlap in time" do
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when existing reservation is canceled" do
+          let!(:existing_reservation) do
+            FactoryBot.create(:reservation,
+                             shop: shop,
+                             menus: [menu1],
+                             start_time: start_time.advance(minutes: -30),
+                             end_time: end_time.advance(minutes: -30),
+                             staffs: [staff1])
+          end
+
+          before do
+            existing_reservation.cancel!
+          end
+
+          it "ignores canceled reservations for equipment availability" do
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when menu has no equipment requirements" do
+          let(:menu_without_equipment) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes) }
+
+          before do
+            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu_without_equipment)
+            args[:menu_ids] = [menu_without_equipment.id]
+          end
+
+          it "is valid when menu doesn't require any equipment" do
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when equipment is soft-deleted" do
+          before do
+            equipment1.update(deleted_at: Time.current)
+          end
+
+          it "ignores soft-deleted equipment in validation" do
+            # equipment1 is soft-deleted, only equipment2 is checked (which is available)
+            expect(outcome).to be_valid
+          end
+        end
+      end
     end
 
     # validate_time_range

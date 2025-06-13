@@ -64,6 +64,7 @@ module Reservable
       validate_activity_reservation
       validate_interval_time if validate_overlap?
       validate_seats_for_customers if overbooking_restriction
+      validate_equipment_availability
 
       return if staff_ids.blank?
 
@@ -303,6 +304,32 @@ module Reservable
 
     def user
       @user ||= shop.user
+    end
+
+    def validate_equipment_availability
+      return if menu_ids.blank?
+
+      menu_ids.each do |menu_id|
+        menu = Menu.find(menu_id)
+
+        menu.menu_equipments.includes(:equipment).each do |menu_equipment|
+          equipment = menu_equipment.equipment
+          next if equipment.deleted_at.present?
+          required_quantity = menu_equipment.required_quantity
+
+          # Check if the equipment belongs to the current shop
+          next unless equipment.shop_id == shop.id
+
+          unless equipment.sufficient_for_reservation?(required_quantity, start_time, end_time, reservation_id)
+            available_quantity = equipment.available_quantity_for_time_range(start_time, end_time, reservation_id)
+            errors.add(:menu_ids, :insufficient_equipment,
+                      menu_id: menu_id,
+                      equipment_name: equipment.name,
+                      required: required_quantity,
+                      available: available_quantity)
+          end
+        end
+      end
     end
 
     def in_lab?

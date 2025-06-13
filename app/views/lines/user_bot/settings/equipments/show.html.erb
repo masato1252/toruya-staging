@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="settings-dashboard form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_shop_equipments_path(shop_id: @shop.id, business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.equipments.title") %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.equipments.name") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_equipment_path(shop_id: @shop.id, business_owner_id: business_owner_id, id: @equipment.id), title: @equipment.name %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.equipments.quantity") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_equipment_path(shop_id: @shop.id, business_owner_id: business_owner_id, id: @equipment.id), title: @equipment.quantity.to_s %>
+
+        <div class="field-header"><%= t("user_bot.dashboards.settings.equipments.related_menus") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_equipment_path(shop_id: @shop.id, business_owner_id: business_owner_id, id: @equipment.id), title: @equipment.menus.any? ? @equipment.menus.map(&:name).join(", ") : t("common.no_data") %>
+      </div>
+
+      <div class="centerize">
+        <%= link_to edit_lines_user_bot_settings_shop_equipment_path(shop_id: @shop.id, business_owner_id: business_owner_id, id: @equipment.id), class: "btn btn-tarco" do %>
+          <i class="fa fa-edit"></i> <span><%= I18n.t("action.edit") %></span>
+        <% end %>
+
+        <%= link_to lines_user_bot_settings_shop_equipment_path(shop_id: @shop.id, business_owner_id: business_owner_id, id: @equipment.id), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
+          <i class="fa fa-minus"></i> <span><%= I18n.t("action.delete") %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

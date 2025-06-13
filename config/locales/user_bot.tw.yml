@@ -436,6 +436,24 @@ tw:
           new_page_desc: 我們將通過簡訊發送成員註冊頁面
           cellphone_input_placeholder: 成員的手機號碼
           new_page_methods_html: <b>【成員註冊方法】</b><br /> ①通過簡訊發送成員註冊頁面<br /> ②成員自行從註冊頁面完成成員註冊<br /> ③以成員身份使用Toruya
+        equipments:
+          title: 設備管理
+          list_page_title: 設備管理
+          list_page_header: 設備清單
+          new_page_title: 新增設備
+          new_page_header: 設備資訊
+          edit_page_title: 編輯設備
+          edit_page_header: 設備資訊
+          name: 設備名稱
+          name_placeholder: 請輸入設備名稱
+          description: 設備描述
+          description_placeholder: 請輸入設備描述
+          quantity: 數量
+          related_menus: 相關服務項目
+          required_quantity: 所需數量
+          no_equipments: 還沒有設定任何設備
+          hint_html: 請指定此設備關聯的服務項目。<br>當客戶預約該項目時則會使用該設備。<br>如果服務所需的設備已全被佔用，就算服務員有空檔，也無法預約。
+          hint_2_html: 您可以設定與服務項目關聯的設備。<br>如果服務所需的設備已全被佔用，就算服務員有空檔，也無法預約。
       surveys:
         title: 表單
         activity_title: 活動報名表單
@@ -1016,3 +1034,5 @@ tw:
         pending_reservations_label: 需要確認的預約
         missing_sale_page_service_label: 未建立銷售頁面的服務
         pending_customer_services_label: 需要確認的服務
+      booking_page:
+        required_equipments: "所需設備"

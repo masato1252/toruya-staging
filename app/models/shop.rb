@@ -42,6 +42,8 @@ class Shop < ApplicationRecord
   has_many :business_schedules
   has_many :custom_schedules
   has_many :reservations, -> { active }
+  has_many :equipments, dependent: :destroy
+  has_many :active_equipments, -> { active }, class_name: "Equipment"
   belongs_to :user
 
   scope :active, -> { where(deleted_at: nil) }

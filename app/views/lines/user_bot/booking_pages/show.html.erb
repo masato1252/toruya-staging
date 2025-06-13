@@ -35,7 +35,19 @@
                 booking_page_id: @booking_page.id
               }), class: "break-line-content underline" %><br />
               <div class="desc">
-                <%= booking_option.menus.pluck(:name).join(", ") %><br />
+                <%= booking_option.menus.map(&:name).join(", ") %><br />
+                <%
+                  equipment_requirements = {}
+                  booking_option.menus.each do |menu|
+                    menu.equipments.each do |equipment|
+                      required_quantity = equipment.menu_equipments.find_by(menu: menu).required_quantity
+                      equipment_requirements[equipment.name] = (equipment_requirements[equipment.name] || 0) + required_quantity
+                    end
+                  end
+                %>
+                <% if equipment_requirements.any? %>
+                  <%= t("user_bot.dashboards.booking_page.required_equipments") %>：<%= equipment_requirements.map { |name, quantity| "#{name} (#{quantity})" }.join(", ") %><br />
+                <% end %>
                 <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %>・<%= booking_price_desc(booking_option) %>・<%= booking_option.menus.map {|menu| menu.shop_menus.map(&:max_seat_number).join(", ") }.join(", ") %><%= I18n.t("common.seat_number") %>
 
                 <% if booking_option.secondary? %>

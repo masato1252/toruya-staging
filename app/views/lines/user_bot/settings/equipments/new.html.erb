@@ -1,0 +1,10 @@
+<%= react_component("user_bot/settings/equipments/new", {
+  props: {
+    business_owner_id: business_owner_id,
+    shop_id: @shop.id,
+    back_path: lines_user_bot_settings_shop_equipments_path(shop_id: @shop.id, business_owner_id: business_owner_id),
+    equipment_menus_options: @equipment_menus_options
+  }
+},
+{ camelize_props: false }
+) %>

@@ -442,6 +442,10 @@ ja:
           attributes:
             customer_phone_number:
               taken: "^この電話番号はすでに使用されています，他の電話番号を使用してください"
+        menu_equipment:
+          attributes:
+            equipment:
+              must_belong_to_menu_shop: "機器はメニューに紐づく店舗のものを選択してください"
     models:
       user: ユーザー
       staff: スタッフ
