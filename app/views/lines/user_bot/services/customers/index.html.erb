@@ -6,7 +6,7 @@
 
         <div class="field-group-header flex justify-between" id="name">
           <span><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></span>
-          <span><%= @available_count %>/<%= @relations.select(:customer_id).distinct.count %><%= t("common.person_unit") %></span>
+          <span><%= @available_count %>/<%= @relations.map(&:customer_id).uniq.count %><%= t("common.person_unit") %></span>
         </div>
 
         <% @relations.each do |relation| %>

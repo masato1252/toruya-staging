@@ -3,9 +3,11 @@
 class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardController
   def index
     @online_service = Current.business_owner.online_services.find(params[:service_id])
-    @relations = @online_service.all_online_service_customer_relations.includes(:customer, :last_customer_payment).order("online_service_customer_relations.created_at DESC")
+    relations = @online_service.all_online_service_customer_relations.includes(:customer, :last_customer_payment, :online_service).to_a
+    state_order = { "pending" => 1, "accessible" => 2, "available" => 3, "inactive" => 4 }
+    @relations = relations.sort_by { |relation| [state_order[relation.state], -relation.updated_at.to_i] }
     @available_count = @online_service.online_service_customer_relations.available.size
-    @available_customers = current_user.customers.where.not(id: @relations.pluck(:customer_id))
+    @available_customers = current_user.customers.where.not(id: @relations.map(&:customer_id))
   end
 
   def show
@@ -44,7 +46,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
     ::Sales::OnlineServices::Approve.run!(relation: relation)
     CustomerPayments::ApproveManually.run(online_service_customer_relation: relation)
-    
+
     redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
   end
 
