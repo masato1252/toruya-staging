@@ -242,7 +242,7 @@ RSpec.describe Surveys::Upsert do
                     {
                       start_time: Time.current + 1.day,
                       end_time: Time.current + 1.day + 1.hour,
-                      end_date: Time.current.tomorrow.to_date.to_s
+                      end_date: (Time.current + 1.day + 1.hour).to_date.to_s
                     }
                   ]
                 }
@@ -283,7 +283,7 @@ RSpec.describe Surveys::Upsert do
                   {
                     start_time: Time.current + 1.day,
                     end_time: Time.current + 1.day + 1.hour,
-                    end_date: Time.current.tomorrow.to_date.to_s
+                    end_date: (Time.current + 1.day + 1.hour).to_date.to_s
                   }
                 ]
               }
@@ -409,9 +409,9 @@ RSpec.describe Surveys::Upsert do
                   end_date: slot2.end_time.to_date.to_s
                 },
                 {
-                  start_time: 1.day.from_now,
-                  end_time: 1.day.from_now + 1.hour,
-                  end_date: 1.day.from_now.to_date.to_s
+                  start_time: Time.current + 2.days,
+                  end_time: Time.current + 2.days + 1.hour,
+                  end_date: (Time.current + 2.days + 1.hour).to_date.to_s
                 }
               ]
             }]

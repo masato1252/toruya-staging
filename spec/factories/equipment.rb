@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :equipment do
     sequence(:name) { |n| "Equipment #{n}" }
-    description { "Equipment description" }
     quantity { 5 }
 
     association :shop

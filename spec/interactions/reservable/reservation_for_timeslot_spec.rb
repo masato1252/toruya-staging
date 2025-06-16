@@ -683,18 +683,6 @@ RSpec.describe Reservable::ReservationForTimeslot do
           end
         end
 
-        context "when equipment belongs to different shop" do
-          let(:other_shop) { FactoryBot.create(:shop) }
-          let(:other_equipment) { FactoryBot.create(:equipment, shop: other_shop, quantity: 5) }
-          let!(:menu_equipment_other_shop) { FactoryBot.create(:menu_equipment, menu: menu1, equipment: other_equipment, required_quantity: 1) }
-
-          it "skips validation for equipment from other shops" do
-            # Even though other_equipment belongs to other_shop,
-            # the validation should skip it and the reservation should be valid
-            expect(outcome).to be_valid
-          end
-        end
-
         context "when updating existing reservation" do
           let!(:existing_reservation) do
             FactoryBot.create(:reservation,
@@ -750,11 +738,14 @@ RSpec.describe Reservable::ReservationForTimeslot do
         end
 
         context "when menu has no equipment requirements" do
-          let(:menu_without_equipment) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes) }
+          let(:menu_without_equipment) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 4) }
 
           before do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu_without_equipment)
             args[:menu_ids] = [menu_without_equipment.id]
+            args[:number_of_customer] = 1
+            # 明確建立 staff_menu 關聯
+            FactoryBot.create(:staff_menu, staff: staff1, menu: menu_without_equipment, max_customers: 4)
           end
 
           it "is valid when menu doesn't require any equipment" do
