@@ -6,7 +6,7 @@
           <%= I18n.t("action.new_off_schedule") %>
         </h4>
       </div>
-      <%= form_with url: local_assigns[:custom_schedule_id] ? SiteRouting.new(self).custom_schedule_path(business_owner_id, local_assigns[:custom_schedule_id]) : SiteRouting.new(self).custom_schedules_path(business_owner_id),
+      <%= form_with url: local_assigns[:custom_schedule_id] ? SiteRouting.new(self).custom_schedule_path(Current.user.id, local_assigns[:custom_schedule_id]) : SiteRouting.new(self).custom_schedules_path(Current.user.id),
         local: true,
         method: local_assigns[:custom_schedule_id] ? :patch : :post do %>
         <div class="modal-body">
