@@ -10,6 +10,7 @@ class LinesController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   before_action :social_customer, only: %w(identify_shop_customer find_customer create_customer identify_code ask_identification_code)
   before_action :authenticate_social_user, only: %w(user_login)
+  skip_before_action :verify_authenticity_token, only: %w(update_customer_address)
   skip_before_action :track_ahoy_visit
 
   layout "booking"
