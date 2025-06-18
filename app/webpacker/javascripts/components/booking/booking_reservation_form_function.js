@@ -24,6 +24,7 @@ import SurveyForm from "components/shared/survey/form";
 import BookingReservationButton from "./booking_reservation_button";
 import BookingOptionFirstFlow from "./booking_option_first_flow";
 import ProductRequirementView from "./product_requirement_view";
+import StaffSelection from "./staff_selection";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { CommonServices } from "user_bot/api";
 import { getMomentLocale } from "libraries/helper.js";
@@ -42,7 +43,21 @@ const BookingReservationFormFunction = ({props}) => {
     });
   }, []);
 
-  const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(props.booking_reservation_form)
+  useEffect(() => {
+    if (booking_reservation_form_values?.selected_staff_id) {
+      set_booking_reservation_form_values(prev => ({...prev, booking_options: props.booking_reservation_form.staff_booking_options_map[booking_reservation_form_values.selected_staff_id]}))
+    }
+  }, [booking_reservation_form_values?.selected_staff_id])
+
+  const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(() => {
+    const baseState = {
+      ...props.booking_reservation_form,
+      staff_selection_done: !props.booking_reservation_form.staff_selection_required ||
+                           (props.booking_reservation_form.selected_staff_id !== undefined && props.booking_reservation_form.selected_staff_id !== null)
+    };
+
+    return baseState;
+  })
   const stripe_token_ref = useRef();
   const square_token_ref = useRef();
   const address_ref = useRef();
@@ -103,7 +118,12 @@ const BookingReservationFormFunction = ({props}) => {
     set_booking_reservation_form_values(prev => ({...prev, [field]: resetValue}))
     })
 
-    set_booking_reservation_form_values(prev => ({...prev, booking_option_selected_flow_done: false, is_survey_done: false, booking_failed: null, errors: {}}))
+    if (props.booking_reservation_form.staff_selection_required) {
+      set_booking_reservation_form_values(prev => ({...prev, booking_option_selected_flow_done: false, is_survey_done: false, booking_failed: null, selected_staff_id: null, staff_selection_done: false, errors: {}}))
+    }
+    else {
+      set_booking_reservation_form_values(prev => ({...prev, booking_option_selected_flow_done: false, is_survey_done: false, booking_failed: null, errors: {}}))
+    }
     return {};
   }
 
@@ -131,6 +151,25 @@ const BookingReservationFormFunction = ({props}) => {
     }
   }
 
+      const selectStaff = (staffId) => {
+    // Get booking options for selected staff from pre-calculated map
+    const staffKey = staffId === null ? "any_staff" : staffId.toString();
+    const staffBookingOptions = booking_reservation_form_values.staff_booking_options_map[staffKey] || [];
+
+    // Update state with selected staff and corresponding booking options
+    set_booking_reservation_form_values(prev => ({
+      ...prev,
+      selected_staff_id: staffId,
+      staff_selection_done: true,
+      booking_options: staffBookingOptions,
+      booking_option_ids: [],
+      booking_option_selected_flow_done: false,
+      booking_date: null,
+      booking_at: null,
+      booking_times: []
+    }))
+  }
+
   const fetchBookingTimes = async (date) => {
     scrollToTarget("times_header")
     set_booking_reservation_form_values(prev => ({...prev, booking_date: date, is_fetching_booking_time: true}));
@@ -141,7 +180,8 @@ const BookingReservationFormFunction = ({props}) => {
       params: {
         date: date,
         booking_option_ids: booking_reservation_form_values.booking_option_ids,
-        customer_id: booking_reservation_form_values?.customer_info?.id
+        customer_id: booking_reservation_form_values?.customer_info?.id,
+        staff_id: booking_reservation_form_values.selected_staff_id
       },
       responseType: "json"
     })
@@ -186,6 +226,18 @@ const BookingReservationFormFunction = ({props}) => {
     const { booking_option_ids, booking_date, booking_at } = booking_reservation_form_values;
 
     return booking_option_ids && booking_date && booking_at
+  }
+
+    const isStaffSelectionDone = () => {
+    const { staff_selection_required, selected_staff_id, staff_selection_done } = booking_reservation_form_values;
+
+    // If staff selection is not required, it's always done
+    if (!staff_selection_required) return true;
+
+    // If staff selection is required, it's only done when:
+    // 1. staff_selection_done is true AND
+    // 2. A staff has been explicitly selected (selected_staff_id is not null/undefined)
+    return staff_selection_done && (selected_staff_id !== undefined && selected_staff_id !== null);
   }
 
   const isSocialLoginChecked = () => {
@@ -327,7 +379,8 @@ const BookingReservationFormFunction = ({props}) => {
         "present_customer_info",
         "social_user_id",
         "sale_page_id",
-        "survey_answers"
+        "survey_answers",
+        "selected_staff_id"
       ),
       {
         stripe_token,
@@ -392,6 +445,22 @@ const BookingReservationFormFunction = ({props}) => {
     }
   }
 
+  const renderStaffSelection = () => {
+    const { available_staffs, staff_selection_required, selected_staff_id, staff_selection_done } = booking_reservation_form_values;
+
+    // Only show staff selection if it's required AND not yet completed
+    if (!staff_selection_required || staff_selection_done) return null;
+
+    return (
+      <StaffSelection
+        availableStaffs={available_staffs}
+        selectedStaffId={selected_staff_id}
+        onStaffSelect={selectStaff}
+        i18n={props.i18n}
+      />
+    );
+  }
+
   const renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = props.booking_page
     const { is_done, is_paying_booking, is_filling_address, booking_option_ids, skip_social_customer, found_customer, is_survey_done, submitting } = booking_reservation_form_values
@@ -405,6 +474,11 @@ const BookingReservationFormFunction = ({props}) => {
           social_customer_exists={props.social_customer_exists}
         />
       )
+    }
+
+    // If staff selection is required but not done yet, don't show booking flow
+    if (!isStaffSelectionDone()) {
+      return null;
     }
 
     if (!isOnlinePayment() && (props.booking_page.is_customer_address_required ? !isCustomerAddressFilled() : false) && (is_filling_address || is_done || is_paying_booking)) {
@@ -571,6 +645,7 @@ const BookingReservationFormFunction = ({props}) => {
         <OwnerWarning i18n={props.i18n} is_shop_owner={props.is_shop_owner} is_done={booking_reservation_form_values.is_done} />
         <DraftWarning i18n={props.i18n} booking_page={props.booking_page} />
         <BookingHeader booking_page={props.booking_page} is_done={booking_reservation_form_values.is_done} />
+        {renderStaffSelection()}
         {renderBookingFlow()}
       </form>
 

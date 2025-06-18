@@ -16,9 +16,8 @@
   <meta property="og:description" content="<%= @booking_page.name %> <%= booking_page_url(@booking_page.slug) %> <%= @booking_page.greeting&.squish %>">
 <% end %>
 <%
-  page_booking_options = @booking_page_options.filter { |booking_page_option| booking_page_option.booking_option&.bookable? }.map { |booking_page_option| booking_page_option_item(booking_page_option) }
   customer_info_hash = customer_info_as_json(@customer)
-  booking_option_ids = @is_single_booking_option ? [custom_options(page_booking_options)[0][:id]] : (params[:booking_option_ids].present? ? params[:booking_option_ids].split(",").map(&:to_i) : [])
+  booking_option_ids = @is_single_booking_option ? [custom_options(@booking_page_options)[0][:id]] : (params[:booking_option_ids].present? ? params[:booking_option_ids].split(",").map(&:to_i) : [])
   booking_url = request.subdomain == 'booking' ? subdomain_booking_page_url(@booking_page.slug) : booking_page_url(@booking_page.slug)
 %>
 
@@ -68,7 +67,6 @@
       found_customer: @customer&.is_identified?,
       booking_flow: "booking_option_first",
       remember_me: true,
-      booking_options: custom_options(page_booking_options),
       customer_first_name: @customer&.first_name,
       customer_last_name: @customer&.last_name,
       customer_phonetic_last_name: @customer&.phonetic_last_name,
@@ -86,12 +84,17 @@
       customer_social_user_id: @social_customer&.social_user_id,
       sale_page_id: params[:_from_id],
       user_id: @booking_page.user_id,
+      available_staffs: @available_staffs,
+      staff_selection_required: @staff_selection_required,
+      selected_staff_id: @selected_staff_id,
+      staff_booking_options_map: @staff_booking_options_map,
+      booking_options: @selected_staff_id ? @staff_booking_options_map[@selected_staff_id.to_s] : [],
     },
     path: {
       save: booking_reservation_booking_page_path(@booking_page, format: :json),
       find_customer: find_customer_booking_page_path(@booking_page),
       ask_confirmation_code: ask_confirmation_code_booking_page_path(@booking_page),
-      confirm_code: confirm_code_booking_page_path(@booking_page)
+      confirm_code: confirm_code_booking_page_path(@booking_page),
     },
     i18n: {
       errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),

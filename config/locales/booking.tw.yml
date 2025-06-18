@@ -41,6 +41,10 @@ tw:
     owner_personal_schedule_warning: 如果您想設定為不可預約，請在『我的日曆』中建立個人行程。
     confirm_booking_option: 確認預約項目
     secondary_option_hint: 需要與主要選項搭配
+    staff_selection:
+      title: 請選擇服務人員
+      description: 選擇後將顯示可用的服務
+      any_staff: 不指定（任何服務人員皆可）
     booking_code:
       code: 確認碼
       resend: 重新發送確認碼

@@ -98,7 +98,16 @@ class BookingPagesController < ActionController::Base
       end
     end
 
-    @booking_page_options = @booking_page.booking_page_options.includes(:booking_option).references(:booking_options)
+    booking_page_options = @booking_page.booking_page_options.includes(:booking_option).references(:booking_options)
+    @booking_page_options = booking_page_options.filter { |booking_page_option| booking_page_option.booking_option&.bookable? }.map { |booking_page_option| ApplicationController.helpers.booking_page_option_item(booking_page_option) }
+
+    # Get all available staffs for booking options
+    @available_staffs = get_available_staffs_for_booking_page
+    @staff_selection_required = @available_staffs.size > 1
+
+    # Pre-calculate booking options for each staff to avoid API calls
+    @staff_booking_options_map = get_staff_booking_options_map
+    @selected_staff_id = params[:staff_id] ? params[:staff_id].to_i : @available_staffs.length == 1 ? @available_staffs[0][:id] : nil
   end
 
   def booking_reservation
@@ -116,9 +125,12 @@ class BookingPagesController < ActionController::Base
     # Set lock for 30 seconds
     Rails.cache.write(booking_key, true, expires_in: 30.seconds)
 
+    # Use selected staff if available, otherwise use automatic staff selection
+    selected_staff_ids = params[:selected_staff_id].present? ? [params[:selected_staff_id].to_i] : staff_ids
+
     outcome = Booking::CreateReservationForTimeslot.run(
       booking_page_id: params[:id].to_i,
-      staff_ids: staff_ids,
+      staff_ids: selected_staff_ids,
       booking_option_ids: booking_option_ids,
       booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
       customer_last_name: params[:customer_last_name],
@@ -191,10 +203,13 @@ class BookingPagesController < ActionController::Base
       }.to_json
     end
 
+    # Use selected staff if available for calendar
+    calendar_staff_ids = params[:staff_id].present? ? [params[:staff_id].to_i] : staff_ids
+
     outcome = Booking::CalendarForTimeslot.run(
           shop: booking_page.shop,
           booking_page: booking_page,
-          staff_ids: staff_ids,
+          staff_ids: calendar_staff_ids,
           date_range: month_dates,
           booking_option_ids: booking_option_ids,
           special_dates: special_dates,
@@ -244,11 +259,14 @@ class BookingPagesController < ActionController::Base
       end
     end
 
+    # Use selected staff if available for booking times
+    booking_times_staff_ids = params[:staff_id].present? ? [params[:staff_id].to_i] : staff_ids
+
     outcome = Booking::AvailableBookingTimesForTimeslot.run(
       shop: booking_page.shop,
       booking_page: booking_page,
       booking_option_ids: booking_option_ids,
-      staff_ids: staff_ids,
+      staff_ids: booking_times_staff_ids,
       special_dates: booking_dates,
       interval: booking_page.interval,
       overbooking_restriction: booking_page.overbooking_restriction,
@@ -294,8 +312,64 @@ class BookingPagesController < ActionController::Base
 
   def staff_ids
     @staff_ids ||= begin
-      menu_ids = BookingOptionMenu.where(booking_option_id: booking_option_ids).pluck(:menu_id)
-      StaffMenu.where(menu_id: menu_ids).group(:staff_id).having("COUNT(menu_id) = ?", menu_ids.size).pluck(:staff_id)
+      # If a specific staff is selected, use that staff
+      if params[:staff_id].present?
+        [params[:staff_id].to_i]
+      else
+        # Original logic: find staff that can handle all selected booking options
+        menu_ids = BookingOptionMenu.where(booking_option_id: booking_option_ids).pluck(:menu_id)
+        StaffMenu.where(menu_id: menu_ids).group(:staff_id).having("COUNT(menu_id) = ?", menu_ids.size).pluck(:staff_id)
+      end
     end
   end
+
+  def get_available_staffs_for_booking_page
+    # Get all menu IDs from active booking options
+    menu_ids = @booking_page.booking_options.active
+                          .joins(:booking_option_menus)
+                          .pluck('booking_option_menus.menu_id')
+                          .uniq
+
+    # Get all staffs that can handle these menus
+    staff_ids = StaffMenu.where(menu_id: menu_ids)
+                         .joins(:staff)
+                         .merge(Staff.active)
+                         .pluck(:staff_id)
+                         .uniq
+
+    # Return staff information including name and ID
+    Staff.where(id: staff_ids).map do |staff|
+      {
+        id: staff.id,
+        name: "#{staff.last_name} #{staff.first_name}".strip,
+        full_name: "#{staff.last_name} #{staff.first_name}".strip
+      }
+    end
+  end
+
+  def get_staff_booking_options_map
+    staff_options_map = {
+      # "any_staff" represents when no specific staff is selected
+      "any_staff" => @booking_page_options
+    }
+
+    # Calculate options for each specific staff
+    @available_staffs.each do |staff_info|
+      staff_id = staff_info[:id]
+      staff_menu_ids = StaffMenu.where(staff_id: staff_id).pluck(:menu_id)
+
+      # Filter booking options that this staff can handle from the already processed @booking_page_options
+      available_booking_options = @booking_page_options.select do |option|
+        option_menu_ids = option.menu_ids
+        # Staff can handle this booking option if they can handle ALL its menus
+        (option_menu_ids - staff_menu_ids).empty?
+      end
+
+      staff_options_map[staff_id.to_s] = available_booking_options
+    end
+
+    staff_options_map
+  end
+
+
 end

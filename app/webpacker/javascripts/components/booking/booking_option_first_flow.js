@@ -30,7 +30,9 @@ const BookingOptionFirstFlow = ({
     booking_flow,
     booking_option_ids,
     booking_at,
-    booking_option_selected_flow_done
+    booking_option_selected_flow_done,
+    staff_selection_done,
+    staff_selection_required,
   } = booking_reservation_form_values;
   const { please_select_a_menu, edit } = i18n;
 
@@ -62,6 +64,11 @@ const BookingOptionFirstFlow = ({
 
       {!booking_option_selected_flow_done && (
         <div className="result-fields booking-options">
+          {staff_selection_required && staff_selection_done &&  (
+            <div>
+              {resetValues && <a href="#" className="edit" onClick={() => resetValues(["staff_selection_done"])}>{edit}</a>}
+            </div>
+          )}
           <h4>
             {please_select_a_menu}
           </h4>

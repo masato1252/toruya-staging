@@ -41,7 +41,9 @@ module SettingsHelper
 
     Option.new(
       id: booking_option.id,
+      value: booking_option.id,
       name: booking_option.show_name,
+      label: booking_option.show_name,
       minutes: booking_option.minutes,
       price: booking_option.price_text,
       price_text: booking_option.price_text,
@@ -52,7 +54,7 @@ module SettingsHelper
       is_online_payment: booking_page_option.is_online_payment?,
       option_type: booking_option.option_type,
       memo: booking_option.memo,
-      menu_ids: booking_option.menu_relations.pluck(:menu_id)
+      menu_ids: booking_option.menu_relations.pluck(:menu_id),
     )
   end
 

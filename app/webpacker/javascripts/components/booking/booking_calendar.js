@@ -81,6 +81,7 @@ const BookingCalendar = ({booking_reservation_form_values, i18n, calendar, fetch
               skip_default_date={true}
               dateSelectedCallback={fetchBookingTimes}
               scheduleParams={{
+                staff_id: booking_reservation_form_values.selected_staff_id,
                 booking_option_ids: booking_option_ids,
                 customer_id: booking_reservation_form_values?.customer_info?.id
               }}

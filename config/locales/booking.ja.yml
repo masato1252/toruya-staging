@@ -41,6 +41,10 @@ ja:
     owner_personal_schedule_warning: 予約不可にしたい場合は『Myカレンダー』より個人の予定を作成してください。
     confirm_booking_option: 空き状況を確認
     secondary_option_hint: メインオプションとの組み合わせが必要です
+    staff_selection:
+      title: スタッフを選択してください
+      description: 選択後、対応可能なサービスが表示されます
+      any_staff: 指定なし（どのスタッフでも良い）
     booking_code:
       code: 確認コード
       resend: コード再送
