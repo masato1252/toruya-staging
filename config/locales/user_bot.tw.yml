@@ -433,9 +433,9 @@ tw:
             employee: 成員
           new_page_title: 新增成員
           new_page_header: 手機號碼
-          new_page_desc: 我們將通過簡訊發送成員註冊頁面
-          cellphone_input_placeholder: 成員的手機號碼
-          new_page_methods_html: <b>【成員註冊方法】</b><br /> ①通過簡訊發送成員註冊頁面<br /> ②成員自行從註冊頁面完成成員註冊<br /> ③以成員身份使用Toruya
+          new_page_desc: 我們將通過簡訊或Email發送成員註冊頁面
+          cellphone_input_placeholder: 成員的手機號碼或Email
+          new_page_methods_html: <b>【成員註冊方法】</b><br /> ①通過簡訊或Email發送成員註冊頁面<br /> ②成員自行從註冊頁面完成成員註冊<br /> ③以成員身份使用Toruya
         equipments:
           title: 設備管理
           list_page_title: 設備管理

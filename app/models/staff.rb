@@ -48,7 +48,7 @@ class Staff < ApplicationRecord
   scope :undeleted, -> { where(deleted_at: nil) }
   scope :visible, -> { joins(:staff_account).merge(StaffAccount.visible) }
 
-  delegate :phone_number, :level, to: :staff_account, allow_nil: true
+  delegate :phone_number, :email, :level, to: :staff_account, allow_nil: true
 
   def active?
     !deleted_at && staff_account&.active?
@@ -65,7 +65,7 @@ class Staff < ApplicationRecord
   end
 
   def display_name
-    name.presence || staff_account.phone_number || "スタッフ #{id}"
+    name.presence || staff_account.phone_number.presence || staff_account.email.presence || "スタッフ #{id}"
   end
 
   # no any business schedule exists

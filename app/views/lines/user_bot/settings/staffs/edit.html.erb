@@ -3,10 +3,11 @@
     business_owner_id: business_owner_id,
     staff: StaffSerializer.new(@staff).attributes_hash.merge(
       @staff.attributes.slice("last_name", "first_name", "phonetic_last_name", "phonetic_first_name"),
-      phone_number: @staff.phone_number
+      phone_number: @staff.phone_number,
+      email: @staff.email
     ),
     attribute: params[:attribute],
-    title: t("user_bot.dashboards.settings.staffs.list_page_header"),
+    title: @staff.display_name,
     staff_menus_options: defined?(@staff_menus_options) ? @staff_menus_options : nil,
     support_feature_flags: support_feature_flags
   }

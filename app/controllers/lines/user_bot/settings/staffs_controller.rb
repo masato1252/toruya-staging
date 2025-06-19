@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardController
-  before_action :set_staff, only: [:show, :edit, :update, :destroy, :resend_activation_sms]
+  before_action :set_staff, only: [:show, :edit, :update, :destroy, :resend_activation]
 
   def index
     @staffs = Staff.where(user: Current.business_owner).undeleted.includes(:staff_account).visible.order(:id)
@@ -38,7 +38,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def create
-    outcome = Staffs::Invite.run(user: Current.business_owner, phone_number: params[:phone_number])
+    outcome = Staffs::Invite.run(user: Current.business_owner, phone_number_or_email: params[:phone_number_or_email])
 
     if outcome.valid?
       redirect_to edit_lines_user_bot_settings_staff_path(business_owner_id: Current.business_owner.id, id: outcome.result.id, attribute: :staff_menus), notice: I18n.t("common.create_successfully_message")
@@ -56,6 +56,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
       phonetic_last_name: params[:phonetic_last_name],
       phonetic_first_name: params[:phonetic_first_name],
       phone_number: params[:phone_number],
+      email: params[:email],
       picture: params[:picture],
       introduction: params[:introduction],
       staff_menus: params[:staff_menus]
@@ -75,7 +76,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
     end
   end
 
-  def resend_activation_sms
+  def resend_activation
     Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: @staff.staff_account, user: @staff.staff_account.owner)
 
     flash[:success] = I18n.t("settings.staff_account.sent_message")

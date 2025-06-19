@@ -2,6 +2,7 @@ tw:
   action:
     account_switch: 切換帳戶
     activate: 啟用
+    invitation_resend: 再發送邀請
     delete: 刪除
     delete2: "刪　除"
     deleted: 已刪除

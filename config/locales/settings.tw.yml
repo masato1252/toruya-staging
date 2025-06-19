@@ -174,7 +174,7 @@ tw:
       manager_capability: 管理員
       gmail_hint: 使用 Gmail 設定成員帳戶，可讓成員自行管理您的店舖和自己的行程。
       resend_email: 重新發送驗證郵件
-      sent_message: 已將成員註冊連結發送至設定的成員手機。請讓成員透過收到的郵件進行註冊。
+      sent_message: 已將成員註冊連結發送至設定的成員。請讓成員透過收到的通知進行註冊。
       new_staff_active: 有新核准的成員帳戶。您可以設定成員的詳細權限。
       staff_setting: 成員設定
       connected_your_account: 成員帳戶設定已完成。

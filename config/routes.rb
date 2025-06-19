@@ -355,7 +355,7 @@ Rails.application.routes.draw do
 
             resources :staffs do
               collection do
-                get :resend_activation_sms
+                get :resend_activation
               end
             end
             resources :consultants, only: [:index, :new, :create] do

@@ -75,7 +75,7 @@ module Notifiers
         end
       elsif receiver.is_a?(StaffAccount) || receiver.is_a?(ConsultantAccount)
         # send to staff or consultant decided by delivered_by :notifier
-        send_notification_with_fallbacks(preferred_channel: notifier)
+        send_notification_with_fallbacks(custom_priority: delivered_by_priority)
       else
         # send to user using either deliver_by_all or deliver_by_priority
         if delivered_by_all.present?

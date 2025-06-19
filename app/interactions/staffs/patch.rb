@@ -10,6 +10,7 @@ module Staffs
     string :phonetic_first_name, default: nil
     string :phonetic_last_name, default: nil
     string :phone_number, default: nil
+    string :email, default: nil
     file :picture, default: nil
     string :introduction, default: nil
     array :staff_menus, default: nil
@@ -27,6 +28,8 @@ module Staffs
         when "phone_number"
           formatted_phone = Phonelib.parse(phone_number, :jp).international(false)
           staff.staff_account.update!(phone_number: formatted_phone)
+        when "email"
+          staff.staff_account.update!(email: email)
         when "staff_info"
           if picture
             staff.picture.purge

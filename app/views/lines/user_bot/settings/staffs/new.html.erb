@@ -4,13 +4,11 @@
       <div class="form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.staffs.new_page_title") %>
 
-        <div class="field-header"><%= t("user_bot.dashboards.settings.staffs.new_page_header") %></div>
-
         <div class="margin-around centerize">
           <div class="my-2"><%= t("user_bot.dashboards.settings.staffs.new_page_desc") %></div>
 
           <%= form_with(url: lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), local: true) do |f| %>
-            <%= f.telephone_field :phone_number, placeholder: t("user_bot.dashboards.settings.staffs.cellphone_input_placeholder") %>
+            <%= f.text_field :phone_number_or_email, placeholder: t("user_bot.dashboards.settings.staffs.cellphone_input_placeholder") %>
             <%= f.submit t("common.send"), class: "btn btn-tarco" %>
           <% end %>
         </div>

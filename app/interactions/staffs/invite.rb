@@ -3,7 +3,7 @@
 module Staffs
   class Invite < ActiveInteraction::Base
     object :user
-    string :phone_number
+    string :phone_number_or_email
     string :level, default: "admin"
     boolean :consultant, default: false
 
@@ -26,8 +26,16 @@ module Staffs
           end
         end
 
+        if phone_number_or_email.include?("@")
+          email = phone_number_or_email
+          phone_number = nil
+        else
+          email = nil
+          phone_number = phone_number_or_email
+        end
+
         # All the staff be invited was admin currently.
-        compose(StaffAccounts::Create, staff: staff, params: { phone_number: phone_number, level: level }, consultant: consultant)
+        compose(StaffAccounts::Create, staff: staff, params: { phone_number: phone_number, email: email, level: level }, consultant: consultant)
 
         staff
       end

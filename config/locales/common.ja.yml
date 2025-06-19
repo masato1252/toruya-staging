@@ -2,6 +2,7 @@ ja:
   action:
     account_switch: アカウント切替
     activate: 有効化
+    invitation_resend: 招待を再送信
     delete: 削除
     delete2: "削　除"
     deleted: 削除済み

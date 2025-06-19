@@ -47,6 +47,7 @@ class StaffAccount < ApplicationRecord
   validates :owner_id, presence: true
   validates :staff_id, presence: true, uniqueness: { scope: [:owner_id] }
   validates :phone_number, uniqueness: { scope: [:owner_id] }, if: -> (staff_account) { staff_account.phone_number.present? }
+  validates :email, uniqueness: { scope: [:owner_id] }, if: -> (staff_account) { staff_account.email.present? }
   validates :user_id, uniqueness: { scope: [:owner_id, :active_uniqueness] }, if: -> (staff_account) { staff_account.active_uniqueness.present? }
   scope :visible, -> { where("staff_accounts.user_id = staff_accounts.owner_id").or(where.not(level: "owner")) }
 

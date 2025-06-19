@@ -104,6 +104,22 @@ const StaffEdit = ({props}) => {
           </>
         );
         break
+      case "email":
+        return (
+          <>
+            <div className="field-header">
+              {I18n.t("common.email")}
+            </div>
+            <div className="field-row">
+              <input
+                ref={register()}
+                type="email"
+                name="email"
+              />
+            </div>
+          </>
+        );
+        break
       case "staff_info":
         return (
           <StaffEditComponent

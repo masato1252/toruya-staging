@@ -10,6 +10,9 @@
         <div class="field-header"><%= t("common.cellphone_number") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_staff_path(business_owner_id: business_owner_id, id: staff.id, attribute: :phone_number), title: @staff.phone_number %>
 
+        <div class="field-header"><%= t("common.email") %></div>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_staff_path(business_owner_id: business_owner_id, id: staff.id, attribute: :email), title: @staff.email %>
+
         <div class="field-header"><%= t("user_bot.dashboards.settings.staffs.authority") %></div>
         <%= render "lines/user_bot/field_row", title: t("user_bot.dashboards.settings.staffs.authorities.#{@staff.level}") %>
 
@@ -20,7 +23,7 @@
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_staff_path(business_owner_id: business_owner_id, id: staff.id, attribute: :staff_menus), title: @staff.staff_menus.map(&:menu).map(&:name).join(", ") %>
       </div>
       <div class="centerize">
-        <%= link_to t("action.sms_resend"), resend_activation_sms_lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id, id: staff.id), class: "btn btn-tarco" %>
+        <%= link_to t("action.invitation_resend"), resend_activation_lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id, id: staff.id), class: "btn btn-tarco" %>
 
         <% if can?(:delete, @staff) %>
           <%= link_to t("user_bot.dashboards.settings.staffs.delete"), lines_user_bot_settings_staff_path(business_owner_id: business_owner_id, id: staff.id), class: "btn btn-orange", method: :delete, data: { confirm: I18n.t("settings.staff.delete_confirmation_message", staff_name: staff.name) } %>

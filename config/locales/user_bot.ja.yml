@@ -432,9 +432,9 @@ ja:
             employee: 従業員
           new_page_title: 新規スタッフ追加
           new_page_header: 携帯電話番号
-          new_page_desc: スタッフ登録ページをSMS送信します
-          cellphone_input_placeholder: スタッフの携帯電話番号
-          new_page_methods_html: <b>【スタッフ登録方法】</b><br /> ①スタッフ登録ページをSMS送信<br /> ②スタッフ自信で登録ページからスタッフ登録<br /> ③スタッフとしてToruyaを利用
+          new_page_desc: メンバー登録ページをSMSまたはメールで送信します
+          cellphone_input_placeholder: 携帯電話番号またはEmail
+          new_page_methods_html: <b>【メンバー登録方法】</b><br /> ①SMSまたはメールでメンバー登録ページを送信<br /> ②メンバー自身が登録ページから登録を完了<br /> ③メンバーとしてToruyaを利用
         equipments:
           title: 機器管理
           list_page_title: 機器管理
