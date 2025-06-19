@@ -225,10 +225,24 @@ const SchedulesCalendar = ({ props }) => {
       moment(schedule.full_end_time).toDate() :
       (timezone ? moment.tz(schedule.full_end_time, timezone).toDate() : moment(schedule.full_end_time).toDate());
 
+    // Check if this should be an all-day event (00:00 to 23:59)
+    const startMoment = hasTimezone ?
+      moment(schedule.full_start_time) :
+      (timezone ? moment.tz(schedule.full_start_time, timezone) : moment(schedule.full_start_time));
+
+    const endMoment = hasTimezone ?
+      moment(schedule.full_end_time) :
+      (timezone ? moment.tz(schedule.full_end_time, timezone) : moment(schedule.full_end_time));
+
+    const isAllDay = startMoment.format('HH:mm') === '00:00' && endMoment.format('HH:mm') === '23:59';
+
+    console.log(`📅 Event "${schedule.title || schedule.description}": ${startMoment.format('HH:mm')} - ${endMoment.format('HH:mm')}, allDay: ${isAllDay}`);
+
     return {
       ...schedule,
       start: startTime,
-      end: endTime
+      end: endTime,
+      allDay: isAllDay
     };
   });
 
