@@ -695,7 +695,7 @@ ja:
         booking_revenue: 予約収益
         booking_option: 予約メニュー
         bookings_count: 予約数
-        rich_menu_introduction_message_html: これはあなたのメニューの訪問分析です。<br>メニューのクリック数、成約数、売上などのデータを確認できます。<br><br> しかし、あなたはLINE公式アカウントを使用しているため、Toruyaはメニューの訪問分析を取得できません。<br> 興味がある場合は、<a href="%{setting_path}">ここ</a>から設定できます。
+        rich_menu_introduction_message_html: これはあなたのリッチメニューの訪問分析です。<br>メニューのクリック数、成約数、売上などのデータを確認できます。<br><br> しかし、あなたはLINE公式アカウントを使用しているため、Toruyaはリッチメニューの訪問分析を取得できません。<br> 興味がある場合は、<a href="%{setting_path}">ここ</a>から設定できます。
       booking_page_creation:
         default_label: "%{name}予約ページ"
         default_greeting: "%{name}の予約を受付ます。"
