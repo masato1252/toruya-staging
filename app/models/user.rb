@@ -289,6 +289,10 @@ class User < ApplicationRecord
     social_user&.current_users
   end
 
+  def related_user_ids
+    @related_user_ids ||= related_users&.map(&:id) || []
+  end
+
   def all_staff_related_users
     owner_staff_accounts.active.map(&:user).map(&:related_users).flatten.compact.uniq
   end

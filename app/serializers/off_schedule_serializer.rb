@@ -21,11 +21,19 @@ class OffScheduleSerializer
   end
 
   attribute :title do |schedule|
-    schedule.reason.presence || I18n.t("common.off_schedule")
+    if Current.business_owner&.related_user_ids&.include?(schedule.user_id)
+      schedule.reason.presence || I18n.t("common.off_schedule")
+    else
+      I18n.t("user_bot.dashboards.schedules.user_not_available", user_name: schedule.user.profile.name)
+    end
   end
 
   attribute :reason do |schedule|
-    schedule.reason.presence || I18n.t("common.off_schedule")
+    if Current.business_owner&.related_user_ids&.include?(schedule.user_id)
+      schedule.reason.presence || I18n.t("common.off_schedule")
+    else
+      I18n.t("user_bot.dashboards.schedules.user_not_available", user_name: schedule.user.profile.name)
+    end
   end
 
   attribute :start_date do |schedule|

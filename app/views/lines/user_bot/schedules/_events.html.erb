@@ -77,7 +77,7 @@
                 <%= I18n.t("user_bot.dashboards.schedules.end_time_earlier_schedule_warning") %>
               </span>
             <% end %>
-            <%= my_calendar || local_assigns[:related_user_ids]&.include?(schedule[:user_id]) ? schedule[:reason] : I18n.t("user_bot.dashboards.schedules.user_not_available", user_name: schedule[:user_name]) %>
+            <%= schedule[:reason] %>
           </div>
           <div class="extra"></div>
         </a>
