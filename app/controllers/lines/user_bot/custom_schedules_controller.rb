@@ -3,7 +3,11 @@
 class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardController
     # show action for dynamic modal loading
   def show
-    custom_schedule = current_user.custom_schedules.find(params[:id])
+    custom_schedule = current_user.custom_schedules.find_by(id: params[:id])
+    if custom_schedule.nil?
+      head :not_found
+      return
+    end
 
     if custom_schedule_permission(custom_schedule)
       render partial: 'reservations/off_date_modal_content', locals: {
