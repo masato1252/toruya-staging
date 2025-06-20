@@ -15,7 +15,7 @@ module StaffAccounts
             consultant_account.consultant_user
           end
 
-        staff = compose(Staffs::Invite, user: client, phone_number: consultant_user.phone_number, consultant: true)
+        staff = compose(Staffs::Invite, user: client, phone_number_or_email: consultant_user.phone_number, consultant: true)
         compose(StaffAccounts::ConnectUser, token: staff.staff_account.token, user: consultant_user)
       end
     end
