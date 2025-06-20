@@ -118,6 +118,67 @@ RSpec.describe Subscriptions::Charge do
 
           outcome
         end
+
+        context "when last successful charge was more than 2 months ago" do
+          before do
+            # Create a completed charge from 3 months ago
+            FactoryBot.create(:subscription_charge,
+              user: user,
+              state: :completed,
+              charge_date: 3.months.ago
+            )
+          end
+
+          it "downgrades the subscription to free plan" do
+            expect(user.subscription.charge_required).to be false
+
+            outcome
+
+            user.subscription.reload
+            expect(user.subscription.plan).to eq(Plan.free_level.take)
+          end
+        end
+
+        context "when last successful charge was within 2 months" do
+          before do
+            # Create a completed charge from 1 month ago
+            FactoryBot.create(:subscription_charge,
+              user: user,
+              state: :completed,
+              charge_date: 1.month.ago
+            )
+          end
+
+          it "does not downgrade the subscription" do
+            original_plan = user.subscription.plan
+
+            outcome
+
+            user.subscription.reload
+            expect(user.subscription.plan).to eq(original_plan)
+          end
+        end
+
+        context "when user subscription is already free" do
+          before do
+            user.subscription.update(plan: Plan.free_level.take)
+            # Create a completed charge from 3 months ago
+            FactoryBot.create(:subscription_charge,
+              user: user,
+              state: :completed,
+              charge_date: 3.months.ago
+            )
+          end
+
+          it "does not attempt to downgrade" do
+            expect(user.subscription.charge_required).to be false
+
+            outcome
+
+            user.subscription.reload
+            expect(user.subscription.plan).to eq(Plan.free_level.take)
+          end
+        end
       end
     end
   end

@@ -89,13 +89,7 @@ module Subscriptions
               charge.save!
               errors.add(:plan, :auth_failed, payment_intent_id: payment_intent.id)
 
-              unless manual
-                Notifiers::Users::Subscriptions::ChargeFailed.run(
-                  receiver: user,
-                  user: user,
-                  subscription_charge: charge
-                )
-              end
+              handle_charge_failed(charge)
 
               if Rails.configuration.x.env.production?
                 SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, payment intent status: #{payment_intent.status}")
@@ -107,13 +101,7 @@ module Subscriptions
             charge.auth_failed!
             errors.add(:plan, :auth_failed)
 
-            unless manual
-              Notifiers::Users::Subscriptions::ChargeFailed.run(
-                receiver: user,
-                user: user,
-                subscription_charge: charge
-              )
-            end
+            handle_charge_failed(charge)
 
             if Rails.configuration.x.env.production?
               SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, #{error}")
@@ -124,13 +112,7 @@ module Subscriptions
             charge.processor_failed!
             errors.add(:plan, :processor_failed)
 
-            unless manual
-              Notifiers::Users::Subscriptions::ChargeFailed.run(
-                receiver: user,
-                user: user,
-                subscription_charge: charge
-              )
-            end
+            handle_charge_failed(charge)
 
             if Rails.configuration.x.env.production?
               SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, #{error}")
@@ -232,6 +214,21 @@ module Subscriptions
           confirm: true,          # Immediately attempt to confirm payment
           payment_method_types: ['card']
         })
+      end
+    end
+
+    def handle_charge_failed(charge)
+      unless manual
+        Notifiers::Users::Subscriptions::ChargeFailed.run(
+          receiver: user,
+          user: user,
+          subscription_charge: charge
+        )
+
+        # If the customer's plan is not free, and the last successful charge was more than 2 months ago, and this charge failed, downgrade the plan to free
+        if user.subscription.charge_required && user.subscription_charges.last_completed.charge_date < 2.months.ago
+          user.subscription.update(plan: Plan.free_level.take)
+        end
       end
     end
   end
