@@ -59,6 +59,6 @@ class SubscriptionCharge < ApplicationRecord
   end
 
   def with_shop_fee?
-    details && details["shop_fee"] != 0
+    details && details["shop_fee"] && details["shop_fee"] != 0
   end
 end

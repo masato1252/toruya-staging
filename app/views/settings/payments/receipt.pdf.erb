@@ -58,7 +58,7 @@
               <td>
                 <%= @charge.details["plan_name"] %>(<%= l(@charge.charge_date, format: :year_month_date) %> ~ <%= l(@charge.expired_date, format: :year_month_date) %>)
               </td>
-              <td><%= @charge.details["plan_amount"] %></td>
+              <td><%= @charge.details["charge_amount"] %></td>
             </tr>
             <% if @charge.with_shop_fee? %>
               <tr>
