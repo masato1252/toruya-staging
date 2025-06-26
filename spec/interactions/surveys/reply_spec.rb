@@ -60,9 +60,9 @@ RSpec.describe Surveys::Reply do
               currency: 'JPY',
               datetime_slots: [
                 {
-                  start_time: Time.current + 1.day,
-                  end_time: Time.current + 1.day + 1.hour,
-                  end_date: Time.current.tomorrow.to_date.to_s
+                  start_time: 1.day.from_now,
+                  end_time: 1.day.from_now + 1.hour,
+                  end_date: (1.day.from_now + 1.hour).to_date.to_s
                 }
               ]
             }

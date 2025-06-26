@@ -25,9 +25,10 @@ namespace :reservations do
     date_before_reservation = Time.current.advance(hours: 24)
 
     user_ids = Subscription.charge_required.pluck(:user_id) + Subscription.where("trial_expired_date > ?", Time.current).pluck(:user_id)
+    user_ids += User.business_active.pluck(:id)
 
     reservations = Reservation.reminderable
-                             .where(user_id: user_ids)
+                             .where(user_id: user_ids.uniq)
                              .where("start_time >= ? AND start_time <= ?",
                                    date_before_reservation.beginning_of_hour,
                                    date_before_reservation.end_of_hour)

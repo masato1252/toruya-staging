@@ -34,18 +34,20 @@ module Booking
         #   JSON.parse(special_date)["start_at_date_part"]
         # end.select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
 
+        # Performance optimization: Preload data only if we detect potential cache misses
+        preload_data_for_special_dates if should_preload_data_for_special_dates?
+
         available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
           # Remember to add more connections for activerecord
           # https://www.joshbeckman.org/2020/05/09/cleaning-up-ruby-threads-and-activerecord-connections/
           # if true || Rails.env.test?
-            special_dates.filter_map do |raw_special_date|
-              json_parsed_date = JSON.parse(raw_special_date)
-              special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
-              next if special_date < booking_page.available_booking_start_date || special_date > booking_page.available_booking_end_date
+            parsed_special_dates.filter_map do |parsed_date_info|
+              special_date = parsed_date_info[:date]
+              next unless date_in_booking_range?(special_date)
 
-              special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
-              special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
+              special_date_start_at = parsed_date_info[:start_at]
+              special_date_end_at = parsed_date_info[:end_at]
 
               available_date = Rails.cache.fetch(cache_key(special_date), expires_in: 12.hours, force: force_update_cache) do
                 # use empty string avoid return content is nil
@@ -56,7 +58,10 @@ module Booking
             end.flatten.uniq
       else
         available_working_dates = schedules[:working_dates].map { |date| Date.parse(date) }
-        available_working_dates = available_working_dates.select { |date| date >= booking_page.available_booking_start_date && date <= booking_page.available_booking_end_date }
+        available_working_dates = available_working_dates.select { |date| date_in_booking_range?(date) }
+
+        # Performance optimization: Preload data only if we detect potential cache misses
+        preload_data_for_working_dates(available_working_dates) if should_preload_data_for_working_dates?(available_working_dates)
 
         available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
@@ -94,46 +99,193 @@ module Booking
       )
     end
 
-    def booking_options_updated_at
-      @booking_options_updated_at ||= booking_options.map(&:updated_at)
+    # Performance optimization: Cache parsed JSON data to avoid repeated parsing
+    def parsed_special_dates
+      @parsed_special_dates ||= special_dates.map do |raw_special_date|
+        json_parsed_date = JSON.parse(raw_special_date)
+        {
+          raw: raw_special_date,
+          json: json_parsed_date,
+          date: Date.parse(json_parsed_date[START_AT_DATE_PART]),
+          start_at: Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}"),
+          end_at: Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
+        }
+      end
     end
 
-    def booking_option_menus_updated_at
-      @booking_option_menus_updated_at ||= booking_options.map(&:menus).flatten.uniq.map(&:updated_at)
+    # Performance optimization: Optimized date range check
+    def date_in_booking_range?(date)
+      date >= booking_page.available_booking_start_date && date <= booking_page.available_booking_end_date
     end
 
+    # Performance optimization: Smarter cache miss detection for special dates
+    def should_preload_data_for_special_dates?
+      return true if force_update_cache
+
+      # Quick check: if any of the first few dates don't have cache, likely others don't either
+      sample_dates = parsed_special_dates.select { |pd| date_in_booking_range?(pd[:date]) }.first(3)
+      return false if sample_dates.empty?
+
+      sample_dates.any? do |parsed_date_info|
+        !Rails.cache.exist?(cache_key(parsed_date_info[:date]))
+      end
+    end
+
+    # Performance optimization: Smarter cache miss detection for working dates
+    def should_preload_data_for_working_dates?(working_dates)
+      return true if force_update_cache
+
+      # Quick check: if any of the first few dates don't have cache, likely others don't either
+      sample_dates = working_dates.first(3)
+      return false if sample_dates.empty?
+
+      sample_dates.any? { |date| !Rails.cache.exist?(cache_key(date)) }
+    end
+
+    # Performance optimization: Preload data for special dates to avoid N+1 queries during cache miss
+    def preload_data_for_special_dates
+      return if @cache_data_loaded
+
+      all_dates = parsed_special_dates
+        .map { |pd| pd[:date] }
+        .select { |date| date_in_booking_range?(date) }
+
+      preload_shared_data(all_dates)
+      @cache_data_loaded = true
+    end
+
+    # Performance optimization: Preload data for working dates to avoid N+1 queries during cache miss
+    def preload_data_for_working_dates(working_dates)
+      return if @cache_data_loaded
+
+      all_dates = working_dates.select { |date| date_in_booking_range?(date) }
+      preload_shared_data(all_dates)
+      @cache_data_loaded = true
+    end
+
+    # Shared data preloading logic
+    def preload_shared_data(all_dates)
+      return if all_dates.empty?
+
+      # Batch load all required data
+      @reservation_data = {}
+      @custom_schedule_data = {}
+
+      # Performance optimization: Use includes to reduce N+1 queries
+      # Batch query all reservation data for dates
+      reservations_by_date = shop.reservations
+        .includes(:reservation_staffs, :reservation_menus)
+        .where(start_time: all_dates.first.beginning_of_day..all_dates.last.end_of_day)
+        .group_by { |r| r.start_time.to_date }
+
+      @reservation_data = all_dates.each_with_object({}) do |date, hash|
+        hash[date] = reservations_by_date[date]&.max_by(&:updated_at)
+      end
+
+      # Batch query CustomSchedule data
+      custom_schedules_by_date = CustomSchedule
+        .closed
+        .where(user_id: staff_user_ids)
+        .where(start_time: all_dates.first.beginning_of_day..all_dates.last.end_of_day)
+        .group_by { |cs| cs.start_time.to_date }
+
+      @custom_schedule_data = all_dates.each_with_object({}) do |date, hash|
+        hash[date] = custom_schedules_by_date[date]&.max_by(&:updated_at)
+      end
+
+      # Cache other frequently accessed data
+      @business_schedule_last = BusinessSchedule.where(shop: shop).order("updated_at").last
+      @booking_page_special_dates_count = BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).count
+      @booking_page_special_dates_last = BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).order("updated_at").last
+    end
+
+    # Simplified cache_key - avoid expensive queries when cache exists
     def cache_key(date)
       [
         booking_page,
         date,
         shop,
         booking_option_ids,
-        shop.reservations.in_date(date).order("updated_at").last,
+        cached_reservation_data(date), # Use cached or simple lookup
         staff_ids,
-        CustomSchedule.in_date(date).closed.where(user_id: staff_user_ids).order("updated_at").last,
-        BusinessSchedule.where(shop: shop).order("updated_at").last,
-        BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).count,
-        BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).order("updated_at").last,
+        cached_custom_schedule_data(date), # Use cached or simple lookup
+        cached_business_schedule_last,
+        cached_booking_page_special_dates_count,
+        cached_booking_page_special_dates_last,
         booking_options_updated_at,
-        booking_option_menus_updated_at,
+        booking_option_menus_updated_at
       ]
+    end
+
+    # Use preloaded data if available, otherwise fallback to individual queries
+    def cached_reservation_data(date)
+      @reservation_data&.dig(date) ||
+        shop.reservations.where(start_time: date.beginning_of_day..date.end_of_day).order(:updated_at).last
+    end
+
+    def cached_custom_schedule_data(date)
+      @custom_schedule_data&.dig(date) ||
+        CustomSchedule.closed.where(user_id: staff_user_ids, start_time: date.beginning_of_day..date.end_of_day).order(:updated_at).last
+    end
+
+    def cached_business_schedule_last
+      @business_schedule_last ||= BusinessSchedule.where(shop: shop).order("updated_at").last
+    end
+
+    def cached_booking_page_special_dates_count
+      @booking_page_special_dates_count ||= BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).count
+    end
+
+    def cached_booking_page_special_dates_last
+      @booking_page_special_dates_last ||= BookingPageSpecialDate.where(booking_page_id: shop.user.booking_page_ids).order("updated_at").last
+    end
+
+    # Performance optimization: Avoid repeated calculations
+    def booking_options_updated_at
+      @booking_options_updated_at ||= begin
+        # Use a single SQL query to get all updated_at values
+        shop.user.booking_options
+          .where(id: booking_option_ids)
+          .pluck(:updated_at)
+      end
+    end
+
+    # Performance optimization: Avoid repeated calculations and N+1 queries
+    def booking_option_menus_updated_at
+      @booking_option_menus_updated_at ||= begin
+        # Use join query to avoid N+1 problem
+        Menu.joins(:booking_option_menus)
+          .where(booking_option_menus: { booking_option_id: booking_option_ids })
+          .distinct
+          .pluck(:updated_at)
+      end
     end
 
     def staff_user_ids
       @staff_user_ids ||= shop.staff_users.pluck(:id)
     end
 
+    # Performance optimization: Cache repeated calculation results
+    def booking_options_menu_ids
+      @booking_options_menu_ids ||= booking_options.map(&:menus).flatten.map(&:id).uniq
+    end
+
+    def booking_options_total_minutes
+      @booking_options_total_minutes ||= booking_options.sum(&:minutes)
+    end
+
     def test_available_booking_date(date, booking_available_start_at = nil, booking_available_end_at = nil)
       time_range_outcome = Reservable::Time.run(shop: shop, booking_page: booking_page, date: date)
       return if time_range_outcome.invalid?
 
-      return if @booking_options.any? do |booking_option|
+      # Performance optimization: Early exit check
+      return if booking_options.any? do |booking_option|
         booking_option.start_time.to_date > date || (booking_option.end_at && booking_option.end_at.to_date < date)
       end
 
       time_range = time_range_outcome.result
       booking_available_end_at ||= shop_close_at = time_range.last.last
-      total_required_time = @booking_options.sum(&:minutes)
+      total_required_time = booking_options_total_minutes # Use cached result
 
       catch :next_working_date do
         booking_available_start_at ||= shop_open_at = time_range.first.first
@@ -151,7 +303,7 @@ module Booking
               shop: shop,
               staff_ids: staff_ids,
               booking_page: booking_page,
-              booking_options: @booking_options,
+              booking_options: booking_options, # Use memoized version
               date: date,
               booking_start_at: booking_start_at,
               overbooking_restriction: overbooking_restriction
@@ -171,7 +323,7 @@ module Booking
               shop: shop,
               staff_ids: staff_ids,
               booking_page: booking_page,
-              booking_options: @booking_options,
+              booking_options: booking_options, # Use memoized version
               date: date,
               booking_start_at: booking_available_start_at,
               overbooking_restriction: overbooking_restriction
