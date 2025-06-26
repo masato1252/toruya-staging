@@ -52,7 +52,7 @@ module Customers
         email: email
       )
 
-      customers_hash[:found_customer] || (customer_id && user.customers.find_by(id: customer_id))
+      (customer_id && user.customers.find_by(id: customer_id)) || customers_hash[:found_customer]
     end
 
     def create_customer
