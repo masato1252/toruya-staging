@@ -66,7 +66,7 @@ class Subscription < ApplicationRecord
   end
 
   def over_free_limit?
-    in_free_plan? && customers_count_over_free_limit?
+    current_plan.free_level? && customers_count_over_free_limit?
   end
 
   def customers_count_over_free_limit?
