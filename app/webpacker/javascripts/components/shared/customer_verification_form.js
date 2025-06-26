@@ -39,6 +39,7 @@ const CustomerVerificationForm = ({
     customer_phone_number,
     customer_phone_number_confirmation,
     customer_email,
+    customer_id,
     user_id,
     customer_social_user_id
   } = customerValues;
@@ -156,6 +157,7 @@ const CustomerVerificationForm = ({
       const [_error, response] = await CustomerVerificationServices.verifyCode({
         user_id: user_id,
         customer_email: customer_email,
+        customer_id: customer_id,
         uuid: verificationUuid,
         code: verificationCode
       });
@@ -200,6 +202,7 @@ const CustomerVerificationForm = ({
         customer_phonetic_first_name,
         customer_phone_number,
         customer_email,
+        customer_id,
         uuid: verificationUuid
       });
 

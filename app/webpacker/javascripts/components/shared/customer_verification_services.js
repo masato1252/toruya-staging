@@ -49,6 +49,7 @@ export const CustomerVerificationServices = {
         'customer_phonetic_first_name',
         'customer_phone_number',
         'customer_email',
+        'customer_id',
         'uuid'
       ]),
       responseType: "json"

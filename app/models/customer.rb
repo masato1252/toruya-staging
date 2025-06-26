@@ -66,7 +66,7 @@
 # }
 
 class Customer < ApplicationRecord
-  has_paper_trail on: [:update]
+  has_paper_trail
   BLACKLIST_IDS = [6388]
   include NormalizeName
   include SayHi
@@ -408,7 +408,7 @@ class Customer < ApplicationRecord
   end
 
   def is_identified?
-    (customer_email.present? || customer_phone_number.present?) && (last_name.present? || first_name.present?)
+    (customer_email.present? || customer_phone_number.present?) && (last_name.present? && first_name.present?)
   end
 
   def in_blacklist?

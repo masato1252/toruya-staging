@@ -10,6 +10,7 @@ module Customers
     string :phonetic_first_name, default: nil
     string :phone_number, default: nil
     string :email, default: nil
+    integer :customer_id, default: nil
 
     def execute
       customer_from_social_customer = social_customer&.customer
@@ -51,7 +52,7 @@ module Customers
         email: email
       )
 
-      customers_hash[:found_customer]
+      customers_hash[:found_customer] || (customer_id && user.customers.find_by(id: customer_id))
     end
 
     def create_customer

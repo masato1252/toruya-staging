@@ -259,7 +259,7 @@ const BookingReservationFormFunction = ({props}) => {
     } = booking_reservation_form_values;
 
     if (props.support_feature_flags.support_phonetic_name) {
-      return (found_customer && customer_info && customer_info.id) || (
+      return (found_customer && customer_info && customer_info.id && customer_last_name && customer_first_name) || (
         customer_last_name &&
         customer_first_name &&
         customer_phonetic_last_name &&
@@ -269,7 +269,7 @@ const BookingReservationFormFunction = ({props}) => {
       )
     }
     else {
-      return (found_customer && customer_info && customer_info.id) || (
+      return (found_customer && customer_info && customer_info.id && customer_last_name && customer_first_name) || (
         customer_last_name && customer_first_name && customer_phone_number && customer_email
       )
     }

@@ -52,7 +52,8 @@ class CustomerVerificationController < ActionController::Base
       phonetic_last_name: params[:customer_phonetic_last_name],
       phonetic_first_name: params[:customer_phonetic_first_name],
       phone_number: params[:customer_phone_number],
-      email: params[:customer_email]
+      email: params[:customer_email],
+      customer_id: params[:customer_id]
     )
 
     # Update the identification code with the customer ID
