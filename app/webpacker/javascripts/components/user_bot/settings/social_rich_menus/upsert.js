@@ -232,13 +232,15 @@ const SocialRichMenuUpsert = ({props}) => {
             }
 
             <BottomNavigationBar klassName="centerize">
-              <CircleButtonWithWord
-                onHandle={() => {
-                  window.location.href = Routes.lines_user_bot_settings_social_account_social_rich_menu_path(props.business_owner_id, props.rich_menu.id)
-                }}
-                klassName="btn btn-circle btn-tweak btn-tarco btn-bottom-left"
-                icon={<i className="fa fa-chart-line fa-2x"></i>}
-              />
+              {props.rich_menu.id && (
+                <CircleButtonWithWord
+                  onHandle={() => {
+                    window.location.href = Routes.lines_user_bot_settings_social_account_social_rich_menu_path(props.business_owner_id, props.rich_menu.id)
+                  }}
+                  klassName="btn btn-circle btn-tweak btn-tarco btn-bottom-left"
+                  icon={<i className="fa fa-chart-line fa-2x"></i>}
+                />
+              )}
               <CircleButtonWithWord
                 disabled={formState.isSubmitting}
                 onHandle={handleSubmit(onSubmit)}
