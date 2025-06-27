@@ -7,6 +7,7 @@ module StripeEvents
     def execute
       case event.type
       when 'invoice.payment_succeeded'
+        Rollbar.info(event.type, { event: event })
         compose(StripeEvents::PaymentSucceed, event: event)
       when 'invoice.payment_failed'
         Rollbar.error(event.type, { event: event })
