@@ -27,7 +27,7 @@
 
 # payment_state pending, and permission_state active might be purchased from bundler
 class OnlineServiceCustomerRelation < ApplicationRecord
-  ACTIVE_STATES = %w[pending free paid partial_paid canceled].freeze
+  ACTIVE_STATES = %w[pending free paid incomplete partial_paid canceled].freeze
   SOLD_STATES = %w[paid partial_paid]
 
   include SayHi
@@ -59,7 +59,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     failed: 3,
     refunded: 4,
     canceled: 5,
-    partial_paid: 6
+    partial_paid: 6,
+    incomplete: 7
   }, _suffix: true
 
   enum permission_state: {

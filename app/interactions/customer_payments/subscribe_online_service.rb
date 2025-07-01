@@ -20,11 +20,15 @@ class CustomerPayments::SubscribeOnlineService < ActiveInteraction::Base
           Sales::OnlineServices::Approve.run(relation: online_service_customer_relation)
         end
 
-        errors.merge!(outcome.errors)
+        if outcome.valid?
+          online_service_customer_relation.paid_payment_state!
+        else
+          errors.merge!(outcome.errors)
+        end
     else
       errors.merge!(subscribe_outcome.errors)
 
-      online_service_customer_relation.failed_payment_state!
+      online_service_customer_relation.failed_payment_state! if !online_service_customer_relation.incomplete_payment_state?
     end
   end
 

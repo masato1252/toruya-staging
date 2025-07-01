@@ -43,6 +43,112 @@ RSpec.describe OnlineServiceCustomerRelations::Subscribe do
       expect(relation).to be_paid_payment_state
     end
 
+    context "when subscription requires 3DS authentication" do
+      let(:stripe_subscription_id) { 'sub_test_incomplete' }
+      let(:payment_intent) do
+        double('PaymentIntent',
+          id: 'pi_test_requires_action',
+          status: 'requires_action',
+          client_secret: 'pi_test_requires_action_secret'
+        )
+      end
+      let(:invoice) { double('Invoice', payment_intent: payment_intent) }
+      let(:incomplete_subscription) do
+        double('Subscription',
+          id: stripe_subscription_id,
+          status: 'incomplete',
+          latest_invoice: invoice
+        )
+      end
+
+      before do
+        # Override the default Stripe::Subscription.create mock to return incomplete status
+        allow(Stripe::Subscription).to receive(:create).and_return(incomplete_subscription)
+      end
+
+      it "sets relation to incomplete_payment_state when 3DS is required" do
+        expect(relation).to receive(:incomplete_payment_state!).and_call_original
+
+        outcome
+
+        # Verify the relation state is set correctly
+        expect(relation).to be_incomplete_payment_state
+        expect(relation.stripe_subscription_id).to eq(stripe_subscription_id)
+
+        # Verify the proper error is added with client_secret for 3DS handling
+        expect(outcome.valid?).to be_falsey
+        expect(outcome.errors.details[:relation]).to be_present
+
+        relation_error = outcome.errors.details[:relation].find { |error| error[:error] == :requires_action }
+        expect(relation_error).to be_present
+        expect(relation_error[:client_secret]).to eq('pi_test_requires_action_secret')
+        expect(relation_error[:stripe_subscription_id]).to eq(stripe_subscription_id)
+      end
+
+      context "with different payment_intent statuses that require action" do
+        ['requires_payment_method', 'requires_confirmation', 'requires_source', 'processing', 'requires_source_action'].each do |status|
+          context "when payment_intent status is #{status}" do
+            let(:payment_intent) do
+              double('PaymentIntent',
+                id: "pi_test_#{status}",
+                status: status,
+                client_secret: "pi_test_#{status}_secret"
+              )
+            end
+
+            it "sets relation to incomplete_payment_state" do
+              expect(relation).to receive(:incomplete_payment_state!).and_call_original
+
+              outcome
+
+              expect(relation).to be_incomplete_payment_state
+              expect(outcome.valid?).to be_falsey
+
+              relation_error = outcome.errors.details[:relation].find { |error| error[:error] == :requires_action }
+              expect(relation_error).to be_present
+            end
+          end
+        end
+      end
+
+      context "when payment_intent is nil" do
+        let(:invoice) { double('Invoice', payment_intent: nil) }
+
+        it "handles nil payment_intent gracefully" do
+          # Let's see what actually happens when payment_intent is nil
+          outcome
+
+          # Check if the operation succeeds or fails, and how
+          expect(outcome.valid?).to be_falsey
+          expect(outcome.errors.details[:relation]).to be_present
+
+          # The error should be caught by the general rescue block
+          relation_error = outcome.errors.details[:relation].find { |error| error[:error] == :something_wrong }
+          expect(relation_error).to be_present
+        end
+      end
+
+      context "when payment_intent status does not require action" do
+        let(:payment_intent) do
+          double('PaymentIntent',
+            id: 'pi_test_failed',
+            status: 'failed',
+            client_secret: 'pi_test_failed_secret'
+          )
+        end
+
+        it "adds subscription_incomplete error instead of requires_action" do
+          outcome
+
+          expect(outcome.valid?).to be_falsey
+          expect(outcome.errors.details[:relation]).to be_present
+
+          relation_error = outcome.errors.details[:relation].find { |error| error[:error] == :subscription_incomplete }
+          expect(relation_error).to be_present
+        end
+      end
+    end
+
     context "when relation was not available" do
       let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, :expired, customer: customer, permission_state: :active) }
 
