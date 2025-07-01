@@ -10,10 +10,12 @@
     </div>
     <div class="modal-footer centerize">
       <%= link_to t("action.cancel"), lines_user_bot_settings_path(business_owner_id), class: "btn btn-yellow" %>
-      <%= link_to t("warnings.change_verified_line_settings.disconnect_btn"),
+      <%= button_to t("warnings.change_verified_line_settings.disconnect_btn"),
         reset_lines_user_bot_settings_social_account_path(business_owner_id),
         class: "btn btn-danger",
-        method: :post
+        method: :post,
+        remote: false,
+        form_class: "inline-block"
       %>
     </div>
   </div>
