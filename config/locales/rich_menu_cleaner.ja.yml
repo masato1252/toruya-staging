@@ -1,0 +1,89 @@
+ja:
+  rich_menu_cleaner:
+    title: "Toruya LINE Rich Menu 削除ツール"
+    subtitle: "第三者ツールに「乗っ取られた」Rich Menu 問題を簡単に解決"
+    description: "お客様の LINE 公式アカウントを公式管理画面の制御に戻します"
+    footer: "すべての LINE 公式アカウントユーザーの Rich Menu 問題を解決します"
+
+    meta:
+      keywords: "LINE Rich Menu, 削除ツール, LINE 公式アカウント, Toruya"
+
+    footer_provider: "このツールは <a href=\"https://toruya.com\" class=\"text-primary font-weight-medium\">Toruya</a> が無料で提供しています"
+
+    problems:
+      title: "こんな問題でお困りですか？"
+      items:
+        - "第三者の LINE ツールを停止した後も、Rich Menu が古いコンテンツを表示している"
+        - "LINE 公式アカウント管理画面で新しい Rich Menu を設定したが、ユーザーには古いものが表示される"
+        - "LINE 公式アカウント管理画面の Rich Menu 設定に戻したい"
+
+    form:
+      access_token_label: "Channel Access Token"
+      access_token_placeholder: "LINE Channel Access Token を入力してください"
+      access_token_help: "<a href=\"https://developers.line.biz/console/\" target=\"_blank\" class=\"text-primary\">LINE Developers Console</a> → 対象 Channel → Messaging API settings → Channel access token で取得できます"
+      check_button: "現在の Rich Menu を確認"
+      clean_button: "すべての Rich Menu を削除"
+      confirm_message: "すべての Rich Menu を削除してもよろしいですか？削除後は LINE 公式アカウント管理画面の設定が使用されます。"
+
+    verification:
+      title: "確認結果"
+      loading: "確認中..."
+
+    instructions:
+      title: "使用方法"
+      steps:
+        - "<a href=\"https://developers.line.biz/console/\" target=\"_blank\" class=\"text-white text-decoration-underline\">LINE Developers Console</a> にログインします"
+        - "対象の Messaging API Channel を選択します"
+        - "「Messaging API settings」タブを開きます"
+        - "「Channel access token」を見つけてコピーします"
+        - "上記の入力欄に貼り付けます"
+        - "「現在の Rich Menu を確認」をクリックして状況を確認します"
+        - "「すべての Rich Menu を削除」をクリックして削除を完了します"
+
+    security:
+      title: "セキュリティについて"
+      items:
+        - "Access Token は保存されません。一回限りの API 呼び出しにのみ使用されます"
+        - "すべての操作は HTTPS セキュア接続で行われます"
+        - "このツールは Rich Menu 設定のみを削除し、他の LINE 機能には影響しません"
+        - "削除後は LINE 公式アカウント管理画面で Rich Menu を再設定できます"
+
+    toruya:
+      title: "より良い LINE 公式アカウント管理ソリューションを発見"
+      description: "Toruya は完全な LINE 公式アカウント管理ソリューションを提供し、予約システムと顧客関係管理に重点を置いています。"
+      features:
+        booking:
+          title: "予約管理システム"
+          description: "完全なオンライン予約・カレンダー管理"
+        customer:
+          title: "顧客関係管理"
+          description: "顧客データ管理と予約記録の追跡"
+      buttons:
+        learn_more: "Toruya について詳しく"
+        free_trial: "無料で試す"
+        learn_more_url: "https://toruya.com"
+        free_trial_url: "https://manager.toruya.com/ja/userlogin"
+
+    errors:
+      access_token_required: "Channel Access Token を入力してください"
+
+    success:
+      all_deleted: "%{count} 個の Rich Menu をすべて削除しました！\n\nお客様の LINE 公式アカウントは、LINE 公式アカウント管理画面の設定を使用するようになります。"
+      partial_success: "一部削除成功：%{success} 個削除成功、%{failed} 個削除失敗"
+      none_to_delete: "削除する Rich Menu がありません"
+
+    failure:
+      all_failed: "%{count} 個の Rich Menu の削除がすべて失敗しました"
+      api_error: "API 呼び出しに失敗しました (%{code}): %{message}"
+      network_error: "ネットワークエラーまたはその他の問題：%{message}"
+      invalid_token: "Access Token が無効です。Channel Access Token が正しいかご確認ください"
+      insufficient_permission: "権限が不足しています。Channel Access Token に十分な権限があるかご確認ください"
+
+    list:
+      found: "%{count} 個の Rich Menu が見つかりました"
+      none_found: "現在 Rich Menu はありません"
+
+    language:
+      switch: "Language / 言語"
+      chinese: "中文"
+      japanese: "日本語"

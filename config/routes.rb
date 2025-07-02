@@ -857,4 +857,14 @@ Rails.application.routes.draw do
   namespace :api do
     resources :images, only: [:create]
   end
+
+  # Rich Menu Cleaner - Help users clean up Rich Menu hijacked by third-party tools
+  scope "(:locale)", locale: /ja|tw/, defaults: { locale: "tw" } do
+    resources :rich_menu_cleaner, only: [:index] do
+      collection do
+        post :clean
+        post :verify
+      end
+    end
+  end
 end

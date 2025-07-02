@@ -1,0 +1,298 @@
+<% content_for :title, t('rich_menu_cleaner.title') %>
+
+<!-- Top toolbar: includes tool title and language switcher -->
+<div class="fixed-top bg-white border-bottom shadow-sm" style="z-index: 1050;">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center py-3">
+          <div>
+            <h1 class="h4 mb-0 text-dark font-weight-bold">
+              <i class="fas fa-magic mr-2 text-primary"></i>
+              <%= t('rich_menu_cleaner.title') %>
+            </h1>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="languageDropdown" data-toggle="dropdown">
+              <i class="fas fa-globe mr-1"></i>
+              <%= t('rich_menu_cleaner.language.switch') %>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <%= link_to rich_menu_cleaner_index_path(locale: :tw),
+                  class: "dropdown-item #{'active' if I18n.locale == :tw}" do %>
+                🇹🇼 <%= t('rich_menu_cleaner.language.chinese') %>
+              <% end %>
+              <%= link_to rich_menu_cleaner_index_path(locale: :ja),
+                  class: "dropdown-item #{'active' if I18n.locale == :ja}" do %>
+                🇯🇵 <%= t('rich_menu_cleaner.language.japanese') %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 100px;">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <!-- Brief description -->
+      <div class="text-center mb-4">
+        <p class="lead text-muted mb-2"><%= t('rich_menu_cleaner.subtitle') %></p>
+        <p class="text-secondary"><%= t('rich_menu_cleaner.description') %></p>
+      </div>
+
+      <!-- Problem description -->
+      <div class="alert alert-warning border-left-warning mb-4">
+        <div class="d-flex">
+          <div class="flex-shrink-0 mr-3">
+            <i class="fas fa-exclamation-triangle text-warning"></i>
+          </div>
+          <div>
+            <h5 class="alert-heading"><%= t('rich_menu_cleaner.problems.title') %></h5>
+            <ul class="mb-0">
+              <% t('rich_menu_cleaner.problems.items').each do |item| %>
+                <li><%= item %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flash Messages -->
+      <% if flash[:notice] %>
+        <div class="alert alert-success alert-dismissible fade show">
+          <%= simple_format(flash[:notice]) %>
+          <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+          </button>
+        </div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="alert alert-danger alert-dismissible fade show">
+          <%= simple_format(flash[:alert]) %>
+          <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+          </button>
+        </div>
+      <% end %>
+
+      <!-- Main operation area -->
+      <div class="card shadow mb-4">
+        <div class="card-body p-4">
+          <h2 class="card-title h4 mb-4"><%= t('rich_menu_cleaner.title') %></h2>
+
+          <%= form_with url: clean_rich_menu_cleaner_index_path(locale: I18n.locale), method: :post, local: true, class: "needs-validation", novalidate: true do |form| %>
+            <!-- Access Token input -->
+            <div class="form-group mb-4">
+              <%= form.label :access_token, t('rich_menu_cleaner.form.access_token_label'), class: "form-label font-weight-medium" %>
+              <%= form.text_field :access_token,
+                  placeholder: t('rich_menu_cleaner.form.access_token_placeholder'),
+                  class: "form-control",
+                  id: "access_token_input",
+                  required: true %>
+              <small class="form-text text-muted">
+                <%= t('rich_menu_cleaner.form.access_token_help').html_safe %>
+              </small>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <button type="button"
+                      onclick="verifyRichMenus()"
+                      class="btn btn-info">
+                <i class="fas fa-search mr-2"></i><%= t('rich_menu_cleaner.form.check_button') %>
+              </button>
+
+              <%= form.submit t('rich_menu_cleaner.form.clean_button'),
+                  class: "btn btn-danger",
+                  onclick: "return confirm('#{t('rich_menu_cleaner.form.confirm_message')}')",
+                  data: { confirm: t('rich_menu_cleaner.form.confirm_message') } %>
+            </div>
+          <% end %>
+
+          <!-- Verification result display area -->
+          <div id="verification_result" class="d-none">
+            <hr class="my-4">
+            <h5 class="mb-3"><%= t('rich_menu_cleaner.verification.title') %></h5>
+            <div id="result_content" class="p-3 bg-light rounded"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usage instructions -->
+      <div class="card bg-info text-white mb-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-book mr-2"></i><%= t('rich_menu_cleaner.instructions.title') %>
+          </h5>
+          <ol class="mb-0">
+            <% t('rich_menu_cleaner.instructions.steps').each do |step| %>
+              <li><%= step.html_safe %></li>
+            <% end %>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Security notes -->
+      <div class="card border-secondary mb-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-shield-alt mr-2"></i><%= t('rich_menu_cleaner.security.title') %>
+          </h5>
+          <ul class="mb-0">
+            <% t('rich_menu_cleaner.security.items').each do |item| %>
+              <li><%= item %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Toruya promotional area -->
+      <div class="card bg-gradient-primary text-white mb-4">
+        <div class="card-body text-center p-4">
+          <h3 class="h3 mb-3">
+            <i class="fas fa-calendar-alt mr-2"></i><%= t('rich_menu_cleaner.toruya.title') %>
+          </h3>
+          <p class="lead mb-4">
+            <%= t('rich_menu_cleaner.toruya.description') %>
+          </p>
+
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+              <div class="bg-white bg-opacity-20 rounded p-3">
+                <div class="h2 mb-2">📅</div>
+                <h5 class="font-weight-bold mb-2"><%= t('rich_menu_cleaner.toruya.features.booking.title') %></h5>
+                <p class="mb-0"><%= t('rich_menu_cleaner.toruya.features.booking.description') %></p>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="bg-white bg-opacity-20 rounded p-3">
+                <div class="h2 mb-2">👥</div>
+                <h5 class="font-weight-bold mb-2"><%= t('rich_menu_cleaner.toruya.features.customer.title') %></h5>
+                <p class="mb-0"><%= t('rich_menu_cleaner.toruya.features.customer.description') %></p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <a href="<%= t('rich_menu_cleaner.toruya.buttons.learn_more_url') %>" target="_blank"
+               class="btn btn-light btn-lg mr-3 mb-2">
+              <i class="fas fa-star mr-2"></i><%= t('rich_menu_cleaner.toruya.buttons.learn_more') %>
+            </a>
+            <a href="<%= t('rich_menu_cleaner.toruya.buttons.free_trial_url') %>" target="_blank"
+               class="btn btn-warning btn-lg mb-2">
+              <i class="fas fa-rocket mr-2"></i><%= t('rich_menu_cleaner.toruya.buttons.free_trial') %>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// Browser language detection
+function detectBrowserLanguage() {
+  const supportedLocales = ['ja', 'tw'];
+  const browserLang = navigator.language || navigator.userLanguage;
+
+  let detectedLocale = 'tw'; // Default value
+
+  if (browserLang.startsWith('ja')) {
+    detectedLocale = 'ja';
+  } else if (browserLang.startsWith('zh')) {
+    detectedLocale = 'tw';
+  }
+
+  // If no language has been set, use the detected language
+  if (!getCookie('browser_locale') && !sessionStorage.getItem('locale_set')) {
+    setCookie('browser_locale', detectedLocale, 30);
+
+    // If current language differs from detected language, redirect
+    const currentLocale = '<%= I18n.locale %>';
+    if (currentLocale !== detectedLocale) {
+      const currentUrl = new URL(window.location);
+      currentUrl.searchParams.set('locale', detectedLocale);
+      window.location.href = currentUrl.toString();
+    }
+  }
+}
+
+function getCookie(name) {
+  const value = "; " + document.cookie;
+  const parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function setCookie(name, value, days) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + expires + "; path=/";
+}
+
+async function verifyRichMenus() {
+  const accessToken = document.getElementById('access_token_input').value.trim();
+  const resultDiv = document.getElementById('verification_result');
+  const contentDiv = document.getElementById('result_content');
+
+  if (!accessToken) {
+    alert('<%= t('rich_menu_cleaner.errors.access_token_required') %>');
+    return;
+  }
+
+  try {
+    contentDiv.innerHTML = `
+      <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted"><%= t('rich_menu_cleaner.verification.loading') %></p>
+      </div>
+    `;
+    resultDiv.classList.remove('d-none');
+
+    const response = await fetch('<%= verify_rich_menu_cleaner_index_path(locale: I18n.locale) %>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: `access_token=${encodeURIComponent(accessToken)}`
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      contentDiv.innerHTML = `
+        <div class="alert alert-success mb-0">
+          <i class="fas fa-check-circle mr-2"></i>
+          ${result.message}
+        </div>
+      `;
+    } else {
+      contentDiv.innerHTML = `
+        <div class="alert alert-danger mb-0">
+          <i class="fas fa-exclamation-circle mr-2"></i>
+          ${result.message}
+        </div>
+      `;
+    }
+
+  } catch (error) {
+    contentDiv.innerHTML = `
+      <div class="alert alert-danger mb-0">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        <%= t('rich_menu_cleaner.failure.network_error', message: '') %>${error.message}
+      </div>
+    `;
+  }
+}
+
+// Execute language detection when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  detectBrowserLanguage();
+});
+</script>

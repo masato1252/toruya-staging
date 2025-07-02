@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale == :ja ? 'ja' : 'zh-TW' %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title><%= content_for?(:title) ? yield(:title) : t('rich_menu_cleaner.title') %> - Toruya</title>
+    <meta name="description" content="<%= t('rich_menu_cleaner.description') %>">
+    <meta name="keywords" content="<%= t('rich_menu_cleaner.meta.keywords') %>">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      }
+
+      /* Japanese font optimization */
+      html[lang="ja"] body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
+      }
+
+      /* Chinese font optimization */
+      html[lang="zh-TW"] body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      }
+
+      .main-container {
+        min-height: 100vh;
+        padding: 2rem 0;
+      }
+      .border-left-warning {
+        border-left: 4px solid #ffc107 !important;
+      }
+      .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .bg-opacity-20 {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+      }
+      .gap-3 > * {
+        margin-right: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+      .gap-3 > *:last-child {
+        margin-right: 0;
+      }
+      .navbar-brand {
+        font-weight: bold;
+        color: #667eea !important;
+      }
+      .footer-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+      .dropdown-item.active {
+        background-color: #007bff;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Main Content -->
+    <div class="main-container">
+      <%= yield %>
+    </div>
+
+    <!-- Simple Footer -->
+    <footer class="bg-white border-top">
+      <div class="container text-center py-4">
+        <p class="footer-text mb-2">
+          <%= raw(t('rich_menu_cleaner.footer_provider')) %>
+        </p>
+        <p class="footer-text mb-0">
+          <small><%= t('rich_menu_cleaner.footer') %></small>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
