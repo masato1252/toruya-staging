@@ -61,12 +61,16 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
       currency: params[:currency].presence || Current.business_owner.currency
     )
 
-    flash[:notice] = t("common.update_successfully_message")
+    if outcome.valid?
+      flash[:notice] = t("common.update_successfully_message")
 
-    if outcome.result.activities.exists?
-      return_json_response(outcome, { redirect_to: activities_lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
+      if outcome.result.activities.exists?
+        return_json_response(outcome, { redirect_to: activities_lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
+      else
+        return_json_response(outcome, { redirect_to: lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
+      end
     else
-      return_json_response(outcome, { redirect_to: lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
+      return_json_response(outcome)
     end
   end
 
