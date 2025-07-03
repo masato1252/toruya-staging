@@ -20,7 +20,7 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
         product.online_service_customer_relations.find_by(online_service: product, customer: current_customer)
       end
 
-    if @relation
+    if @relation && @relation.legal_to_access?
       # Redirect to the online service page
       redirect_to online_service_path(slug: product.slug)
       return
