@@ -7,6 +7,10 @@ FactoryBot.define do
     amount { Money.new(1000) }
     provider { AccessProvider.providers[:stripe_connect] }
 
+    trait :active do
+      state { :active }
+    end
+
     trait :completed do
       state { :completed }
     end

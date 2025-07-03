@@ -22,16 +22,18 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       online_service_customer_relation.with_lock do
         if existing_payment = online_service_customer_relation.customer_payments.where(order_id: price_details.order_id).completed.take
           return existing_payment
+        elsif existing_active_payment = online_service_customer_relation.customer_payments.where(order_id: price_details.order_id).active.take
+          existing_active_payment
+        else
+          customer.customer_payments.create!(
+            product: online_service_customer_relation,
+            amount: charging_price_amount,
+            charge_at: Time.current,
+            expired_at: expire_at,
+            manual: manual,
+            order_id: price_details.order_id
+          )
         end
-
-        customer.customer_payments.create!(
-          product: online_service_customer_relation,
-          amount: charging_price_amount,
-          charge_at: Time.current,
-          expired_at: expire_at,
-          manual: manual,
-          order_id: price_details.order_id
-        )
       end
 
     begin

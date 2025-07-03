@@ -97,6 +97,45 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           expect(outcome.result).to eq(paid_payment)
         end
       end
+
+      context "when there is an existing active payment with same order_id" do
+        let!(:active_payment) do
+          FactoryBot.create(
+            :customer_payment,
+            :active,
+            product: relation,
+            customer: customer,
+            order_id: relation.price_details.first.order_id,
+            amount: relation.price_details.first.amount_with_currency,
+            manual: manual
+          )
+        end
+
+        it "reuses existing active payment and processes it through Stripe" do
+          expect {
+            outcome
+          }.not_to change {
+            CustomerPayment.where(
+              customer: relation.customer,
+              product: relation,
+              order_id: relation.price_details.first.order_id
+            ).count
+          }
+          # Should return the same payment object (reloaded)
+          expect(outcome.result.id).to eq(active_payment.id)
+        end
+
+        it "calls Stripe PaymentIntent.create to complete the active payment" do
+          expect(Stripe::PaymentIntent).to receive(:create).and_call_original
+          outcome
+        end
+
+        it "completes the active payment after Stripe processing" do
+          result_payment = outcome.result
+          expect(result_payment.id).to eq(active_payment.id)
+          expect(result_payment).to be_completed  # Should be completed after Stripe processing
+        end
+      end
     end
 
     # specific charge which order id
@@ -118,6 +157,35 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
             order_id: order_id
           ).completed.count
         }.by(1)
+      end
+
+      context "when there is an existing active payment with same order_id for specific price" do
+        let!(:active_payment) do
+          FactoryBot.create(
+            :customer_payment,
+            :active,
+            product: relation,
+            customer: customer,
+            order_id: order_id,
+            amount: online_service_customer_price.amount_with_currency,
+            manual: manual
+          )
+        end
+
+        it "reuses existing active payment for the specific order and processes it through Stripe" do
+          expect {
+            outcome
+          }.not_to change {
+            CustomerPayment.where(
+              customer: relation.customer,
+              product: relation,
+              order_id: order_id
+            ).count
+          }
+          # Should return the same payment object (reloaded)
+          expect(outcome.result.id).to eq(active_payment.id)
+          expect(outcome.result).to be_completed  # Should be completed after Stripe processing
+        end
       end
     end
 
