@@ -72,8 +72,9 @@ class AdminChannel < ApplicationCable::Channel
   def toggle_customer_pin(data)
     social_user = SocialUser.find_by!(social_service_user_id: data["customer_id"])
 
+    change_pinned = !social_user.pinned
     social_user.same_social_user_scope.each do |s_user|
-      s_user.update!(pinned: !s_user.pinned)
+      s_user.update!(pinned: change_pinned)
     end
   end
 
