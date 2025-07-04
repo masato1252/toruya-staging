@@ -21,7 +21,7 @@ class Lines::UserBotController < ActionController::Base
       write_user_bot_cookies(:social_service_user_id, social_service_user_id)
     end
 
-    @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
+    @social_user ||= SocialUser.where.not(user_id: nil).find_by(social_service_user_id: user_bot_cookies(:social_service_user_id)) || SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
   end
 
   def current_users
