@@ -26,11 +26,11 @@
 #
 
 class CustomerPayment < ApplicationRecord
-  NON_PAYMENT_STATES = %i(change_expire_at)
+  NON_PAYMENT_STATES = %i(change_expire_at change_stripe_subscription_id)
   PAYMENT_STATES = %i(active completed refunded auth_failed processor_failed refund_failed bonus)
 
   # order_id need to be unique, under the same product_type and product_id and customer_id
-  validates :order_id, uniqueness: { scope: [:product_type, :product_id, :customer_id] }
+  # validates :order_id, uniqueness: { scope: [:product_type, :product_id, :customer_id] }
   belongs_to :product, polymorphic: true
   belongs_to :customer
   monetize :amount_cents
@@ -47,6 +47,7 @@ class CustomerPayment < ApplicationRecord
     refund_failed: 5,
     bonus: 6,
     change_expire_at: 7,
+    change_stripe_subscription_id: 10,
     canceled: 8,
     manually_approved: 9
   }

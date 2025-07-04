@@ -27,8 +27,8 @@
 
 # payment_state pending, and permission_state active might be purchased from bundler
 class OnlineServiceCustomerRelation < ApplicationRecord
-  ACTIVE_STATES = %w[pending free paid incomplete partial_paid canceled].freeze
-  SOLD_STATES = %w[paid partial_paid]
+  ACTIVE_STATES = %w[pending free paid incomplete partial_paid canceled manual_paid].freeze
+  SOLD_STATES = %w[paid partial_paid manual_paid]
 
   include SayHi
   hi_track_event "online_service_purchased"
@@ -60,7 +60,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     refunded: 4,
     canceled: 5,
     partial_paid: 6,
-    incomplete: 7
+    incomplete: 7,
+    manual_paid: 8
   }, _suffix: true
 
   enum permission_state: {

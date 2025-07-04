@@ -390,6 +390,7 @@ ja:
             auth_failed: 失敗
             processor_failed: 失敗
             change_expire_at: 利用期限変更
+            change_stripe_subscription_id: Stripe Subscription ID変更
             canceled: 中止
             manually_approved: 手動承認
         stripe:

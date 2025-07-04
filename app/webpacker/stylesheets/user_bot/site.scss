@@ -142,6 +142,7 @@ a {
   }
 
   &.change_expire_at,
+  &.change_stripe_subscription_id,
   &.checked_in {
     background-color: $palette-color1; // #fcbe46;
     border: 1px $palette-color1-1 solid;

@@ -6,8 +6,6 @@ class CustomerPayments::ChangeServiceExpireAt < ActiveInteraction::Base
   string :memo, default: nil
 
   def execute
-    return if online_service_customer_relation.subscription?
-
     if online_service.bundler?
       bundled_online_service_ids = online_service.bundled_services.pluck(:online_service_id)
 

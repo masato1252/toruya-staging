@@ -174,6 +174,7 @@ Rails.application.routes.draw do
                 post :approve
                 delete :cancel
                 put :change_expire_at
+                put :change_stripe_subscription_id
               end
 
               collection do

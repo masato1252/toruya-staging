@@ -59,7 +59,7 @@
         <%= form_tag assign_lines_user_bot_service_customers_path(business_owner_id: business_owner_id, service_id: @online_service.id), method: :post, remote: false, class: 'assign-customer-form' do %>
           <div class="form-group">
             <%= select_tag :customer_id,
-                options_from_collection_for_select(@available_customers, :id, :name),
+                options_from_collection_for_select(@assignable_customers, :id, :name),
                 class: 'form-control',
                 prompt: t("user_bot.dashboards.settings.service_customer_relation.select_customer_prompt") %>
           </div>

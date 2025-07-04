@@ -4,6 +4,7 @@ module Sales
   module OnlineServices
     class Approve < ActiveInteraction::Base
       object :relation, class: OnlineServiceCustomerRelation
+      boolean :manual, default: false
 
       validate :validate_relation_current
 
@@ -11,9 +12,9 @@ module Sales
         relation.permission_state = :active
         relation.expire_at = relation.online_service.current_expire_time
 
-        if relation.assignment?
+        if relation.assignment? || manual
           relation.paid_at = Time.current
-          relation.payment_state = :pending
+          relation.payment_state = :manual_paid
           relation.save
         elsif relation.sale_page&.free?
           relation.free_payment_state!

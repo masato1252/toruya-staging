@@ -7,7 +7,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
     state_order = { "pending" => 1, "accessible" => 2, "available" => 3, "inactive" => 4 }
     @relations = relations.sort_by { |relation| [state_order[relation.state], -relation.updated_at.to_i] }
     @available_count = @online_service.online_service_customer_relations.available.size
-    @available_customers = current_user.customers.where.not(id: @relations.map(&:customer_id))
+    @assignable_customers = current_user.customers.where.not(id: @online_service.online_service_customer_relations.available.map(&:customer_id))
   end
 
   def show
@@ -44,7 +44,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
     online_service = Current.business_owner.online_services.find(params[:service_id])
     relation = online_service.online_service_customer_relations.find(params[:id])
 
-    ::Sales::OnlineServices::Approve.run!(relation: relation)
+    ::Sales::OnlineServices::Approve.run!(relation: relation, manual: true)
     CustomerPayments::ApproveManually.run(online_service_customer_relation: relation)
 
     redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
@@ -69,6 +69,16 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
       memo: params[:memo]
     )
 
+    redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
+  end
+
+  def change_stripe_subscription_id
+    online_service = Current.business_owner.online_services.find(params[:service_id])
+    relation = online_service.online_service_customer_relations.find(params[:id])
+    CustomerPayments::ChangeStripeSubscriptionId.run!(
+      online_service_customer_relation: relation,
+      stripe_subscription_id: params[:stripe_subscription_id]
+    )
     redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
   end
 end

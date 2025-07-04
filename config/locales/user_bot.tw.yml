@@ -389,6 +389,7 @@ tw:
             auth_failed: 失敗
             processor_failed: 失敗
             change_expire_at: 更改使用期限
+            change_stripe_subscription_id: Stripe Subscription ID 變更
             canceled: 已取消
             manually_approved: 手動批准
         stripe:
