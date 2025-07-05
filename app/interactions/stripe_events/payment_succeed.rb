@@ -69,12 +69,20 @@ module StripeEvents
             { stripe_account: customer.user.stripe_provider.uid }
           )
 
-          # Set the default payment method
-          Stripe::Subscription.update(
-            relation.stripe_subscription_id,
-            { default_payment_method: payment_intent.payment_method },
-            { stripe_account: customer.user.stripe_provider.uid }
-          )
+          # Only update default_payment_method if subscription is not canceled (active, trialing, unpaid, etc.)
+          if %w[active trialing unpaid past_due incomplete incomplete_expired].include?(stripe_subscription.status)
+            Stripe::Subscription.update(
+              relation.stripe_subscription_id,
+              { default_payment_method: payment_intent.payment_method },
+              { stripe_account: customer.user.stripe_provider.uid }
+            )
+          else
+            Rollbar.warn("Skip updating default_payment_method for canceled subscription", {
+              subscription_id: relation.stripe_subscription_id,
+              status: stripe_subscription.status,
+              event: event.as_json
+            })
+          end
         end
 
         if Rails.configuration.x.env.production?
