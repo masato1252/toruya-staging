@@ -21,7 +21,7 @@
 <% end %>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.signup_date") %></div>
-<%= render "lines/user_bot/field_row", title: I18n.l(@relation.created_at, format: :long_date_with_wday) %>
+<%= render "lines/user_bot/field_row", title: I18n.l(@relation.approved_at, format: :long_date_with_wday) %>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
 <div class="field-row with-format">
