@@ -204,7 +204,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
       sale_page: sale_page,
       customer: customer,
       current: true,
-    ).where.not(id: id).take : nil
+    ).where.not(id: id).last : nil
   end
 
   def bundled_service_relations
