@@ -84,8 +84,7 @@ class Customer < ApplicationRecord
   has_many :reservation_customers
   has_many :reservations, -> { active }, through: :reservation_customers
   has_many :customer_payments
-  has_many :online_service_customer_relations, -> { available }
-  has_many :current_online_service_customer_relations, -> { current }
+  has_many :online_service_customer_relations, -> { current }
   has_many :online_service_customer_applications, class_name: "OnlineServiceCustomerRelation", foreign_key: :customer_id
   has_many :customer_tickets
   belongs_to :user, counter_cache: true
