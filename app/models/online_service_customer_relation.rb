@@ -116,10 +116,10 @@ class OnlineServiceCustomerRelation < ApplicationRecord
       "accessible"
     elsif available?
       "available"
-    elsif pending? || active?
-      "pending"
-    else
+    elsif inactive?
       "inactive"
+    else
+      "pending"
     end
   end
 
