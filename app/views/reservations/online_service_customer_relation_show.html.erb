@@ -3,7 +3,7 @@
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <h4 class="modal-title" id="reservation-show-modal">
-        <span class="state <%= @relation.state %>"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.state}") %></span>
+        <span class="state <%= @relation.display_state %>"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.display_state}") %></span>
         <span><%= I18n.l(@reservation.created_at, format: :date) %></span>
 
         <span><%= @reservation.created_at.to_fs(:time)%></span>

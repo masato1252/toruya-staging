@@ -7,8 +7,8 @@
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_state") %></div>
 <div class="flex">
-  <span class="state <%= @relation.state %>"></span>
-  <%= render "lines/user_bot/field_row", title: t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.state}") %>
+  <span class="state <%= @relation.display_state %>"></span>
+  <%= render "lines/user_bot/field_row", title: t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.display_state}") %>
 </div>
 
 <% if @relation.subscription? && @is_owner %>

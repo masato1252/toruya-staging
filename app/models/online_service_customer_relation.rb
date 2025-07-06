@@ -97,15 +97,30 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def accessible?
-    state == "accessible" || bundler_relation&.state == "accessible"
+    return @accessible if defined?(@accessible)
+    @accessible = state == "accessible" || bundler_relation&.state == "accessible"
   end
 
   def available?
-    state == "available" || bundler_relation&.state == "available"
+    return @available if defined?(@available)
+    @available = state == "available" || bundler_relation&.state == "available"
   end
 
   def inactive?
-    state == "inactive" || bundler_relation&.state == "inactive"
+    return @inactive if defined?(@inactive)
+    @inactive = state == "inactive" || bundler_relation&.state == "inactive"
+  end
+
+  def display_state
+    if accessible?
+      "accessible"
+    elsif available?
+      "available"
+    elsif pending? || active?
+      "pending"
+    else
+      "inactive"
+    end
   end
 
   # available means you are legal to use, but the service doesn't start yet
@@ -117,7 +132,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def legal_to_access?
-    (payment_legal_to_access? && active?) || (bundler_relation&.legal_to_access?)
+    return @legal_to_access if defined?(@legal_to_access)
+    @legal_to_access = (payment_legal_to_access? && active?) || (bundler_relation&.legal_to_access?)
   end
 
   def payment_legal_to_access? # payment is fine
@@ -125,24 +141,28 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def service_started?
-    (online_service.start_at.nil? || online_service.start_at < Time.current) || (bundler_relation&.service_started?)
+    return @service_started if defined?(@service_started)
+    @service_started = (online_service.start_at.nil? || online_service.start_at < Time.current) || (bundler_relation&.service_started?)
   end
 
   def unexpired?
-    (expire_at.nil? || expire_at >= Time.current) || (bundler_relation&.unexpired?)
+    return @unexpired if defined?(@unexpired)
+    @unexpired = (expire_at.nil? || expire_at >= Time.current) || (bundler_relation&.unexpired?)
   end
 
   def purchased?
-    (free_payment_state? || paid_payment_state? || partial_paid_payment_state?) || (bundler_relation&.purchased?)
+    return @purchased if defined?(@purchased)
+    @purchased = (free_payment_state? || paid_payment_state? || partial_paid_payment_state?) || (bundler_relation&.purchased?)
   end
 
   def upsell_sold?
-    @unsell_sold ||=
-      if online_service.upsell_sale_page_id && (sale_relation = customer.online_service_customer_relations.where(sale_page_id: online_service.upsell_sale_page_id).current.first)
-        sale_relation.purchased?
-      else
-        false
-      end
+    return @upsell_sold if defined?(@upsell_sold)
+
+    @upsell_sold = if online_service.upsell_sale_page_id && (sale_relation = customer.online_service_customer_relations.where(sale_page_id: online_service.upsell_sale_page_id).current.first)
+      sale_relation.purchased?
+    else
+      false
+    end
 
     @upsell_sold || bundler_relation&.upsell_sold?
   end
@@ -160,9 +180,11 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def price_details
-    product_details["prices"].map do |_attributes|
+    return @price_details if defined?(@price_details)
+
+    @price_details = product_details["prices"].map do |_attributes|
       if _attributes["bundler_price"]
-        bundler_relation.price_details.first
+        bundler_relation&.price_details&.first
       else
         ::OnlineServiceCustomerPrice.new(_attributes.merge(
           charge_at: _attributes["charge_at"] ? Time.parse(_attributes["charge_at"]) : nil,
@@ -218,11 +240,25 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def subscription?
-    bundler_relation&.subscription? || (stripe_subscription_id.present? || price_details.first.interval.present? || bundled_service&.subscription)
+    return @subscription if defined?(@subscription)
+
+    @subscription = if bundler_relation
+      bundler_relation.subscription?
+    else
+      stripe_subscription_id.present? ||
+      (price_details.first&.interval.present?) ||
+      bundled_service&.subscription
+    end
   end
 
   def forever?
-    bundler_relation&.forever? || (expire_at.nil? && !subscription?)
+    return @forever if defined?(@forever)
+
+    @forever = if bundler_relation
+      bundler_relation.forever?
+    else
+      expire_at.nil? && !subscription?
+    end
   end
 
   def user_currency
@@ -230,14 +266,16 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def selling_prices_text
-    if purchased_from_bundler?
-      bundler_relation.selling_prices_text
+    return @selling_prices_text if defined?(@selling_prices_text)
+
+    @selling_prices_text = if purchased_from_bundler?
+      bundler_relation&.selling_prices_text
     else
       if assignment?
         "N/A"
       elsif free_payment_state?
         I18n.t("common.free_price")
-      elsif price_details.first.interval
+      elsif price_details.first&.interval
         if user_currency == "JPY"
           "#{I18n.t("common.#{price_details.first.interval}_pay")} #{price_details.first.amount_with_currency.format(:ja_default_format)}"
         else
