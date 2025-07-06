@@ -203,6 +203,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
       online_service: sale_page.product,
       sale_page: sale_page,
       customer: customer,
+      current: true,
     ).where.not(id: id).take : nil
   end
 
