@@ -32,7 +32,7 @@ module Notifiers
               end
 
               relations = scope.limit(LineClient::COLUMNS_NUMBER_LIMIT + 1)
-              relations.filter!(&:available?)
+              relations = relations.to_a.filter {|re| re.accessible? || re.available? }
 
               if relations.size > LineClient::COLUMNS_NUMBER_LIMIT
                 limited_relations = relations.first(LineClient::COLUMNS_NUMBER_LIMIT - 1)
