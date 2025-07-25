@@ -23,7 +23,7 @@ class OmniauthSetup
 
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
-    who = @request.parameters["who"].presence || @request.cookies["who"]
+    who = @request.parameters["whois"].presence || @request.cookies["whois"]
 
     if who && MessageEncryptor.decrypt(who) == CallbacksController::TORUYA_USER
       {
