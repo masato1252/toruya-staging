@@ -46,6 +46,7 @@ module StripeEvents
             order_id: data_object.id,
             stripe_charge_details: event.as_json
           )
+          relation.update(expire_at: Time.at(stripe_subscription.current_period_end) + 1.day)
           payment.completed!
         end
 
