@@ -210,7 +210,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   def bundled_service_relations
     @bundled_service_relations ||= OnlineServiceCustomerRelation.where(
       current: true,
-      online_service: sale_page.product.bundled_online_services,
+      online_service: sale_page&.product&.bundled_online_services,
       sale_page: sale_page, # NOTICE: ONLY the one from the same sale page
       customer: customer
     )

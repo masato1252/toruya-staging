@@ -11,6 +11,15 @@
   <%= render "lines/user_bot/field_row", title: t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.display_state}") %>
 </div>
 
+<% if !@relation.bundler_relation && @relation.bundled_service_relations.any? %>
+  <% @relation.bundled_service_relations.each do |bundled_service_relation| %>
+    <div class="flex">
+      <span class="state <%= bundled_service_relation.display_state %>"></span>
+      <%= render "lines/user_bot/field_row", title: "#{bundled_service_relation.online_service.name}: #{t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{bundled_service_relation.display_state}")}", path: lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: bundled_service_relation.online_service.id, id: bundled_service_relation.id) %>
+    </div>
+  <% end %>
+<% end %>
+
 <% if @relation.subscription? && @is_owner %>
   <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.stripe_subscription_id") %></div>
   <div class="flex">
