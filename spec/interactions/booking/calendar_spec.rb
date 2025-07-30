@@ -13,7 +13,7 @@ RSpec.describe Booking::Calendar do
   let(:booking_page) { FactoryBot.create(:booking_page, end_at: nil) }
   let(:shop) { business_schedule.shop }
   let(:user) { shop.user }
-  let(:date_range) { Date.current.beginning_of_month..Date.current.end_of_month  }
+  let(:date_range) { Date.current.beginning_of_month..Date.current.end_of_month.end_of_day  }
   let(:args) do
     {
       shop: shop,
@@ -136,7 +136,7 @@ RSpec.describe Booking::Calendar do
     end
 
     context 'when calendar date over available_booking_end_date' do
-      let(:date_range) { booking_page.available_booking_end_date.tomorrow..booking_page.available_booking_end_date.tomorrow.tomorrow.end_of_month }
+      let(:date_range) { booking_page.available_booking_end_date.tomorrow..booking_page.available_booking_end_date.tomorrow.tomorrow.end_of_month.end_of_day }
 
       it "returns expected result" do
         result = outcome.result

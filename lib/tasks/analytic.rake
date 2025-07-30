@@ -302,7 +302,7 @@ namespace :analytic do
     #   }
     # }
     current_month = Time.new(2021, 7)
-    end_month = Time.current.prev_month.end_of_month
+    end_month = Time.current.prev_month.end_of_month.end_of_day
     join_user_ids = []
     joined_month = {}
     helper = ApplicationController.helpers
@@ -312,8 +312,8 @@ namespace :analytic do
     while current_month < end_month
       last_month = current_month.next_month > end_month
 
-      charges = SubscriptionCharge.completed.where(created_at: current_month..current_month.end_of_month)
-      reservations = Reservation.where(created_at: current_month..current_month.end_of_month)
+      charges = SubscriptionCharge.completed.where(created_at: current_month..current_month.end_of_month.end_of_day)
+      reservations = Reservation.where(created_at: current_month..current_month.end_of_month.end_of_day)
 
       user_ids = charges.pluck(:user_id)
       new_user_ids = user_ids - join_user_ids
