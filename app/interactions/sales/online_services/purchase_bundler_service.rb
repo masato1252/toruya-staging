@@ -6,7 +6,8 @@ require "translator"
 module Sales
   module OnlineServices
     class PurchaseBundlerService < ActiveInteraction::Base
-      object :sale_page
+      object :sale_page, default: nil
+      object :online_service, default: nil
       object :customer
       string :authorize_token, default: nil
       string :payment_type
@@ -36,6 +37,8 @@ module Sales
         end
 
         case payment_type
+        when SalePage::PAYMENTS[:assignment]
+          Sales::OnlineServices::ApproveBundlerService.run(relation: relation)
         when SalePage::PAYMENTS[:one_time], SalePage::PAYMENTS[:multiple_times]
           Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, payment_intent_id: payment_intent_id)
 
@@ -59,7 +62,7 @@ module Sales
       private
 
       def product
-        @product ||= sale_page.product
+        @product ||= sale_page&.product || online_service
       end
 
       def social_customer

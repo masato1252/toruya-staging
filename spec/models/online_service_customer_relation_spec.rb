@@ -110,4 +110,63 @@ RSpec.describe OnlineServiceCustomerRelation do
       end
     end
   end
+
+  describe 'with bundler_relation' do
+    let(:user) { FactoryBot.create(:user) }
+    let(:customer) { FactoryBot.create(:customer, user: user) }
+    let(:bundler_service) { FactoryBot.create(:online_service, :bundler, user: user) }
+    let(:bundler_sale_page) { FactoryBot.create(:sale_page, :online_service, product: bundler_service, user: user) }
+    let(:sale_page) { FactoryBot.create(:sale_page, :online_service, product: bundler_service, user: user) }
+
+    let!(:bundler_relation) do
+      FactoryBot.create(:online_service_customer_relation,
+        customer: customer,
+        sale_page: bundler_sale_page,
+        online_service: bundler_service,
+        payment_state: :paid,
+        permission_state: :active
+      )
+    end
+
+    let(:relation) do
+      FactoryBot.create(:online_service_customer_relation,
+        customer: customer,
+        sale_page: sale_page,
+        online_service: bundler_service,
+        payment_state: :failed,
+        permission_state: :pending
+      )
+    end
+
+    it 'state fallback to bundler_relation when sale_page exists' do
+      expect(relation.state).to eq(bundler_relation.state)
+      expect(relation.legal_to_access?).to eq(bundler_relation.legal_to_access?)
+      expect(relation.payment_legal_to_access?).to eq(bundler_relation.payment_legal_to_access?)
+      expect(relation.service_started?).to eq(bundler_relation.service_started?)
+      expect(relation.purchased?).to eq(bundler_relation.purchased?)
+      expect(relation.forever?).to eq(bundler_relation.forever?)
+    end
+
+    it 'returns inactive if both are inactive' do
+      bundler_relation.update!(payment_state: :failed, permission_state: :pending)
+      expect(relation.state).to eq('inactive')
+      expect(relation.legal_to_access?).to eq(false)
+    end
+
+    it 'returns accessible if bundler_relation is accessible' do
+      expect(relation.state).to eq('accessible')
+      expect(relation.legal_to_access?).to eq(true)
+    end
+
+    it 'returns nil bundler_relation when sale_page is nil' do
+      relation.update!(sale_page: nil)
+      expect(relation.bundler_relation).to be_nil
+    end
+
+    it 'returns nil bundler_relation when no matching relation found' do
+      other_sale_page = FactoryBot.create(:sale_page, :online_service, user: user)
+      relation.update!(sale_page: other_sale_page)
+      expect(relation.bundler_relation).to be_nil
+    end
+  end
 end

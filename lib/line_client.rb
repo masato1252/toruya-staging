@@ -23,6 +23,9 @@ class LineClient
     end
 
     response
+  rescue => e
+    Rollbar.error(e)
+    response
   end
 
   # TODO: SocialCustomer or Social User or User

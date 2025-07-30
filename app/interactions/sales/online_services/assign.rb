@@ -12,8 +12,12 @@ module Sales
       def execute
         relation =
           if online_service.bundler?
-            errors.add(:base, "bundler service cannot be assigned")
-            return
+            compose(
+              Sales::OnlineServices::PurchaseBundlerService,
+              online_service: online_service,
+              customer: customer,
+              payment_type: SalePage::PAYMENTS[:assignment]
+            )
           else
             compose(
               Sales::OnlineServices::PurchaseNormalService,
