@@ -10,21 +10,16 @@ const OnlineServiceSolution = ({solution_type, content_url, ...rest}) => {
   switch (solution_type) {
     case "video":
       return (
-        <>
-          <div className='video-player-wrapper extend'>
-            <ReactPlayer
-              className='react-player'
-              url={content_url}
-              width='100%'
-              height='100%'
-              controls={true}
-              {...rest}
-            />
-          </div>
-          <a href={content_url} target="_blank">
-            {content_url}
-          </a>
-        </>
+        <div className='video-player-wrapper extend'>
+          <ReactPlayer
+            className='react-player'
+            url={content_url}
+            width='100%'
+            height='100%'
+            controls={true}
+            {...rest}
+          />
+        </div>
       );
     case "pdf":
       return (
