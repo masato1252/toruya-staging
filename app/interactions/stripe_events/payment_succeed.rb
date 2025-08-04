@@ -46,8 +46,16 @@ module StripeEvents
             order_id: data_object.id,
             stripe_charge_details: event.as_json
           )
-          relation.update(expire_at: Time.at(stripe_subscription.current_period_end) + 1.day)
+          relation.update(expire_at: Time.at(stripe_subscription.current_period_end) + 1.day, payment_state: :paid)
           payment.completed!
+
+          if relation.inactive? || relation.pending?
+            ::Sales::OnlineServices::Approve.run!(relation: relation)
+
+            if relation.online_service.bundler?
+              ::Sales::OnlineServices::ApproveBundlerService.run!(relation: relation)
+            end
+          end
         end
 
         if data_object['billing_reason'] == 'subscription_cycle'
