@@ -295,6 +295,11 @@ textarea {
     padding-left: 0;
     padding-right: 0;
   }
+
+  &.scrollable {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
 }
 
 .preview-image {

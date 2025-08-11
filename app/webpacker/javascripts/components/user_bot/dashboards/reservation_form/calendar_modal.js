@@ -11,7 +11,7 @@ const CalendarModal = ({i18n, calendar, dateSelectedCallback, selectedDate, prop
           <div className="modal-header">
             {i18n.calendar}
           </div>
-          <div className="modal-body">
+          <div className="modal-body scrollable">
             <Calendar
               {...calendar}
               dateSelectedCallback={dateSelectedCallback}

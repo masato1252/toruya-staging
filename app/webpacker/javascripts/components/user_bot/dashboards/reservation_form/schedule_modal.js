@@ -44,7 +44,7 @@ const ScheduleModal = ({i18n, selectedDate, props}) => {
             </div>
           </div>
 
-          <div className="modal-body extend" dangerouslySetInnerHTML={{ __html: body }} />
+          <div className="modal-body extend scrollable" dangerouslySetInnerHTML={{ __html: body }} />
           <div className="modal-footer centerize">
             <button className="btn btn-yellow" onClick={() => { $("#schedule-modal").modal("hide"); }}>
               {I18n.t("user_bot.dashboards.reservation.book_this_date")}

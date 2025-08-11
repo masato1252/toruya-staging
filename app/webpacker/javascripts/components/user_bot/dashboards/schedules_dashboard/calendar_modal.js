@@ -17,7 +17,7 @@ const CalendarModal = ({props}) => {
           <div className="modal-header">
             {props.i18n.calendar}
           </div>
-          <div className="modal-body">
+          <div className="modal-body scrollable">
             <Calendar
               {...props.calendar}
               dateSelectedCallbackPath={props.my_calendar ? Routes.mine_lines_user_bot_schedules_path() : Routes.lines_user_bot_schedules_path({ business_owner_id: props.business_owner_id })}
