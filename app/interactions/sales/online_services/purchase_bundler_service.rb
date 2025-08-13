@@ -56,7 +56,7 @@ module Sales
           compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation, stripe_subscription_id: stripe_subscription_id, payment_method_id: authorize_token)
         end
 
-        compose(Users::UpdateCustomerLatestActivityAt, user: sale_page.user)
+        compose(Users::UpdateCustomerLatestActivityAt, user: sale_page&.user || online_service.user)
       end
 
       private

@@ -108,7 +108,11 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   def inactive?
     return @inactive if defined?(@inactive)
-    @inactive = state == "inactive" && bundler_relation&.state == "inactive"
+    @inactive = if bundler_relation
+      state == "inactive" && bundler_relation.state == "inactive"
+    else
+      state == "inactive"
+    end
   end
 
   def display_state

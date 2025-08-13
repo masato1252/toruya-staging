@@ -14,43 +14,39 @@ RSpec.describe Sales::OnlineServices::Assign do
 
   describe "#execute" do
     describe "service selection logic" do
-      let(:relation_mock) { double("relation", legal_to_access?: false, inactive?: false) }
-      let(:approve_outcome) { double("approve_outcome", valid?: true, invalid?: false) }
-
-      before do
-        # Mock both services to avoid complex setup
-        allow(Sales::OnlineServices::PurchaseBundlerService).to receive(:run).and_return(relation_mock)
-        allow(Sales::OnlineServices::PurchaseNormalService).to receive(:run).and_return(relation_mock)
-        allow(CustomerPayments::ApproveManually).to receive(:run).and_return(approve_outcome)
-      end
-
       context "when online_service is a bundler" do
-        let(:online_service) { double("bundler_service", bundler?: true) }
+        let(:online_service) { FactoryBot.create(:online_service, :bundler, user: user) }
 
-        it "calls PurchaseBundlerService" do
-          expect(Sales::OnlineServices::PurchaseBundlerService).to receive(:run).with(
-            online_service: online_service,
-            customer: customer,
-            payment_type: SalePage::PAYMENTS[:assignment]
-          )
-          expect(Sales::OnlineServices::PurchaseNormalService).not_to receive(:run)
+        it "creates relationship for bundler service" do
+          expect(online_service.bundler?).to be true
 
-          described_class.run(customer: customer, online_service: online_service)
+          expect {
+            described_class.run(customer: customer, online_service: online_service)
+          }.to change {
+            OnlineServiceCustomerRelation.where(online_service: online_service, customer: customer).count
+          }.by(1)
+
+          latest_relation = OnlineServiceCustomerRelation.where(online_service: online_service, customer: customer).last
+          expect(latest_relation.online_service).to eq(online_service)
+          expect(latest_relation.customer).to eq(customer)
         end
       end
 
       context "when online_service is not a bundler" do
-        let(:online_service) { double("normal_service", bundler?: false) }
+        let(:online_service) { FactoryBot.create(:online_service, user: user) }
 
-        it "calls PurchaseNormalService" do
-          expect(Sales::OnlineServices::PurchaseNormalService).to receive(:run).with(
-            online_service: online_service,
-            customer: customer,
-            payment_type: SalePage::PAYMENTS[:assignment]
-          )
-          expect(Sales::OnlineServices::PurchaseBundlerService).not_to receive(:run)
+        it "creates relationship for normal service" do
+          expect(online_service.bundler?).to be false
 
-          described_class.run(customer: customer, online_service: online_service)
+          expect {
+            described_class.run(customer: customer, online_service: online_service)
+          }.to change {
+            OnlineServiceCustomerRelation.where(online_service: online_service, customer: customer).count
+          }.by(1)
+
+          latest_relation = OnlineServiceCustomerRelation.where(online_service: online_service, customer: customer).last
+          expect(latest_relation.online_service).to eq(online_service)
+          expect(latest_relation.customer).to eq(customer)
         end
       end
     end
@@ -81,7 +77,7 @@ RSpec.describe Sales::OnlineServices::Assign do
           latest_relation = OnlineServiceCustomerRelation.where(online_service: online_service, customer: customer, sale_page: nil).last
           expect(latest_relation).to have_attributes(
             current: true,
-            payment_state: "pending",
+            payment_state: "manual_paid",
             permission_state: "active"
           )
           price_details = latest_relation.price_details.first

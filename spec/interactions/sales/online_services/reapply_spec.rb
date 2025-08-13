@@ -3,7 +3,18 @@
 require "rails_helper"
 
 RSpec.describe Sales::OnlineServices::Reapply do
-  let(:relation) { FactoryBot.create(:online_service_customer_relation, :canceled, :expired) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:online_service) { FactoryBot.create(:online_service, user: user) }
+  let(:sale_page) { FactoryBot.create(:sale_page, :online_service, product: online_service, user: user) }
+  let(:relation) {
+    FactoryBot.create(:online_service_customer_relation,
+      online_service: online_service,
+      sale_page: sale_page,
+      payment_state: :failed,
+      permission_state: :pending,
+      expire_at: 1.day.ago
+    )
+  }
   let(:args) do
     {
       online_service_customer_relation: relation,
