@@ -59,6 +59,18 @@ const MenuEdit =({props}) => {
             {I18n.t("common.minute")}
           </div>
         );
+      case "min_staffs_number":
+        return (
+          <>
+            <div className="field-row flex-start">
+              <input ref={register({ required: true, min: 0 })} name="min_staffs_number" type="tel" />
+              {I18n.t("user_bot.dashboards.settings.menu.form.min_staffs_number_unit")}
+            </div>
+            <div className="margin-around justify-center warning">
+              <div className="centerize" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.menu.form.min_staffs_number_hint") }} />
+            </div>
+          </>
+        );
       case "online":
         return (
           <>

@@ -22,6 +22,17 @@
       <%= @menu.interval %>
     </div>
   <% end %>
+  <div class="field-header"><%= t("user_bot.dashboards.settings.menu.min_staffs_number") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :min_staffs_number) do %>
+    <div>
+      <%= @menu.min_staffs_number %>
+      <% if @menu.no_manpower? %>
+        <p class="desc">
+          <%= t("user_bot.dashboards.settings.menu.no_manpower_desc") %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.menu_shops") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: @menu.id, attribute: :menu_shops) do %>
     <div>

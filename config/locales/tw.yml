@@ -409,6 +409,7 @@ tw:
         short_name: "簡稱"
         minutes: "所需時間（分鐘）"
         min_staffs_number: "最少服務人員數"
+        no_manpower_desc: "不會佔住 reservation slot"
       staff_menus:
         max_customers: "最多客戶數"
     select:

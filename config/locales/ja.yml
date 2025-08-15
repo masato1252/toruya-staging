@@ -403,6 +403,7 @@ ja:
         short_name: "短縮名"
         minutes: "所要時間(分)"
         min_staffs_number: "最低担当者数"
+        no_manpower_desc: "予約スロットを占有しません"
       staff_menus:
         max_customers: "最高客戸数"
     select:

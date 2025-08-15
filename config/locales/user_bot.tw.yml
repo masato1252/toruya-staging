@@ -326,6 +326,8 @@ tw:
           short_name: 簡稱
           minutes: 所需時間
           interval: 間隔
+          min_staffs_number: 最少服務人員數
+          no_manpower_desc: 不會佔住 reservation slot
           menu_shops: 上限人數
           full_seat_number_title: 上限人數
           menus_list: 服務列表
@@ -339,6 +341,7 @@ tw:
             short_name_title: 服務基本設定
             minutes_title: 服務基本設定
             interval_title: 服務基本設定
+            min_staffs_number_title: 服務基本設定
             menu_shops_title: 上限人數
             menu_staffs_title: 負責員工
             menu_staffs_subtitle: 負責員工
@@ -348,6 +351,9 @@ tw:
             short_name_subtitle: 簡稱
             minutes_subtitle: 所需時間
             interval_subtitle: 間隔
+            min_staffs_number_subtitle: 最少服務人員數
+            min_staffs_number_unit: 人
+            min_staffs_number_hint: ※ 設為 0 代表不會佔住 reservation slot
             menu_shops_subtitle: 上限人數
             online_subtitle: 舉辦方式
             hint: 請指定此成員可服務的項目。

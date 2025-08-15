@@ -10,6 +10,7 @@ module Menus
       string :short_name, default: nil
       integer :minutes, default: nil
       integer :interval, default: nil
+      integer :min_staffs_number, default: nil
       array :menu_shops, default: nil
       array :menu_staffs, default: nil
       boolean :online, default: nil
@@ -34,7 +35,7 @@ module Menus
           BookingOption.where(id: booking_option_ids).each do |booking_option|
             booking_option.update!(minutes: booking_option.booking_option_menus.sum(:required_time))
           end
-        when "interval", "online"
+        when "interval", "online", "min_staffs_number"
           menu.update(attrs.slice(update_attribute))
         when "menu_shops"
           menu.transaction do

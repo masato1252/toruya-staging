@@ -327,6 +327,8 @@ ja:
           short_name: 短縮名
           minutes: 最低所要時間
           interval: インターバル
+          min_staffs_number: 最低担当者数
+          no_manpower_desc: 予約スロットを占有しません
           menu_shops: 利用店舗（満席数）
           full_seat_number_title: 満席数
           menus_list: メニュー一覧
@@ -340,6 +342,7 @@ ja:
             short_name_title: メニュー基本設定
             minutes_title: メニュー基本設定
             interval_title: メニュー基本設定
+            min_staffs_number_title: メニュー基本設定
             menu_shops_title: 利用店舗
             menu_staffs_title: 担当スタッフ
             menu_staffs_subtitle: 担当スタッフ
@@ -349,6 +352,9 @@ ja:
             short_name_subtitle: 短縮名
             minutes_subtitle: 所要時間
             interval_subtitle: インターバル
+            min_staffs_number_subtitle: 最低担当者数
+            min_staffs_number_unit: 人
+            min_staffs_number_hint: ※ 0に設定すると、予約スロットを占有しません
             menu_shops_subtitle: 利用店舗（満席数）
             online_subtitle: 開催方法
             hint: このスタッフが担当できるメニューを指定してください。
