@@ -282,7 +282,7 @@ class User < ApplicationRecord
   end
 
   def line_keyword_booking_pages
-    booking_pages.active.where(id: line_keyword_booking_page_ids).sort_by { |page| line_keyword_booking_page_ids.index(page.id.to_s) }
+    booking_pages.active.normal.where(id: line_keyword_booking_page_ids).sort_by { |page| line_keyword_booking_page_ids.index(page.id.to_s) }
   end
 
   def related_users
