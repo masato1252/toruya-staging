@@ -54,7 +54,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
     user = social_customer.social_account.user
     # XXX: refactor to better query
     contents = user.line_keyword_booking_pages.map do |booking_page|
-      if booking_page.started? && !booking_page.ended? && !booking_page.draft && booking_page.deleted_at.nil?
+      if booking_page.started? && !booking_page.ended? && !booking_page.draft && booking_page.deleted_at.nil? && !booking_page.rich_menu_only
         ::LineMessages::FlexTemplateContent.two_header_card(
           title1: booking_page.title,
           title2: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title).first(100),
