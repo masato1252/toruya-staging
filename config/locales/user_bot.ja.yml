@@ -614,6 +614,7 @@ ja:
           field_header: 予約ページ
           line_status: LINE予約
           no_option: まだ予約項目がありません。予約ページを作成してください。
+          draft_warning: 下書き状態です
         form:
           add_a_new_option: この価格を追加
           new_option_with_existing_menu:

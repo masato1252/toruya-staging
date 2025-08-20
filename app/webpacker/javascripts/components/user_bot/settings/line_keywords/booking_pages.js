@@ -109,13 +109,14 @@ const LineKeywordsBookingPages = ({props}) => {
         <SortableContext
           items={booking_pages}
         >
-          {booking_pages.map(({id, label}, index) => {
+          {booking_pages.map(({id, label, draft}, index) => {
             return (
               <SortableBookingPage
                 index={index}
                 key={id}
                 id={id}
                 label={label}
+                draft={draft}
                 upCallback={() => {
                   handleDragUp(index)
                 }}
@@ -140,7 +141,7 @@ const LineKeywordsBookingPages = ({props}) => {
   )
 }
 
-const SortableBookingPage = ({id, label, index, deleteCallback, upCallback, downCallback}) => {
+const SortableBookingPage = ({id, label, draft, index, deleteCallback, upCallback, downCallback}) => {
   const {
     setNodeRef,
     transform,
@@ -162,6 +163,9 @@ const SortableBookingPage = ({id, label, index, deleteCallback, upCallback, down
           <i className="fa fa-solid fa-arrow-down" onClick={downCallback}></i>
         </span>
         {index + 1}: {label}
+        {draft && <div style={{color: '#dc3545', fontSize: '12px', marginTop: '4px'}}>
+          <i className="fas fa-exclamation-triangle"></i>&nbsp;{I18n.t("user_bot.dashboards.booking_pages.index.draft_warning")}
+        </div>}
       </span>
       <i
         className="fas fa-trash"

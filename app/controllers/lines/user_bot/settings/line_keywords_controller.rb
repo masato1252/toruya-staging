@@ -2,7 +2,7 @@
 
 class Lines::UserBot::Settings::LineKeywordsController < Lines::UserBotDashboardController
   def edit_booking_pages
-    @booking_pages = Current.business_owner.line_keyword_booking_pages.map { |booking_page| { label: booking_page.name, value: booking_page.id, id: booking_page.id } }
+    @booking_pages = Current.business_owner.line_keyword_booking_pages.map { |booking_page| { label: booking_page.name, value: booking_page.id, id: booking_page.id, draft: booking_page.draft? } }
     @booking_page_options = Current.business_owner.booking_pages.where(draft: false).started.normal.map { |booking_page| { label: booking_page.name, value: booking_page.id, id: booking_page.id } }
   end
 

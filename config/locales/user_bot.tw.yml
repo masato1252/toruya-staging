@@ -615,6 +615,7 @@ tw:
           field_header: 預約頁面
           line_status: LINE預約
           no_option: 您還沒有設定任何預約項目，讓您的客戶預約
+          draft_warning: 草稿狀態
         form:
           add_a_new_option: 新增此項目在預約頁面
           new_option_with_existing_menu:

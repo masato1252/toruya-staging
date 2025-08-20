@@ -12,9 +12,12 @@
             <%= content_tag :div, class: "field-row with-next-arrow" do %>
               <%= link_to lines_user_bot_booking_page_path(booking_page, business_owner_id: business_owner_id), class: "w-8-12" do %>
                 <h3 class="text-gray-700 underline"><%= booking_page.name %></h3>
+                <% if booking_page.draft? %>
+                  <div class="desc danger"><i class="fas fa-exclamation-triangle"></i>&nbsp;<%= I18n.t("user_bot.dashboards.booking_pages.index.draft_warning") %></div>
+                <% end %>
                 <% if @booking_pages_without_option_ids.include?(booking_page.id) %>
                   <div class="desc danger"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= I18n.t("user_bot.dashboards.booking_pages.index.no_option") %></div>
-                <% else %>
+                <% elsif !booking_page.draft? %>
                   <div class="desc"><%= booking_page.title %></div>
                   <div class="desc"><%= booking_page.booking_options.pluck(:name).join(", ")%></div>
                   <div class="desc">
