@@ -209,7 +209,7 @@ class OnlineService < ApplicationRecord
   has_many :chapters, -> { order(position: :asc, id: :asc) }
   has_many :lessons, -> { order("chapters.position": :asc, position: :asc, id: :asc) }, through: :chapters
   has_one :message_template, -> { where(scenario: ::CustomMessages::Customers::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
-  has_many :episodes
+  has_many :episodes, -> { order(id: :desc)}
   has_many :bundled_services, foreign_key: :bundler_online_service_id
   has_many :bundled_online_services, through: :bundled_services, source: :online_service
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
