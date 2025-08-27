@@ -30,7 +30,7 @@ class Shop < ApplicationRecord
   include ReservationChecking
   include Helpers
 
-  validates :name, presence: true, format: { without: /\// }
+  validates :name, presence: true
   validates :short_name, presence: true
 
   has_one_attached :logo
