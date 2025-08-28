@@ -354,7 +354,7 @@ ja:
             interval_subtitle: インターバル
             min_staffs_number_subtitle: 最低担当者数
             min_staffs_number_unit: 人
-            min_staffs_number_hint: ※ 0に設定すると、予約スロットを占有しません
+            min_staffs_number_hint: セルフメニューなど担当スタッフが不要な場合は「0」と入力してください。
             menu_shops_subtitle: 利用店舗（満席数）
             online_subtitle: 開催方法
             hint: このスタッフが担当できるメニューを指定してください。
