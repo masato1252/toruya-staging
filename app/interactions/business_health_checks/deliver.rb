@@ -35,7 +35,7 @@ module BusinessHealthChecks
     def enough_messages_from_customer
       @enough_messages_from_customer ||= begin
         count = SocialMessage
-                .where(social_account_id: user.social_account.id)
+                .where(social_account_id: user.social_account&.id)
                 .from_customer
                 .where("created_at > ?", MESSAGE_FROM_CUSTOMER_CHECKING_PERIOD.days.ago)
                 .count
