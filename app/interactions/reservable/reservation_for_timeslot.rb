@@ -291,11 +291,7 @@ module Reservable
     end
 
     def validate_overlap?
-      if in_lab?
-        overlap_restriction && menu_ids.any? { |menu_id| !Menu.find(menu_id).no_manpower? }
-      else
-        overlap_restriction
-      end
+      overlap_restriction && menu_ids.any? { |menu_id| !Menu.find(menu_id).no_manpower? }
     end
 
     def end_time
