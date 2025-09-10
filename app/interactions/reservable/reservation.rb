@@ -251,7 +251,6 @@ module Reservable
         left_outer_joins(:menus).
         where.not(id: reservation_id.presence).
         where.not("reservations.aasm_state": "canceled").
-        where.not("menus.min_staffs_number": 0).
         where("reservation_menus.menu_id": menu_id).
         where("reservations.deleted_at": nil).
         where("reservations.shop_id = ?", shop.id).

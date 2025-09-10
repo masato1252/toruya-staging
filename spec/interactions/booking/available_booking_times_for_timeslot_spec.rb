@@ -197,15 +197,26 @@ RSpec.describe Booking::AvailableBookingTimesForTimeslot do
       let(:menu) { FactoryBot.create(:menu, :with_reservation_setting, :no_manpower, user: user) }
       let(:booking_option) { FactoryBot.create(:booking_option, user: user, menus: [menu]) }
 
-      # The no-manpower menu still need available staff
-      it "returns expected result, returns all available booking time" do
+      before do
+        # Ensure staff_menu and shop_menu exist for the no_manpower menu
+        StaffMenu.find_or_create_by(menu: menu, staff: staff) do |sm|
+          sm.max_customers = 1
+        end
+        ShopMenu.find_or_create_by(menu: menu, shop: shop) do |sm|
+          sm.max_seat_number = 1
+        end
+      end
+
+      # no-manpower menu skips overlap validation but still requires staff availability
+      # Even though it doesn't need manpower validation, the same staff cannot handle
+      # multiple different reservations simultaneously, regardless of menu type
+      # So times 11:00 and 12:00 are unavailable because the staff is occupied by existing reservation
+      it "returns expected result, no-manpower menu is affected by staff availability constraints" do
         result = outcome.result
 
         expect(result).to eq({
           Time.zone.local(2019, 5, 13, 9)  => [[booking_option.id]],
           Time.zone.local(2019, 5, 13, 10) => [[booking_option.id]],
-          Time.zone.local(2019, 5, 13, 11) => [[booking_option.id]],
-          Time.zone.local(2019, 5, 13, 12) => [[booking_option.id]],
           Time.zone.local(2019, 5, 13, 13) => [[booking_option.id]]
         })
       end
