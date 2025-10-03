@@ -231,7 +231,7 @@ const SurveyBuilder = ({
     setIsSubmitting(true);
     try {
       const formData = {
-        id: initialData.id,
+        id: initialData?.id,
         title,
         description,
         questions: questions.map(q => ({
