@@ -226,6 +226,7 @@ const BroadcastEdit =({props}) => {
                   setQuery={(query_payload) => {
                     setQuery(query_payload)
                   }}
+                  props={props}
                 />
               )
             case "menu":
