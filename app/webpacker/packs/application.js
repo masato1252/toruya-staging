@@ -29,6 +29,7 @@ const context = require.context("../javascripts/controllers", true, /.js$/)
 application.load(definitionsFromContext(context))
 
 require.context('../assets/management', true)
+require.context('../assets/registration', true)
 
 window.toastr = toastr;
 window.Routes = Routes;

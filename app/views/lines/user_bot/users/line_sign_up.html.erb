@@ -1,10 +1,23 @@
 <div id="login">
-  <h2><%= I18n.t("common.login") %></h2>
-  <main id="socialLogin">
-    <p><%= t("common.toruya_user_login_html") %></p>
+  <h2>ToruyaにLINEログイン</h2>
 
-    <%= button_to toruya_line_login_url(root_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]), class: "btn line-button with-wording only-word" do %>
-      <%= I18n.t("common.line_login_btn_word") %>
-    <% end %>
+  <main id="socialLogin">
+    <p>ToruyaにLINEログインすることで、予約管理から集客まで、スマホで一元管理できるようになります。</p>
+    <p>❶まずはLINEログインしてユーザー登録をしてください。<br>❷ユーザー登録が完了したら、リッチメニューからToruyaがご利用いただけます。</p>
+
+    <div class="margin-around">
+      <%= image_pack_tag "media/assets/registration/guide_user_menu.png", alt: 'ユーザーメニューへのご案内', class: "w-full" %>
+    </div>
+
+    <p style="text-align: center;">まずはLINEログイン！<p>
+
+    <div class="">
+      <a href=<%= "https://line.me/R/ti/p/@#{Rails.application.secrets[:ja][:toruya_user_bot_basic_id]}" %> class="btn line-button with-wording only-word" style="justify-content: center;">
+        <%= I18n.t("common.line_user_login_btn_word") %>
+      </a>
+    </div>
   </main>
+  <aside id="signup">
+    <p>登録ユーザーさんは<a href="<%= new_user_session_path %>" style="vertical-align: baseline;">ログイン</a>してください。</p>
+  </aside>
 </div>

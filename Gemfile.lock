@@ -323,6 +323,8 @@ GEM
       google-apis-core (>= 0.11.0, < 2.a)
     google-apis-sheets_v4 (0.22.0)
       google-apis-core (>= 0.11.0, < 2.a)
+    google-protobuf (4.26.1-arm64-darwin)
+      rake (>= 13)
     google-protobuf (4.26.1-x86_64-darwin)
       rake (>= 13)
     google-protobuf (4.26.1-x86_64-linux)
@@ -458,6 +460,8 @@ GEM
     next_rails (1.2.4)
       colorize (>= 0.8.1)
     nio4r (2.5.9)
+    nokogiri (1.16.3-arm64-darwin)
+      racc (~> 1.4)
     nokogiri (1.16.3-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.3-x86_64-linux)
@@ -701,6 +705,7 @@ GEM
     zeitwerk (2.6.8)
 
 PLATFORMS
+  arm64-darwin-23
   x86_64-darwin-20
   x86_64-linux
 

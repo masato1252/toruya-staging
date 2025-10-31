@@ -19,11 +19,38 @@
     <% end %>
   </main>
   <aside id="signup">
-    <p>初めての方は<%= link_to "ユーザー登録", new_user_registration_path %>してください。</p>
+    <p>初めての方は<a href="<%= new_user_registration_path %>" style="vertical-align: baseline;">ユーザー登録</a>してください。</p>
   </aside>
 </div>
 
 <% if Rails.env.development? %>
+  <style>
+   .field {
+      display: block !important;
+      width: 100% !important;
+    }
+    input[type="password"] {
+      padding: 10px;
+      color: #333333;
+      line-height: 15px;
+      border: 1px solid #dfdfdf;
+      background-color: #fffef5;
+      border-radius: 4px;
+      margin: 16px 3px;
+      padding: 8px;
+      font-size: 16px;
+      min-height: 38px;
+    }
+    input[type="checkbox"] {
+      width: fit-content !important;
+    }
+    .actions {
+      margin-top: 16px !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+  </style>
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
     <div class="field">
       <%= f.email_field :email, autofocus: true, placeholder: "メールアドレス" %>
