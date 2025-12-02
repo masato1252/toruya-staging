@@ -5,6 +5,19 @@ class Api::ImagesController < ApplicationController
     image = params[:image]
 
     if image.present?
+      # Scan for malware before processing
+      begin
+        MalwareScanner.scan!(image.tempfile.path)
+      rescue MalwareScanner::VirusDetectedError => e
+        Rails.logger.error("[Api::ImagesController] Virus detected: #{e.message}")
+        return render json: { success: false, message: 'ウイルスが検出されました。このファイルはアップロードできません。' }, status: :unprocessable_entity
+      rescue => e
+        Rails.logger.error("[Api::ImagesController] Error scanning file: #{e.message}")
+        unless ENV['MALWARE_SCAN_FAIL_SAFE'].to_s.downcase == 'true'
+          return render json: { success: false, message: 'ファイルのスキャン中にエラーが発生しました。' }, status: :unprocessable_entity
+        end
+      end
+
       # Check image dimensions
       image_metadata = MiniMagick::Image.new(image.tempfile.path)
       width = image_metadata.width

@@ -41,11 +41,13 @@
 
 class Profile < ApplicationRecord
   include NormalizeName
+  include MalwareScannable
   store :context, accessors: [:where_know_toruya, :what_main_problem], coder: JSON
 
   belongs_to :user
 
   has_one_attached :logo
+  scan_attachment :logo
 
   validates :first_name, presence: true
   validates :last_name, presence: true

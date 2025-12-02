@@ -29,6 +29,8 @@
 #
 
 class SocialMessage < ApplicationRecord
+  include MalwareScannable
+
   belongs_to :social_account, optional: true
   belongs_to :social_customer, optional: true, touch: true
   belongs_to :user, optional: true
@@ -36,6 +38,7 @@ class SocialMessage < ApplicationRecord
   belongs_to :staff, optional: true
   belongs_to :broadcast, optional: true
   has_one_attached :image
+  scan_attachment :image
 
   scope :unread, -> { where(readed_at: nil) }
   # Sometimes user's line account got some issue, message couldn't be sent successfully.

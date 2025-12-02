@@ -29,11 +29,13 @@ class Shop < ApplicationRecord
   alias_attribute :company_phone_number, :phone_number
   include ReservationChecking
   include Helpers
+  include MalwareScannable
 
   validates :name, presence: true
   validates :short_name, presence: true
 
   has_one_attached :logo
+  scan_attachment :logo
   has_many :staff_relations, class_name: "ShopStaff", dependent: :destroy
   has_many :shop_staffs, dependent: :destroy
   has_many :staffs, -> { active }, through: :shop_staffs

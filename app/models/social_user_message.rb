@@ -29,11 +29,13 @@
 
 class SocialUserMessage < ApplicationRecord
   include SayHi
+  include MalwareScannable
   hi_channel_name "toruya_users_support"
 
   belongs_to :social_user, touch: true
   belongs_to :admin_user, class_name: "User", required: false
   has_one_attached :image
+  scan_attachment :image
 
   scope :unread, -> { where(readed_at: nil) }
   scope :sent, -> { where.not(sent_at: nil) }

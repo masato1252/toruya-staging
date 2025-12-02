@@ -196,6 +196,7 @@ GEM
     certifi (2018.01.18)
     chartkick (4.2.1)
     chunky_png (1.4.0)
+    clamby (1.6.11)
     coderay (1.1.3)
     colorize (0.8.1)
     concurrent-ruby (1.2.2)
@@ -733,6 +734,7 @@ DEPENDENCIES
   cancancan (~> 1.15.0)
   carrierwave
   chunky_png
+  clamby
   dalli
   database_cleaner
   deep_cloneable (~> 3.2.0)

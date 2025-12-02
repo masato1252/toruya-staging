@@ -41,9 +41,12 @@ class CustomMessage < ApplicationRecord
   validates :flex_template, inclusion: { in: ::LineMessages::FlexTemplateContent.singleton_methods(false).map(&:to_s) }, allow_nil: true
   validates :locale, presence: true, inclusion: { in: I18n.available_locales.map(&:to_s) }
 
+  include MalwareScannable
+
   belongs_to :service, polymorphic: true, optional: true # OnlineService, BookingPage or nil(Toruya user)
 
   has_one_attached :picture # content picture
+  scan_attachment :picture
 
   def ever_sent_to_user(user)
     SocialUserMessage.where(custom_message_id: id, social_user_id: user.social_user_id).where.not(sent_at: nil).exists?

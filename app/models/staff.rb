@@ -24,8 +24,10 @@
 class Staff < ApplicationRecord
   include NormalizeName
   include ReservationChecking
+  include MalwareScannable
 
   has_one_attached :picture
+  scan_attachment :picture
   belongs_to :user
   has_many :staff_menus, dependent: :destroy
   has_many :menus, -> { active }, through: :staff_menus

@@ -34,6 +34,8 @@ class SocialRichMenu < ApplicationRecord
   KEYWORDS = I18n.t("line.bot.keywords").keys.map(&:to_s) # "incoming_reservations", "booking_pages", "contacts", "services"
   store_accessor :context, %i[image_errors]
 
+  include MalwareScannable
+
   belongs_to :social_account, required: false
   scope :current, -> { where(current: true) }
   scope :not_official, -> { where.not(social_name: LINE_OFFICIAL_RICH_MENU_KEY) }
@@ -41,6 +43,7 @@ class SocialRichMenu < ApplicationRecord
   scope :default, -> { where(default: true) }
 
   has_one_attached :image # content picture
+  scan_attachment :image
 
   def account
     social_account || (locale == 'tw' ? TwUserBotSocialAccount : UserBotSocialAccount)

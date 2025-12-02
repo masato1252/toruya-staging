@@ -91,6 +91,7 @@ gem "rqrcode", "~> 2.0"
 gem 'chunky_png'
 gem 'pycall'
 gem 'activerecord-typedstore'
+gem 'clamby' # Malware scanning with ClamAV
 
 group :development, :test do
   gem "byebug", platform: :mri

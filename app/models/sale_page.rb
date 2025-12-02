@@ -68,6 +68,8 @@ class SalePage < ApplicationRecord
     assignment: "assignment"
   }.freeze
 
+  include MalwareScannable
+
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
   belongs_to :staff, optional: true
   belongs_to :sale_template
@@ -75,6 +77,7 @@ class SalePage < ApplicationRecord
 
   has_one_attached :picture # content picture
   has_many_attached :customer_pictures
+  scan_attachment :picture, :customer_pictures
 
   scope :active, -> { where(deleted_at: nil) }
   scope :end_yet, -> { where("selling_end_at is NULL or selling_end_at > ?", Time.current) }
