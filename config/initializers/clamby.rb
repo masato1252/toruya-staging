@@ -3,7 +3,8 @@
 # Clamby (ClamAV) Configuration
 # ClamAVを使用してファイルのマルウェアスキャンを行うための設定
 
-if MalwareScanner.enabled?
+# 環境変数を直接チェック（MalwareScannerクラスがまだロードされていない可能性があるため）
+if ENV['MALWARE_SCAN_ENABLED'].to_s.downcase == 'true'
   Clamby.configure({
     # ClamAVのチェック方法
     # :clamscan - コマンドラインツールを使用（デフォルト）
