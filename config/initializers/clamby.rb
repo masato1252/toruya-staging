@@ -29,16 +29,8 @@ if ENV['MALWARE_SCAN_ENABLED'].to_s.downcase == 'true'
 
   Rails.logger.info("[Clamby] Malware scanning is enabled")
   
-  # ClamAVの可用性をチェック
-  begin
-    if Clamby.safe?
-      Rails.logger.info("[Clamby] ClamAV is available and working")
-    else
-      Rails.logger.warn("[Clamby] ClamAV check command failed")
-    end
-  rescue => e
-    Rails.logger.error("[Clamby] Failed to check ClamAV availability: #{e.message}")
-  end
+  # ClamAVの可用性をチェック（起動時のチェックはスキップ）
+  # 実際のスキャン時にClamAVの可用性が確認されます
 else
   Rails.logger.info("[Clamby] Malware scanning is disabled")
 end
