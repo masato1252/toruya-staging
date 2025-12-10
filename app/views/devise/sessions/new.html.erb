@@ -3,7 +3,7 @@
   <main id="socialLogin">
     <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
 
-    <a href=<%= "https://line.me/R/ti/p/@#{Rails.application.secrets[:ja][:toruya_user_bot_basic_id]}" %> class="btn line-button with-wording only-word">
+    <a href="<%= toruya_line_login_url(root_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]) %>" class="btn line-button with-wording only-word">
       <%= I18n.t("common.line_login_btn_word") %>
     </a>
 
