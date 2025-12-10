@@ -6,11 +6,13 @@ class Lines::UserBot::UsersController < Lines::UserBotController
 
   # social user sign up
   def line_sign_up
+    @staff_account = StaffAccount.find_by(token: params[:staff_token]) if params[:staff_token].present?
     render layout: 'booking'
   end
 
   # user login
   def connect
+    @staff_account = StaffAccount.find_by(token: params[:staff_token]) if params[:staff_token].present?
     render layout: 'booking'
   end
 
