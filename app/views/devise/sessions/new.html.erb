@@ -3,9 +3,11 @@
   <main id="socialLogin">
     <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
 
-    <a href="<%= toruya_line_login_url(root_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]) %>" class="btn line-button with-wording only-word">
-      <%= I18n.t("common.line_login_btn_word") %>
-    </a>
+    <%= button_to toruya_line_login_url(root_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]),
+                class: "btn line-button with-wording only-word",
+                data: { disable_with: "<i class='fa fa-spinner fa-spin fa-fw'></i>".html_safe } do %>
+      <%= I18n.t("common.line_user_login_btn_word") %>
+    <% end %>
 
     <% if params[:_higoogle] %>
       <div style="border: 1px solid black; padding: 10px; margin: 10px;">
