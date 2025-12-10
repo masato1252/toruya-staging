@@ -12,7 +12,7 @@
     <p style="text-align: center;">まずはLINEログイン！<p>
 
     <div class="">
-      <a href="<%= toruya_line_login_url(root_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]) %>" class="btn line-button with-wording only-word" style="justify-content: center;">
+      <a href="<%= toruya_line_login_url(root_url, staff_token: params[:staff_token], consultant_token: params[:consultant_token]) %>" class="btn line-button with-wording only-word" style="justify-content: center;">
         <%= I18n.t("common.line_user_login_btn_word") %>
       </a>
     </div>
