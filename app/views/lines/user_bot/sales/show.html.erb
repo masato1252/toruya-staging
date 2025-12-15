@@ -32,18 +32,10 @@
         </div>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_start_at") %></div>
-        <% if @sale_page.is_booking_page? %>
-          <%= render "lines/user_bot/field_row", title: @sale_page.product&.start_time_text %>
-        <% else %>
-          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, business_owner_id: business_owner_id, attribute: :start_time), title: @sale_page.start_time_text %>
-        <% end %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, business_owner_id: business_owner_id, attribute: :start_time), title: @sale_page.start_time_text %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_end_at") %></div>
-        <% if @sale_page.is_booking_page? %>
-          <%= render "lines/user_bot/field_row", title: @sale_page.product&.end_time_text %>
-        <% else %>
-          <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, business_owner_id: business_owner_id, attribute: :end_time), title: @sale_page.end_time_text %>
-        <% end %>
+        <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, business_owner_id: business_owner_id, attribute: :end_time), title: @sale_page.end_time_text %>
 
         <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.selling_solutions") %></div>
         <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_price") %></div>

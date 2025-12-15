@@ -27,8 +27,9 @@ class SalePagesController < ActionController::Base
           @main_product.shop.company_full_address
       ].compact
 
-      @is_started = @main_product.started?
-      @is_ended = @main_product.ended?
+      # Use SalePage's selling period instead of BookingPage's period for CTA control
+      @is_started = sale_page.started?
+      @is_ended = sale_page.ended?
       @company = @main_product.shop
       @payable = true
     when OnlineService
