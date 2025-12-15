@@ -3,12 +3,20 @@
 # Be sure to restart your server when you modify this file.
 
 if Rails.env.production?
-  # Use domain: :all for production to allow cookies across subdomains
-  Rails.application.config.session_store :cookie_store, 
+  # For production environments
+  session_options = {
     key: '_kasaike_session',
-    domain: :all,
     secure: true,  # Require HTTPS
-    same_site: :lax  # Allow cookies to be sent on redirects from LINE
+    same_site: :none,  # Required for cross-site redirects from LINE
+    httponly: true
+  }
+  
+  # Only set domain if using a custom domain (not herokuapp.com)
+  if ENV['HEROKU_APP_DEFAULT_DOMAIN_NAME'] && !ENV['HEROKU_APP_DEFAULT_DOMAIN_NAME'].include?('herokuapp.com')
+    session_options[:domain] = :all
+  end
+  
+  Rails.application.config.session_store :cookie_store, session_options
 else
   Rails.application.config.session_store :cookie_store, key: '_kasaike_session'
 end
