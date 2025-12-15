@@ -16,7 +16,8 @@ if Rails.env.production?
     session_options[:domain] = :all
   end
   
-  Rails.application.config.session_store :cookie_store, session_options
+  # Use ** to expand hash as keyword arguments
+  Rails.application.config.session_store :cookie_store, **session_options
 else
   Rails.application.config.session_store :cookie_store, key: '_kasaike_session'
 end
