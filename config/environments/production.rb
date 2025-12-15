@@ -122,6 +122,12 @@ Rails.application.configure do
     api_key: ENV['SENDGRID_API_KEY'],
     raise_delivery_errors: true
   }
+  
+  # Set default URL options for URL helpers (required for OmniAuth callbacks)
+  config.action_mailer.default_url_options = { 
+    host: ENV['APP_HOST'] || 'toruya.com',
+    protocol: 'https'
+  }
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
   # middleware. The `delay` is used to determine how long to wait after a write
