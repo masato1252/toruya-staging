@@ -3,7 +3,7 @@
   <main id="socialLogin">
     <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
 
-    <%= button_to toruya_line_login_url(lines_user_bot_connect_user_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]),
+    <%= button_to toruya_line_login_url(lines_user_bot_schedules_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]),
                 class: "btn line-button with-wording only-word",
                 data: { disable_with: "<i class='fa fa-spinner fa-spin fa-fw'></i>".html_safe } do %>
       <%= I18n.t("common.line_login_btn_word") %>

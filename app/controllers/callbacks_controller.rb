@@ -92,9 +92,17 @@ class CallbacksController < Devise::OmniauthCallbacksController
       if outcome.valid? && social_user&.user
         # line sign in
         user = social_user.user
+        
+        Rollbar.info("LineLoginSuccess", 
+          user_id: user.id, 
+          social_user_id: social_user.id,
+          social_service_user_id: social_user.social_service_user_id
+        )
+        
         remember_me(user)
         sign_in(user)
         write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
+        write_user_bot_cookies(:current_user_id, user.id)
 
         if param["existing_owner_id"] # existing user add another line account
           existing_user = User.find(param["existing_owner_id"])
@@ -126,7 +134,6 @@ class CallbacksController < Devise::OmniauthCallbacksController
           redirect_to lines_user_bot_settings_path(user.id, consultant_connect_result: consultant_connect_outcome.valid?)
         else
           Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: param["oauth_redirect_to_url"])
-          write_user_bot_cookies(:current_user_id, user.id)
           
           # oauth_redirect_to_url could be root_path ("/"), which requires authentication
           # Redirect to schedules page if no specific redirect URL is provided or if it's root_path
