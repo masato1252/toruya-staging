@@ -126,7 +126,16 @@ class CallbacksController < Devise::OmniauthCallbacksController
           redirect_to lines_user_bot_settings_path(user.id, consultant_connect_result: consultant_connect_outcome.valid?)
         else
           Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: param["oauth_redirect_to_url"])
-          redirect_to Addressable::URI.new(path: param.delete("oauth_redirect_to_url")).to_s
+          write_user_bot_cookies(:current_user_id, user.id)
+          
+          # oauth_redirect_to_url could be root_path ("/"), which requires authentication
+          # Redirect to schedules page if no specific redirect URL is provided or if it's root_path
+          redirect_url = param["oauth_redirect_to_url"]
+          if redirect_url.blank? || redirect_url == "/" || redirect_url == root_path
+            redirect_to lines_user_bot_schedules_path(business_owner_id: user.id)
+          else
+            redirect_to Addressable::URI.new(path: redirect_url).to_s
+          end
         end
       elsif outcome.valid? && outcome.result.user.nil?
         # user sign up
