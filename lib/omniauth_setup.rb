@@ -24,13 +24,19 @@ class OmniauthSetup
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
     who = @request.parameters["whois"].presence || @request.cookies["whois"]
+    
+    Rails.logger.info("[OmniauthSetup] Parameters whois: #{@request.parameters["whois"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup] Cookies whois: #{@request.cookies["whois"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup] Who value: #{who.present? ? 'present' : 'nil'}")
 
     if who && MessageEncryptor.decrypt(who) == CallbacksController::TORUYA_USER
+      Rails.logger.info("[OmniauthSetup] Using TORUYA_USER credentials")
       {
         client_id: Rails.application.secrets[:ja][:toruya_line_login_id],
         client_secret: Rails.application.secrets[:ja][:toruya_line_login_secret]
       }
     elsif who && MessageEncryptor.decrypt(who) == CallbacksController::TW_TORUYA_USER
+      Rails.logger.info("[OmniauthSetup] Using TW_TORUYA_USER credentials")
       {
         client_id: Rails.application.secrets[:tw][:toruya_line_login_id],
         client_secret: Rails.application.secrets[:tw][:toruya_line_login_secret]
@@ -46,7 +52,9 @@ class OmniauthSetup
           client_secret: account.raw_login_channel_secret
         }
       else
-        Rollbar.error("Unexpected line callback", request: @request)
+        Rails.logger.error("[OmniauthSetup] No credentials found - who: #{who.inspect}, oauth_social_account_id: #{oauth_social_account_id.inspect}")
+        Rollbar.error("Unexpected line callback", request: @request, who: who, cookies: @request.cookies.to_h.keys)
+        {}
       end
     end
   end
