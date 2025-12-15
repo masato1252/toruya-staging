@@ -10,9 +10,10 @@ class SmsClient
     phone_number = phone_number.gsub(/[^0-9]/, '')
 
     formatted_phone =
-      if Rails.configuration.x.env.staging?
-        Phonelib.parse(HARUKO_PHONE, "JP").international(true)
-      elsif Phonelib.valid?(phone_number)
+      # if Rails.configuration.x.env.staging?
+      #   Phonelib.parse(HARUKO_PHONE, "JP").international(true)
+      # els
+      if Phonelib.valid?(phone_number)
         Phonelib.parse(phone_number).international(true)
       else
         Phonelib.parse(phone_number, locale_country_code(locale)).international(true)
