@@ -26,7 +26,7 @@ const PriceBlock = ({
     else if (!product.is_started) {
       return (
         <>
-          <BookingStartInfo start_at={product.start_at} />
+          <BookingStartInfo start_at={product.start_time} />
           <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
         </>
       )
