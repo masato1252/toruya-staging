@@ -63,6 +63,9 @@ const PriceBlock = ({
   normal_price,
   is_started,
   start_at,
+  end_at,
+  start_time,
+  end_time,
   is_ended,
   purchase_url,
   social_account_add_friend_url,
@@ -145,7 +148,7 @@ const PriceBlock = ({
   if (!demo && !is_started) {
     return (
       <>
-        <ServiceStartInfo start_at={start_at} />
+        <ServiceStartInfo start_at={start_time} />
         <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
       </>
     )

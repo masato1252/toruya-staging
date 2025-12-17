@@ -24,6 +24,9 @@ const SaleTemplateView = ({
   introduction_video_url,
   is_started,
   start_at,
+  end_at,
+  start_time,
+  end_time,
   is_ended,
   purchase_url,
   payable,
@@ -64,6 +67,9 @@ const SaleTemplateView = ({
         normal_price={normal_price?.price_amount}
         quantity={quantity}
         start_at={start_at}
+        end_at={end_at}
+        start_time={start_time}
+        end_time={end_time}
         is_started={is_started}
         is_ended={is_ended}
         purchase_url={purchase_url}

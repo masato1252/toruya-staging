@@ -13,7 +13,7 @@ import CompanyInfoView from "components/user_bot/sales/company_info_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  price, normal_price, quantity, introduction_video_url, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews, is_external, support_feature_flags, company_info}) => {
+  price, normal_price, quantity, introduction_video_url, is_started, start_at, end_at, start_time, end_time, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews, is_external, support_feature_flags, company_info}) => {
 
   if (preview) {
     return (
@@ -31,6 +31,9 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
           normal_price={normal_price}
           quantity={quantity}
           start_at={start_at}
+          end_at={end_at}
+          start_time={start_time}
+          end_time={end_time}
           is_started={is_started}
           is_ended={is_ended}
           purchase_url={purchase_url}
@@ -63,6 +66,9 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
         normal_price={normal_price}
         quantity={quantity}
         start_at={start_at}
+        end_at={end_at}
+        start_time={start_time}
+        end_time={end_time}
         is_started={is_started}
         is_ended={is_ended}
         purchase_url={purchase_url}
@@ -89,6 +95,10 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
           normal_price={normal_price?.price_amount}
           quantity={quantity}
           is_started={is_started}
+          start_at={start_at}
+          end_at={end_at}
+          start_time={start_time}
+          end_time={end_time}
           is_ended={is_ended}
           purchase_url={purchase_url}
           payable={payable}
