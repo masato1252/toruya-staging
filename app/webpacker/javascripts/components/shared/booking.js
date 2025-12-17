@@ -38,7 +38,7 @@ export const ServiceStartInfo = ({start_at}) => (
       {I18n.t("booking_page.start_yet.title")}
     </h3>
     <div className="message">
-      {I18n.t("booking_page.start_yet.message1")}
+      {I18n.t("booking_page.start_yet.message1_online_service")}
       <br />
       <strong>{start_at}～</strong>
       <br />
@@ -53,6 +53,11 @@ export const ServiceEndInfo = () => (
       <h3 className="title">
         {I18n.t("booking_page.ended.title")}
       </h3>
+      <div className="message">
+        {I18n.t("booking_page.ended.message1_online_service")}
+        <br />
+        {I18n.t("booking_page.ended.message2")}
+      </div>
     </div>
   </div>
 )
