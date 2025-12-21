@@ -10,6 +10,70 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
     @refundable = @subscription.refundable?
   end
 
+  def upgrade_preview
+    begin
+      Rails.logger.info "Upgrade preview called with params: #{params.inspect}"
+      
+      new_plan = Plan.find_by!(level: params[:plan])
+      unless new_plan
+        Rails.logger.error "Plan not found: #{params[:plan]}"
+        render json: { error: "プランが見つかりませんでした" }, status: :not_found
+        return
+      end
+      
+      rank = params[:rank].to_i
+      subscription = Current.business_owner.subscription
+      
+      # 新プランの料金を取得
+      price_outcome = Plans::Price.run(user: Current.business_owner, plan: new_plan, rank: rank)
+      unless price_outcome.valid?
+        Rails.logger.error "Price calculation failed: #{price_outcome.errors.full_messages.join(', ')}"
+        render json: { error: "プランの料金を取得できませんでした: #{price_outcome.errors.full_messages.join(', ')}" }, status: :unprocessable_entity
+        return
+      end
+      new_plan_price, _ = price_outcome.result
+      
+      # 既存プランの残存価値を取得
+      residual_value_outcome = Subscriptions::ResidualValue.run(user: Current.business_owner)
+      unless residual_value_outcome.valid?
+        Rails.logger.error "Residual value calculation failed: #{residual_value_outcome.errors.full_messages.join(', ')}"
+        render json: { error: "残存価値を取得できませんでした: #{residual_value_outcome.errors.full_messages.join(', ')}" }, status: :unprocessable_entity
+        return
+      end
+      residual_value = residual_value_outcome.result
+      
+      # アップグレード時、新プランの料金を残りの契約期間で日割り計算
+      if subscription.in_paid_plan && (last_charge = Current.business_owner.subscription_charges.last_plan_charged)
+        new_plan_price = new_plan_price * Rational(last_charge.expired_date - Subscription.today, last_charge.expired_date - last_charge.charge_date)
+      end
+      
+      charge_amount = new_plan_price - residual_value
+      unless charge_amount.positive?
+        charge_amount = new_plan_price
+      end
+      
+      # 次回のチャージ日（現在の契約終了日）
+      next_charge_date = subscription.expired_date
+      
+      # 次回以降のチャージ金額（新プランの通常料金）
+      next_charge_amount, _ = Plans::Price.run!(user: Current.business_owner, plan: new_plan, rank: rank)
+      
+      result = {
+        current_charge_amount: charge_amount.format,
+        next_charge_date: next_charge_date ? next_charge_date.strftime("%Y年%m月%d日") : nil,
+        next_charge_amount: next_charge_amount.format
+      }
+      
+      Rails.logger.info "Upgrade preview result: #{result.inspect}"
+      render json: result
+    rescue => e
+      Rails.logger.error "Upgrade preview error: #{e.class} - #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      Rollbar.error(e, "Upgrade preview failed", params: params)
+      render json: { error: "情報の取得に失敗しました: #{e.message}" }, status: :internal_server_error
+    end
+  end
+
   def create
     new_plan = Plan.find_by!(level: params[:plan])
 
@@ -122,8 +186,51 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def downgrade
-    Subscriptions::Unsubscribe.run(user: Current.business_owner)
+    user = Current.business_owner
+    
+    # 選択されたプランを取得（パラメータがない場合は無料プランへのダウングレードとみなす）
+    if params[:plan].present?
+      plan = Plan.find_by!(level: params[:plan])
+      rank = params[:rank].to_i || 0
+      
+      # 無料プランへのダウングレードの場合
+      if plan.free_level?
+        outcome = Subscriptions::Unsubscribe.run(user: user)
+      else
+        # 有料プラン間のダウングレードの場合、次回請求時に新プランで請求されるようにnext_planを設定
+        outcome = Plans::Subscribe.run(
+          user: user,
+          plan: plan,
+          rank: rank,
+          change_immediately: false  # 次回請求時に変更
+        )
+      end
+      
+      unless outcome.valid?
+        flash[:alert] = outcome.errors.full_messages.join(", ")
+      end
+    else
+      # プランが指定されていない場合は無料プランへのダウングレード
+      outcome = Subscriptions::Unsubscribe.run(user: user)
+    end
 
-    redirect_to lines_user_bot_settings_path(business_owner_id: business_owner_id)
+    redirect_path = lines_user_bot_settings_path(business_owner_id: business_owner_id)
+    # social_service_user_idをURLに追加
+    # query_params = []
+    # if current_social_user&.social_service_user_id
+    #   query_params << "social_service_user_id=#{current_social_user.social_service_user_id}"
+    # elsif params[:social_service_user_id].present?
+    #   query_params << "social_service_user_id=#{params[:social_service_user_id]}"
+    # end
+    
+    # # クエリパラメータを追加
+    # if query_params.any?
+    #   redirect_path += "?#{query_params.join('&')}"
+    # end
+    
+    # プランメニューへのアンカーリンクを追加（URLの最後）
+    redirect_path += "#plans-menu-item"
+    
+    redirect_to redirect_path
   end
 end

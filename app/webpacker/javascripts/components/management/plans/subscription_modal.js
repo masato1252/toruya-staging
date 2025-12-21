@@ -18,16 +18,16 @@ class SubscriptionModal extends React.Component {
           <div>
             {this.props.i18n.downgradeDesc1 || this.props.i18n.downgrade_desc1}
           </div>
-          <div className="downgrade-label">
+          {/* <div className="downgrade-label">
             {this.props.i18n.downgradeLabel1 || this.props.i18n.downgrade.label1}
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             {this.props.i18n.downgradeDesc2 || this.props.i18n.downgrade_desc2}
-          </div>
+          </div> */}
         </div>
-        <div className="modal-footer">
+        <div className="modal-footer flex justify-center">
           <div
-           className={`btn btn-tarco`}
+           className={`block btn btn-tarco mr-4`}
            onClick={() => { $("#subscription-modal").modal("hide"); }}
            >
             {this.props.i18n.downgradeCancelBtn || this.props.i18n.downgrade.cancel_btn}

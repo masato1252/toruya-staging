@@ -31,6 +31,8 @@ class Settings::PaymentsController < SettingsController
 
     if outcome.invalid?
       render json: { message: outcome.errors.full_messages.join("") }, status: :unprocessable_entity
+    else
+      render json: { redirect_path: settings_plans_path }
     end
   end
 
@@ -68,7 +70,33 @@ class Settings::PaymentsController < SettingsController
   end
 
   def downgrade
-    current_user.subscription.update_columns(plan_id: Subscription::FREE_PLAN_ID)
+    user = current_user
+    
+    # 選択されたプランを取得（パラメータがない場合は無料プランへのダウングレードとみなす）
+    if params[:plan].present?
+      plan = Plan.find_by!(level: params[:plan])
+      rank = params[:rank].to_i || 0
+      
+      # 無料プランへのダウングレードの場合
+      if plan.free_level?
+        outcome = Subscriptions::Unsubscribe.run(user: user)
+      else
+        # 有料プラン間のダウングレードの場合、次回請求時に新プランで請求されるようにnext_planを設定
+        outcome = Plans::Subscribe.run(
+          user: user,
+          plan: plan,
+          rank: rank,
+          change_immediately: false  # 次回請求時に変更
+        )
+      end
+      
+      unless outcome.valid?
+        flash[:alert] = outcome.errors.full_messages.join(", ")
+      end
+    else
+      # プランが指定されていない場合は無料プランへのダウングレード
+      outcome = Subscriptions::Unsubscribe.run(user: user)
+    end
 
     redirect_to settings_plans_path
   end
