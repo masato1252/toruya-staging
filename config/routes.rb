@@ -295,6 +295,7 @@ Rails.application.routes.draw do
               collection do
                 get :refund
                 get :downgrade
+                get :upgrade_preview
                 put :change_card
               end
 

@@ -24,8 +24,8 @@ class LineClient
 
     response
   rescue => e
-    Rollbar.error(e)
-    response
+    Rollbar.error(e, args: args, method: caller_locations(1,1)[0].label)
+    nil  # Explicitly return nil on error
   end
 
   # TODO: SocialCustomer or Social User or User

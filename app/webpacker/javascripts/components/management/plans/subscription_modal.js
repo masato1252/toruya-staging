@@ -27,7 +27,7 @@ class SubscriptionModal extends React.Component {
         </div>
         <div className="modal-footer flex justify-center">
           <div
-           className={`block btn btn-tarco mr-4`}
+           className={`block btn btn-tarco mr-2`}
            onClick={() => { $("#subscription-modal").modal("hide"); }}
            >
             {this.props.i18n.downgradeCancelBtn || this.props.i18n.downgrade.cancel_btn}
