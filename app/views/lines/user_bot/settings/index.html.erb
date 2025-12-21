@@ -49,11 +49,11 @@
         <% end %>
 
         <% if support_official_support_display? %>
-          <%= link_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id), class: "field-row", id: "plans-menu-item" do %>
+          <%= link_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.company.consultants") %></span><i class="fa fa-angle-right"></i>
           <% end %>
         <% end %>
-        <%= link_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id), class: "field-row" do %>
+        <%= link_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id), class: "field-row", id: "plans-menu-item" do %>
           <div>
             <%= t("settings.plans.plan_info.plan_member", plan_name: Current.business_owner.member_plan_name) %><br />
             <div class="desc">

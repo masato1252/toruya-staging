@@ -116,7 +116,14 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
          payment_intent_id: error_with_client_secret[:payment_intent_id]
       }, status: :unprocessable_entity
     else
-      render json: { redirect_path: lines_user_bot_settings_path(business_owner_id: business_owner_id) }
+      redirect_path = lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)
+      # social_service_user_idをURLに追加
+      # if current_social_user&.social_service_user_id
+      #   redirect_path += "?social_service_user_id=#{current_social_user.social_service_user_id}"
+      # elsif params[:social_service_user_id].present?
+      #   redirect_path += "?social_service_user_id=#{params[:social_service_user_id]}"
+      # end
+      render json: { redirect_path: redirect_path }
     end
   end
 

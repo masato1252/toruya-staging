@@ -68,6 +68,29 @@ class PlanCharge extends React.Component {
     processing: false
   };
 
+  
+  stripePromise = null;
+  currentStripeKey = null;
+
+  componentDidMount() {
+    this.initializeStripe();
+  }
+
+  componentDidUpdate(prevProps) {
+    const currentStripeKey = this.props.stripeKey || this.props.stripe_key;
+    if (currentStripeKey !== this.currentStripeKey) {
+      this.initializeStripe();
+    }
+  }
+
+  initializeStripe = () => {
+    const stripeKey = this.props.stripeKey || this.props.stripe_key;
+    if (stripeKey) {
+      this.currentStripeKey = stripeKey;
+      this.stripePromise = loadStripe(stripeKey);
+    }
+  }
+
   toggleProcessing = () => {
     this.setState(prevState => ({ processing: !prevState.processing }));
   }
@@ -221,8 +244,9 @@ class PlanCharge extends React.Component {
       // paymentPathからdowngradePathを推測
       // 例: /settings/payments -> /settings/payments/downgrade
       // 例: /lines/user_bot/owner/82/settings/payments -> /lines/user_bot/owner/82/settings/payments/downgrade
+      const paymentPath = this.props.paymentPath || this.props.props?.paymentPath;
       const downgradePath = this.props.downgradePath || 
-        (this.props.paymentPath ? this.props.paymentPath.replace(/\/?$/, '/downgrade') : '/settings/payments/downgrade');
+        (paymentPath ? paymentPath.replace(/\/?$/, '/downgrade') : '/settings/payments/downgrade');
 
       // social_service_user_idを取得
       const getSocialServiceUserId = () => {
@@ -270,11 +294,13 @@ class PlanCharge extends React.Component {
 
   render() {
     if (this.props.chargeImmediately) {
-      const stripePromise = loadStripe(this.props.stripeKey || this.props.stripe_key);
+      if (!this.stripePromise) {
+        return null; // Stripe is loading
+      }
 
       return (
         <>
-          <Elements stripe={stripePromise}>
+          <Elements stripe={this.stripePromise}>
             <PaymentForm
               onSuccess={this.onCharge}
               stripeKey={this.props.stripeKey || this.props.stripe_key}
@@ -289,7 +315,7 @@ class PlanCharge extends React.Component {
 
     if (this.props.downgrade) {
       return (
-        <div className="btn btn-orange" onClick={this.onCharge}>
+        <div className="btn btn-orange" onClick={this.onDowngrade}>
           {this.props.i18n.downgradeConfirmBtn || this.props.i18n.downgrade.confirm_btn}
         </div>
       );

@@ -17,6 +17,12 @@ module SocialUserMessages
           LineClient.flex(social_user, content)
         end
 
+      # Handle case where response is nil (LINE API failed or content_type unknown)
+      if response.nil?
+        errors.add(:social_user_message, :sent_failed, message: "^LINE API request failed or invalid content type")
+        return
+      end
+
       if response.code == "200"
         social_user_message.update(sent_at: Time.current)
       else
