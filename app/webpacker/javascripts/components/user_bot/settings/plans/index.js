@@ -8,6 +8,7 @@ import StripeCheckoutModal from "shared/stripe_checkout_modal";
 import StripeChangeCardModal from "shared/stripe_change_card_modal";
 import { TopNavigationBar } from "shared/components"
 import SubscriptionModal from "components/management/plans/subscription_modal";
+import UpgradeConfirmationModal from "./upgrade_confirmation_modal";
 import SupportModal from "shared/support_modal";
 import I18n from 'i18n-js/index.js.erb';
 
@@ -18,6 +19,7 @@ const Plans = ({props}) => {
 
   const [selected_plan_level, seletePlan] = useState()
   const [selected_rank, seleteRank] = useState(props.default_upgrade_rank || props.current_rank)
+  const [current_charge_amount, setCurrentChargeAmount] = useState(null)
 
   const isCurrentPlan = (planLevel) => {
     return props.current_plan_level === planLevel;
@@ -36,7 +38,68 @@ const Plans = ({props}) => {
   const onPay = (planLevel) => {
     seletePlan(planLevel)
 
+    // 有料プラン→上位の有料プランへのアップグレードの場合、確認モーダルを表示
+    // 状態更新を待つためにsetTimeoutを使用
+    setTimeout(() => {
+      if (props.in_paid_plan && isUpgrade(planLevel)) {
+        $("#upgrade-confirmation-modal").modal("show");
+      } else {
+        $("#checkout-modal").modal("show");
+      }
+    }, 0);
+  };
+
+  const onConfirmUpgrade = async () => {
+    $("#upgrade-confirmation-modal").modal("hide");
+    // 確認モーダルで取得したチャージ金額を保持
+    await fetchUpgradePreview();
     $("#checkout-modal").modal("show");
+  };
+
+  const getSocialServiceUserId = () => {
+    // URLパラメータから取得を試みる
+    const urlParams = new URLSearchParams(window.location.search);
+    const socialServiceUserId = urlParams.get('social_service_user_id');
+    if (socialServiceUserId) {
+      return socialServiceUserId;
+    }
+    // URLパスから取得を試みる
+    const pathMatch = window.location.pathname.match(/social_service_user_id\/([^\/\?]+)/);
+    if (pathMatch) {
+      return pathMatch[1];
+    }
+    return null;
+  };
+
+  const fetchUpgradePreview = async () => {
+    if (!selected_plan_level || selected_rank === undefined) return;
+    
+    const selectedPlan = props.plans[selected_plan_level];
+    if (!selectedPlan) return;
+
+    try {
+      const socialServiceUserId = getSocialServiceUserId();
+      let url = `/lines/user_bot/owner/${props.business_owner_id}/settings/payments/upgrade_preview?plan=${selectedPlan.key}&rank=${selected_rank}`;
+      if (socialServiceUserId) {
+        url += `&social_service_user_id=${socialServiceUserId}`;
+      }
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        credentials: "same-origin"
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentChargeAmount(data.current_charge_amount);
+      }
+    } catch (error) {
+      console.error("Error fetching upgrade preview:", error);
+    }
   };
 
   const onSubscribe = (planLevel) => {
@@ -51,6 +114,26 @@ const Plans = ({props}) => {
   const handleFailure = (error) => {
     toastr.error(error.message)
   }
+
+  const isPlanChangeRestricted = (planLevel) => {
+    // 無料プラン→有料プランを契約した日の内に、上位有料プランへのアップグレードを制限
+    if (!props.plan_change_restricted_today) {
+      return false;
+    }
+    
+    // 現在のプランが有料プランで、選択したプランが上位の有料プランかチェック
+    const currentLevel = props.current_plan_level;
+    const planOrder = Plans.planOrder;
+    const currentIndex = planOrder.indexOf(currentLevel);
+    const selectedIndex = planOrder.indexOf(planLevel);
+    
+    // 現在が有料プラン（basicまたはpremium）で、選択したプランが上位プランの場合
+    return currentIndex >= 1 && selectedIndex > currentIndex;
+  };
+
+  const handleRestrictedPlanClick = () => {
+    toastr.warning("プラン変更は1日1回までとなります");
+  };
 
   const renderSaveOrPayButton = (planLevel) => {
     if (planLevel == "free") {
@@ -67,11 +150,14 @@ const Plans = ({props}) => {
       )
     };
 
+    const restricted = isPlanChangeRestricted(planLevel);
+
     if (isUpgrade(planLevel)) {
       return (
         <div
-          className={`btn btn-yellow`}
-          onClick={() => onPay(planLevel)} >
+          className={`btn btn-yellow ${restricted ? 'disabled' : ''}`}
+          style={restricted ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
+          onClick={restricted ? handleRestrictedPlanClick : () => onPay(planLevel)} >
           {props.i18n.save}
         </div>
       )
@@ -287,21 +373,28 @@ const Plans = ({props}) => {
       />
       <StripeCheckoutModal
         stripe_key={props.stripe_key}
-        header="Trouya"
+        header="Toruya"
         plan_key={selectedPlan()?.key}
         rank={selected_rank}
         desc={selectedPlan()?.name}
-        details_desc={`${basicPlan.details.period}: ${cost_info(selected_plan_level)}`}
+        details_desc={current_charge_amount ? `今回のチャージ金額: ${current_charge_amount}` : `${basicPlan.details.period}: ${cost_info(selected_plan_level)}`}
         pay_btn={props.i18n.pay}
         payment_path={Routes.lines_user_bot_settings_payments_path(props.business_owner_id)}
         props={props}
         handleFailure={handleFailure}
       />
+      <UpgradeConfirmationModal
+        props={props}
+        selectedPlan={selectedPlan()}
+        rank={selected_rank}
+        onConfirm={onConfirmUpgrade}
+        onCancel={() => $("#upgrade-confirmation-modal").modal("hide")}
+      />
       <StripeChangeCardModal
         change_card_path={Routes.change_card_lines_user_bot_settings_payments_path(props.business_owner_id, {format: "json"})}
         stripe_key={props.stripe_key}
         business_owner_id={props.business_owner_id}
-        header="Trouya"
+        header="Toruya"
         pay_btn={I18n.t('plans.actions.change_card')}
       />
     </StickyContainer>

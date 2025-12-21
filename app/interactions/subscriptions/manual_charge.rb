@@ -16,8 +16,16 @@ module Subscriptions
       subscription.with_lock do
         Payments::StoreStripeCustomer.run(user: user, authorize_token: authorize_token, payment_intent_id: payment_intent_id)
 
+        # 新プランの料金を取得
         new_plan_price, charging_rank = compose(Plans::Price, user: user, plan: plan, rank: rank)
+
+        # 既存プランの残存価値を取得（新規：0円、既存：残存価値）
         residual_value = compose(Subscriptions::ResidualValue, user: user)
+
+        # アップグレード時、新プランの料金を残りの契約期間で日割り計算
+        if user.subscription.in_paid_plan && (last_charge = user.subscription_charges.last_plan_charged)
+          new_plan_price = new_plan_price * Rational(last_charge.expired_date - Subscription.today, last_charge.expired_date - last_charge.charge_date)
+        end
 
         charge_amount = new_plan_price - residual_value
         unless charge_amount.positive?
@@ -49,7 +57,10 @@ module Subscriptions
           subscription.plan = plan
           subscription.rank = charging_rank
           subscription.next_plan = nil
-          subscription.set_recurring_day
+          # 新規契約時のみrecurring_dayを設定（アップグレード時は既存のrecurring_dayを保持）
+          unless user.subscription.in_paid_plan && user.subscription_charges.last_plan_charged
+            subscription.set_recurring_day
+          end
           subscription.set_expire_date
           subscription.save!
 

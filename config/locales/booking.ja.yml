@@ -90,10 +90,12 @@ ja:
     start_yet:
       title: 受付開始前です
       message1: このページからのご予約は
+      message1_online_service: このページからの利用登録は
       message2: 受付を開始します。
     ended:
       title: 受付を終了しました
       message1: このページからのご予約は
+      message1_online_service: このページからの利用登録は
       message2: 受付を終了いたしました。
     booking_mailer:
       customer_reservation_notification:

@@ -214,6 +214,60 @@ class PlanCharge extends React.Component {
     }
   };
 
+  onDowngrade = async () => {
+    try {
+      this.toggleProcessing();
+
+      // paymentPathからdowngradePathを推測
+      // 例: /settings/payments -> /settings/payments/downgrade
+      // 例: /lines/user_bot/owner/82/settings/payments -> /lines/user_bot/owner/82/settings/payments/downgrade
+      const downgradePath = this.props.downgradePath || 
+        (this.props.paymentPath ? this.props.paymentPath.replace(/\/?$/, '/downgrade') : '/settings/payments/downgrade');
+
+      // social_service_user_idを取得
+      const getSocialServiceUserId = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const socialServiceUserId = urlParams.get('social_service_user_id');
+        if (socialServiceUserId) {
+          return socialServiceUserId;
+        }
+        const pathMatch = window.location.pathname.match(/social_service_user_id\/([^\/\?]+)/);
+        if (pathMatch) {
+          return pathMatch[1];
+        }
+        return null;
+      };
+
+      const socialServiceUserId = getSocialServiceUserId();
+      
+      // 選択されたプラン情報を取得
+      const planKey = this.props.plan?.key || this.props.plan?.level;
+      const rank = this.props.rank || 0;
+      
+      // パラメータを構築
+      const params = new URLSearchParams();
+      if (planKey) {
+        params.append('plan', planKey);
+      }
+      if (rank) {
+        params.append('rank', rank);
+      }
+      if (socialServiceUserId) {
+        params.append('social_service_user_id', socialServiceUserId);
+      }
+      
+      const url = `${downgradePath}?${params.toString()}`;
+
+      // ダウングレードはGETリクエストで、リダイレクトが返されるため、直接window.locationを使用
+      window.location.href = url;
+    } catch (err) {
+      this.toggleProcessing();
+      console.error("Downgrade error:", err);
+      // ダウングレード失敗時はエラーモーダルではなく、通常のエラーメッセージを表示
+      alert(this.props.i18n?.downgradeFailed || "ダウングレードに失敗しました。ページを再読み込みしてください。");
+    }
+  };
+
   render() {
     if (this.props.chargeImmediately) {
       const stripePromise = loadStripe(this.props.stripeKey || this.props.stripe_key);

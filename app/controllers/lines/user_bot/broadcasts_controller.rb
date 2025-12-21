@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def index
-    @broadcasts = Current.business_owner.broadcasts.ordered.normal.limit(50)
+    @broadcasts = Current.business_owner.broadcasts.ordered.normal
   end
 
   def show

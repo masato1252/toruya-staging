@@ -177,8 +177,10 @@ class Subscription < ApplicationRecord
         current_charged_record = user.subscription_charges.last_completed
 
         if last_charged_record && last_charged_record.expired_date > Date.today
-          last_charged_record.expired_date.next_month
+          # アップグレード時、既存プランの契約終了日をそのまま使用
+          return last_charged_record.expired_date
         else
+          # 新規契約（過去に契約終了したものありも含む）
           current_charged_record.charge_date.next_month
         end
       end

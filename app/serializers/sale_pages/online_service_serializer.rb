@@ -13,6 +13,18 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
     object.selling_start_at ? I18n.l(object.selling_start_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_now")
   end
 
+  attribute :end_at do |object|
+    object.selling_end_at ? I18n.l(object.selling_end_at, format: :long_date_with_wday) : I18n.t("sales.never_expire")
+  end
+
+  attribute :start_time do |object|
+    object.start_time_text
+  end
+
+  attribute :end_time do |object|
+    object.end_time_text
+  end
+
   attribute :is_started do |object|
     object.started?
   end
