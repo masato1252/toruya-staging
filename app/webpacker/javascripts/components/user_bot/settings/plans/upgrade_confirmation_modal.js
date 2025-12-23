@@ -129,19 +129,19 @@ const UpgradeConfirmationModal = ({props, selectedPlan, rank, onConfirm, onCance
             ) : previewData ? (
               <div className="upgrade-preview-content">
                 <div className="upgrade-preview-section" style={{ marginBottom: '20px' }}>
-                  <h5 style={{ fontWeight: 'bold', marginBottom: '10px' }}>今回チャージする金額</h5>
+                  <h5 style={{ fontWeight: 'bold', marginBottom: '10px' }}>今回お支払いいただく金額</h5>
                   <p className="charge-amount" style={{ fontSize: '24px', fontWeight: 'bold', color: '#333' }}>
                     {previewData.current_charge_amount}
                   </p>
                 </div>
                 {previewData.next_charge_date && (
                   <div className="upgrade-preview-section" style={{ marginBottom: '20px' }}>
-                    <h5 style={{ fontWeight: 'bold', marginBottom: '10px' }}>次回のチャージ日</h5>
+                    <h5 style={{ fontWeight: 'bold', marginBottom: '10px' }}>次回お支払い日</h5>
                     <p style={{ fontSize: '16px' }}>{previewData.next_charge_date}</p>
                   </div>
                 )}
                 <div className="upgrade-preview-section">
-                  <h5 style={{ fontWeight: 'bold', marginBottom: '10px' }}>次回以降のチャージ金額</h5>
+                  <h5 style={{ fontWeight: 'bold', marginBottom: '10px' }}>次回以降のお支払い金額</h5>
                   <p className="charge-amount" style={{ fontSize: '20px', fontWeight: 'bold', color: '#333' }}>
                     {previewData.next_charge_amount}
                   </p>
@@ -173,7 +173,7 @@ const UpgradeConfirmationModal = ({props, selectedPlan, rank, onConfirm, onCance
               onClick={handleConfirm}
               disabled={loading || !previewData}
             >
-              了承して次へ
+              了承して支払いへ
             </button>
           </div>
         </div>
