@@ -377,7 +377,7 @@ const Plans = ({props}) => {
         plan_key={selectedPlan()?.key}
         rank={selected_rank}
         desc={selectedPlan()?.name}
-        details_desc={current_charge_amount ? `今回のチャージ金額: ${current_charge_amount}` : `${basicPlan.details.period}: ${cost_info(selected_plan_level)}`}
+        details_desc={current_charge_amount ? `今回お支払いいただく金額: ${current_charge_amount}` : `${basicPlan.details.period}: ${cost_info(selected_plan_level)}`}
         pay_btn={props.i18n.pay}
         payment_path={Routes.lines_user_bot_settings_payments_path(props.business_owner_id)}
         props={props}
