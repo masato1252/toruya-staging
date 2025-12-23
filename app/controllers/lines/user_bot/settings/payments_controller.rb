@@ -109,9 +109,14 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       )
 
       error_with_client_secret = find_error_with_client_secret(outcome)
+      
+      # エラータイプを取得（:planキーから最初のエラーを取得）
+      error_type = outcome.errors.details[:plan]&.first&.dig(:error) ||
+                   outcome.errors.details.values.flatten.first&.dig(:error)
 
       render json: {
          message: outcome.errors.full_messages.join(""),
+         error_type: error_type,
          client_secret: error_with_client_secret[:client_secret],
          payment_intent_id: error_with_client_secret[:payment_intent_id]
       }, status: :unprocessable_entity

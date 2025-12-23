@@ -21,7 +21,7 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 
-const PaymentForm = ({ onSuccess, stripeKey, plan, i18n }) => {
+const PaymentForm = ({ onSuccess, stripeKey, plan, i18n, onError }) => {
   const [processing, setProcessing] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -43,6 +43,9 @@ const PaymentForm = ({ onSuccess, stripeKey, plan, i18n }) => {
     if (error) {
       setProcessing(false);
       console.error(error);
+      if (onError) {
+        onError(error.message || "カード情報の入力に問題があります。");
+      }
     } else {
       onSuccess(paymentMethod.id);
     }
@@ -65,7 +68,8 @@ class PlanCharge extends React.Component {
   };
 
   state = {
-    processing: false
+    processing: false,
+    errorMessage: null
   };
 
   
@@ -129,7 +133,7 @@ class PlanCharge extends React.Component {
           const stripe = await loadStripe(this.props.stripeKey || this.props.stripe_key);
           let result;
 
-          switch (err.plan) {
+          switch (err.error_type || err.plan) {
             case 'requires_payment_method':
             case 'requires_source':
               result = await stripe.confirmCardPayment(err.client_secret, {
@@ -168,22 +172,47 @@ class PlanCharge extends React.Component {
               this.toggleProcessing();
               window.location = result["redirect_path"];
             } else {
-              throw Error("Payment failed after confirmation");
+              // リトライ失敗時のエラーメッセージを取得
+              let errorMessage = "決済の確認後に失敗しました。";
+              try {
+                const errorData = await retryResponse.json();
+                errorMessage = errorData.message || errorMessage;
+              } catch (e) {
+                // JSON解析に失敗した場合はデフォルトメッセージを使用
+              }
+              throw new Error(errorMessage);
             }
           } else if (result.paymentIntent && result.paymentIntent.status === 'processing') {
             // Start polling payment status
             this.pollPaymentStatus(result.paymentIntent.id);
           }
         } else {
-          throw err;
+          // client_secretがない場合、エラーメッセージを取得してthrow
+          const errorMessage = err.message || "決済に失敗しました。もう一度お試しください。";
+          throw new Error(errorMessage);
         }
       } else {
-        throw Error("Payment failed");
+        // エラーレスポンスからメッセージを取得
+        let errorMessage = "決済に失敗しました。もう一度お試しください。";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          // JSON解析に失敗した場合はデフォルトメッセージを使用
+        }
+        throw new Error(errorMessage);
       }
     }
     catch (err) {
       this.toggleProcessing()
-      $("#charge-failed-modal").modal("show");
+      
+      // エラーメッセージを取得
+      const errorMessage = err.message || 
+        (typeof err === 'string' ? err : "決済に失敗しました。もう一度お試しください。");
+      
+      // エラーメッセージをstateに保存してモーダルに渡す
+      this.setState({ errorMessage });
+      $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
     }
   };
 
@@ -207,7 +236,8 @@ class PlanCharge extends React.Component {
             window.location = result.redirect_path;
             break;
           case 'failed':
-            throw Error(result.error || "Payment failed");
+            const failedMessage = result.error || result.message || "決済に失敗しました。";
+            throw new Error(failedMessage);
           case 'processing':
             // Continue polling
             setTimeout(() => this.pollPaymentStatus(paymentIntentId), 2000);
@@ -229,11 +259,25 @@ class PlanCharge extends React.Component {
             break;
         }
       } else {
-        throw Error("Failed to check payment status");
+        // ステータス確認失敗時のエラーメッセージを取得
+        let errorMessage = "決済状況の確認に失敗しました。";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          // JSON解析に失敗した場合はデフォルトメッセージを使用
+        }
+        throw new Error(errorMessage);
       }
     } catch (err) {
       this.toggleProcessing();
-      $("#charge-failed-modal").modal("show");
+      
+      // エラーメッセージを取得
+      const errorMessage = err.message || "決済状況の確認に失敗しました。";
+      
+      // エラーメッセージをstateに保存してモーダルに渡す
+      this.setState({ errorMessage });
+      $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
     }
   };
 
@@ -303,12 +347,16 @@ class PlanCharge extends React.Component {
           <Elements stripe={this.stripePromise}>
             <PaymentForm
               onSuccess={this.onCharge}
+              onError={(errorMessage) => {
+                this.setState({ errorMessage });
+                $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
+              }}
               stripeKey={this.props.stripeKey || this.props.stripe_key}
               plan={this.props.plan}
               i18n={this.props.i18n}
             />
           </Elements>
-          <ChargeFailedModal {...this.props} />
+          <ChargeFailedModal {...this.props} errorMessage={this.state.errorMessage} />
         </>
       );
     }
