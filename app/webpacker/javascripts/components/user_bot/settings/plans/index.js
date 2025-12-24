@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { StickyContainer, Sticky  } from 'react-sticky';
 import Routes from 'js-routes.js'
+import toastr from 'toastr';
 
 import StripeCheckoutModal from "shared/stripe_checkout_modal";
 import StripeChangeCardModal from "shared/stripe_change_card_modal";
@@ -20,6 +21,7 @@ const Plans = ({props}) => {
   const [selected_plan_level, seletePlan] = useState()
   const [selected_rank, seleteRank] = useState(props.default_upgrade_rank || props.current_rank)
   const [current_charge_amount, setCurrentChargeAmount] = useState(null)
+  const [isReservedForDowngrade, setIsReservedForDowngrade] = useState(false)
 
   const isCurrentPlan = (planLevel) => {
     return props.current_plan_level === planLevel;
@@ -33,6 +35,7 @@ const Plans = ({props}) => {
     if (isUpgrade(props.default_upgrade_plan)) {
       onPay(props.default_upgrade_plan)
     }
+    // flashメッセージはレイアウトのcustom_bootstrap_flashで表示されるため、ここでは表示しない
   })
 
   const onPay = (planLevel) => {
@@ -104,8 +107,34 @@ const Plans = ({props}) => {
 
   const onSubscribe = (planLevel) => {
     seletePlan(planLevel)
+    
+    // すでにそのプランへのダウングレードが予約されている場合
+    if (isDowngradeReserved(planLevel)) {
+      setIsReservedForDowngrade(true)
+    } else {
+      setIsReservedForDowngrade(false)
+    }
 
     $("#subscription-modal").modal("show");
+  };
+  
+  const cancelDowngradeReservation = () => {
+    $("#subscription-modal").modal("hide");
+    
+    const url = `/lines/user_bot/owner/${props.business_owner_id}/settings/payments/cancel_downgrade_reservation`;
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    
+    // CSRFトークンを追加
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'authenticity_token';
+    csrfInput.value = props.formAuthenticityToken;
+    form.appendChild(csrfInput);
+    
+    document.body.appendChild(form);
+    form.submit();
   };
 
   const subscriptionPlanIndex = (planLevel) => Plans.planOrder.indexOf(planLevel)
@@ -115,6 +144,7 @@ const Plans = ({props}) => {
     toastr.error(error.message)
   }
 
+  // 同日中のプラン変更制限をチェック
   const isPlanChangeRestricted = (planLevel) => {
     // プラン初回契約または変更した同日中に、再度プラン変更（アップグレード・ダウングレード）を制限
     if (!props.plan_change_restricted_today) {
@@ -129,6 +159,11 @@ const Plans = ({props}) => {
     
     // 現在のプランと選択したプランが異なる場合（アップグレード・ダウングレード問わず）
     return currentIndex !== selectedIndex;
+  };
+  
+  // 指定されたプランへのダウングレードが予約されているかチェック
+  const isDowngradeReserved = (planLevel) => {
+    return props.next_plan_level === planLevel;
   };
 
   const handleRestrictedPlanClick = () => {
@@ -163,12 +198,13 @@ const Plans = ({props}) => {
       )
     } else if (!isUpgrade(planLevel)) {
       // downgrade
+      const isReserved = isDowngradeReserved(planLevel);
       return (
         <div
           className={`btn btn-yellow ${restricted ? 'disabled' : ''}`}
           style={restricted ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
           onClick={restricted ? handleRestrictedPlanClick : () => onSubscribe(planLevel)} >
-          {props.i18n.save}
+          {isReserved ? "予約中" : props.i18n.save}
         </div>
       )
     }
@@ -371,6 +407,8 @@ const Plans = ({props}) => {
         {...props}
         selectedPlan={selectedPlan()}
         rank={selected_rank}
+        isReservedForDowngrade={isReservedForDowngrade}
+        onCancelReservation={cancelDowngradeReservation}
       />
       <StripeCheckoutModal
         stripe_key={props.stripe_key}

@@ -122,13 +122,36 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       }, status: :unprocessable_entity
     else
       redirect_path = lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)
+      
+      # プラン契約かアップグレードかを判断してflashメッセージを設定
+      subscription = Current.business_owner.subscription
+      current_plan = subscription.current_plan
+      current_plan_level = Plan.permission_level(current_plan.level)
+      new_plan_level = Plan.permission_level(new_plan.level)
+      
+      # プランレベルの順序を定義
+      plan_order = ["free", "basic", "premium"]
+      current_index = plan_order.index(current_plan_level)
+      new_index = plan_order.index(new_plan_level)
+      
+      # メッセージタイプとメッセージを設定
+      if current_plan_level == "free"
+        flash[:notice] = "プランの契約が完了しました"
+      elsif new_index && current_index && new_index > current_index
+        flash[:notice] = "プランのアップグレードが完了しました"
+      else
+        flash[:notice] = "プランの変更が完了しました"
+      end
+      
       # social_service_user_idをURLに追加
       # if current_social_user&.social_service_user_id
       #   redirect_path += "?social_service_user_id=#{current_social_user.social_service_user_id}"
       # elsif params[:social_service_user_id].present?
       #   redirect_path += "?social_service_user_id=#{params[:social_service_user_id]}"
       # end
-      render json: { redirect_path: redirect_path }
+      render json: { 
+        redirect_path: redirect_path
+      }
     end
   end
 
@@ -220,13 +243,20 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       
       unless outcome.valid?
         flash[:alert] = outcome.errors.full_messages.join(", ")
+      else
+        flash[:notice] = "プランのダウングレード予約が完了しました"
       end
     else
       # プランが指定されていない場合は無料プランへのダウングレード
       outcome = Subscriptions::Unsubscribe.run(user: user)
+      if outcome.valid?
+        flash[:notice] = "プランのダウングレード予約が完了しました"
+      end
     end
 
-    redirect_path = lines_user_bot_settings_path(business_owner_id: business_owner_id)
+    # プラン選択画面にリダイレクト
+    redirect_path = lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)
+    
     # social_service_user_idをURLに追加
     # query_params = []
     # if current_social_user&.social_service_user_id
@@ -241,8 +271,21 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
     # end
     
     # プランメニューへのアンカーリンクを追加（URLの最後）
-    redirect_path += "#plans-menu-item"
+    #redirect_path += "#plans-menu-item"
     
     redirect_to redirect_path
+  end
+
+  def cancel_downgrade_reservation
+    user = Current.business_owner
+    subscription = user.subscription
+    
+    if subscription.next_plan_id.present?
+      subscription.update(next_plan_id: nil)
+      flash[:notice] = "プランのダウングレード予約をキャンセルしました"
+      redirect_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)
+    else
+      render json: { success: false, message: "ダウングレード予約が存在しません" }, status: :unprocessable_entity
+    end
   end
 end

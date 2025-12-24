@@ -11,6 +11,11 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
 
     # プラン初回契約または変更した同日中に、再度プラン変更（アップグレード・ダウングレード）を制限
     @plan_change_restricted_today = plan_change_restricted_today?
+    
+    # 次回請求時のダウングレード予約プランIDとlevelを取得
+    subscription = Current.business_owner.subscription
+    @next_plan_id = subscription.next_plan_id
+    @next_plan_level = subscription.next_plan ? Plan.permission_level(subscription.next_plan.level) : nil
   end
 
   private
