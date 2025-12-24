@@ -6,6 +6,8 @@ import _ from "lodash";
 
 class SubscriptionModal extends React.Component {
   renderContent = () => {
+    const isReserved = this.props.isReservedForDowngrade;
+    
     return (
       <div className="downgrade-area">
         <div className="modal-body">
@@ -26,19 +28,38 @@ class SubscriptionModal extends React.Component {
           </div> */}
         </div>
         <div className="modal-footer flex justify-center">
-          <div
-           className={`block btn btn-tarco mr-2`}
-           onClick={() => { $("#subscription-modal").modal("hide"); }}
-           >
-            {this.props.i18n.downgradeCancelBtn || this.props.i18n.downgrade.cancel_btn}
-          </div>
-          <PlanCharge
-            {...this.props}
-            plan={this.props.selectedPlan}
-            rank={this.props.rank}
-            chargeImmediately={false}
-            downgrade={true}
-            />
+          {isReserved ? (
+            <>
+              <div
+                className={`block btn btn-tarco mr-2`}
+                onClick={() => { $("#subscription-modal").modal("hide"); }}
+              >
+                予約したままにする
+              </div>
+              <div
+                className={`block btn btn-yellow`}
+                onClick={this.props.onCancelReservation}
+              >
+                予約をキャンセルする
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className={`block btn btn-tarco mr-2`}
+                onClick={() => { $("#subscription-modal").modal("hide"); }}
+              >
+                {this.props.i18n.downgradeCancelBtn || this.props.i18n.downgrade.cancel_btn}
+              </div>
+              <PlanCharge
+                {...this.props}
+                plan={this.props.selectedPlan}
+                rank={this.props.rank}
+                chargeImmediately={false}
+                downgrade={true}
+              />
+            </>
+          )}
         </div>
       </div>
     );

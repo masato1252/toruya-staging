@@ -297,6 +297,7 @@ Rails.application.routes.draw do
                 get :downgrade
                 get :upgrade_preview
                 put :change_card
+                post :cancel_downgrade_reservation
               end
 
               member do
