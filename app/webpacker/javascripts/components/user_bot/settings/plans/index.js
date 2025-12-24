@@ -116,19 +116,19 @@ const Plans = ({props}) => {
   }
 
   const isPlanChangeRestricted = (planLevel) => {
-    // 無料プラン→有料プランを契約した日の内に、上位有料プランへのアップグレードを制限
+    // プラン初回契約または変更した同日中に、再度プラン変更（アップグレード・ダウングレード）を制限
     if (!props.plan_change_restricted_today) {
       return false;
     }
     
-    // 現在のプランが有料プランで、選択したプランが上位の有料プランかチェック
+    // 現在のプランと選択したプランが異なる場合、制限を適用
     const currentLevel = props.current_plan_level;
     const planOrder = Plans.planOrder;
     const currentIndex = planOrder.indexOf(currentLevel);
     const selectedIndex = planOrder.indexOf(planLevel);
     
-    // 現在が有料プラン（basicまたはpremium）で、選択したプランが上位プランの場合
-    return currentIndex >= 1 && selectedIndex > currentIndex;
+    // 現在のプランと選択したプランが異なる場合（アップグレード・ダウングレード問わず）
+    return currentIndex !== selectedIndex;
   };
 
   const handleRestrictedPlanClick = () => {
@@ -165,8 +165,9 @@ const Plans = ({props}) => {
       // downgrade
       return (
         <div
-          className={`btn btn-yellow`}
-          onClick={() => onSubscribe(planLevel)} >
+          className={`btn btn-yellow ${restricted ? 'disabled' : ''}`}
+          style={restricted ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
+          onClick={restricted ? handleRestrictedPlanClick : () => onSubscribe(planLevel)} >
           {props.i18n.save}
         </div>
       )
