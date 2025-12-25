@@ -36,6 +36,17 @@ class StripePaymentStatusController < ApplicationController
         render json: { status: 'processing' }
       when 'canceled'
         render json: { status: 'failed', error: 'Payment was canceled' }
+      when 'failed'
+        # PaymentIntentのlast_payment_errorからエラー情報を取得
+        last_payment_error = payment_intent.last_payment_error
+        render json: { 
+          status: 'failed', 
+          error: 'Payment failed',
+          last_payment_error: last_payment_error ? {
+            code: last_payment_error.code,
+            message: last_payment_error.message
+          } : nil
+        }
       else
         render json: { status: 'failed', error: 'Payment failed' }
       end

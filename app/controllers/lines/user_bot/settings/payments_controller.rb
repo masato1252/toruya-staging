@@ -111,12 +111,18 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       error_with_client_secret = find_error_with_client_secret(outcome)
       
       # エラータイプを取得（:planキーから最初のエラーを取得）
-      error_type = outcome.errors.details[:plan]&.first&.dig(:error) ||
-                   outcome.errors.details.values.flatten.first&.dig(:error)
+      plan_error = outcome.errors.details[:plan]&.first || {}
+      error_type = plan_error[:error] || outcome.errors.details.values.flatten.first&.dig(:error)
+      
+      # Stripeエラーコードとメッセージを取得
+      stripe_error_code = plan_error[:stripe_error_code]
+      stripe_error_message = plan_error[:stripe_error_message]
 
       render json: {
          message: outcome.errors.full_messages.join(""),
          error_type: error_type,
+         stripe_error_code: stripe_error_code,
+         stripe_error_message: stripe_error_message,
          client_secret: error_with_client_secret[:client_secret],
          payment_intent_id: error_with_client_secret[:payment_intent_id]
       }, status: :unprocessable_entity

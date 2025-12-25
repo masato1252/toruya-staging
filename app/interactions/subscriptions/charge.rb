@@ -100,7 +100,11 @@ module Subscriptions
           end
         rescue Stripe::CardError => error
           # 決済失敗時はchargeを保存しない（ロールバックされる）
-          errors.add(:plan, :auth_failed)
+          stripe_error = error.json_body[:error] || {}
+          errors.add(:plan, :auth_failed, 
+            stripe_error_code: stripe_error[:code],
+            stripe_error_message: stripe_error[:message] || error.message
+          )
 
           handle_charge_failed(charge)
 
@@ -110,7 +114,11 @@ module Subscriptions
           end
         rescue Stripe::StripeError => error
           # 決済失敗時はchargeを保存しない（ロールバックされる）
-          errors.add(:plan, :processor_failed)
+          stripe_error = error.json_body[:error] || {}
+          errors.add(:plan, :processor_failed,
+            stripe_error_code: stripe_error[:code],
+            stripe_error_message: stripe_error[:message] || error.message
+          )
 
           handle_charge_failed(charge)
 
