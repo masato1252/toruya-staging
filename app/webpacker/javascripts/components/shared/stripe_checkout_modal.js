@@ -9,6 +9,39 @@ import ChargeFailedModal from "components/management/plans/charge_failed";
 const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
   const [processing, setProcessing] = useState(false)
 
+  // Stripeエラーコードを日本語メッセージに変換
+  const getStripeErrorMessage = (error) => {
+    if (!error) return "決済に失敗しました。もう一度お試しください。";
+    
+    // Stripeエラーコードからメッセージを取得
+    const errorCode = error.code || error.type;
+    const errorMessage = error.message || "";
+    
+    switch (errorCode) {
+      case 'card_declined':
+        return "カード決済が拒否されました。カード会社にお問い合わせください。";
+      case 'expired_card':
+        return "カードの有効期限が切れています。別のカードをお試しください。";
+      case 'incorrect_cvc':
+        return "セキュリティーコード（CVC）が正しくありません。もう一度ご確認ください。";
+      case 'incorrect_number':
+        return "カード番号が正しくありません。もう一度ご確認ください。";
+      case 'processing_error':
+        return "処理中にエラーが発生しました。しばらく時間をおいてから再度お試しください。";
+      case 'insufficient_funds':
+        return "カードの残高が不足しています。別のカードをお試しください。";
+      case 'generic_decline':
+        return "カード決済が拒否されました。カード会社にお問い合わせください。";
+      case 'lost_card':
+        return "このカードは紛失カードとして報告されています。カード会社にお問い合わせください。";
+      case 'stolen_card':
+        return "このカードは盗難カードとして報告されています。カード会社にお問い合わせください。";
+      default:
+        // エラーメッセージがあればそれを使用、なければデフォルトメッセージ
+        return errorMessage || "決済に失敗しました。もう一度お試しください。";
+    }
+  }
+
   const handleToken = async (paymentMethodId) => {
     setProcessing(true)
 
@@ -31,7 +64,8 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
 
           if (confirmError) {
             setProcessing(false)
-            $("#charge-failed-modal").modal("show");
+            const errorMessage = getStripeErrorMessage(confirmError);
+            $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
           }
           else if (paymentIntent.status === 'succeeded') {
             // Payment successful, retry API call
@@ -45,7 +79,21 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
 
             if (retryError) {
               setProcessing(false)
-              $("#charge-failed-modal").modal("show");
+              // エラーレスポンスからメッセージを取得
+              let errorMessage = "決済に失敗しました。もう一度お試しください。";
+              if (retryError.response?.data?.stripe_error_code) {
+                // Stripeエラーコードからメッセージを取得
+                const stripeError = {
+                  code: retryError.response.data.stripe_error_code,
+                  message: retryError.response.data.stripe_error_message
+                };
+                errorMessage = getStripeErrorMessage(stripeError);
+              } else if (retryError.response?.data?.message) {
+                errorMessage = retryError.response.data.message;
+              } else if (retryError.message) {
+                errorMessage = retryError.message;
+              }
+              $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
             } else {
               window.location = retryResponse.data["redirect_path"];
             }
@@ -56,14 +104,29 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
           }
         } else {
           setProcessing(false)
-          $("#charge-failed-modal").modal("show");
+          // エラーレスポンスからメッセージを取得
+          let errorMessage = "決済に失敗しました。もう一度お試しください。";
+          if (error.response?.data?.stripe_error_code) {
+            // Stripeエラーコードからメッセージを取得
+            const stripeError = {
+              code: error.response.data.stripe_error_code,
+              message: error.response.data.stripe_error_message
+            };
+            errorMessage = getStripeErrorMessage(stripeError);
+          } else if (error.response?.data?.message) {
+            errorMessage = error.response.data.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+          $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
         }
       } else {
         window.location = response.data["redirect_path"];
       }
     } catch (err) {
       setProcessing(false);
-      $("#charge-failed-modal").modal("show");
+      const errorMessage = err.message || "決済処理中にエラーが発生しました。もう一度お試しください。";
+      $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
     }
   }
 
@@ -93,7 +156,21 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
             });
 
             if (retryError) {
-              $("#charge-failed-modal").modal("show");
+              // エラーレスポンスからメッセージを取得
+              let errorMessage = "決済に失敗しました。もう一度お試しください。";
+              if (retryError.response?.data?.stripe_error_code) {
+                // Stripeエラーコードからメッセージを取得
+                const stripeError = {
+                  code: retryError.response.data.stripe_error_code,
+                  message: retryError.response.data.stripe_error_message
+                };
+                errorMessage = getStripeErrorMessage(stripeError);
+              } else if (retryError.response?.data?.message) {
+                errorMessage = retryError.response.data.message;
+              } else if (retryError.message) {
+                errorMessage = retryError.message;
+              }
+              $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
             } else {
               window.location = retryResponse.data["redirect_path"];
             }
@@ -101,7 +178,18 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
             break;
           case 'failed':
             setProcessing(false);
-            $("#charge-failed-modal").modal("show");
+            // PaymentIntentのlast_payment_errorからエラー情報を取得
+            let failedErrorMessage = "決済に失敗しました。もう一度お試しください。";
+            if (result.last_payment_error) {
+              const stripeError = {
+                code: result.last_payment_error.code,
+                message: result.last_payment_error.message
+              };
+              failedErrorMessage = getStripeErrorMessage(stripeError);
+            } else if (result.error_message) {
+              failedErrorMessage = result.error_message;
+            }
+            $("#charge-failed-modal").data('error-message', failedErrorMessage).modal("show");
             break;
           case 'processing':
             // Continue polling
@@ -114,7 +202,8 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
 
             if (error) {
               setProcessing(false);
-              $("#charge-failed-modal").modal("show");
+              const errorMessage = getStripeErrorMessage(error);
+              $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
             } else if (paymentIntent.status === 'succeeded') {
               setProcessing(false);
               window.location = result.redirect_path;
@@ -126,11 +215,13 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
         }
       } else {
         setProcessing(false);
-        $("#charge-failed-modal").modal("show");
+        const errorMessage = "決済処理中にエラーが発生しました。もう一度お試しください。";
+        $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
       }
     } catch (err) {
       setProcessing(false);
-      $("#charge-failed-modal").modal("show");
+      const errorMessage = err.message || "決済処理中にエラーが発生しました。もう一度お試しください。";
+      $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
     }
   };
 
