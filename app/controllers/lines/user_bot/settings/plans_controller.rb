@@ -27,7 +27,7 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
     # 現在有料プランにいる場合のみチェック
     return false unless subscription.in_paid_plan
     
-    # 今日完了したmanualなchargeを取得
+    # 今日完了したmanualなchargeを取得（初回契約またはアップグレード）
     today_charge = user.subscription_charges
                       .finished
                       .manual
@@ -35,23 +35,7 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
                       .order(created_at: :desc)
                       .first
     
-    return false unless today_charge
-    
-    # 今日のchargeが無料プランから有料プランへの初回契約かチェック
-    # first_chargeが今日のchargeと同じか、または今日のchargeが最初の有料プランへの契約か
-    first_charge = subscription.first_charge
-    if first_charge && first_charge.id == today_charge.id
-      # 初回契約が今日の場合
-      return true
-    end
-    
-    # 今日のcharge以前に有料プランへのchargeがない場合も初回契約とみなす
-    previous_paid_charge = user.subscription_charges
-                               .finished
-                               .where("charge_date < ?", Subscription.today)
-                               .where.not(plan_id: Subscription::FREE_PLAN_ID)
-                               .exists?
-    
-    !previous_paid_charge
+    # 今日完了したmanualなchargeがあれば、同日中のプラン変更を制限
+    return today_charge.present?
   end
 end
