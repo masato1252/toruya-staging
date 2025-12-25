@@ -42,17 +42,16 @@ const ChargeFailedModal = (props) => {
               <span aria-hidden="true">×</span>
             </button>
             <h4 className="modal-title" id="myModalLabel">
-              {props.i18n?.chargeFailedTitle || props.i18n?.payment?.failed_title || "決済エラー"}
+              {/* {props.i18n?.chargeFailedTitle || props.i18n?.payment?.failed_title || "決済エラー"} */}
+              決済エラー
             </h4>
           </div>
           <div className="modal-body">
-            {errorMessage ? (
-              <div style={{ color: '#9e2146', marginBottom: '15px', fontWeight: 'bold', padding: '10px', backgroundColor: '#fff5f5', borderRadius: '4px' }}>
-                {errorMessage}
-              </div>
-            ) : null}
-            {!errorMessage && defaultMessage}
-            {props.i18n?.chargeFailedDesc2 || props.i18n?.payment?.failed_desc2}
+            カード情報に問題があり決済(変更)できませんでした
+            {/* <div style={{ color: '#9e2146', marginBottom: '15px', fontWeight: 'bold', padding: '10px', backgroundColor: '#fff5f5', borderRadius: '4px' }}>
+              カード情報に問題があり決済(変更)できませんでした
+            </div>
+            {props.i18n?.chargeFailedDesc2 || props.i18n?.payment?.failed_desc2} */}
           </div>
           <div className="modal-footer">
             <div
