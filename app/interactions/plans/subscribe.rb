@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "order_id"
+
 module Plans
   class Subscribe < ActiveInteraction::Base
     object :user
@@ -30,7 +32,32 @@ module Plans
       else
         # change plan later
         subscription.update(next_plan: plan)
+        
+        # ダウングレード予約の場合、subscription_chargeを作成（同日中の制限チェック用）
+        if subscription.current_plan.downgrade?(plan)
+          create_downgrade_reservation_charge(subscription, plan)
+        end
       end
+    end
+
+    private
+
+    def create_downgrade_reservation_charge(subscription, plan)
+      user.subscription_charges.create!(
+        plan: plan,
+        rank: rank,
+        amount_cents: 0,
+        amount_currency: user.currency || "JPY",
+        charge_date: Subscription.today,
+        manual: true,
+        state: :completed,
+        order_id: OrderId.generate,
+        details: {
+          type: SubscriptionCharge::TYPES[:downgrade_reservation],
+          plan_name: plan.name,
+          rank: rank
+        }
+      )
     end
   end
 end

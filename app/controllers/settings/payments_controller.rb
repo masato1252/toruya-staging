@@ -3,7 +3,12 @@
 class Settings::PaymentsController < SettingsController
   def index
     @subscription = current_user.subscription
-    @charges = current_user.subscription_charges.finished.includes(:plan).where("created_at >= ?", 1.year.ago).order("created_at DESC")
+    @charges = current_user.subscription_charges
+      .finished
+      .displayable_in_history
+      .includes(:plan)
+      .where("created_at >= ?", 1.year.ago)
+      .order("created_at DESC")
     @refundable = @subscription.refundable?
   end
 

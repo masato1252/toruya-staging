@@ -119,6 +119,12 @@ const Plans = ({props}) => {
   };
   
   const cancelDowngradeReservation = () => {
+    // 同日中の制限をチェック
+    if (props.plan_change_restricted_today) {
+      toastr.warning("プラン変更は1日1回までとなります");
+      return;
+    }
+    
     $("#subscription-modal").modal("hide");
     
     const url = `/lines/user_bot/owner/${props.business_owner_id}/settings/payments/cancel_downgrade_reservation`;
@@ -409,6 +415,7 @@ const Plans = ({props}) => {
         rank={selected_rank}
         isReservedForDowngrade={isReservedForDowngrade}
         onCancelReservation={cancelDowngradeReservation}
+        planChangeRestrictedToday={props.plan_change_restricted_today}
       />
       <StripeCheckoutModal
         stripe_key={props.stripe_key}

@@ -37,8 +37,9 @@ class SubscriptionModal extends React.Component {
                 予約したままにする
               </div>
               <div
-                className={`block btn btn-yellow`}
-                onClick={this.props.onCancelReservation}
+                className={`block btn btn-yellow ${this.props.planChangeRestrictedToday ? 'disabled' : ''}`}
+                style={this.props.planChangeRestrictedToday ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
+                onClick={this.props.planChangeRestrictedToday ? () => {} : this.props.onCancelReservation}
               >
                 予約をキャンセルする
               </div>
