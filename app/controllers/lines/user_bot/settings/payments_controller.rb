@@ -1,12 +1,19 @@
 # frozen_string_literal: true
 
+require "order_id"
+
 class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardController
   skip_before_action :authenticate_current_user!, only: [:receipt]
   skip_before_action :authenticate_super_user, only: [:receipt]
 
   def index
     @subscription = Current.business_owner.subscription
-    @charges = Current.business_owner.subscription_charges.finished.includes(:plan).where("created_at >= ?", 1.year.ago).order("created_at DESC")
+    @charges = Current.business_owner.subscription_charges
+      .finished
+      .displayable_in_history
+      .includes(:plan)
+      .where("created_at >= ?", 1.year.ago)
+      .order("created_at DESC")
     @refundable = @subscription.refundable?
   end
 
@@ -286,12 +293,74 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
     user = Current.business_owner
     subscription = user.subscription
     
+    # 同日中の制限をチェック
+    if plan_change_restricted_today?
+      flash[:alert] = "プラン変更は1日1回までとなります"
+      redirect_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)
+      return
+    end
+    
     if subscription.next_plan_id.present?
+      next_plan = subscription.next_plan
       subscription.update(next_plan_id: nil)
+      
+      # ダウングレードキャンセルのsubscription_chargeを作成（同日中の制限チェック用）
+      user.subscription_charges.create!(
+        plan: next_plan,
+        rank: subscription.rank,
+        amount_cents: 0,
+        amount_currency: user.currency || "JPY",
+        charge_date: Subscription.today,
+        manual: true,
+        state: :completed,
+        order_id: OrderId.generate,
+        details: {
+          type: SubscriptionCharge::TYPES[:downgrade_cancellation],
+          plan_name: next_plan.name,
+          rank: subscription.rank
+        }
+      )
+      
       flash[:notice] = "プランのダウングレード予約をキャンセルしました"
       redirect_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)
     else
       render json: { success: false, message: "ダウングレード予約が存在しません" }, status: :unprocessable_entity
     end
+  end
+
+  private
+
+  def plan_change_restricted_today?
+    user = Current.business_owner
+    subscription = user.subscription
+    
+    # 現在有料プランにいる場合のみチェック
+    return false unless subscription.in_paid_plan
+    
+    # 今日完了したmanualなchargeを取得（初回契約またはアップグレード）
+    today_charge = user.subscription_charges
+                      .finished
+                      .manual
+                      .where(charge_date: Subscription.today)
+                      .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_reservation])
+                      .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_cancellation])
+                      .order(created_at: :desc)
+                      .first
+    
+    # 今日完了したmanualなchargeがあれば、同日中のプラン変更を制限
+    return true if today_charge.present?
+    
+    # 今日作成されたダウングレード予約・キャンセルのchargeをチェック
+    today_downgrade_charge = user.subscription_charges
+                                  .finished
+                                  .where(charge_date: Subscription.today)
+                                  .where("details ->> 'type' IN (?, ?)",
+                                         SubscriptionCharge::TYPES[:downgrade_reservation],
+                                         SubscriptionCharge::TYPES[:downgrade_cancellation])
+                                  .order(created_at: :desc)
+                                  .first
+    
+    # 今日ダウングレード予約・キャンセルがあれば、同日中のプラン変更を制限
+    today_downgrade_charge.present?
   end
 end

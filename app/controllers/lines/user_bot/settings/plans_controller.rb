@@ -32,10 +32,25 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
                       .finished
                       .manual
                       .where(charge_date: Subscription.today)
+                      .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_reservation])
+                      .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_cancellation])
                       .order(created_at: :desc)
                       .first
     
     # 今日完了したmanualなchargeがあれば、同日中のプラン変更を制限
-    return today_charge.present?
+    return true if today_charge.present?
+    
+    # 今日作成されたダウングレード予約・キャンセルのchargeをチェック
+    today_downgrade_charge = user.subscription_charges
+                                  .finished
+                                  .where(charge_date: Subscription.today)
+                                  .where("details ->> 'type' IN (?, ?)",
+                                         SubscriptionCharge::TYPES[:downgrade_reservation],
+                                         SubscriptionCharge::TYPES[:downgrade_cancellation])
+                                  .order(created_at: :desc)
+                                  .first
+    
+    # 今日ダウングレード予約・キャンセルがあれば、同日中のプラン変更を制限
+    today_downgrade_charge.present?
   end
 end
