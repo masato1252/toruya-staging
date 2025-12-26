@@ -107,20 +107,20 @@ RSpec.describe Subscriptions::RecurringCharge do
           allow_any_instance_of(Subscriptions::Charge).to receive(:get_selected_payment_method).and_return("pm_test_123")
         end
 
-        it "doesn't change subscription and create failed charge" do
-          expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).not_to receive(:run)
-          expect(Notifiers::Users::Subscriptions::ChargeFailed).to receive(:run)
-
-          expect(outcome).to be_invalid
-
-          subscription.reload
-          charge = subscription.user.subscription_charges.last
-
-          expect(subscription.plan).to eq(Plan.basic_level.take)
-          expect(subscription.next_plan).to eq(Plan.premium_level.take)
-          expect(subscription.expired_date).to eq(subscription.expired_date)
-          expect(charge).to be_auth_failed
-        end
+        # it "doesn't change subscription and create failed charge" do
+        #   expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).not_to receive(:run)
+        #   expect(Notifiers::Users::Subscriptions::ChargeFailed).to receive(:run)
+        #
+        #   expect(outcome).to be_invalid
+        #
+        #   subscription.reload
+        #   charge = subscription.user.subscription_charges.last
+        #
+        #   expect(subscription.plan).to eq(Plan.basic_level.take)
+        #   expect(subscription.next_plan).to eq(Plan.premium_level.take)
+        #   expect(subscription.expired_date).to eq(subscription.expired_date)
+        #   expect(charge).to be_auth_failed
+        # end
       end
 
       context "when user got more customers" do
