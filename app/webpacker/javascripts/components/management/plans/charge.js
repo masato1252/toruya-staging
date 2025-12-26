@@ -5,6 +5,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import ProcessingBar from "shared/processing_bar";
 import ChargeFailedModal from "./charge_failed";
+import toastr from "toastr";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -281,6 +282,10 @@ class PlanCharge extends React.Component {
     }
   };
 
+  handleRestrictedClick = () => {
+    toastr.warning("プラン変更は1日1回までとなります");
+  };
+
   onDowngrade = async () => {
     try {
       this.toggleProcessing();
@@ -362,8 +367,13 @@ class PlanCharge extends React.Component {
     }
 
     if (this.props.downgrade) {
+      const isRestricted = this.props.planChangeRestrictedToday;
       return (
-        <div className="btn btn-orange" onClick={this.onDowngrade}>
+        <div 
+          className={`btn btn-orange ${isRestricted ? 'disabled' : ''}`}
+          style={isRestricted ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
+          onClick={isRestricted ? this.handleRestrictedClick : this.onDowngrade}
+        >
           {this.props.i18n.downgradeConfirmBtn || this.props.i18n.downgrade.confirm_btn}
         </div>
       );

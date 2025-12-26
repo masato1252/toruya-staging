@@ -207,9 +207,8 @@ const Plans = ({props}) => {
       const isReserved = isDowngradeReserved(planLevel);
       return (
         <div
-          className={`btn btn-yellow ${restricted ? 'disabled' : ''}`}
-          style={restricted ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
-          onClick={restricted ? handleRestrictedPlanClick : () => onSubscribe(planLevel)} >
+          className="btn btn-yellow"
+          onClick={() => onSubscribe(planLevel)} >
           {isReserved ? "予約中" : props.i18n.save}
         </div>
       )

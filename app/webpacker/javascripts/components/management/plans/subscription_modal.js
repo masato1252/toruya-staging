@@ -3,8 +3,13 @@
 import React from "react";
 import PlanCharge from "./charge";
 import _ from "lodash";
+import toastr from "toastr";
 
 class SubscriptionModal extends React.Component {
+  handleRestrictedClick = () => {
+    toastr.warning("プラン変更は1日1回までとなります");
+  };
+
   renderContent = () => {
     const isReserved = this.props.isReservedForDowngrade;
     
@@ -39,7 +44,7 @@ class SubscriptionModal extends React.Component {
               <div
                 className={`block btn btn-yellow ${this.props.planChangeRestrictedToday ? 'disabled' : ''}`}
                 style={this.props.planChangeRestrictedToday ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
-                onClick={this.props.planChangeRestrictedToday ? () => {} : this.props.onCancelReservation}
+                onClick={this.props.planChangeRestrictedToday ? this.handleRestrictedClick : this.props.onCancelReservation}
               >
                 予約をキャンセルする
               </div>
@@ -58,6 +63,7 @@ class SubscriptionModal extends React.Component {
                 rank={this.props.rank}
                 chargeImmediately={false}
                 downgrade={true}
+                planChangeRestrictedToday={this.props.planChangeRestrictedToday}
               />
             </>
           )}
