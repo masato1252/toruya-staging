@@ -86,7 +86,11 @@ class User < ApplicationRecord
   has_many :filtered_outcomes
   has_many :subscription_charges do
     def last_completed
-      where(state: :completed).order("updated_at").last
+      where(state: :completed)
+        .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_reservation])
+        .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_cancellation])
+        .order("updated_at")
+        .last
     end
 
     def last_plan_charged
