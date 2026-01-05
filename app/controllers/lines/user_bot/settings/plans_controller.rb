@@ -42,7 +42,7 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
     
     # 今日作成されたダウングレード予約・キャンセルのchargeをチェック
     today_downgrade_charge = user.subscription_charges
-                                  .finished
+                               .finished
                                   .where(charge_date: Subscription.today)
                                   .where("details ->> 'type' IN (?, ?)",
                                          SubscriptionCharge::TYPES[:downgrade_reservation],

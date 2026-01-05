@@ -176,7 +176,7 @@ class Subscription < ApplicationRecord
         last_charged_record = user.subscription_charges.where.not(expired_date: nil).last_completed
         current_charged_record = user.subscription_charges.last_completed
 
-        if last_charged_record && last_charged_record.expired_date > Date.today
+        if last_charged_record && last_charged_record.expired_date > self.class.today
           # アップグレード時、既存プランの契約終了日をそのまま使用（recurring_dateを通さない）
           return last_charged_record.expired_date
         elsif last_charged_record

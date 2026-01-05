@@ -51,20 +51,20 @@ class SubscriptionModal extends React.Component {
             </>
           ) : (
             <>
-              <div
-                className={`block btn btn-tarco mr-2`}
-                onClick={() => { $("#subscription-modal").modal("hide"); }}
-              >
-                {this.props.i18n.downgradeCancelBtn || this.props.i18n.downgrade.cancel_btn}
-              </div>
-              <PlanCharge
-                {...this.props}
-                plan={this.props.selectedPlan}
-                rank={this.props.rank}
-                chargeImmediately={false}
-                downgrade={true}
+          <div
+           className={`block btn btn-tarco mr-2`}
+           onClick={() => { $("#subscription-modal").modal("hide"); }}
+           >
+            {this.props.i18n.downgradeCancelBtn || this.props.i18n.downgrade.cancel_btn}
+          </div>
+          <PlanCharge
+            {...this.props}
+            plan={this.props.selectedPlan}
+            rank={this.props.rank}
+            chargeImmediately={false}
+            downgrade={true}
                 planChangeRestrictedToday={this.props.planChangeRestrictedToday}
-              />
+            />
             </>
           )}
         </div>
