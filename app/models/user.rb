@@ -119,6 +119,8 @@ class User < ApplicationRecord
   has_many :online_services
   has_many :tickets
   has_many :surveys
+  has_many :line_notice_requests, dependent: :destroy
+  has_many :line_notice_charges, dependent: :destroy
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, :company_name, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :display_last_name, :display_first_name, :message_name, to: :profile, allow_nil: true
@@ -382,6 +384,27 @@ class User < ApplicationRecord
 
   def has_single_shop?
     shops.count == 1
+  end
+
+  # LINE通知関連メソッド
+  def line_notice_free_trial_available?
+    !line_notice_charges.free_trials.successful.exists?
+  end
+
+  def line_notice_free_trial_used?
+    line_notice_charges.free_trials.successful.exists?
+  end
+
+  def line_notice_charges_count
+    line_notice_charges.successful.count
+  end
+
+  def line_notice_free_trial_count
+    line_notice_charges.free_trials.successful.count
+  end
+
+  def line_notice_paid_charges_count
+    line_notice_charges.paid_charges.successful.count
   end
 
   private

@@ -4,9 +4,11 @@
 # Table name: subscriptions
 #
 #  id                 :bigint           not null, primary key
+#  earned_credits     :decimal(, )      default(0.0), not null
 #  expired_date       :date
 #  rank               :integer          default(0)
 #  recurring_day      :integer
+#  remaining_credits  :decimal(, )      default(0.0), not null
 #  trial_days         :integer
 #  trial_expired_date :date
 #  created_at         :datetime         not null
