@@ -40,6 +40,9 @@ class BookingPagesController < ActionController::Base
         @booking_page.user.customers.find_by(id: cookies[:booking_customer_id] || cookies[:verified_customer_id])
       end
 
+    # LINEから取得したemailまたは過去の登録済みemailを取得
+    @customer_email = cookies[:line_customer_email] || @customer&.email
+
     @last_selected_option_ids =
       if params[:last_booking_option_ids] || params[:last_booking_option_id]
         params[:last_booking_option_ids]&.split(",")&.map(&:to_i) || [params[:last_booking_option_id].to_i]

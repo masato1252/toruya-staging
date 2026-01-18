@@ -26,6 +26,16 @@ module SocialCustomers
       social_customer.social_user_name = auth.info.name
       social_customer.social_user_picture_url = auth.info.image
 
+      # LINEからemailを取得（失敗してもログインは続行）
+      begin
+        line_email = JWT.decode(auth.credentials.id_token, secret, false)[0]["email"]
+        # emailをcompositionsに保存してCallbacksControllerで使用
+        compositions[:line_email] = line_email if line_email.present?
+      rescue => e
+        Rollbar.info("LINE email retrieval failed", error: e.message, user_id: social_account.user_id)
+        # email取得失敗時も続行
+      end
+
       unless social_customer.is_owner
         social_customer.is_owner = customer_is_owner?
       end
@@ -57,6 +67,18 @@ module SocialCustomers
 
     def customer_is_owner?
       who == CallbacksController::SHOP_OWNER_CUSTOMER_SELF
+    end
+
+    def secret
+      if who == CallbacksController::TORUYA_USER
+        Rails.application.secrets[:ja][:toruya_line_login_secret]
+      elsif who == CallbacksController::TW_TORUYA_USER
+        Rails.application.secrets[:tw][:toruya_line_login_secret]
+      else
+        # Store-specific secret
+        social_account = SocialAccount.find(MessageEncryptor.decrypt(param["oauth_social_account_id"]))
+        social_account.raw_login_channel_secret
+      end
     end
   end
 end
