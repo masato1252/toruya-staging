@@ -74,6 +74,7 @@ tw:
       message_email: 您的電子郵件
       no_line_message1_html: 預約內容已發送至<br />您輸入的手機號碼或電子郵件
       no_line_message2_html: 如果您連結LINE帳號，<br />可以透過LINE接收預約內容<br />和前一天的提醒
+      request_line_notice: 請求LINE通知
       desc1: 的預約資訊
       desc2: 可以與您的行程一起管理的
       desc3: 免費日曆應用程式

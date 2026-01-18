@@ -5,7 +5,10 @@ class CustomerMailer < ApplicationMailer
   layout :determine_layout
 
   def custom
-    @message_content = params[:message]
+    # 新しいパラメータ形式（text_message, html_message）と古い形式（message）の両方をサポート
+    @text_message = params[:text_message] || params[:message]
+    @html_message = params[:html_message] || params[:message]
+    
     mail(
       to: params[:email],
       subject: params[:subject]

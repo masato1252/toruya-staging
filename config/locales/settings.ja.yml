@@ -323,6 +323,7 @@ ja:
         refund_successfully_message: 返金手続き完了
         refund_failed_message: 返金手続き失敗。もう一度手続きしてください。
         extra_shop: 追加店舗
+        line_notice_request: LINE通知リクエスト
       upgrade:
         caption_title: アップグレードのオプション
         caption_desc: アップグレードには２通りの選択肢があります。

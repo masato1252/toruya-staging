@@ -1,0 +1,67 @@
+<div class="header">
+  <div class="header-title-part">
+    <h1>
+      <% if shop_logo_url(@reservation.shop, "260") %>
+        <%= image_tag shop_logo_url(@reservation.shop, "260"), class: "logo" %>
+      <% else %>
+        <%= @reservation.shop.name %>
+      <% end %>
+    </h1>
+  </div>
+</div>
+
+<div class="done-view">
+  <div class="mb-8">
+    <h2 class="mb-6px"><%= t("line_notice_requests.new.title") %></h2>
+  </div>
+  
+  <hr class="bg-gray-300 border-0 h-px mb-8" />
+
+  <div class="mb-8">
+    <h3 class="title mb-4"><%= t("common.reservation_details") %></h3>
+    <div class="message mb-6">
+      <%= @reservation.booking_time %><br />
+      <%= @reservation.menus_sentence %>
+    </div>
+  </div>
+
+  <hr class="bg-gray-300 border-0 h-px mb-8" />
+
+  <div class="mb-8">
+    <div class="message mb-6">
+      <%= t("line_notice_requests.new.description_html", shop_name: @reservation.shop.name).html_safe %>
+    </div>
+
+    <% if @existing_request %>
+      <div class="reminder-mark desc mb-6">
+        <%= t("line_notice_requests.new.already_requested") %>
+      </div>
+      
+      <div class="margin-around">
+        <%= link_to t("line_notice_requests.new.back_to_reservation"), 
+            booking_path(@reservation.shop.slug, @reservation.id), 
+            class: "btn btn-tarco" %>
+      </div>
+    <% else %>
+      <div class="mb-6">
+        <div class="message text-sm text-gray-600 mb-4">
+          <%= t("line_notice_requests.new.notice_html").html_safe %>
+        </div>
+      </div>
+
+      <div class="margin-around">
+        <%= link_to t("line_notice_requests.new.connect_line_button"), 
+            line_oauth_url, 
+            class: "btn btn-success",
+            style: "background-color: #06C755; border-color: #06C755;" %>
+      </div>
+
+      <div class="margin-around">
+        <%= link_to t("common.cancel"), 
+            booking_path(@reservation.shop.slug, @reservation.id), 
+            class: "btn btn-tarco-outline" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

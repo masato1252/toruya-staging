@@ -1,0 +1,112 @@
+<% content_for :title do %>
+  <%= t('line_notice_requests.store.show.title') %>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= t('line_notice_requests.store.show.title') %></h3>
+        </div>
+        <div class="panel-body">
+          <!-- 予約情報 -->
+          <div class="mb-4">
+            <h4><%= t('common.reservation_details') %></h4>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th><%= t('common.customer_name') %></th>
+                  <td><%= @customer.name %></td>
+                </tr>
+                <tr>
+                  <th><%= t('common.reservation_datetime') %></th>
+                  <td><%= l(@reservation.start_time, format: :long) %></td>
+                </tr>
+                <tr>
+                  <th><%= t('common.menu') %></th>
+                  <td><%= @reservation.menus_sentence %></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr>
+
+          <!-- 料金案内 -->
+          <div class="mb-4">
+            <h4><%= t('line_notice_requests.store.show.charge_information') %></h4>
+            <% if @is_free_trial %>
+              <div class="alert alert-success">
+                <strong><%= t('line_notice_requests.store.show.free_trial_notice') %></strong>
+                <p><%= t('line_notice_requests.store.show.free_trial_description') %></p>
+              </div>
+            <% else %>
+              <div class="alert alert-warning">
+                <strong><%= t('line_notice_requests.store.show.paid_notice', amount: "#{@charge_amount}円") %></strong>
+                <p><%= t('line_notice_requests.store.show.paid_description') %></p>
+              </div>
+            <% end %>
+          </div>
+
+          <hr>
+
+          <!-- 承認ボタン -->
+          <div class="text-center">
+            <% if @is_free_trial %>
+              <%= form_with(
+                url: approve_lines_user_bot_line_notice_request_path(business_owner_id: business_owner_id, id: @line_notice_request.id),
+                method: :post,
+                local: true,
+                class: 'inline-block'
+              ) do |f| %>
+                <%= f.submit t('line_notice_requests.store.show.approve_button'), 
+                    class: 'btn btn-success btn-lg',
+                    data: { confirm: t('line_notice_requests.store.show.approve_confirm') } %>
+              <% end %>
+            <% else %>
+              <button id="approve-with-payment-btn" class="btn btn-success btn-lg">
+                <%= t('line_notice_requests.store.show.approve_and_pay_button', amount: "#{@charge_amount}円") %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% unless @is_free_trial %>
+  <%= react_component("line_notice_requests/payment_modal", {
+    props: {
+      lineNoticeRequestId: @line_notice_request.id,
+      businessOwnerId: business_owner_id,
+      chargeAmount: @charge_amount,
+      stripeKey: ENV['STRIPE_PUBLIC_KEY'],
+      approveUrl: approve_lines_user_bot_line_notice_request_path(business_owner_id: business_owner_id, id: @line_notice_request.id),
+      i18n: {
+        modalTitle: t('line_notice_requests.store.payment.modal_title'),
+        chargeAmountLabel: t('line_notice_requests.store.payment.charge_amount_label'),
+        cardNumberLabel: t('line_notice_requests.store.payment.card_number_label'),
+        submitButton: t('line_notice_requests.store.payment.submit_button'),
+        cancelButton: t('common.cancel'),
+        processing: t('common.processing')
+      }
+    }
+  }) %>
+<% end %>
+
+<script>
+  <% unless @is_free_trial %>
+    document.addEventListener('DOMContentLoaded', function() {
+      const approveBtn = document.getElementById('approve-with-payment-btn');
+      if (approveBtn) {
+        approveBtn.addEventListener('click', function() {
+          // Reactコンポーネントのモーダルを開く
+          window.dispatchEvent(new CustomEvent('openLineNoticePaymentModal'));
+        });
+      }
+    });
+  <% end %>
+</script>
+

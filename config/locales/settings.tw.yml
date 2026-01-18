@@ -323,6 +323,7 @@ tw:
         refund_successfully_message: 退款程序完成
         refund_failed_message: 退款程序失敗。請再試一次。
         extra_shop: 額外店鋪
+        line_notice_request: LINE通知請求
       upgrade:
         caption_title: 升級項目
         caption_desc: 您有兩種升級選擇。

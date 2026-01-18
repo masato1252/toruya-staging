@@ -46,6 +46,18 @@ ja:
   customer_mailer:
     custom:
       title: "%{company_name}からのお知らせ"
+    line_notice_request:
+      invitation_html: |
+        店主の設定により、お知らせがメールにて送信されています。次回以降のお知らせをLINEで受け取りたい方は、以下のリンクよりLINE連携して、店主へリクエストを送信してください。<br><br>＜LINEでお知らせをリクエスト＞<br>%{request_url}
+      invitation_text: |
+        店主の設定により、お知らせがメールにて送信されています。次回以降のお知らせをLINEで受け取りたい方は、以下のリンクよりLINE連携して、店主へリクエストを送信してください。
+
+        ＜LINEでお知らせをリクエスト＞
+        %{request_url}
+      pending_approval_html: |
+        LINEでお知らせをリクエスト済みですが、店主の承認が得られるまで、お知らせはメールにて送信されます。店主による承認をお待ちください。
+      pending_approval_text: |
+        LINEでお知らせをリクエスト済みですが、店主の承認が得られるまで、お知らせはメールにて送信されます。店主による承認をお待ちください。
   user_mailer:
     custom:
       title: "Toruyaからのお知らせ"

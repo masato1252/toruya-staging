@@ -406,7 +406,7 @@ const BookingReservationFormFunction = ({props}) => {
 
       bookingReservationLoading_ref.current = false
 
-      const { status, errors, requires_action, client_secret } = response.data;
+      const { status, errors, requires_action, client_secret, reservation_id } = response.data;
 
       if (status === "successful") {
         // Send GA4 booking_complete event
@@ -415,7 +415,7 @@ const BookingReservationFormFunction = ({props}) => {
           'event_label': window.location.pathname,
         });
 
-        set_booking_reservation_form_values(prev => ({...prev, is_done: true, submitting: false }))
+        set_booking_reservation_form_values(prev => ({...prev, is_done: true, reservation_id: reservation_id, submitting: false }))
         return { status: "successful" };
       }
       else if (status === "failed") {
@@ -504,6 +504,9 @@ const BookingReservationFormFunction = ({props}) => {
           skip_social_customer={skip_social_customer}
           function_access_id={props.function_access_id}
           customer_notification_channel={props.customer_notification_channel}
+          is_free_plan={props.is_free_plan}
+          line_settings_verified={props.line_settings_verified}
+          reservation_id={booking_reservation_form_values.reservation_id}
         />
       )
     }

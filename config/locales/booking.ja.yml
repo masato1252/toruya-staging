@@ -74,6 +74,7 @@ ja:
       message_email: メールアドレス
       no_line_message1_html: ご予約内容を<br />ご入力いただいた携帯電話番号またはメールアドレスに送信しました
       no_line_message2_html: LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます
+      request_line_notice: LINEでお知らせをリクエスト
       desc1: の予約情報を
       desc2: あなたの予定と一緒に管理できる
       desc3: 無料カレンダーアプリ

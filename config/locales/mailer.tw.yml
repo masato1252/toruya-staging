@@ -46,6 +46,18 @@ tw:
   customer_mailer:
     custom:
       title: "%{company_name}的通知"
+    line_notice_request:
+      invitation_html: |
+        由於店主的設定，通知透過電子郵件發送。如果您希望透過LINE接收未來的通知，請透過以下連結進行LINE連接，並向店主發送請求。<br><br>＜請求LINE通知＞<br>%{request_url}
+      invitation_text: |
+        由於店主的設定，通知透過電子郵件發送。如果您希望透過LINE接收未來的通知，請透過以下連結進行LINE連接，並向店主發送請求。
+
+        ＜請求LINE通知＞
+        %{request_url}
+      pending_approval_html: |
+        您已請求LINE通知，但在店主批准之前，通知將透過電子郵件發送。請等待店主批准。
+      pending_approval_text: |
+        您已請求LINE通知，但在店主批准之前，通知將透過電子郵件發送。請等待店主批准。
   user_mailer:
     custom:
       title: "來自Toruya的通知"

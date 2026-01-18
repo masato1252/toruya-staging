@@ -80,7 +80,7 @@ class LineNoticeCharge < ApplicationRecord
   scope :chargeable, -> { where(state: [:pending, :failed]) }
 
   # Constants
-  LINE_NOTICE_CHARGE_AMOUNT_JPY = 110  # 円
+  LINE_NOTICE_CHARGE_AMOUNT_JPY = 275  # 円（250円 + 税10%）
 
   # Class methods
   def self.create_free_trial!(user:, reservation:, line_notice_request:)
@@ -101,7 +101,7 @@ class LineNoticeCharge < ApplicationRecord
       user: user,
       reservation: reservation,
       line_notice_request: line_notice_request,
-      amount: LINE_NOTICE_CHARGE_AMOUNT_JPY,  # 実金額（110円）
+      amount: LINE_NOTICE_CHARGE_AMOUNT_JPY,  # 実金額（275円 = 250円 + 税10%）
       amount_currency: user.currency || 'JPY',
       charge_date: Date.current,
       is_free_trial: false,
@@ -149,7 +149,7 @@ class LineNoticeCharge < ApplicationRecord
     if is_free_trial
       self.amount = 0
     else
-      self.amount ||= LINE_NOTICE_CHARGE_AMOUNT_JPY  # 実金額（110円）
+      self.amount ||= LINE_NOTICE_CHARGE_AMOUNT_JPY  # 実金額（275円 = 250円 + 税10%）
     end
   end
 
