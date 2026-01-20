@@ -152,13 +152,13 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
                   console.log('Payment 3DS succeeded, final retry...');
                   // PaymentIntent の 3DS認証成功、最終リトライ
                   const [finalError, finalResponse] = await PaymentServices.payPlan({
-                    token: paymentMethodId,
-                    plan: plan_key,
-                    rank,
-                    business_owner_id: props.business_owner_id,
-                    payment_intent_id: paymentIntent.id
-                  });
-                  
+              token: paymentMethodId,
+              plan: plan_key,
+              rank,
+              business_owner_id: props.business_owner_id,
+              payment_intent_id: paymentIntent.id
+            });
+
                   if (finalError) {
                     setProcessing(false);
                     const errorMessage = finalError.response?.data?.message || "決済に失敗しました。もう一度お試しください。";
@@ -173,11 +173,11 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
                   pollPaymentStatus(paymentIntent.id, paymentMethodId);
                 }
               } else {
-                setProcessing(false)
+              setProcessing(false)
                 // バックエンドから返されたメッセージを優先的に表示
                 let errorMessage = retryError.response?.data?.message || "決済に失敗しました。もう一度お試しください。";
                 console.log('Showing error message:', errorMessage);
-                $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
+              $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
               }
             } else {
               console.log('Retry succeeded, redirecting to:', retryResponse.data["redirect_path"]);

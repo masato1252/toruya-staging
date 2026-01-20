@@ -1,6 +1,9 @@
 ja:
   meta:
     title: Toruyaースモールビジネスの顧客管理ツールー
+  common:
+    optional: "任意"
+    email: "メールアドレス"
   broadcast:
     states:
       active: 配信待ち

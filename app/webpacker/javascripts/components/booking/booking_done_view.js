@@ -69,8 +69,6 @@ const BookingDoneView = ({
         ) : (
           <>
             <div className="message">
-              {message1}
-              <br />
               {getNotificationMessage()}
             </div>
             {!is_free_plan && customer_notification_channel === 'line' ? <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} /> : null}

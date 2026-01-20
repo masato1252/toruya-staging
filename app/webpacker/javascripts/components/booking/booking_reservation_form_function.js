@@ -580,7 +580,7 @@ const BookingReservationFormFunction = ({props}) => {
         )}
         {isBookingFlowEnd() && isSocialLoginChecked() && (
           <CustomerVerificationForm
-            verification_required={!booking_reservation_form_values.social_user_id || props.customer_notification_channel == "email"}
+            verification_required={booking_reservation_form_values.social_user_id && props.customer_notification_channel == "email"}
             setCustomerValues={set_booking_reservation_form_values}
             customerValues={booking_reservation_form_values}
             found_customer={found_customer}

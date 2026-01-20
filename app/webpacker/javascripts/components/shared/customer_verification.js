@@ -4,6 +4,23 @@ import I18n from 'i18n-js/index.js.erb';
 
 import { ErrorMessage } from "shared/components";
 
+// 国番号の定数
+const COUNTRY_CODES = [
+  { code: '+81', label: '🇯🇵 日本 (+81)', country: 'JP' },
+  { code: '+1', label: '🇺🇸 アメリカ (+1)', country: 'US' },
+  { code: '+86', label: '🇨🇳 中国 (+86)', country: 'CN' },
+  { code: '+82', label: '🇰🇷 韓国 (+82)', country: 'KR' },
+  { code: '+886', label: '🇹🇼 台湾 (+886)', country: 'TW' },
+  { code: '+852', label: '🇭🇰 香港 (+852)', country: 'HK' },
+  { code: '+65', label: '🇸🇬 シンガポール (+65)', country: 'SG' },
+  { code: '+66', label: '🇹🇭 タイ (+66)', country: 'TH' },
+  { code: '+84', label: '🇻🇳 ベトナム (+84)', country: 'VN' },
+  { code: '+63', label: '🇵🇭 フィリピン (+63)', country: 'PH' },
+  { code: '+44', label: '🇬🇧 イギリス (+44)', country: 'GB' },
+  { code: '+33', label: '🇫🇷 フランス (+33)', country: 'FR' },
+  { code: '+49', label: '🇩🇪 ドイツ (+49)', country: 'DE' },
+];
+
 // Basic information form
 export const CustomerBasicInfoForm = ({
   customer_last_name,
@@ -163,24 +180,42 @@ export const VerificationCodeForm = ({
 // Verified customer form
 export const VerifiedCustomerForm = ({
   customer_phone_number,
+  customer_country_code,
   handleChange,
   handleSubmit,
   isSubmitting,
 }) => {
+  const defaultCountryCode = customer_country_code || '+81';
+  
   return (
     <div className="customer-type-options">
       <h4>
         {I18n.t("common.phone_number")} <span className="required">*</span>
       </h4>
-      <input
-        type="tel"
-        className="form-control"
-        value={customer_phone_number || ""}
-        onChange={(e) => handleChange('customer_phone_number', e.target.value)}
-        placeholder="09012345678"
-      />
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <select
+          className="form-control"
+          style={{ width: '180px', flexShrink: 0 }}
+          value={defaultCountryCode}
+          onChange={(e) => handleChange('customer_country_code', e.target.value)}
+        >
+          {COUNTRY_CODES.map(country => (
+            <option key={country.code} value={country.code}>
+              {country.label}
+            </option>
+          ))}
+        </select>
+        <input
+          type="tel"
+          className="form-control"
+          style={{ flex: 1 }}
+          value={customer_phone_number || ""}
+          onChange={(e) => handleChange('customer_phone_number', e.target.value)}
+          placeholder="9012345678"
+        />
+      </div>
 
-      <div className="centerize">
+      <div className="centerize" style={{ marginTop: '20px' }}>
         <a
           href="#"
           className="btn btn-tarco submit"
@@ -203,12 +238,15 @@ export const CustomerInfoForm = ({
   customer_phonetic_first_name,
   customer_email,
   customer_phone_number,
+  customer_country_code,
   support_phonetic_name,
   handleChange,
   handleSubmit,
   isSubmitting,
   errors,
 }) => {
+  const defaultCountryCode = customer_country_code || '+81';
+  
   return (
     <div className="customer-type-options">
       <h4>
@@ -273,15 +311,30 @@ export const CustomerInfoForm = ({
       <h4>
         {I18n.t("common.phone_number")} <span className="required">*</span>
       </h4>
-      <input
-        type="tel"
-        className="form-control"
-        value={customer_phone_number || ""}
-        onChange={(e) => handleChange('customer_phone_number', e.target.value)}
-        placeholder="09012345678"
-      />
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <select
+          className="form-control"
+          style={{ width: '180px', flexShrink: 0 }}
+          value={defaultCountryCode}
+          onChange={(e) => handleChange('customer_country_code', e.target.value)}
+        >
+          {COUNTRY_CODES.map(country => (
+            <option key={country.code} value={country.code}>
+              {country.label}
+            </option>
+          ))}
+        </select>
+        <input
+          type="tel"
+          className="form-control"
+          style={{ flex: 1 }}
+          value={customer_phone_number || ""}
+          onChange={(e) => handleChange('customer_phone_number', e.target.value)}
+          placeholder="9012345678"
+        />
+      </div>
 
-      <div className="centerize">
+      <div className="centerize" style={{ marginTop: '20px' }}>
         <a
           href="#"
           className="btn btn-tarco submit"

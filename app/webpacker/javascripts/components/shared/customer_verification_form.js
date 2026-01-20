@@ -39,6 +39,7 @@ const CustomerVerificationForm = ({
     customer_phone_number,
     customer_phone_number_confirmation,
     customer_email,
+    customer_country_code,
     customer_id,
     user_id,
     customer_social_user_id
@@ -193,6 +194,11 @@ const CustomerVerificationForm = ({
     setIsSubmitting(true);
 
     try {
+      // 国番号と電話番号を結合
+      const fullPhoneNumber = customer_country_code 
+        ? `${customer_country_code}${customer_phone_number}` 
+        : customer_phone_number;
+      
       const [_error, response] = await CustomerVerificationServices.createOrUpdateCustomer({
         user_id,
         customer_social_user_id,
@@ -200,7 +206,7 @@ const CustomerVerificationForm = ({
         customer_first_name,
         customer_phonetic_last_name,
         customer_phonetic_first_name,
-        customer_phone_number,
+        customer_phone_number: fullPhoneNumber,
         customer_email,
         customer_id,
         uuid: verificationUuid
@@ -240,6 +246,7 @@ const CustomerVerificationForm = ({
     customer_phonetic_first_name,
     customer_email,
     customer_phone_number,
+    customer_country_code,
     errors: customerValues.errors,
     support_phonetic_name,
     handleChange,
@@ -275,6 +282,7 @@ const CustomerVerificationForm = ({
             <CustomerBasicInfoForm {...commonBasicInfoProps} />
             <VerifiedCustomerForm
               customer_phone_number={customer_phone_number}
+              customer_country_code={customer_country_code}
               handleChange={handleChange}
               handleSubmit={submitVerifiedCustomer}
               isSubmitting={isSubmitting}

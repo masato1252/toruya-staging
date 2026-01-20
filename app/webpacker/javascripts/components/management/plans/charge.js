@@ -145,7 +145,7 @@ class PlanCharge extends React.Component {
           // Handle cases that require user action
           const stripe = await loadStripe(this.props.stripeKey || this.props.stripe_key);
           let result;
-          
+
           // バックエンドから返されたユーザー向けメッセージを保持
           const backendMessage = err.message || "決済処理に失敗しました。";
 
@@ -249,66 +249,66 @@ class PlanCharge extends React.Component {
                     throw new Error(backendMessage);
                   }
                   result = await stripe.confirmCardPayment(err.client_secret, {
-                    payment_method: paymentMethodId
-                  });
-                  break;
-                case 'requires_action':
+                payment_method: paymentMethodId
+              });
+              break;
+            case 'requires_action':
                   // handleCardActionはSetupIntentとPaymentIntentの両方で使える
-                  result = await stripe.handleCardAction(err.client_secret);
-                  break;
-                case 'requires_confirmation':
+              result = await stripe.handleCardAction(err.client_secret);
+              break;
+            case 'requires_confirmation':
                   // SetupIntentの場合は間違ったブランチに来ているのでエラー
                   if (clientSecretType === 'setup') {
                     console.error('ERROR: SetupIntent in PaymentIntent requires_confirmation case');
                     throw new Error(backendMessage);
                   }
-                  result = await stripe.confirmCardPayment(err.client_secret);
-                  break;
+              result = await stripe.confirmCardPayment(err.client_secret);
+              break;
               }
             } catch (stripeError) {
               // Stripe APIエラーが発生した場合も、バックエンドのメッセージを使用
               console.error('Stripe API error:', stripeError);
               throw new Error(backendMessage);
-            }
+          }
 
-            if (result.error) {
+          if (result.error) {
               // result.errorの場合も、バックエンドのメッセージを使用
               console.error('Stripe confirmCardPayment result error:', result.error);
               throw new Error(backendMessage);
-            } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-              // Payment successful, retry backend API call
-              const retryResponse = await fetch(this.props.paymentPath, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  "X-Requested-With": "XMLHttpRequest",
-                },
-                credentials: "same-origin",
-                body: JSON.stringify({
-                  ...data,
-                  payment_intent_id: result.paymentIntent.id
-                }),
-              });
+          } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+            // Payment successful, retry backend API call
+            const retryResponse = await fetch(this.props.paymentPath, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                "X-Requested-With": "XMLHttpRequest",
+              },
+              credentials: "same-origin",
+              body: JSON.stringify({
+                ...data,
+                payment_intent_id: result.paymentIntent.id
+              }),
+            });
 
-              if (retryResponse.ok) {
-                const result = await retryResponse.json();
-                this.toggleProcessing();
-                window.location = result["redirect_path"];
-              } else {
-                // リトライ失敗時のエラーメッセージを取得
-                let errorMessage = "決済の確認後に失敗しました。";
-                try {
-                  const errorData = await retryResponse.json();
+            if (retryResponse.ok) {
+              const result = await retryResponse.json();
+              this.toggleProcessing();
+              window.location = result["redirect_path"];
+            } else {
+              // リトライ失敗時のエラーメッセージを取得
+              let errorMessage = "決済の確認後に失敗しました。";
+              try {
+                const errorData = await retryResponse.json();
                   // messageには既にユーザー向けメッセージとStripeエラーの両方が含まれている
-                  errorMessage = errorData.message || errorMessage;
-                } catch (e) {
-                  // JSON解析に失敗した場合はデフォルトメッセージを使用
-                }
-                throw new Error(errorMessage);
+                errorMessage = errorData.message || errorMessage;
+              } catch (e) {
+                // JSON解析に失敗した場合はデフォルトメッセージを使用
               }
-            } else if (result.paymentIntent && result.paymentIntent.status === 'processing') {
-              // Start polling payment status
-              this.pollPaymentStatus(result.paymentIntent.id);
+              throw new Error(errorMessage);
+            }
+          } else if (result.paymentIntent && result.paymentIntent.status === 'processing') {
+            // Start polling payment status
+            this.pollPaymentStatus(result.paymentIntent.id);
             }
           }
         } else {
