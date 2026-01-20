@@ -67,8 +67,20 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
           )
         }
       else
+        # エラー詳細を取得（プラン決済と同様のフォーマット）
+        error_details = outcome.errors.details[:payment]&.first || outcome.errors.details[:user]&.first || {}
+        
+        # ユーザー向けメッセージを優先的に使用
+        user_message = error_details[:user_message] || outcome.errors.full_messages.first || "決済に失敗しました。"
+        
         render json: { 
-          error: outcome.errors.full_messages.join(", ")
+          message: user_message,
+          error_type: error_details[:error]&.to_s || 'payment_failed',
+          stripe_error_code: error_details[:stripe_error_code],
+          stripe_error_message: error_details[:stripe_error_message],
+          client_secret: error_details[:client_secret],
+          payment_intent_id: error_details[:payment_intent_id],
+          setup_intent_id: error_details[:setup_intent_id]
         }, status: :unprocessable_entity
       end
     end

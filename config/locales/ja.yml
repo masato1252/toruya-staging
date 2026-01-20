@@ -853,6 +853,19 @@ ja:
               no_payment_method: "^有効な支払い方法が見つかりません。"
             customer:
               requires_action: "^3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+        line_notice_requests/approve:
+          attributes:
+            payment:
+              auth_failed: "カード認証に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              processor_failed: "決済処理に失敗しました。しばらく時間をおいてもう一度お試しください。"
+              card_error: "カードエラーが発生しました。カード情報をご確認ください。"
+              stripe_error: "決済処理中にエラーが発生しました。しばらく時間をおいてもう一度お試しください。"
+              requires_action: "3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+              failed: "決済に失敗しました。もう一度お試しください。"
+              no_payment_method: "有効な支払い方法が見つかりません。"
+            user:
+              no_stripe_customer: "Stripe顧客情報が見つかりません。カードを登録してください。"
+              store_customer_failed: "カード登録に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
         customer_payments/purchase_online_service:
           attributes:
             customer:

@@ -15,21 +15,51 @@ module Notifiers
       def message
         reservation = line_notice_request.reservation
         customer = line_notice_request.customer
+        customer_family_name = customer.family_name || customer.name.split(' ').first || customer.name
+        reservation_day = I18n.l(reservation.start_time.to_date, format: :long)
+        is_free_trial = receiver.line_notice_free_trial_available?
         
         I18n.with_locale(receiver.locale) do
-          <<~MESSAGE.strip
-            【LINE通知リクエスト】
+          if is_free_trial
+            # 初回（無料）の文言
+            <<~MESSAGE.strip
+              予約客 #{customer_family_name}様より、LINEでのお知らせ受信リクエストが届いています。
 
-            お客様からLINE通知のリクエストが届きました。
+              LINEでリマインド等のメッセージを自動送信するには、有料プランの契約が必要です。
 
-            ■ 予約情報
-            お客様名: #{customer.name}
-            予約日時: #{I18n.l(reservation.start_time, format: :long)}
-            メニュー: #{reservation.menus_sentence}
+              ✅仮予約作成のお知らせ
+              ✅予約確定のお知らせ
+              ✅24時間前のリマインド
+              ✅カスタム作成した全てのリマインド
 
-            以下のリンクから内容を確認できます。
-            #{approval_url}
-          MESSAGE
+              特別に、今回 #{reservation_day} のご予約に限り、#{customer_family_name}様のLINEにお知らせ送信を、無料でお試しいただけます。
+
+              ＜LINEでお知らせを試す＞
+              #{approval_url}
+            MESSAGE
+          else
+            # 二回目以降（都度課金）の文言
+            <<~MESSAGE.strip
+              予約客 #{customer_family_name}様より、LINEでのお知らせ受信リクエストが届いています。
+
+              LINEでリマインド等のメッセージを自動送信するには、有料プランの契約が必要です。
+
+              ✅仮予約作成のお知らせ
+              ✅予約確定のお知らせ
+              ✅24時間前のリマインド
+              ✅カスタム作成した全てのリマインド
+
+              今回 #{reservation_day} のご予約に限り、#{customer_family_name}様のLINEにお知らせ送信を、250円＋税でお試しいただけます。
+
+              ＜LINEでお知らせを試す＞
+              #{approval_url}
+
+              また、有料プランにご契約いただくことで、すべての予約でLINEでお知らせを自動送信できます。
+
+              ＜有料プランを確認する＞
+              #{plans_url}
+            MESSAGE
+          end
         end
       end
 
@@ -41,6 +71,15 @@ module Notifiers
           id: line_notice_request.id,
           host: ENV['HOST'] || 'toruya.com',
           protocol: 'https'
+        )
+      end
+
+      def plans_url
+        Rails.application.routes.url_helpers.lines_user_bot_settings_plans_url(
+          business_owner_id: receiver.id,
+          host: ENV['HOST'] || 'toruya.com',
+          protocol: 'https',
+          anchor: 'plans-menu-item'
         )
       end
 

@@ -26,6 +26,108 @@ const PaymentForm = ({ chargeAmount, approveUrl, i18n, onClose }) => {
   const stripe = useStripe();
   const elements = useElements();
 
+  const handle3DSAuthentication = async (errorData, paymentMethodId) => {
+    console.log('Starting 3DS authentication:', errorData);
+    
+    try {
+      // PaymentIntent か SetupIntent かを判定
+      const isSetupIntent = !!(errorData.setup_intent_id) || (errorData.client_secret && errorData.client_secret.startsWith('seti_'));
+      
+      console.log('Intent type detection:', {
+        setup_intent_id: errorData.setup_intent_id,
+        payment_intent_id: errorData.payment_intent_id,
+        client_secret_prefix: errorData.client_secret ? errorData.client_secret.substring(0, 5) : null,
+        isSetupIntent: isSetupIntent
+      });
+      
+      let result;
+      if (isSetupIntent) {
+        // SetupIntent の 3DS認証
+        result = await stripe.confirmCardSetup(errorData.client_secret, {
+          payment_method: paymentMethodId
+        });
+        
+        console.log('SetupIntent confirmation result:', result);
+        
+        if (result.error) {
+          setProcessing(false);
+          setErrorMessage(errorData.message || result.error.message || "3DS認証に失敗しました。");
+          return;
+        }
+        
+        if (result.setupIntent && result.setupIntent.status === 'succeeded') {
+          console.log('SetupIntent 3DS succeeded, retrying...');
+          await retryPaymentAfter3DS(paymentMethodId, result.setupIntent.id, null);
+        }
+      } else {
+        // PaymentIntent の 3DS認証
+        result = await stripe.confirmCardPayment(errorData.client_secret);
+        
+        console.log('PaymentIntent confirmation result:', result);
+        
+        if (result.error) {
+          setProcessing(false);
+          setErrorMessage(errorData.message || result.error.message || "3DS認証に失敗しました。");
+          return;
+        }
+        
+        if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+          console.log('PaymentIntent 3DS succeeded, retrying...');
+          await retryPaymentAfter3DS(paymentMethodId, null, result.paymentIntent.id);
+        }
+      }
+    } catch (error) {
+      console.error('3DS authentication error:', error);
+      setProcessing(false);
+      setErrorMessage(errorData.message || "3DS認証中にエラーが発生しました。");
+    }
+  };
+
+  const retryPaymentAfter3DS = async (paymentMethodId, setupIntentId, paymentIntentId) => {
+    console.log('Retrying payment after 3DS:', { setupIntentId, paymentIntentId });
+    
+    try {
+      const retryPayload = {
+        payment_method_id: paymentMethodId
+      };
+      
+      if (setupIntentId) {
+        retryPayload.setup_intent_id = setupIntentId;
+      }
+      if (paymentIntentId) {
+        retryPayload.payment_intent_id = paymentIntentId;
+      }
+      
+      const response = await fetch(approveUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content,
+        },
+        body: JSON.stringify(retryPayload),
+      });
+
+      const data = await response.json();
+      console.log('Retry response:', data);
+
+      if (response.ok && data.status === 'success') {
+        // 成功 - リダイレクト
+        window.location.href = data.redirect_url;
+      } else if (data.client_secret) {
+        // 再度3DS認証が必要（PaymentIntentの3DS）
+        console.log('Second 3DS authentication required');
+        await handle3DSAuthentication(data, paymentMethodId);
+      } else {
+        setProcessing(false);
+        setErrorMessage(data.message || data.error || "決済に失敗しました。");
+      }
+    } catch (error) {
+      console.error('Retry payment error:', error);
+      setProcessing(false);
+      setErrorMessage("決済の再試行中にエラーが発生しました。");
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setProcessing(true);
@@ -61,13 +163,19 @@ const PaymentForm = ({ chargeAmount, approveUrl, i18n, onClose }) => {
       });
 
       const data = await response.json();
+      console.log('Backend response:', data);
 
       if (response.ok && data.status === 'success') {
         // 成功 - リダイレクト
         window.location.href = data.redirect_url;
+      } else if (data.client_secret) {
+        // 3DS認証が必要な場合
+        console.log('3DS authentication required');
+        await handle3DSAuthentication(data, paymentMethod.id);
       } else {
         setProcessing(false);
-        setErrorMessage(data.error || "決済に失敗しました。");
+        // バックエンドから返された親切なメッセージを優先的に表示
+        setErrorMessage(data.message || data.error || "決済に失敗しました。");
       }
     } catch (err) {
       setProcessing(false);

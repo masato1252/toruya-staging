@@ -6,6 +6,8 @@ module LineNoticeRequests
     object :user
     boolean :is_free_trial
     string :payment_method_id, default: nil
+    string :setup_intent_id, default: nil
+    string :payment_intent_id, default: nil
 
     def execute
       # バリデーション
@@ -45,15 +47,29 @@ module LineNoticeRequests
 
     def process_paid_charge
       # Stripe顧客とPaymentMethodを準備（顧客IDがない場合は自動作成）
+      # 3DS認証後のリトライの場合は、setup_intent_idを渡す
       store_customer_outcome = compose(
         Payments::StoreStripeCustomer,
         user: user,
-        authorize_token: payment_method_id
+        authorize_token: payment_method_id,
+        setup_intent_id: setup_intent_id
       )
       
       unless store_customer_outcome.valid?
+        # エラー詳細を取得
+        user_error = store_customer_outcome.errors.details[:user]&.first || {}
+        raw_stripe_message = user_error[:stripe_error_message]
+        user_friendly_message = I18n.t("active_interaction.errors.models.line_notice_requests/approve.attributes.user.store_customer_failed")
+        
+        # エラーメッセージにはユーザー向けメッセージと生のStripeエラーを両方含める
+        combined_error_message = if raw_stripe_message.present?
+          "#{user_friendly_message} | Raw error: #{raw_stripe_message}"
+        else
+          "#{user_friendly_message} | Raw error: #{store_customer_outcome.errors.full_messages.join(', ')}"
+        end
+        
+        create_failed_charge(error_message: combined_error_message)
         errors.merge!(store_customer_outcome.errors)
-        create_failed_charge(error_message: "Failed to setup Stripe customer: #{store_customer_outcome.errors.full_messages.join(', ')}")
         return nil
       end
 
@@ -63,31 +79,38 @@ module LineNoticeRequests
       # Stripeカスタマー取得（上記で確実に作成されている）
       stripe_customer_id = user.subscription.reload.stripe_customer_id
       unless stripe_customer_id.present?
-        errors.add(:user, :no_stripe_customer)
+        user_friendly_message = I18n.t("active_interaction.errors.models.line_notice_requests/approve.attributes.user.no_stripe_customer")
+        errors.add(:user, :no_stripe_customer, user_message: user_friendly_message)
         # Stripe顧客IDがない場合も失敗レコードを作成
-        create_failed_charge(error_message: "Stripe customer not found after setup")
+        create_failed_charge(error_message: "#{user_friendly_message} | Raw error: Stripe customer not found after setup")
         return nil
       end
 
       begin
-        # PaymentIntentを作成
-        payment_intent = Stripe::PaymentIntent.create({
-          amount: amount.fractional * amount.currency.default_subunit_to_unit,
-          currency: amount.currency.iso_code,
-          customer: stripe_customer_id,
-          payment_method: payment_method_id,
-          description: "LINE通知リクエスト承認 - 予約ID: #{line_notice_request.reservation_id}",
-          statement_descriptor: "Toruya LINE通知",
-          metadata: {
-            user_id: user.id,
-            reservation_id: line_notice_request.reservation_id,
-            line_notice_request_id: line_notice_request.id,
-            type: 'line_notice_charge'
-          },
-          off_session: false,
-          confirm: true,
-          payment_method_types: ['card']
-        })
+        # PaymentIntentを作成または取得
+        payment_intent = if payment_intent_id.present?
+          # 3DS認証後のリトライの場合は、既存のPaymentIntentを取得
+          Stripe::PaymentIntent.retrieve(payment_intent_id)
+        else
+          # 新規PaymentIntentを作成
+          Stripe::PaymentIntent.create({
+            amount: amount.fractional * amount.currency.default_subunit_to_unit,
+            currency: amount.currency.iso_code,
+            customer: stripe_customer_id,
+            payment_method: payment_method_id,
+            description: "LINE通知リクエスト承認 - 予約ID: #{line_notice_request.reservation_id}",
+            statement_descriptor: "Toruya LINE通知",
+            metadata: {
+              user_id: user.id,
+              reservation_id: line_notice_request.reservation_id,
+              line_notice_request_id: line_notice_request.id,
+              type: 'line_notice_charge'
+            },
+            off_session: false,
+            confirm: true,
+            payment_method_types: ['card']
+          })
+        end
 
         case payment_intent.status
         when 'succeeded'
@@ -100,46 +123,85 @@ module LineNoticeRequests
             stripe_charge_details: payment_intent.as_json
           )
         when 'requires_action', 'requires_payment_method'
-          errors.add(:payment, :requires_action)
+          user_friendly_message = I18n.t("active_interaction.errors.models.line_notice_requests/approve.attributes.payment.requires_action")
+          # ユーザー向けメッセージと生のエラーを両方記録
+          error_details = "Payment intent status: #{payment_intent.status}"
+          error_details += ", last_payment_error: #{payment_intent.last_payment_error&.dig('message')}" if payment_intent.last_payment_error.present?
+          
+          errors.add(:payment, :requires_action, 
+            client_secret: payment_intent.client_secret,
+            payment_intent_id: payment_intent.id,
+            user_message: user_friendly_message
+          )
           # 追加アクション必要の場合も失敗レコードを作成
           create_failed_charge(
-            error_message: "Payment requires action: #{payment_intent.status}",
+            error_message: "#{user_friendly_message} | Raw error: #{error_details}",
             payment_intent_id: payment_intent.id,
             stripe_charge_details: payment_intent.as_json
           )
           nil
         else
-          errors.add(:payment, :failed)
+          user_friendly_message = I18n.t("active_interaction.errors.models.line_notice_requests/approve.attributes.payment.failed")
+          # ユーザー向けメッセージと生のエラーを両方記録
+          error_details = "Payment intent failed with status: #{payment_intent.status}"
+          error_details += ", last_payment_error: #{payment_intent.last_payment_error&.dig('message')}" if payment_intent.last_payment_error.present?
+          
+          errors.add(:payment, :failed, user_message: user_friendly_message)
           # その他の失敗ケースも記録
           create_failed_charge(
-            error_message: "Payment failed with status: #{payment_intent.status}",
+            error_message: "#{user_friendly_message} | Raw error: #{error_details}",
             payment_intent_id: payment_intent.id,
             stripe_charge_details: payment_intent.as_json
           )
-          Rollbar.error("LINE notice charge payment failed", 
-            status: payment_intent.status, 
-            user_id: user.id,
-            line_notice_request_id: line_notice_request.id
-          )
+          
+          if Rails.configuration.x.env.production?
+            Rollbar.error("LINE notice charge payment failed", 
+              status: payment_intent.status, 
+              user_id: user.id,
+              line_notice_request_id: line_notice_request.id
+            )
+          end
           nil
         end
       rescue Stripe::CardError => e
-        errors.add(:payment, :card_error, message: e.message)
+        stripe_error = e.json_body&.dig(:error) || {}
+        raw_error_message = stripe_error[:message] || e.message
+        user_friendly_message = I18n.t("active_interaction.errors.models.line_notice_requests/approve.attributes.payment.card_error")
+        
+        errors.add(:payment, :card_error, 
+          stripe_error_code: stripe_error[:code],
+          stripe_error_message: raw_error_message,
+          user_message: user_friendly_message
+        )
         # カードエラーも記録
         create_failed_charge(
-          error_message: "Card error: #{e.message}",
+          error_message: "#{user_friendly_message} | Raw error: #{raw_error_message} (code: #{stripe_error[:code]})",
           stripe_charge_details: { error: e.json_body }
         )
-        Rollbar.error(e, user_id: user.id, line_notice_request_id: line_notice_request.id)
+        
+        if Rails.configuration.x.env.production?
+          Rollbar.error(e, user_id: user.id, line_notice_request_id: line_notice_request.id, stripe_error: stripe_error)
+        end
         nil
       rescue Stripe::StripeError => e
-        errors.add(:payment, :stripe_error, message: e.message)
+        stripe_error = e.json_body&.dig(:error) || {}
+        raw_error_message = stripe_error[:message] || e.message
+        user_friendly_message = I18n.t("active_interaction.errors.models.line_notice_requests/approve.attributes.payment.stripe_error")
+        
+        errors.add(:payment, :stripe_error, 
+          stripe_error_code: stripe_error[:code],
+          stripe_error_message: raw_error_message,
+          user_message: user_friendly_message
+        )
         # Stripeエラーも記録
         create_failed_charge(
-          error_message: "Stripe error: #{e.message}",
+          error_message: "#{user_friendly_message} | Raw error: #{raw_error_message} (code: #{stripe_error[:code]})",
           stripe_charge_details: { error: e.json_body }
         )
-        Rollbar.error(e, user_id: user.id, line_notice_request_id: line_notice_request.id)
+        
+        if Rails.configuration.x.env.production?
+          Rollbar.error(e, user_id: user.id, line_notice_request_id: line_notice_request.id, stripe_error: stripe_error)
+        end
         nil
       end
     end
