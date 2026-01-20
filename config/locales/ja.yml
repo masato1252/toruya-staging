@@ -1006,7 +1006,7 @@ ja:
     new:
       title: "LINE通知リクエスト"
       description_html: |
-        <p class="mb-3"><strong>%{shop_name}</strong>は現在無料プランをご利用中のため、予約に関する通知はメールでのみ送信されています。</p>
+        <p class="mb-3"><strong>%{shop_name}</strong>の設定により、予約に関する通知はメールでのみ送信されています。</p>
         <p class="mb-3">この予約についてLINE通知を希望される場合は、店舗へリクエストを送信できます。</p>
         <p class="mb-0">店舗が承認すると、予約に関するリマインドや変更通知をLINEで受け取れるようになります。</p>
       connect_line_button: "LINE連携してリクエストする"
@@ -1058,3 +1058,16 @@ ja:
       customer_not_found: "顧客情報が見つかりません。先に顧客登録を完了してください。"
       not_found: "リクエストが見つかりません"
       payment_method_required: "決済情報が必要です"
+  customer_mailer:
+    custom:
+      title: "%{company_name}より通知"
+    line_notice_request:
+      invitation_text: |
+        店主の設定により、お知らせがメールにて送信されています。次回以降のお知らせをLINEで受け取りたい方は、以下のリンクよりLINE連携して、店主へリクエストを送信してください。
+
+        ＜LINEでお知らせをリクエスト＞
+        %{request_url}
+      invitation_html: |
+        店主の設定により、お知らせがメールにて送信されています。次回以降のお知らせをLINEで受け取りたい方は、以下のリンクよりLINE連携して、店主へリクエストを送信してください。<br><br>＜LINEでお知らせをリクエスト＞<br><a href="%{request_url}">%{request_url}</a>
+      pending_approval_text: "LINEでお知らせをリクエスト済みですが、店主の承認が得られるまで、お知らせはメールにて送信されます。店主による承認をお待ちください。"
+      pending_approval_html: "LINEでお知らせをリクエスト済みですが、店主の承認が得られるまで、お知らせはメールにて送信されます。店主による承認をお待ちください。"

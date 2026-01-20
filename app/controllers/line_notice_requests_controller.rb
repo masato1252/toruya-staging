@@ -86,11 +86,11 @@ class LineNoticeRequestsController < ActionController::Base
   end
 
   def line_oauth_url
-    # LINE OAuth URL を生成（既存のOmniauth設定を利用）
-    who = MessageEncryptor.encrypt("customer")
+    # LINE OAuth URL を生成（店舗のSocialAccountを使用）
+    oauth_social_account_id = MessageEncryptor.encrypt(@reservation.user.social_account.id.to_s)
     oauth_redirect_to_url = callback_line_notice_requests_url(reservation_id: @reservation.id)
     
-    "/users/auth/line?who=#{CGI.escape(who)}&oauth_redirect_to_url=#{CGI.escape(oauth_redirect_to_url)}"
+    "/users/auth/line?oauth_social_account_id=#{CGI.escape(oauth_social_account_id)}&oauth_redirect_to_url=#{CGI.escape(oauth_redirect_to_url)}"
   end
   helper_method :line_oauth_url
 end

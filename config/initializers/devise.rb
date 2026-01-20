@@ -283,7 +283,9 @@ Devise.setup do |config|
       select_account: true,
       scope: "userinfo.email,userinfo.profile,contacts" }
 
-  config.omniauth :line, setup: OmniauthSetup
+  # LINE Login Channel - 店舗ごとの認証情報を動的に設定（setupオプション使用）
+  # ダミー値は実際のChannel IDの形式（数値）にする必要がある
+  config.omniauth :line, '2008874461', '44f2232a25d9b92d02749ec0c4b5aae3', setup: OmniauthSetup
   config.omniauth :stripe_connect,
     Rails.application.secrets.stripe_connect_id,
     Rails.application.secrets.stripe_secret_key,
