@@ -49,7 +49,7 @@ const BookingDoneView = ({
   };
 
   // LINEリクエストボタンのURL
-  const lineNoticeRequestUrl = reservation_id ? `/line_notice_requests/new?reservation_id=${reservation_id}` : null;
+  const lineNoticeRequestUrl = reservation_id ? `/line_notice_requests?reservation_id=${reservation_id}` : null;
   
   // LINEリクエストボタンを表示するか判定
   const shouldShowLineRequestButton = is_free_plan && line_settings_verified && lineNoticeRequestUrl;

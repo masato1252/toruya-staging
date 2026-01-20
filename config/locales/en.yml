@@ -2,6 +2,8 @@ en:
   common:
     optional: "Optional"
     email: "Email"
+    reservation_details: "Reservation Details"
+    cancel: "Cancel"
   requirement:
     contact_redirect_message: Please connect your google account with your toruya groups.
     contact_warning_message: Please go to %{link} to connect your google account with your toruya groups.

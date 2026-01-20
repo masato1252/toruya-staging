@@ -11,57 +11,61 @@
 </div>
 
 <div class="done-view">
-  <div class="mb-8">
-    <h2 class="mb-6px"><%= t("line_notice_requests.new.title") %></h2>
+  <div class="text-center mb-8">
+    <div class="mb-3">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" class="inline-block h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      </svg>
+    </div>
+    <h2 class="text-xl font-bold mb-2"><%= t("line_notice_requests.new.title") %></h2>
   </div>
-  
-  <hr class="bg-gray-300 border-0 h-px mb-8" />
 
-  <div class="mb-8">
-    <h3 class="title mb-4"><%= t("common.reservation_details") %></h3>
-    <div class="message mb-6">
+  <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+    <h3 class="font-semibold mb-3 text-gray-700" style="font-size: 16px;"><%= t("common.reservation_details") %></h3>
+    <div class="text-gray-800" style="line-height: 1.8;">
       <%= @reservation.booking_time %><br />
       <%= @reservation.menus_sentence %>
     </div>
   </div>
 
-  <hr class="bg-gray-300 border-0 h-px mb-8" />
-
-  <div class="mb-8">
-    <div class="message mb-6">
-      <%= t("line_notice_requests.new.description_html", shop_name: @reservation.shop.name).html_safe %>
-    </div>
-
-    <% if @existing_request %>
-      <div class="reminder-mark desc mb-6">
+  <% if @existing_request %>
+    <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+      <p class="text-gray-800" style="line-height: 1.8;">
         <%= t("line_notice_requests.new.already_requested") %>
-      </div>
-      
-      <div class="margin-around">
-        <%= link_to t("line_notice_requests.new.back_to_reservation"), 
-            booking_path(@reservation.shop.slug, @reservation.id), 
-            class: "btn btn-tarco" %>
-      </div>
-    <% else %>
-      <div class="mb-6">
-        <div class="message text-sm text-gray-600 mb-4">
-          <%= t("line_notice_requests.new.notice_html").html_safe %>
+      </p>
+    </div>
+    
+    <div class="margin-around">
+      <%= link_to t("line_notice_requests.new.back_to_reservation"), 
+          shop_reservation_path(@reservation.shop, @reservation), 
+          class: "btn btn-tarco" %>
+    </div>
+  <% else %>
+    <div class="mb-8">
+      <div class="mb-6 p-5 bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div style="line-height: 1.8; color: #374151;">
+          <%= t("line_notice_requests.new.description_html", shop_name: @reservation.shop.name).html_safe %>
         </div>
       </div>
 
-      <div class="margin-around">
-        <%= link_to t("line_notice_requests.new.connect_line_button"), 
-            line_oauth_url, 
-            class: "btn btn-success",
-            style: "background-color: #06C755; border-color: #06C755;" %>
+      <div class="mb-4">
+        <%= link_to line_oauth_url, 
+            class: "btn btn-success btn-lg w-100 d-flex align-items-center justify-content-center",
+            style: "background-color: #06C755; border-color: #06C755; padding: 14px 24px; font-size: 16px; font-weight: 600;" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.105.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+          </svg>
+          <%= t("line_notice_requests.new.connect_line_button") %>
+        <% end %>
       </div>
 
-      <div class="margin-around">
+      <div class="text-center">
         <%= link_to t("common.cancel"), 
-            booking_path(@reservation.shop.slug, @reservation.id), 
-            class: "btn btn-tarco-outline" %>
+            shop_reservation_path(@reservation.shop, @reservation), 
+            class: "btn btn-link text-gray-600",
+            style: "text-decoration: none;" %>
       </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
 
