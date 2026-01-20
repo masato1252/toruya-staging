@@ -38,16 +38,10 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class LineNoticeCharge < ApplicationRecord
-  # Money gem support
-  include MoneyRails::ActionViewExtension
-
   # Relations
   belongs_to :user  # 店舗オーナー
   belongs_to :reservation
   belongs_to :line_notice_request
-
-  # Money columns (amountは実金額で格納、cents変換なし)
-  monetize :amount, subunit_to_unit: 1
 
   # Enums
   enum state: {
@@ -138,6 +132,11 @@ class LineNoticeCharge < ApplicationRecord
 
   def successful?
     completed?
+  end
+
+  # Money object for amount (amountカラムは実金額を格納しているため、そのままMoneyオブジェクト化)
+  def amount_money
+    Money.new(amount, amount_currency)
   end
 
   private
