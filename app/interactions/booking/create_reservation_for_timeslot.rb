@@ -179,6 +179,18 @@ module Booking
 
           customer.save
 
+          unless customer.persisted?
+            errors.merge!(customer.errors)
+            errors.add(:base, :customer_save_failed)
+            Rollbar.error("Customer save failed in booking", {
+              customer_errors: customer.errors.details,
+              customer_attributes: customer.attributes,
+              user_id: user.id,
+              booking_page_id: booking_page_id
+            }) if Rails.configuration.x.env.production?
+            raise ActiveRecord::Rollback
+          end
+
           catch :booked_reservation do
             unless reservation
               loop_for_reserable_timeslot(

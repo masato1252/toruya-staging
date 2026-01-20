@@ -1,4 +1,9 @@
 tw:
+  common:
+    optional: "選填"
+    email: "電子郵件"
+    reservation_details: "預約詳情"
+    cancel: "取消"
   meta:
     title: Toruya 一人公司的最佳助手。擁有你的事業，掌控你的人生
   broadcast:

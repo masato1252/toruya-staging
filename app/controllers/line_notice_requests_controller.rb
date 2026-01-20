@@ -10,11 +10,12 @@ class LineNoticeRequestsController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   skip_before_action :verify_authenticity_token, only: [:callback]
   skip_before_action :track_ahoy_visit
+  skip_before_action :set_locale
+  before_action :load_reservation, only: [:new, :callback, :success]
+  before_action :set_locale
+  before_action :check_reservation_eligibility, only: [:new]
 
   layout "booking"
-
-  before_action :load_reservation, only: [:new, :callback]
-  before_action :check_reservation_eligibility, only: [:new]
 
   # GET /line_notice_requests/new?reservation_id=123
   # リクエスト説明画面
@@ -29,7 +30,7 @@ class LineNoticeRequestsController < ActionController::Base
     social_user_id = params[:social_user_id]
     
     unless social_user_id.present?
-      redirect_to new_line_notice_request_path(reservation_id: @reservation.id), alert: I18n.t("line_notice_requests.errors.line_auth_failed")
+      redirect_to line_notice_requests_path(reservation_id: @reservation.id), alert: I18n.t("line_notice_requests.errors.line_auth_failed")
       return
     end
 
@@ -37,7 +38,7 @@ class LineNoticeRequestsController < ActionController::Base
     social_customer = SocialCustomer.find_by(social_user_id: social_user_id)
     
     unless social_customer&.customer
-      redirect_to new_line_notice_request_path(reservation_id: @reservation.id), alert: I18n.t("line_notice_requests.errors.customer_not_found")
+      redirect_to line_notice_requests_path(reservation_id: @reservation.id), alert: I18n.t("line_notice_requests.errors.customer_not_found")
       return
     end
 
@@ -50,21 +51,29 @@ class LineNoticeRequestsController < ActionController::Base
     if outcome.valid?
       redirect_to success_line_notice_requests_path(request_id: outcome.result.id)
     else
-      redirect_to new_line_notice_request_path(reservation_id: @reservation.id), alert: outcome.errors.full_messages.join(", ")
+      redirect_to line_notice_requests_path(reservation_id: @reservation.id), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
   # GET /line_notice_requests/success?request_id=123
   # リクエスト完了画面
   def success
-    @request = LineNoticeRequest.find(params[:request_id])
-    @reservation = @request.reservation
+    # @reservationと@requestはload_reservationで設定済み
   end
 
   private
 
+  def product_social_user
+    @reservation&.user&.social_user
+  end
+
   def load_reservation
-    @reservation = Reservation.find(params[:reservation_id])
+    if params[:reservation_id].present?
+      @reservation = Reservation.find(params[:reservation_id])
+    elsif params[:request_id].present?
+      @request = LineNoticeRequest.find(params[:request_id])
+      @reservation = @request.reservation
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: I18n.t("line_notice_requests.errors.reservation_not_found")
   end

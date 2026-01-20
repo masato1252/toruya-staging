@@ -61,9 +61,10 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
   end
 
   def append_request_invitation(original_message, format:)
-    request_url = Rails.application.routes.url_helpers.new_line_notice_request_url(
+    request_url = Rails.application.routes.url_helpers.line_notice_requests_url(
       reservation_id: reservation.id,
-      host: ENV['HOST'] || 'toruya.com'
+      host: ENV['APP_HOST'] || 'toruya.com',
+      protocol: 'https'
     )
 
     if format == :html
