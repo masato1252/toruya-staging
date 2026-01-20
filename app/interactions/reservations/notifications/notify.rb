@@ -16,7 +16,8 @@ module Reservations
         I18n.with_locale(customer.locale) do
           return unless business_owner.subscription.active?
 
-          send_notification_with_fallbacks(preferred_channel: business_owner.customer_notification_channel)
+          preferred_channel = determine_customer_notification_channel
+          send_notification_with_fallbacks(preferred_channel: preferred_channel)
         end
       end
 
@@ -82,6 +83,24 @@ module Reservations
           social_customer: customer.social_customer,
           message: message
         )
+      end
+
+      # 顧客への通知チャンネルを決定
+      # 無料プランでも、予約に関するLINE通知リクエストが承認されていればLINEで送信
+      def determine_customer_notification_channel
+        # 無料プランの場合
+        if business_owner.subscription.in_free_plan?
+          # LINE通知リクエストが承認済みか確認
+          approved_request = LineNoticeRequest.approved
+            .where(reservation_id: reservation.id)
+            .first
+          
+          # 承認済みならLINE、そうでなければemail
+          return approved_request.present? ? "line" : "email"
+        end
+        
+        # デフォルトは店舗の設定に従う
+        business_owner.customer_notification_channel
       end
     end
   end

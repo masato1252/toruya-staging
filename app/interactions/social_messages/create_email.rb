@@ -9,7 +9,14 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
   def execute
     # メッセージに予約関連のLINE通知リクエスト案内を追加
     text_message = append_line_notice_request_info(message, format: :text)
-    html_message = append_line_notice_request_info(message, format: :html)
+    
+    # HTML形式のメッセージは元のメッセージの改行も含めて変換
+    html_base_message = message.gsub("\n", "<br>")
+    html_message = append_line_notice_request_info(html_base_message, format: :html)
+
+    Rails.logger.info "[CreateEmail] reservation_id: #{reservation&.id}, should_show: #{should_show_line_notice_request_info?}"
+    Rails.logger.info "[CreateEmail] user plan: #{customer.user.subscription.current_plan&.name}, free?: #{customer.user.subscription.current_plan&.free_level?}"
+    Rails.logger.info "[CreateEmail] line_settings_verified?: #{customer.user.social_account&.line_settings_verified?}"
 
     SocialMessage.create!(
       social_account: customer.social_customer&.social_account,
@@ -67,41 +74,35 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
       protocol: 'https'
     )
 
+    # すべての文字列をUTF-8に統一
+    original_message = original_message.force_encoding('UTF-8')
+    request_url = request_url.force_encoding('UTF-8')
+
     if format == :html
       separator = "<br><br>--------------------<br>"
-      line_break = "<br>"
-      notice_text = I18n.t('customer_mailer.line_notice_request.invitation_html',
-        request_url: request_url,
-        default: "店主の設定により、お知らせがメールにて送信されています。次回以降のお知らせをLINEで受け取りたい方は、以下のリンクよりLINE連携して、店主へリクエストを送信してください。#{line_break}#{line_break}＜LINEでお知らせをリクエスト＞#{line_break}#{request_url}"
-      )
-      # 既存のメッセージにもHTMLの改行を適用
-      html_original = original_message.gsub("\n", "<br>")
-      "#{html_original}#{separator}#{notice_text}"
+      notice_text = I18n.t('customer_mailer.line_notice_request.invitation_html', request_url: request_url)
+      # original_messageは既にHTMLの改行が適用済み
+      [original_message, separator, notice_text].join
     else
       separator = "\n\n--------------------\n"
-      notice_text = I18n.t('customer_mailer.line_notice_request.invitation_text',
-        request_url: request_url,
-        default: "店主の設定により、お知らせがメールにて送信されています。次回以降のお知らせをLINEで受け取りたい方は、以下のリンクよりLINE連携して、店主へリクエストを送信してください。\n\n＜LINEでお知らせをリクエスト＞\n#{request_url}"
-      )
-      "#{original_message}#{separator}#{notice_text}"
+      notice_text = I18n.t('customer_mailer.line_notice_request.invitation_text', request_url: request_url)
+      [original_message, separator, notice_text].join
     end
   end
 
   def append_pending_request_notice(original_message, format:)
+    # すべての文字列をUTF-8に統一
+    original_message = original_message.force_encoding('UTF-8')
+    
     if format == :html
       separator = "<br><br>--------------------<br>"
-      notice_text = I18n.t('customer_mailer.line_notice_request.pending_approval_html',
-        default: "LINEでお知らせをリクエスト済みですが、店主の承認が得られるまで、お知らせはメールにて送信されます。店主による承認をお待ちください。"
-      )
-      # 既存のメッセージにもHTMLの改行を適用
-      html_original = original_message.gsub("\n", "<br>")
-      "#{html_original}#{separator}#{notice_text}"
+      notice_text = I18n.t('customer_mailer.line_notice_request.pending_approval_html')
+      # original_messageは既にHTMLの改行が適用済み
+      [original_message, separator, notice_text].join
     else
       separator = "\n\n--------------------\n"
-      notice_text = I18n.t('customer_mailer.line_notice_request.pending_approval_text',
-        default: "LINEでお知らせをリクエスト済みですが、店主の承認が得られるまで、お知らせはメールにて送信されます。店主による承認をお待ちください。"
-      )
-      "#{original_message}#{separator}#{notice_text}"
+      notice_text = I18n.t('customer_mailer.line_notice_request.pending_approval_text')
+      [original_message, separator, notice_text].join
     end
   end
 end

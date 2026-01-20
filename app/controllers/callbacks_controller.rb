@@ -176,7 +176,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         cookies.set_across_domains(:line_social_user_id_of_customer, outcome.result.social_user_id, expires: 20.years.from_now)
         
         # LINEから取得したemailをCookieに保存（1時間有効）
-        if outcome.compositions[:line_email].present?
+        if outcome.respond_to?(:compositions) && outcome.compositions[:line_email].present?
           cookies.set_across_domains(:line_customer_email, outcome.compositions[:line_email], expires: 1.hour.from_now)
         end
       end

@@ -223,7 +223,7 @@ module Notifiers
       # 予約関連の通知の場合
       if respond_to?(:reservation) && reservation.present?
         # 無料プランの場合
-        if business_owner.subscription.free_level?
+        if business_owner.subscription.in_free_plan?
           # LINE通知リクエストが承認済みか確認
           approved_request = LineNoticeRequest.approved
             .where(reservation_id: reservation.id)
@@ -241,7 +241,7 @@ module Notifiers
     # LINE通知リクエストによる送信で、これが最終通知の場合に店舗へ通知
     def check_and_notify_owner_if_final_line_notice
       return unless respond_to?(:reservation) && reservation.present?
-      return unless business_owner.subscription.free_level?
+      return unless business_owner.subscription.in_free_plan?
       
       # LINE通知リクエストが承認済みか確認
       approved_request = LineNoticeRequest.approved
