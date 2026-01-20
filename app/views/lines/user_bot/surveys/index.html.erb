@@ -31,7 +31,7 @@
             <% end %>
           <% end %>
 
-          <div class="margin-around centerize">
+          <div class="margin-around centerize" style="display: none;">
             <%= link_to params[:mode] == "activity" ? activities_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id) : forms_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id), class: "btn btn-yellow", data: {
               controller: "gtag",
               action: "click->gtag#sendEvent",
@@ -54,19 +54,21 @@
             <% else %>
               <%= t("user_bot.dashboards.surveys.introduction_message_html") %>
             <% end %>
-          </div>
         </div>
+      </div>
 
-        <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
-          <%= link_to params[:mode] == "activity" ? activities_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id) : forms_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: {
-            controller: "gtag",
-            action: "click->gtag#sendEvent",
-            gtag_event_value: "add_survey",
-            gtag_event_category: "surveys",
-            gtag_event_label: "add_more_circle"
-          } do %>
-            <i class="fas fa-plus fa-2x"></i>
-            <div class="word"><%= t("action.add_more") %></div>
+        <% if false %>
+          <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+            <%= link_to params[:mode] == "activity" ? activities_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id) : forms_new_lines_user_bot_surveys_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: {
+              controller: "gtag",
+              action: "click->gtag#sendEvent",
+              gtag_event_value: "add_survey",
+              gtag_event_category: "surveys",
+              gtag_event_label: "add_more_circle"
+            } do %>
+              <i class="fas fa-plus fa-2x"></i>
+              <div class="word"><%= t("action.add_more") %></div>
+            <% end %>
           <% end %>
         <% end %>
       </div>
