@@ -1,0 +1,90 @@
+<% content_for :title do %>
+  <%= t('line_notice_requests.store.success.title') %>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <i class="fa fa-check-circle"></i>
+            <%= t('line_notice_requests.store.success.title') %>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <!-- 成功メッセージ -->
+          <div class="alert alert-success text-center mb-4">
+            <h4><%= t('line_notice_requests.store.success.message') %></h4>
+            <p><%= t('line_notice_requests.store.success.description', customer_name: @customer.name) %></p>
+          </div>
+
+          <!-- 予約情報 -->
+          <div class="mb-4">
+            <h4><%= t('common.reservation_details') %></h4>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th><%= t('common.customer_name') %></th>
+                  <td><%= @customer.name %></td>
+                </tr>
+                <tr>
+                  <th><%= t('common.reservation_datetime') %></th>
+                  <td><%= l(@reservation.start_time, format: :long) %></td>
+                </tr>
+                <tr>
+                  <th><%= t('common.menu') %></th>
+                  <td><%= @reservation.menus_sentence %></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 課金情報 -->
+          <% if @line_notice_charge %>
+            <div class="mb-4">
+              <h4><%= t('line_notice_requests.store.success.charge_details') %></h4>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th><%= t('line_notice_requests.store.success.charge_type') %></th>
+                    <td>
+                      <% if @line_notice_charge.free? %>
+                        <span class="label label-success"><%= t('line_notice_requests.store.success.free_trial') %></span>
+                      <% else %>
+                        <span class="label label-info"><%= t('line_notice_requests.store.success.paid') %></span>
+                      <% end %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th><%= t('line_notice_requests.store.success.charge_amount') %></th>
+                    <td><%= @line_notice_charge.amount.format %></td>
+                  </tr>
+                  <tr>
+                    <th><%= t('line_notice_requests.store.success.charge_date') %></th>
+                    <td><%= l(@line_notice_charge.charge_date) %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
+
+          <hr>
+
+          <!-- 案内文 -->
+          <div class="alert alert-info">
+            <%= t('line_notice_requests.store.success.notification_info_html').html_safe %>
+          </div>
+
+          <!-- アクションボタン -->
+          <div class="text-center mt-4">
+            <%= link_to t('line_notice_requests.store.success.back_to_schedule'), 
+                lines_user_bot_schedules_path(business_owner_id: business_owner_id), 
+                class: 'btn btn-primary btn-lg' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

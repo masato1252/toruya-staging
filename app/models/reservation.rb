@@ -63,6 +63,8 @@ class Reservation < ApplicationRecord
   has_many :reservation_customers, dependent: :destroy
   has_many :active_reservation_customers, -> { active }, dependent: :destroy, class_name: "ReservationCustomer"
   has_many :customers, through: :active_reservation_customers
+  has_many :line_notice_requests, dependent: :destroy
+  has_many :line_notice_charges, dependent: :destroy
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :in_month, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_month, date.end_of_month.end_of_day) }
@@ -196,6 +198,24 @@ class Reservation < ApplicationRecord
 
   def dates
     (start_time.to_date..end_time.to_date).to_a
+  end
+
+  # LINE通知関連メソッド
+  def line_notice_enabled?
+    line_notice_requests.approved.exists? && 
+      line_notice_charges.successful.exists?
+  end
+
+  def line_notice_requested?
+    line_notice_requests.exists?
+  end
+
+  def pending_line_notice_request
+    line_notice_requests.pending.first
+  end
+
+  def approved_line_notice_request
+    line_notice_requests.approved.first
   end
 
   private

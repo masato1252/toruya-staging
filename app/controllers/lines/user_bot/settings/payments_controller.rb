@@ -8,12 +8,22 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
 
   def index
     @subscription = Current.business_owner.subscription
-    @charges = Current.business_owner.subscription_charges
+    
+    # プラン課金履歴を取得
+    subscription_charges = Current.business_owner.subscription_charges
       .finished
       .displayable_in_history
       .includes(:plan)
       .where("created_at >= ?", 1.year.ago)
-      .order("created_at DESC")
+    
+    # LINE通知課金履歴を取得
+    line_notice_charges = Current.business_owner.line_notice_charges
+      .where(state: :completed)
+      .where("created_at >= ?", 1.year.ago)
+    
+    # 両方を結合して時系列にソート
+    @charges = (subscription_charges.to_a + line_notice_charges.to_a).sort_by(&:created_at).reverse
+    
     @refundable = @subscription.refundable?
   end
 
@@ -217,7 +227,16 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   def receipt
     user_id = MessageEncryptor.decrypt(params[:encrypted_user_id])
     user = User.find(user_id)
-    @charge = user.subscription_charges.find(params[:id])
+    
+    # SubscriptionChargeまたはLineNoticeChargeを取得
+    if params[:type] == 'line_notice_charge'
+      @charge = user.line_notice_charges.find(params[:id])
+      @charge_type = 'line_notice_charge'
+    else
+      @charge = user.subscription_charges.find(params[:id])
+      @charge_type = 'subscription_charge'
+    end
+    
     @receipient_name = user.name
 
     options = {

@@ -40,6 +40,9 @@ class BookingPagesController < ActionController::Base
         @booking_page.user.customers.find_by(id: cookies[:booking_customer_id] || cookies[:verified_customer_id])
       end
 
+    # LINEから取得したemailまたは過去の登録済みemailを取得
+    @customer_email = cookies[:line_customer_email] || @customer&.email
+
     @last_selected_option_ids =
       if params[:last_booking_option_ids] || params[:last_booking_option_id]
         params[:last_booking_option_ids]&.split(",")&.map(&:to_i) || [params[:last_booking_option_id].to_i]
@@ -155,14 +158,16 @@ class BookingPagesController < ActionController::Base
     if outcome.valid?
       result = outcome.result
       customer = result[:customer]
+      reservation = result[:reservation]
 
       cookies.clear_across_domains(:booking_customer_id)
       cookies.set_across_domains(:booking_customer_id, customer&.id, expires: 20.years.from_now)
 
-      Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
+      Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: reservation)
 
       render json: {
-        status: "successful"
+        status: "successful",
+        reservation_id: reservation&.id
       }
     else
       # Check if it's a 3DS-related error - any error containing client_secret needs frontend handling

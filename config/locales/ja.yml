@@ -853,6 +853,19 @@ ja:
               no_payment_method: "^有効な支払い方法が見つかりません。"
             customer:
               requires_action: "^3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+        line_notice_requests/approve:
+          attributes:
+            payment:
+              auth_failed: "カード認証に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              processor_failed: "決済処理に失敗しました。しばらく時間をおいてもう一度お試しください。"
+              card_error: "カードエラーが発生しました。カード情報をご確認ください。"
+              stripe_error: "決済処理中にエラーが発生しました。しばらく時間をおいてもう一度お試しください。"
+              requires_action: "3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+              failed: "決済に失敗しました。もう一度お試しください。"
+              no_payment_method: "有効な支払い方法が見つかりません。"
+            user:
+              no_stripe_customer: "Stripe顧客情報が見つかりません。カードを登録してください。"
+              store_customer_failed: "カード登録に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
         customer_payments/purchase_online_service:
           attributes:
             customer:
@@ -970,3 +983,74 @@ ja:
           attributes:
             staff:
               undeleteable: "^責任者は削除できません"
+        line_notice_requests/create:
+          attributes:
+            customer:
+              not_associated_with_reservation: "^この予約に関連付けられていません"
+            reservation:
+              store_not_on_free_plan: "^店舗が無料プランではありません"
+              already_has_pending_request: "^既にリクエストが送信されています"
+  line_notice_requests:
+    new:
+      title: "LINE通知リクエスト"
+      description_html: |
+        <p class="mb-4">%{shop_name}は現在無料プランをご利用中のため、予約に関する通知はメールでのみ送信されます。</p>
+        <p class="mb-4">LINE通知を希望される場合は、店舗へリクエストを送信することができます。</p>
+        <p class="mb-4">店舗が承認すると、この予約に関する通知をLINEで受け取ることができます。</p>
+      notice_html: |
+        <p class="mb-2"><strong>※ご注意</strong></p>
+        <ul class="list-disc pl-5 mb-2">
+          <li>初回のみ無料で利用できます</li>
+          <li>2回目以降は1件につき275円（250円＋税）の費用が発生します</li>
+          <li>費用は店舗側が負担します</li>
+          <li>店舗が拒否する場合もあります</li>
+        </ul>
+      connect_line_button: "LINE連携してリクエストする"
+      already_requested: "このご予約については既にLINE通知リクエストが送信されています。"
+      back_to_reservation: "予約詳細に戻る"
+    success:
+      title: "リクエスト送信完了"
+      description_html: |
+        <p class="mb-4">LINEでお知らせ機能のリクエストが %{shop_name} に送信されました。</p>
+        <p class="mb-4">店舗側の承認をお待ちください。</p>
+      notice_html: |
+        <p><strong>✓ 承認されるまでしばらくお待ちください</strong></p>
+        <p>承認または拒否された場合は、メールでお知らせします。</p>
+      back_to_reservation: "予約詳細に戻る"
+    store:
+      show:
+        title: "LINE通知リクエスト確認"
+        charge_information: "料金案内"
+        free_trial_notice: "初回無料でご利用いただけます"
+        free_trial_description: "この承認は初回のため、費用は発生しません。"
+        paid_notice: "今回のお支払い金額：%{amount}"
+        paid_description: "2回目以降のLINE通知リクエスト承認には、1件につき275円（250円＋税）の費用がかかります。"
+        approve_button: "リクエストを承認する（無料）"
+        approve_and_pay_button: "リクエストを承認する（%{amount}）"
+        approve_confirm: "このLINE通知リクエストを承認してもよろしいですか？"
+      success:
+        title: "承認完了"
+        message: "LINE通知リクエストを承認しました"
+        description: "%{customer_name}様への今後の予約通知は、LINEで送信されます。"
+        charge_details: "課金情報"
+        charge_type: "種別"
+        charge_amount: "金額"
+        charge_date: "承認日"
+        free_trial: "初回無料"
+        paid: "有料"
+        notification_info_html: |
+          <strong>今後の通知について</strong><br>
+          この予約に関する確定通知、リマインダーなどがお客様のLINEに送信されます。
+        back_to_schedule: "スケジュールに戻る"
+      payment:
+        modal_title: "決済情報の入力"
+        charge_amount_label: "お支払い金額"
+        card_number_label: "カード情報"
+        submit_button: "決済して承認する"
+    errors:
+      reservation_not_found: "予約が見つかりません"
+      not_free_plan: "この機能は無料プランの店舗でのみご利用いただけます"
+      line_auth_failed: "LINE連携に失敗しました。もう一度お試しください。"
+      customer_not_found: "顧客情報が見つかりません。先に顧客登録を完了してください。"
+      not_found: "リクエストが見つかりません"
+      payment_method_required: "決済情報が必要です"

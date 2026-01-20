@@ -13,7 +13,9 @@ module PlansHelper
   end
 
   def charge_description(charge)
-    if charge.shop_fee?
+    if charge.is_a?(LineNoticeCharge)
+      t("settings.plans.payment.line_notice_request")
+    elsif charge.shop_fee?
       t("settings.plans.payment.extra_shop")
     else
       charge.plan.name

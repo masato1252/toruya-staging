@@ -71,7 +71,11 @@ module Notifiers
         if content_type != SocialUserMessages::Create::TEXT_TYPE
           send_notification_with_fallbacks(preferred_channel: "line")
         else
-          send_notification_with_fallbacks(preferred_channel: business_owner.customer_notification_channel)
+          preferred_channel = determine_customer_notification_channel
+          send_notification_with_fallbacks(preferred_channel: preferred_channel)
+          
+          # LINE通知リクエストで送信した場合、最終通知かチェックして店舗へ通知
+          check_and_notify_owner_if_final_line_notice if preferred_channel == "line"
         end
       elsif receiver.is_a?(StaffAccount) || receiver.is_a?(ConsultantAccount)
         # send to staff or consultant decided by delivered_by :notifier
@@ -176,7 +180,8 @@ module Notifiers
             email: email,
             message: message,
             subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name),
-            broadcast: try(:broadcast)
+            broadcast: try(:broadcast),
+            reservation: try(:reservation)
           )
         else
           UserMailer.with(
@@ -210,6 +215,69 @@ module Notifiers
 
     def business_owner
       target_line_user&.user || target_email_user.try(:user) || target_email_user
+    end
+
+    # 顧客への通知チャンネルを決定
+    # 無料プランでも、予約に関するLINE通知リクエストが承認されていればLINEで送信
+    def determine_customer_notification_channel
+      # 予約関連の通知の場合
+      if respond_to?(:reservation) && reservation.present?
+        # 無料プランの場合
+        if business_owner.subscription.free_level?
+          # LINE通知リクエストが承認済みか確認
+          approved_request = LineNoticeRequest.approved
+            .where(reservation_id: reservation.id)
+            .first
+          
+          # 承認済みならLINE、そうでなければemail
+          return approved_request.present? ? "line" : "email"
+        end
+      end
+      
+      # デフォルトは店舗の設定に従う
+      business_owner.customer_notification_channel
+    end
+
+    # LINE通知リクエストによる送信で、これが最終通知の場合に店舗へ通知
+    def check_and_notify_owner_if_final_line_notice
+      return unless respond_to?(:reservation) && reservation.present?
+      return unless business_owner.subscription.free_level?
+      
+      # LINE通知リクエストが承認済みか確認
+      approved_request = LineNoticeRequest.approved
+        .where(reservation_id: reservation.id)
+        .first
+      
+      return unless approved_request.present?
+      
+      # この予約に対するスケジュール済み通知が他にあるかチェック
+      # 予約開始時刻より後の通知がスケジュールされていなければ最終通知とみなす
+      if is_final_notification_for_reservation?
+        # 店舗オーナーへLINE通知（非同期）
+        Notifiers::Users::LineNoticeCompleted.perform_later(
+          receiver: business_owner,
+          line_notice_request: approved_request,
+          customer: target_email_user
+        )
+      end
+    end
+
+    # この通知が予約に対する最終通知かどうかを判定
+    def is_final_notification_for_reservation?
+      # 予約開始時刻より後にスケジュールされた通知ジョブがあるか確認
+      # Sidekiq::ScheduledSetから該当ジョブを検索
+      scheduled_set = Sidekiq::ScheduledSet.new
+      
+      has_future_notification = scheduled_set.any? do |job|
+        next false unless job.klass.include?('Notifiers::Customers')
+        next false unless job.args.any? { |arg| arg.is_a?(Hash) && arg.dig('reservation', 'id') == reservation.id }
+        
+        # ジョブの実行予定時刻が予約開始時刻より後
+        job_scheduled_at = Time.at(job.at)
+        job_scheduled_at > reservation.start_time
+      end
+      
+      !has_future_notification
     end
 
     private

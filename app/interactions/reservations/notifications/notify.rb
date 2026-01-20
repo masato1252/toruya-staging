@@ -61,7 +61,8 @@ module Reservations
           customer: customer,
           email: mail,
           message: message,
-          subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name)
+          subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name),
+          reservation: reservation
         )
       end
 

@@ -237,6 +237,14 @@ Rails.application.routes.draw do
             end
           end
 
+          # LINE通知リクエスト管理
+          resources :line_notice_requests, only: [:show] do
+            member do
+              post :approve
+              get :success
+            end
+          end
+
           resources :booking_pages do
             collection do
               get "/social_service_user_id/:social_service_user_id", action: "index"
@@ -705,6 +713,15 @@ Rails.application.routes.draw do
 
       resources :reminder_permissions, only: [] do
         get ":encrypted_data", to: "reminder_permissions#create", on: :collection, as: :customer_from # customer_from_callbacks_reminder_permissions
+      end
+    end
+
+    # LINE通知リクエスト機能
+    resources :line_notice_requests, only: [] do
+      collection do
+        get :new
+        get :callback
+        get :success
       end
     end
 

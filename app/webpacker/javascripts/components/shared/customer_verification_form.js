@@ -90,7 +90,7 @@ const CustomerVerificationForm = ({
 
   // Check if form is valid
   const isBasicInfoValid = () => {
-    let isValid = customer_last_name && customer_first_name && customer_email;
+    let isValid = customer_last_name && customer_first_name && customer_phone_number;
 
     if (support_phonetic_name) {
       isValid = isValid && customer_phonetic_last_name && customer_phonetic_first_name;

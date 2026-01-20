@@ -1,5 +1,4 @@
 import React from "react";
-import PhoneInput from 'react-phone-input-2';
 
 import I18n from 'i18n-js/index.js.erb';
 
@@ -84,7 +83,7 @@ export const CustomerBasicInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.email")}{I18n.t("common.why_need_email")}
+        {I18n.t("common.email")} ({I18n.t("common.optional")})
       </h4>
       <input
         type="email"
@@ -168,21 +167,17 @@ export const VerifiedCustomerForm = ({
   handleSubmit,
   isSubmitting,
 }) => {
-  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
-
   return (
     <div className="customer-type-options">
       <h4>
-        {I18n.t("common.phone_number")}
+        {I18n.t("common.phone_number")} <span className="required">*</span>
       </h4>
-      <PhoneInput
-        country={phone_countries.includes(I18n.locale) ? I18n.locale : 'jp'}
-        onlyCountries={phone_countries}
+      <input
+        type="tel"
+        className="form-control"
         value={customer_phone_number || ""}
-        onChange={(phone) => handleChange('customer_phone_number', phone)}
-        autoFormat={false}
+        onChange={(e) => handleChange('customer_phone_number', e.target.value)}
         placeholder="09012345678"
-        countryCodeEditable={false}
       />
 
       <div className="centerize">
@@ -190,7 +185,7 @@ export const VerifiedCustomerForm = ({
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !customer_phone_number}
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
@@ -214,8 +209,6 @@ export const CustomerInfoForm = ({
   isSubmitting,
   errors,
 }) => {
-  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
-
   return (
     <div className="customer-type-options">
       <h4>
@@ -267,7 +260,7 @@ export const CustomerInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.email")}{I18n.t("common.why_need_email")}
+        {I18n.t("common.email")} ({I18n.t("common.optional")})
       </h4>
       <input
         type="email"
@@ -278,16 +271,14 @@ export const CustomerInfoForm = ({
       />
 
       <h4>
-        {I18n.t("common.phone_number")}
+        {I18n.t("common.phone_number")} <span className="required">*</span>
       </h4>
-      <PhoneInput
-        country={phone_countries.includes(I18n.locale) ? I18n.locale : 'jp'}
-        onlyCountries={phone_countries}
+      <input
+        type="tel"
+        className="form-control"
         value={customer_phone_number || ""}
-        onChange={(phone) => handleChange('customer_phone_number', phone)}
-        autoFormat={false}
+        onChange={(e) => handleChange('customer_phone_number', e.target.value)}
         placeholder="09012345678"
-        countryCodeEditable={false}
       />
 
       <div className="centerize">
@@ -295,7 +286,7 @@ export const CustomerInfoForm = ({
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting || !customer_last_name || !customer_first_name }
+          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_phone_number}
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :

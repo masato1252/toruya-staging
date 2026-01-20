@@ -45,7 +45,14 @@
         </tr>
       </thead>
       <tbody>
-        <% if @charge.completed? %>
+        <% if @charge_type == 'line_notice_charge' %>
+          <%# LINE通知リクエスト課金の場合 %>
+          <tr>
+            <td><%= I18n.t("settings.plans.payment.line_notice_request") %></td>
+            <td>1件</td>
+            <td><%= @charge.amount.format %></td>
+          </tr>
+        <% elsif @charge.completed? %>
           <% if @charge.shop_fee? %>
             <tr>
               <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>

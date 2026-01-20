@@ -17,7 +17,10 @@ const BookingDoneView = ({
   booking_option_ids,
   skip_social_customer,
   function_access_id,
-  customer_notification_channel
+  customer_notification_channel,
+  is_free_plan,
+  line_settings_verified,
+  reservation_id
 }) => {
   const {
     title,
@@ -27,6 +30,29 @@ const BookingDoneView = ({
     message_email,
     back_to_book
   } = i18n.done
+
+  // 無料プランの場合の通知チャンネルメッセージを修正
+  const getNotificationMessage = () => {
+    if (is_free_plan) {
+      // 無料プランの場合は常にメール通知
+      return message_email || I18n.t("booking_page.done.message_email");
+    } else {
+      // 有料プランの場合は通知チャンネルに応じたメッセージ
+      if (customer_notification_channel === 'line') {
+        return message_line;
+      } else if (customer_notification_channel === 'sms') {
+        return message_sms;
+      } else {
+        return message_email;
+      }
+    }
+  };
+
+  // LINEリクエストボタンのURL
+  const lineNoticeRequestUrl = reservation_id ? `/line_notice_requests/new?reservation_id=${reservation_id}` : null;
+  
+  // LINEリクエストボタンを表示するか判定
+  const shouldShowLineRequestButton = is_free_plan && line_settings_verified && lineNoticeRequestUrl;
 
   return (
     <div className="done-view">
@@ -45,9 +71,18 @@ const BookingDoneView = ({
             <div className="message">
               {message1}
               <br />
-              {customer_notification_channel === 'line' ? message_line : customer_notification_channel === 'sms' ? message_sms : message_email}
+              {getNotificationMessage()}
             </div>
-            {customer_notification_channel === 'line' ? <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} /> : null}
+            {!is_free_plan && customer_notification_channel === 'line' ? <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} /> : null}
+            
+            {/* 無料プラン かつ LINE連携済み の場合、LINE通知リクエストボタンを表示 */}
+            {shouldShowLineRequestButton && (
+              <div className="margin-around">
+                <a href={lineNoticeRequestUrl} className="btn btn-success" style={{ backgroundColor: '#06C755', borderColor: '#06C755' }}>
+                  {I18n.t("booking_page.done.request_line_notice")}
+                </a>
+              </div>
+            )}
           </>
         )
       }

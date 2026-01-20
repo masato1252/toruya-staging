@@ -923,3 +923,43 @@ tw:
           attributes:
             staff:
               undeleteable: "^無法刪除負責人"
+        line_notice_requests/create:
+          attributes:
+            customer:
+              not_associated_with_reservation: "^與此預約無關"
+            reservation:
+              store_not_on_free_plan: "^商店不是免費方案"
+              already_has_pending_request: "^已經發送過請求"
+  line_notice_requests:
+    new:
+      title: "LINE通知請求"
+      description_html: |
+        <p class="mb-4">%{shop_name}目前使用免費方案，因此預約相關通知僅通過電子郵件發送。</p>
+        <p class="mb-4">如果您希望使用LINE通知，可以向商店發送請求。</p>
+        <p class="mb-4">商店批准後，您將可以通過LINE接收有關此預約的通知。</p>
+      notice_html: |
+        <p class="mb-2"><strong>※注意事項</strong></p>
+        <ul class="list-disc pl-5 mb-2">
+          <li>首次可免費使用</li>
+          <li>第二次起每次需275日圓（250日圓＋稅）</li>
+          <li>費用由商店承擔</li>
+          <li>商店可能會拒絕</li>
+        </ul>
+      connect_line_button: "連接LINE並請求"
+      already_requested: "此預約已經發送過LINE通知請求。"
+      back_to_reservation: "返回預約詳情"
+    success:
+      title: "請求發送完成"
+      description_html: |
+        <p class="mb-4">LINE通知功能的請求已發送至 %{shop_name}。</p>
+        <p class="mb-4">請等待店舖批准。</p>
+      notice_html: |
+        <p><strong>✓ 請等待批准</strong></p>
+        <p>批准或拒絕後，我們會通過電子郵件通知您。</p>
+      back_to_reservation: "返回預約詳情"
+    errors:
+      reservation_not_found: "找不到預約"
+      not_free_plan: "此功能僅適用於免費方案的商店"
+      line_auth_failed: "LINE連接失敗。請重試。"
+      customer_not_found: "找不到客戶信息。請先完成客戶註冊。"
+
