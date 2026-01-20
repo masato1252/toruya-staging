@@ -129,19 +129,25 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       
       # エラータイプを取得（:planキーから最初のエラーを取得）
       plan_error = outcome.errors.details[:plan]&.first || {}
-      error_type = plan_error[:error] || outcome.errors.details.values.flatten.first&.dig(:error)
+      user_error = outcome.errors.details[:user]&.first || {}
+      error_type = plan_error[:error] || user_error[:error] || outcome.errors.details.values.flatten.first&.dig(:error)
       
-      # Stripeエラーコードとメッセージを取得
-      stripe_error_code = plan_error[:stripe_error_code]
-      stripe_error_message = plan_error[:stripe_error_message]
+      # Stripeエラーコードとメッセージを取得（planとuserの両方をチェック）
+      stripe_error_code = plan_error[:stripe_error_code] || user_error[:stripe_error_code]
+      stripe_error_message = plan_error[:stripe_error_message] || user_error[:stripe_error_message]
+      user_message = plan_error[:user_message] || user_error[:user_message]
+      
+      # ユーザー向けメッセージのみをフロントに送信（詳細はDBに記録済み）
+      display_message = user_message || outcome.errors.full_messages.join("")
 
       render json: {
-         message: outcome.errors.full_messages.join(""),
+         message: display_message,
          error_type: error_type,
          stripe_error_code: stripe_error_code,
          stripe_error_message: stripe_error_message,
          client_secret: error_with_client_secret[:client_secret],
-         payment_intent_id: error_with_client_secret[:payment_intent_id]
+         payment_intent_id: error_with_client_secret[:payment_intent_id],
+         setup_intent_id: error_with_client_secret[:setup_intent_id]
       }, status: :unprocessable_entity
     else
       redirect_path = lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)

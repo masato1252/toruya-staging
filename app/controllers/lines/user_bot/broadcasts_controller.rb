@@ -101,14 +101,27 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def customers_count
-    outcome =
+    customers =
       case params[:query_type]
+      when "active_customers"
+        Current.business_owner.customers.active_in(3.months.ago)
       when "online_service_for_active_customers"
-        Broadcasts::QueryActiveServiceCustomers.run(user: Current.business_owner, query: params[:query].permit!.to_h)
+        outcome = Broadcasts::QueryActiveServiceCustomers.run(user: Current.business_owner, query: params[:query].permit!.to_h)
+        outcome.result
       else
-        Broadcasts::QueryCustomers.run(user: Current.business_owner, query: params[:query].permit!.to_h)
+        outcome = Broadcasts::QueryCustomers.run(user: Current.business_owner, query: params[:query].permit!.to_h)
+        outcome.result
       end
 
-    return_json_response(outcome, { customers_count: outcome.result.count })
+    # Apply blacklist filter
+    filtered_customers = customers.select { |customer| !customer.in_blacklist? }
+    
+    # Apply reminder_permission filter for marketing broadcasts
+    # reservation_customers and manual_assignment don't require reminder_permission
+    unless ["reservation_customers", "manual_assignment"].include?(params[:query_type])
+      filtered_customers = filtered_customers.select { |customer| customer.reminder_permission }
+    end
+
+    render json: { customers_count: filtered_customers.count }
   end
 end

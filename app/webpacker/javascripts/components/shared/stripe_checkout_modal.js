@@ -55,75 +55,154 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
       setProcessing(false)
 
       if (error) {
+        console.log('=== Payment error received ===');
+        console.log('Error response:', error.response?.data);
+        
         if (error.response?.data?.client_secret) {
+          console.log('Client secret found, starting 3DS flow');
           // Handle 3DS authentication case
           const stripe = await loadStripe(props.stripe_key);
-          const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(error.response.data.client_secret);
+          const errorData = error.response.data;
+          
+          // SetupIntent か PaymentIntent かを判定
+          const isSetupIntent = !!(errorData.setup_intent_id) || (errorData.client_secret && errorData.client_secret.startsWith('seti_'));
+          console.log('Is SetupIntent?', isSetupIntent);
+          console.log('Client secret prefix:', errorData.client_secret?.substring(0, 5));
+          
+          let confirmError, intent;
+          
+          if (isSetupIntent) {
+            console.log('Calling stripe.confirmCardSetup...');
+            // SetupIntent の場合
+            const result = await stripe.confirmCardSetup(errorData.client_secret, {
+              payment_method: paymentMethodId
+            });
+            console.log('confirmCardSetup result:', result);
+            confirmError = result.error;
+            intent = result.setupIntent;
+          } else {
+            console.log('Calling stripe.confirmCardPayment...');
+            // PaymentIntent の場合
+            const result = await stripe.confirmCardPayment(errorData.client_secret);
+            console.log('confirmCardPayment result:', result);
+            confirmError = result.error;
+            intent = result.paymentIntent;
+          }
+
+          console.log('confirmError:', confirmError);
+          console.log('intent:', intent);
+          console.log('intent status:', intent?.status);
 
           setProcessing(true)
 
           if (confirmError) {
+            console.log('Confirm error detected:', confirmError);
             setProcessing(false)
-            const errorMessage = getStripeErrorMessage(confirmError);
+            // バックエンドから返されたメッセージを優先的に表示
+            const errorMessage = errorData.message || getStripeErrorMessage(confirmError);
             $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
           }
-          else if (paymentIntent.status === 'succeeded') {
-            // Payment successful, retry API call
-            const [retryError, retryResponse] = await PaymentServices.payPlan({
+          else if (intent && intent.status === 'succeeded') {
+            console.log('3DS authentication succeeded, retrying payment...');
+            // Payment/Setup successful, retry API call
+            const retryData = {
               token: paymentMethodId,
               plan: plan_key,
               rank,
-              business_owner_id: props.business_owner_id,
-              payment_intent_id: paymentIntent.id
-            });
+              business_owner_id: props.business_owner_id
+            };
+            
+            // SetupIntentとPaymentIntentで送るパラメータを分ける
+            if (isSetupIntent) {
+              retryData.setup_intent_id = intent.id;
+              console.log('Adding setup_intent_id to retry:', intent.id);
+            } else {
+              retryData.payment_intent_id = intent.id;
+              console.log('Adding payment_intent_id to retry:', intent.id);
+            }
+            
+            console.log('Retry request data:', retryData);
+            
+            const [retryError, retryResponse] = await PaymentServices.payPlan(retryData);
+
+            console.log('Retry response - error:', retryError);
+            console.log('Retry response - success:', retryResponse);
 
             if (retryError) {
-              setProcessing(false)
-              // エラーレスポンスからメッセージを取得
-              let errorMessage = "決済に失敗しました。もう一度お試しください。";
-              if (retryError.response?.data?.stripe_error_code) {
-                // Stripeエラーコードからメッセージを取得
-                const stripeError = {
-                  code: retryError.response.data.stripe_error_code,
-                  message: retryError.response.data.stripe_error_message
-                };
-                errorMessage = getStripeErrorMessage(stripeError);
-              } else if (retryError.response?.data?.message) {
-                errorMessage = retryError.response.data.message;
-              } else if (retryError.message) {
-                errorMessage = retryError.message;
+              console.log('Retry error response data:', retryError.response?.data);
+              
+              // リトライ後も3DS認証が必要な場合（PaymentIntentの3DS認証）
+              if (retryError.response?.data?.client_secret) {
+                console.log('Retry also requires 3DS authentication (PaymentIntent)');
+                const retryErrorData = retryError.response.data;
+                
+                // PaymentIntent の 3DS認証
+                const { error: paymentConfirmError, paymentIntent } = await stripe.confirmCardPayment(
+                  retryErrorData.client_secret
+                );
+                
+                console.log('Payment confirmCardPayment result:', { error: paymentConfirmError, paymentIntent });
+                
+                if (paymentConfirmError) {
+                  setProcessing(false);
+                  const errorMessage = retryErrorData.message || getStripeErrorMessage(paymentConfirmError);
+                  console.log('Payment confirmation error:', errorMessage);
+                  $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
+                } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                  console.log('Payment 3DS succeeded, final retry...');
+                  // PaymentIntent の 3DS認証成功、最終リトライ
+                  const [finalError, finalResponse] = await PaymentServices.payPlan({
+                    token: paymentMethodId,
+                    plan: plan_key,
+                    rank,
+                    business_owner_id: props.business_owner_id,
+                    payment_intent_id: paymentIntent.id
+                  });
+                  
+                  if (finalError) {
+                    setProcessing(false);
+                    const errorMessage = finalError.response?.data?.message || "決済に失敗しました。もう一度お試しください。";
+                    console.log('Final retry error:', errorMessage);
+                    $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
+                  } else {
+                    console.log('Payment successful, redirecting...');
+                    window.location = finalResponse.data["redirect_path"];
+                  }
+                } else if (paymentIntent && paymentIntent.status === 'processing') {
+                  console.log('Payment processing, start polling...');
+                  pollPaymentStatus(paymentIntent.id, paymentMethodId);
+                }
+              } else {
+                setProcessing(false)
+                // バックエンドから返されたメッセージを優先的に表示
+                let errorMessage = retryError.response?.data?.message || "決済に失敗しました。もう一度お試しください。";
+                console.log('Showing error message:', errorMessage);
+                $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
               }
-              $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
             } else {
+              console.log('Retry succeeded, redirecting to:', retryResponse.data["redirect_path"]);
               window.location = retryResponse.data["redirect_path"];
             }
           }
-          else if (paymentIntent.status === 'processing') {
-            // Start polling payment status
-            pollPaymentStatus(paymentIntent.id, paymentMethodId);
+          else if (intent && intent.status === 'processing') {
+            // Start polling payment status (PaymentIntentのみ、SetupIntentにはprocessingステータスはない)
+            pollPaymentStatus(intent.id, paymentMethodId);
           }
         } else {
+          console.log('No client_secret, showing error message');
           setProcessing(false)
-          // エラーレスポンスからメッセージを取得
-          let errorMessage = "決済に失敗しました。もう一度お試しください。";
-          if (error.response?.data?.stripe_error_code) {
-            // Stripeエラーコードからメッセージを取得
-            const stripeError = {
-              code: error.response.data.stripe_error_code,
-              message: error.response.data.stripe_error_message
-            };
-            errorMessage = getStripeErrorMessage(stripeError);
-          } else if (error.response?.data?.message) {
-            errorMessage = error.response.data.message;
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
+          // バックエンドから返されたメッセージを優先的に表示
+          const errorMessage = error.response?.data?.message || "決済に失敗しました。もう一度お試しください。";
+          console.log('Error message:', errorMessage);
           $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
         }
       } else {
+        console.log('Payment successful, redirecting...');
         window.location = response.data["redirect_path"];
       }
     } catch (err) {
+      console.error('=== Catch block reached ===');
+      console.error('Error:', err);
       setProcessing(false);
       const errorMessage = err.message || "決済処理中にエラーが発生しました。もう一度お試しください。";
       $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
@@ -156,20 +235,8 @@ const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
             });
 
             if (retryError) {
-              // エラーレスポンスからメッセージを取得
-              let errorMessage = "決済に失敗しました。もう一度お試しください。";
-              if (retryError.response?.data?.stripe_error_code) {
-                // Stripeエラーコードからメッセージを取得
-                const stripeError = {
-                  code: retryError.response.data.stripe_error_code,
-                  message: retryError.response.data.stripe_error_message
-                };
-                errorMessage = getStripeErrorMessage(stripeError);
-              } else if (retryError.response?.data?.message) {
-                errorMessage = retryError.response.data.message;
-              } else if (retryError.message) {
-                errorMessage = retryError.message;
-              }
+              // バックエンドから返されたメッセージを優先的に表示
+              const errorMessage = retryError.response?.data?.message || "決済に失敗しました。もう一度お試しください。";
               $("#charge-failed-modal").data('error-message', errorMessage).modal("show");
             } else {
               window.location = retryResponse.data["redirect_path"];

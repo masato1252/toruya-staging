@@ -145,11 +145,6 @@
           <% end %>
         <% end %>
 
-      <div class="field-header"><%= t("user_bot.dashboards.settings.support.toruya_lab") %></div>
-        <%= link_to edit_lines_user_bot_settings_user_setting_path(business_owner_id: business_owner_id, attribute: "customer_notification_channel", back_path: lines_user_bot_settings_path(business_owner_id: business_owner_id)), class: "field-row" do %>
-          <span><%= t("user_bot.dashboards.settings.user_settings.customer_notification_channel.title") %>: <%= t("user_bot.dashboards.settings.user_settings.customer_notification_channel.options.#{Current.business_owner.customer_notification_channel}") %></span><i class="fa fa-angle-right"></i>
-        <% end %>
-
         <div class="bottom-navigation-bar centerize">
           <%= sprintf("%07d", Current.business_owner.id) %>
         </div>

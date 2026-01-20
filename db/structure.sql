@@ -1,4 +1,4 @@
-\restrict v1toKDw4oWPhUCAhjxl60Owy5kfzMo86YAZ3LwF9E9EgoPGMKbjJOjrljkstufi
+\restrict famd8XepDBKW7QAzVfxqGUuLmYVKkiEwpKHQlgJZwDTL6ctwYrawjN7X3DO4kBF
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 18.0
@@ -3492,7 +3492,8 @@ CREATE TABLE public.subscription_charges (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     details jsonb,
-    rank integer DEFAULT 0
+    rank integer DEFAULT 0,
+    error_message text
 );
 
 
@@ -7215,7 +7216,7 @@ CREATE EVENT TRIGGER validate_extension ON ddl_command_end
 -- PostgreSQL database dump complete
 --
 
-\unrestrict v1toKDw4oWPhUCAhjxl60Owy5kfzMo86YAZ3LwF9E9EgoPGMKbjJOjrljkstufi
+\unrestrict famd8XepDBKW7QAzVfxqGUuLmYVKkiEwpKHQlgJZwDTL6ctwYrawjN7X3DO4kBF
 
 SET search_path TO "$user", public, heroku_ext;
 
@@ -7493,6 +7494,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250612140711'),
 ('20250612140730'),
 ('20260113031127'),
-('20260113031241');
+('20260113031241'),
+('20260120024943');
 
 

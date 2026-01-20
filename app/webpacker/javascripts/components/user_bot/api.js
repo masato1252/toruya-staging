@@ -315,7 +315,7 @@ const CustomerServices = {
 }
 
 const PaymentServices = {
-  payPlan: ({token, plan, rank, business_owner_id, payment_intent_id}) => {
+  payPlan: ({token, plan, rank, business_owner_id, payment_intent_id, setup_intent_id}) => {
     return request({
       method: "POST",
       headers: {
@@ -327,7 +327,8 @@ const PaymentServices = {
         plan,
         rank,
         business_owner_id,
-        payment_intent_id
+        payment_intent_id,
+        setup_intent_id
       },
       responseType: "json"
     })

@@ -33,10 +33,16 @@ module Payments
 
             return payment_method_id
           when 'requires_action', 'requires_payment_method', 'requires_confirmation', "requires_source", "processing", "requires_source_action"
-            errors.add(:customer, :requires_action, client_secret: setup_intent.client_secret, payment_intent_id: setup_intent.id)
+            user_friendly_message = I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.customer.requires_action")
+            errors.add(:customer, :requires_action, 
+              client_secret: setup_intent.client_secret, 
+              setup_intent_id: setup_intent.id,
+              user_message: user_friendly_message
+            )
             return nil
           else
-            errors.add(:user, :failed)
+            user_friendly_message = I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.failed")
+            errors.add(:user, :failed, user_message: user_friendly_message)
             return nil
           end
         end
@@ -65,14 +71,21 @@ module Payments
 
               return payment_method_id
             else
-              errors.add(:user, :no_payment_method)
+              user_friendly_message = I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.no_payment_method")
+              errors.add(:user, :no_payment_method, user_message: user_friendly_message)
               return nil
             end
           when 'requires_action', 'requires_payment_method', 'requires_confirmation', "requires_source", "processing", "requires_source_action"
-            errors.add(:user, :requires_action, client_secret: payment_intent.client_secret, payment_intent_id: payment_intent_id)
+            user_friendly_message = I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.requires_action")
+            errors.add(:user, :requires_action, 
+              client_secret: payment_intent.client_secret, 
+              payment_intent_id: payment_intent_id,
+              user_message: user_friendly_message
+            )
             return nil
           else
-            errors.add(:user, :failed)
+            user_friendly_message = I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.failed")
+            errors.add(:user, :failed, user_message: user_friendly_message)
             return nil
           end
         end
@@ -131,21 +144,35 @@ module Payments
           payment_method_id
         when 'requires_action', 'requires_payment_method', 'requires_confirmation'
           # Requires 3DS verification, return client_secret for frontend processing
-          errors.add(:user, :requires_action, client_secret: setup_intent.client_secret, setup_intent_id: setup_intent.id)
+          user_friendly_message = I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.requires_action")
+          errors.add(:user, :requires_action, 
+            client_secret: setup_intent.client_secret, 
+            setup_intent_id: setup_intent.id,
+            user_message: user_friendly_message
+          )
           nil
         else
-          errors.add(:user, :failed)
+          user_friendly_message = I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.failed")
+          errors.add(:user, :failed, user_message: user_friendly_message)
           nil
         end
 
-      rescue Stripe::CardError => error
-        errors.add(:user, :auth_failed)
-        Rollbar.error(error, toruya_user: user.id, stripe_charge: error.json_body&.dig(:error))
+        rescue Stripe::CardError => error
+        stripe_error = error.json_body&.dig(:error) || {}
+        errors.add(:user, :auth_failed, 
+          stripe_error_code: stripe_error[:code],
+          stripe_error_message: stripe_error[:message] || error.message
+        )
+        Rollbar.error(error, toruya_user: user.id, stripe_charge: stripe_error)
         nil
       rescue Stripe::StripeError => error
         if !error.message.include?("already been attached")
-          errors.add(:user, :processor_failed)
-          Rollbar.error(error, toruya_user: user.id, stripe_charge: error.json_body&.dig(:error))
+          stripe_error = error.json_body&.dig(:error) || {}
+          errors.add(:user, :processor_failed,
+            stripe_error_code: stripe_error[:code],
+            stripe_error_message: stripe_error[:message] || error.message
+          )
+          Rollbar.error(error, toruya_user: user.id, stripe_charge: stripe_error)
         end
         nil
       end

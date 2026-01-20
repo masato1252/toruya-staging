@@ -12,6 +12,7 @@ module Subscriptions
 
     def execute
       user = subscription.user
+      failed_charge_data = nil
 
       # トランザクション内でロックを取得
       ActiveRecord::Base.transaction do
@@ -23,6 +24,61 @@ module Subscriptions
           )
           
           unless store_customer_outcome.valid?
+            # StoreStripeCustomerが失敗した場合もchargeレコードを作成
+            charge_amount_for_error = begin
+              new_plan_price, charging_rank = compose(Plans::Price, user: user, plan: plan, rank: rank)
+              residual_value = compose(Subscriptions::ResidualValue, user: user)
+              if user.subscription.in_paid_plan && (last_charge = user.subscription_charges.last_plan_charged)
+                new_plan_price = new_plan_price * Rational(last_charge.expired_date - Subscription.today, last_charge.expired_date - last_charge.charge_date)
+              end
+              amount = new_plan_price - residual_value
+              amount.positive? ? amount : new_plan_price
+            rescue => e
+              Money.new(0, user.currency || "JPY")
+            end
+            
+            # エラー詳細を取得
+            user_error = store_customer_outcome.errors.details[:user]&.first || {}
+            customer_error = store_customer_outcome.errors.details[:customer]&.first || {}
+            
+            # エラータイプとStripeエラー情報を取得
+            error_type = user_error[:error] || customer_error[:error]
+            raw_stripe_message = user_error[:stripe_error_message] || customer_error[:stripe_error_message]
+            stripe_error_code = user_error[:stripe_error_code] || customer_error[:stripe_error_code]
+            
+            # ユーザー向けメッセージを生成（full_messagesは使わない）
+            user_friendly_message = if error_type == :auth_failed
+              I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.auth_failed")
+            elsif error_type == :processor_failed
+              I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.processor_failed")
+            elsif error_type == :requires_action
+              I18n.t("active_interaction.errors.models.payments/store_stripe_customer.attributes.user.requires_action")
+            else
+              store_customer_outcome.errors.full_messages.join(', ')
+            end
+            
+            # エラーメッセージにはユーザー向けメッセージと生のStripeエラーを両方含める
+            combined_error_message = if raw_stripe_message.present?
+              error_details = "#{raw_stripe_message}"
+              error_details += " (code: #{stripe_error_code})" if stripe_error_code.present?
+              "#{user_friendly_message} | Raw error: #{error_details}"
+            else
+              user_friendly_message
+            end
+            
+            failed_charge_data = {
+              user_id: user.id,
+              plan_id: plan.id,
+              rank: rank,
+              amount_cents: charge_amount_for_error.cents,
+              amount_currency: charge_amount_for_error.currency.iso_code,
+              charge_date: Subscription.today,
+              manual: true,
+              order_id: OrderId.generate,
+              state: 'auth_failed',
+              error_message: combined_error_message
+            }
+            
             errors.merge!(store_customer_outcome.errors)
             raise ActiveRecord::Rollback
           end
@@ -85,10 +141,37 @@ module Subscriptions
 
             Notifiers::Users::Subscriptions::ChargeSuccessfully.run(receiver: subscription.user, user: subscription.user)
           else
-            # 決済失敗時はエラーをマージしてロールバック
+            # 決済失敗時、chargeの情報を保持（トランザクション外で再保存するため）
+            charge = charge_outcome.result
+            if charge
+              failed_charge_data = {
+                user_id: user.id,
+                plan_id: plan.id,
+                rank: charging_rank,
+                amount_cents: charge_amount.cents,
+                amount_currency: charge_amount.currency.iso_code,
+                charge_date: charge.charge_date,
+                manual: true,
+                order_id: charge.order_id,
+                state: charge.state,
+                stripe_charge_details: charge.stripe_charge_details,
+                error_message: charge.error_message
+              }
+            end
+            
+            # エラーをマージしてロールバック
             errors.merge!(charge_outcome.errors)
             raise ActiveRecord::Rollback
           end
+        end
+      end
+      
+      # トランザクション外でfailed chargeを再保存（ロールバックの影響を受けない）
+      if failed_charge_data
+        begin
+          SubscriptionCharge.create!(failed_charge_data)
+        rescue => e
+          Rollbar.error("Failed to save charge record", error: e.message, charge_data: failed_charge_data)
         end
       end
     end
