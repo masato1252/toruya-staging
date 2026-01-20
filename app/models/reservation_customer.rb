@@ -30,7 +30,6 @@
 #
 # Indexes
 #
-#  index_reservation_customers_on_function_access_id              (function_access_id)
 #  index_reservation_customers_on_reservation_id_and_customer_id  (reservation_id,customer_id) UNIQUE
 #  index_reservation_customers_on_sale_page_id_and_created_at     (sale_page_id,created_at)
 #  index_reservation_customers_on_slug                            (slug) UNIQUE

@@ -10,7 +10,7 @@
 #  price_cents        :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  survey_id          :bigint
+#  survey_id          :bigint           not null
 #  survey_question_id :bigint           not null
 #
 # Indexes
