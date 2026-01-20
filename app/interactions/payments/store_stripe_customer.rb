@@ -157,7 +157,7 @@ module Payments
           nil
         end
 
-        rescue Stripe::CardError => error
+      rescue Stripe::CardError => error
         stripe_error = error.json_body&.dig(:error) || {}
         errors.add(:user, :auth_failed, 
           stripe_error_code: stripe_error[:code],

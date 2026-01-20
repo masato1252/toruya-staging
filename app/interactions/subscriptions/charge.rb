@@ -223,7 +223,7 @@ module Subscriptions
         if selected_payment_method.nil?
           errors.add(:plan, :stripe_customer_not_found)
           if Rails.configuration.x.env.production?
-            Rollbar.error("No payment method available", user_id: user.id, stripe_customer_id: stripe_customer_id)
+          Rollbar.error("No payment method available", user_id: user.id, stripe_customer_id: stripe_customer_id)
           end
           return nil
         end
@@ -260,7 +260,7 @@ module Subscriptions
         if selected_payment_method.nil?
           errors.add(:plan, :no_payment_method)
           if Rails.configuration.x.env.production?
-            Rollbar.error("No payment method available for recurring charge", user_id: user.id, stripe_customer_id: stripe_customer_id)
+          Rollbar.error("No payment method available for recurring charge", user_id: user.id, stripe_customer_id: stripe_customer_id)
           end
           return nil
         end

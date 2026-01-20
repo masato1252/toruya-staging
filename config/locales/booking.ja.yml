@@ -69,9 +69,9 @@ ja:
       owner_warning2: 通知LINEはお客様へは送られません。
       title: 仮予約が完了しました
       message1: ご予約内容を送信しました
-      message_line: ログインされたLINEアカウントまたは携帯電話のSMS
-      message_sms: 携帯電話のSMSまたはメール
-      message_email: メールアドレス
+      message_line: ログインされたLINEアカウントまたは携帯電話のSMS へ、ご予約内容を送信しました
+      message_sms: 携帯電話のSMSまたはメール へ、ご予約内容を送信しました
+      message_email: メールアドレス へ、ご予約内容を送信しました
       no_line_message1_html: ご予約内容を<br />ご入力いただいた携帯電話番号またはメールアドレスに送信しました
       no_line_message2_html: LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます
       request_line_notice: LINEでお知らせをリクエスト

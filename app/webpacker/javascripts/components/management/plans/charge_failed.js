@@ -61,8 +61,8 @@ const ChargeFailedModal = (props) => {
               </>
             ) : (
               <div>
-                カード情報に問題があり決済(変更)できませんでした
-              </div>
+              カード情報に問題があり決済(変更)できませんでした
+            </div>
             )}
           </div>
           <div className="modal-footer">

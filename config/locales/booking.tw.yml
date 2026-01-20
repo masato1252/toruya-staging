@@ -69,9 +69,9 @@ tw:
       owner_warning2: 通知不會發送給客戶的LINE。
       title: 『待確認』預訂已完成，請等待商家確認
       message1: 預約內容已發送至
-      message_line: 您登入的LINE帳號或手機簡訊
-      message_sms: 您的手機簡訊或電子郵件
-      message_email: 您的電子郵件
+      message_line: 預約內容已發送至您登入的LINE帳號或手機簡訊
+      message_sms: 預約內容已發送至您的手機簡訊或電子郵件
+      message_email: 預約內容已發送至您的電子郵件
       no_line_message1_html: 預約內容已發送至<br />您輸入的手機號碼或電子郵件
       no_line_message2_html: 如果您連結LINE帳號，<br />可以透過LINE接收預約內容<br />和前一天的提醒
       request_line_notice: 請求LINE通知

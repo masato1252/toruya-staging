@@ -48,6 +48,9 @@ ja:
       title: Temporary reservation has been made
       message1: Reservation detail has been
       message2: sent to your mobile phone
+      message_line: Reservation detail has been sent to your LINE account or mobile phone SMS
+      message_sms: Reservation detail has been sent to your mobile phone SMS or email
+      message_email: Reservation detail has been sent to your email address
       desc1: Manage {shop-name} reservation
       desc2: with your personal schedule
       desc3: FREE
