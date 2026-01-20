@@ -24,14 +24,12 @@
 #  phonetic_first_name          :string
 #  phonetic_last_name           :string
 #  reminder_permission          :boolean          default(TRUE)
-#  status                       :string           default("active")
 #  tags                         :string           default([]), is an Array
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  contact_group_id             :integer
 #  custom_id                    :string
 #  google_contact_id            :string
-#  line_user_id                 :string
 #  rank_id                      :integer
 #  square_customer_id           :string
 #  stripe_customer_id           :string
@@ -40,17 +38,15 @@
 #
 # Indexes
 #
-#  customer_names_on_first_name_idx                      (first_name) USING gin
-#  customer_names_on_last_name_idx                       (last_name) USING gin
-#  customer_names_on_phonetic_first_name_idx             (phonetic_first_name) USING gin
-#  customer_names_on_phonetic_last_name_idx              (phonetic_last_name) USING gin
-#  customers_basic_index                                 (user_id,contact_group_id,deleted_at)
-#  customers_google_index                                (user_id,google_uid,google_contact_id) UNIQUE
-#  index_customers_on_user_id_and_customer_email         (user_id,customer_email)
-#  index_customers_on_user_id_and_customer_phone_number  (user_id,customer_phone_number) UNIQUE
-#  index_customers_on_user_id_and_line_user_id           (user_id,line_user_id) UNIQUE
-#  jp_name_index                                         (user_id,phonetic_last_name,phonetic_first_name)
-#  used_services_index                                   (user_id,menu_ids,online_service_ids) USING gin
+#  customer_names_on_first_name_idx               (first_name) USING gin
+#  customer_names_on_last_name_idx                (last_name) USING gin
+#  customer_names_on_phonetic_first_name_idx      (phonetic_first_name) USING gin
+#  customer_names_on_phonetic_last_name_idx       (phonetic_last_name) USING gin
+#  customers_basic_index                          (user_id,contact_group_id,deleted_at)
+#  customers_google_index                         (user_id,google_uid,google_contact_id) UNIQUE
+#  index_customers_on_user_id_and_customer_email  (user_id,customer_email)
+#  jp_name_index                                  (user_id,phonetic_last_name,phonetic_first_name)
+#  used_services_index                            (user_id,menu_ids,online_service_ids) USING gin
 #
 
 # attributes format:

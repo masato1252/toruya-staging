@@ -832,6 +832,27 @@ ja:
               requires_action: "^3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
               canceled: "^支払いがキャンセルされました。"
               failed: "^支払いに失敗しました。"
+        plan:
+          attributes:
+            base:
+              already_subscribe_the_same_plan: "すでに同じプランに加入しています。"
+              requires_payment_method: "3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+              canceled: "支払いがキャンセルされました。"
+              auth_failed: "カード認証に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              processor_failed: "決済処理に失敗しました。しばらく時間をおいてもう一度お試しください。"
+              something_wrong: "支払いに失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              no_payment_method: "有効な支払い方法が見つかりません。"
+              unable_to_downgrade_manually: "手動でのダウングレードはできません。"
+        payments/store_stripe_customer:
+          attributes:
+            user:
+              auth_failed: "^カード認証に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              processor_failed: "^カード登録に失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
+              requires_action: "^3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
+              failed: "^カード登録に失敗しました。"
+              no_payment_method: "^有効な支払い方法が見つかりません。"
+            customer:
+              requires_action: "^3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
         customer_payments/purchase_online_service:
           attributes:
             customer:

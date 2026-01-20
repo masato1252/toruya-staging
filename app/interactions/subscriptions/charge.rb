@@ -47,7 +47,15 @@ module Subscriptions
 
           # If PaymentIntent creation fails (e.g. recurring charge has no payment method)
           if payment_intent.nil?
+            user_friendly_message = I18n.t("active_interaction.errors.models.plan.attributes.base.no_payment_method")
+            raw_error = errors.full_messages.join(', ')
+            charge.error_message = "#{user_friendly_message} | Raw error: Failed to create payment intent - #{raw_error}"
+            charge.auth_failed!
+            charge.save!
             errors.add(:plan, :no_payment_method)
+            
+            Rollbar.error("Payment intent creation failed", user_id: user.id, errors: errors.full_messages)
+            
             return charge
           end
 
@@ -81,54 +89,109 @@ module Subscriptions
           when "requires_payment_method", "requires_source", "requires_confirmation", "requires_action", "processing", "requires_capture", "requires_source_action"
             # 3DS認証が必要な場合、chargeは保存するがdetailsは作成しない（ManualChargeで作成される）
             charge.stripe_charge_details = payment_intent.as_json
+            user_friendly_message = I18n.t("active_interaction.errors.models.plan.attributes.base.requires_payment_method")
+            # ユーザー向けメッセージと生のエラーを両方記録
+            error_details = "Payment intent status: #{payment_intent.status}"
+            error_details += ", last_payment_error: #{payment_intent.last_payment_error&.dig('message')}" if payment_intent.last_payment_error.present?
+            charge.error_message = "#{user_friendly_message} | Raw error: #{error_details}"
             charge.save!
-            errors.add(:plan, :requires_payment_method, client_secret: payment_intent.client_secret, payment_intent_id: payment_intent.id)
+            errors.add(:plan, :requires_payment_method, 
+              client_secret: payment_intent.client_secret, 
+              payment_intent_id: payment_intent.id,
+              user_message: user_friendly_message
+            )
           when "canceled"
-            # 決済失敗時はchargeを保存しない（ロールバックされる）
+            # 決済失敗時もchargeを保存（追跡のため）
+            charge.stripe_charge_details = payment_intent.as_json
+            user_friendly_message = I18n.t("active_interaction.errors.models.plan.attributes.base.canceled")
+            # ユーザー向けメッセージと生のエラーを両方記録
+            error_details = "Cancellation reason: #{payment_intent.cancellation_reason || 'not specified'}"
+            error_details += ", last_payment_error: #{payment_intent.last_payment_error&.dig('message')}" if payment_intent.last_payment_error.present?
+            charge.error_message = "#{user_friendly_message} | Raw error: #{error_details}"
+            charge.auth_failed!
+            charge.save!
             errors.add(:plan, :canceled, client_secret: payment_intent.client_secret)
           else
-            Rollbar.error("Payment intent failed", status: payment_intent.status, user_id: user.id, stripe_charge: payment_intent.as_json)
-            # 決済失敗時はchargeを保存しない（ロールバックされる）
+            # その他の失敗ステータス時もchargeを保存
+            charge.stripe_charge_details = payment_intent.as_json
+            user_friendly_message = I18n.t("active_interaction.errors.models.plan.attributes.base.auth_failed")
+            # ユーザー向けメッセージと生のエラーを両方記録
+            error_details = "Payment intent failed with status: #{payment_intent.status}"
+            error_details += ", last_payment_error: #{payment_intent.last_payment_error&.dig('message')}" if payment_intent.last_payment_error.present?
+            charge.error_message = "#{user_friendly_message} | Raw error: #{error_details}"
+            charge.auth_failed!
+            charge.save!
+            
             errors.add(:plan, :auth_failed, payment_intent_id: payment_intent.id)
 
             handle_charge_failed(charge)
 
             if Rails.configuration.x.env.production?
               SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, payment intent status: #{payment_intent.status}")
-              Rollbar.error("Payment intent failed", user_id: user.id, stripe_charge: payment_intent.as_json)
+              Rollbar.error("Payment intent failed", status: payment_intent.status, user_id: user.id, stripe_charge: payment_intent.as_json)
             end
           end
         rescue Stripe::CardError => error
-          # 決済失敗時はchargeを保存しない（ロールバックされる）
-          stripe_error = error.json_body[:error] || {}
+          # 決済失敗時もchargeを保存（追跡のため）
+          stripe_error = error.json_body&.dig(:error) || {}
+          raw_error_message = stripe_error[:message] || error.message
+          user_friendly_message = I18n.t("active_interaction.errors.models.plan.attributes.base.auth_failed")
+          
+          charge.stripe_charge_details = stripe_error
+          # ユーザー向けメッセージと生のエラーを両方記録
+          charge.error_message = "#{user_friendly_message} | Raw error: #{raw_error_message} (code: #{stripe_error[:code]})"
+          charge.auth_failed!
+          charge.save!
+          
           errors.add(:plan, :auth_failed, 
             stripe_error_code: stripe_error[:code],
-            stripe_error_message: stripe_error[:message] || error.message
+            stripe_error_message: raw_error_message,
+            user_message: user_friendly_message
           )
 
           handle_charge_failed(charge)
 
           if Rails.configuration.x.env.production?
             SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, #{error}")
-            Rollbar.error(error, user_id: user.id, stripe_charge: error.json_body[:error])
+            Rollbar.error(error, user_id: user.id, stripe_charge: stripe_error)
           end
         rescue Stripe::StripeError => error
-          # 決済失敗時はchargeを保存しない（ロールバックされる）
-          stripe_error = error.json_body[:error] || {}
+          # 決済失敗時もchargeを保存（追跡のため）
+          stripe_error = error.json_body&.dig(:error) || {}
+          raw_error_message = stripe_error[:message] || error.message
+          user_friendly_message = I18n.t("active_interaction.errors.models.plan.attributes.base.processor_failed")
+          
+          charge.stripe_charge_details = stripe_error
+          # ユーザー向けメッセージと生のエラーを両方記録
+          charge.error_message = "#{user_friendly_message} | Raw error: #{raw_error_message} (code: #{stripe_error[:code]})"
+          charge.processor_failed!
+          charge.save!
+          
           errors.add(:plan, :processor_failed,
             stripe_error_code: stripe_error[:code],
-            stripe_error_message: stripe_error[:message] || error.message
+            stripe_error_message: raw_error_message,
+            user_message: user_friendly_message
           )
 
           handle_charge_failed(charge)
 
           if Rails.configuration.x.env.production?
             SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, #{error}")
-            Rollbar.error(error, user_id: user.id, stripe_charge: error.json_body[:error])
+            Rollbar.error(error, user_id: user.id, stripe_charge: stripe_error)
           end
         rescue => e
-          Rollbar.error(e)
+          # その他のエラーもchargeを保存
+          user_friendly_message = I18n.t("active_interaction.errors.models.plan.attributes.base.something_wrong")
+          # ユーザー向けメッセージと生のエラーを両方記録
+          charge.error_message = "#{user_friendly_message} | Raw error: #{e.class} - #{e.message}"
+          charge.auth_failed!
+          charge.save!
+          
           errors.add(:plan, :something_wrong)
+          
+          if Rails.configuration.x.env.production?
+            Rollbar.error(e, user_id: user.id, charge_id: charge.id)
+          end
         end
 
         # XXX: Put the fee and referral behviors here is because the of plans changes behaviors
@@ -159,7 +222,9 @@ module Subscriptions
 
         if selected_payment_method.nil?
           errors.add(:plan, :stripe_customer_not_found)
-          Rollbar.error("No payment method available", user_id: user.id, stripe_customer_id: stripe_customer_id)
+          if Rails.configuration.x.env.production?
+            Rollbar.error("No payment method available", user_id: user.id, stripe_customer_id: stripe_customer_id)
+          end
           return nil
         end
 
@@ -194,7 +259,9 @@ module Subscriptions
 
         if selected_payment_method.nil?
           errors.add(:plan, :no_payment_method)
-          Rollbar.error("No payment method available for recurring charge", user_id: user.id, stripe_customer_id: stripe_customer_id)
+          if Rails.configuration.x.env.production?
+            Rollbar.error("No payment method available for recurring charge", user_id: user.id, stripe_customer_id: stripe_customer_id)
+          end
           return nil
         end
 

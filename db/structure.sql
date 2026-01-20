@@ -1,6 +1,12 @@
+\restrict famd8XepDBKW7QAzVfxqGUuLmYVKkiEwpKHQlgJZwDTL6ctwYrawjN7X3DO4kBF
+
+-- Dumped from database version 16.10
+-- Dumped by pg_dump version 18.0
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -8,6 +14,20 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Name: _heroku; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA _heroku;
+
+
+--
+-- Name: heroku_ext; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA heroku_ext;
+
 
 --
 -- Name: public; Type: SCHEMA; Schema: -; Owner: -
@@ -58,7 +78,285 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 
+--
+-- Name: create_ext(); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.create_ext() RETURNS event_trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+
+DECLARE
+
+  schemaname TEXT;
+  databaseowner TEXT;
+
+  r RECORD;
+
+BEGIN
+
+  IF tg_tag OPERATOR(pg_catalog.=) 'CREATE EXTENSION' AND current_user OPERATOR(pg_catalog.!=) 'rds_superuser' THEN
+    PERFORM _heroku.validate_search_path();
+
+    FOR r IN SELECT * FROM pg_catalog.pg_event_trigger_ddl_commands()
+    LOOP
+        CONTINUE WHEN r.command_tag != 'CREATE EXTENSION' OR r.object_type != 'extension';
+
+        schemaname := (
+            SELECT n.nspname
+            FROM pg_catalog.pg_extension AS e
+            INNER JOIN pg_catalog.pg_namespace AS n
+            ON e.extnamespace = n.oid
+            WHERE e.oid = r.objid
+        );
+
+        databaseowner := (
+            SELECT pg_catalog.pg_get_userbyid(d.datdba)
+            FROM pg_catalog.pg_database d
+            WHERE d.datname = pg_catalog.current_database()
+        );
+        --RAISE NOTICE 'Record for event trigger %, objid: %,tag: %, current_user: %, schema: %, database_owenr: %', r.object_identity, r.objid, tg_tag, current_user, schemaname, databaseowner;
+        IF r.object_identity = 'address_standardizer_data_us' THEN
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'us_gaz');
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'us_lex');
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'us_rules');
+        ELSIF r.object_identity = 'amcheck' THEN
+            EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %I.bt_index_check TO %I;', schemaname, databaseowner);
+            EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %I.bt_index_parent_check TO %I;', schemaname, databaseowner);
+        ELSIF r.object_identity = 'dict_int' THEN
+            EXECUTE pg_catalog.format('ALTER TEXT SEARCH DICTIONARY %I.intdict OWNER TO %I;', schemaname, databaseowner);
+        ELSIF r.object_identity = 'pg_partman' THEN
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'part_config');
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'part_config_sub');
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'custom_time_partitions');
+        ELSIF r.object_identity = 'pg_stat_statements' THEN
+            EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %I.pg_stat_statements_reset TO %I;', schemaname, databaseowner);
+        ELSIF r.object_identity = 'postgis' THEN
+            PERFORM _heroku.postgis_after_create();
+        ELSIF r.object_identity = 'postgis_raster' THEN
+            PERFORM _heroku.postgis_after_create();
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT', databaseowner, 'raster_columns');
+            PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT', databaseowner, 'raster_overviews');
+        ELSIF r.object_identity = 'postgis_topology' THEN
+            PERFORM _heroku.postgis_after_create();
+            EXECUTE pg_catalog.format('GRANT USAGE ON SCHEMA topology TO %I;', databaseowner);
+            EXECUTE pg_catalog.format('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA topology TO %I;', databaseowner);
+            PERFORM _heroku.grant_table_if_exists('topology', 'SELECT, UPDATE, INSERT, DELETE', databaseowner);
+            EXECUTE pg_catalog.format('GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA topology TO %I;', databaseowner);
+        ELSIF r.object_identity = 'postgis_tiger_geocoder' THEN
+            PERFORM _heroku.postgis_after_create();
+            EXECUTE pg_catalog.format('GRANT USAGE ON SCHEMA tiger TO %I;', databaseowner);
+            EXECUTE pg_catalog.format('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tiger TO %I;', databaseowner);
+            PERFORM _heroku.grant_table_if_exists('tiger', 'SELECT, UPDATE, INSERT, DELETE', databaseowner);
+
+            EXECUTE pg_catalog.format('GRANT USAGE ON SCHEMA tiger_data TO %I;', databaseowner);
+            EXECUTE pg_catalog.format('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tiger_data TO %I;', databaseowner);
+            PERFORM _heroku.grant_table_if_exists('tiger_data', 'SELECT, UPDATE, INSERT, DELETE', databaseowner);
+        END IF;
+    END LOOP;
+  END IF;
+END;
+$$;
+
+
+--
+-- Name: drop_ext(); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.drop_ext() RETURNS event_trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+
+DECLARE
+
+  schemaname TEXT;
+  databaseowner TEXT;
+
+  r RECORD;
+
+BEGIN
+
+  IF tg_tag OPERATOR(pg_catalog.=) 'DROP EXTENSION' AND current_user OPERATOR(pg_catalog.!=) 'rds_superuser' THEN
+    PERFORM _heroku.validate_search_path();
+
+    FOR r IN SELECT * FROM pg_catalog.pg_event_trigger_dropped_objects()
+    LOOP
+      CONTINUE WHEN r.object_type != 'extension';
+
+      databaseowner := (
+            SELECT pg_catalog.pg_get_userbyid(d.datdba)
+            FROM pg_catalog.pg_database d
+            WHERE d.datname = pg_catalog.current_database()
+      );
+
+      --RAISE NOTICE 'Record for event trigger %, objid: %,tag: %, current_user: %, database_owner: %, schemaname: %', r.object_identity, r.objid, tg_tag, current_user, databaseowner, r.schema_name;
+
+      IF r.object_identity = 'postgis_topology' THEN
+          EXECUTE pg_catalog.format('DROP SCHEMA IF EXISTS topology');
+      END IF;
+    END LOOP;
+
+  END IF;
+END;
+$$;
+
+
+--
+-- Name: extension_before_drop(); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.extension_before_drop() RETURNS event_trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+
+DECLARE
+
+  query TEXT;
+
+BEGIN
+  query := (SELECT pg_catalog.current_query());
+
+  -- RAISE NOTICE 'executing extension_before_drop: tg_event: %, tg_tag: %, current_user: %, session_user: %, query: %', tg_event, tg_tag, current_user, session_user, query;
+  IF tg_tag OPERATOR(pg_catalog.=) 'DROP EXTENSION' AND NOT pg_catalog.pg_has_role(session_user, 'rds_superuser', 'MEMBER') THEN
+    PERFORM _heroku.validate_search_path();
+
+    -- DROP EXTENSION [ IF EXISTS ] name [, ...] [ CASCADE | RESTRICT ]
+    IF (pg_catalog.regexp_match(query, 'DROP\s+EXTENSION\s+(IF\s+EXISTS)?.*(plpgsql)', 'i') IS NOT NULL) THEN
+      RAISE EXCEPTION 'The plpgsql extension is required for database management and cannot be dropped.';
+    END IF;
+  END IF;
+END;
+$$;
+
+
+--
+-- Name: grant_table_if_exists(text, text, text, text); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.grant_table_if_exists(alias_schemaname text, grants text, databaseowner text, alias_tablename text DEFAULT NULL::text) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+
+BEGIN
+  PERFORM _heroku.validate_search_path();
+
+  IF alias_tablename IS NULL THEN
+    EXECUTE pg_catalog.format('GRANT %s ON ALL TABLES IN SCHEMA %I TO %I;', grants, alias_schemaname, databaseowner);
+  ELSE
+    IF EXISTS (SELECT 1 FROM pg_tables WHERE pg_tables.schemaname = alias_schemaname AND pg_tables.tablename = alias_tablename) THEN
+      EXECUTE pg_catalog.format('GRANT %s ON TABLE %I.%I TO %I;', grants, alias_schemaname, alias_tablename, databaseowner);
+    END IF;
+  END IF;
+END;
+$$;
+
+
+--
+-- Name: postgis_after_create(); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.postgis_after_create() RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+DECLARE
+    schemaname TEXT;
+    databaseowner TEXT;
+BEGIN
+    PERFORM _heroku.validate_search_path();
+
+    schemaname := (
+        SELECT n.nspname
+        FROM pg_catalog.pg_extension AS e
+        INNER JOIN pg_catalog.pg_namespace AS n ON e.extnamespace = n.oid
+        WHERE e.extname = 'postgis'
+    );
+    databaseowner := (
+        SELECT pg_catalog.pg_get_userbyid(d.datdba)
+        FROM pg_catalog.pg_database d
+        WHERE d.datname = pg_catalog.current_database()
+    );
+
+    EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %I.st_tileenvelope TO %I;', schemaname, databaseowner);
+    EXECUTE pg_catalog.format('GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE %I.spatial_ref_sys TO %I;', schemaname, databaseowner);
+END;
+$$;
+
+
+--
+-- Name: validate_extension(); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.validate_extension() RETURNS event_trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+
+DECLARE
+
+  schemaname TEXT;
+  r RECORD;
+
+BEGIN
+
+  IF tg_tag OPERATOR(pg_catalog.=) 'CREATE EXTENSION' AND current_user OPERATOR(pg_catalog.!=) 'rds_superuser' THEN
+    PERFORM _heroku.validate_search_path();
+
+    FOR r IN SELECT * FROM pg_catalog.pg_event_trigger_ddl_commands()
+    LOOP
+      CONTINUE WHEN r.command_tag != 'CREATE EXTENSION' OR r.object_type != 'extension';
+
+      schemaname := (
+        SELECT n.nspname
+        FROM pg_catalog.pg_extension AS e
+        INNER JOIN pg_catalog.pg_namespace AS n
+        ON e.extnamespace = n.oid
+        WHERE e.oid = r.objid
+      );
+
+      IF schemaname = '_heroku' THEN
+        RAISE EXCEPTION 'Creating extensions in the _heroku schema is not allowed';
+      END IF;
+    END LOOP;
+  END IF;
+END;
+$$;
+
+
+--
+-- Name: validate_search_path(); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.validate_search_path() RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+DECLARE
+
+  current_search_path TEXT;
+  schemas TEXT[];
+  pg_catalog_index INTEGER;
+
+BEGIN
+
+  current_search_path := pg_catalog.current_setting('search_path');
+  schemas := pg_catalog.string_to_array(current_search_path, ',');
+
+  schemas := (
+    SELECT pg_catalog.array_agg(TRIM(schema_name::text))
+    FROM pg_catalog.unnest(schemas) AS schema_name
+  );
+
+  IF ('pg_catalog' OPERATOR(pg_catalog.=) ANY(schemas)) THEN
+    SELECT pg_catalog.array_position(schemas, 'pg_catalog') INTO pg_catalog_index;
+    IF pg_catalog_index OPERATOR(pg_catalog.!=) 1 THEN
+      RAISE EXCEPTION 'pg_catalog must be first in the search_path for this operation. Current search_path: %', current_search_path;
+    END IF;
+  END IF;
+END;
+$$;
+
+
 SET default_tablespace = '';
+
+SET default_table_access_method = heap;
 
 --
 -- Name: access_providers; Type: TABLE; Schema: public; Owner: -
@@ -1276,9 +1574,9 @@ CREATE TABLE public.customers (
     email_types character varying,
     deleted_at timestamp without time zone,
     reminder_permission boolean DEFAULT true,
-    phone_numbers_details jsonb DEFAULT '[]'::jsonb,
-    emails_details jsonb DEFAULT '[]'::jsonb,
-    address_details jsonb DEFAULT '{}'::jsonb,
+    phone_numbers_details jsonb,
+    emails_details jsonb,
+    address_details jsonb,
     stripe_customer_id character varying,
     menu_ids character varying[] DEFAULT '{}'::character varying[],
     online_service_ids character varying[] DEFAULT '{}'::character varying[],
@@ -1286,9 +1584,7 @@ CREATE TABLE public.customers (
     square_customer_id character varying,
     tags character varying[] DEFAULT '{}'::character varying[],
     customer_email character varying,
-    customer_phone_number character varying,
-    line_user_id character varying,
-    status character varying DEFAULT 'active'::character varying
+    customer_phone_number character varying
 );
 
 
@@ -1328,7 +1624,6 @@ CREATE TABLE public.delayed_jobs (
     queue character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    args text,
     signature character varying
 );
 
@@ -1350,40 +1645,6 @@ CREATE SEQUENCE public.delayed_jobs_id_seq
 --
 
 ALTER SEQUENCE public.delayed_jobs_id_seq OWNED BY public.delayed_jobs.id;
-
-
---
--- Name: equipments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.equipments (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    quantity integer DEFAULT 1 NOT NULL,
-    shop_id bigint NOT NULL,
-    deleted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: equipments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.equipments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: equipments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.equipments_id_seq OWNED BY public.equipments.id;
 
 
 --
@@ -1423,6 +1684,40 @@ CREATE SEQUENCE public.episodes_id_seq
 --
 
 ALTER SEQUENCE public.episodes_id_seq OWNED BY public.episodes.id;
+
+
+--
+-- Name: equipments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.equipments (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    quantity integer DEFAULT 1 NOT NULL,
+    shop_id bigint NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: equipments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.equipments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: equipments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.equipments_id_seq OWNED BY public.equipments.id;
 
 
 --
@@ -1535,6 +1830,86 @@ CREATE SEQUENCE public.lessons_id_seq
 --
 
 ALTER SEQUENCE public.lessons_id_seq OWNED BY public.lessons.id;
+
+
+--
+-- Name: line_notice_charges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.line_notice_charges (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    reservation_id bigint NOT NULL,
+    line_notice_request_id bigint NOT NULL,
+    amount numeric NOT NULL,
+    amount_currency character varying DEFAULT 'JPY'::character varying NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    charge_date date NOT NULL,
+    is_free_trial boolean DEFAULT false NOT NULL,
+    stripe_charge_details jsonb,
+    details jsonb,
+    order_id character varying,
+    payment_intent_id character varying,
+    error_message text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: line_notice_charges_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.line_notice_charges_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: line_notice_charges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.line_notice_charges_id_seq OWNED BY public.line_notice_charges.id;
+
+
+--
+-- Name: line_notice_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.line_notice_requests (
+    id bigint NOT NULL,
+    reservation_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    approved_at timestamp(6) without time zone,
+    rejected_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
+    rejection_reason text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: line_notice_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.line_notice_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: line_notice_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.line_notice_requests_id_seq OWNED BY public.line_notice_requests.id;
 
 
 --
@@ -2003,9 +2378,9 @@ CREATE TABLE public.profiles (
     city character varying,
     street1 character varying,
     street2 character varying,
+    template_variables json,
     personal_address_details jsonb,
     company_address_details jsonb,
-    template_variables json,
     context jsonb,
     company_email character varying
 );
@@ -2132,6 +2507,39 @@ CREATE SEQUENCE public.ranks_id_seq
 --
 
 ALTER SEQUENCE public.ranks_id_seq OWNED BY public.ranks.id;
+
+
+--
+-- Name: referral_credits; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.referral_credits (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    referral_id bigint,
+    subscription_charge_id bigint,
+    amount numeric NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: referral_credits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.referral_credits_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: referral_credits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.referral_credits_id_seq OWNED BY public.referral_credits.id;
 
 
 --
@@ -2458,8 +2866,8 @@ CREATE TABLE public.sale_pages (
     selling_start_at timestamp without time zone,
     normal_price_amount_cents numeric,
     selling_price_amount_cents numeric,
-    deleted_at timestamp without time zone,
     sections_context jsonb,
+    deleted_at timestamp without time zone,
     selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[],
     internal_name character varying,
     recurring_prices jsonb DEFAULT '{"default": {}}'::jsonb,
@@ -3084,7 +3492,8 @@ CREATE TABLE public.subscription_charges (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     details jsonb,
-    rank integer DEFAULT 0
+    rank integer DEFAULT 0,
+    error_message text
 );
 
 
@@ -3123,7 +3532,9 @@ CREATE TABLE public.subscriptions (
     updated_at timestamp without time zone NOT NULL,
     rank integer DEFAULT 0,
     trial_days integer,
-    trial_expired_date date
+    trial_expired_date date,
+    earned_credits numeric DEFAULT 0.0 NOT NULL,
+    remaining_credits numeric DEFAULT 0.0 NOT NULL
 );
 
 
@@ -3153,14 +3564,14 @@ ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 CREATE TABLE public.survey_activities (
     id bigint NOT NULL,
     survey_question_id bigint NOT NULL,
+    survey_id bigint NOT NULL,
     name character varying NOT NULL,
     "position" integer,
     max_participants integer,
     price_cents integer,
     currency character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    survey_id bigint
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -3378,6 +3789,26 @@ CREATE TABLE public.taggings (
 
 
 --
+-- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.taggings_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.taggings_id_seq OWNED BY public.taggings.id;
+
+
+--
 -- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3388,6 +3819,26 @@ CREATE TABLE public.tags (
     updated_at timestamp without time zone,
     taggings_count integer DEFAULT 0
 );
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tags_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -3911,6 +4362,20 @@ ALTER TABLE ONLY public.lessons ALTER COLUMN id SET DEFAULT nextval('public.less
 
 
 --
+-- Name: line_notice_charges id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_charges ALTER COLUMN id SET DEFAULT nextval('public.line_notice_charges_id_seq'::regclass);
+
+
+--
+-- Name: line_notice_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_requests ALTER COLUMN id SET DEFAULT nextval('public.line_notice_requests_id_seq'::regclass);
+
+
+--
 -- Name: menu_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4020,6 +4485,13 @@ ALTER TABLE ONLY public.question_answers ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.ranks ALTER COLUMN id SET DEFAULT nextval('public.ranks_id_seq'::regclass);
+
+
+--
+-- Name: referral_credits id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.referral_credits ALTER COLUMN id SET DEFAULT nextval('public.referral_credits_id_seq'::regclass);
 
 
 --
@@ -4244,6 +4716,20 @@ ALTER TABLE ONLY public.survey_responses ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.surveys ALTER COLUMN id SET DEFAULT nextval('public.surveys_id_seq'::regclass);
+
+
+--
+-- Name: taggings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.taggings_id_seq'::regclass);
+
+
+--
+-- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
 
 
 --
@@ -4616,6 +5102,22 @@ ALTER TABLE ONLY public.lessons
 
 
 --
+-- Name: line_notice_charges line_notice_charges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_charges
+    ADD CONSTRAINT line_notice_charges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: line_notice_requests line_notice_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_requests
+    ADD CONSTRAINT line_notice_requests_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: menu_categories menu_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4741,6 +5243,14 @@ ALTER TABLE ONLY public.question_answers
 
 ALTER TABLE ONLY public.ranks
     ADD CONSTRAINT ranks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: referral_credits referral_credits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.referral_credits
+    ADD CONSTRAINT referral_credits_pkey PRIMARY KEY (id);
 
 
 --
@@ -5563,20 +6073,6 @@ CREATE INDEX index_customers_on_user_id_and_customer_email ON public.customers U
 
 
 --
--- Name: index_customers_on_user_id_and_customer_phone_number; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_customers_on_user_id_and_customer_phone_number ON public.customers USING btree (user_id, customer_phone_number);
-
-
---
--- Name: index_customers_on_user_id_and_line_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_customers_on_user_id_and_line_user_id ON public.customers USING btree (user_id, line_user_id);
-
-
---
 -- Name: index_delayed_jobs_on_signature; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5637,6 +6133,76 @@ CREATE INDEX index_function_accesses_on_date_and_source_and_label ON public.func
 --
 
 CREATE INDEX index_lessons_on_chapter_id ON public.lessons USING btree (chapter_id);
+
+
+--
+-- Name: index_line_notice_charges_on_line_notice_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_charges_on_line_notice_request_id ON public.line_notice_charges USING btree (line_notice_request_id);
+
+
+--
+-- Name: index_line_notice_charges_on_order_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_charges_on_order_id ON public.line_notice_charges USING btree (order_id);
+
+
+--
+-- Name: index_line_notice_charges_on_payment_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_charges_on_payment_intent_id ON public.line_notice_charges USING btree (payment_intent_id);
+
+
+--
+-- Name: index_line_notice_charges_on_reservation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_charges_on_reservation_id ON public.line_notice_charges USING btree (reservation_id);
+
+
+--
+-- Name: index_line_notice_charges_on_user_and_free_trial; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_charges_on_user_and_free_trial ON public.line_notice_charges USING btree (user_id, is_free_trial);
+
+
+--
+-- Name: index_line_notice_charges_on_user_and_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_charges_on_user_and_state ON public.line_notice_charges USING btree (user_id, state);
+
+
+--
+-- Name: index_line_notice_charges_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_charges_on_user_id ON public.line_notice_charges USING btree (user_id);
+
+
+--
+-- Name: index_line_notice_requests_on_reservation_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_requests_on_reservation_and_status ON public.line_notice_requests USING btree (reservation_id, status);
+
+
+--
+-- Name: index_line_notice_requests_on_reservation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_requests_on_reservation_id ON public.line_notice_requests USING btree (reservation_id);
+
+
+--
+-- Name: index_line_notice_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_line_notice_requests_on_user_id ON public.line_notice_requests USING btree (user_id);
 
 
 --
@@ -5773,6 +6339,27 @@ CREATE INDEX index_ranks_on_user_id ON public.ranks USING btree (user_id);
 
 
 --
+-- Name: index_referral_credits_on_referral_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_referral_credits_on_referral_id ON public.referral_credits USING btree (referral_id);
+
+
+--
+-- Name: index_referral_credits_on_subscription_charge_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_referral_credits_on_subscription_charge_id ON public.referral_credits USING btree (subscription_charge_id);
+
+
+--
+-- Name: index_referral_credits_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_referral_credits_on_user_id ON public.referral_credits USING btree (user_id);
+
+
+--
 -- Name: index_referrals_on_referrer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5791,13 +6378,6 @@ CREATE INDEX index_reservation_booking_options_on_booking_option_id ON public.re
 --
 
 CREATE INDEX index_reservation_booking_options_on_reservation_id ON public.reservation_booking_options USING btree (reservation_id);
-
-
---
--- Name: index_reservation_customers_on_function_access_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reservation_customers_on_function_access_id ON public.reservation_customers USING btree (function_access_id);
 
 
 --
@@ -6529,6 +7109,30 @@ CREATE INDEX user_state_index ON public.subscription_charges USING btree (user_i
 
 
 --
+-- Name: line_notice_requests fk_rails_3ed6e77951; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_requests
+    ADD CONSTRAINT fk_rails_3ed6e77951 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: line_notice_requests fk_rails_492783d81a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_requests
+    ADD CONSTRAINT fk_rails_492783d81a FOREIGN KEY (reservation_id) REFERENCES public.reservations(id);
+
+
+--
+-- Name: line_notice_charges fk_rails_74e0235543; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_charges
+    ADD CONSTRAINT fk_rails_74e0235543 FOREIGN KEY (reservation_id) REFERENCES public.reservations(id);
+
+
+--
 -- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6553,6 +7157,22 @@ ALTER TABLE ONLY public.active_storage_attachments
 
 
 --
+-- Name: line_notice_charges fk_rails_d2d9fdb86d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_charges
+    ADD CONSTRAINT fk_rails_d2d9fdb86d FOREIGN KEY (line_notice_request_id) REFERENCES public.line_notice_requests(id);
+
+
+--
+-- Name: line_notice_charges fk_rails_d5b38cb785; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.line_notice_charges
+    ADD CONSTRAINT fk_rails_d5b38cb785 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6561,10 +7181,44 @@ ALTER TABLE ONLY public.profiles
 
 
 --
+-- Name: extension_before_drop; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER extension_before_drop ON ddl_command_start
+   EXECUTE FUNCTION _heroku.extension_before_drop();
+
+
+--
+-- Name: log_create_ext; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER log_create_ext ON ddl_command_end
+   EXECUTE FUNCTION _heroku.create_ext();
+
+
+--
+-- Name: log_drop_ext; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER log_drop_ext ON sql_drop
+   EXECUTE FUNCTION _heroku.drop_ext();
+
+
+--
+-- Name: validate_extension; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER validate_extension ON ddl_command_end
+   EXECUTE FUNCTION _heroku.validate_extension();
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user", public;
+\unrestrict famd8XepDBKW7QAzVfxqGUuLmYVKkiEwpKHQlgJZwDTL6ctwYrawjN7X3DO4kBF
+
+SET search_path TO "$user", public, heroku_ext;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20160705120808'),
@@ -6784,7 +7438,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240311145252'),
 ('20240314114811'),
 ('20240318014002'),
-('20240321000000'),
 ('20240412022437'),
 ('20240415014225'),
 ('20240417023711'),
@@ -6834,12 +7487,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250306135657'),
 ('20250311141530'),
 ('20250405223945'),
-('20250415114430'),
 ('20250423000000'),
 ('20250510071219'),
 ('20250610000000'),
 ('20250611000001'),
 ('20250612140711'),
-('20250612140730');
+('20250612140730'),
+('20260113031127'),
+('20260113031241'),
+('20260120024943');
 
 

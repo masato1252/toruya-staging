@@ -8,6 +8,7 @@
 #  amount_currency       :string
 #  charge_date           :date
 #  details               :jsonb
+#  error_message         :text
 #  expired_date          :date
 #  manual                :boolean          default(FALSE), not null
 #  rank                  :integer          default(0)
