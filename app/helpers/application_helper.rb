@@ -116,7 +116,6 @@ module ApplicationHelper
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
     cookies.clear_across_domains(:oauth_social_account_id, :whois, :who)
     cookies.set_across_domains(:oauth_social_account_id, encrypted_id, expires: 100.year)
-    cookies.set_across_domains(:whois, encrypted_id, expires: 5.minutes)
 
     if social_account&.is_login_available?
       options.merge!(
