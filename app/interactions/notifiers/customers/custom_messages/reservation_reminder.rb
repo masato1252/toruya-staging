@@ -16,13 +16,25 @@ module Notifiers
           compose(::CustomMessages::ReceiverContent, custom_message: custom_message, receiver: receiver, variable_source: reservation)
         end
 
-        def deliverable
-          if custom_message.after_days
-            reservation.reminderable? && expected_schedule_time && reservation.remind_customer?(receiver)
-          else
-            expected_schedule_time && reservation.remind_customer?(receiver)
-          end
-        end
+  def deliverable
+    result = if custom_message.after_days
+      reservation.reminderable? && expected_schedule_time && reservation.remind_customer?(receiver)
+    else
+      expected_schedule_time && reservation.remind_customer?(receiver)
+    end
+    
+    Rails.logger.info "[ReservationReminder] ===== カスタムリマインド実行チェック ====="
+    Rails.logger.info "[ReservationReminder] reservation_id: #{reservation.id}, receiver_id: #{receiver.id}"
+    Rails.logger.info "[ReservationReminder] custom_message: #{custom_message.scenario} (#{custom_message.before_minutes ? "#{custom_message.before_minutes}分前" : "#{custom_message.after_days}日後"})"
+    Rails.logger.info "[ReservationReminder] deliverable?: #{result}"
+    if !result
+      Rails.logger.info "[ReservationReminder]   - reminderable?: #{reservation.reminderable?}" if custom_message.after_days
+      Rails.logger.info "[ReservationReminder]   - expected_schedule_time?: #{expected_schedule_time}"
+      Rails.logger.info "[ReservationReminder]   - remind_customer?: #{reservation.remind_customer?(receiver)}"
+    end
+    
+    result
+  end
 
         private
 

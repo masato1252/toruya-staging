@@ -3,13 +3,21 @@
 module Reservations
   module Notifications
     class Confirmation < Notify
-      def execute
-        I18n.with_locale(customer.locale) do
-          return if reservation.start_time < Time.current
-
-          super
-        end
+  def execute
+    I18n.with_locale(customer.locale) do
+      Rails.logger.info "[Confirmation] ===== 予約確定通知実行 ====="
+      Rails.logger.info "[Confirmation] reservation_id: #{reservation.id}, customer_id: #{customer.id}"
+      Rails.logger.info "[Confirmation] start_time: #{reservation.start_time}, current: #{Time.current}"
+      
+      if reservation.start_time < Time.current
+        Rails.logger.info "[Confirmation] ⚠️ 過去の予約のためスキップ"
+        return
       end
+
+      Rails.logger.info "[Confirmation] ✅ 予約確定通知送信開始"
+      super
+    end
+  end
 
       private
 

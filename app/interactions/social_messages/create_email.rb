@@ -7,6 +7,11 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
   object :reservation, default: nil  # 予約関連の通知の場合に渡される
 
   def execute
+    Rails.logger.info "[CreateEmail] ===== メール送信開始 ====="
+    Rails.logger.info "[CreateEmail] customer_id: #{customer.id}, email: #{email}"
+    Rails.logger.info "[CreateEmail] reservation: #{reservation.present? ? "ID=#{reservation.id}" : 'nil'}"
+    Rails.logger.info "[CreateEmail] subject: #{subject}"
+    
     # メッセージに予約関連のLINE通知リクエスト案内を追加
     text_message = append_line_notice_request_info(message, format: :text)
     
@@ -14,9 +19,18 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
     html_base_message = message.gsub("\n", "<br>")
     html_message = append_line_notice_request_info(html_base_message, format: :html)
 
-    Rails.logger.info "[CreateEmail] reservation_id: #{reservation&.id}, should_show: #{should_show_line_notice_request_info?}"
-    Rails.logger.info "[CreateEmail] user plan: #{customer.user.subscription.current_plan&.name}, free?: #{customer.user.subscription.current_plan&.free_level?}"
-    Rails.logger.info "[CreateEmail] line_settings_verified?: #{customer.user.social_account&.line_settings_verified?}"
+    Rails.logger.info "[CreateEmail] should_show_line_notice_request_info?: #{should_show_line_notice_request_info?}"
+    if reservation.present?
+      Rails.logger.info "[CreateEmail]   - reservation.present?: true"
+      Rails.logger.info "[CreateEmail]   - user plan: #{customer.user.subscription.current_plan&.name}"
+      Rails.logger.info "[CreateEmail]   - free_level?: #{customer.user.subscription.current_plan&.free_level?}"
+      Rails.logger.info "[CreateEmail]   - line_settings_verified?: #{customer.user.social_account&.line_settings_verified?}"
+      Rails.logger.info "[CreateEmail]   - existing LineNoticeRequest: #{LineNoticeRequest.pending.find_by(reservation_id: reservation.id).present?}"
+    else
+      Rails.logger.info "[CreateEmail]   - reservation: nil (予約に関係ないメール)"
+    end
+    Rails.logger.info "[CreateEmail] text_message length: #{text_message.length} (original: #{message.length})"
+    Rails.logger.info "[CreateEmail] LINE案内追加: #{text_message.length > message.length ? 'YES' : 'NO'}"
 
     SocialMessage.create!(
       social_account: customer.social_customer&.social_account,

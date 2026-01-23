@@ -4,13 +4,21 @@
 module Reservations
   module Notifications
     class Reminder < Notify
-      def execute
-        I18n.with_locale(customer.locale) do
-          return unless reservation.remind_customer?(customer)
-
-          super
-        end
+  def execute
+    I18n.with_locale(customer.locale) do
+      Rails.logger.info "[Reminder] ===== 24時間前リマインド実行 ====="
+      Rails.logger.info "[Reminder] reservation_id: #{reservation.id}, customer_id: #{customer.id}"
+      Rails.logger.info "[Reminder] remind_customer?: #{reservation.remind_customer?(customer)}"
+      
+      unless reservation.remind_customer?(customer)
+        Rails.logger.info "[Reminder] ⚠️ remind_customer? が false のためスキップ"
+        return
       end
+
+      Rails.logger.info "[Reminder] ✅ リマインド送信開始"
+      super
+    end
+  end
 
       private
 

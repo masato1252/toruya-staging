@@ -9,11 +9,15 @@ module Reservations
       object :booking_page
       array :booking_options
 
-      def execute
-        I18n.with_locale(customer.locale) do
-          super
-        end
-      end
+  def execute
+    I18n.with_locale(customer.locale) do
+      Rails.logger.info "[Booking] ===== 仮予約確定通知実行 ====="
+      Rails.logger.info "[Booking] reservation_id: #{reservation.id}, customer_id: #{customer.id}"
+      Rails.logger.info "[Booking] booking_page_id: #{booking_page.id}"
+      Rails.logger.info "[Booking] ✅ 仮予約確定通知送信開始"
+      super
+    end
+  end
 
       private
 
