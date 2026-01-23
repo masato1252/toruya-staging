@@ -63,7 +63,7 @@ class SocialAccount < ApplicationRecord
   end
 
   def is_login_available?
-    login_channel_id && login_channel_secret && raw_login_channel_secret
+    login_channel_id.present? && login_channel_secret.present? && raw_login_channel_secret.present?
   end
 
   def bot_data_finished?
