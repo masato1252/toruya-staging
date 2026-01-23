@@ -100,7 +100,7 @@ export const CustomerBasicInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.email")} ({I18n.t("common.optional")})
+        {I18n.t("common.email")} <span className="required">*</span>
       </h4>
       <input
         type="email"
@@ -298,7 +298,7 @@ export const CustomerInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.email")} ({I18n.t("common.optional")})
+        {I18n.t("common.email")} <span className="required">*</span>
       </h4>
       <input
         type="email"
@@ -307,6 +307,7 @@ export const CustomerInfoForm = ({
         onChange={(e) => handleChange('customer_email', e.target.value)}
         placeholder="example@example.com"
       />
+      <ErrorMessage error={errors?.customer_email_failed_message} />
 
       <h4>
         {I18n.t("common.phone_number")} <span className="required">*</span>
@@ -339,7 +340,7 @@ export const CustomerInfoForm = ({
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_phone_number}
+          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_email || !customer_phone_number}
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
