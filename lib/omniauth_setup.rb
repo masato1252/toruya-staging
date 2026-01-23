@@ -43,16 +43,32 @@ class OmniauthSetup
 
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
-    who = @request.parameters["whois"].presence || @request.cookies["whois"] || @request.session[:line_oauth_who]
-    oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || @request.cookies["oauth_social_account_id"] || @request.session[:oauth_social_account_id]
+    # パラメータを最優先（URLクエリパラメータ or POSTボディ）
+    # 次にCookie、最後にSession
+    oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
+                              @request.cookies["oauth_social_account_id"] || 
+                              @request.session[:oauth_social_account_id]
     
-    Rails.logger.info("[OmniauthSetup] Parameters whois: #{@request.parameters["whois"].present? ? 'present' : 'nil'}")
-    Rails.logger.info("[OmniauthSetup] Parameters oauth_social_account_id: #{@request.parameters["oauth_social_account_id"].present? ? 'present' : 'nil'}")
-    Rails.logger.info("[OmniauthSetup] Cookies whois: #{@request.cookies["whois"].present? ? 'present' : 'nil'}")
-    Rails.logger.info("[OmniauthSetup] Session line_oauth_who: #{@request.session[:line_oauth_who].present? ? 'present' : 'nil'}")
-    Rails.logger.info("[OmniauthSetup] Session oauth_social_account_id: #{@request.session[:oauth_social_account_id].present? ? 'present' : 'nil'}")
-    Rails.logger.info("[OmniauthSetup] Who value: #{who.present? ? 'present' : 'nil'}")
-    Rails.logger.info("[OmniauthSetup] oauth_social_account_id value: #{oauth_social_account_id.present? ? 'present' : 'nil'}")
+    who = @request.parameters["whois"].presence || 
+          @request.cookies["whois"] || 
+          @request.session[:line_oauth_who]
+    
+    Rails.logger.info("[OmniauthSetup] ===== 認証情報取得開始 =====")
+    Rails.logger.info("[OmniauthSetup] Request method: #{@request.request_method}")
+    Rails.logger.info("[OmniauthSetup] Request path: #{@request.path}")
+    Rails.logger.info("[OmniauthSetup] Parameters keys: #{@request.parameters.keys.join(', ')}")
+    Rails.logger.info("[OmniauthSetup] --- パラメータ確認 ---")
+    Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (param): #{@request.parameters["oauth_social_account_id"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   whois (param): #{@request.parameters["whois"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup] --- Cookie確認 ---")
+    Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (cookie): #{@request.cookies["oauth_social_account_id"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   whois (cookie): #{@request.cookies["whois"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup] --- Session確認 ---")
+    Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (session): #{@request.session[:oauth_social_account_id].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   line_oauth_who (session): #{@request.session[:line_oauth_who].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup] --- 採用値 ---")
+    Rails.logger.info("[OmniauthSetup]   oauth_social_account_id: #{oauth_social_account_id.present? ? "present (#{oauth_social_account_id[0..20]}...)" : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   who: #{who.present? ? 'present' : 'nil'}")
     
     # Check if we have credentials in session from previous request phase
     if @request.session[:line_oauth_credentials].present?
@@ -70,37 +86,65 @@ class OmniauthSetup
       @request.session[:oauth_social_account_id] = oauth_social_account_id
     end
 
-    # Handle oauth_social_account_id (for LINE notice requests from customers)
+    # 優先度1: oauth_social_account_id（店舗固有のLINE Login）
     if oauth_social_account_id.present?
       begin
         account_id = MessageEncryptor.decrypt(oauth_social_account_id)
         account = SocialAccount.find(account_id)
         
-        Rails.logger.info("[OmniauthSetup] Using SocialAccount #{account_id} credentials")
+        Rails.logger.info("[OmniauthSetup] ✅ 店舗固有のLINE Login認証情報を使用")
+        Rails.logger.info("[OmniauthSetup]   SocialAccount ID: #{account_id}")
+        Rails.logger.info("[OmniauthSetup]   店舗: #{account.user&.shop&.display_name || 'N/A'}")
+        Rails.logger.info("[OmniauthSetup]   login_channel_id: #{account.login_channel_id.present? ? 'present' : 'nil'}")
+        Rails.logger.info("[OmniauthSetup]   raw_login_channel_secret: #{account.raw_login_channel_secret.present? ? 'present' : 'nil'}")
         
         return {
           client_id: account.login_channel_id,
           client_secret: account.raw_login_channel_secret
         }
+      rescue ActiveSupport::MessageVerifier::InvalidSignature => e
+        Rails.logger.error("[OmniauthSetup] ❌ oauth_social_account_id の復号化に失敗: #{e.message}")
+        Rails.logger.error("[OmniauthSetup]    暗号化された値: #{oauth_social_account_id[0..50]}...")
+        return {}
+      rescue ActiveRecord::RecordNotFound => e
+        Rails.logger.error("[OmniauthSetup] ❌ SocialAccountが見つかりません: #{e.message}")
+        return {}
       rescue => e
-        Rails.logger.error("[OmniauthSetup] Error loading SocialAccount: #{e.message}")
+        Rails.logger.error("[OmniauthSetup] ❌ SocialAccount読み込みエラー: #{e.class} - #{e.message}")
         return {}
       end
-    elsif who && MessageEncryptor.decrypt(who) == CallbacksController::TORUYA_USER
-      Rails.logger.info("[OmniauthSetup] Using TORUYA_USER credentials")
-      {
-        client_id: Rails.application.secrets[:ja][:toruya_line_login_id],
-        client_secret: Rails.application.secrets[:ja][:toruya_line_login_secret]
-      }
-    elsif who && MessageEncryptor.decrypt(who) == CallbacksController::TW_TORUYA_USER
-      {
-        client_id: Rails.application.secrets[:tw][:toruya_line_login_id],
-        client_secret: Rails.application.secrets[:tw][:toruya_line_login_secret]
-      }
-    else
-      Rails.logger.error("[OmniauthSetup] No credentials found - who: #{who.inspect}, oauth_social_account_id: #{oauth_social_account_id.inspect}")
-      Rollbar.error("Unexpected line callback", request: @request, who: who, cookies: @request.cookies.to_h.keys, session_keys: @request.session.to_h.keys) if Rails.configuration.x.env.production?
-      {}
     end
+    
+    # 優先度2: whois（Toruya共通のLINE Login）
+    if who.present?
+      begin
+        decrypted_who = MessageEncryptor.decrypt(who)
+        
+        if decrypted_who == CallbacksController::TORUYA_USER
+          Rails.logger.info("[OmniauthSetup] ✅ Toruya共通 (JA) LINE Login認証情報を使用")
+          return {
+            client_id: Rails.application.secrets[:ja][:toruya_line_login_id],
+            client_secret: Rails.application.secrets[:ja][:toruya_line_login_secret]
+          }
+        elsif decrypted_who == CallbacksController::TW_TORUYA_USER
+          Rails.logger.info("[OmniauthSetup] ✅ Toruya共通 (TW) LINE Login認証情報を使用")
+          return {
+            client_id: Rails.application.secrets[:tw][:toruya_line_login_id],
+            client_secret: Rails.application.secrets[:tw][:toruya_line_login_secret]
+          }
+        else
+          Rails.logger.warn("[OmniauthSetup] ⚠️ 不明なwhois値: #{decrypted_who}")
+        end
+      rescue => e
+        Rails.logger.error("[OmniauthSetup] ❌ whoisの復号化に失敗: #{e.message}")
+      end
+    end
+    
+    # どの認証情報も取得できなかった場合
+    Rails.logger.error("[OmniauthSetup] ❌ 認証情報が見つかりませんでした")
+    Rails.logger.error("[OmniauthSetup]    oauth_social_account_id: #{oauth_social_account_id.inspect}")
+    Rails.logger.error("[OmniauthSetup]    who: #{who.inspect}")
+    Rollbar.error("Unexpected line callback", request: @request, who: who, cookies: @request.cookies.to_h.keys, session_keys: @request.session.to_h.keys) if Rails.configuration.x.env.production?
+    {}
   end
 end

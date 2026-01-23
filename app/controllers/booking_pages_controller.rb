@@ -15,8 +15,9 @@ class BookingPagesController < ActionController::Base
   layout "booking"
 
   def show
-    # Clear only 'who' cookie (used for Toruya login), keep oauth_social_account_id for store-specific LINE login
-    cookies.clear_across_domains(:who)
+    # パラメータベースの認証に移行したため、認証関連Cookieをクリア
+    # これにより、異なる店舗間での認証情報の混在を防ぐ
+    cookies.clear_across_domains(:oauth_social_account_id, :whois, :who)
     if !booking_page.user.subscription.active?
       render inline: t("common.no_service_warning_html")
       return

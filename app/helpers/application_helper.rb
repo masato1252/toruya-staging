@@ -112,31 +112,38 @@ module ApplicationHelper
 
   # line_login_url(current_owner.social_account, request.url, foo: "bar"),
   def line_login_url(social_account, oauth_redirect_to_url, *args)
+    return nil unless social_account&.is_login_available?
+    
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
-    cookies.clear_across_domains(:oauth_social_account_id, :whois, :who)
-    cookies.set_across_domains(:oauth_social_account_id, encrypted_id, expires: 100.year)
+    
+    # パラメータベースの認証情報伝達（Cookieは使わない）
+    options.merge!(
+      prompt: "consent",
+      bot_prompt: "aggressive",
+      oauth_redirect_to_url: oauth_redirect_to_url,
+      oauth_social_account_id: encrypted_id
+    )
 
-    if social_account&.is_login_available?
-      options.merge!(
-        prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, oauth_social_account_id: encrypted_id
-      )
-
-      user_line_omniauth_authorize_path(options)
-    else
-      nil
-    end
+    user_line_omniauth_authorize_path(options)
   end
 
   def toruya_line_login_url(oauth_redirect_to_url, *args)
     options = args.extract_options!
     toruya_user = params[:locale] == 'tw' ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
-    cookies.clear_across_domains(:whois, :who)
+    
+    # パラメータベースの認証情報伝達（Cookie はフォールバック用に残す）
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
     cookies.set_across_domains(:whois, encrypted_content, expires: 5.minutes)
 
     options.merge!(
-      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, whois: encrypted_content, who: encrypted_content, locale: params[:locale]
+      prompt: "consent",
+      bot_prompt: "aggressive",
+      oauth_redirect_to_url: oauth_redirect_to_url,
+      whois: encrypted_content,
+      who: encrypted_content,
+      locale: params[:locale]
     )
 
     user_line_omniauth_authorize_path(options)
@@ -146,11 +153,19 @@ module ApplicationHelper
     options = args.extract_options!
     toruya_user = Current.business_owner.locale_is?(:tw) ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
-    cookies.clear_across_domains(:whois, :who)
+    
+    # パラメータベースの認証情報伝達（Cookie はフォールバック用に残す）
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
     cookies.set_across_domains(:whois, encrypted_content, expires: 5.minutes)
 
     options.merge!(
-      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, whois: encrypted_content, who: encrypted_content, existing_owner_id: root_user.id, locale: params[:locale]
+      prompt: "consent",
+      bot_prompt: "aggressive",
+      oauth_redirect_to_url: oauth_redirect_to_url,
+      whois: encrypted_content,
+      who: encrypted_content,
+      existing_owner_id: root_user.id,
+      locale: params[:locale]
     )
 
     user_line_omniauth_authorize_path(options)
