@@ -126,6 +126,14 @@ class OmniauthSetup
       Rails.logger.info("[OmniauthSetup]   保存: oauth_redirect_to_url")
     end
     
+    # 予約情報もSessionに保存（Callbackフェーズで復元するため）
+    %w[booking_option_ids booking_date booking_at staff_id].each do |key|
+      if @request.parameters[key].present?
+        @request.session["oauth_#{key}"] = @request.parameters[key]
+        Rails.logger.info("[OmniauthSetup]   保存: #{key} = #{@request.parameters[key]}")
+      end
+    end
+
     # 優先度1: oauth_social_account_id（店舗固有のLINE Login）
     if oauth_social_account_id.present?
       begin
