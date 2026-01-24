@@ -68,10 +68,18 @@ class OmniauthSetup
     Rails.logger.info("[OmniauthSetup]   line_oauth_who (session): #{@request.session[:line_oauth_who].present? ? 'present' : 'nil'}")
     Rails.logger.info("[OmniauthSetup] --- 採用値 ---")
     Rails.logger.info("[OmniauthSetup]   oauth_social_account_id: #{oauth_social_account_id.present? ? "present (#{oauth_social_account_id[0..20]}...)" : 'nil'}")
-    Rails.logger.info("[OmniauthSetup]   who: #{who.present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   who: #{who.present? ? "present (#{who[0..20]}...)" : 'nil'}")
     
-    # Check if we have credentials in session from previous request phase
-    if @request.session[:line_oauth_credentials].present?
+    # Callbackフェーズの判定: パラメータに oauth_social_account_id も whois も無い場合
+    # (LINEからのリダイレクト後なので、URLパラメータには code と state のみ)
+    is_callback_phase = @request.parameters["oauth_social_account_id"].blank? && 
+                        @request.parameters["whois"].blank? &&
+                        (@request.parameters["code"].present? || @request.path.include?("callback"))
+    
+    Rails.logger.info("[OmniauthSetup] フェーズ判定: #{is_callback_phase ? 'Callback' : '開始'}")
+    
+    # Callbackフェーズでは、Sessionから認証情報を取得
+    if is_callback_phase && @request.session[:line_oauth_credentials].present?
       Rails.logger.info("[OmniauthSetup] ✅ Using credentials from session (callback phase)")
       return @request.session[:line_oauth_credentials]
     end

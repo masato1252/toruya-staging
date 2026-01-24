@@ -180,6 +180,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
       
       # Sessionから取得した場合はクリア
       session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
+      session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
+      session.delete(:line_oauth_who) if session[:line_oauth_who].present?
+      session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
+      
+      Rails.logger.info("[CallbacksController] Sessionクリア完了")
 
       uri = URI.parse(oauth_redirect_to_url)
       queries = {
