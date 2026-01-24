@@ -86,28 +86,33 @@ class OmniauthSetup
     Rails.logger.info("[OmniauthSetup]   oauth_social_account_id: #{oauth_social_account_id.present? ? "present (#{oauth_social_account_id[0..20]}...)" : 'nil'}")
     Rails.logger.info("[OmniauthSetup]   who: #{who.present? ? "present (#{who[0..20]}...)" : 'nil'}")
     
-    # Check if we have credentials in session from previous request phase (callbackフェーズ用)
-    if @request.session[:line_oauth_credentials].present?
-      Rails.logger.info("[OmniauthSetup] Using credentials from session (callback phase)")
-      return @request.session[:line_oauth_credentials]
-    end
-    
-    # Store who in session for callback phase (予約画面以外のみ)
-    if who.present? && !is_booking_flow
-      @request.session[:line_oauth_who] = who
-    end
-    
-    # Store oauth_social_account_id in session for callback phase (予約画面以外のみ)
-    if oauth_social_account_id.present? && !is_booking_flow
-      @request.session[:oauth_social_account_id] = oauth_social_account_id
-    end
-
-    # 予約画面経由の場合、oauth_social_account_id が必須
-    if is_booking_flow && oauth_social_account_id.blank?
-      Rails.logger.error("[OmniauthSetup] 🚨 予約画面経由でoauth_social_account_idが指定されていません")
-      Rails.logger.error("[OmniauthSetup]    予約画面からのLINEログインにはoauth_social_account_idパラメータが必須です")
-      Rollbar.error("Booking LINE login without oauth_social_account_id", request_params: @request.parameters.to_h) if Rails.configuration.x.env.production?
-      return {}
+    # 予約画面経由の場合、Sessionに保存された古い認証情報を完全無視
+    if is_booking_flow
+      Rails.logger.info("[OmniauthSetup] 🔒 予約画面モード: Session無視")
+      
+      # 予約画面経由の場合、oauth_social_account_id が必須
+      if oauth_social_account_id.blank?
+        Rails.logger.error("[OmniauthSetup] 🚨 予約画面経由でoauth_social_account_idが指定されていません")
+        Rails.logger.error("[OmniauthSetup]    予約画面からのLINEログインにはoauth_social_account_idパラメータが必須です")
+        Rollbar.error("Booking LINE login without oauth_social_account_id", request_params: @request.parameters.to_h) if Rails.configuration.x.env.production?
+        return {}
+      end
+    else
+      # 予約画面以外では、Sessionから認証情報を取得（callbackフェーズ用）
+      if @request.session[:line_oauth_credentials].present?
+        Rails.logger.info("[OmniauthSetup] Using credentials from session (callback phase)")
+        return @request.session[:line_oauth_credentials]
+      end
+      
+      # Store who in session for callback phase
+      if who.present?
+        @request.session[:line_oauth_who] = who
+      end
+      
+      # Store oauth_social_account_id in session for callback phase
+      if oauth_social_account_id.present?
+        @request.session[:oauth_social_account_id] = oauth_social_account_id
+      end
     end
     
     # 優先度1: oauth_social_account_id（店舗固有のLINE Login）
