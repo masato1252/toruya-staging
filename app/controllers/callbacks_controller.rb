@@ -137,6 +137,14 @@ class CallbacksController < Devise::OmniauthCallbacksController
     else
       Rollbar.info("LineLogin2", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
+      # CallbackフェーズではパラメータがSessionに保存されているので復元
+      param["oauth_social_account_id"] ||= session[:oauth_social_account_id]
+      param["who"] ||= session[:line_oauth_who]
+      
+      Rails.logger.info("[CallbacksController] Callback phase - param keys: #{param.keys.join(', ')}")
+      Rails.logger.info("[CallbacksController]   oauth_social_account_id: #{param["oauth_social_account_id"].present? ? 'present' : 'nil'}")
+      Rails.logger.info("[CallbacksController]   who: #{param["who"].present? ? 'present' : 'nil'}")
+
       outcome = ::SocialCustomers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
         param: param,
