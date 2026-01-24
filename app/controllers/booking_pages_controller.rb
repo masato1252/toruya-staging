@@ -95,7 +95,7 @@ class BookingPagesController < ActionController::Base
       end
     end
 
-    @social_account = @booking_page.user.social_accounts.first
+    @social_account = @booking_page.user.social_account
 
     if @booking_page.product_requirement
       if !@customer || @booking_page.requirement_customers.exclude?(@customer)
