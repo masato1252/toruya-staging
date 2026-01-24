@@ -43,56 +43,34 @@ class OmniauthSetup
   
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
+    # パラメータを最優先（URLクエリパラメータ or POSTボディ）
+    # 次にCookie、最後にSession
+    oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
+                              @request.cookies["oauth_social_account_id"] || 
+                              @request.session[:oauth_social_account_id]
+    
+    who = @request.parameters["whois"].presence || 
+          @request.cookies["whois"] || 
+          @request.session[:line_oauth_who]
+    
     Rails.logger.info("[OmniauthSetup] ===== 認証情報取得開始 =====")
     Rails.logger.info("[OmniauthSetup] Request method: #{@request.request_method}")
     Rails.logger.info("[OmniauthSetup] Request path: #{@request.path}")
     Rails.logger.info("[OmniauthSetup] Parameters keys: #{@request.parameters.keys.join(', ')}")
-    
-    # 予約画面経由かどうかを判定（oauth_redirect_to_url に "booking" が含まれているか）
-    oauth_redirect_to_url = @request.parameters["oauth_redirect_to_url"].to_s
-    is_booking_flow = oauth_redirect_to_url.include?("booking")
-    
-    Rails.logger.info("[OmniauthSetup] 予約画面経由: #{is_booking_flow ? 'YES' : 'NO'}")
-    Rails.logger.info("[OmniauthSetup] oauth_redirect_to_url: #{oauth_redirect_to_url[0..50]}...")
-    
-    # 認証情報の取得（パラメータ → Cookie → Session の優先順位）
-    # 予約画面経由の場合はCookieを無視
-    if is_booking_flow
-      # 予約画面モード: パラメータのみを使用（Cookie無視、Sessionは使用）
-      oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
-                                @request.session[:oauth_social_account_id]
-      who = @request.parameters["whois"].presence || 
-            @request.session[:line_oauth_who]
-      
-      Rails.logger.info("[OmniauthSetup] 🔒 予約画面モード: パラメータ → Session（Cookie無視）")
-      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (param): #{@request.parameters["oauth_social_account_id"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (session): #{@request.session[:oauth_social_account_id].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   whois (param): #{@request.parameters["whois"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   whois (session): #{@request.session[:line_oauth_who].present? ? 'present' : 'nil'}")
-    else
-      # 通常モード: パラメータ → Cookie → Session
-      oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
-                                @request.cookies["oauth_social_account_id"] || 
-                                @request.session[:oauth_social_account_id]
-      
-      who = @request.parameters["whois"].presence || 
-            @request.cookies["whois"] || 
-            @request.session[:line_oauth_who]
-      
-      Rails.logger.info("[OmniauthSetup] 📋 通常モード: パラメータ → Cookie → Session")
-      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (param): #{@request.parameters["oauth_social_account_id"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (cookie): #{@request.cookies["oauth_social_account_id"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (session): #{@request.session[:oauth_social_account_id].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   whois (param): #{@request.parameters["whois"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   whois (cookie): #{@request.cookies["whois"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   whois (session): #{@request.session[:line_oauth_who].present? ? 'present' : 'nil'}")
-    end
-    
+    Rails.logger.info("[OmniauthSetup] --- パラメータ確認 ---")
+    Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (param): #{@request.parameters["oauth_social_account_id"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   whois (param): #{@request.parameters["whois"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup] --- Cookie確認 ---")
+    Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (cookie): #{@request.cookies["oauth_social_account_id"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   whois (cookie): #{@request.cookies["whois"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup] --- Session確認 ---")
+    Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (session): #{@request.session[:oauth_social_account_id].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   line_oauth_who (session): #{@request.session[:line_oauth_who].present? ? 'present' : 'nil'}")
     Rails.logger.info("[OmniauthSetup] --- 採用値 ---")
     Rails.logger.info("[OmniauthSetup]   oauth_social_account_id: #{oauth_social_account_id.present? ? "present (#{oauth_social_account_id[0..20]}...)" : 'nil'}")
-    Rails.logger.info("[OmniauthSetup]   who: #{who.present? ? "present (#{who[0..20]}...)" : 'nil'}")
+    Rails.logger.info("[OmniauthSetup]   who: #{who.present? ? 'present' : 'nil'}")
     
-    # Callbackフェーズでは、Sessionから認証情報を取得
+    # Check if we have credentials in session from previous request phase
     if @request.session[:line_oauth_credentials].present?
       Rails.logger.info("[OmniauthSetup] ✅ Using credentials from session (callback phase)")
       return @request.session[:line_oauth_credentials]
@@ -111,13 +89,7 @@ class OmniauthSetup
       @request.session[:oauth_social_account_id] = oauth_social_account_id
       Rails.logger.info("[OmniauthSetup]   保存: oauth_social_account_id")
     end
-    
-    # oauth_redirect_to_urlもSessionに保存（Callbackフェーズで復元するため）
-    if oauth_redirect_to_url.present?
-      @request.session[:oauth_redirect_to_url] = oauth_redirect_to_url
-      Rails.logger.info("[OmniauthSetup]   保存: oauth_redirect_to_url")
-    end
-    
+
     # 優先度1: oauth_social_account_id（店舗固有のLINE Login）
     if oauth_social_account_id.present?
       begin
@@ -127,7 +99,7 @@ class OmniauthSetup
         Rails.logger.info("[OmniauthSetup] ✅ 店舗固有のLINE Login認証情報を使用")
         Rails.logger.info("[OmniauthSetup]   SocialAccount ID: #{account_id}")
         Rails.logger.info("[OmniauthSetup]   店舗: #{account.user&.shop&.display_name || 'N/A'}")
-        Rails.logger.info("[OmniauthSetup]   login_channel_id: #{account.login_channel_id.present? ? "present (#{account.login_channel_id})" : 'nil'}")
+        Rails.logger.info("[OmniauthSetup]   login_channel_id: #{account.login_channel_id.present? ? 'present' : 'nil'}")
         Rails.logger.info("[OmniauthSetup]   raw_login_channel_secret: #{account.raw_login_channel_secret.present? ? 'present' : 'nil'}")
         
         return {
