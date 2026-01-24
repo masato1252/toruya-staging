@@ -87,15 +87,27 @@ export const AddLineFriendInfo = ({social_account_add_friend_url, children}) => 
   ) : <></>
 )
 
-export const LineLoginBtn = ({social_account_login_url, btn_text, children}) => (
-  social_account_login_url ? (
+export const LineLoginBtn = ({social_account_login_url, btn_text, children}) => {
+  if (!social_account_login_url) return <></>;
+  
+  // URLからパス名とパラメータを抽出
+  const url = new URL(social_account_login_url, window.location.origin);
+  const params = Object.fromEntries(url.searchParams);
+  
+  return (
     <div className="message centerize">
       {children}
-      <a href={social_account_login_url} className="btn line-button with-wording with-logo" data-method="post">
-        <img src={LineIconBaseImg} />
-        {btn_text || I18n.t("common.line_login_btn_word")}
-      </a>
+      <form method="post" action={url.pathname}>
+        <input type="hidden" name="authenticity_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
+        {Object.entries(params).map(([key, value]) => (
+          <input key={key} type="hidden" name={key} value={value} />
+        ))}
+        <button type="submit" className="btn line-button with-wording with-logo" style={{border: 'none', cursor: 'pointer', padding: '10px 20px'}}>
+          <img src={LineIconBaseImg} />
+          {btn_text || I18n.t("common.line_login_btn_word")}
+        </button>
+      </form>
     </div>
-  ) : <></>
-)
+  );
+}
 
