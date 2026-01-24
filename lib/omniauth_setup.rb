@@ -86,9 +86,15 @@ class OmniauthSetup
     Rails.logger.info("[OmniauthSetup]   oauth_social_account_id: #{oauth_social_account_id.present? ? "present (#{oauth_social_account_id[0..20]}...)" : 'nil'}")
     Rails.logger.info("[OmniauthSetup]   who: #{who.present? ? "present (#{who[0..20]}...)" : 'nil'}")
     
-    # 予約画面経由の場合、Sessionに保存された古い認証情報を完全無視
+    # Callbackフェーズでは、Sessionから認証情報を取得
+    if @request.session[:line_oauth_credentials].present?
+      Rails.logger.info("[OmniauthSetup] ✅ Using credentials from session (callback phase)")
+      return @request.session[:line_oauth_credentials]
+    end
+    
+    # 予約画面経由の場合、パラメータのみを使用（Cookie完全無視）
     if is_booking_flow
-      Rails.logger.info("[OmniauthSetup] 🔒 予約画面モード: Session無視")
+      Rails.logger.info("[OmniauthSetup] 🔒 予約画面モード: パラメータのみ使用（Cookie無視）")
       
       # 予約画面経由の場合、oauth_social_account_id が必須
       if oauth_social_account_id.blank?
@@ -98,18 +104,13 @@ class OmniauthSetup
         return {}
       end
     else
-      # 予約画面以外では、Sessionから認証情報を取得（callbackフェーズ用）
-      if @request.session[:line_oauth_credentials].present?
-        Rails.logger.info("[OmniauthSetup] Using credentials from session (callback phase)")
-        return @request.session[:line_oauth_credentials]
-      end
+      # 予約画面以外では、whoやoauth_social_account_idをSessionに保存（callbackフェーズ用）
+      Rails.logger.info("[OmniauthSetup] 📋 通常モード: SessionにwhoisとIDを保存")
       
-      # Store who in session for callback phase
       if who.present?
         @request.session[:line_oauth_who] = who
       end
       
-      # Store oauth_social_account_id in session for callback phase
       if oauth_social_account_id.present?
         @request.session[:oauth_social_account_id] = oauth_social_account_id
       end
