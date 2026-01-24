@@ -145,7 +145,17 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
       param.delete("bot_prompt")
       param.delete("prompt")
-      oauth_redirect_to_url = param.delete("oauth_redirect_to_url")
+      oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url]
+
+      # oauth_redirect_to_urlがnilの場合はroot_pathにリダイレクト
+      if oauth_redirect_to_url.blank?
+        Rails.logger.warn("[CallbacksController] oauth_redirect_to_url is blank, redirecting to root")
+        redirect_to root_path
+        return
+      end
+      
+      # Sessionから取得した場合はクリア
+      session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
 
       uri = URI.parse(oauth_redirect_to_url)
       queries = {

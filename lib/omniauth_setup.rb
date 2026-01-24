@@ -112,6 +112,12 @@ class OmniauthSetup
       Rails.logger.info("[OmniauthSetup]   保存: oauth_social_account_id")
     end
     
+    # oauth_redirect_to_urlもSessionに保存（Callbackフェーズで復元するため）
+    if oauth_redirect_to_url.present?
+      @request.session[:oauth_redirect_to_url] = oauth_redirect_to_url
+      Rails.logger.info("[OmniauthSetup]   保存: oauth_redirect_to_url")
+    end
+    
     # 優先度1: oauth_social_account_id（店舗固有のLINE Login）
     if oauth_social_account_id.present?
       begin
