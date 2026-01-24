@@ -55,16 +55,22 @@ class OmniauthSetup
     Rails.logger.info("[OmniauthSetup] 予約画面経由: #{is_booking_flow ? 'YES' : 'NO'}")
     Rails.logger.info("[OmniauthSetup] oauth_redirect_to_url: #{oauth_redirect_to_url[0..50]}...")
     
-    # 予約画面経由の場合、パラメータのみを使用（Cookie/Session完全無視）
+    # 認証情報の取得（パラメータ → Cookie → Session の優先順位）
+    # 予約画面経由の場合はCookieを無視
     if is_booking_flow
-      oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence
-      who = @request.parameters["whois"].presence
+      # 予約画面モード: パラメータのみを使用（Cookie無視、Sessionは使用）
+      oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
+                                @request.session[:oauth_social_account_id]
+      who = @request.parameters["whois"].presence || 
+            @request.session[:line_oauth_who]
       
-      Rails.logger.info("[OmniauthSetup] 🔒 予約画面モード: パラメータのみ使用（Cookie/Session無視）")
-      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (param): #{oauth_social_account_id.present? ? 'present' : 'nil'}")
-      Rails.logger.info("[OmniauthSetup]   whois (param): #{who.present? ? 'present' : 'nil'}")
+      Rails.logger.info("[OmniauthSetup] 🔒 予約画面モード: パラメータ → Session（Cookie無視）")
+      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (param): #{@request.parameters["oauth_social_account_id"].present? ? 'present' : 'nil'}")
+      Rails.logger.info("[OmniauthSetup]   oauth_social_account_id (session): #{@request.session[:oauth_social_account_id].present? ? 'present' : 'nil'}")
+      Rails.logger.info("[OmniauthSetup]   whois (param): #{@request.parameters["whois"].present? ? 'present' : 'nil'}")
+      Rails.logger.info("[OmniauthSetup]   whois (session): #{@request.session[:line_oauth_who].present? ? 'present' : 'nil'}")
     else
-      # その他の機能では従来通り（パラメータ → Cookie → Session）
+      # 通常モード: パラメータ → Cookie → Session
       oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
                                 @request.cookies["oauth_social_account_id"] || 
                                 @request.session[:oauth_social_account_id]
@@ -92,28 +98,18 @@ class OmniauthSetup
       return @request.session[:line_oauth_credentials]
     end
     
-    # 予約画面経由の場合、パラメータのみを使用（Cookie完全無視）
-    if is_booking_flow
-      Rails.logger.info("[OmniauthSetup] 🔒 予約画面モード: パラメータのみ使用（Cookie無視）")
-      
-      # 予約画面経由の場合、oauth_social_account_id が必須
-      if oauth_social_account_id.blank?
-        Rails.logger.error("[OmniauthSetup] 🚨 予約画面経由でoauth_social_account_idが指定されていません")
-        Rails.logger.error("[OmniauthSetup]    予約画面からのLINEログインにはoauth_social_account_idパラメータが必須です")
-        Rollbar.error("Booking LINE login without oauth_social_account_id", request_params: @request.parameters.to_h) if Rails.configuration.x.env.production?
-        return {}
-      end
-    else
-      # 予約画面以外では、whoやoauth_social_account_idをSessionに保存（callbackフェーズ用）
-      Rails.logger.info("[OmniauthSetup] 📋 通常モード: SessionにwhoisとIDを保存")
-      
-      if who.present?
-        @request.session[:line_oauth_who] = who
-      end
-      
-      if oauth_social_account_id.present?
-        @request.session[:oauth_social_account_id] = oauth_social_account_id
-      end
+    # 開始フェーズ: whoやoauth_social_account_idをSessionに保存（callbackフェーズ用）
+    # 予約画面モードでもSessionに保存（Cookieは使わないが、Sessionは使う）
+    Rails.logger.info("[OmniauthSetup] 💾 開始フェーズ: SessionにIDを保存")
+    
+    if who.present?
+      @request.session[:line_oauth_who] = who
+      Rails.logger.info("[OmniauthSetup]   保存: line_oauth_who")
+    end
+    
+    if oauth_social_account_id.present?
+      @request.session[:oauth_social_account_id] = oauth_social_account_id
+      Rails.logger.info("[OmniauthSetup]   保存: oauth_social_account_id")
     end
     
     # 優先度1: oauth_social_account_id（店舗固有のLINE Login）
