@@ -15,7 +15,7 @@ module Notifiers
       def message
         reservation = line_notice_request.reservation
         customer = line_notice_request.customer
-        customer_family_name = customer.family_name || customer.name.split(' ').first || customer.name
+        customer_family_name = customer.last_name || customer.name&.split(' ')&.first || customer.name || '（氏名不明）'
         reservation_day = I18n.l(reservation.start_time.to_date, format: :long)
         is_free_trial = receiver.line_notice_free_trial_available?
         
