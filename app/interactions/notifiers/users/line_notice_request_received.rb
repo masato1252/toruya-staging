@@ -88,10 +88,12 @@ module Notifiers
       end
 
       def notify_by_line
-        LineClient.push_message(
-          receiver.social_user,
-          message
-        )
+        # SocialUserからSocialCustomerを取得（receiverはUser、receiver.social_userはSocialUser）
+        social_customer = receiver.social_customers.find_by(social_user_id: receiver.social_user.social_user_id)
+        
+        return unless social_customer
+        
+        LineClient.send(social_customer, message)
       end
 
       def target_line_user
