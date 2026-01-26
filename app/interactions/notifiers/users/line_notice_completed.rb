@@ -15,10 +15,11 @@ module Notifiers
 
       def message
         reservation = line_notice_request.reservation
+        customer_family_name = customer.last_name || customer.name&.split(' ')&.first || customer.name || '（氏名不明）'
         
         I18n.with_locale(receiver.locale) do
           <<~MESSAGE.strip
-            #{customer.family_name}様へのLINEによるお知らせ送信が全て完了いたしました。
+            #{customer_family_name}様へのLINEによるお知らせ送信が全て完了いたしました。
             以降もLINEによるお知らせ送信をご利用いただくには、有料プランの契約が必要です。
 
             ＜有料プランを確認する＞
@@ -31,9 +32,7 @@ module Notifiers
 
       def plans_url
         Rails.application.routes.url_helpers.lines_user_bot_settings_plans_url(
-          business_owner_id: receiver.id,
-          host: ENV['HOST'] || 'toruya.com',
-          protocol: 'https'
+          business_owner_id: receiver.id
         )
       end
 
@@ -42,10 +41,22 @@ module Notifiers
       end
 
       def notify_by_line
-        LineClient.push_message(
-          receiver.social_user,
-          message
-        )
+        # LineClient.sendに統一（他のNotifierと同じパターン）
+        social_user = receiver.social_user
+        
+        unless social_user&.social_user_id.present?
+          Rails.logger.warn("[LineNoticeCompleted] ⚠️ receiver.social_user が存在しません (user_id=#{receiver.id})")
+          return
+        end
+        
+        Rails.logger.info("[LineNoticeCompleted] 店舗オーナーにLINE通知送信: social_user_id=#{social_user.social_user_id}, user_id=#{receiver.id}")
+        
+        begin
+          LineClient.send(social_user, message)
+        rescue => e
+          Rails.logger.error("[LineNoticeCompleted] ❌ LINE送信失敗: #{e.class} - #{e.message}")
+          Rollbar.error(e, social_user_id: social_user.social_user_id, user_id: receiver.id, line_notice_request_id: line_notice_request.id)
+        end
       end
 
       def target_line_user
