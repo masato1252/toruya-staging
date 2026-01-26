@@ -18,6 +18,11 @@ class BookingPagesController < ActionController::Base
     # パラメータベースの認証に移行したため、認証関連Cookieをクリア
     # これにより、異なる店舗間での認証情報の混在を防ぐ
     cookies.clear_across_domains(:oauth_social_account_id, :whois, :who)
+    
+    Rails.logger.info("[BookingPagesController] show action - params: #{params.keys.join(', ')}")
+    Rails.logger.info("[BookingPagesController]   social_user_id: #{params[:social_user_id].present? ? params[:social_user_id] : 'nil'}")
+    Rails.logger.info("[BookingPagesController]   cookie line_social_user_id_of_customer: #{cookies[:line_social_user_id_of_customer].present? ? 'present' : 'nil'}")
+    
     if !booking_page.user.subscription.active?
       render inline: t("common.no_service_warning_html")
       return
@@ -34,8 +39,11 @@ class BookingPagesController < ActionController::Base
     @customer =
       if params[:social_user_id] || cookies[:line_social_user_id_of_customer]
         @social_customer = @booking_page.user.social_customers.find_by(social_user_id: params[:social_user_id] || cookies[:line_social_user_id_of_customer])
+        Rails.logger.info("[BookingPagesController]   @social_customer found: #{@social_customer.present? ? "ID=#{@social_customer.id}" : 'nil'}")
         @social_customer&.customer
       end
+    
+    Rails.logger.info("[BookingPagesController]   @customer: #{@customer.present? ? "ID=#{@customer.id}" : 'nil'}")
 
     @customer ||=
       if cookies[:booking_customer_id] || cookies[:verified_customer_id]
