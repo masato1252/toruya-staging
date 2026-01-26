@@ -163,14 +163,15 @@ class CallbacksController < Devise::OmniauthCallbacksController
       param["oauth_social_account_id"] ||= session[:oauth_social_account_id]
       param["who"] ||= session[:line_oauth_who]
       
-      # 予約情報もSessionから復元
-      %w[booking_option_ids booking_date booking_at staff_id].each do |key|
+      # 予約情報とcustomer_idもSessionから復元
+      %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
         param[key] ||= session["oauth_#{key}"]
       end
       
       Rails.logger.info("[CallbacksController] Callback phase - param keys: #{param.keys.join(', ')}")
       Rails.logger.info("[CallbacksController]   oauth_social_account_id: #{param["oauth_social_account_id"].present? ? 'present' : 'nil'}")
       Rails.logger.info("[CallbacksController]   who: #{param["who"].present? ? 'present' : 'nil'}")
+      Rails.logger.info("[CallbacksController]   customer_id: #{param["customer_id"].present? ? 'present' : 'nil'}")
 
       outcome = ::SocialCustomers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
@@ -205,8 +206,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
       session.delete(:line_oauth_who) if session[:line_oauth_who].present?
       session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
       
-      # 予約情報もクリア
-      %w[booking_option_ids booking_date booking_at staff_id].each do |key|
+      # 予約情報とcustomer_idもクリア
+      %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
         session.delete("oauth_#{key}") if session["oauth_#{key}"].present?
       end
       
