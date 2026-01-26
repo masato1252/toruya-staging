@@ -5,7 +5,11 @@ ja:
     optional: "任意"
     email: "メールアドレス"
     reservation_details: "予約内容"
+    customer_name: "顧客名"
+    reservation_datetime: "予約日時"
+    menu: "メニュー"
     cancel: "キャンセル"
+    processing: "処理中..."
   broadcast:
     states:
       active: 配信待ち
@@ -599,6 +603,7 @@ ja:
       month_day_wday: "%m/%d(%a)"
       local_time: "%Y-%m-%dT%H:%M:%S"
       short_date: "'%y/%m/%d"
+      reservation_datetime: "%Y年%m月%d日(%a) %H:%M〜"
     pm: PM
   datetime:
     distance_in_words:
@@ -869,6 +874,8 @@ ja:
               stripe_error: "決済処理中にエラーが発生しました。しばらく時間をおいてもう一度お試しください。"
               requires_action: "3Dセキュア認証が必要です。カード発行会社の認証を完了してください。"
               failed: "決済に失敗しました。もう一度お試しください。"
+              canceled: "決済がキャンセルされました。"
+              something_wrong: "予期しないエラーが発生しました。しばらく時間をおいてもう一度お試しください。"
               no_payment_method: "有効な支払い方法が見つかりません。"
             user:
               no_stripe_customer: "Stripe顧客情報が見つかりません。カードを登録してください。"

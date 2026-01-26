@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 
 const CARD_ELEMENT_OPTIONS = {
+  hidePostalCode: true,
   style: {
     base: {
       fontSize: '16px',
@@ -186,26 +187,17 @@ const PaymentForm = ({ chargeAmount, approveUrl, i18n, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <label className="form-label">
-          <strong>{i18n.chargeAmountLabel}</strong>
-        </label>
-        <div className="alert alert-info">
-          <h4>{chargeAmount}円</h4>
-        </div>
+      <div className="mb-4" style={{ display: 'flex', alignItems: 'center', fontSize: '16px', marginBottom: '20px' }}>
+        <strong style={{ marginRight: '8px' }}>{i18n.chargeAmountLabel}:</strong>
+        <span>{chargeAmount}円</span>
       </div>
 
       <div className="mb-4">
-        <label className="form-label">
-          <strong>{i18n.cardNumberLabel}</strong>
-        </label>
-        <div className="form-control" style={{ padding: '10px' }}>
-          <CardElement options={CARD_ELEMENT_OPTIONS} />
-        </div>
+        <CardElement options={CARD_ELEMENT_OPTIONS} />
       </div>
 
       {errorMessage && (
-        <div className="alert alert-danger">
+        <div className="alert alert-danger" style={{ marginTop: '20px' }}>
           {errorMessage}
         </div>
       )}
@@ -213,7 +205,7 @@ const PaymentForm = ({ chargeAmount, approveUrl, i18n, onClose }) => {
       <div className="text-right">
         <button 
           type="button" 
-          className="btn btn-default mr-2" 
+          className="btn btn-tarco mr-2" 
           onClick={onClose}
           disabled={processing}
         >
@@ -221,7 +213,7 @@ const PaymentForm = ({ chargeAmount, approveUrl, i18n, onClose }) => {
         </button>
         <button 
           type="submit" 
-          className="btn btn-success" 
+          className="btn btn-yellow" 
           disabled={!stripe || processing}
         >
           {processing ? i18n.processing : i18n.submitButton}
@@ -236,18 +228,43 @@ const PaymentModal = ({ props }) => {
   const [stripePromise, setStripePromise] = useState(null);
 
   useEffect(() => {
+    console.log('[PaymentModal] Reactコンポーネント初期化');
+    console.log('[PaymentModal] props.stripeKey:', props.stripeKey ? '設定あり' : '設定なし');
     if (props.stripeKey) {
+      console.log('[PaymentModal] Stripe初期化開始');
       setStripePromise(loadStripe(props.stripeKey));
+    } else {
+      console.error('[PaymentModal] エラー: stripeKeyが設定されていません');
     }
   }, [props.stripeKey]);
 
   useEffect(() => {
-    const handleOpen = () => setIsOpen(true);
+    console.log('[PaymentModal] イベントリスナー設定');
+    const handleOpen = () => {
+      console.log('[PaymentModal] openLineNoticePaymentModal イベント受信 - モーダル表示');
+      setIsOpen(true);
+    };
     window.addEventListener('openLineNoticePaymentModal', handleOpen);
-    return () => window.removeEventListener('openLineNoticePaymentModal', handleOpen);
+    console.log('[PaymentModal] イベントリスナー設定完了');
+    return () => {
+      console.log('[PaymentModal] イベントリスナー解除');
+      window.removeEventListener('openLineNoticePaymentModal', handleOpen);
+    };
   }, []);
 
-  if (!isOpen || !stripePromise) return null;
+  console.log('[PaymentModal] レンダリング状態:', { isOpen, stripePromise: !!stripePromise });
+  
+  if (!isOpen) {
+    console.log('[PaymentModal] モーダル非表示（isOpen=false）');
+    return null;
+  }
+  
+  if (!stripePromise) {
+    console.log('[PaymentModal] モーダル非表示（stripePromise=null）');
+    return null;
+  }
+  
+  console.log('[PaymentModal] モーダル表示中');
 
   return (
     <div className="modal fade in" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
