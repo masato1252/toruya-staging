@@ -90,7 +90,10 @@ class LineNoticeRequestsController < ActionController::Base
     oauth_social_account_id = MessageEncryptor.encrypt(@reservation.user.social_account.id.to_s)
     oauth_redirect_to_url = callback_line_notice_requests_url(reservation_id: @reservation.id)
     
-    "/users/auth/line?oauth_social_account_id=#{CGI.escape(oauth_social_account_id)}&oauth_redirect_to_url=#{CGI.escape(oauth_redirect_to_url)}"
+    # 予約に紐づくcustomer_idを取得して渡す（SocialCustomers::FromOmniauthで自動紐付けするため）
+    customer_id = @reservation.customer.id
+    
+    "/users/auth/line?oauth_social_account_id=#{CGI.escape(oauth_social_account_id)}&oauth_redirect_to_url=#{CGI.escape(oauth_redirect_to_url)}&customer_id=#{customer_id}"
   end
   helper_method :line_oauth_url
 end

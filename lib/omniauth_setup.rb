@@ -132,7 +132,7 @@ class OmniauthSetup
     end
     
     # 予約情報もSessionに保存（Callbackフェーズで復元するため）
-    %w[booking_option_ids booking_date booking_at staff_id].each do |key|
+    %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
       if @request.parameters[key].present?
         @request.session["oauth_#{key}"] = @request.parameters[key]
         Rails.logger.info("[OmniauthSetup]   保存: #{key} = #{@request.parameters[key]}")
