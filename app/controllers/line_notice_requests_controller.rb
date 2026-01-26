@@ -28,17 +28,25 @@ class LineNoticeRequestsController < ActionController::Base
   def callback
     # LINE OAuth から返された social_user_id を取得
     social_user_id = params[:social_user_id]
+    customer_id = params[:customer_id]
     
     unless social_user_id.present?
       redirect_to line_notice_requests_path(reservation_id: @reservation.id), alert: I18n.t("line_notice_requests.errors.line_auth_failed")
       return
     end
 
-    # SocialCustomer を取得または作成
-    social_customer = SocialCustomer.find_by(social_user_id: social_user_id)
+    # SocialCustomer を取得（customer_idとsocial_user_idの両方で検索して、正しいレコードを取得）
+    social_customer = if customer_id.present?
+      # customer_idとsocial_user_idの両方で検索（最新のレコードを取得）
+      SocialCustomer.where(social_user_id: social_user_id, customer_id: customer_id).order(created_at: :desc).first
+    else
+      # customer_idがない場合は、social_user_idだけで検索
+      SocialCustomer.find_by(social_user_id: social_user_id)
+    end
     
     Rails.logger.info("[LineNoticeRequestsController] callback - social_customer検索結果:")
     Rails.logger.info("[LineNoticeRequestsController]   social_user_id: #{social_user_id}")
+    Rails.logger.info("[LineNoticeRequestsController]   customer_id (param): #{customer_id || 'nil'}")
     Rails.logger.info("[LineNoticeRequestsController]   social_customer found: #{social_customer.present? ? "ID=#{social_customer.id}" : 'nil'}")
     Rails.logger.info("[LineNoticeRequestsController]   social_customer.customer: #{social_customer&.customer.present? ? "ID=#{social_customer.customer.id}" : 'nil'}")
     
