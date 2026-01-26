@@ -90,8 +90,10 @@ class LineNoticeRequestsController < ActionController::Base
     oauth_social_account_id = MessageEncryptor.encrypt(@reservation.user.social_account.id.to_s)
     oauth_redirect_to_url = callback_line_notice_requests_url(reservation_id: @reservation.id)
     
-    # 予約に紐づくcustomer_idを取得して渡す（SocialCustomers::FromOmniauthで自動紐付けするため）
-    customer_id = @reservation.customer.id
+    # 予約に紐づく最初のcustomer_idを取得して渡す（SocialCustomers::FromOmniauthで自動紐付けするため）
+    customer_id = @reservation.customers.first&.id
+    
+    return nil unless customer_id.present?
     
     "/users/auth/line?oauth_social_account_id=#{CGI.escape(oauth_social_account_id)}&oauth_redirect_to_url=#{CGI.escape(oauth_redirect_to_url)}&customer_id=#{customer_id}"
   end
