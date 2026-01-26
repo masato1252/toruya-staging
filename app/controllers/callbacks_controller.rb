@@ -102,7 +102,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
         remember_me(user)
         sign_in(user)
         write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
-        write_user_bot_cookies(:current_user_id, user.id)
+        
+        # Session cleanup for store login flow
+        session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
+        session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
+        session.delete(:line_oauth_who) if session[:line_oauth_who].present?
 
         if param["existing_owner_id"] # existing user add another line account
           existing_user = User.find(param["existing_owner_id"])
@@ -133,15 +137,17 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
           redirect_to lines_user_bot_settings_path(user.id, consultant_connect_result: consultant_connect_outcome.valid?)
         else
-          Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: param["oauth_redirect_to_url"])
+          # Sessionから oauth_redirect_to_url を復元
+          oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url]
+          session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
           
-          # oauth_redirect_to_url could be root_path ("/"), which requires authentication
-          # Redirect to schedules page if no specific redirect URL is provided or if it's root_path
-          redirect_url = param["oauth_redirect_to_url"]
-          if redirect_url.blank? || redirect_url == "/" || redirect_url == root_path
-            redirect_to lines_user_bot_schedules_path(business_owner_id: user.id)
+          Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: oauth_redirect_to_url)
+          
+          if oauth_redirect_to_url.present?
+            redirect_to Addressable::URI.new(path: oauth_redirect_to_url).to_s
           else
-            redirect_to Addressable::URI.new(path: redirect_url).to_s
+            # oauth_redirect_to_urlが無い場合は、デフォルトでスケジュール画面へ
+            redirect_to lines_user_bot_schedules_path(business_owner_id: user.id)
           end
         end
       elsif outcome.valid? && outcome.result.user.nil?
