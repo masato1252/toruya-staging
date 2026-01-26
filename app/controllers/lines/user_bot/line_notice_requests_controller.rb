@@ -12,6 +12,12 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
     # 初回無料かどうかを判定
     @is_free_trial = Current.business_owner.line_notice_free_trial_available?
     @charge_amount = @is_free_trial ? 0 : LineNoticeCharge::LINE_NOTICE_CHARGE_AMOUNT_JPY
+    
+    # デバッグログ
+    Rails.logger.info("[LineNoticeRequestsController#show] user_id: #{Current.business_owner.id}")
+    Rails.logger.info("[LineNoticeRequestsController#show]   is_free_trial: #{@is_free_trial}")
+    Rails.logger.info("[LineNoticeRequestsController#show]   existing free_trial charges count: #{Current.business_owner.line_notice_charges.free_trials.successful.count}")
+    Rails.logger.info("[LineNoticeRequestsController#show]   all charges count: #{Current.business_owner.line_notice_charges.count}")
   end
 
   # POST /lines/user_bot/owner/:business_owner_id/line_notice_requests/:id/approve
