@@ -68,17 +68,13 @@ module Notifiers
       def approval_url
         Rails.application.routes.url_helpers.lines_user_bot_line_notice_request_url(
           business_owner_id: receiver.id,
-          id: line_notice_request.id,
-          host: ENV['HOST'] || 'toruya.com',
-          protocol: 'https'
+          id: line_notice_request.id
         )
       end
 
       def plans_url
         Rails.application.routes.url_helpers.lines_user_bot_settings_plans_url(
           business_owner_id: receiver.id,
-          host: ENV['HOST'] || 'toruya.com',
-          protocol: 'https',
           anchor: 'plans-menu-item'
         )
       end
