@@ -1009,7 +1009,10 @@ ja:
       line_auth_failed: "LINE連携に失敗しました。もう一度お試しください。"
       customer_not_found: "顧客情報が見つかりませんでした。"
       reservation_not_found: "予約が見つかりませんでした。"
+      not_found: "LINE通知リクエストが見つかりませんでした。"
       not_free_plan: "この機能は無料プラン店舗の予約のみ利用できます。"
+      cannot_be_approved: "このリクエストは承認できません。すでに処理済みか、期限切れです。"
+      payment_method_required: "決済情報が必要です。"
     new:
       title: "LINE通知リクエスト"
       description_html: |

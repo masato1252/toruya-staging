@@ -9,6 +9,22 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
     @reservation = @line_notice_request.reservation
     @customer = @line_notice_request.customer
     
+    # すでに承認済みの場合は成功画面にリダイレクト
+    if @line_notice_request.approved?
+      redirect_to success_lines_user_bot_line_notice_request_path(
+        business_owner_id: business_owner_id,
+        id: @line_notice_request.id
+      )
+      return
+    end
+    
+    # 承認不可の場合（拒否済み・期限切れなど）
+    unless @line_notice_request.can_be_approved?
+      flash[:alert] = I18n.t('line_notice_requests.errors.cannot_be_approved')
+      redirect_to lines_user_bot_schedules_path(business_owner_id: business_owner_id)
+      return
+    end
+    
     # 初回無料かどうかを判定
     @is_free_trial = Current.business_owner.line_notice_free_trial_available?
     @charge_amount = @is_free_trial ? 0 : LineNoticeCharge::LINE_NOTICE_CHARGE_AMOUNT_JPY
@@ -23,6 +39,22 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   # POST /lines/user_bot/owner/:business_owner_id/line_notice_requests/:id/approve
   # リクエスト承認処理
   def approve
+    # すでに承認済みの場合は成功画面にリダイレクト
+    if @line_notice_request.approved?
+      redirect_to success_lines_user_bot_line_notice_request_path(
+        business_owner_id: business_owner_id,
+        id: @line_notice_request.id
+      )
+      return
+    end
+    
+    # 承認不可の場合
+    unless @line_notice_request.can_be_approved?
+      flash[:alert] = I18n.t('line_notice_requests.errors.cannot_be_approved')
+      redirect_to lines_user_bot_schedules_path(business_owner_id: business_owner_id)
+      return
+    end
+    
     # 初回無料かどうかを判定
     is_free_trial = Current.business_owner.line_notice_free_trial_available?
 

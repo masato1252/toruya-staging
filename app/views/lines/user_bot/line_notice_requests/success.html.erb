@@ -11,8 +11,17 @@
         <div class="panel-body" style="padding: 30px;">
           <!-- 成功メッセージ -->
           <div class="alert alert-success text-center" style="padding: 30px; border-radius: 6px; margin-bottom: 35px;">
-            <h4 style="margin-bottom: 15px; font-size: 22px;"><%= t('line_notice_requests.store.success.message') %></h4>
-            <p style="margin-bottom: 0; font-size: 16px;"><%= t('line_notice_requests.store.success.description', customer_name: @customer.name) %></p>
+            <h4 style="margin-bottom: 15px; font-size: 22px;">
+              <i class="fa fa-check-circle" style="margin-right: 8px;"></i>
+              <%= t('line_notice_requests.store.success.message') %>
+            </h4>
+            <p style="margin-bottom: 8px; font-size: 16px;"><%= t('line_notice_requests.store.success.description', customer_name: @customer.name) %></p>
+            <% if @line_notice_request.approved_at.present? %>
+              <p style="margin-bottom: 0; font-size: 14px; color: #555;">
+                <i class="fa fa-clock-o" style="margin-right: 4px;"></i>
+                承認日時: <%= l(@line_notice_request.approved_at, format: :long) %>
+              </p>
+            <% end %>
           </div>
 
           <!-- 予約情報 -->
