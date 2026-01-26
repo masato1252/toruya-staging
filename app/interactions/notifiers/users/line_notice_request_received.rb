@@ -88,12 +88,23 @@ module Notifiers
       end
 
       def notify_by_line
-        # SocialUserからSocialCustomerを取得（receiverはUser、receiver.social_userはSocialUser）
-        social_customer = receiver.social_customers.find_by(social_user_id: receiver.social_user.social_user_id)
+        # receiverはUser（店舗オーナー）、receiver.social_userはToruya公式アカウントのSocialUser
+        social_user = receiver.social_user
         
-        return unless social_customer
+        unless social_user&.social_user_id.present?
+          Rails.logger.warn("[LineNoticeRequestReceived] ⚠️ receiver.social_user が存在しません (user_id=#{receiver.id})")
+          return
+        end
         
-        LineClient.send(social_customer, message)
+        Rails.logger.info("[LineNoticeRequestReceived] 店舗オーナーにLINE通知送信: social_user_id=#{social_user.social_user_id}, user_id=#{receiver.id}")
+        
+        begin
+          # SocialUserはclientとsocial_user_idを持つので、LineClient.sendに直接渡せる
+          LineClient.send(social_user, message)
+        rescue => e
+          Rails.logger.error("[LineNoticeRequestReceived] ❌ LINE送信失敗: #{e.class} - #{e.message}")
+          Rollbar.error(e, social_user_id: social_user.social_user_id, user_id: receiver.id, line_notice_request_id: line_notice_request.id)
+        end
       end
 
       def target_line_user
