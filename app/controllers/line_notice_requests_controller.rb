@@ -37,7 +37,13 @@ class LineNoticeRequestsController < ActionController::Base
     # SocialCustomer を取得または作成
     social_customer = SocialCustomer.find_by(social_user_id: social_user_id)
     
+    Rails.logger.info("[LineNoticeRequestsController] callback - social_customer検索結果:")
+    Rails.logger.info("[LineNoticeRequestsController]   social_user_id: #{social_user_id}")
+    Rails.logger.info("[LineNoticeRequestsController]   social_customer found: #{social_customer.present? ? "ID=#{social_customer.id}" : 'nil'}")
+    Rails.logger.info("[LineNoticeRequestsController]   social_customer.customer: #{social_customer&.customer.present? ? "ID=#{social_customer.customer.id}" : 'nil'}")
+    
     unless social_customer&.customer
+      Rails.logger.warn("[LineNoticeRequestsController] ⚠️ social_customer.customer が nil のため、TOPにリダイレクト")
       redirect_to line_notice_requests_path(reservation_id: @reservation.id), alert: I18n.t("line_notice_requests.errors.customer_not_found")
       return
     end
