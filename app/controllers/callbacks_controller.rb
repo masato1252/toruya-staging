@@ -171,6 +171,16 @@ class CallbacksController < Devise::OmniauthCallbacksController
         param: param,
         who: param["who"] && MessageEncryptor.decrypt(param["who"])
       )
+      
+      Rails.logger.info("[CallbacksController] SocialCustomers::FromOmniauth result:")
+      Rails.logger.info("[CallbacksController]   outcome.valid?: #{outcome.valid?}")
+      if outcome.valid?
+        Rails.logger.info("[CallbacksController]   social_customer_id: #{outcome.result.id}")
+        Rails.logger.info("[CallbacksController]   social_user_id: #{outcome.result.social_user_id}")
+        Rails.logger.info("[CallbacksController]   customer_id: #{outcome.result.customer_id}")
+      else
+        Rails.logger.error("[CallbacksController]   errors: #{outcome.errors.full_messages.join(', ')}")
+      end
 
       param.delete("bot_prompt")
       param.delete("prompt")
