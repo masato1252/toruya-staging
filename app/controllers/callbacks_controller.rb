@@ -197,6 +197,15 @@ class CallbacksController < Devise::OmniauthCallbacksController
       Rails.logger.info("[CallbacksController] Sessionクリア完了")
 
       uri = URI.parse(oauth_redirect_to_url)
+      
+      # デバッグ: paramの内容を確認
+      Rails.logger.info("[CallbacksController] リダイレクト前のparam: #{param.keys.join(', ')}")
+      Rails.logger.info("[CallbacksController]   booking_option_ids: #{param['booking_option_ids'].inspect}")
+      Rails.logger.info("[CallbacksController]   booking_date: #{param['booking_date'].inspect}")
+      Rails.logger.info("[CallbacksController]   booking_at: #{param['booking_at'].inspect}")
+      Rails.logger.info("[CallbacksController]   staff_id: #{param['staff_id'].inspect}")
+      Rails.logger.info("[CallbacksController] oauth_redirect_to_url: #{oauth_redirect_to_url}")
+      
       queries = {
         status: outcome.valid?,
         social_user_id: outcome.result.social_user_id

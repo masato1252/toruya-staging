@@ -22,16 +22,21 @@ class OmniauthSetup
     
     credentials = custom_credentials
     
-    Rails.logger.info("[OmniauthSetup] Setup called with credentials: client_id=#{credentials[:client_id].present? ? 'present' : 'nil'}")
+    # Sessionから取得した場合はStringキー、通常はSymbolキー
+    client_id = credentials[:client_id] || credentials["client_id"]
+    client_secret = credentials[:client_secret] || credentials["client_secret"]
+    
+    Rails.logger.info("[OmniauthSetup] Setup called with credentials: client_id=#{client_id.present? ? 'present' : 'nil'}")
     Rails.logger.info("[OmniauthSetup] Credentials: #{credentials.inspect}")
+    Rails.logger.info("[OmniauthSetup] Extracted client_id: #{client_id}")
     
     # Store credentials in session for callback phase
-    if credentials[:client_id].present?
+    if client_id.present?
       @request.session[:line_oauth_credentials] = credentials
     end
     
-    @env['omniauth.strategy'].options[:client_id] = credentials[:client_id] if credentials[:client_id]
-    @env['omniauth.strategy'].options[:client_secret] = credentials[:client_secret] if credentials[:client_secret]
+    @env['omniauth.strategy'].options[:client_id] = client_id if client_id
+    @env['omniauth.strategy'].options[:client_secret] = client_secret if client_secret
     @env['omniauth.strategy'].options[:scope] = "profile openid email"
     
     Rails.logger.info("[OmniauthSetup] Final strategy options: client_id=#{@env['omniauth.strategy'].options[:client_id]}")
