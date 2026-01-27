@@ -30,9 +30,14 @@ module CustomMessages
       private
 
       def send_schedule_message(message)
-        schedule_at = scenario_start_at.advance(days: message.after_days).change(hour: DEFAULT_NOTIFICATION_HOUR, min: rand(5), sec: rand(59))
+        # after_days が -1 の場合は即座に送信
+        if message.after_days == -1
+          schedule_at = Time.current
+        else
+          schedule_at = scenario_start_at.advance(days: message.after_days).change(hour: DEFAULT_NOTIFICATION_HOUR, min: rand(5), sec: rand(59))
+        end
 
-        if schedule_at > Time.current || message.after_days == 0
+        if schedule_at > Time.current || message.after_days == 0 || message.after_days == -1
           Notifiers::Users::CustomMessages::Send.perform_at(
             schedule_at: schedule_at,
             scenario_start_at: scenario_start_at,
