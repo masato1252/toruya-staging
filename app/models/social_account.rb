@@ -58,7 +58,7 @@ class SocialAccount < ApplicationRecord
   def message_api_verified?
     bot_data_finished? && social_messages.where(
       social_customer: user.owner_social_customer,
-      raw_content: user.social_user.social_service_user_id
+      raw_content: user.owner_social_customer&.social_user_id
     ).from_customer.exists?
   end
 

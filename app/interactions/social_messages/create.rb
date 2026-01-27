@@ -62,7 +62,7 @@ module SocialMessages
         ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
 
         # Shop owner customer self send a confirmation message to toruya shop owner user
-        if social_customer.is_owner && content == social_user.social_service_user_id && social_customer.customer
+        if social_customer.is_owner && content == social_customer.social_user_id && social_customer.customer
           # Immediate execution for better UX - user sees completion message right away
           Notifiers::Users::LineSettingsVerified.perform_later(receiver: social_user.user)
 
