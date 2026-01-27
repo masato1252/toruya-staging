@@ -46,6 +46,15 @@ class LinesController < ActionController::Base
   end
 
   def user_login
+    # OAuth関連のSessionをクリア（店舗固有のLINE Login情報が誤って使われないように）
+    session.delete(:line_oauth_credentials)
+    session.delete(:oauth_social_account_id)
+    session.delete(:line_oauth_who)
+    session.delete(:oauth_redirect_to_url)
+    %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
+      session.delete("oauth_#{key}")
+    end
+    
     if params[:locale] == "tw"
       render action: "tw_user_login", layout: "booking"
       return
