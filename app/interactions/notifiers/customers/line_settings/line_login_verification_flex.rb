@@ -13,7 +13,7 @@ module Notifiers
               action_templates: [
                 LineActions::Message.new(
                   label: I18n.t("line_verification.confirmation_message.action"),
-                  text: receiver.user.social_user.social_service_user_id,
+                  text: receiver.social_user_id,
                   btn: 'primary'
                 ).template
               ]
