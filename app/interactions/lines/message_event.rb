@@ -92,6 +92,18 @@ class Lines::MessageEvent < ActiveInteraction::Base
               last_name: "",
               first_name: social_customer.social_user_name
             )
+
+            # Reload to get the newly created customer
+            social_customer.reload
+
+            # Record the original message for verification purposes
+            compose(
+              SocialMessages::Create,
+              social_customer: social_customer,
+              content: event["message"]["text"],
+              readed: false,
+              message_type: SocialMessage.message_types[:customer]
+            )
           end
         else
           compose(
