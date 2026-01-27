@@ -54,6 +54,9 @@ module Notifiers
         private
 
         def expected_schedule_time
+          # after_days が -1 の場合は即時送信なので、時刻チェックをスキップ
+          return true if custom_message.after_days == -1
+
           if schedule_at && custom_message.after_days && scenario_start_at
             expected_schedule_at = scenario_start_at.advance(days: custom_message.after_days).change(hour: ::CustomMessages::Users::Next::DEFAULT_NOTIFICATION_HOUR)
             return expected_schedule_at.utc.to_i == schedule_at.change(min: 0, sec: 0).utc.to_i
