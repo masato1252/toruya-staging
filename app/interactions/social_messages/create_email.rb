@@ -31,8 +31,10 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
     end
     Rails.logger.info "[CreateEmail] text_message length: #{text_message.length} (original: #{message.length})"
     Rails.logger.info "[CreateEmail] LINE案内追加: #{text_message.length > message.length ? 'YES' : 'NO'}"
+    Rails.logger.info "[CreateEmail] ===== SocialMessage作成開始 ====="
+    Rails.logger.info "[CreateEmail] reservation_id: #{reservation&.id}"
 
-    SocialMessage.create!(
+    social_message = SocialMessage.create!(
       social_account: customer.social_customer&.social_account,
       social_customer: customer.social_customer,
       customer_id: customer.id,
@@ -46,6 +48,8 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
       broadcast: broadcast,
       reservation: reservation
     )
+    
+    Rails.logger.info "[CreateEmail] ✅ SocialMessage作成成功: ID=#{social_message.id}, reservation_id=#{social_message.reservation_id}"
 
     CustomerMailer.with(
       customer: customer,
