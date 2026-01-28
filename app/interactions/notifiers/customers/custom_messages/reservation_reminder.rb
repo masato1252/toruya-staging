@@ -45,15 +45,16 @@ module Notifiers
         private
 
         def check_duplicate_delivery
-          # 過去30分以内に同じ予約・同じ顧客へのメッセージが送信されているかチェック
-          # 予約日時を含むメッセージで判定
+          # 過去30分以内に同じ予約・同じ顧客・同じカスタムメッセージが送信されているかチェック
           time_window = 30.minutes.ago
           
           SocialMessage.where(
             customer_id: receiver.id,
-            user_id: reservation.user_id
-          ).where("raw_content LIKE ?", "%#{reservation.start_time.strftime('%Y年%-m月%-d日')}%")
-           .where("created_at >= ?", time_window)
+            user_id: reservation.user_id,
+            channel: 'email', # メールのみ対象
+            custom_message_id: custom_message.id, # 同じカスタムメッセージで区別
+            reservation_id: reservation.id # 同じ予約で区別
+          ).where("created_at >= ?", time_window)
            .exists?
         end
 
