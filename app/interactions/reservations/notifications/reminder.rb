@@ -11,7 +11,7 @@ module Reservations
       Rails.logger.info "[Reminder] remind_customer?: #{reservation.remind_customer?(customer)}"
       
       # 重複送信チェック：過去2時間以内に同じリマインダーが送信されていないか確認
-      already_sent = SocialMessage.where(
+      already_sent = ::SocialMessage.where(
         customer_id: customer.id,
         user_id: reservation.user_id,
         channel: 'email',

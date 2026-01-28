@@ -40,7 +40,7 @@ namespace :reservations do
       
       reservation.customers.each do |customer|
         # メール送信履歴をチェック（過去2時間以内）
-        sent_message = SocialMessage.where(
+        sent_message = ::SocialMessage.where(
           customer_id: customer.id,
           user_id: reservation.user_id,
           channel: 'email',

@@ -48,7 +48,7 @@ module Notifiers
           # 過去30分以内に同じ予約・同じ顧客・同じカスタムメッセージが送信されているかチェック
           time_window = 30.minutes.ago
           
-          SocialMessage.where(
+          ::SocialMessage.where(
             customer_id: receiver.id,
             user_id: reservation.user_id,
             channel: 'email', # メールのみ対象
