@@ -43,7 +43,8 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
       sent_at: Time.current,
       message_type: "bot",
       channel: SocialMessage.channels[:email],
-      broadcast: broadcast
+      broadcast: broadcast,
+      reservation: reservation
     )
 
     CustomerMailer.with(
