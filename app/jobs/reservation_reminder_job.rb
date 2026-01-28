@@ -13,9 +13,8 @@ class ReservationReminderJob < ApplicationJob
         customer_id: customer.id,
         user_id: reservation.user_id,
         channel: 'email',
-        message_type: ['bot', 'customer']
-      ).where("raw_content LIKE ?", "%#{reservation.start_time.strftime('%Y年%-m月%-d日')}%")
-       .where("created_at >= ?", Time.current - 2.hours)
+        reservation_id: reservation.id
+      ).where("created_at >= ?", Time.current - 2.hours)
        .exists?
 
       if already_sent
