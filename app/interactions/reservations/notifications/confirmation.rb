@@ -40,6 +40,29 @@ module Reservations
 
         Translator.perform(template, reservation.message_template_variables(customer))
       end
+
+      # 予約確定通知のCustomMessageを取得（重複チェック用）
+      def custom_message_for_tracking
+        @custom_message_for_tracking ||= begin
+          reservation_customer = ReservationCustomer.find_by(customer: customer, reservation: reservation)
+          return nil unless reservation_customer
+
+          # booking_pageがあり、カスタムメッセージを使う場合
+          if reservation_customer.booking_page.present? && !reservation_customer.booking_page.use_shop_default_message
+            CustomMessage.find_by(
+              service_type: "BookingPage",
+              service_id: reservation_customer.booking_page.id,
+              scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
+              after_days: nil
+            )
+          end || CustomMessage.find_by(
+            service_type: "Shop",
+            service_id: reservation.shop.id,
+            scenario: ::CustomMessages::Customers::Template::RESERVATION_CONFIRMED,
+            after_days: nil
+          )
+        end
+      end
     end
   end
 end
