@@ -17,7 +17,12 @@ module Notifiers
         end
 
   def deliverable
-    result = if custom_message.after_days
+    # 重複送信チェック：過去30分以内に同じリマインダーが送信されていないか確認
+    already_sent = check_duplicate_delivery
+    
+    result = if already_sent
+      false
+    elsif custom_message.after_days
       reservation.reminderable? && expected_schedule_time && reservation.remind_customer?(receiver)
     else
       expected_schedule_time && reservation.remind_customer?(receiver)
@@ -26,8 +31,9 @@ module Notifiers
     Rails.logger.info "[ReservationReminder] ===== カスタムリマインド実行チェック ====="
     Rails.logger.info "[ReservationReminder] reservation_id: #{reservation.id}, receiver_id: #{receiver.id}"
     Rails.logger.info "[ReservationReminder] custom_message: #{custom_message.scenario} (#{custom_message.before_minutes ? "#{custom_message.before_minutes}分前" : "#{custom_message.after_days}日後"})"
+    Rails.logger.info "[ReservationReminder] already_sent?: #{already_sent}"
     Rails.logger.info "[ReservationReminder] deliverable?: #{result}"
-    if !result
+    if !result && !already_sent
       Rails.logger.info "[ReservationReminder]   - reminderable?: #{reservation.reminderable?}" if custom_message.after_days
       Rails.logger.info "[ReservationReminder]   - expected_schedule_time?: #{expected_schedule_time}"
       Rails.logger.info "[ReservationReminder]   - remind_customer?: #{reservation.remind_customer?(receiver)}"
@@ -37,6 +43,19 @@ module Notifiers
   end
 
         private
+
+        def check_duplicate_delivery
+          # 過去30分以内に同じ予約・同じ顧客へのメッセージが送信されているかチェック
+          # 予約日時を含むメッセージで判定
+          time_window = 30.minutes.ago
+          
+          SocialMessage.where(
+            customer_id: receiver.id,
+            user_id: reservation.user_id
+          ).where("raw_content LIKE ?", "%#{reservation.start_time.strftime('%Y年%-m月%-d日')}%")
+           .where("created_at >= ?", time_window)
+           .exists?
+        end
 
         def expected_schedule_time
           if schedule_at && custom_message.before_minutes

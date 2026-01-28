@@ -34,7 +34,31 @@ namespace :reservations do
                                    date_before_reservation.end_of_hour)
 
     reservations.find_each do |reservation|
-      ReservationReminderJob.perform_later(reservation)
+      # 24時間前リマインダーが過去2時間以内に既に送信済みかチェック
+      # 各顧客に対してメッセージが送信されているか確認
+      already_sent = false
+      
+      reservation.customers.each do |customer|
+        # メール送信履歴をチェック（過去2時間以内）
+        sent_message = SocialMessage.where(
+          customer_id: customer.id,
+          user_id: reservation.user_id,
+          channel: 'email',
+          message_type: ['bot', 'customer']
+        ).where("raw_content LIKE ?", "%#{reservation.start_time.strftime('%Y年%-m月%-d日')}%")
+         .where("created_at >= ?", Time.current - 2.hours)
+         .exists?
+
+        if sent_message
+          already_sent = true
+          Rails.logger.info "[Reminder] Skip: reservation_id=#{reservation.id}, customer_id=#{customer.id} - Already sent within 2 hours"
+          break
+        end
+      end
+
+      unless already_sent
+        ReservationReminderJob.perform_later(reservation)
+      end
     end
   end
 end
