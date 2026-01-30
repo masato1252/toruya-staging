@@ -53,7 +53,7 @@
           <%# LINE通知リクエスト課金の場合 %>
           <tr>
             <td><%= I18n.t("settings.plans.payment.line_notice_request") %></td>
-            <td>1件</td>
+            <td></td>
             <td><%= @charge.amount_money.format %></td>
           </tr>
         <% elsif @charge.completed? %>
