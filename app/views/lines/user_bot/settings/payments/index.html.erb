@@ -18,7 +18,13 @@
             <% @charges.each do |charge| %>
               <tr>
                 <td><%= l(charge.created_at.to_date) %></td>
-                <td><%= charge.amount.format %></td>
+                <td>
+                  <% if charge.is_a?(LineNoticeCharge) %>
+                    <%= charge.amount_money.format %>
+                  <% else %>
+                    <%= charge.amount.format %>
+                  <% end %>
+                </td>
                 <td><%= charge_description(charge) %> <%= "(#{t("settings.plans.payment.refund")})" if charge.respond_to?(:refunded?) && charge.refunded? %></td>
                 <td>
                   <% if charge.is_a?(LineNoticeCharge) %>
