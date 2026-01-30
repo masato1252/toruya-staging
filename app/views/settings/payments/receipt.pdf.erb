@@ -20,7 +20,11 @@
       <% if @charge.refunded?%>
         <span class="refund-amount-tip"><%= I18n.t("settings.subscription.receipt.refund.amount_tip") %> </span>
       <% end %>
-        <%= @charge.amount.format %>
+        <% if @charge.is_a?(LineNoticeCharge) %>
+          <%= @charge.amount_money.format %>
+        <% else %>
+          <%= @charge.amount.format %>
+        <% end %>
       </div>
       <div>
         <%= raw I18n.t("settings.subscription.receipt.desc2_html") %>
