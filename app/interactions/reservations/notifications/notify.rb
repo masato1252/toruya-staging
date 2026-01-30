@@ -103,12 +103,19 @@ module Reservations
         business_owner.customer_notification_channel
       end
 
-      # 無料プランの場合、emailが優先チャネルならLINEへのフォールバックを防ぐ
+      # 無料プランの場合、LINE通知リクエストの承認状態をチェックしてLINEを除外
       def notification_priority_for(preferred_channel)
-        # 無料プランでemailが優先の場合（= LINE通知リクエスト未承認）
-        if business_owner.subscription.in_free_plan? && preferred_channel.to_s == "email"
-          # LINEを除外したフォールバック順序（email → SMS）
-          return %w[email sms]
+        # 無料プランの場合、LINE通知リクエストの承認状態を確認
+        if business_owner.subscription.in_free_plan?
+          approved_request = LineNoticeRequest.approved
+            .where(reservation_id: reservation.id)
+            .exists?
+          
+          # LINE通知リクエストが承認されていない場合、LINEを除外
+          unless approved_request
+            # preferred_channelに関わらず、LINEを除外したフォールバック順序
+            return %w[email sms]
+          end
         end
         
         # それ以外は通常のフォールバック（親クラスの実装を使用）
