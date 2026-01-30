@@ -94,12 +94,12 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
 
     if format == :html
       separator = "<br><br>--------------------<br>"
-      notice_text = I18n.t('customer_mailer.line_notice_request.invitation_html', request_url: request_url)
+      notice_text = I18n.t('customer_mailer.line_notice_request.email.invitation_html', request_url: request_url)
       # original_messageは既にHTMLの改行が適用済み
       [original_message, separator, notice_text].join
     else
       separator = "\n\n--------------------\n"
-      notice_text = I18n.t('customer_mailer.line_notice_request.invitation_text', request_url: request_url)
+      notice_text = I18n.t('customer_mailer.line_notice_request.email.invitation_text', request_url: request_url)
       [original_message, separator, notice_text].join
     end
   end
@@ -110,12 +110,12 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
     
     if format == :html
       separator = "<br><br>--------------------<br>"
-      notice_text = I18n.t('customer_mailer.line_notice_request.pending_approval_html')
+      notice_text = I18n.t('customer_mailer.line_notice_request.email.pending_approval_html')
       # original_messageは既にHTMLの改行が適用済み
       [original_message, separator, notice_text].join
     else
       separator = "\n\n--------------------\n"
-      notice_text = I18n.t('customer_mailer.line_notice_request.pending_approval_text')
+      notice_text = I18n.t('customer_mailer.line_notice_request.email.pending_approval_text')
       [original_message, separator, notice_text].join
     end
   end
