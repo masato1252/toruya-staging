@@ -54,14 +54,14 @@
           <tr>
             <td><%= I18n.t("settings.plans.payment.line_notice_request") %></td>
             <td>1件</td>
-            <td><%= @charge.amount.format %></td>
+            <td><%= @charge.amount_money.format %></td>
           </tr>
         <% elsif @charge.completed? %>
           <% if @charge.shop_fee? %>
             <tr>
               <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>
               <td>1<%= I18n.t("settings.subscription.receipt.shop") %></td>
-              <td><%= @charge.amount.format %></td>
+              <td><%= @charge.is_a?(LineNoticeCharge) ? @charge.amount_money.format : @charge.amount.format %></td>
             </tr>
           <% else %>
             <tr>
@@ -86,13 +86,13 @@
               <%= @charge.details["plan_name"] %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)
             </td>
             <td>
-              <%= @charge.amount.format %>
+              <%= @charge.is_a?(LineNoticeCharge) ? @charge.amount_money.format : @charge.amount.format %>
             </td>
           </tr>
           <tr>
             <td><%= I18n.t("settings.subscription.receipt.refund.plan") %>: </td>
             <td><%= @charge.details["plan_name"] %> クーリングオフ返金</td>
-            <td><%= @charge.amount.format %></td>
+            <td><%= @charge.is_a?(LineNoticeCharge) ? @charge.amount_money.format : @charge.amount.format %></td>
           </tr>
         <% end %>
       </tbody>
