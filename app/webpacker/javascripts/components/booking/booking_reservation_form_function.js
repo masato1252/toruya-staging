@@ -597,6 +597,9 @@ const BookingReservationFormFunction = ({props}) => {
             i18n={props.i18n}
             support_phonetic_name={props.support_feature_flags.support_phonetic_name}
             locale={props.locale}
+            is_free_plan={props.is_free_plan}
+            is_trial_member={props.is_trial_member}
+            has_customer_line_connection={!!booking_reservation_form_values.social_user_id}
           />
         )}
         {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer) && props.booking_page.survey && !is_survey_done && (

@@ -112,7 +112,7 @@ ja:
     no_more_message: メッセージ終了
     view_more: もっと見る
     verify_identity: 確認する
-    complete: 完了
+    complete: 次　へ
     survey_save: 保存して次へ
     change_channel: 通知方式を変更する
   common:
@@ -146,13 +146,13 @@ ja:
     address_street1: 続き住所
     address_street2: 建物名／部屋番号
     address: 住所
-    phone_number: 電話番号
+    phone_number: 携帯番号
     cellphone_number: 携帯電話番号
     participants_full: 額滿
-    email: メール
+    email: メールアドレス
     birthday: 生年月日
     memo: メモ
-    name: 氏名
+    name: お名前
     name2: お名前
     last_name: 姓
     first_name: 名

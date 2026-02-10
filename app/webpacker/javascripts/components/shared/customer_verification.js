@@ -6,19 +6,19 @@ import { ErrorMessage } from "shared/components";
 
 // 国番号の定数
 const COUNTRY_CODES = [
-  { code: '+81', label: '🇯🇵 日本 (+81)', country: 'JP' },
-  { code: '+1', label: '🇺🇸 アメリカ (+1)', country: 'US' },
-  { code: '+86', label: '🇨🇳 中国 (+86)', country: 'CN' },
-  { code: '+82', label: '🇰🇷 韓国 (+82)', country: 'KR' },
-  { code: '+886', label: '🇹🇼 台湾 (+886)', country: 'TW' },
-  { code: '+852', label: '🇭🇰 香港 (+852)', country: 'HK' },
-  { code: '+65', label: '🇸🇬 シンガポール (+65)', country: 'SG' },
-  { code: '+66', label: '🇹🇭 タイ (+66)', country: 'TH' },
-  { code: '+84', label: '🇻🇳 ベトナム (+84)', country: 'VN' },
-  { code: '+63', label: '🇵🇭 フィリピン (+63)', country: 'PH' },
-  { code: '+44', label: '🇬🇧 イギリス (+44)', country: 'GB' },
-  { code: '+33', label: '🇫🇷 フランス (+33)', country: 'FR' },
-  { code: '+49', label: '🇩🇪 ドイツ (+49)', country: 'DE' },
+  { code: '+81', label: '🇯🇵 日本', country: 'JP' },
+  { code: '+1', label: '🇺🇸 アメリカ', country: 'US' },
+  { code: '+86', label: '🇨🇳 中国', country: 'CN' },
+  { code: '+82', label: '🇰🇷 韓国', country: 'KR' },
+  { code: '+886', label: '🇹🇼 台湾', country: 'TW' },
+  { code: '+852', label: '🇭🇰 香港', country: 'HK' },
+  { code: '+65', label: '🇸🇬 シンガポール', country: 'SG' },
+  { code: '+66', label: '🇹🇭 タイ', country: 'TH' },
+  { code: '+84', label: '🇻🇳 ベトナム', country: 'VN' },
+  { code: '+63', label: '🇵🇭 フィリピン', country: 'PH' },
+  { code: '+44', label: '🇬🇧 イギリス', country: 'GB' },
+  { code: '+33', label: '🇫🇷 フランス', country: 'FR' },
+  { code: '+49', label: '🇩🇪 ドイツ', country: 'DE' },
 ];
 
 // Basic information form
@@ -37,7 +37,8 @@ export const CustomerBasicInfoForm = ({
   isEmailVerified,
   isBasicInfoValid,
   verificationStep,
-  locale
+  locale,
+  isEmailRequired = true // デフォルトは必須
 }) => {
   const {
     customer_phonetic_name_failed_message,
@@ -100,7 +101,8 @@ export const CustomerBasicInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.email")} <span className="required">*</span>
+        {I18n.t("common.email")}
+        {isEmailRequired && <span className="required">*</span>}
       </h4>
       <input
         type="email"
@@ -244,13 +246,14 @@ export const CustomerInfoForm = ({
   handleSubmit,
   isSubmitting,
   errors,
+  isEmailRequired = true, // デフォルトは必須
 }) => {
   const defaultCountryCode = customer_country_code || '+81';
   
   return (
     <div className="customer-type-options">
       <h4>
-        {I18n.t("common.name")}
+        {I18n.t("common.name")} <span className="required">必須項目</span>
       </h4>
       <div>
         <input
@@ -298,19 +301,7 @@ export const CustomerInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.email")} <span className="required">*</span>
-      </h4>
-      <input
-        type="email"
-        className="form-control"
-        value={customer_email || ""}
-        onChange={(e) => handleChange('customer_email', e.target.value)}
-        placeholder="example@example.com"
-      />
-      <ErrorMessage error={errors?.customer_email_failed_message} />
-
-      <h4>
-        {I18n.t("common.phone_number")} <span className="required">*</span>
+        {I18n.t("common.phone_number")} <span className="required">必須項目</span>
       </h4>
       <div style={{ display: 'flex', gap: '8px' }}>
         <select
@@ -331,16 +322,30 @@ export const CustomerInfoForm = ({
           style={{ flex: 1 }}
           value={customer_phone_number || ""}
           onChange={(e) => handleChange('customer_phone_number', e.target.value)}
-          placeholder="9012345678"
+          placeholder="09012345678"
         />
       </div>
+      <ErrorMessage error={errors?.customer_phone_number_failed_message} />
+
+      <h4>
+        {I18n.t("common.email")}
+        {isEmailRequired && <span className="required">必須項目</span>}
+      </h4>
+      <input
+        type="email"
+        className="form-control"
+        value={customer_email || ""}
+        onChange={(e) => handleChange('customer_email', e.target.value)}
+        placeholder="example@example.com"
+      />
+      <ErrorMessage error={errors?.customer_email_failed_message} />
 
       <div className="centerize" style={{ marginTop: '20px' }}>
         <a
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_email || !customer_phone_number}
+          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_phone_number || (isEmailRequired && !customer_email)}
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
