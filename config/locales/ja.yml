@@ -177,7 +177,7 @@ ja:
     accept_in_canceled: 予約復活
     shop_closed: 営業時間外
     cancel: 全員キャンセル
-    refund: 払　戻
+    refund: "払　戻"
     customer_cancel: 予約キャンセル
     cancel_confirmation_message: キャンセルされた予約は顧客台帳からご確認いただけます。
     pending: 承認待ち
@@ -219,7 +219,7 @@ ja:
       refund:
         title: 返金する
         message: "返金は %{provider} を通して行われます。返済のタイミングや手数料については %{provider} へお問合せください。"
-        submit_btn: 返　金
+        submit_btn: "返　金"
         confirmation_message: "このまま %{provider} から返金を実行しますか？"
       staff_states:
         title: 予約を承認

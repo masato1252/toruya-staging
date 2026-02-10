@@ -13,7 +13,7 @@ ja:
     remember_me: 次回から入力を省略する
     reminder_desc: 予約の通知を受け取る
     confirm_customer_info: 確認コード送信
-    next_step: 次　へ
+    next_step: "次　へ"
     confirm_reservation: 仮予約を確定する
     not_me: 様でない場合はこちら
     edit_info: 個人情報を編集する

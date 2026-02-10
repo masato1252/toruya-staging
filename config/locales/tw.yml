@@ -173,7 +173,7 @@ tw:
     accept_in_canceled: 恢復預約
     shop_closed: 非營業時間
     cancel: 全員取消
-    refund: 退　款
+    refund: "退　款"
     customer_cancel: 取消預約
     cancel_confirmation_message: 您可以在客戶資料中查看已取消的預約。
     pending: 待確認
@@ -215,7 +215,7 @@ tw:
       refund:
         title: 退款
         message: "退款將透過 %{provider} 進行。關於退款時間和手續費，請向 %{provider} 詢問。"
-        submit_btn: 退　款
+        submit_btn: "退　款"
         confirmation_message: "確定要透過 %{provider} 進行退款嗎？"
       staff_states:
         title: 確認預約
