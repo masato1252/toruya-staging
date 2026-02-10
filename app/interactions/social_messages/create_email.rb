@@ -5,11 +5,13 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
   string :subject
   object :broadcast, default: nil
   object :reservation, default: nil  # 予約関連の通知の場合に渡される
+  object :custom_message, default: nil  # メッセージの種類を識別するためのCustomMessage
 
   def execute
     Rails.logger.info "[CreateEmail] ===== メール送信開始 ====="
     Rails.logger.info "[CreateEmail] customer_id: #{customer.id}, email: #{email}"
     Rails.logger.info "[CreateEmail] reservation: #{reservation.present? ? "ID=#{reservation.id}" : 'nil'}"
+    Rails.logger.info "[CreateEmail] custom_message: #{custom_message.present? ? "ID=#{custom_message.id}, scenario=#{custom_message.scenario}" : 'nil'}"
     Rails.logger.info "[CreateEmail] subject: #{subject}"
     
     # メッセージに予約関連のLINE通知リクエスト案内を追加
@@ -31,8 +33,11 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
     end
     Rails.logger.info "[CreateEmail] text_message length: #{text_message.length} (original: #{message.length})"
     Rails.logger.info "[CreateEmail] LINE案内追加: #{text_message.length > message.length ? 'YES' : 'NO'}"
+    Rails.logger.info "[CreateEmail] ===== SocialMessage作成開始 ====="
+    Rails.logger.info "[CreateEmail] reservation_id: #{reservation&.id}"
+    Rails.logger.info "[CreateEmail] custom_message_id: #{custom_message&.id}"
 
-    SocialMessage.create!(
+    social_message = SocialMessage.create!(
       social_account: customer.social_customer&.social_account,
       social_customer: customer.social_customer,
       customer_id: customer.id,
@@ -43,8 +48,12 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
       sent_at: Time.current,
       message_type: "bot",
       channel: SocialMessage.channels[:email],
-      broadcast: broadcast
+      broadcast: broadcast,
+      reservation: reservation,
+      custom_message_id: custom_message&.id  # CustomMessage IDを保存
     )
+    
+    Rails.logger.info "[CreateEmail] ✅ SocialMessage作成成功: ID=#{social_message.id}, reservation_id=#{social_message.reservation_id}, custom_message_id=#{social_message.custom_message_id}"
 
     CustomerMailer.with(
       customer: customer,

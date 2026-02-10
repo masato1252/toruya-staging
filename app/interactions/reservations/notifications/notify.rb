@@ -63,8 +63,15 @@ module Reservations
           email: mail,
           message: message,
           subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name),
-          reservation: reservation
+          reservation: reservation,
+          custom_message: custom_message_for_tracking
         )
+      end
+
+      # メッセージの種類を識別するためのCustomMessageオブジェクト
+      # サブクラスでオーバーライドして適切なCustomMessageを返す
+      def custom_message_for_tracking
+        nil
       end
 
       def notify_by_sms

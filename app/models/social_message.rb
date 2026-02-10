@@ -37,6 +37,8 @@ class SocialMessage < ApplicationRecord
   belongs_to :customer, optional: true
   belongs_to :staff, optional: true
   belongs_to :broadcast, optional: true
+  belongs_to :reservation, optional: true
+  belongs_to :custom_message, optional: true
   has_one_attached :image
   scan_attachment :image
 

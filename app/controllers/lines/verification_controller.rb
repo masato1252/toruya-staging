@@ -66,6 +66,15 @@ class Lines::VerificationController < ActionController::Base
       end
     end
 
+    # 今回の処理で検証が完了したかチェック
+    was_not_ready = !@message_api_ready
+    now_ready = current_user.social_account&.message_api_verified?
+
+    # 初めて検証完了した場合のみメッセージ送信
+    if was_not_ready && now_ready
+      Notifiers::Users::LineSettingsVerified.run(receiver: current_user)
+    end
+
     if current_user.social_account&.line_settings_verified?
       SocialAccounts::RichMenus::SwitchToOfficial.run(social_account: current_user.social_account)
     end
