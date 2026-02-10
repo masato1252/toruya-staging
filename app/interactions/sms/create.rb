@@ -11,7 +11,7 @@ module Sms
     object :reservation, default: nil
 
     def execute
-      # メッセージにLINE通知リクエスト案内を追加（メールと同じ条件）
+      # メッセージにLINE通知リクエスト案内または連携のススメを追加（メールと同じ条件）
       final_message = append_line_notice_request_info(message)
       
       SmsClient.send(phone_number, final_message, user&.locale || customer&.locale || "ja")
@@ -52,28 +52,36 @@ module Sms
     private
 
     def append_line_notice_request_info(original_message)
-      # 予約がない、または無料プランでない、またはLINE連携未完了の場合は追加しない
-      return original_message unless should_show_line_notice_request_info?
+      # 予約がない、顧客がいない、またはLINE連携未完了の場合は追加しない
+      return original_message unless reservation.present?
+      return original_message unless customer.present?
+      return original_message unless customer.user.social_account&.line_settings_verified?
 
-      # 既にリクエスト済みかどうかを確認
-      existing_request = LineNoticeRequest.pending.find_by(reservation_id: reservation.id)
+      # マインドマップに基づく条件分岐
+      if should_show_line_request_notice?
+        # 既にリクエスト済みかどうかを確認
+        existing_request = LineNoticeRequest.pending.find_by(reservation_id: reservation.id)
 
-      if existing_request
-        # リクエスト済みの場合
-        append_pending_request_notice(original_message)
+        if existing_request
+          append_pending_request_notice(original_message)
+        else
+          append_request_invitation(original_message)
+        end
+      elsif should_show_line_recommendation?
+        append_line_recommendation(original_message)
       else
-        # 未リクエストの場合
-        append_request_invitation(original_message)
+        original_message
       end
     end
 
-    def should_show_line_notice_request_info?
-      return false unless reservation.present?
-      return false unless customer.present?
-      return false unless customer.user.subscription.current_plan.free_level?
-      return false unless customer.user.social_account&.line_settings_verified?
-      
-      true
+    def should_show_line_request_notice?
+      # 無料プラン（試用期間外）の場合のみ
+      customer.user.subscription.in_free_plan? && !customer.user.trial_member?
+    end
+
+    def should_show_line_recommendation?
+      # 顧客LINE連携なし + (有料プラン or 試用期間中)
+      customer.social_customer.nil? && (!customer.user.subscription.in_free_plan? || customer.user.trial_member?)
     end
 
     def append_request_invitation(original_message)
@@ -84,13 +92,26 @@ module Sms
       )
 
       separator = "\n\n--------------------\n"
-      notice_text = I18n.t('customer_mailer.line_notice_request.sms.invitation_text', request_url: request_url)
+      notice_text = I18n.t('customer_mailer.line_notice_request.sms_invitation_text', request_url: request_url)
       [original_message, separator, notice_text].join
     end
 
     def append_pending_request_notice(original_message)
       separator = "\n\n--------------------\n"
-      notice_text = I18n.t('customer_mailer.line_notice_request.sms.pending_approval_text')
+      notice_text = I18n.t('customer_mailer.line_notice_request.sms_pending_approval_text')
+      [original_message, separator, notice_text].join
+    end
+
+    def append_line_recommendation(original_message)
+      # 顧客の店舗側へのLINE連携URL
+      line_connect_url = Rails.application.routes.url_helpers.user_line_omniauth_authorize_url(
+        host: ENV['APP_HOST'] || 'toruya.com',
+        protocol: 'https',
+        who: customer.user.id  # 店舗ID
+      )
+
+      separator = "\n\n--------------------\n"
+      notice_text = I18n.t('customer_mailer.line_notice_request.sms_line_recommendation_text', line_connect_url: line_connect_url)
       [original_message, separator, notice_text].join
     end
   end

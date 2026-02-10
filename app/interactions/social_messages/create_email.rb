@@ -67,27 +67,39 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
   private
 
   def append_line_notice_request_info(original_message, format:)
-    # 予約がない、または無料プランでない、またはLINE連携未完了の場合は追加しない
-    return original_message unless should_show_line_notice_request_info?
+    # 予約がない、またはLINE連携未完了の場合は追加しない
+    return original_message unless reservation.present?
+    return original_message unless customer.user.social_account&.line_settings_verified?
 
-    # 既にリクエスト済みかどうかを確認
-    existing_request = LineNoticeRequest.pending.find_by(reservation_id: reservation.id)
+    # マインドマップに基づく条件分岐
+    # 1. リクエスト文（通常）：無料プラン（試用期間外）
+    # 2. 連携のススメ：顧客LINE連携なし + (有料プラン or 試用期間中)
+    
+    if should_show_line_request_notice?
+      # 既にリクエスト済みかどうかを確認
+      existing_request = LineNoticeRequest.pending.find_by(reservation_id: reservation.id)
 
-    if existing_request
-      # リクエスト済みの場合
-      append_pending_request_notice(original_message, format: format)
+      if existing_request
+        append_pending_request_notice(original_message, format: format)
+      else
+        append_request_invitation(original_message, format: format)
+      end
+    elsif should_show_line_recommendation?
+      append_line_recommendation(original_message, format: format)
     else
-      # 未リクエストの場合
-      append_request_invitation(original_message, format: format)
+      original_message
     end
   end
 
-  def should_show_line_notice_request_info?
-    return false unless reservation.present?
-    return false unless customer.user.subscription.current_plan.free_level?
-    return false unless customer.user.social_account&.line_settings_verified?
-    
-    true
+  def should_show_line_request_notice?
+    # 無料プラン（試用期間外）の場合のみ
+    # ※顧客LINE連携の有無は関係なし
+    customer.user.subscription.in_free_plan? && !customer.user.trial_member?
+  end
+
+  def should_show_line_recommendation?
+    # 顧客LINE連携なし + (有料プラン or 試用期間中)
+    customer.social_customer.nil? && (!customer.user.subscription.in_free_plan? || customer.user.trial_member?)
   end
 
   def append_request_invitation(original_message, format:)
@@ -125,6 +137,29 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
     else
       separator = "\n\n--------------------\n"
       notice_text = I18n.t('customer_mailer.line_notice_request.email.pending_approval_text')
+      [original_message, separator, notice_text].join
+    end
+  end
+
+  def append_line_recommendation(original_message, format:)
+    # 顧客の店舗側へのLINE連携URL
+    line_connect_url = Rails.application.routes.url_helpers.user_line_omniauth_authorize_url(
+      host: ENV['APP_HOST'] || 'toruya.com',
+      protocol: 'https',
+      who: customer.user.id  # 店舗ID
+    )
+
+    # すべての文字列をUTF-8に統一
+    original_message = original_message.force_encoding('UTF-8')
+    line_connect_url = line_connect_url.force_encoding('UTF-8')
+
+    if format == :html
+      separator = "<br><br>--------------------<br>"
+      notice_text = I18n.t('customer_mailer.line_notice_request.line_recommendation_html', line_connect_url: line_connect_url)
+      [original_message, separator, notice_text].join
+    else
+      separator = "\n\n--------------------\n"
+      notice_text = I18n.t('customer_mailer.line_notice_request.line_recommendation_text', line_connect_url: line_connect_url)
       [original_message, separator, notice_text].join
     end
   end
