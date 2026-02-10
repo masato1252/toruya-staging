@@ -53,8 +53,8 @@ tw:
         invitation_text: |
           由於店主（用戶）的設定，通知透過電子郵件發送。如果您希望透過LINE接收未來的通知，請透過以下連結進行LINE連接，並向店主發送請求。
 
-        ＜請求LINE通知＞
-        %{request_url}
+          ＜請求LINE通知＞
+          %{request_url}
       pending_approval_html: |
         您已請求LINE通知，但在店主批准之前，通知將透過電子郵件發送。請等待店主批准。
       pending_approval_text: |
