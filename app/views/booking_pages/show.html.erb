@@ -42,6 +42,7 @@
     business_owner_id: @booking_page.user_id,
     customer_notification_channel: @booking_page.user.customer_notification_channel,
     is_free_plan: @booking_page.user.subscription.current_plan.free_level?,
+    is_trial_member: @booking_page.user.trial_member?,
     line_settings_verified: @booking_page.user.social_account&.line_settings_verified?,
     booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled", "multiple_selection", "payment_option").merge!({
       shop_logo_url: shop_logo_url(@booking_page.shop, "260"),

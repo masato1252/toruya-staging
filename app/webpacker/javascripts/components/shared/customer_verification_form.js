@@ -16,7 +16,10 @@ const CustomerVerificationForm = ({
   setCustomerFound,
   support_phonetic_name,
   verification_required,
-  locale
+  locale,
+  is_free_plan,
+  is_trial_member,
+  has_customer_line_connection
 }) => {
   const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
 
@@ -95,6 +98,11 @@ const CustomerVerificationForm = ({
 
     if (support_phonetic_name) {
       isValid = isValid && customer_phonetic_last_name && customer_phonetic_first_name;
+    }
+
+    // メールアドレスが必須の場合のみチェック
+    if (isEmailRequired()) {
+      isValid = isValid && customer_email;
     }
 
     return isValid;
@@ -238,6 +246,16 @@ const CustomerVerificationForm = ({
     }));
   };
 
+  // メールアドレスの必須判定
+  // 任意：有料プラン（試用期間外） + 顧客LINE連携あり
+  // それ以外：必須
+  const isEmailRequired = () => {
+    if (is_free_plan) return true; // 無料プラン：必須
+    if (is_trial_member) return true; // 試用期間中：必須
+    if (!has_customer_line_connection) return true; // LINE連携なし：必須
+    return false; // 有料プラン + LINE連携あり：任意
+  };
+
   // Common props for CustomerBasicInfoForm
   const commonBasicInfoProps = {
     customer_last_name,
@@ -255,7 +273,8 @@ const CustomerVerificationForm = ({
     isEmailVerified,
     isBasicInfoValid,
     verificationStep,
-    locale
+    locale,
+    isEmailRequired: isEmailRequired()
   };
 
   // Render component based on current step

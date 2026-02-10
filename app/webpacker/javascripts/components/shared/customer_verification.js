@@ -37,7 +37,8 @@ export const CustomerBasicInfoForm = ({
   isEmailVerified,
   isBasicInfoValid,
   verificationStep,
-  locale
+  locale,
+  isEmailRequired = true // デフォルトは必須
 }) => {
   const {
     customer_phonetic_name_failed_message,
@@ -100,7 +101,8 @@ export const CustomerBasicInfoForm = ({
       )}
 
       <h4>
-        {I18n.t("common.email")} <span className="required">*</span>
+        {I18n.t("common.email")}
+        {isEmailRequired && <span className="required">*</span>}
       </h4>
       <input
         type="email"
@@ -244,6 +246,7 @@ export const CustomerInfoForm = ({
   handleSubmit,
   isSubmitting,
   errors,
+  isEmailRequired = true, // デフォルトは必須
 }) => {
   const defaultCountryCode = customer_country_code || '+81';
   
@@ -326,6 +329,7 @@ export const CustomerInfoForm = ({
 
       <h4>
         {I18n.t("common.email")}
+        {isEmailRequired && <span className="required">必須項目</span>}
       </h4>
       <input
         type="email"
@@ -341,7 +345,7 @@ export const CustomerInfoForm = ({
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_phone_number}
+          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_phone_number || (isEmailRequired && !customer_email)}
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
