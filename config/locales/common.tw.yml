@@ -114,7 +114,7 @@ tw:
     no_more_message: 訊息已結束
     view_more: 查看更多
     verify_identity: 驗證
-    complete: 完成
+    complete: 下一步
     survey_save: 儲存
     change_channel: 變更通知方式
   common:
@@ -148,13 +148,13 @@ tw:
     address_street1: 街道地址
     address_street2: 大樓名稱／房號
     address: 地址
-    phone_number: 電話號碼
+    phone_number: 手機號碼
     cellphone_number: 手機號碼
     participants_full: 已額滿
-    email: 電子郵件
+    email: 電子郵件地址
     birthday: 生日
     memo: 備註
-    name: 姓名
+    name: 您的大名
     name2: 您的大名
     last_name: 姓
     first_name: 名
