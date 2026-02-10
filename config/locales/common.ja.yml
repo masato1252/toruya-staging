@@ -112,7 +112,7 @@ ja:
     no_more_message: メッセージ終了
     view_more: もっと見る
     verify_identity: 確認する
-    complete: 次　へ
+    complete: "次　へ"
     survey_save: 保存して次へ
     change_channel: 通知方式を変更する
   common:
