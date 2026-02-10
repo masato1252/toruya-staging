@@ -57,11 +57,8 @@ module SocialMessages
       end
 
       if is_message_from_customer
-        # TODO: Need to deal with other pending
-        # Switch user rich menu to tell users there are new messages
-        ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
-
         # Shop owner customer self send a confirmation message to toruya shop owner user
+        # Check this FIRST before HandleUnread to avoid interruption by errors
         if social_customer.is_owner && content == social_customer.social_user_id && social_customer.customer
           # Immediate execution for better UX - user sees completion message right away
           Notifiers::Users::LineSettingsVerified.run(receiver: social_user.user)
@@ -72,6 +69,10 @@ module SocialMessages
             SocialAccounts::RichMenus::CustomerReservations.run(social_account: social_account)
           end
         end
+
+        # TODO: Need to deal with other pending
+        # Switch user rich menu to tell users there are new messages
+        ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
 
         case content_type
         when IMAGE_TYPE
