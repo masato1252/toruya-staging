@@ -58,9 +58,9 @@ ja:
     save_as_schedule: 配信予約を保存
     call: 電話する
     send_message: メッセージ送信する
-    next_step: 次　へ
+    next_step: "次　へ"
     skip_step: 設定せずに次へ
-    prev_step: 戻　る
+    prev_step: "戻　る"
     no_need_setup: 設定せずに
     add_step: ステップを追加
     book_now: 今すぐ予約する

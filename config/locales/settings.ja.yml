@@ -254,7 +254,7 @@ ja:
       receipt:
         label: 領収書
         desc_html: ご利用ありがとうございます。<br>ご質問・お問合せは、Toruyaマネージャーのお問合せフォームよりご連絡ください。
-        desc2_html: 但し　インターネットサービスToruya利用料として<br>上記正に領収いたしました
+        desc2_html: "但し　インターネットサービスToruya利用料として<br>上記正に領収いたしました"
         date: お支払日
         transaction_id: 取引ID
         account: ご利用アカウント
