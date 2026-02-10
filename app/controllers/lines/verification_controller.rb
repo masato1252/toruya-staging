@@ -63,12 +63,6 @@ class Lines::VerificationController < ActionController::Base
       if all_requests_result.all?(false)
         Notifiers::Users::LineSettings::VerifyFailedMessage.run(receiver: current_user.social_user)
         Notifiers::Users::LineSettings::VerifyFailedVideo.run(receiver: current_user.social_user)
-      elsif all_requests_result.any?(true)
-        # テスト送信が成功し、message_api_verified?がtrueになった場合
-        # 即座に完了メッセージを送信
-        if current_user.social_account&.message_api_verified?
-          Notifiers::Users::LineSettingsVerified.run(receiver: current_user)
-        end
       end
     end
 
