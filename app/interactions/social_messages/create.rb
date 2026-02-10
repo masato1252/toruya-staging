@@ -64,12 +64,12 @@ module SocialMessages
         # Shop owner customer self send a confirmation message to toruya shop owner user
         if social_customer.is_owner && content == social_customer.social_user_id && social_customer.customer
           # Immediate execution for better UX - user sees completion message right away
-          Notifiers::Users::LineSettingsVerified.perform_later(receiver: social_user.user)
+          Notifiers::Users::LineSettingsVerified.run(receiver: social_user.user)
 
           if social_account.line_settings_verified?
             social_user.user.user_setting.update(customer_notification_channel: "line")
             # Immediate execution for better UX - user sees rich menu right away
-            SocialAccounts::RichMenus::CustomerReservations.perform_later(social_account: social_account)
+            SocialAccounts::RichMenus::CustomerReservations.run(social_account: social_account)
           end
         end
 
