@@ -22,11 +22,17 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
     menu_key ||= rich_menu_key
 
     if social_user.social_rich_menu_key != menu_key && !Rails.env.development?
-      compose(
-        ::RichMenus::Connect,
-        social_target: social_user,
-        social_rich_menu: ::SocialRichMenu.find_by!(social_name: menu_key, locale: social_user.locale)
-      )
+      social_rich_menu = ::SocialRichMenu.find_by(social_name: menu_key, locale: social_user.locale)
+      
+      if social_rich_menu
+        compose(
+          ::RichMenus::Connect,
+          social_target: social_user,
+          social_rich_menu: social_rich_menu
+        )
+      else
+        Rails.logger.warn("[SwitchRichMenu] SocialRichMenu not found: social_name=#{menu_key}, locale=#{social_user.locale}")
+      end
     end
   end
 
