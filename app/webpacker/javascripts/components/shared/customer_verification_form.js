@@ -202,10 +202,20 @@ const CustomerVerificationForm = ({
     setIsSubmitting(true);
 
     try {
-      // 国番号と電話番号を結合
-      const fullPhoneNumber = customer_country_code 
-        ? `${customer_country_code}${customer_phone_number}` 
-        : customer_phone_number;
+      // 電話番号が既に国番号を含んでいるかチェック
+      const phoneStr = String(customer_phone_number || '');
+      let fullPhoneNumber = customer_phone_number;
+      
+      // 電話番号が国番号で始まっていない場合のみ、国番号を追加
+      const startsWithCountryCode = phoneStr.startsWith('+');
+      if (!startsWithCountryCode && customer_country_code) {
+        // 日本の電話番号の場合、先頭の0を削除
+        let phoneToAppend = customer_phone_number;
+        if (customer_country_code === '+81' && phoneStr.startsWith('0')) {
+          phoneToAppend = phoneStr.substring(1);
+        }
+        fullPhoneNumber = `${customer_country_code}${phoneToAppend}`;
+      }
       
       const [_error, response] = await CustomerVerificationServices.createOrUpdateCustomer({
         user_id,
@@ -317,7 +327,7 @@ const CustomerVerificationForm = ({
   if (verification_required) {
     return renderCurrentStep();
   } else {
-    return <CustomerInfoForm {...commonBasicInfoProps} handleSubmit={submitVerifiedCustomer} isSubmitting={isSubmitting} />;
+    return <CustomerInfoForm {...commonBasicInfoProps} handleSubmit={submitVerifiedCustomer} isSubmitting={isSubmitting} isEmailRequired={isEmailRequired()} />;
   }
 }
 
