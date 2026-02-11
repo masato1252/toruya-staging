@@ -505,6 +505,7 @@ const BookingReservationFormFunction = ({props}) => {
           function_access_id={props.function_access_id}
           customer_notification_channel={props.customer_notification_channel}
           is_free_plan={props.is_free_plan}
+          is_trial_member={props.is_trial_member}
           line_settings_verified={props.line_settings_verified}
           reservation_id={booking_reservation_form_values.reservation_id}
         />

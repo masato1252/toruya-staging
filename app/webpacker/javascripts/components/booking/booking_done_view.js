@@ -19,6 +19,7 @@ const BookingDoneView = ({
   function_access_id,
   customer_notification_channel,
   is_free_plan,
+  is_trial_member,
   line_settings_verified,
   reservation_id
 }) => {
@@ -31,59 +32,86 @@ const BookingDoneView = ({
     back_to_book
   } = i18n.done
 
-  // 無料プランの場合の通知チャンネルメッセージを修正
+  // 送信方法に応じたメッセージを取得
   const getNotificationMessage = () => {
-    if (is_free_plan) {
-      // 無料プランの場合は常にメール通知
-      return message_email || I18n.t("booking_page.done.message_email");
+    let method = '';
+    if (customer_notification_channel === 'line') {
+      method = 'LINE';
+    } else if (customer_notification_channel === 'sms') {
+      method = 'ショートメッセージ';
     } else {
-      // 有料プランの場合は通知チャンネルに応じたメッセージ
-      if (customer_notification_channel === 'line') {
-        return message_line;
-      } else if (customer_notification_channel === 'sms') {
-        return message_sms;
-      } else {
-        return message_email;
-      }
+      method = 'メール';
     }
+    return `ご予約内容を${method}でお送りしています。`;
   };
 
-  // LINEリクエストボタンのURL
-  const lineNoticeRequestUrl = reservation_id ? `/line_notice_requests?reservation_id=${reservation_id}` : null;
-  
-  // LINEリクエストボタンを表示するか判定
-  const shouldShowLineRequestButton = is_free_plan && line_settings_verified && lineNoticeRequestUrl;
+  // 追加文の表示判定
+  const getAdditionalContent = () => {
+    // 店舗側LINE未連携の場合 → 何もなし
+    if (!line_settings_verified) {
+      return null;
+    }
+
+    // 店舗側LINE連携済みの場合
+    if (skip_social_customer) {
+      // ユーザ側「LINEを持っていない」を選択（LINEログインしていない時）
+      if (is_free_plan) {
+        // 店舗が無料プラン → 追加文①「LINE通知リクエスト案内文」
+        return {
+          type: 'line_request',
+          url: reservation_id ? `/line_notice_requests?reservation_id=${reservation_id}` : null
+        };
+      } else if (!is_trial_member) {
+        // 店舗が有料プラン加入中（試用期間外） → 追加文②「LINE連携のススメ」
+        return {
+          type: 'line_recommendation',
+          url: social_account_login_url
+        };
+      }
+    } else {
+      // ユーザ側LINEログイン状態で仮予約した時
+      if (is_free_plan) {
+        // 店舗が無料プラン → 追加文①「LINE通知リクエスト案内文」
+        return {
+          type: 'line_request',
+          url: reservation_id ? `/line_notice_requests?reservation_id=${reservation_id}` : null
+        };
+      }
+    }
+
+    return null;
+  };
+
+  const additionalContent = getAdditionalContent();
 
   return (
     <div className="done-view">
       <h3 className="title">
-        {title}
+        仮予約が完了しました
       </h3>
-      {
-        skip_social_customer && customer_notification_channel === 'line' ? (
-          <>
-            <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_line_message1_html") }} />
-            <div className="message" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.no_line_message2_html") }} />
-            <LineLoginBtn social_account_login_url={social_account_login_url} />
-          </>
-        ) : (
-          <>
-            <div className="message">
-              {getNotificationMessage()}
-            </div>
-            {!is_free_plan && customer_notification_channel === 'line' ? <CheckInLineBtn social_account_add_friend_url={social_account_add_friend_url} /> : null}
-            
-            {/* 無料プラン かつ LINE連携済み の場合、LINE通知リクエストボタンを表示 */}
-            {shouldShowLineRequestButton && (
-              <div className="margin-around">
-                <a href={lineNoticeRequestUrl} className="btn btn-success" style={{ backgroundColor: '#06C755', borderColor: '#06C755' }}>
-                  {I18n.t("booking_page.done.request_line_notice")}
-                </a>
-              </div>
-            )}
-          </>
-        )
-      }
+      
+      <div className="message">
+        {getNotificationMessage()}
+      </div>
+
+      {/* 追加文の表示 */}
+      {additionalContent && additionalContent.type === 'line_request' && additionalContent.url && (
+        <div className="margin-around">
+          <p>LINEで通知を受け取りたい方は<br />リクエストしてください。</p>
+          <a href={additionalContent.url} className="btn btn-success" style={{ backgroundColor: '#06C755', borderColor: '#06C755' }}>
+            LINEで通知をリクエスト
+          </a>
+        </div>
+      )}
+
+      {additionalContent && additionalContent.type === 'line_recommendation' && additionalContent.url && (
+        <div className="margin-around">
+          <p>LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます。</p>
+          <a href={additionalContent.url} className="btn btn-success" style={{ backgroundColor: '#06C755', borderColor: '#06C755' }}>
+            LINE連携
+          </a>
+        </div>
+      )}
 
       {tickets?.length > 0 && tickets.map(ticket => (
         <React.Fragment key={ticket.id}>
