@@ -10,29 +10,12 @@ module Reservations
       Rails.logger.info "[Reminder] reservation_id: #{reservation.id}, customer_id: #{customer.id}"
       Rails.logger.info "[Reminder] remind_customer?: #{reservation.remind_customer?(customer)}"
       
-      # 重複送信チェック：過去2時間以内に同じリマインダーが送信されていないか確認
-      # custom_message_idも条件に含める
-      cm_for_tracking = custom_message_for_tracking
-      already_sent = ::SocialMessage.where(
-        customer_id: customer.id,
-        user_id: reservation.user_id,
-        channel: 'email',
-        reservation_id: reservation.id,
-        custom_message_id: cm_for_tracking&.id  # custom_message_idで絞り込み（nilも含む）
-      ).where("created_at >= ?", Time.current - 2.hours)
-       .exists?
-
-      if already_sent
-        Rails.logger.info "[Reminder] ⚠️ 過去2時間以内に送信済みのためスキップ (custom_message_id: #{cm_for_tracking&.id})"
-        return
-      end
-      
       unless reservation.remind_customer?(customer)
         Rails.logger.info "[Reminder] ⚠️ remind_customer? が false のためスキップ"
         return
       end
 
-      Rails.logger.info "[Reminder] ✅ リマインド送信開始 (custom_message_id: #{cm_for_tracking&.id})"
+      Rails.logger.info "[Reminder] ✅ リマインド送信開始"
       super
     end
   end
