@@ -198,7 +198,29 @@ export const VerifiedCustomerForm = ({
   handleSubmit,
   isSubmitting,
 }) => {
-  const defaultCountryCode = customer_country_code || '+81';
+  // 電話番号から国番号を分離
+  const separatePhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return { countryCode: '+81', number: '' };
+    
+    const phoneStr = String(phoneNumber);
+    
+    // 国番号を探す
+    for (const country of COUNTRY_CODES) {
+      if (phoneStr.startsWith(country.code)) {
+        return {
+          countryCode: country.code,
+          number: phoneStr.substring(country.code.length)
+        };
+      }
+    }
+    
+    // 国番号が見つからない場合、デフォルトは+81
+    return { countryCode: '+81', number: phoneStr };
+  };
+  
+  const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number);
+  const defaultCountryCode = customer_country_code || initialCountryCode;
+  const displayPhoneNumber = initialNumber;
   
   return (
     <div className="customer-type-options">
@@ -222,7 +244,7 @@ export const VerifiedCustomerForm = ({
           type="tel"
           className="form-control"
           style={{ flex: 1 }}
-          value={customer_phone_number || ""}
+          value={displayPhoneNumber || ""}
           onChange={(e) => handleChange('customer_phone_number', e.target.value)}
           placeholder="9012345678"
         />
@@ -233,7 +255,7 @@ export const VerifiedCustomerForm = ({
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting || !customer_phone_number}
+          disabled={isSubmitting || !displayPhoneNumber}
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
@@ -259,7 +281,29 @@ export const CustomerInfoForm = ({
   errors,
   isEmailRequired = true, // デフォルトは必須
 }) => {
-  const defaultCountryCode = customer_country_code || '+81';
+  // 電話番号から国番号を分離
+  const separatePhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return { countryCode: '+81', number: '' };
+    
+    const phoneStr = String(phoneNumber);
+    
+    // 国番号を探す
+    for (const country of COUNTRY_CODES) {
+      if (phoneStr.startsWith(country.code)) {
+        return {
+          countryCode: country.code,
+          number: phoneStr.substring(country.code.length)
+        };
+      }
+    }
+    
+    // 国番号が見つからない場合、デフォルトは+81
+    return { countryCode: '+81', number: phoneStr };
+  };
+  
+  const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number);
+  const defaultCountryCode = customer_country_code || initialCountryCode;
+  const displayPhoneNumber = initialNumber;
   
   return (
     <div className="customer-type-options">
@@ -342,7 +386,7 @@ export const CustomerInfoForm = ({
           type="tel"
           className="form-control"
           style={{ flex: 1 }}
-          value={customer_phone_number || ""}
+          value={displayPhoneNumber || ""}
           onChange={(e) => handleChange('customer_phone_number', e.target.value)}
           placeholder="09012345678"
         />
@@ -367,7 +411,7 @@ export const CustomerInfoForm = ({
           href="#"
           className="btn btn-tarco submit"
           onClick={handleSubmit}
-          disabled={isSubmitting || !customer_last_name || !customer_first_name || !customer_phone_number || (isEmailRequired && !customer_email)}
+          disabled={isSubmitting || !customer_last_name || !customer_first_name || !displayPhoneNumber || (isEmailRequired && !customer_email)}
         >
           {isSubmitting ?
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> :
