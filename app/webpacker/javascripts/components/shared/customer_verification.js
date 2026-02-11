@@ -53,56 +53,67 @@ export const CustomerBasicInfoForm = ({
   return (
     <div className="customer-type-options">
       <h4>
-        {I18n.t("common.name")}
+        {I18n.t("common.name")} <span className="required-label">必須項目</span>
       </h4>
-      <div>
-        <input
-          name="customer_last_name"
-          type="text"
-          placeholder={I18n.t("common.last_name")}
-          value={customer_last_name || ""}
-          onChange={(e) => handleChange('customer_last_name', e.target.value)}
-        />
-        <ErrorMessage error={customer_last_name_failed_message} />
-        <input
-          name="customer_first_name"
-          type="text"
-          placeholder={I18n.t("common.first_name")}
-          value={customer_first_name || ""}
-          onChange={(e) => handleChange('customer_first_name', e.target.value)}
-        />
-        <ErrorMessage error={customer_first_name_failed_message} />
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ flex: 1 }}>
+          <input
+            name="customer_last_name"
+            type="text"
+            placeholder={I18n.t("common.last_name")}
+            value={customer_last_name || ""}
+            onChange={(e) => handleChange('customer_last_name', e.target.value)}
+            style={{ width: '100%' }}
+          />
+          <ErrorMessage error={customer_last_name_failed_message} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <input
+            name="customer_first_name"
+            type="text"
+            placeholder={I18n.t("common.first_name")}
+            value={customer_first_name || ""}
+            onChange={(e) => handleChange('customer_first_name', e.target.value)}
+            style={{ width: '100%' }}
+          />
+          <ErrorMessage error={customer_first_name_failed_message} />
+        </div>
       </div>
 
       {support_phonetic_name && (
         <>
           <br />
-          <div>
-            <input
-              id="customer_phonetic_last_name"
-              name="customer_phonetic_last_name"
-              type="text"
-              placeholder={I18n.t("common.phonetic_last_name")}
-              value={customer_phonetic_last_name || ""}
-              onChange={(e) => handleChange('customer_phonetic_last_name', e.target.value)}
-            />
-            <p></p>
-            <input
-              id="customer_phonetic_first_name"
-              name="customer_phonetic_first_name"
-              type="text"
-              placeholder={I18n.t("common.phonetic_first_name")}
-              value={customer_phonetic_first_name || ""}
-              onChange={(e) => handleChange('customer_phonetic_first_name', e.target.value)}
-            />
-            <ErrorMessage error={customer_phonetic_name_failed_message} />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ flex: 1 }}>
+              <input
+                id="customer_phonetic_last_name"
+                name="customer_phonetic_last_name"
+                type="text"
+                placeholder={I18n.t("common.phonetic_last_name")}
+                value={customer_phonetic_last_name || ""}
+                onChange={(e) => handleChange('customer_phonetic_last_name', e.target.value)}
+                style={{ width: '100%' }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <input
+                id="customer_phonetic_first_name"
+                name="customer_phonetic_first_name"
+                type="text"
+                placeholder={I18n.t("common.phonetic_first_name")}
+                value={customer_phonetic_first_name || ""}
+                onChange={(e) => handleChange('customer_phonetic_first_name', e.target.value)}
+                style={{ width: '100%' }}
+              />
+            </div>
           </div>
+          <ErrorMessage error={customer_phonetic_name_failed_message} />
         </>
       )}
 
       <h4>
         {I18n.t("common.email")}
-        {isEmailRequired && <span className="required">*</span>}
+        {isEmailRequired && <span className="required-label">必須項目</span>}
       </h4>
       <input
         type="email"
@@ -192,7 +203,7 @@ export const VerifiedCustomerForm = ({
   return (
     <div className="customer-type-options">
       <h4>
-        {I18n.t("common.phone_number")} <span className="required">*</span>
+        {I18n.t("common.cellphone_number")} <span className="required-label">必須項目</span>
       </h4>
       <div style={{ display: 'flex', gap: '8px' }}>
         <select
@@ -253,55 +264,66 @@ export const CustomerInfoForm = ({
   return (
     <div className="customer-type-options">
       <h4>
-        {I18n.t("common.name")} <span className="required">必須項目</span>
+        {I18n.t("common.name")} <span className="required-label">必須項目</span>
       </h4>
-      <div>
-        <input
-          name="customer_last_name"
-          type="text"
-          placeholder={I18n.t("common.last_name")}
-          value={customer_last_name || ""}
-          onChange={(e) => handleChange('customer_last_name', e.target.value)}
-        />
-        <ErrorMessage error={errors?.customer_last_name_failed_message} />
-        <input
-          name="customer_first_name"
-          type="text"
-          placeholder={I18n.t("common.first_name")}
-          value={customer_first_name || ""}
-          onChange={(e) => handleChange('customer_first_name', e.target.value)}
-        />
-        <ErrorMessage error={errors?.customer_first_name_failed_message} />
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ flex: 1 }}>
+          <input
+            name="customer_last_name"
+            type="text"
+            placeholder={I18n.t("common.last_name")}
+            value={customer_last_name || ""}
+            onChange={(e) => handleChange('customer_last_name', e.target.value)}
+            style={{ width: '100%' }}
+          />
+          <ErrorMessage error={errors?.customer_last_name_failed_message} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <input
+            name="customer_first_name"
+            type="text"
+            placeholder={I18n.t("common.first_name")}
+            value={customer_first_name || ""}
+            onChange={(e) => handleChange('customer_first_name', e.target.value)}
+            style={{ width: '100%' }}
+          />
+          <ErrorMessage error={errors?.customer_first_name_failed_message} />
+        </div>
       </div>
 
       {support_phonetic_name && (
         <>
           <br />
-          <div>
-            <input
-              id="customer_phonetic_last_name"
-              name="customer_phonetic_last_name"
-              type="text"
-              placeholder={I18n.t("common.phonetic_last_name")}
-              value={customer_phonetic_last_name || ""}
-              onChange={(e) => handleChange('customer_phonetic_last_name', e.target.value)}
-            />
-            <p></p>
-            <input
-              id="customer_phonetic_first_name"
-              name="customer_phonetic_first_name"
-              type="text"
-              placeholder={I18n.t("common.phonetic_first_name")}
-              value={customer_phonetic_first_name || ""}
-              onChange={(e) => handleChange('customer_phonetic_first_name', e.target.value)}
-            />
-            <ErrorMessage error={errors?.customer_phonetic_name_failed_message} />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ flex: 1 }}>
+              <input
+                id="customer_phonetic_last_name"
+                name="customer_phonetic_last_name"
+                type="text"
+                placeholder={I18n.t("common.phonetic_last_name")}
+                value={customer_phonetic_last_name || ""}
+                onChange={(e) => handleChange('customer_phonetic_last_name', e.target.value)}
+                style={{ width: '100%' }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <input
+                id="customer_phonetic_first_name"
+                name="customer_phonetic_first_name"
+                type="text"
+                placeholder={I18n.t("common.phonetic_first_name")}
+                value={customer_phonetic_first_name || ""}
+                onChange={(e) => handleChange('customer_phonetic_first_name', e.target.value)}
+                style={{ width: '100%' }}
+              />
+            </div>
           </div>
+          <ErrorMessage error={errors?.customer_phonetic_name_failed_message} />
         </>
       )}
 
       <h4>
-        {I18n.t("common.phone_number")} <span className="required">必須項目</span>
+        {I18n.t("common.cellphone_number")} <span className="required-label">必須項目</span>
       </h4>
       <div style={{ display: 'flex', gap: '8px' }}>
         <select
@@ -328,8 +350,8 @@ export const CustomerInfoForm = ({
       <ErrorMessage error={errors?.customer_phone_number_failed_message} />
 
       <h4>
-        {I18n.t("common.email")}
-        {isEmailRequired && <span className="required">必須項目</span>}
+        {I18n.t("common.email_address")}
+        {isEmailRequired && <span className="required-label">必須項目</span>}
       </h4>
       <input
         type="email"
