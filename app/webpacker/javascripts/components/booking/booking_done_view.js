@@ -18,6 +18,8 @@ const BookingDoneView = ({
   skip_social_customer,
   function_access_id,
   customer_notification_channel,
+  customer_email,
+  customer_phone_number,
   is_free_plan,
   is_trial_member,
   line_settings_verified,
@@ -32,12 +34,39 @@ const BookingDoneView = ({
     back_to_book
   } = i18n.done
 
+  // 実際の送信チャネルを判定
+  const getActualNotificationChannel = () => {
+    // 店舗側LINE未連携の場合、LINEは使えない
+    if (!line_settings_verified) {
+      // メールがあればメール、なければSMS
+      return customer_email ? 'email' : 'sms';
+    }
+
+    // 無料プランの場合
+    if (is_free_plan) {
+      // LINE通知リクエストが承認されていない限り、LINEは使えない
+      // 仮予約時点では未承認なので、メールかSMS
+      return customer_email ? 'email' : 'sms';
+    }
+
+    // 有料プランまたは試用期間中の場合
+    // 顧客がLINEログインしていればLINE、そうでなければフォールバック
+    if (!skip_social_customer) {
+      // LINEログイン済み → LINE
+      return 'line';
+    } else {
+      // LINEログインしていない → メールかSMS
+      return customer_email ? 'email' : 'sms';
+    }
+  };
+
   // 送信方法に応じたメッセージを取得
   const getNotificationMessage = () => {
+    const actualChannel = getActualNotificationChannel();
     let method = '';
-    if (customer_notification_channel === 'line') {
+    if (actualChannel === 'line') {
       method = 'LINE';
-    } else if (customer_notification_channel === 'sms') {
+    } else if (actualChannel === 'sms') {
       method = 'ショートメッセージ';
     } else {
       method = 'メール';
@@ -98,7 +127,7 @@ const BookingDoneView = ({
       {additionalContent && additionalContent.type === 'line_request' && additionalContent.url && (
         <div className="margin-around">
           <p>LINEで通知を受け取りたい方は<br />リクエストしてください。</p>
-          <a href={additionalContent.url} className="btn btn-success" style={{ backgroundColor: '#06C755', borderColor: '#06C755' }}>
+          <a href={additionalContent.url} className="btn btn-success" style={{ marginTop: '32px', backgroundColor: '#06C755', borderColor: '#06C755' }}>
             LINEで通知をリクエスト
           </a>
         </div>
@@ -107,7 +136,7 @@ const BookingDoneView = ({
       {additionalContent && additionalContent.type === 'line_recommendation' && additionalContent.url && (
         <div className="margin-around">
           <p>LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます。</p>
-          <a href={additionalContent.url} className="btn btn-success" style={{ backgroundColor: '#06C755', borderColor: '#06C755' }}>
+          <a href={additionalContent.url} className="btn btn-success" style={{ marginTop: '32px',  backgroundColor: '#06C755', borderColor: '#06C755' }}>
             LINE連携
           </a>
         </div>

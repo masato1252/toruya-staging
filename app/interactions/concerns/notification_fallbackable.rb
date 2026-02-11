@@ -1,5 +1,6 @@
 module NotificationFallbackable
   # The core notification fallback logic that is the same in both classes
+  # Returns the channel that was actually used for sending the notification
   def send_notification_with_fallbacks(preferred_channel: nil, custom_priority: nil)
     channels_by_priority = custom_priority || notification_priority_for(preferred_channel)
 
@@ -7,8 +8,10 @@ module NotificationFallbackable
       next unless send_method_available?(channel)
 
       send_notification_via(channel)
-      break
+      return channel  # Return the channel that was actually used
     end
+    
+    nil  # Return nil if no channel was available
   end
 
   # Send notifications to all available channels in the provided list
