@@ -4,17 +4,21 @@ import React from "react";
 import Autolinker from 'autolinker';
 
 import BookingFailedArea from "./booking_failed_area";
+import { isValidEmail } from "./current_customer_info";
 
 const BookingReservationButton = ({
   set_booking_reservation_form_values, booking_reservation_form_values, i18n, booking_page, payment_solution,
   isBookingFlowEnd, isEnoughCustomerInfo, isCustomerTrusted, isOnlinePayment, isCustomerAddressRequired, isCustomerAddressFilled, handleSubmit, is_single_option, resetBookingFailedValues,
-  tickets
+  tickets, requiresEmailInput
 }) => {
   if (!isBookingFlowEnd) return <></>;
   if (!isEnoughCustomerInfo) return <></>;
   if (!isCustomerTrusted) return <></>;
 
   const submitting = booking_reservation_form_values.submitting;
+
+  // メール入力が必要なのにメールが未入力or形式不正の場合は非活性
+  const isEmailInvalid = requiresEmailInput && !isValidEmail(booking_reservation_form_values.customer_email);
 
   const isAnyErrors = () => {
     return booking_reservation_form_values.errors && Object.keys(booking_reservation_form_values.errors).length
@@ -23,6 +27,8 @@ const BookingReservationButton = ({
   const isPaymentSolutionReady = () => {
     return !!payment_solution.stripe_key || !!payment_solution.square_location_id
   }
+
+  const isButtonDisabled = submitting || isEmailInvalid;
 
   return (
     <div className="reservation-confirmation">
@@ -33,9 +39,9 @@ const BookingReservationButton = ({
       )}
 
       <a href="#"
-        className={`btn btn-tarco ${submitting ? 'disabled' : ''}`}
+        className={`btn btn-tarco ${isButtonDisabled ? 'disabled' : ''}`}
         onClick={(_event) => {
-          if (submitting) return;
+          if (isButtonDisabled) return;
           if (isAnyErrors()) {
             $("#customer-info-modal").modal("show");
           }
@@ -50,7 +56,7 @@ const BookingReservationButton = ({
             handleSubmit()
           }
         }}
-        disabled={submitting}
+        disabled={isButtonDisabled}
       >
         {submitting ? (
           <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
