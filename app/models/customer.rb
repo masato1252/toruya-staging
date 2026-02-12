@@ -103,7 +103,13 @@ class Customer < ApplicationRecord
 
   def update_customer_email_and_phone_number
     self.customer_email = email
-    self.customer_phone_number = Phonelib.parse(mobile_phone_number).international(false)
+    phone = mobile_phone_number
+    if phone.present?
+      parsed = Phonelib.parse(phone)
+      # 国番号なしのローカル番号（例: 09090841258）の場合、日本(JP)として解析
+      parsed = Phonelib.parse(phone, "JP") unless parsed.valid?
+      self.customer_phone_number = parsed.international(false)
+    end
   end
 
   def active_customer_ticket_of_product(product) # booking_option
