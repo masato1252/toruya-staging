@@ -65,6 +65,12 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
     # 2. 連携のススメ：顧客LINE連携なし + (有料プラン or 試用期間中)
     
     if should_show_line_request_notice?
+      # 最後の通知の場合はLINE通知リクエスト案内を追加しない
+      unless reservation.has_future_notifications_for?(customer)
+        Rails.logger.info "[CreateEmail] LINE通知リクエスト案内スキップ: 最後の通知のため (reservation_id: #{reservation.id})"
+        return original_message
+      end
+
       # 既にリクエスト済みかどうかを確認
       existing_request = LineNoticeRequest.pending.find_by(reservation_id: reservation.id)
 

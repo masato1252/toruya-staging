@@ -181,6 +181,39 @@ class Reservation < ApplicationRecord
     notifiable? && reservation_customers.where(customer: customer, state: :accepted).exists?
   end
 
+  # この予約に対して、今後まだ顧客への通知が予定されているかを判定
+  # @param target_customer [Customer] 対象顧客
+  # @return [Boolean] 今後の通知がある場合 true
+  def has_future_notifications_for?(target_customer)
+    reservation_customer = ReservationCustomer.find_by(customer: target_customer, reservation: self)
+    return false unless reservation_customer
+
+    booking_page = reservation_customer.booking_page
+    now = Time.current
+
+    # カスタムリマインドのスコープ
+    custom_messages_scope = if booking_page.present? && !booking_page.use_shop_default_message
+      CustomMessage.scenario_of(booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_CUSTOM_REMINDER)
+    else
+      CustomMessage.scenario_of(shop, CustomMessages::Customers::Template::SHOP_CUSTOM_REMINDER)
+    end
+
+    # 1. 予約前のカスタムリマインド（before_minutes）がまだ未来にあるか
+    custom_messages_scope.where.not(before_minutes: nil).each do |cm|
+      return true if start_time.advance(minutes: -cm.before_minutes) > now
+    end
+
+    # 2. 24時間前リマインドがまだ未来にあるか
+    return true if start_time.advance(hours: -24) > now
+
+    # 3. 予約後のカスタムリマインド（after_days）がまだ未来にあるか
+    custom_messages_scope.where.not(after_days: nil).each do |cm|
+      return true if start_time.advance(days: cm.after_days) > now
+    end
+
+    false
+  end
+
   def booking_time
     Time.use_zone(user.timezone) do
       "#{I18n.l(start_time, format: :long_date_with_wday)} ~ #{I18n.l(end_time, format: :time_only)}"
