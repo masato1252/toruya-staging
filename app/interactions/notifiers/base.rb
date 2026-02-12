@@ -250,34 +250,17 @@ module Notifiers
       
       return unless approved_request.present?
       
-      # この予約に対するスケジュール済み通知が他にあるかチェック
-      # 予約開始時刻より後の通知がスケジュールされていなければ最終通知とみなす
-      if is_final_notification_for_reservation?
-        # 店舗オーナーへLINE通知（非同期）
-        Notifiers::Users::LineNoticeCompleted.perform_later(
+      # この予約に対する今後の通知がなければ最終通知とみなす
+      target_customer = receiver.is_a?(Customer) ? receiver : target_email_user
+      unless reservation.has_future_notifications_for?(target_customer)
+        Rails.logger.info "[LineNoticeCompleted] 最終通知検出: reservation_id=#{reservation.id}, customer=#{target_customer.id} → 店舗へ即時通知"
+        # 店舗オーナーへLINE通知（即時実行）
+        Notifiers::Users::LineNoticeCompleted.run(
           receiver: business_owner,
           line_notice_request: approved_request,
-          customer: target_email_user
+          customer: target_customer
         )
       end
-    end
-
-    # この通知が予約に対する最終通知かどうかを判定
-    def is_final_notification_for_reservation?
-      # 予約開始時刻より後にスケジュールされた通知ジョブがあるか確認
-      # Sidekiq::ScheduledSetから該当ジョブを検索
-      scheduled_set = Sidekiq::ScheduledSet.new
-      
-      has_future_notification = scheduled_set.any? do |job|
-        next false unless job.klass.include?('Notifiers::Customers')
-        next false unless job.args.any? { |arg| arg.is_a?(Hash) && arg.dig('reservation', 'id') == reservation.id }
-        
-        # ジョブの実行予定時刻が予約開始時刻より後
-        job_scheduled_at = Time.at(job.at)
-        job_scheduled_at > reservation.start_time
-      end
-      
-      !has_future_notification
     end
 
     private
