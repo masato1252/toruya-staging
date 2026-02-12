@@ -49,9 +49,10 @@ const CurrentCustomerInfo = ({booking_reservation_form_values, i18n, isCustomerT
               className="form-control"
               value={customer_email || ""}
               onChange={(e) => {
+                const value = e.target.value;
                 set_booking_reservation_form_values(prev => ({
                   ...prev,
-                  customer_email: e.target.value
+                  customer_email: value
                 }));
               }}
               onBlur={() => setEmailTouched(true)}
