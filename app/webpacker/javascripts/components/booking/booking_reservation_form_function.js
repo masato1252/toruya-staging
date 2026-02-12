@@ -434,6 +434,12 @@ const BookingReservationFormFunction = ({props}) => {
       else if (status === "invalid_authenticity_token") {
         location.reload()
       }
+      else {
+        // 想定外のステータスの場合のフォールバック
+        console.error("Unexpected response status:", status, response.data);
+        set_booking_reservation_form_values(prev => ({...prev, submitting: false}))
+        location.reload()
+      }
     }
     catch(error) {
       bookingReservationLoading_ref.current = false
