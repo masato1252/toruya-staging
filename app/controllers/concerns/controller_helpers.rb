@@ -30,7 +30,9 @@ module ControllerHelpers
 
   # Helper method to find error with client_secret from any key in outcome.errors.details
   def find_error_with_client_secret(outcome)
-    find_error_with_key(outcome, :client_secret) || {}
+    result = find_error_with_key(outcome, :client_secret)
+    # client_secretが実際に存在する場合のみ返す（空ハッシュはfalsyとして扱う）
+    result.present? && result[:client_secret].present? ? result : nil
   end
 
   # Helper method to check if outcome has 3DS authentication requirements
