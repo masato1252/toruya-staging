@@ -1,3 +1,5 @@
+require "message_encryptor"
+
 class SocialMessages::CreateEmail < ActiveInteraction::Base
   object :customer
   string :email
@@ -129,12 +131,8 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
   end
 
   def append_line_recommendation(original_message, format:)
-    # 顧客の店舗側へのLINE連携URL
-    line_connect_url = Rails.application.routes.url_helpers.user_line_omniauth_authorize_url(
-      host: ENV['APP_HOST'] || 'toruya.com',
-      protocol: 'https',
-      who: customer.user.id  # 店舗ID
-    )
+    line_connect_url = build_line_connect_url
+    return original_message unless line_connect_url
 
     # すべての文字列をUTF-8に統一
     original_message = original_message.force_encoding('UTF-8')
@@ -149,5 +147,28 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
       notice_text = I18n.t('customer_mailer.line_notice_request.line_recommendation_text', line_connect_url: line_connect_url)
       [original_message, separator, notice_text].join
     end
+  end
+
+  def build_line_connect_url
+    social_account = customer.user.social_account
+    return nil unless social_account&.is_login_available?
+
+    encrypted_id = MessageEncryptor.encrypt(social_account.id)
+    # LINE連携後のリダイレクト先（予約詳細ページ）
+    redirect_url = Rails.application.routes.url_helpers.shop_reservation_url(
+      customer.user.shop, reservation,
+      host: ENV['APP_HOST'] || 'toruya.com',
+      protocol: 'https'
+    )
+
+    Rails.application.routes.url_helpers.user_line_omniauth_authorize_url(
+      host: ENV['APP_HOST'] || 'toruya.com',
+      protocol: 'https',
+      oauth_social_account_id: encrypted_id,
+      oauth_redirect_to_url: redirect_url,
+      customer_id: customer.id,
+      prompt: 'consent',
+      bot_prompt: 'aggressive'
+    )
   end
 end
