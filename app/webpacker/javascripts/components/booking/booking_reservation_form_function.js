@@ -399,6 +399,8 @@ const BookingReservationFormFunction = ({props}) => {
     }
 
     try {
+      console.log("[BookingSubmit] リクエスト送信中...", { url: props.path.save, data: JSON.stringify(data).substring(0, 500) });
+
       const [_error, response] = await CommonServices.create({
         url: props.path.save,
         data: data
@@ -406,19 +408,41 @@ const BookingReservationFormFunction = ({props}) => {
 
       bookingReservationLoading_ref.current = false
 
+      // safe-awaitのエラーチェック
+      if (_error) {
+        console.error("[BookingSubmit] ❌ APIリクエストエラー:", _error);
+        console.error("[BookingSubmit] エラー詳細:", _error.message, _error.response?.status, _error.response?.data);
+        set_booking_reservation_form_values(prev => ({...prev, submitting: false, booking_failed: true}))
+        return;
+      }
+
+      if (!response || !response.data) {
+        console.error("[BookingSubmit] ❌ レスポンスが空:", { response });
+        set_booking_reservation_form_values(prev => ({...prev, submitting: false, booking_failed: true}))
+        return;
+      }
+
+      console.log("[BookingSubmit] ✅ レスポンス受信:", JSON.stringify(response.data));
+
       const { status, errors, requires_action, client_secret, reservation_id } = response.data;
 
       if (status === "successful") {
+        console.log("[BookingSubmit] ✅ 予約成功 reservation_id:", reservation_id);
         // Send GA4 booking_complete event
-        window.gtag('event', 'booking_complete', {
-          'event_category': 'booking_page',
-          'event_label': window.location.pathname,
-        });
+        try {
+          window.gtag('event', 'booking_complete', {
+            'event_category': 'booking_page',
+            'event_label': window.location.pathname,
+          });
+        } catch(gtagError) {
+          console.warn("[BookingSubmit] gtag送信失敗（無視）:", gtagError);
+        }
 
         set_booking_reservation_form_values(prev => ({...prev, is_done: true, reservation_id: reservation_id, submitting: false }))
         return { status: "successful" };
       }
       else if (status === "failed") {
+        console.error("[BookingSubmit] ❌ 予約失敗:", errors?.message);
         set_booking_reservation_form_values(prev => ({...prev, booking_failed: true, submitting: false}))
 
         if (errors) {
@@ -428,20 +452,24 @@ const BookingReservationFormFunction = ({props}) => {
         throw new Error(errors?.message || '預約失敗');
       }
       else if (status === "requires_action" && client_secret) {
-        // Need 3DS verification
+        console.log("[BookingSubmit] 3DS認証が必要");
         return { requires_action: true, client_secret };
       }
       else if (status === "invalid_authenticity_token") {
+        console.warn("[BookingSubmit] CSRFトークン無効 → リロード");
         location.reload()
+      }
+      else {
+        console.error("[BookingSubmit] ❌ 想定外のステータス:", status, "レスポンス全体:", JSON.stringify(response.data));
+        set_booking_reservation_form_values(prev => ({...prev, submitting: false}))
       }
     }
     catch(error) {
       bookingReservationLoading_ref.current = false
-      console.error(error)
+      console.error("[BookingSubmit] ❌ catchブロック:", error.message, error.stack);
       if (error.message && error.message !== '預約失敗') {
-        location.reload()
+        set_booking_reservation_form_values(prev => ({...prev, submitting: false, booking_failed: true}))
       }
-      throw error;
     }
   }
 

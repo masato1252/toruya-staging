@@ -175,15 +175,19 @@ class BookingPagesController < ActionController::Base
 
       Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: reservation)
 
+      Rails.logger.info "[BookingReservation] ✅ 予約成功: reservation_id=#{reservation&.id}, customer_id=#{customer&.id}"
       render json: {
         status: "successful",
         reservation_id: reservation&.id
       }
     else
+      Rails.logger.error "[BookingReservation] ❌ 予約失敗: errors=#{outcome.errors.full_messages.join(', ')}, details=#{outcome.errors.details}"
+
       # Check if it's a 3DS-related error - any error containing client_secret needs frontend handling
       error_with_client_secret = find_error_with_client_secret(outcome)
 
       if error_with_client_secret
+        Rails.logger.info "[BookingReservation] 3DS認証が必要: client_secret=#{error_with_client_secret[:client_secret].present?}"
         render json: {
           status: "requires_action",
           client_secret: error_with_client_secret[:client_secret],
@@ -199,7 +203,7 @@ class BookingPagesController < ActionController::Base
         render json: {
           status: "failed",
           errors: {
-            message: I18n.t("booking_page.message.booking_unexpected_failed_message")
+            message: outcome.errors.full_messages.first || I18n.t("booking_page.message.booking_unexpected_failed_message")
           }
         }
       end

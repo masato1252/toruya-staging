@@ -145,9 +145,9 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
          error_type: error_type,
          stripe_error_code: stripe_error_code,
          stripe_error_message: stripe_error_message,
-         client_secret: error_with_client_secret[:client_secret],
-         payment_intent_id: error_with_client_secret[:payment_intent_id],
-         setup_intent_id: error_with_client_secret[:setup_intent_id]
+         client_secret: error_with_client_secret&.dig(:client_secret),
+         payment_intent_id: error_with_client_secret&.dig(:payment_intent_id),
+         setup_intent_id: error_with_client_secret&.dig(:setup_intent_id)
       }, status: :unprocessable_entity
     else
       redirect_path = lines_user_bot_settings_plans_path(business_owner_id: business_owner_id)
