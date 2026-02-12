@@ -135,11 +135,13 @@ const BookingDoneView = ({
       )}
 
       {additionalContent && additionalContent.type === 'line_recommendation' && additionalContent.url && (
-        <div className="margin-around">
-          <p>LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます。</p>
-          <a href={additionalContent.url} className="btn btn-success" style={{ marginTop: '32px',  backgroundColor: '#06C755', borderColor: '#06C755' }}>
-            LINE連携
-          </a>
+        <div style={{ marginTop: '32px' }}>
+          <LineLoginBtn
+            social_account_login_url={additionalContent.url}
+            btn_text="LINE連携"
+          >
+            <p>LINE連携すると<br />ご予約内容や前日のリマインドを<br />LINEで受け取ることができます。</p>
+          </LineLoginBtn>
         </div>
       )}
 
