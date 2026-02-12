@@ -1,0 +1,31 @@
+<div class="done-view" style="text-align: center; padding: 40px 20px;">
+  <h3 style="margin-bottom: 16px;">LINE連携ページへ移動中...</h3>
+  <p style="color: #666; margin-bottom: 24px;">自動的にLINEログイン画面へ移動します。<br>移動しない場合は下のボタンを押してください。</p>
+
+  <%= form_tag "/users/auth/line", method: :post, id: "line_connect_form" do %>
+    <% if @oauth_social_account_id.present? %>
+      <%= hidden_field_tag :oauth_social_account_id, @oauth_social_account_id %>
+    <% end %>
+    <% if @oauth_redirect_to_url.present? %>
+      <%= hidden_field_tag :oauth_redirect_to_url, @oauth_redirect_to_url %>
+    <% end %>
+    <% if @customer_id.present? %>
+      <%= hidden_field_tag :customer_id, @customer_id %>
+    <% end %>
+    <% if @prompt.present? %>
+      <%= hidden_field_tag :prompt, @prompt %>
+    <% end %>
+    <% if @bot_prompt.present? %>
+      <%= hidden_field_tag :bot_prompt, @bot_prompt %>
+    <% end %>
+
+    <%= submit_tag "LINE連携する", class: "btn btn-success", style: "background-color: #06C755; border-color: #06C755; padding: 12px 32px; font-size: 16px;" %>
+  <% end %>
+</div>
+
+<script>
+  // ページ読み込み後、自動的にフォームを送信
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('line_connect_form').submit();
+  });
+</script>

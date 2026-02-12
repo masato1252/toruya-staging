@@ -167,7 +167,9 @@ class SocialMessages::CreateEmail < ActiveInteraction::Base
       protocol: 'https'
     )
 
-    Rails.application.routes.url_helpers.user_line_omniauth_authorize_url(
+    # メール/SMS内のリンクはGETでアクセスされるため、
+    # OmniAuthのPOST要件を満たす中継ページ経由でLINE連携を開始する
+    Rails.application.routes.url_helpers.line_connect_url(
       host: ENV['APP_HOST'] || 'toruya.com',
       protocol: 'https',
       oauth_social_account_id: encrypted_id,

@@ -716,6 +716,9 @@ Rails.application.routes.draw do
       end
     end
 
+    # LINE連携中継ページ（メール/SMS内のURLからGETでアクセス → 自動POSTでOmniAuth開始）
+    get 'line_connect', to: 'line_connect#show', as: :line_connect
+
     # LINE通知リクエスト機能
     resources :line_notice_requests, only: [] do
       collection do
