@@ -84,14 +84,14 @@ const BookingDoneView = ({
     // 店舗側LINE連携済みの場合
     if (skip_social_customer) {
       // ユーザ側「LINEを持っていない」を選択（LINEログインしていない時）
-      if (is_free_plan) {
-        // 店舗が無料プラン → 追加文①「LINE通知リクエスト案内文」
+      if (is_free_plan && !is_trial_member) {
+        // 店舗が無料プラン（試用期間外） → 追加文①「LINE通知リクエスト案内文」
         return {
           type: 'line_request',
           url: reservation_id ? `/line_notice_requests?reservation_id=${reservation_id}` : null
         };
-      } else if (!is_trial_member) {
-        // 店舗が有料プラン加入中（試用期間外） → 追加文②「LINE連携のススメ」
+      } else if (!is_free_plan || is_trial_member) {
+        // 店舗が有料プラン or 試用期間中 → 追加文②「LINE連携のススメ」
         return {
           type: 'line_recommendation',
           url: social_account_login_url
@@ -99,13 +99,14 @@ const BookingDoneView = ({
       }
     } else {
       // ユーザ側LINEログイン状態で仮予約した時
-      if (is_free_plan) {
-        // 店舗が無料プラン → 追加文①「LINE通知リクエスト案内文」
+      if (is_free_plan && !is_trial_member) {
+        // 店舗が無料プラン（試用期間外） → 追加文①「LINE通知リクエスト案内文」
         return {
           type: 'line_request',
           url: reservation_id ? `/line_notice_requests?reservation_id=${reservation_id}` : null
         };
       }
+      // 有料プラン or 試用期間中 + LINEログイン済み → 何もなし（LINE通知できるので不要）
     }
 
     return null;

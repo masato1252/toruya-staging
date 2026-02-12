@@ -6,7 +6,8 @@ import {
   CustomerBasicInfoForm,
   VerificationCodeForm,
   VerifiedCustomerForm,
-  CustomerInfoForm
+  CustomerInfoForm,
+  toInternationalNumber
 } from "components/shared/customer_verification";
 
 const CustomerVerificationForm = ({
@@ -202,21 +203,11 @@ const CustomerVerificationForm = ({
     setIsSubmitting(true);
 
     try {
-      // 電話番号が既に国番号を含んでいるかチェック
-      const phoneStr = String(customer_phone_number || '');
-      let fullPhoneNumber = customer_phone_number;
-      
-      // 電話番号が国番号で始まっていない場合のみ、国番号を追加
-      const startsWithCountryCode = phoneStr.startsWith('+');
-      if (!startsWithCountryCode && customer_country_code) {
-        // 日本の電話番号の場合、先頭の0を削除
-        let phoneToAppend = customer_phone_number;
-        if (customer_country_code === '+81' && phoneStr.startsWith('0')) {
-          phoneToAppend = phoneStr.substring(1);
-        }
-        fullPhoneNumber = `${customer_country_code}${phoneToAppend}`;
-      }
-      
+      // 共通関数でローカル番号を国際番号に変換
+      // 例: countryCode='+81', number='09090841258' → '+819090841258'
+      const effectiveCountryCode = customer_country_code || '+81';
+      const fullPhoneNumber = toInternationalNumber(effectiveCountryCode, customer_phone_number);
+
       const [_error, response] = await CustomerVerificationServices.createOrUpdateCustomer({
         user_id,
         customer_social_user_id,
@@ -231,6 +222,12 @@ const CustomerVerificationForm = ({
       });
 
       if (response.data.customer_id) {
+        // stateの電話番号を国際番号形式に更新（後続のhandleSubmitで正しい番号が送られるように）
+        setCustomerValues(prev => ({
+          ...prev,
+          customer_phone_number: fullPhoneNumber
+        }));
+
         // Call the setCustomerFound function to proceed with the booking
         setCustomerFound({
           customer_id: response.data.customer_id,

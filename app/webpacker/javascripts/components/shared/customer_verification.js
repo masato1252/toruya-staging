@@ -5,21 +5,68 @@ import I18n from 'i18n-js/index.js.erb';
 import { ErrorMessage } from "shared/components";
 
 // 国番号の定数
-const COUNTRY_CODES = [
-  { code: '+81', label: '🇯🇵 日本', country: 'JP' },
-  { code: '+1', label: '🇺🇸 アメリカ', country: 'US' },
-  { code: '+86', label: '🇨🇳 中国', country: 'CN' },
-  { code: '+82', label: '🇰🇷 韓国', country: 'KR' },
-  { code: '+886', label: '🇹🇼 台湾', country: 'TW' },
-  { code: '+852', label: '🇭🇰 香港', country: 'HK' },
-  { code: '+65', label: '🇸🇬 シンガポール', country: 'SG' },
-  { code: '+66', label: '🇹🇭 タイ', country: 'TH' },
-  { code: '+84', label: '🇻🇳 ベトナム', country: 'VN' },
-  { code: '+63', label: '🇵🇭 フィリピン', country: 'PH' },
-  { code: '+44', label: '🇬🇧 イギリス', country: 'GB' },
-  { code: '+33', label: '🇫🇷 フランス', country: 'FR' },
-  { code: '+49', label: '🇩🇪 ドイツ', country: 'DE' },
+export const COUNTRY_CODES = [
+  { code: '+81', label: '🇯🇵 日本', country: 'JP', hasNationalPrefix: true },
+  { code: '+1', label: '🇺🇸 アメリカ', country: 'US', hasNationalPrefix: false },
+  { code: '+86', label: '🇨🇳 中国', country: 'CN', hasNationalPrefix: false },
+  { code: '+82', label: '🇰🇷 韓国', country: 'KR', hasNationalPrefix: true },
+  { code: '+886', label: '🇹🇼 台湾', country: 'TW', hasNationalPrefix: true },
+  { code: '+852', label: '🇭🇰 香港', country: 'HK', hasNationalPrefix: false },
+  { code: '+65', label: '🇸🇬 シンガポール', country: 'SG', hasNationalPrefix: false },
+  { code: '+66', label: '🇹🇭 タイ', country: 'TH', hasNationalPrefix: true },
+  { code: '+84', label: '🇻🇳 ベトナム', country: 'VN', hasNationalPrefix: true },
+  { code: '+63', label: '🇵🇭 フィリピン', country: 'PH', hasNationalPrefix: true },
+  { code: '+44', label: '🇬🇧 イギリス', country: 'GB', hasNationalPrefix: true },
+  { code: '+33', label: '🇫🇷 フランス', country: 'FR', hasNationalPrefix: true },
+  { code: '+49', label: '🇩🇪 ドイツ', country: 'DE', hasNationalPrefix: true },
 ];
+
+// 国際番号から国番号を分離し、国内番号形式に変換する共通関数
+// 例: +819090841258 → { countryCode: '+81', number: '09090841258' }
+export const separatePhoneNumber = (phoneNumber) => {
+  if (!phoneNumber) return { countryCode: '+81', number: '' };
+
+  const phoneStr = String(phoneNumber);
+
+  // 国番号を探す（長い国番号から先にマッチさせるため、降順ソート）
+  const sortedCodes = [...COUNTRY_CODES].sort((a, b) => b.code.length - a.code.length);
+  for (const country of sortedCodes) {
+    if (phoneStr.startsWith(country.code)) {
+      let localNumber = phoneStr.substring(country.code.length);
+      // 国内プレフィックス0を使う国の場合、先頭に0を付加
+      if (country.hasNationalPrefix && localNumber && !localNumber.startsWith('0')) {
+        localNumber = '0' + localNumber;
+      }
+      return {
+        countryCode: country.code,
+        number: localNumber
+      };
+    }
+  }
+
+  // 国番号が見つからない場合、デフォルトは+81
+  return { countryCode: '+81', number: phoneStr };
+};
+
+// ローカル番号を国際番号に変換する共通関数
+// 例: countryCode='+81', number='09090841258' → '+819090841258'
+export const toInternationalNumber = (countryCode, localNumber) => {
+  if (!localNumber) return '';
+  const phoneStr = String(localNumber);
+
+  // 既に国番号が付いている場合はそのまま返す
+  if (phoneStr.startsWith('+')) return phoneStr;
+
+  const country = COUNTRY_CODES.find(c => c.code === countryCode);
+  let numberToAppend = phoneStr;
+
+  // 国内プレフィックス0を使う国の場合、先頭の0を削除
+  if (country?.hasNationalPrefix && phoneStr.startsWith('0')) {
+    numberToAppend = phoneStr.substring(1);
+  }
+
+  return `${countryCode}${numberToAppend}`;
+};
 
 // Basic information form
 export const CustomerBasicInfoForm = ({
@@ -198,26 +245,6 @@ export const VerifiedCustomerForm = ({
   handleSubmit,
   isSubmitting,
 }) => {
-  // 電話番号から国番号を分離
-  const separatePhoneNumber = (phoneNumber) => {
-    if (!phoneNumber) return { countryCode: '+81', number: '' };
-    
-    const phoneStr = String(phoneNumber);
-    
-    // 国番号を探す
-    for (const country of COUNTRY_CODES) {
-      if (phoneStr.startsWith(country.code)) {
-        return {
-          countryCode: country.code,
-          number: phoneStr.substring(country.code.length)
-        };
-      }
-    }
-    
-    // 国番号が見つからない場合、デフォルトは+81
-    return { countryCode: '+81', number: phoneStr };
-  };
-  
   const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number);
   const defaultCountryCode = customer_country_code || initialCountryCode;
   const displayPhoneNumber = initialNumber;
@@ -246,7 +273,7 @@ export const VerifiedCustomerForm = ({
           style={{ flex: 1 }}
           value={displayPhoneNumber || ""}
           onChange={(e) => handleChange('customer_phone_number', e.target.value)}
-          placeholder="9012345678"
+          placeholder="09012345678"
         />
       </div>
 
@@ -281,26 +308,6 @@ export const CustomerInfoForm = ({
   errors,
   isEmailRequired = true, // デフォルトは必須
 }) => {
-  // 電話番号から国番号を分離
-  const separatePhoneNumber = (phoneNumber) => {
-    if (!phoneNumber) return { countryCode: '+81', number: '' };
-    
-    const phoneStr = String(phoneNumber);
-    
-    // 国番号を探す
-    for (const country of COUNTRY_CODES) {
-      if (phoneStr.startsWith(country.code)) {
-        return {
-          countryCode: country.code,
-          number: phoneStr.substring(country.code.length)
-        };
-      }
-    }
-    
-    // 国番号が見つからない場合、デフォルトは+81
-    return { countryCode: '+81', number: phoneStr };
-  };
-  
   const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number);
   const defaultCountryCode = customer_country_code || initialCountryCode;
   const displayPhoneNumber = initialNumber;

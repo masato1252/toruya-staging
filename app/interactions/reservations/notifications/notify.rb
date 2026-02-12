@@ -18,6 +18,22 @@ module Reservations
 
           preferred_channel = determine_customer_notification_channel
           send_notification_with_fallbacks(preferred_channel: preferred_channel)
+
+          # LINE通知リクエストで送信した場合、最終通知かチェックして店舗へ即時通知
+          if preferred_channel == "line" && business_owner.subscription.in_free_plan?
+            approved_request = LineNoticeRequest.approved
+              .where(reservation_id: reservation.id)
+              .first
+
+            if approved_request.present? && !reservation.has_future_notifications_for?(customer)
+              Rails.logger.info "[LineNoticeCompleted] 最終通知検出(Notify経由): reservation_id=#{reservation.id}, customer=#{customer.id} → 店舗へ即時通知"
+              Notifiers::Users::LineNoticeCompleted.run(
+                receiver: business_owner,
+                line_notice_request: approved_request,
+                customer: customer
+              )
+            end
+          end
         end
       end
 

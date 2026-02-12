@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sms_client"
+require "message_encryptor"
 
 module Sms
   class Create < ActiveInteraction::Base
@@ -59,6 +60,12 @@ module Sms
 
       # マインドマップに基づく条件分岐
       if should_show_line_request_notice?
+        # 最後の通知の場合はLINE通知リクエスト案内を追加しない
+        unless reservation.has_future_notifications_for?(customer)
+          Rails.logger.info "[Sms::Create] LINE通知リクエスト案内スキップ: 最後の通知のため (reservation_id: #{reservation.id})"
+          return original_message
+        end
+
         # 既にリクエスト済みかどうかを確認
         existing_request = LineNoticeRequest.pending.find_by(reservation_id: reservation.id)
 
@@ -103,16 +110,35 @@ module Sms
     end
 
     def append_line_recommendation(original_message)
-      # 顧客の店舗側へのLINE連携URL
-      line_connect_url = Rails.application.routes.url_helpers.user_line_omniauth_authorize_url(
-        host: ENV['APP_HOST'] || 'toruya.com',
-        protocol: 'https',
-        who: customer.user.id  # 店舗ID
-      )
+      line_connect_url = build_line_connect_url
+      return original_message unless line_connect_url
 
       separator = "\n\n--------------------\n"
       notice_text = I18n.t('customer_mailer.line_notice_request.sms_line_recommendation_text', line_connect_url: line_connect_url)
       [original_message, separator, notice_text].join
+    end
+
+    def build_line_connect_url
+      social_account = customer.user.social_account
+      return nil unless social_account&.is_login_available?
+
+      encrypted_id = MessageEncryptor.encrypt(social_account.id)
+      # LINE連携後のリダイレクト先（予約詳細ページ）
+      redirect_url = Rails.application.routes.url_helpers.shop_reservation_url(
+        customer.user.shop, reservation,
+        host: ENV['APP_HOST'] || 'toruya.com',
+        protocol: 'https'
+      )
+
+      Rails.application.routes.url_helpers.user_line_omniauth_authorize_url(
+        host: ENV['APP_HOST'] || 'toruya.com',
+        protocol: 'https',
+        oauth_social_account_id: encrypted_id,
+        oauth_redirect_to_url: redirect_url,
+        customer_id: customer.id,
+        prompt: 'consent',
+        bot_prompt: 'aggressive'
+      )
     end
   end
 end

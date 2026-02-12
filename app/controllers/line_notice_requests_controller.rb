@@ -63,6 +63,8 @@ class LineNoticeRequestsController < ActionController::Base
     )
 
     if outcome.valid?
+      # 友だち追加URLを確認画面に渡す
+      @line_add_friend_url = @reservation.user.social_account.add_friend_url
       redirect_to success_line_notice_requests_path(request_id: outcome.result.id)
     else
       redirect_to line_notice_requests_path(reservation_id: @reservation.id), alert: outcome.errors.full_messages.join(", ")
@@ -109,7 +111,9 @@ class LineNoticeRequestsController < ActionController::Base
     
     return nil unless customer_id.present?
     
-    "/users/auth/line?oauth_social_account_id=#{CGI.escape(oauth_social_account_id)}&oauth_redirect_to_url=#{CGI.escape(oauth_redirect_to_url)}&customer_id=#{customer_id}"
+    # bot_prompt=aggressive: LINE Login時に店舗の公式アカウントを友だち追加する画面を表示（チェックON状態）
+    # prompt=consent: 毎回同意画面を表示
+    "/users/auth/line?oauth_social_account_id=#{CGI.escape(oauth_social_account_id)}&oauth_redirect_to_url=#{CGI.escape(oauth_redirect_to_url)}&customer_id=#{customer_id}&prompt=consent&bot_prompt=aggressive"
   end
   helper_method :line_oauth_url
 end

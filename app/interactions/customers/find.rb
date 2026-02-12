@@ -11,7 +11,11 @@ module Customers
     def execute
       user_customers = user.customers.order("id")
       customers = user_customers.where(customer_email: email) if email.present?
-      customers = customers.presence || user_customers.where(customer_phone_number: Phonelib.parse(phone_number).international(false)) if phone_number.present?
+      if phone_number.present?
+        parsed_phone = Phonelib.parse(phone_number)
+        parsed_phone = Phonelib.parse(phone_number, "JP") unless parsed_phone.valid?
+        customers = customers.presence || user_customers.where(customer_phone_number: parsed_phone.international(false))
+      end
 
       if customers.present?
         return {

@@ -34,6 +34,22 @@
     </div>
   </div>
 
+  <% if @reservation.user.social_account&.add_friend_url %>
+    <div class="mb-8 p-5 bg-blue-50 border-l-4 border-blue-500 rounded">
+      <h3 class="font-semibold mb-3 text-blue-900" style="font-size: 16px;">
+        <%= t("line_notice_requests.success.add_friend_title") %>
+      </h3>
+      <div style="line-height: 1.8; color: #1e40af; margin-bottom: 16px;">
+        <%= t("line_notice_requests.success.add_friend_description_html", shop_name: @reservation.shop.name).html_safe %>
+      </div>
+      <%= link_to t("line_notice_requests.success.add_friend_button"), 
+          @reservation.user.social_account.add_friend_url, 
+          class: "btn btn-success btn-lg w-100",
+          style: "background-color: #06C755; border-color: #06C755; padding: 12px 24px; font-size: 16px;",
+          target: "_blank" %>
+    </div>
+  <% end %>
+
   <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
     <h3 class="font-semibold mb-3 text-gray-700" style="font-size: 16px;"><%= t("common.reservation_details") %></h3>
     <div class="text-gray-800" style="line-height: 1.8;">

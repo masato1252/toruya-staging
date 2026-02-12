@@ -618,6 +618,7 @@ const BookingReservationFormFunction = ({props}) => {
         {isBookingFlowEnd() && isSocialLoginChecked() && (found_customer) && (!props.booking_page.survey || is_survey_done) && !submitting && (
           <CurrentCustomerInfo
             booking_reservation_form_values={booking_reservation_form_values}
+            set_booking_reservation_form_values={set_booking_reservation_form_values}
             i18n={props.i18n}
             isCustomerTrusted={found_customer}
             not_me_callback={() => {
@@ -642,6 +643,7 @@ const BookingReservationFormFunction = ({props}) => {
             is_single_option={is_single_option}
             tickets={booking_option_ids.map(id => props.booking_options_quota[id]).filter(Boolean).filter(ticket => ticket.ticket_code)}
             resetBookingFailedValues={resetBookingFailedValues}
+            requiresEmailInput={found_customer && !props.booking_reservation_form.customer_email}
           />
         )}
       </div>

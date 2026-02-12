@@ -961,6 +961,10 @@ tw:
       notice_html: |
         <p><strong>✓ 請等待批准</strong></p>
         <p>批准或拒絕後，我們會通過電子郵件通知您。</p>
+      add_friend_title: "【重要】請加商店為好友"
+      add_friend_description_html: |
+        <p class="mb-0">要接收LINE通知，您需要將<strong>%{shop_name}</strong>的LINE官方帳號加為好友。<br>請點擊下方按鈕完成加好友。</p>
+      add_friend_button: "加為好友"
       back_to_reservation: "返回預約詳情"
     errors:
       reservation_not_found: "找不到預約"

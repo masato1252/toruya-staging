@@ -27,6 +27,7 @@ module SocialCustomers
       social_customer.social_user_picture_url = auth.info.image
 
       # LINEからemailを取得（失敗してもログインは続行）
+      line_email = nil
       begin
         line_email = JWT.decode(auth.credentials.id_token, secret, false)[0]["email"]
         # emailをcompositionsに保存してCallbacksControllerで使用
@@ -58,6 +59,14 @@ module SocialCustomers
           social_customer: social_customer,
           customer: Customer.find(param["customer_id"])
         )
+      end
+
+      # LINEから取得したemailをcustomerのemails_detailsに保存
+      # （customerにemailが未登録の場合のみ）
+      if line_email.present? && social_customer.customer.present? && social_customer.customer.email.blank?
+        customer = social_customer.customer
+        customer.update(emails_details: [{ "type" => "mobile", "value" => line_email }])
+        Rails.logger.info("[FromOmniauth] LINE emailをcustomerに保存: customer_id=#{customer.id}, email=#{line_email}")
       end
 
       social_customer
