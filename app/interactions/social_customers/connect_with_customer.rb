@@ -6,6 +6,7 @@ module SocialCustomers
   class ConnectWithCustomer < ActiveInteraction::Base
     object :social_customer
     object :customer
+    string :custom_message, default: nil
 
     def execute
       other_social_customers = SocialCustomer.where.not(id: social_customer.id).where(user_id: social_customer.user_id, customer_id: customer.id)
@@ -19,7 +20,8 @@ module SocialCustomers
 
       # 紐付け成功後にLINE通知とリッチメニュー設定
       begin
-        LineClient.send(social_customer, I18n.t("line.bot.connected_successfully"))
+        line_message = custom_message.presence || I18n.t("line.bot.connected_successfully")
+        LineClient.send(social_customer, line_message)
         RichMenus::Connect.run(social_target: social_customer, social_rich_menu: social_account.current_rich_menu) if social_account.current_rich_menu
       rescue => e
         # LINE送信失敗してもcustomer紐付けは成功しているのでログだけ出力

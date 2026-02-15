@@ -21,31 +21,41 @@ export const COUNTRY_CODES = [
   { code: '+49', label: '🇩🇪 ドイツ', country: 'DE', hasNationalPrefix: true },
 ];
 
+// 店舗localeに応じたデフォルト国番号を返す
+const getDefaultCountryCode = (locale) => {
+  if (locale === 'tw') return '+886';
+  return '+81'; // default: Japan
+};
+
 // 国際番号から国番号を分離し、国内番号形式に変換する共通関数
 // 例: +819090841258 → { countryCode: '+81', number: '09090841258' }
-export const separatePhoneNumber = (phoneNumber) => {
-  if (!phoneNumber) return { countryCode: '+81', number: '' };
+// 例(ローカル): 09090841258, locale='ja' → { countryCode: '+81', number: '09090841258' }
+export const separatePhoneNumber = (phoneNumber, locale) => {
+  const defaultCode = getDefaultCountryCode(locale);
+  if (!phoneNumber) return { countryCode: defaultCode, number: '' };
 
   const phoneStr = String(phoneNumber);
 
-  // 国番号を探す（長い国番号から先にマッチさせるため、降順ソート）
-  const sortedCodes = [...COUNTRY_CODES].sort((a, b) => b.code.length - a.code.length);
-  for (const country of sortedCodes) {
-    if (phoneStr.startsWith(country.code)) {
-      let localNumber = phoneStr.substring(country.code.length);
-      // 国内プレフィックス0を使う国の場合、先頭に0を付加
-      if (country.hasNationalPrefix && localNumber && !localNumber.startsWith('0')) {
-        localNumber = '0' + localNumber;
+  // '+'で始まる場合は国際番号 → 国番号を解析
+  if (phoneStr.startsWith('+')) {
+    const sortedCodes = [...COUNTRY_CODES].sort((a, b) => b.code.length - a.code.length);
+    for (const country of sortedCodes) {
+      if (phoneStr.startsWith(country.code)) {
+        let localNumber = phoneStr.substring(country.code.length);
+        // 国内プレフィックス0を使う国の場合、先頭に0を付加
+        if (country.hasNationalPrefix && localNumber && !localNumber.startsWith('0')) {
+          localNumber = '0' + localNumber;
+        }
+        return {
+          countryCode: country.code,
+          number: localNumber
+        };
       }
-      return {
-        countryCode: country.code,
-        number: localNumber
-      };
     }
   }
 
-  // 国番号が見つからない場合、デフォルトは+81
-  return { countryCode: '+81', number: phoneStr };
+  // '+'で始まらない場合はローカル番号 → localeに応じたデフォルト国を使用
+  return { countryCode: defaultCode, number: phoneStr };
 };
 
 // ローカル番号を国際番号に変換する共通関数
@@ -244,8 +254,9 @@ export const VerifiedCustomerForm = ({
   handleChange,
   handleSubmit,
   isSubmitting,
+  locale,
 }) => {
-  const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number);
+  const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number, locale);
   const defaultCountryCode = customer_country_code || initialCountryCode;
   const displayPhoneNumber = initialNumber;
   
@@ -307,8 +318,9 @@ export const CustomerInfoForm = ({
   isSubmitting,
   errors,
   isEmailRequired = true, // デフォルトは必須
+  locale,
 }) => {
-  const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number);
+  const { countryCode: initialCountryCode, number: initialNumber } = separatePhoneNumber(customer_phone_number, locale);
   const defaultCountryCode = customer_country_code || initialCountryCode;
   const displayPhoneNumber = initialNumber;
   

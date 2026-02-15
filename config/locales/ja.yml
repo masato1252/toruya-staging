@@ -1016,20 +1016,17 @@ ja:
     new:
       title: "LINE通知リクエスト"
       description_html: |
-        <p class="mb-3"><strong>%{shop_name}</strong>の設定により、予約に関する通知はメールでのみ送信されています。</p>
-        <p class="mb-3">この予約についてLINE通知を希望される場合は、店舗へリクエストを送信できます。</p>
-        <p class="mb-0">店舗が承認すると、予約に関するリマインドや変更通知をLINEで受け取れるようになります。</p>
+        <p class="mb-3"><strong>%{shop_name}</strong>の設定により、予約に関する通知は<br>メールまたはショートメッセージで送信されています。</p>
+        <p class="mb-3">この予約についてLINE通知を希望される場合は<br>LINE連携してリクエストを送信してください。</p>
       connect_line_button: "LINE連携してリクエストする"
-      already_requested: "このご予約についてはすでにLINE通知をリクエスト済みです。店舗の承認をお待ちください。"
+      already_requested_html: |
+        既にLINE通知リクエスト済みです。<br>店舗の承認をお待ちください。
       back_to_reservation: "予約詳細に戻る"
     success:
       title: "リクエスト送信完了"
       description_html: |
         <p class="mb-3"><strong>%{shop_name}</strong>へLINE通知のリクエストを送信しました。</p>
-        <p class="mb-0">店舗側の承認をお待ちください。承認後、予約に関する通知がLINEで届くようになります。</p>
-      notice_html: |
-        <strong style="display: block; margin-bottom: 8px;">📱 承認状況について</strong>
-        <p style="margin: 0;">店舗が承認または拒否した場合、メールでお知らせします。</p>
+        <p class="mb-0">店舗側で承認されると<br>LINEで通知されます。</p>
       add_friend_title: "【重要】店舗を友だち追加してください"
       add_friend_description_html: |
         <p class="mb-0">LINE通知を受け取るには、<strong>%{shop_name}</strong>のLINE公式アカウントを友だち追加する必要があります。<br>下のボタンから友だち追加を完了してください。</p>

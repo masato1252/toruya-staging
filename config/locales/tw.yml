@@ -951,7 +951,8 @@ tw:
           <li>商店可能會拒絕</li>
         </ul>
       connect_line_button: "連接LINE並請求"
-      already_requested: "此預約已經發送過LINE通知請求。"
+      already_requested_html: |
+        此預約已經發送過LINE通知請求。<br>請等待店舖批准。
       back_to_reservation: "返回預約詳情"
     success:
       title: "請求發送完成"

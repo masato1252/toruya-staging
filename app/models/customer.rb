@@ -105,10 +105,25 @@ class Customer < ApplicationRecord
     self.customer_email = email
     phone = mobile_phone_number
     if phone.present?
+      # 店舗localeに応じたホーム国を決定
+      shop_locale = user&.locale&.to_s
+      home_country = shop_locale == "tw" ? "TW" : "JP"
+
       parsed = Phonelib.parse(phone)
-      # 国番号なしのローカル番号（例: 09090841258）の場合、日本(JP)として解析
-      parsed = Phonelib.parse(phone, "JP") unless parsed.valid?
-      self.customer_phone_number = parsed.international(false)
+      parsed = Phonelib.parse(phone, home_country) unless parsed.valid?
+
+      if parsed.valid?
+        if parsed.countries.include?(home_country)
+          # ホーム国の番号：ローカル形式で保存（例: 09090841258）
+          self.customer_phone_number = parsed.national(false)
+        else
+          # 他国の番号：E.164形式で保存（例: +12345678901）
+          self.customer_phone_number = parsed.e164
+        end
+      else
+        # パースできない場合はそのまま保存
+        self.customer_phone_number = phone
+      end
     end
   end
 

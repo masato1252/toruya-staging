@@ -128,7 +128,7 @@ const BookingDoneView = ({
       {additionalContent && additionalContent.type === 'line_request' && additionalContent.url && (
         <div className="margin-around">
           <p>LINEで通知を受け取りたい方は<br />リクエストしてください。</p>
-          <a href={additionalContent.url} className="btn btn-success" style={{ marginTop: '32px', backgroundColor: '#06C755', borderColor: '#06C755' }}>
+          <a href={additionalContent.url} className="btn btn-yellow" style={{ marginTop: '32px', backgroundColor: '#06C755', borderColor: '#06C755' }}>
             LINEで通知をリクエスト
           </a>
         </div>
