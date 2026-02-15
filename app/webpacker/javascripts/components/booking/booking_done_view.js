@@ -42,8 +42,8 @@ const BookingDoneView = ({
       return customer_email ? 'email' : 'sms';
     }
 
-    // 無料プランの場合
-    if (is_free_plan) {
+    // 無料プランかつ試用期間外の場合
+    if (is_free_plan && !is_trial_member) {
       // LINE通知リクエストが承認されていない限り、LINEは使えない
       // 仮予約時点では未承認なので、メールかSMS
       return customer_email ? 'email' : 'sms';
