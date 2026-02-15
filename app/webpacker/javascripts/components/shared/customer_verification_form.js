@@ -312,6 +312,7 @@ const CustomerVerificationForm = ({
               handleChange={handleChange}
               handleSubmit={submitVerifiedCustomer}
               isSubmitting={isSubmitting}
+              locale={locale}
             />
           </>
         );

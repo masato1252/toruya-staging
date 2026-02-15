@@ -79,6 +79,7 @@ ja:
         booking_pages: 新たに予約する
       thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
       connected_successfully: "ありがとうございます！\n\n 顧客情報の連携が完了しました。"
+      line_notice_request_connected: "%{shop_name}へLINE通知をリクエストしました。\n\n店舗側で承認されるとLINEで通知されるようになります。"
       please_use_contact_feature: こちらのメッセージ送信機能をご利用ください。
       features:
         connect_customer:

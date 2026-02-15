@@ -79,6 +79,7 @@ tw:
         booking_pages: 新增預約
       thanks_follow: "感謝您加入好友。\n\n 您可以使用此LINE帳號進行預約確認、變更等線上預約服務。"
       connected_successfully: "非常感謝您！\n\n 客戶資訊連結已完成。"
+      line_notice_request_connected: "已向%{shop_name}發送LINE通知請求。\n\n商家核准後，您將透過LINE收到通知。"
       please_use_contact_feature: 請使用此訊息發送功能。
       features:
         connect_customer:

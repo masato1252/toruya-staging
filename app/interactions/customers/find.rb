@@ -12,9 +12,22 @@ module Customers
       user_customers = user.customers.order("id")
       customers = user_customers.where(customer_email: email) if email.present?
       if phone_number.present?
+        # 店舗localeに応じたホーム国を決定
+        home_country = user.locale&.to_s == "tw" ? "TW" : "JP"
+
         parsed_phone = Phonelib.parse(phone_number)
-        parsed_phone = Phonelib.parse(phone_number, "JP") unless parsed_phone.valid?
-        customers = customers.presence || user_customers.where(customer_phone_number: parsed_phone.international(false))
+        parsed_phone = Phonelib.parse(phone_number, home_country) unless parsed_phone.valid?
+
+        # 新旧フォーマット両方で検索（移行期間の互換性確保）
+        possible_numbers = [phone_number]
+        if parsed_phone.valid?
+          possible_numbers << parsed_phone.national(false)     # ローカル形式: 09090841258
+          possible_numbers << parsed_phone.e164                # E.164形式: +819090841258
+          possible_numbers << parsed_phone.international(false) # レガシー形式: 819090841258
+        end
+        possible_numbers = possible_numbers.compact.uniq
+
+        customers = customers.presence || user_customers.where(customer_phone_number: possible_numbers)
       end
 
       if customers.present?

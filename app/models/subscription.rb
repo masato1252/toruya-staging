@@ -96,6 +96,11 @@ class Subscription < ApplicationRecord
     plan_id == FREE_PLAN_ID
   end
 
+  # 試用期間中かどうか（無料プランかつ試用期間内）
+  def in_trial?
+    in_free_plan? && trial_expired_date >= self.class.today
+  end
+
   def is_paid_plan_in_free_level?
     # Usually happen when user charged failed
     charge_required && current_plan.level == Plan::FREE_LEVEL

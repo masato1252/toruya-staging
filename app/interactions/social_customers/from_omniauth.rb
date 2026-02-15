@@ -55,9 +55,17 @@ module SocialCustomers
       end
 
       if param["customer_id"]
+        # LINE通知リクエスト経由の場合はカスタムメッセージを送信
+        custom_msg = nil
+        if param["oauth_redirect_to_url"].to_s.include?("line_notice_requests")
+          shop_name = social_customer.user&.shops&.first&.name || social_customer.user&.profile&.company_name || ""
+          custom_msg = I18n.t("line.bot.line_notice_request_connected", shop_name: shop_name)
+        end
+
         SocialCustomers::ConnectWithCustomer.run(
           social_customer: social_customer,
-          customer: Customer.find(param["customer_id"])
+          customer: Customer.find(param["customer_id"]),
+          custom_message: custom_msg
         )
       end
 

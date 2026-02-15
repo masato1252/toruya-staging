@@ -20,7 +20,8 @@ module Reservations
           send_notification_with_fallbacks(preferred_channel: preferred_channel)
 
           # LINE通知リクエストで送信した場合、最終通知かチェックして店舗へ即時通知
-          if preferred_channel == "line" && business_owner.subscription.in_free_plan?
+          # 試用期間中は通常のLINE通知なので、LINE通知リクエスト完了チェックは不要
+          if preferred_channel == "line" && business_owner.subscription.in_free_plan? && !business_owner.subscription.in_trial?
             approved_request = LineNoticeRequest.approved
               .where(reservation_id: reservation.id)
               .first
@@ -109,10 +110,11 @@ module Reservations
       end
 
       # 顧客への通知チャンネルを決定
-      # 無料プランでも、予約に関するLINE通知リクエストが承認されていればLINEで送信
+      # 試用期間中は有料プランと同様に店舗設定に従う
+      # 無料プラン（試用期間外）でも、予約に関するLINE通知リクエストが承認されていればLINEで送信
       def determine_customer_notification_channel
-        # 無料プランの場合
-        if business_owner.subscription.in_free_plan?
+        # 無料プランかつ試用期間外の場合のみ、LINE通知リクエストベースの判定
+        if business_owner.subscription.in_free_plan? && !business_owner.subscription.in_trial?
           # LINE通知リクエストが承認済みか確認
           approved_request = LineNoticeRequest.approved
             .where(reservation_id: reservation.id)
@@ -122,7 +124,7 @@ module Reservations
           return approved_request.present? ? "line" : "email"
         end
         
-        # デフォルトは店舗の設定に従う
+        # 有料プランまたは試用期間中は店舗の設定に従う
         business_owner.customer_notification_channel
       end
 

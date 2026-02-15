@@ -31,7 +31,7 @@
     <% if @existing_request %>
     <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
       <p class="text-gray-800" style="line-height: 1.8;">
-        <%= t("line_notice_requests.new.already_requested") %>
+        <%= t("line_notice_requests.new.already_requested_html").html_safe %>
       </p>
       </div>
       

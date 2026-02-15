@@ -42,8 +42,8 @@ const BookingDoneView = ({
       return customer_email ? 'email' : 'sms';
     }
 
-    // 無料プランの場合
-    if (is_free_plan) {
+    // 無料プランかつ試用期間外の場合
+    if (is_free_plan && !is_trial_member) {
       // LINE通知リクエストが承認されていない限り、LINEは使えない
       // 仮予約時点では未承認なので、メールかSMS
       return customer_email ? 'email' : 'sms';
@@ -128,7 +128,7 @@ const BookingDoneView = ({
       {additionalContent && additionalContent.type === 'line_request' && additionalContent.url && (
         <div className="margin-around">
           <p>LINEで通知を受け取りたい方は<br />リクエストしてください。</p>
-          <a href={additionalContent.url} className="btn btn-success" style={{ marginTop: '32px', backgroundColor: '#06C755', borderColor: '#06C755' }}>
+          <a href={additionalContent.url} className="btn btn-yellow" style={{ marginTop: '32px', backgroundColor: '#06C755', borderColor: '#06C755' }}>
             LINEで通知をリクエスト
           </a>
         </div>
