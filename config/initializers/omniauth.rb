@@ -3,11 +3,10 @@
 require "message_encryptor"
 
 # OmniAuth configuration for proper callback URL handling
+# MAIL_DOMAINを使用して、本番環境で正しいドメイン（manager.toruya.com）を使用する
 OmniAuth.config.full_host = lambda do |env|
-  # Use APP_HOST environment variable to set the correct host for callbacks
-  # This is especially important for staging/production environments
-  scheme = env['rack.url_scheme']
-  host = ENV['HEROKU_APP_DEFAULT_DOMAIN_NAME'] || env['HTTP_HOST']
+  scheme = ENV['HTTP_PROTOCOL'] || 'https'
+  host = ENV['MAIL_DOMAIN'] || env['HTTP_HOST']
   "#{scheme}://#{host}"
 end
 
