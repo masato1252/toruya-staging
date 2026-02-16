@@ -8,6 +8,10 @@ module RichMenus
     def execute
       if Rails.env.development?
         social_rich_menu.destroy
+      elsif social_rich_menu.social_rich_menu_id.blank?
+        # LINE API上にリッチメニューが存在しない（IDが空）場合はDBレコードのみ削除
+        social_rich_menu.image.purge_later if social_rich_menu.image.attached?
+        social_rich_menu.destroy
       else
         response = ::LineClient.delete_rich_menu(social_rich_menu)
 
