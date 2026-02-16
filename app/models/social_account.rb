@@ -56,9 +56,19 @@ class SocialAccount < ApplicationRecord
   end
 
   def message_api_verified?
-    bot_data_finished? && social_messages.where(
-      social_customer: user.owner_social_customer,
-      raw_content: user.owner_social_customer&.social_user_id
+    return false unless bot_data_finished?
+
+    osc = user.owner_social_customer
+    return false unless osc
+
+    # 新方式: owner_social_customer.social_user_id（店舗Messaging API UID）
+    # 旧方式: social_user.social_service_user_id（Toruya共通LINE Login UID）
+    # 既存の検証メッセージとの後方互換性のため、両方をチェック
+    possible_contents = [osc.social_user_id, user.social_user&.social_service_user_id].compact.uniq
+
+    social_messages.where(
+      social_customer: osc,
+      raw_content: possible_contents
     ).from_customer.exists?
   end
 
