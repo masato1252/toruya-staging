@@ -8,6 +8,8 @@ module CookieJarExtension
   included do
     def clear_across_domains(*cookie_names)
       cookie_names.each do |cookie_name|
+        # domain: :all で設定されたCookieも確実に削除するため、両方のパターンで削除
+        delete(cookie_name, domain: :all)
         delete(cookie_name)
       end
     end

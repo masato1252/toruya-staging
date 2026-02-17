@@ -21,6 +21,7 @@
 
     <%= button_to toruya_line_login_url(root_path),
                   class: "btn line-button with-wording only-word",
+                  style: "display: flex; justify-content: center;",
                   data: { disable_with: "<i class='fa fa-spinner fa-spin fa-fw'></i>".html_safe } do %>
       <%= I18n.t("common.line_login_btn_word") %>
     <% end %>
