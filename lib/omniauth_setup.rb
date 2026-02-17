@@ -93,25 +93,23 @@ class OmniauthSetup
     # 予約画面モードでもSessionに保存（Cookieは使わないが、Sessionは使う）
     Rails.logger.info("[OmniauthSetup] 💾 開始フェーズ: SessionにIDを保存")
     
-    # パラメータで明示的に指定された場合、古いセッション値をクリアして混在を防ぐ
-    # whois（Toruya共通ログイン）がパラメータにあれば、店舗固有のセッション値をクリア
+    # パラメータで明示的に指定された場合、反対側の認証情報を完全にクリアして混在を防ぐ
+    # whois（Toruya共通ログイン）がパラメータにあれば、店舗固有の値をセッション・Cookie・変数すべてからクリア
     if @request.parameters["whois"].present?
       @request.session.delete(:oauth_social_account_id)
       @request.session.delete(:line_oauth_credentials)
-      # oauth_social_account_idを再取得（セッションからの値を排除）
-      oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
-                                @request.cookies["oauth_social_account_id"]
-      Rails.logger.info("[OmniauthSetup]   whoisパラメータ検出 → 古いoauth_social_account_idセッションをクリア")
+      # oauth_social_account_idを完全にnilにする（Cookieに残存していても無視）
+      oauth_social_account_id = nil
+      Rails.logger.info("[OmniauthSetup]   whoisパラメータ検出 → oauth_social_account_idを完全にクリア（session/cookie/変数すべて）")
     end
     
-    # oauth_social_account_id（店舗固有ログイン）がパラメータにあれば、Toruya共通のセッション値をクリア
+    # oauth_social_account_id（店舗固有ログイン）がパラメータにあれば、Toruya共通の値をセッション・Cookie・変数すべてからクリア
     if @request.parameters["oauth_social_account_id"].present?
       @request.session.delete(:line_oauth_who)
       @request.session.delete(:line_oauth_credentials)
-      # whoを再取得（セッションからの値を排除）
-      who = @request.parameters["whois"].presence || 
-            @request.cookies["whois"]
-      Rails.logger.info("[OmniauthSetup]   oauth_social_account_idパラメータ検出 → 古いwhoisセッションをクリア")
+      # whoを完全にnilにする（Cookieに残存していても無視）
+      who = nil
+      Rails.logger.info("[OmniauthSetup]   oauth_social_account_idパラメータ検出 → whoisを完全にクリア（session/cookie/変数すべて）")
     end
     
     if who.present?
