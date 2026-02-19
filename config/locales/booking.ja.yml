@@ -135,7 +135,7 @@ ja:
     service_unavailable_description_html: このサービスは現在ご利用いただけません。
   online_service_purchases:
     service_content: サービスコンテンツを
-    please_check_in_channel: 透過%{channel}でお届けしましたので<br>ご確認ください
+    please_check_in_channel: 　%{channel}でお届けしましたので<br>ご確認ください
   membership:
     all_tag: すべて
     no_episode_yet: まだコンテンツ準備中です。
