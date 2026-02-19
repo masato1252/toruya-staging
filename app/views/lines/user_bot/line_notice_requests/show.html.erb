@@ -1,7 +1,7 @@
-<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+<div class="container" style="padding-bottom: 60px;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <div class="panel panel-default" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; border: none;">
+      <div class="panel panel-default" style="border-radius: 8px; border: none;">
         <div class="panel-heading" style="padding: 20px 30px; border-radius: 8px 8px 0 0;">
           <h3 class="panel-title" style="font-size: 20px; font-weight: bold; margin: 0;"><%= t('line_notice_requests.store.show.title') %></h3>
         </div>
@@ -32,38 +32,30 @@
           <!-- 料金案内 -->
           <div style="margin-bottom: 35px;">
             <h4 style="margin-bottom: 20px; color: #333; font-weight: bold;"><%= t('line_notice_requests.store.show.charge_information') %></h4>
-            <% if @is_free_trial %>
-              <div class="alert alert-success" style="padding: 20px; border-radius: 6px; margin-bottom: 0;">
-                <strong style="font-size: 16px;"><%= t('line_notice_requests.store.show.free_trial_notice') %></strong>
-                <p style="margin-top: 10px; margin-bottom: 0;"><%= t('line_notice_requests.store.show.free_trial_description') %></p>
-              </div>
-            <% else %>
-              <div class="alert alert-warning" style="padding: 20px; border-radius: 6px; margin-bottom: 0;">
-                <strong style="font-size: 16px;"><%= t('line_notice_requests.store.show.paid_notice', amount: "#{@charge_amount}円") %></strong>
-                <p style="margin-top: 10px; margin-bottom: 0;"><%= t('line_notice_requests.store.show.paid_description') %></p>
-              </div>
-            <% end %>
+            <ul style="list-style: disc; padding-left: 20px; margin: 0;">
+              <li>初回：無料</li>
+              <li>２回目以降：１予約250円＋税</li>
+            </ul>
           </div>
 
           <hr style="margin: 30px 0; border-color: #e0e0e0;">
 
           <!-- 承認ボタン -->
-          <div class="text-center" style="padding-top: 10px;">
+          <div style="display: flex; justify-content: center; padding-top: 10px;">
             <% if @is_free_trial %>
               <%= form_with(
                 url: approve_lines_user_bot_line_notice_request_path(business_owner_id: business_owner_id, id: @line_notice_request.id),
                 method: :post,
-                local: true,
-                class: 'inline-block'
+                local: true
               ) do |f| %>
-                <%= f.submit t('line_notice_requests.store.show.approve_button'), 
-                    class: 'btn btn-success btn-lg',
-                    style: 'padding: 12px 40px; font-size: 18px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);',
+                <%= f.submit "無料でリクエストを承認する",
+                    class: 'btn btn-yellow btn-lg',
+                    style: 'padding: 12px 40px; font-size: 18px; border-radius: 6px;',
                     data: { confirm: t('line_notice_requests.store.show.approve_confirm') } %>
               <% end %>
             <% else %>
-              <button id="approve-with-payment-btn" class="btn btn-success btn-lg" style="padding: 12px 40px; font-size: 18px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <%= t('line_notice_requests.store.show.approve_and_pay_button', amount: "#{@charge_amount}円") %>
+              <button id="approve-with-payment-btn" class="btn btn-yellow btn-lg" style="padding: 12px 40px; font-size: 18px; border-radius: 6px;">
+                料金を支払って承認する
               </button>
             <% end %>
           </div>
@@ -95,29 +87,13 @@
 
 <script>
   <% unless @is_free_trial %>
-    console.log('[LineNoticeRequest] 有料モード - JavaScript初期化開始');
-    console.log('[LineNoticeRequest] @is_free_trial:', <%= @is_free_trial %>);
-    console.log('[LineNoticeRequest] stripe_publishable_key:', '<%= Rails.application.secrets.stripe_publishable_key.present? ? "設定あり" : "設定なし" %>');
-    
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('[LineNoticeRequest] DOMContentLoaded イベント発火');
-      const approveBtn = document.getElementById('approve-with-payment-btn');
-      console.log('[LineNoticeRequest] 承認ボタン要素:', approveBtn);
-      
+      var approveBtn = document.getElementById('approve-with-payment-btn');
       if (approveBtn) {
-        console.log('[LineNoticeRequest] クリックイベントリスナー設定');
         approveBtn.addEventListener('click', function() {
-          console.log('[LineNoticeRequest] 承認ボタンクリック - カスタムイベント発火');
-          // Reactコンポーネントのモーダルを開く
           window.dispatchEvent(new CustomEvent('openLineNoticePaymentModal'));
-          console.log('[LineNoticeRequest] カスタムイベント発火完了');
         });
-      } else {
-        console.error('[LineNoticeRequest] エラー: 承認ボタン要素が見つかりません');
       }
     });
-  <% else %>
-    console.log('[LineNoticeRequest] 無料トライアルモード - 決済不要');
   <% end %>
 </script>
-

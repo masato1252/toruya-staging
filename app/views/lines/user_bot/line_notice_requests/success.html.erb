@@ -1,27 +1,23 @@
-<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+<div class="container" style="padding-bottom: 60px; background-color: #fff;">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <div class="panel panel-success" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; border: none;">
+      <div class="panel panel-success" style="border-radius: 8px; border: none; background-color: #fff;">
         <div class="panel-heading" style="padding: 20px 30px; border-radius: 8px 8px 0 0;">
           <h3 class="panel-title" style="font-size: 20px; font-weight: bold; margin: 0;">
-            <i class="fa fa-check-circle"></i>
-            <%= t('line_notice_requests.store.success.title') %>
+            <%= t('line_notice_requests.store.show.title') %>
           </h3>
         </div>
-        <div class="panel-body" style="padding: 30px;">
+        <div class="panel-body" style="padding: 30px; background-color: #fff;">
           <!-- 成功メッセージ -->
           <div class="alert alert-success text-center" style="padding: 30px; border-radius: 6px; margin-bottom: 35px;">
-            <h4 style="margin-bottom: 15px; font-size: 22px;">
-              <i class="fa fa-check-circle" style="margin-right: 8px;"></i>
-              <%= t('line_notice_requests.store.success.message') %>
-            </h4>
-            <p style="margin-bottom: 8px; font-size: 16px;"><%= t('line_notice_requests.store.success.description', customer_name: @customer.name) %></p>
-            <% if @line_notice_request.approved_at.present? %>
-              <p style="margin-bottom: 0; font-size: 14px; color: #555;">
-                <i class="fa fa-clock-o" style="margin-right: 4px;"></i>
-                承認日時: <%= l(@line_notice_request.approved_at, format: :long) %>
-              </p>
-            <% end %>
+            <p style="margin-bottom: 10px; font-size: 16px; font-weight: bold;">
+              <% if @line_notice_charge&.free? %>
+                リクエストを承認しました
+              <% else %>
+                お支払いが完了しました
+              <% end %>
+            </p>
+            <p style="margin-bottom: 0; font-size: 14px;">以降のリマインドは<br>LINEで通知されます。</p>
           </div>
 
           <!-- 予約情報 -->
@@ -45,52 +41,18 @@
             </table>
           </div>
 
-          <!-- 課金情報 -->
-          <% if @line_notice_charge %>
-            <div style="margin-bottom: 30px;">
-              <h4 style="margin-bottom: 20px; color: #333; font-weight: bold;"><%= t('line_notice_requests.store.success.charge_details') %></h4>
-              <table class="table table-bordered" style="background-color: #fff;">
-                <tbody>
-                  <tr>
-                    <th style="width: 35%; background-color: #f9f9f9;"><%= t('line_notice_requests.store.success.charge_type') %></th>
-                    <td>
-                      <% if @line_notice_charge.free? %>
-                        <span class="label label-success" style="font-size: 14px; padding: 6px 12px;"><%= t('line_notice_requests.store.success.free_trial') %></span>
-                      <% else %>
-                        <span class="label label-info" style="font-size: 14px; padding: 6px 12px;"><%= t('line_notice_requests.store.success.paid') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th style="background-color: #f9f9f9;"><%= t('line_notice_requests.store.success.charge_amount') %></th>
-                    <td><%= @line_notice_charge.amount_money.format %></td>
-                  </tr>
-                  <tr>
-                    <th style="background-color: #f9f9f9;"><%= t('line_notice_requests.store.success.charge_date') %></th>
-                    <td><%= l(@line_notice_charge.charge_date) %></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          <% end %>
-
           <hr style="margin: 30px 0; border-color: #e0e0e0;">
 
-          <!-- 案内文 -->
-          <div class="alert alert-info" style="padding: 20px; border-radius: 6px; margin-bottom: 30px;">
-            <%= t('line_notice_requests.store.success.notification_info_html').html_safe %>
-          </div>
-
-          <!-- アクションボタン -->
-          <div class="text-center" style="padding-top: 10px;">
-            <%= link_to t('line_notice_requests.store.success.back_to_schedule'), 
-                lines_user_bot_schedules_path(business_owner_id: business_owner_id), 
-                class: 'btn btn-primary btn-lg',
-                style: 'padding: 12px 40px; font-size: 18px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);' %>
+          <!-- 料金案内 -->
+          <div style="margin-bottom: 35px;">
+            <h4 style="margin-bottom: 20px; color: #333; font-weight: bold;"><%= t('line_notice_requests.store.show.charge_information') %></h4>
+            <ul style="list-style: disc; padding-left: 20px; margin: 0;">
+              <li>初回：無料</li>
+              <li>２回目以降：１予約250円＋税</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
