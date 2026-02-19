@@ -11,15 +11,18 @@ export const CustomerIdentification = ({
     support_feature_flags,
     locale,
     identifiedCallback,
-    user_id
+    user_id,
+    is_free_plan,
+    is_trial_member,
+    has_customer_line_connection
   }) => {
 
   const [customer_values, setCustomerValues] = useState({
     customer_id: customer?.customer_id,
-    customer_last_name: customer?.customer_last_name,
-    customer_first_name: customer?.customer_first_name,
-    customer_phonetic_last_name: customer?.customer_phonetic_last_name,
-    customer_phonetic_first_name: customer?.customer_phonetic_first_name,
+    customer_last_name: customer?.customer_last_name || customer?.last_name,
+    customer_first_name: customer?.customer_first_name || customer?.first_name,
+    customer_phonetic_last_name: customer?.customer_phonetic_last_name || customer?.phonetic_last_name,
+    customer_phonetic_first_name: customer?.customer_phonetic_first_name || customer?.phonetic_first_name,
     customer_phone_number: customer?.customer_phone_number,
     customer_email: customer?.customer_email,
     customer_verified: customer?.is_identified,
@@ -57,6 +60,9 @@ export const CustomerIdentification = ({
         i18n={i18n}
         support_phonetic_name={support_feature_flags.support_phonetic_name}
         locale={locale || 'en'}
+        is_free_plan={is_free_plan}
+        is_trial_member={is_trial_member}
+        has_customer_line_connection={has_customer_line_connection}
       />
     </div>
   )

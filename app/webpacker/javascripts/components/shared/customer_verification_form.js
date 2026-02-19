@@ -93,15 +93,14 @@ const CustomerVerificationForm = ({
 
   if (found_customer) return <></>;
 
-  // Check if form is valid
+  // Check if form is valid (phone number is collected in a later step, so not checked here)
   const isBasicInfoValid = () => {
-    let isValid = customer_last_name && customer_first_name && customer_phone_number;
+    let isValid = customer_last_name && customer_first_name;
 
     if (support_phonetic_name) {
       isValid = isValid && customer_phonetic_last_name && customer_phonetic_first_name;
     }
 
-    // メールアドレスが必須の場合のみチェック
     if (isEmailRequired()) {
       isValid = isValid && customer_email;
     }

@@ -182,6 +182,9 @@ export const CustomerPurchases = ({props}) => {
               setIdentifiedCustomer({ customer_id: customer.customer_id, customer_verified: customer.customer_verified })
             }
           }
+          is_free_plan={props.is_free_plan}
+          is_trial_member={props.is_trial_member}
+          has_customer_line_connection={!!social_user_id}
         />
       </CompanyHeader>
     </div>
