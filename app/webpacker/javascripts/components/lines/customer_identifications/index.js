@@ -14,7 +14,8 @@ export const CustomerIdentification = ({
     user_id,
     is_free_plan,
     is_trial_member,
-    has_customer_line_connection
+    has_customer_line_connection,
+    email_always_required
   }) => {
 
   const [customer_values, setCustomerValues] = useState({
@@ -63,6 +64,7 @@ export const CustomerIdentification = ({
         is_free_plan={is_free_plan}
         is_trial_member={is_trial_member}
         has_customer_line_connection={has_customer_line_connection}
+        email_always_required={email_always_required}
       />
     </div>
   )

@@ -20,7 +20,8 @@ const CustomerVerificationForm = ({
   locale,
   is_free_plan,
   is_trial_member,
-  has_customer_line_connection
+  has_customer_line_connection,
+  email_always_required
 }) => {
   const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz'];
 
@@ -256,10 +257,11 @@ const CustomerVerificationForm = ({
   // 任意：有料プラン（試用期間外） + 顧客LINE連携あり
   // それ以外：必須
   const isEmailRequired = () => {
-    if (is_free_plan) return true; // 無料プラン：必須
-    if (is_trial_member) return true; // 試用期間中：必須
-    if (!has_customer_line_connection) return true; // LINE連携なし：必須
-    return false; // 有料プラン + LINE連携あり：任意
+    if (email_always_required) return true;
+    if (is_free_plan) return true;
+    if (is_trial_member) return true;
+    if (!has_customer_line_connection) return true;
+    return false;
   };
 
   // Common props for CustomerBasicInfoForm

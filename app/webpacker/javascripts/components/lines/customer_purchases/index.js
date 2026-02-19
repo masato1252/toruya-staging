@@ -185,6 +185,7 @@ export const CustomerPurchases = ({props}) => {
           is_free_plan={props.is_free_plan}
           is_trial_member={props.is_trial_member}
           has_customer_line_connection={!!social_user_id}
+          email_always_required={props.email_always_required}
         />
       </CompanyHeader>
     </div>

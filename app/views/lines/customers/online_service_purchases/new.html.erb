@@ -18,6 +18,7 @@
     is_free_plan: current_owner.subscription.in_free_plan?,
     is_trial_member: current_owner.trial_member?,
     has_customer_line_connection: current_social_customer.present?,
+    email_always_required: true,
     i18n: {
     }.merge!([
       t("booking_page"),
