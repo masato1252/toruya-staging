@@ -28,9 +28,9 @@
                 <td><%= charge_description(charge) %> <%= "(#{t("settings.plans.payment.refund")})" if charge.respond_to?(:refunded?) && charge.refunded? %></td>
                 <td>
                   <% if charge.is_a?(LineNoticeCharge) %>
-                    <%= link_to t("settings.plans.payment.receipt"), receipt_lines_user_bot_settings_payment_path(id: charge.id, type: 'line_notice_charge', encrypted_user_id: MessageEncryptor.encrypt(Current.business_owner.id), format: :pdf), target: "_blank" %>
+                    <%= link_to t("settings.plans.payment.receipt_link"), receipt_lines_user_bot_settings_payment_path(id: charge.id, type: 'line_notice_charge', encrypted_user_id: MessageEncryptor.encrypt(Current.business_owner.id), format: :pdf), target: "_blank" %>
                   <% else %>
-                    <%= link_to t("settings.plans.payment.receipt"), receipt_lines_user_bot_settings_payment_path(id: charge.id, encrypted_user_id: MessageEncryptor.encrypt(Current.business_owner.id), format: :pdf), target: "_blank" %>
+                    <%= link_to t("settings.plans.payment.receipt_link"), receipt_lines_user_bot_settings_payment_path(id: charge.id, encrypted_user_id: MessageEncryptor.encrypt(Current.business_owner.id), format: :pdf), target: "_blank" %>
                   <% end %>
                   <%# 
                     <%#= link_to t("settings.plans.payment.refund"), "#", class: "btn btn-orange", data: { toggle: "modal", target: "#refund-modal" } if @refundable && @subscription.first_charge.id == charge.id

@@ -316,6 +316,7 @@ tw:
         amount: 總金額
         plan: 方案
         receipt: 收據
+        receipt_link: PDF顯示
         failed_title: 付款失敗！
         failed_desc1: 由於付款未能完成，我們無法變更您的使用方案。
         failed_desc2: 請再試一次。

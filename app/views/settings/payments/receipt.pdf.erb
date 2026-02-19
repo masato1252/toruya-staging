@@ -53,7 +53,7 @@
           <%# LINE通知リクエスト課金の場合 %>
           <tr>
             <td><%= I18n.t("settings.plans.payment.line_notice_request") %></td>
-            <td></td>
+            <td><%= l(@charge.reservation.start_time, format: "%Y年%m月%d日%H:%M") %> <%= @charge.reservation.customers.first&.last_name %><%= @charge.reservation.customers.first&.first_name %>様</td>
             <td><%= @charge.amount_money.format %></td>
           </tr>
         <% elsif @charge.completed? %>
