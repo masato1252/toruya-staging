@@ -12,16 +12,16 @@
             <table class="table table-bordered" style="background-color: #fff;">
               <tbody>
                 <tr>
-                  <th style="width: 35%; background-color: #f9f9f9;"><%= t('common.customer_name') %></th>
-                  <td><%= @customer.name %></td>
+                  <th style="width: 35%; background-color: #f9f9f9; padding: 4px;"><%= t('common.customer_name') %></th>
+                  <td style="padding: 4px;"><%= @customer.name %></td>
                 </tr>
                 <tr>
-                  <th style="background-color: #f9f9f9;"><%= t('common.reservation_datetime') %></th>
-                  <td><%= l(@reservation.start_time, format: :reservation_datetime) %></td>
+                  <th style="background-color: #f9f9f9; padding: 4px;"><%= t('common.reservation_datetime') %></th>
+                  <td style="padding: 4px;"><%= l(@reservation.start_time, format: :reservation_datetime) %></td>
                 </tr>
                 <tr>
-                  <th style="background-color: #f9f9f9;"><%= t('common.menu') %></th>
-                  <td><%= @reservation.menus_sentence %></td>
+                  <th style="background-color: #f9f9f9; padding: 4px;"><%= t('common.menu') %></th>
+                  <td style="padding: 4px;"><%= @reservation.menus_sentence %></td>
                 </tr>
               </tbody>
             </table>
