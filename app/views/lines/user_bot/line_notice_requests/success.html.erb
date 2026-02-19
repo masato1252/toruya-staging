@@ -10,14 +10,14 @@
         <div class="panel-body" style="padding: 30px; background-color: #fff;">
           <!-- 成功メッセージ -->
           <div class="alert alert-success text-center" style="padding: 30px; border-radius: 6px; margin-bottom: 35px;">
-            <p style="margin-bottom: 10px; font-size: 16px; font-weight: bold;">
+            <p style="margin-bottom: 10px; font-size: 16px; font-weight: bold; text-align: center;">
               <% if @line_notice_charge&.free? %>
                 リクエストを承認しました
               <% else %>
                 お支払いが完了しました
               <% end %>
             </p>
-            <p style="margin-bottom: 0; font-size: 14px;">以降のリマインドは<br>LINEで通知されます。</p>
+            <p style="margin-bottom: 0; font-size: 14px; text-align: center; color: #333;">以降のリマインドは<br>LINEで通知されます。</p>
           </div>
 
           <!-- 予約情報 -->
@@ -51,6 +51,9 @@
               <li>２回目以降：１予約250円＋税</li>
             </ul>
           </div>
+
+          <hr style="margin: 30px 0; border-color: #e0e0e0;">
+
         </div>
       </div>
     </div>
