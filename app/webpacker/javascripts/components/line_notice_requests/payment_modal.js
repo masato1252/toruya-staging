@@ -132,7 +132,7 @@ const PaymentModal = ({ props }) => {
             handleToken={handleToken}
             handleFailure={handleFailure}
             header="Toruya"
-            desc=""
+            desc="LINE通知リクエスト"
             details_desc={`今回のお支払い金額: ¥${props.chargeAmount}`}
             pay_btn="お支払い"
           />
