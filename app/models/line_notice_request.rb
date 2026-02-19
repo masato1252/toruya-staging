@@ -86,7 +86,7 @@ class LineNoticeRequest < ApplicationRecord
   end
 
   def no_duplicate_pending_request
-    if LineNoticeRequest.pending.where(reservation_id: reservation_id).exists?
+    if LineNoticeRequest.where(status: [:pending, :approved]).where(reservation_id: reservation_id).exists?
       errors.add(:reservation_id, 'already has a pending request')
     end
   end

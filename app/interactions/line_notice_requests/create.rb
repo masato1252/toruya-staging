@@ -18,8 +18,8 @@ module LineNoticeRequests
         return
       end
 
-      # バリデーション: 既にpendingのリクエストが存在しないか確認
-      if LineNoticeRequest.pending.exists?(reservation_id: reservation.id)
+      # バリデーション: 既にpendingまたはapprovedのリクエストが存在しないか確認
+      if LineNoticeRequest.where(status: [:pending, :approved]).exists?(reservation_id: reservation.id)
         errors.add(:reservation, :already_has_pending_request)
         return
       end

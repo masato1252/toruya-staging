@@ -20,7 +20,7 @@ class LineNoticeRequestsController < ActionController::Base
   # GET /line_notice_requests/new?reservation_id=123
   # リクエスト説明画面
   def new
-    @existing_request = LineNoticeRequest.pending.find_by(reservation_id: @reservation.id)
+    @existing_request = LineNoticeRequest.where(status: [:pending, :approved]).find_by(reservation_id: @reservation.id)
   end
 
   # GET /line_notice_requests/callback (LINE OAuth後のコールバック)
