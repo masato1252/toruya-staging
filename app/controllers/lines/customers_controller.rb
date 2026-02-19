@@ -44,6 +44,8 @@ class Lines::CustomersController < ActionController::Base
         _id
       elsif params[:social_service_user_id].present?
         params[:social_service_user_id]
+      elsif params[:social_user_id].present?
+        params[:social_user_id]
       else
         if cookies[:temp_line_social_user_id_of_customer].present?
           cookies[:temp_line_social_user_id_of_customer]
