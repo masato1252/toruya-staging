@@ -36,7 +36,7 @@ module Subscriptions
             subscription.plan = charging_plan
             subscription.rank = charge.rank
             subscription.next_plan = nil
-            subscription.set_expire_date
+            subscription.set_expire_date(is_upgrade: false)
             subscription.save!
 
             charge.expired_date = subscription.expired_date

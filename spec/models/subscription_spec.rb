@@ -124,63 +124,54 @@ RSpec.describe Subscription do
   end
 
   describe "#set_expire_date" do
-    context "when user have paid their subscription" do
-      before do
-        Time.zone = "Tokyo"
-        Timecop.freeze(charge_date)
+    before do
+      Time.zone = "Tokyo"
+      Timecop.freeze(Date.new(2022, 5, 15))
+    end
+
+    context "when is_upgrade is false (new subscription or renewal)" do
+      let(:subscription) { FactoryBot.create(:subscription, :basic, recurring_day: 15) }
+
+      it "sets expired_date to 1 month from today" do
+        subscription.set_expire_date
+
+        expect(subscription.expired_date).to eq(Date.new(2022, 6, 15))
       end
 
-      let!(:last_completed_charge) { FactoryBot.create(:subscription_charge, :completed, charge_date: charge_date, user: subscription.user) }
+      context "when recurring_day is over the end of next month" do
+        let(:subscription) { FactoryBot.create(:subscription, :basic, recurring_day: 31) }
 
-      context "when the recurring_day is over the end of month" do
-        let(:charge_date) { Date.new(2017, 12, 31) }
+        before do
+          Timecop.freeze(Date.new(2022, 1, 31))
+        end
 
-        # it "sets the expired date to last charge date's end of next month" do
-        #   subscription.set_expire_date
-        #
-        #   expect(subscription.expired_date).to eq(Date.new(2018, 2, 28))
-        # end
-      end
+        it "sets expired_date to the last day of next month" do
+          subscription.set_expire_date
 
-      context "when the recurring_day is less or equal than the end of month" do
-        let(:charge_date) { Date.new(2017, 12, 27) }
-
-        # it "sets the expired date to next charge date" do
-        #   subscription.set_expire_date
-        #
-        #   expect(subscription.expired_date).to eq(Date.new(2018, 2, 27))
-        # end
+          expect(subscription.expired_date).to eq(Date.new(2022, 2, 28))
+        end
       end
 
       context "when plan is an annual plan" do
         let(:subscription) { FactoryBot.create(:subscription, :business) }
-        let(:charge_date) { Date.new(2018, 1, 31) }
 
-        it "sets the expired date to next charge date" do
+        it "sets expired_date to 1 year from today" do
           subscription.set_expire_date
 
-          expect(subscription.expired_date).to eq(Date.new(2019, 1, 31))
+          expect(subscription.expired_date).to eq(Date.new(2023, 5, 15))
         end
-      end
-
-      context "when user be charged before current expire date expired" do
-        let(:charge_date) { Date.new(2021, 3, 23) }
-        let(:last_charge_date) { charge_date.advance(weeks: -2) }
-        let!(:last_completed_charge) { FactoryBot.create(:subscription_charge, :completed, charge_date: last_charge_date, user: subscription.user) }
-
-        # it "sets expired date from last record's expire date" do
-        #   subscription.set_expire_date
-        #
-        #   expect(subscription.expired_date).to eq(last_completed_charge.expired_date.next_month)
-        # end
       end
     end
 
-    context "when users never paid their subscription" do
-      it "sets today" do
-        subscription.set_expire_date
+    context "when is_upgrade is true (paid plan upgrade)" do
+      let(:subscription) { FactoryBot.create(:subscription, :basic, recurring_day: 15, expired_date: Date.new(2022, 6, 15)) }
 
-        expect(subscription.expired_date).to eq(described_class.today)
+      it "does not change expired_date" do
+        original_expired_date = subscription.expired_date
+
+        subscription.set_expire_date(is_upgrade: true)
+
+        expect(subscription.expired_date).to eq(original_expired_date)
       end
     end
   end

@@ -128,8 +128,17 @@ class Subscription < ApplicationRecord
     self.recurring_day = self.class.today.day
   end
 
-  def set_expire_date
-    self.expired_date = next_charge_date
+  def set_expire_date(is_upgrade: false)
+    if is_upgrade
+      return
+    end
+
+    self.expired_date = if Plan::ANNUAL_CHARGE_PLANS.include?(plan.level)
+      self.class.today.next_year
+    else
+      date = self.class.today.next_month
+      recurring_date(date.year, date.month)
+    end
   end
 
   def expire
@@ -160,41 +169,9 @@ class Subscription < ApplicationRecord
 
   private
 
-  def next_charge_date
-    if user.subscription_charges.last_completed
-      scheduled_recurring_date
-    else
-      self.class.today
-    end
-  end
-
   def recurring_date(year, month)
     end_day_of_month = Date.new(year, month).end_of_month.day
 
     Date.new(year, month, [end_day_of_month, recurring_day].min)
-  end
-
-  def scheduled_recurring_date
-    date =
-      if Plan::ANNUAL_CHARGE_PLANS.include?(plan.level)
-        user.subscription_charges.last_completed.charge_date.next_year
-      else
-        # XXX: If before subscription expired, # we did charged, then extend the subscription expired date further, not from the charge date
-        last_charged_record = user.subscription_charges.where.not(expired_date: nil).last_completed
-        current_charged_record = user.subscription_charges.last_completed
-
-        if last_charged_record && last_charged_record.expired_date > self.class.today
-          # アップグレード時、既存プランの契約終了日をそのまま使用（recurring_dateを通さない）
-          return last_charged_record.expired_date
-        elsif last_charged_record
-          # 自動更新時、前回の契約終了日から1ヶ月延長（recurring_dateを通す）
-          last_charged_record.expired_date.next_month
-        else
-          # 新規契約（過去に契約終了したものありも含む）
-          current_charged_record.charge_date.next_month
-        end
-      end
-
-    recurring_date(date.year, date.month)
   end
 end

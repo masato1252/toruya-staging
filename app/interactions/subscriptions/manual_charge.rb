@@ -112,15 +112,15 @@ module Subscriptions
           if charge_outcome.valid?
             charge = charge_outcome.result
             
-            # 決済成功時のみsubscriptionを更新
+            is_upgrade = subscription.in_paid_plan? && user.subscription_charges.last_plan_charged.present?
+
             subscription.plan = plan
             subscription.rank = charging_rank
             subscription.next_plan = nil
-            # 新規契約時のみrecurring_dayを設定（アップグレード時は既存のrecurring_dayを保持）
-            unless user.subscription.in_paid_plan && user.subscription_charges.last_plan_charged
+            unless is_upgrade
               subscription.set_recurring_day
             end
-            subscription.set_expire_date
+            subscription.set_expire_date(is_upgrade: is_upgrade)
             subscription.save!
 
             # 成功時のみcharge.detailsを作成

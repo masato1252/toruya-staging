@@ -87,8 +87,8 @@ class User < ApplicationRecord
   has_many :subscription_charges do
     def last_completed
       where(state: :completed)
-        .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_reservation])
-        .where.not("details ->> 'type' = ?", SubscriptionCharge::TYPES[:downgrade_cancellation])
+        .where("(details ->> 'type') IS DISTINCT FROM ?", SubscriptionCharge::TYPES[:downgrade_reservation])
+        .where("(details ->> 'type') IS DISTINCT FROM ?", SubscriptionCharge::TYPES[:downgrade_cancellation])
         .order("updated_at")
         .last
     end
