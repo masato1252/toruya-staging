@@ -54,7 +54,8 @@ export default () => {
           member_plan_name: "Free",
           charge_required: false,
           in_paid_plan: false,
-          next_charge_date: null
+          next_charge_date: null,
+          next_plan_name: null
         }
       })
       toastr.success("即時で無料プランへ変更しました")
@@ -71,7 +72,7 @@ export default () => {
     if (!error) {
       dispatch({
         type: "UPDATE_CUSTOMER_SUBSCRIPTION",
-        payload: { in_paid_plan: false }
+        payload: { in_paid_plan: false, next_plan_name: "Free" }
       })
       toastr.success("次回更新時に無料プランへ変更を予約しました")
     }
@@ -169,6 +170,9 @@ export default () => {
         </li>
         <li>
           {I18n.t("admin.chat.next_charge_date", { date: selected_customer.next_charge_date || "" } )}
+        </li>
+        <li>
+          次回支払い時の変更プラン：{selected_customer.next_plan_name || "---"}
         </li>
         <li>
           {I18n.t("admin.chat.last_visit_time", { time: selected_customer.last_visit_time || "" } )}

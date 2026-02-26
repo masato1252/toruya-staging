@@ -84,6 +84,10 @@ class SocialUserSerializer
     end
   end
 
+  attribute :next_plan_name do |social_user|
+    social_user.user&.subscription&.next_plan&.name
+  end
+
   attribute :charge_required do |social_user|
     !!social_user.user&.subscription&.charge_required
   end
