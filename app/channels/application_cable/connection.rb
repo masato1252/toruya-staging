@@ -12,7 +12,13 @@ module ApplicationCable
     protected
 
     def find_verified_user
-      User.find_by(id: cookies.signed['user.id']) || reject_unauthorized_connection
+      if (user = env['warden']&.user)
+        user
+      elsif (user = User.find_by(id: cookies.signed['user.id']))
+        user
+      else
+        reject_unauthorized_connection
+      end
     end
   end
 end
