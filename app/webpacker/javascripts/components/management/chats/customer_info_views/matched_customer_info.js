@@ -48,8 +48,16 @@ export default () => {
       data: { user_id: selected_customer.shop_customer.id }
     })
     if (!error) {
+      dispatch({
+        type: "UPDATE_CUSTOMER_SUBSCRIPTION",
+        payload: {
+          member_plan_name: "Free",
+          charge_required: false,
+          in_paid_plan: false,
+          next_charge_date: null
+        }
+      })
       toastr.success("即時で無料プランへ変更しました")
-      window.location.reload()
     }
     return !error
   }
@@ -61,8 +69,11 @@ export default () => {
       data: { user_id: selected_customer.shop_customer.id }
     })
     if (!error) {
+      dispatch({
+        type: "UPDATE_CUSTOMER_SUBSCRIPTION",
+        payload: { in_paid_plan: false }
+      })
       toastr.success("次回更新時に無料プランへ変更を予約しました")
-      window.location.reload()
     }
     return !error
   }

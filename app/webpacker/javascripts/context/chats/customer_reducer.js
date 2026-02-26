@@ -130,6 +130,22 @@ export default (state = initialState, action) => {
           [state.selected_customer.channel_id]: channel_customers.map(el => (el.id === state.selected_customer.id ? {...el, has_more_messages: action.payload.has_more_messages} : el))
         }
       }
+    case "UPDATE_CUSTOMER_SUBSCRIPTION":
+      channel_customers = state.customers[state.selected_customer.channel_id] || []
+      const subscriptionUpdate = action.payload
+
+      return {
+        ...state,
+        selected_customer: {
+          ...state.selected_customer, ...subscriptionUpdate
+        },
+        customers: {
+          ...state.customers,
+          [state.selected_customer.channel_id]: channel_customers.map(el =>
+            el.id === state.selected_customer.id ? { ...el, ...subscriptionUpdate } : el
+          )
+        }
+      }
     case "TOGGLE_CUSTOMER_PIN":
       if (action.payload) {
         channel_customers = state.customers[action.payload.channel_id] || []
