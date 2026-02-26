@@ -757,7 +757,7 @@ Rails.application.routes.draw do
       end
     end
 
-    authenticated :user, -> user { user.super_admin? || user.can_admin_chat? || Rails.env.development? } do
+    authenticated :user, -> user { user.super_admin? || user.can_admin_chat? || Rails.env.development? || Rails.configuration.x.env.staging? } do
       scope "(:locale)", locale: /tw|ja/, defaults: { locale: "ja" } do
         namespace :admin do
           resource :memo, only: [:create]
@@ -788,7 +788,7 @@ Rails.application.routes.draw do
       end
     end
 
-    authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
+    authenticated :user, -> user { user.super_admin? || Rails.env.development? || Rails.configuration.x.env.staging? } do
       mount Delayed::Web::Engine, at: "/_jobs"
       mount PgHero::Engine, at: "/_pghero"
       mount Blazer::Engine, at: "_blazer"
