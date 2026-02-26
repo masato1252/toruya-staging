@@ -770,7 +770,7 @@ Rails.application.routes.draw do
           resources :sale_pages, only: [:index]
           resources :booking_pages, only: [:index]
           resources :online_service_customer_relations, only: [:index]
-          resource :subscription, only: [:destroy]
+          resource :subscription, only: [:destroy, :update]
           get "logs"
 
           resources :custom_messages, only: [] do

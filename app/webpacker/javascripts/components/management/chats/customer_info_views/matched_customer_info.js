@@ -9,6 +9,7 @@ import { CommonServices } from "components/user_bot/api";
 import { SubmitButton } from "shared/components";
 import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js'
+import toastr from 'toastr';
 
 export default () => {
   const { selected_customer, dispatch, subscription }= useContext(GlobalContext)
@@ -40,18 +41,30 @@ export default () => {
     window.location.replace(response.data.redirect_to)
   }
 
-  const handleUnsubscribe = async () => {
-    if (confirm("Are you sure?")) {
-      const [error, response] = await CommonServices.delete({
-        url: Routes.admin_subscription_path({format: "json"}),
-        data: {
-          user_id: selected_customer.shop_customer.id
-        }
-      })
-
-      alert("Done")
-      window.location.replace(response.data.redirect_to)
+  const handleImmediateUnsubscribe = async () => {
+    if (!confirm("即時で無料プランへ変更します。よろしいですか？")) return false;
+    const [error, response] = await CommonServices.delete({
+      url: Routes.admin_subscription_path({format: "json"}),
+      data: { user_id: selected_customer.shop_customer.id }
+    })
+    if (!error) {
+      toastr.success("即時で無料プランへ変更しました")
+      window.location.reload()
     }
+    return !error
+  }
+
+  const handleScheduledUnsubscribe = async () => {
+    if (!confirm("次回更新時に無料プランへ変更します。よろしいですか？")) return false;
+    const [error, response] = await CommonServices.update({
+      url: Routes.admin_subscription_path({format: "json"}),
+      data: { user_id: selected_customer.shop_customer.id }
+    })
+    if (!error) {
+      toastr.success("次回更新時に無料プランへ変更を予約しました")
+      window.location.reload()
+    }
+    return !error
   }
 
   useEffect(() => {
@@ -175,19 +188,28 @@ export default () => {
           {I18n.t("admin.chat.reservations", { count: selected_customer.reservations_count } )}
         </li>
         <li>
-          <SubmitButton
-            handleSubmit={handleUnsubscribe}
-            btnWord={`${I18n.t("action.unsubscribe")} (${selected_customer.shop_customer.id})`}
-            disabled={!selected_customer.charge_required}
-          />
-        </li>
-        <li>
           {selected_customer.where_know_toruya}
         </li>
         <li>
           {selected_customer.what_main_problem}
         </li>
       </ul>
+      <hr />
+      <div style={{ marginTop: "16px", padding: "12px", border: "1px solid #dc3545", borderRadius: "4px" }}>
+        <h5>解約する (user_id: {selected_customer.shop_customer.id})</h5>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px" }}>
+          <SubmitButton
+            handleSubmit={handleImmediateUnsubscribe}
+            btnWord="即時で無料プランへ変更"
+            disabled={!selected_customer.charge_required}
+          />
+          <SubmitButton
+            handleSubmit={handleScheduledUnsubscribe}
+            btnWord="次回更新時に無料プランへ変更"
+            disabled={!selected_customer.in_paid_plan}
+          />
+        </div>
+      </div>
     </>
   )
 }
