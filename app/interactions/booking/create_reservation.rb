@@ -5,6 +5,7 @@ require "hash_deep_diff"
 module Booking
   class CreateReservation < ActiveInteraction::Base
     include ::Booking::SharedMethods
+    include SlackErrorNotification
 
     integer :booking_page_id
     integer :booking_option_id

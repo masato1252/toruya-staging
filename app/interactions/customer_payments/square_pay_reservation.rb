@@ -3,6 +3,7 @@
 require "slack_client"
 
 class CustomerPayments::SquarePayReservation < ActiveInteraction::Base
+  include SlackErrorNotification
   object :reservation_customer
   object :payment, class: CustomerPayment
   string :source_id

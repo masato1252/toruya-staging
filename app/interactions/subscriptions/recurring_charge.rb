@@ -2,6 +2,7 @@
 
 module Subscriptions
   class RecurringCharge < ActiveInteraction::Base
+    include SlackErrorNotification
     object :subscription
 
     def execute

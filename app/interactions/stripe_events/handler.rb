@@ -2,6 +2,7 @@
 
 module StripeEvents
   class Handler < ActiveInteraction::Base
+    include SlackErrorNotification
     object :event, class: Stripe::Event
 
     def execute

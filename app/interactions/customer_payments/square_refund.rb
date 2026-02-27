@@ -7,6 +7,7 @@ require "slack_client"
 # https://developer.squareup.com/reference/square/refunds-api/refund-payment
 class CustomerPayments::SquareRefund < ActiveInteraction::Base
   include RefundMethods
+  include SlackErrorNotification
   object :customer_payment
   object :amount, class: Money
 

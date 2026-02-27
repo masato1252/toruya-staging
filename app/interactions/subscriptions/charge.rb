@@ -6,6 +6,7 @@ require "order_id"
 module Subscriptions
   class Charge < ActiveInteraction::Base
     include StripePaymentMethodHandler
+    include SlackErrorNotification
     object :user
     object :plan
     boolean :manual

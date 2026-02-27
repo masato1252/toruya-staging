@@ -15,12 +15,23 @@
 # DummyJob.perform_later # won't use any debounce or throttle rules
 #
 require "key_value_storage"
+require "slack_error_notifier"
 
 class ApplicationJob < ActiveJob::Base
   rescue_from ActiveJob::SerializationError do |exception|
     Rollbar.error(e)
   end
   discard_on ActiveJob::DeserializationError
+
+  rescue_from StandardError do |exception|
+    SlackErrorNotifier.notify(exception, {
+      source: "Job",
+      job_name: self.class.name,
+      job_args: arguments
+    })
+    Rollbar.error(exception) if defined?(Rollbar)
+    raise exception
+  end
 
   BUFFER = 1 # second.
   DEFAULT_DELAY = 90 # seconds

@@ -5,6 +5,7 @@ require "slack_client"
 # https://stripe.com/docs/refunds#tracing-refunds
 class CustomerPayments::StripeRefund < ActiveInteraction::Base
   include RefundMethods
+  include SlackErrorNotification
   object :customer_payment
   object :amount, class: Money
 

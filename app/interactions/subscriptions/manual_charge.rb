@@ -2,6 +2,7 @@
 
 module Subscriptions
   class ManualCharge < ActiveInteraction::Base
+    include SlackErrorNotification
     object :subscription
     object :plan
     integer :rank

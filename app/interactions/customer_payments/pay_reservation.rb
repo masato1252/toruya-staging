@@ -4,6 +4,7 @@ require "slack_client"
 require "order_id"
 
 class CustomerPayments::PayReservation < ActiveInteraction::Base
+  include SlackErrorNotification
   object :reservation_customer
   object :payment_provider, class: AccessProvider
   string :source_id, default: nil

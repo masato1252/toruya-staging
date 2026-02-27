@@ -4,6 +4,7 @@ require "slack_client"
 
 class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
   include StripePaymentMethodHandler
+  include SlackErrorNotification
   object :online_service_customer_relation
   object :online_service_customer_price, class: OnlineServiceCustomerPrice, default: nil
   boolean :first_time_charge, default: false

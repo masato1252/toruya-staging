@@ -27,5 +27,8 @@ module Kasaike
 
     config.autoload_once_paths << Rails.root.join('app/job_serializers').to_s
     config.autoload_once_paths << Rails.root.join('app/instruments').to_s
+
+    require_relative "../app/middleware/slack_error_middleware"
+    config.middleware.use SlackErrorMiddleware
   end
 end

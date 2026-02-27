@@ -2,6 +2,7 @@
 
 class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
   include StripePaymentMethodHandler
+  include SlackErrorNotification
   object :relation, class: OnlineServiceCustomerRelation
   string :stripe_subscription_id, default: nil
   string :payment_method_id, default: nil

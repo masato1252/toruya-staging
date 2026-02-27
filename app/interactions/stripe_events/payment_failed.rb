@@ -2,6 +2,7 @@
 
 module StripeEvents
   class PaymentFailed < ActiveInteraction::Base
+    include SlackErrorNotification
     # https://stripe.com/docs/api/invoices/object
     object :event, class: Stripe::Event
 

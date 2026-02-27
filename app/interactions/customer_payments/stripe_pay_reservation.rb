@@ -4,6 +4,7 @@ require "slack_client"
 
 class CustomerPayments::StripePayReservation < ActiveInteraction::Base
   include StripePaymentMethodHandler
+  include SlackErrorNotification
   object :reservation_customer
   object :payment, class: CustomerPayment
   string :payment_intent_id, default: nil
