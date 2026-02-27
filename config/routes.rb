@@ -782,6 +782,9 @@ Rails.application.routes.draw do
               put "scenario/:scenario/:id", action: "update", as: :update
               get "scenarios", action: "scenarios"
               post "scenario/:scenario/demo", action: "demo", as: :demo
+              get "bulk_send/:bulk_type", action: "bulk_send", as: :bulk_send
+              post "bulk_send/:bulk_type/save", action: "save_bulk_message", as: :save_bulk_message
+              post "bulk_send/:bulk_type/send", action: "execute_bulk_send", as: :execute_bulk_send
             end
           end
         end

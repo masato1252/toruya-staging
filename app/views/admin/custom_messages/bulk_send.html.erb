@@ -1,0 +1,121 @@
+<%= render "admin/features" %>
+
+<h1>一括送信</h1>
+
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 16px; margin-bottom: 24px;">
+  <h4 style="margin-top: 0;">送信対象条件:</h4>
+  <ul style="margin-bottom: 0;">
+    <li>無料プラン（トライアル外）</li>
+    <li>予約ページ経由で本人以外の予約があったユーザ</li>
+    <% if @bulk_type == "incomplete_line" %>
+      <li>LINE連携設定が途中</li>
+    <% end %>
+  </ul>
+</div>
+
+<% if flash[:notice] %>
+  <div style="background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px; padding: 12px; margin-bottom: 16px;">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+<% if flash[:alert] %>
+  <div style="background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px; padding: 12px; margin-bottom: 16px;">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
+<div style="display: flex; gap: 24px; align-items: flex-start;">
+  <div style="flex: 1;">
+    <h3>メッセージ編集</h3>
+    <textarea id="bulk-message-content" rows="15" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"><%= @saved_message&.content %></textarea>
+  </div>
+
+  <div style="flex: 1; max-height: 500px; overflow-y: auto; border: 1px solid #ced4da; border-radius: 4px; padding: 12px;">
+    <h3 style="margin-top: 0;">
+      送信対象者リスト
+      <span style="font-size: 14px; font-weight: normal; color: #6c757d;">(<%= @target_users.size %>件)</span>
+    </h3>
+    <div style="margin-bottom: 8px;">
+      <label style="cursor: pointer;">
+        <input type="checkbox" id="select-all" checked onchange="toggleAll(this)"> 全選択 / 全解除
+      </label>
+    </div>
+    <% if @target_users.empty? %>
+      <p style="color: #6c757d;">対象ユーザーがいません</p>
+    <% else %>
+      <% @target_users.each do |user| %>
+        <div style="padding: 4px 0; border-bottom: 1px solid #eee;">
+          <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" class="user-checkbox" value="<%= user.id %>" checked>
+            <span>
+              user_id: <%= user.id %>
+              <% if user.profile %>
+                - <%= user.profile.last_name %> <%= user.profile.first_name %>
+              <% end %>
+              <% if user.social_user.nil? %>
+                <span style="color: #dc3545; font-size: 12px;">(LINE未連携)</span>
+              <% end %>
+            </span>
+          </label>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div style="margin-top: 24px; display: flex; gap: 12px;">
+  <%= form_tag save_bulk_message_admin_custom_messages_path(@bulk_type), method: :post, id: "save-form" do %>
+    <input type="hidden" name="content" id="save-content">
+    <button type="submit" class="btn btn-yellow" style="padding: 8px 24px;">保存</button>
+  <% end %>
+
+  <%= form_tag execute_bulk_send_admin_custom_messages_path(@bulk_type), method: :post, id: "send-form" do %>
+    <input type="hidden" name="content" id="send-content">
+    <div id="send-user-ids-container"></div>
+    <button type="submit" class="btn btn-orange" style="padding: 8px 24px;" onclick="return confirmSend()">送信実行</button>
+  <% end %>
+</div>
+
+<script>
+  function toggleAll(checkbox) {
+    document.querySelectorAll('.user-checkbox').forEach(function(cb) {
+      cb.checked = checkbox.checked;
+    });
+  }
+
+  document.getElementById('save-form').addEventListener('submit', function() {
+    document.getElementById('save-content').value = document.getElementById('bulk-message-content').value;
+  });
+
+  function confirmSend() {
+    var content = document.getElementById('bulk-message-content').value;
+    if (!content.trim()) {
+      alert('メッセージを入力してください');
+      return false;
+    }
+
+    var checkedBoxes = document.querySelectorAll('.user-checkbox:checked');
+    if (checkedBoxes.length === 0) {
+      alert('送信対象者を選択してください');
+      return false;
+    }
+
+    if (!confirm('選択した ' + checkedBoxes.length + ' 件のユーザーにメッセージを送信します。よろしいですか？')) {
+      return false;
+    }
+
+    document.getElementById('send-content').value = content;
+
+    var container = document.getElementById('send-user-ids-container');
+    container.innerHTML = '';
+    checkedBoxes.forEach(function(cb) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'user_ids[]';
+      input.value = cb.value;
+      container.appendChild(input);
+    });
+
+    return true;
+  }
+</script>

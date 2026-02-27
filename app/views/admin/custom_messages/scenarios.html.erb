@@ -11,3 +11,16 @@
     <li><%= link_to scenario_label(scenario), scenario_admin_custom_messages_path(scenario, locale: I18n.locale) %></li>
   <% end %>
 </ul>
+
+<hr style="margin: 32px 0;" />
+<h2>一括メッセージ送信</h2>
+<ul>
+  <li>
+    <%= link_to "無料プラン(トライアル外) + 予約ページ経由で予約(本人以外)があったユーザ",
+        bulk_send_admin_custom_messages_path("free_with_reservations") %>
+  </li>
+  <li>
+    <%= link_to "無料プラン(トライアル外) + LINE連携設定が途中 + 予約ページ経由で予約(本人以外)があったユーザ",
+        bulk_send_admin_custom_messages_path("incomplete_line") %>
+  </li>
+</ul>

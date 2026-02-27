@@ -16,6 +16,13 @@ module CustomMessages
       NO_NEW_CUSTOMER = "no_new_customer"
       NO_LINE_SETTINGS = "no_line_settings"
       NO_ENOUGH_MESSAGE = "no_enough_message"
+      BULK_FREE_WITH_RESERVATIONS = "bulk_free_with_reservations"
+      BULK_FREE_INCOMPLETE_LINE_WITH_RESERVATIONS = "bulk_free_incomplete_line_with_reservations"
+
+      BULK_SEND_SCENARIOS = [
+        BULK_FREE_WITH_RESERVATIONS,
+        BULK_FREE_INCOMPLETE_LINE_WITH_RESERVATIONS,
+      ].freeze
 
       HEALTH_CHECK_SCENARIOS = [
         NO_ENOUGH_MESSAGE,
@@ -36,7 +43,7 @@ module CustomMessages
         USER_CHARGE_MESSAGE
       ].freeze
 
-      SCENARIOS = HEALTH_CHECK_SCENARIOS + NORMAL_SCENARIOS
+      SCENARIOS = HEALTH_CHECK_SCENARIOS + NORMAL_SCENARIOS + BULK_SEND_SCENARIOS
 
       string :scenario
       string :locale
