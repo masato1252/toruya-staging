@@ -1,7 +1,7 @@
 module Surveys
   class Upsert < ActiveInteraction::Base
     object :user
-    object :owner, class: ApplicationRecord # ReservationCustomer or Customer
+    object :owner, class: ApplicationRecord
     object :survey, default: nil
 
     string :title, default: nil
@@ -53,9 +53,6 @@ module Surveys
         description: description
       )
 
-      # Track slots that were deleted during this update
-      deleted_slot_ids = []
-
       Survey.transaction do
         @survey.save!
 
@@ -73,8 +70,7 @@ module Surveys
               position: question_params[:position]
             )
 
-            # If question type is changed to text or activity, delete all options and activities that have no responses
-            question.options.destroy_all if question_params[:question_type] == 'text' || question_params[:question_type] == 'activity'
+            question.options.destroy_all if question_params[:question_type] == 'text'
           else
             question = @survey.questions.create!(
               description: question_params[:description],
@@ -101,105 +97,12 @@ module Surveys
             end
 
             question.options.where(id: existing_option_ids - processed_option_ids).destroy_all
-          elsif question_params[:question_type] == 'activity'
-            existing_activity_ids = question.activities.pluck(:id)
-            processed_activity_ids = []
-
-            question_params[:activities].each do |activity_params|
-              activity = question.activities.find_by(id: activity_params[:id]) if activity_params[:id].present?
-
-              if activity
-                activity.update!(
-                  name: activity_params[:name],
-                  position: activity_params[:position],
-                  max_participants: activity_params[:max_participants],
-                  price_cents: activity_params[:price_cents],
-                  currency: currency
-                )
-              else
-                activity = question.activities.create!(
-                  survey: @survey,
-                  name: activity_params[:name],
-                  position: activity_params[:position],
-                  max_participants: activity_params[:max_participants],
-                  price_cents: activity_params[:price_cents],
-                  currency: currency
-                )
-              end
-
-              processed_activity_ids << activity.id
-
-              existing_slot_ids = activity.activity_slots.pluck(:id)
-              processed_slot_ids = []
-
-              activity_params[:datetime_slots].each do |slot_params|
-                slot = activity.activity_slots.find_by(id: slot_params[:id]) if slot_params[:id].present?
-
-                if slot
-                  # Ensure end_time uses end_date's date part
-                  end_time = slot_params[:end_time]
-                  if end_time && slot_params[:end_date]
-                    end_date = Date.parse(slot_params[:end_date])
-                    end_time = Time.new(end_date.year, end_date.month, end_date.day, end_time.hour, end_time.min)
-                  end
-
-                  slot.update!(
-                    start_time: slot_params[:start_time],
-                    end_time: end_time
-                  )
-                else
-                  # Ensure end_time uses end_date's date part
-                  end_time = slot_params[:end_time]
-                  if end_time && slot_params[:end_date]
-                    end_date = Date.parse(slot_params[:end_date])
-                    end_time = Time.new(end_date.year, end_date.month, end_date.day, end_time.hour, end_time.min)
-                  end
-
-                  slot = activity.activity_slots.create!(
-                    start_time: slot_params[:start_time],
-                    end_time: end_time
-                  )
-                end
-
-                compose(SurveyActivitySlots::UpsertReservation,
-                  survey: @survey,
-                  activity: activity,
-                  slot: slot,
-                  customer: nil,
-                  survey_response: nil
-                )
-
-                activity.survey_responses.each do |response|
-                  compose(SurveyActivitySlots::UpsertReservation,
-                    survey: @survey,
-                    activity: activity,
-                    slot: slot,
-                    customer: response.owner,
-                    survey_response: response
-                  )
-                end
-
-                processed_slot_ids << slot.id
-              end
-
-              deleted_slot_ids.concat(existing_slot_ids - processed_slot_ids)
-              activity.activity_slots.where(id: existing_slot_ids - processed_slot_ids).destroy_all
-            end
           end
         end
 
-        # handle deleted questions
         questions_to_delete = @survey.questions.where(id: existing_question_ids - processed_question_ids)
         questions_to_delete.each do |question|
-          question.activities.each do |activity|
-            activity.destroy if !activity.survey_responses.any?
-          end
           question.destroy
-        end
-
-        # handle deleted slots
-        if deleted_slot_ids.any?
-          Reservation.where(survey_activity_slot_id: deleted_slot_ids).destroy_all
         end
 
         @survey
@@ -219,18 +122,6 @@ module Surveys
         if SurveyQuestion::SELECTION_TYPES.include?(question[:question_type]) &&
            question[:options].blank?
           errors.add(:questions, "Question #{index + 1} requires options")
-        end
-
-        if question[:question_type] == 'activity' && question[:activities].blank?
-          errors.add(:questions, "Question #{index + 1} requires at least one activity")
-        end
-
-        if question[:question_type] == 'activity'
-          question[:activities].each_with_index do |activity, activity_index|
-            if activity[:datetime_slots].blank?
-              errors.add(:questions, "Activity #{activity_index + 1} in question #{index + 1} requires at least one datetime slot")
-            end
-          end
         end
       end
     end

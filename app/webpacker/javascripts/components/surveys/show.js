@@ -108,8 +108,6 @@ const SurveyShow = ({ props }) => {
           return answer && answer.survey_option_ids && answer.survey_option_ids.length > 0;
         case 'multiple_selection':
           return answer && answer.survey_option_ids && answer.survey_option_ids.length > 0;
-        case 'activity':
-          return answer && answer.survey_activity_id;
         default:
           return true;
       }

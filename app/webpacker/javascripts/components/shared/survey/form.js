@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
-import moment from 'moment-timezone';
-import { getMomentLocale, formatActivitySlotRange } from "libraries/helper.js";
 
 const SurveyForm = ({ survey, survey_answers, onSubmit, submit_text }) => {
-  moment.locale(getMomentLocale(I18n.locale))
-
   const [answers, setAnswers] = useState(() => {
     if (!survey_answers) return {};
 
@@ -16,10 +12,6 @@ const SurveyForm = ({ survey, survey_answers, onSubmit, submit_text }) => {
         acc[answer.survey_question_id] = answer.survey_option_ids.length === 1
           ? answer.survey_option_ids[0].toString()
           : answer.survey_option_ids.map(id => id.toString());
-      } else if (answer.survey_activity_id) {
-        acc[answer.survey_question_id] = {
-          activity_id: answer.survey_activity_id.toString(),
-        };
       }
       return acc;
     }, {});
@@ -36,26 +28,6 @@ const SurveyForm = ({ survey, survey_answers, onSubmit, submit_text }) => {
         ...answers,
         [questionId]: newValues
       })
-    } else if (questionType === 'activity') {
-      const currentAnswer = answers[questionId] || {};
-
-      if (extraData === 'activity') {
-        setAnswers({
-          ...answers,
-          [questionId]: {
-            activity_id: value,
-            slot_id: null
-          }
-        });
-      } else if (extraData === 'slot') {
-        setAnswers({
-          ...answers,
-          [questionId]: {
-            ...currentAnswer,
-            slot_id: value
-          }
-        });
-      }
     } else {
       setAnswers({
         ...answers,
@@ -79,8 +51,6 @@ const SurveyForm = ({ survey, survey_answers, onSubmit, submit_text }) => {
           return !answer;
         case 'multiple_selection':
           return !answer || answer.length === 0;
-        case 'activity':
-          return !answer || !answer.activity_id;
         default:
           return false;
       }
@@ -114,13 +84,6 @@ const SurveyForm = ({ survey, survey_answers, onSubmit, submit_text }) => {
             survey_question_id: parseInt(questionId),
             text_answer: null,
             survey_option_ids: (Array.isArray(value) ? value : [value]).map(v => parseInt(v))
-          };
-        case 'activity':
-          return {
-            survey_question_id: parseInt(questionId),
-            text_answer: null,
-            survey_option_ids: [],
-            survey_activity_id: parseInt(value.activity_id)
           };
         default:
           return {
@@ -196,59 +159,6 @@ const SurveyForm = ({ survey, survey_answers, onSubmit, submit_text }) => {
                 />
                 {option.content}
               </label>
-            ))}
-          </div>
-        )
-
-      case 'activity':
-        const selectedActivityId = answers[question.id]?.activity_id;
-
-        return (
-          <div className="activity-selection">
-            {question.activities.map((activity, index) => (
-              <div key={activity?.id || index} className="activity-period">
-                <label className="radio-label">
-                  <input
-                    type="radio"
-                    name={`activity-${question.id}`}
-                    value={activity?.id}
-                    checked={selectedActivityId === (activity?.id || '').toString()}
-                    disabled={activity.is_full}
-                    onChange={(e) => handleAnswerChange(question.id, e.target.value, 'activity', 'activity')}
-                    required={question.required}
-                  />
-                  <h4>{activity.is_full && <span className="danger mr-2">{I18n.t('common.participants_full')}</span>}{activity.name || I18n.t('settings.survey.period_name_placeholder')}</h4>
-                </label>
-
-                {/* Time Slot Display */}
-                <div className="time-slot-display">
-                  <div className="time-slots">
-                    {activity?.datetime_slots?.map((slot, slotIndex) => (
-                      <div key={slotIndex} className="datetime-slot">
-                        <div className="time-info">
-                          {formatActivitySlotRange(slot)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="activity-info">
-                    {activity.max_participants > 0 && (
-                      <p className="participants-info">
-                        {I18n.t('settings.survey.participants_range', {
-                          max: activity.max_participants
-                        })}
-                      </p>
-                    )}
-                    {activity.price_cents > 0 && (
-                      <p className="price-info">
-                        {I18n.t('settings.survey.price_display', {
-                          price: activity.price_cents
-                        })}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
             ))}
           </div>
         )

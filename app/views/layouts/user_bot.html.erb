@@ -60,7 +60,7 @@
 
         <hr class="my-2" />
         <li class="p-1">
-          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics|.*sales).*(booking|menu|surveys\/activities)/ do %>
+          <%= active_link_to lines_user_bot_booking_pages_path(business_owner_id: business_owner_id), active: /^(?!.*metrics|.*sales).*(booking|menu)/ do %>
             <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.booking_pages.title") %>
           <% end %>
 
@@ -80,11 +80,6 @@
             </li>
             <li>
               <%= active_link_to t("common.menu"), lines_user_bot_settings_menus_path(business_owner_id: business_owner_id) %>
-            </li>
-            <li>
-              <%= active_link_to activities_lines_user_bot_surveys_path(business_owner_id: business_owner_id) do %>
-                <%= t("user_bot.dashboards.surveys.activity_title") %>
-              <% end %>
             </li>
           </ul>
         </li>

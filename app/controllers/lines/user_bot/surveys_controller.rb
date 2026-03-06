@@ -2,25 +2,15 @@
 
 class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   def index
-    if params[:mode] == "activity"
-      @surveys = Survey.active
-                      .joins(:questions)
-                      .where(questions: { question_type: 'activity' })
-                      .where(owner: Current.business_owner)
-                      .includes(:questions, questions: [:options, :activities, { activities: :activity_slots }])
-                      .order(updated_at: :desc)
-                      .distinct
-    else
-      @surveys = Survey.active
-                      .where(owner: Current.business_owner)
-                      .where.not(id: Survey.active
-                                      .joins(:questions)
-                                      .where(questions: { question_type: 'activity' })
-                                      .where(owner: Current.business_owner)
-                                      .select(:id))
-                      .includes(:questions, questions: [:options, :activities, { activities: :activity_slots }])
-                      .order(updated_at: :desc)
-    end
+    @surveys = Survey.active
+                    .where(owner: Current.business_owner)
+                    .where.not(id: Survey.active
+                                    .joins(:questions)
+                                    .where(questions: { question_type: 'activity' })
+                                    .where(owner: Current.business_owner)
+                                    .select(:id))
+                    .includes(:questions, questions: [:options])
+                    .order(updated_at: :desc)
   end
 
   def new
@@ -29,7 +19,6 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
 
   def show
     @survey = current_user.surveys.find(params[:id])
-    @activities = @survey.activities
   end
 
   def edit
@@ -63,12 +52,7 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
 
     if outcome.valid?
       flash[:notice] = t("common.update_successfully_message")
-
-      if outcome.result.activities.exists?
-        return_json_response(outcome, { redirect_to: activities_lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
-      else
-        return_json_response(outcome, { redirect_to: lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
-      end
+      return_json_response(outcome, { redirect_to: lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
     else
       return_json_response(outcome)
     end
@@ -80,11 +64,6 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
 
     flash[:notice] = t("common.delete_successfully_message")
     return_json_response(outcome, { redirect_to: lines_user_bot_surveys_path({ business_owner_id: Current.business_owner.id }) })
-  end
-
-  def activities
-    @survey = current_user.surveys.find(params[:id])
-    @activities = @survey.activities
   end
 
   def settings

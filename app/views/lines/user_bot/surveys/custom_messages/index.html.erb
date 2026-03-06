@@ -4,49 +4,6 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.surveys.title") %></div>
   <%= render "lines/user_bot/field_row", title: @survey.title %>
 
-  <% if @survey.activities.any? %>
-    <div class="field-group-header" id="name"><%= t("user_bot.dashboards.surveys.custom_messages.activty_type") %></div>
-    <%= render "lines/user_bot/field_row",
-      title: t("user_bot.dashboards.surveys.custom_messages.activity_pending_response"),
-      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
-        @survey,
-        business_owner_id: business_owner_id,
-        scenario: ::CustomMessages::Customers::Template::ACTIVITY_PENDING_RESPONSE,
-        custom_message_id: @pending_message&.id
-      )
-    %>
-
-    <%= render "lines/user_bot/field_row",
-      title: t("user_bot.dashboards.surveys.custom_messages.activity_accepted_response"),
-      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
-        @survey,
-        business_owner_id: business_owner_id,
-        scenario: ::CustomMessages::Customers::Template::ACTIVITY_ACCEPTED_RESPONSE,
-        custom_message_id: @accepted_message&.id
-      )
-    %>
-    <%= render "lines/user_bot/field_row",
-      title: t("user_bot.dashboards.surveys.custom_messages.activity_canceled_response"),
-      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
-        @survey,
-        business_owner_id: business_owner_id,
-        scenario: ::CustomMessages::Customers::Template::ACTIVITY_CANCELED_RESPONSE,
-        custom_message_id: @canceled_message&.id
-      )
-    %>
-
-    <div class="field-group-header" id="name"><%= t("user_bot.dashboards.surveys.custom_messages.reminder") %></div>
-
-    <%= render "lines/user_bot/field_row",
-      title: t("user_bot.dashboards.surveys.custom_messages.activity_one_day_reminder"),
-      path: edit_scenario_lines_user_bot_survey_custom_messages_path(
-        @survey,
-        business_owner_id: business_owner_id,
-        scenario: ::CustomMessages::Customers::Template::ACTIVITY_ONE_DAY_REMINDER,
-        custom_message_id: @one_day_reminder_message&.id
-      )
-    %>
-  <% end %>
   <%= render "lines/user_bot/field_row",
     title: t("user_bot.dashboards.surveys.custom_messages.survey_pending_response"),
     path: edit_scenario_lines_user_bot_survey_custom_messages_path(

@@ -36,11 +36,7 @@
       <%= render "reservations/show_modal/survey_response", response: @survey_response if @survey_response %>
       <%= render "reservations/show_modal/booking_from", reservation_customer: @reservation_customer, reservation: @reservation if @reservation_customer %>
 
-      <% if @reservation.from_activity? %>
-        <%= render "reservations/show_modal/activity_buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>
-      <% else %>
         <%= render "reservations/show_modal/buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>
-      <% end %>
     </div>
   </div>
 </div>

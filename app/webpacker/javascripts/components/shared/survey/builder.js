@@ -4,7 +4,6 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import ActivityQuestion from './ActivityQuestion';
 import { getEmbedUrl, getEditorLocale } from 'libraries/helper';
 
 const QUESTION_TYPES = {
@@ -12,7 +11,6 @@ const QUESTION_TYPES = {
   single_selection: 'Single Selection',
   multiple_selection: 'Multiple Selection',
   dropdown: 'Dropdown',
-  activity: 'Activity',
   empty_block: 'Empty Block'
 }
 
@@ -42,17 +40,6 @@ const SurveyBuilder = ({
   const [questions, setQuestions] = useState(() => {
     if (initialData?.questions && initialData.questions.length > 0) {
       return initialData.questions;
-    }
-    if (mode === 'activity') {
-      return [{
-        id: null,
-        description: '',
-        question_type: 'activity',
-        required: true,
-        position: 0,
-        options: [],
-        activities: []
-      }];
     }
     return [{
       id: null,
@@ -108,17 +95,11 @@ const SurveyBuilder = ({
   };
 
   const addQuestion = (type) => {
-    // Check if trying to add activity question when one already exists
-    if (type === 'activity' && questions.some(q => q.question_type === 'activity')) {
-      alert(I18n.t('settings.survey.only_one_activity_allowed'));
-      return;
-    }
-
     const newQuestion = {
       id: null,
       description: '',
       question_type: type,
-      required: type === 'activity' ? true : false,
+      required: false,
       position: questions.length,
       options: [],
       activities: []
@@ -152,22 +133,13 @@ const SurveyBuilder = ({
       const newQuestions = [...prevQuestions];
 
       if (field === 'question_type') {
-        // Check if trying to change to activity type when one already exists
-        if (value === 'activity' && prevQuestions.some(q => q.question_type === 'activity')) {
-          alert(I18n.t('settings.survey.only_one_activity_allowed'));
-          return prevQuestions;
-        }
-
-        // Initialize new question type options
         newQuestions[index] = {
           ...newQuestions[index],
           [field]: value,
           options: [],
           activities: [],
-          required: value === 'activity' ? true : newQuestions[index].required
         };
 
-        // Set initial options based on question type
         switch (value) {
           case 'single_selection':
           case 'multiple_selection':
@@ -178,23 +150,7 @@ const SurveyBuilder = ({
               position: 0,
             }];
             break;
-          case 'activity':
-            newQuestions[index].activities = [{
-              id: null,
-              name: '',
-              position: 0,
-              max_participants: null,
-              price_cents: 0,
-              datetime_slots: [{
-                start_date: '',
-                start_time: null,
-                end_date: '',
-                end_time: null
-              }]
-            }];
-            break;
           default:
-            // text type doesn't need options or activities
             break;
         }
       } else if (field === 'options') {
@@ -378,7 +334,6 @@ const SurveyBuilder = ({
                 className="form-select"
               >
                 {Object.entries(QUESTION_TYPES)
-                  .filter(([value]) => mode === 'activity' || value !== 'activity')
                   .map(([value, label]) => (
                     <option key={value} value={value}>
                       {I18n.t(`settings.survey.question_type_${value}`)}
@@ -446,15 +401,6 @@ const SurveyBuilder = ({
             </div>
 
           </div>
-
-          {question.question_type === 'activity' && (
-            <ActivityQuestion
-              activities={question.activities}
-              onActivitiesChange={(newActivities) => {
-                updateQuestion(questionIndex, 'activities', newActivities);
-              }}
-            />
-          )}
 
           {['single_selection', 'multiple_selection', 'dropdown'].includes(question.question_type) && (
             <div className="options-section">

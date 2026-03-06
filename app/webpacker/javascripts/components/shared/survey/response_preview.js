@@ -1,6 +1,4 @@
 import React from 'react'
-import { formatActivitySlotRange } from 'libraries/helper';
-import moment from 'moment';
 
 const SurveyResponsePreview = ({ survey, question_answers }) => {
   const renderAnswer = (answers, question) => {
@@ -28,45 +26,6 @@ const SurveyResponsePreview = ({ survey, question_answers }) => {
               <li key={option.id}>{option.content}</li>
             ))}
           </ul>
-        )
-
-      case 'activity':
-        const selectedActivity = question.activities?.find(activity => activity.id === questionAnswers[0].survey_activity_id);
-        return (
-          <div className="activity-selection">
-            <div className="activity-period">
-              <h4>{selectedActivity?.name || I18n.t('settings.survey.period_name_placeholder')}</h4>
-
-              {/* Time Slot Display */}
-              <div className="time-slot-display">
-                <div className="time-slots">
-                  {selectedActivity?.datetime_slots?.map((slot, slotIndex) => (
-                    <div key={slotIndex} className="datetime-slot">
-                      <div className="time-info">
-                        {formatActivitySlotRange(slot)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="activity-info">
-                  {selectedActivity?.max_participants > 0 && (
-                    <p className="participants-info">
-                      {I18n.t('settings.survey.participants_range', {
-                        max: selectedActivity.max_participants
-                      })}
-                    </p>
-                  )}
-                  {selectedActivity?.price_cents > 0 && (
-                    <p className="price-info">
-                      {I18n.t('settings.survey.price_display', {
-                        price: selectedActivity.price_cents
-                      })}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
         )
 
       default:

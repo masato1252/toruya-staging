@@ -467,9 +467,7 @@ Rails.application.routes.draw do
           resources :surveys, only: [:index, :show, :new, :edit, :update, :destroy] do
             collection do
               post :upsert
-              get 'activities', action: :index, defaults: { mode: 'activity' }
               get 'forms', action: :index, defaults: { mode: 'form' }
-              get 'activities/new', action: :new, defaults: { mode: 'activity' }
               get 'forms/new', action: :new, defaults: { mode: 'form' }
             end
 
@@ -485,22 +483,6 @@ Rails.application.routes.draw do
               resources :responses, only: [:index, :show], param: :survey_response_id, module: :surveys, as: :survey_responses
             end
 
-            resources :activities, only: [:index, :show], module: :surveys do
-              resources :survey_responses, only: [:show] do
-                member do
-                  post :accept
-                  post :cancel
-                  post :pending
-                end
-              end
-
-              resources :broadcasts do
-                member do
-                  put :activate
-                  put :draft
-                end
-              end
-            end
           end
 
           scope module: :tours, path: :tours, as: :tours do

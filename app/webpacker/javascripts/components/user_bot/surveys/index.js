@@ -37,15 +37,6 @@ const SurveyIndex = ({ props }) => {
   };
 
   const handleSubmit = async (data) => {
-    data.questions.forEach(question => {
-      question.activities.forEach(activity => {
-        activity.datetime_slots.forEach(slot => {
-          slot.start_time = `${slot.start_date} ${slot.start_time}`;
-          slot.end_time = `${slot.start_date} ${slot.end_time}`;
-        });
-      });
-    });
-    console.log("data", data)
     const [error, response] = await CommonServices.create({
       url: Routes.upsert_lines_user_bot_surveys_path({
         business_owner_id: props.business_owner_id,
@@ -62,13 +53,7 @@ const SurveyIndex = ({ props }) => {
       <div className="row">
         <div className="col-sm-6 px-0 settings-view surveys">
             <div className="p-3">
-              {props.has_activities && (
-                <a href={Routes.lines_user_bot_survey_activities_path(props.business_owner_id, surveyData?.id)} className="btn btn-yellow mr-2">
-                  {I18n.t('user_bot.dashboards.surveys.activities.title')}
-                </a>
-              )}
-
-              {!props.has_activities && surveyData?.id && (
+              {surveyData?.id && (
                 <a href={Routes.lines_user_bot_survey_responses_path(props.business_owner_id, surveyData?.id)} className="btn btn-yellow mr-2">
                   {I18n.t('user_bot.dashboards.surveys.responses.title')}
                 </a>

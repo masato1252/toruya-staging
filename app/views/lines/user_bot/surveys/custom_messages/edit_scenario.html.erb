@@ -2,7 +2,7 @@
   props: {
     business_owner_id: business_owner_id,
     scenario: params[:scenario],
-    activities_start_dates: @survey.activities.flat_map(&:activity_slots).select {|slot| slot.start_time > Time.current }.map {|slot| I18n.l(slot.start_time, format: :long_date_full) },
+    activities_start_dates: [],
     message: {
       id: @custom_message&.id,
       service_id: @survey.id,

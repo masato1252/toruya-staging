@@ -17,7 +17,6 @@
     <% end %>
 
     <div class="questions-container">
-      <%= render partial: 'surveys/activity_answers', locals: { activity_answers: response.activity_answers } %>
       <%= render partial: 'surveys/non_activity_answers', locals: { non_activity_answers: response.non_activity_answers } %>
     </div>
   </div>

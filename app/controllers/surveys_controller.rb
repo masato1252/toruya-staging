@@ -2,6 +2,7 @@
 
 class SurveysController < Lines::CustomersController
   include ProductLocale
+  before_action :reject_activity_survey
 
   def show
   end
@@ -28,6 +29,12 @@ class SurveysController < Lines::CustomersController
 
   def survey
     @survey ||= Survey.find_by!(slug: params[:slug])
+  end
+
+  def reject_activity_survey
+    if survey.questions.exists?(question_type: 'activity')
+      raise ActionController::RoutingError, 'Not Found'
+    end
   end
 
   def product_social_user
