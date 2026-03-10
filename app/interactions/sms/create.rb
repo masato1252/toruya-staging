@@ -40,6 +40,7 @@ module Sms
         reservation_id: reservation&.id
       )
     rescue Twilio::REST::RestError => e
+      Rails.logger.error "[Sms::Create] Twilio error sending to #{phone_number}: #{e.message}"
       Rollbar.error(
         e,
         phone_numbers: phone_number,

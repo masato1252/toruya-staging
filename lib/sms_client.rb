@@ -7,17 +7,16 @@ class SmsClient
     return if Rails.env.test? || Rails.env.development?
     return if phone_number.blank?
 
-    phone_number = phone_number.gsub(/[^0-9]/, '')
+    phone_number = phone_number.gsub(/[^\+0-9]/, '')
 
     formatted_phone =
-      # if Rails.configuration.x.env.staging?
-      #   Phonelib.parse(HARUKO_PHONE, "JP").international(true)
-      # els
       if Phonelib.valid?(phone_number)
         Phonelib.parse(phone_number).international(true)
       else
         Phonelib.parse(phone_number, locale_country_code(locale)).international(true)
       end
+
+    Rails.logger.info "[SmsClient] Sending SMS to #{formatted_phone} (original: #{phone_number})"
 
     Twilio::REST::Client.new.messages.create(
       from: Rails.application.secrets.twilio_from_phone,

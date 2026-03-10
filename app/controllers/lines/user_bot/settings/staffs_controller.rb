@@ -43,6 +43,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
     if outcome.valid?
       redirect_to edit_lines_user_bot_settings_staff_path(business_owner_id: Current.business_owner.id, id: outcome.result.id, attribute: :staff_menus), notice: I18n.t("common.create_successfully_message")
     else
+      flash.now[:alert] = outcome.errors.full_messages.join(", ")
       render :new
     end
   end

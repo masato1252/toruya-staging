@@ -52,12 +52,15 @@ module StaffAccounts
 
           if staff_account.save
             if consultant
-              # Send SMS to consultant their client was sign up
               Notifiers::Users::Notifications::ConsultantClientRegistered.run(receiver: staff_account, client: staff_account.owner)
             else
-              # Send SMS to invitee to tell them come to be a staff
-              Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
+              notification_outcome = Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
+              if notification_outcome.invalid?
+                Rails.logger.error "[StaffAccounts::Create] ActivateStaffAccount failed for staff_account##{staff_account.id}: #{notification_outcome.errors.full_messages.join(', ')}"
+              end
             end
+          else
+            Rails.logger.error "[StaffAccounts::Create] staff_account save failed for staff##{staff.id}: #{staff_account.errors.full_messages.join(', ')}"
           end
         end
       end
@@ -78,8 +81,11 @@ module StaffAccounts
     def validate_unique_user
       if params[:email].present? && owner.owner_staff_accounts.where(email: params[:email], active_uniqueness: true).where.not(staff_id: staff.id).exists?
         errors.add(:staff, :email_uniqueness_required)
-      elsif params[:phone_number].present? && owner.owner_staff_accounts.where(phone_number: params[:phone_number], active_uniqueness: true).where.not(staff_id: staff.id).exists?
-        errors.add(:staff, :phone_number_uniqueness_required)
+      elsif params[:phone_number].present?
+        formatted = Phonelib.parse(params[:phone_number], :jp).international(false)
+        if owner.owner_staff_accounts.where(phone_number: formatted, active_uniqueness: true).where.not(staff_id: staff.id).exists?
+          errors.add(:staff, :phone_number_uniqueness_required)
+        end
       end
     end
 
