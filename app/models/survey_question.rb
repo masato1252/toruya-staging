@@ -20,7 +20,7 @@ class SurveyQuestion < ApplicationRecord
   SELECTION_TYPES = %w[single_selection multiple_selection dropdown].freeze
 
   belongs_to :survey
-  has_many :options, class_name: "SurveyOption"
+  has_many :options, -> { order(:position) }, class_name: "SurveyOption"
   has_many :activities, class_name: "SurveyActivity"
 
   validates :description, presence: true

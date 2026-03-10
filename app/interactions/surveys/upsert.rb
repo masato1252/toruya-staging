@@ -105,6 +105,8 @@ module Surveys
           question.destroy
         end
 
+        normalize_positions
+
         @survey
       end
     rescue ActiveRecord::RecordInvalid => e
@@ -112,6 +114,16 @@ module Surveys
     end
 
     private
+
+    def normalize_positions
+      @survey.questions.reload.order(:position, :id).each_with_index do |q, i|
+        q.update_column(:position, i) unless q.position == i
+
+        q.options.reload.order(:position, :id).each_with_index do |opt, j|
+          opt.update_column(:position, j) unless opt.position == j
+        end
+      end
+    end
 
     def validate_questions
       questions.each_with_index do |question, index|

@@ -25,7 +25,7 @@ class Survey < ApplicationRecord
   belongs_to :user
   belongs_to :owner, polymorphic: true, optional: true
 
-  has_many :questions, -> { active }, dependent: :destroy, class_name: "SurveyQuestion"
+  has_many :questions, -> { active.order(:position) }, dependent: :destroy, class_name: "SurveyQuestion"
   has_many :responses, dependent: :destroy, class_name: "SurveyResponse"
   has_many :activities, class_name: "SurveyActivity"
 

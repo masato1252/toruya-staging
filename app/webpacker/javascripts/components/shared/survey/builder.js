@@ -37,9 +37,18 @@ const SurveyBuilder = ({
     return EditorState.createWithContent(contentState);
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const sortByPosition = (items) =>
+    [...items].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+  const sortQuestionsAndOptions = (questions) =>
+    sortByPosition(questions).map(q => ({
+      ...q,
+      options: q.options ? sortByPosition(q.options) : []
+    }));
+
   const [questions, setQuestions] = useState(() => {
     if (initialData?.questions && initialData.questions.length > 0) {
-      return initialData.questions;
+      return sortQuestionsAndOptions(initialData.questions);
     }
     return [{
       id: null,
@@ -53,7 +62,9 @@ const SurveyBuilder = ({
   });
 
   const [editorStates, setEditorStates] = useState(() => {
-    const initialQuestions = initialData?.questions || [{
+    const initialQuestions = initialData?.questions
+      ? sortByPosition(initialData.questions)
+      : [{
             id: null,
             description: '',
             question_type: 'text',
@@ -61,7 +72,7 @@ const SurveyBuilder = ({
             position: 0,
             options: [],
             activities: []
-    }];
+      }];
 
     return initialQuestions.map(question => {
       if (!question.description) {

@@ -1,6 +1,18 @@
 import React, { useState } from 'react'
 
-const SurveyForm = ({ survey, survey_answers, onSubmit, submit_text }) => {
+const sortByPosition = (items) =>
+  [...items].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+const SurveyForm = ({ survey: rawSurvey, survey_answers, onSubmit, submit_text }) => {
+  const survey = {
+    ...rawSurvey,
+    questions: rawSurvey.questions
+      ? sortByPosition(rawSurvey.questions).map(q => ({
+          ...q,
+          options: q.options ? sortByPosition(q.options) : []
+        }))
+      : []
+  };
   const [answers, setAnswers] = useState(() => {
     if (!survey_answers) return {};
 
