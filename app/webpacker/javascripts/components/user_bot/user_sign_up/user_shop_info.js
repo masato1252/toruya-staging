@@ -17,6 +17,15 @@ export const UserShopInfo = ({props, finalView}) => {
     const checkShop = async () => {
       const [error, response] = await UsersServices.checkShop({social_service_user_id: props.social_user, staff_token: props.staff_token })
 
+      if (response.data.redirect_url) {
+        window.gtag('event', 'sign_up_success', {
+          'event_category': 'user',
+          'event_label': 'sign_up'
+        });
+        window.location.href = response.data.redirect_url;
+        return;
+      }
+
       setShopProfile(response.data.is_shop_profile_created)
       setCheckShopProfile(true)
     }

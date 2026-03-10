@@ -129,7 +129,11 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       outcome = StaffAccounts::ConnectUser.run(token: params[:staff_token], user: current_user)
 
       if outcome.valid?
-        render json: { is_shop_profile_created: current_user&.profile&.company_address_details&.present? }
+        staff_account = outcome.result
+        render json: {
+          is_shop_profile_created: true,
+          redirect_url: lines_user_bot_settings_path(business_owner_id: staff_account.owner_id)
+        }
       else
         write_user_bot_cookies(:current_user_id, nil)
 
