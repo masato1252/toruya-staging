@@ -105,6 +105,56 @@ $transition-speed: 0.2s;
     padding: 1rem;
     margin-bottom: 1rem;
 
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid $light-gray;
+
+      .question-number {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: $text-color;
+      }
+
+      .question-move-buttons {
+        display: flex;
+        gap: 0.25rem;
+
+        .btn-move {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          padding: 0;
+          border: 1px solid $border-color;
+          border-radius: 4px;
+          background: white;
+          color: $text-color;
+          cursor: pointer;
+          transition: all $transition-speed ease;
+
+          &:hover:not(:disabled) {
+            background: $light-gray;
+            border-color: darken($border-color, 10%);
+          }
+
+          &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+          }
+
+          i {
+            margin: 0;
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+
     .question-controls {
       margin-bottom: 1rem;
     }

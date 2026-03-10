@@ -139,6 +139,26 @@ const SurveyBuilder = ({
     setEditorStates(prev => prev.filter((_, i) => i !== index));
   };
 
+  const moveQuestion = (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= questions.length) return;
+
+    setQuestions(prevQuestions => {
+      const newQuestions = [...prevQuestions];
+      const [moved] = newQuestions.splice(fromIndex, 1);
+      newQuestions.splice(toIndex, 0, moved);
+      const reindexed = newQuestions.map((q, i) => ({ ...q, position: i }));
+      if (onQuestionsChange) onQuestionsChange(reindexed);
+      return reindexed;
+    });
+
+    setEditorStates(prev => {
+      const newStates = [...prev];
+      const [moved] = newStates.splice(fromIndex, 1);
+      newStates.splice(toIndex, 0, moved);
+      return newStates;
+    });
+  };
+
   const updateQuestion = (index, field, value) => {
     setQuestions(prevQuestions => {
       const newQuestions = [...prevQuestions];
@@ -337,6 +357,29 @@ const SurveyBuilder = ({
 
       {questions.map((question, questionIndex) => (
         <div key={questionIndex} className="question-card">
+          <div className="question-header">
+            <span className="question-number">{I18n.t('settings.survey.question_label', { defaultValue: '設問' })} {questionIndex + 1}</span>
+            <div className="question-move-buttons">
+              <button
+                type="button"
+                className="btn btn-move"
+                disabled={questionIndex === 0}
+                onClick={() => moveQuestion(questionIndex, questionIndex - 1)}
+                title={I18n.t('settings.survey.move_up', { defaultValue: '上へ移動' })}
+              >
+                <i className="fas fa-arrow-up"></i>
+              </button>
+              <button
+                type="button"
+                className="btn btn-move"
+                disabled={questionIndex === questions.length - 1}
+                onClick={() => moveQuestion(questionIndex, questionIndex + 1)}
+                title={I18n.t('settings.survey.move_down', { defaultValue: '下へ移動' })}
+              >
+                <i className="fas fa-arrow-down"></i>
+              </button>
+            </div>
+          </div>
           <div className="question-controls">
             <div className="form-group">
               <select
