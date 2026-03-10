@@ -130,16 +130,16 @@ $transition-speed: 0.2s;
           width: 32px;
           height: 32px;
           padding: 0;
-          border: 1px solid $border-color;
+          border: 1px solid darken($border-color, 5%);
           border-radius: 4px;
-          background: white;
+          background-color: #f0f0f0;
           color: $text-color;
           cursor: pointer;
           transition: all $transition-speed ease;
 
           &:hover:not(:disabled) {
-            background: $light-gray;
-            border-color: darken($border-color, 10%);
+            background-color: darken(#f0f0f0, 8%);
+            border-color: darken($border-color, 15%);
           }
 
           &:disabled {
@@ -150,6 +150,7 @@ $transition-speed: 0.2s;
           i {
             margin: 0;
             font-size: 0.8rem;
+            color: $text-color;
           }
         }
       }
