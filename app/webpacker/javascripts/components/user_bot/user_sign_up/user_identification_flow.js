@@ -2,32 +2,38 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import PhoneInput from 'react-phone-input-2'
 import TextareaAutosize from 'react-autosize-textarea';
 
 import { IdentificationCodesServices, UsersServices } from "user_bot/api";
 import I18n from 'i18n-js/index.js.erb';
 
 import { ErrorMessage, RequiredLabel } from "shared/components";
+import { COUNTRY_CODES, separatePhoneNumber, toInternationalNumber } from "shared/customer_verification";
 
 export const UserIdentificationFlow = ({props, finalView, next}) => {
-  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']
   const {
     page_title, trial_info_html, name, last_name, first_name, confirm_customer_info, booking_code, message,
     phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info, referral_code_title, referral_code_placeholder, sms_faq
   } = props.i18n.user_sign_up;
   const { confirm, required_label } = props.i18n;
 
+  const { countryCode: initialCountryCode, number: initialLocalPhone } = separatePhoneNumber(props.phone_number, props.locale);
+  const [countryCode, setCountryCode] = useState(initialCountryCode);
+  const [localPhone, setLocalPhone] = useState(initialLocalPhone);
+
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm({
     defaultValues: {
-      phone_number: props.phone_number
+      phone_number: props.phone_number ? toInternationalNumber(initialCountryCode, initialLocalPhone) : ''
     }
   });
   const { isSubmitting } = formState;
   const [is_phone_identified, setPhoneIdentified] = useState(!!props.is_user_logged_in)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
-  const phone_number = watch("phone_number")
+
+  useEffect(() => {
+    setValue("phone_number", toInternationalNumber(countryCode, localPhone));
+  }, [countryCode, localPhone]);
 
   useEffect(() => {
     if (props.is_user_logged_in) {
@@ -128,15 +134,28 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
         <h4>
           <RequiredLabel label={props.i18n.user_sign_up.phone_number} required_label={required_label} />
         </h4>
-        <PhoneInput
-          country={phone_countries.includes(props.locale) ? props.locale : 'jp'}
-          onlyCountries={phone_countries}
-          value={phone_number}
-          onChange={ (phone) => setValue("phone_number", phone) }
-          autoFormat={false}
-          placeholder='09012345678'
-          countryCodeEditable={false}
-        />
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <select
+            className="form-control"
+            style={{ width: '180px', flexShrink: 0 }}
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
+          >
+            {COUNTRY_CODES.map(country => (
+              <option key={country.code} value={country.code}>
+                {country.label}
+              </option>
+            ))}
+          </select>
+          <input
+            type="tel"
+            className="form-control"
+            style={{ flex: 1 }}
+            value={localPhone}
+            onChange={(e) => setLocalPhone(e.target.value)}
+            placeholder="09012345678"
+          />
+        </div>
         <ErrorMessage error={errors.phone_number?.message} />
         {!watchIsIdentificationCodeExists && (
           <div className="centerize margin-around">

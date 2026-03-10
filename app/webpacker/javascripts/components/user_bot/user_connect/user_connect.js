@@ -3,12 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IdentificationCodesServices, UsersServices } from "user_bot/api";
-import PhoneInput from 'react-phone-input-2'
 
 import { ErrorMessage, RequiredLabel } from "shared/components";
+import { COUNTRY_CODES, separatePhoneNumber, toInternationalNumber } from "shared/customer_verification";
 
 export const UserConnect = ({props, next}) => {
-  const phone_countries = ['jp', 'ca', 'us', 'mx', 'in', 'ru', 'id', 'cn', 'hk', 'kr', 'my', 'sg', 'tw', 'tr', 'fr', 'de', 'it', 'dk', 'fi', 'is', 'uk', 'ar', 'br', 'au', 'nz']
   const {
     confirm_customer_info, booking_code, message
   } = props.i18n.user_sign_up;
@@ -17,12 +16,19 @@ export const UserConnect = ({props, next}) => {
   } = props.i18n.user_connect;
   const { confirm, shop_info, required_label } = props.i18n;
 
+  const { countryCode: initialCountryCode } = separatePhoneNumber(null, props.locale);
+  const [countryCode, setCountryCode] = useState(initialCountryCode);
+  const [localPhone, setLocalPhone] = useState('');
+
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm();
   const { isSubmitting } = formState;
   const [is_phone_identified, setPhoneIdentified] = useState(false)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
-  const phone_number = watch("phone_number")
+
+  useEffect(() => {
+    setValue("phone_number", toInternationalNumber(countryCode, localPhone));
+  }, [countryCode, localPhone]);
 
   useEffect(() => {
     if (props.is_user_logged_in) {
@@ -79,15 +85,28 @@ export const UserConnect = ({props, next}) => {
         <h4>
           <RequiredLabel label={props.i18n.user_sign_up.phone_number} required_label={required_label} />
         </h4>
-        <PhoneInput
-          country={phone_countries.includes(props.locale) ? props.locale : 'jp'}
-          onlyCountries={phone_countries}
-          value={phone_number}
-          onChange={ (phone) => setValue("phone_number", phone) }
-          autoFormat={false}
-          placeholder='09012345678'
-          countryCodeEditable={false}
-        />
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <select
+            className="form-control"
+            style={{ width: '180px', flexShrink: 0 }}
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
+          >
+            {COUNTRY_CODES.map(country => (
+              <option key={country.code} value={country.code}>
+                {country.label}
+              </option>
+            ))}
+          </select>
+          <input
+            type="tel"
+            className="form-control"
+            style={{ flex: 1 }}
+            value={localPhone}
+            onChange={(e) => setLocalPhone(e.target.value)}
+            placeholder="09012345678"
+          />
+        </div>
         <ErrorMessage error={errors.phone_number?.message} />
         {!watchIsUserMatched && (
           <div className="centerize">
