@@ -23,12 +23,18 @@ module StaffAccounts
           )
 
           begin
-            if user.social_user && Rails.env.production?
-              dashboard_menu = SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY, locale: user.social_user.locale)
-              RichMenus::Connect.run(social_target: user.social_user, social_rich_menu: dashboard_menu) if dashboard_menu
+            social = user.social_user
+            Rails.logger.info "[StaffAccounts::ConnectUser] Rich menu switch: user##{user.id}, social_user=#{social&.id}, locale=#{social&.locale}, env_production=#{Rails.env.production?}"
+            if social && Rails.env.production?
+              dashboard_menu = SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY, locale: social.locale)
+              Rails.logger.info "[StaffAccounts::ConnectUser] Dashboard menu found=#{dashboard_menu&.id}, social_name=#{dashboard_menu&.social_name}"
+              if dashboard_menu
+                RichMenus::Connect.run(social_target: social, social_rich_menu: dashboard_menu)
+                Rails.logger.info "[StaffAccounts::ConnectUser] Rich menu switch completed for user##{user.id}"
+              end
             end
           rescue => e
-            Rails.logger.error "[StaffAccounts::ConnectUser] Rich menu switch failed for user##{user.id}: #{e.message}"
+            Rails.logger.error "[StaffAccounts::ConnectUser] Rich menu switch failed for user##{user.id}: #{e.class} #{e.message}"
           end
 
           Notifiers::Users::Notifications::StaffJoined.perform_later(receiver: staff_account.owner, staff_name: staff.name)

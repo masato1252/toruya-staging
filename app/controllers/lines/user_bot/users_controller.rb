@@ -141,6 +141,19 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       end
     elsif current_user && current_user.staff_accounts.active.where.not(owner_id: current_user.id).exists?
       staff_account = current_user.staff_accounts.active.where.not(owner_id: current_user.id).first
+
+      begin
+        if social_user && Rails.env.production?
+          dashboard_menu = SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY, locale: social_user.locale)
+          if dashboard_menu && social_user.social_rich_menu_key != dashboard_menu.social_name
+            RichMenus::Connect.run(social_target: social_user, social_rich_menu: dashboard_menu)
+            Rails.logger.info "[check_shop_profile] Switched rich menu to Dashboard for social_user##{social_user.id}"
+          end
+        end
+      rescue => e
+        Rails.logger.error "[check_shop_profile] Rich menu switch failed: #{e.class} #{e.message}"
+      end
+
       render json: {
         is_shop_profile_created: true,
         redirect_url: lines_user_bot_settings_path(business_owner_id: staff_account.owner_id)
