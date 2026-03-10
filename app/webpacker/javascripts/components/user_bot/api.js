@@ -34,7 +34,7 @@ const UsersServices = {
         "X-CSRF-Token": Rails.csrfToken()
       },
       url: Routes.lines_user_bot_create_user_path({format: "json"}),
-      data: _.pick(data, ['first_name', 'last_name', 'phone_number', 'email', 'phonetic_last_name', 'phonetic_first_name', 'uuid', 'referral_token', 'where_know_toruya', 'what_main_problem']),
+      data: _.pick(data, ['first_name', 'last_name', 'phone_number', 'email', 'phonetic_last_name', 'phonetic_first_name', 'uuid', 'referral_token', 'where_know_toruya', 'what_main_problem', 'staff_token', 'consultant_token']),
       responseType: "json"
     })
   },
