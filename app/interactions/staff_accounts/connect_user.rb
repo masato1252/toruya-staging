@@ -22,6 +22,13 @@ module StaffAccounts
             phonetic_first_name: staff.phonetic_first_name.presence || user.profile.phonetic_first_name
           )
 
+          if user.social_user && Rails.env.production?
+            RichMenus::Connect.run(
+              social_target: user.social_user,
+              social_rich_menu: SocialRichMenu.find_by!(social_name: UserBotLines::RichMenus::Dashboard::KEY, locale: user.social_user.locale)
+            )
+          end
+
           Notifiers::Users::Notifications::StaffJoined.perform_later(receiver: staff_account.owner, staff_name: staff.name)
         else
           errors.merge!(staff_account.errors)

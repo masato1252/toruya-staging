@@ -139,6 +139,12 @@ class Lines::UserBot::UsersController < Lines::UserBotController
 
         head :bad_request
       end
+    elsif current_user && current_user.staff_accounts.active.exists?
+      staff_account = current_user.staff_accounts.active.first
+      render json: {
+        is_shop_profile_created: true,
+        redirect_url: lines_user_bot_settings_path(business_owner_id: staff_account.owner_id)
+      }
     else
       render json: { is_shop_profile_created: current_user&.profile&.company_address_details&.present? }
     end
