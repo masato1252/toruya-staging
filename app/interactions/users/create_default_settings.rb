@@ -7,6 +7,7 @@ module Users
     def execute
       if user.profile && !user.shops.exists?
         shop_name = user.profile.company_name.presence || "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
+        user.profile.update(company_name: shop_name) if user.profile.company_name.blank?
 
         Shops::Create.run(
           user: user,

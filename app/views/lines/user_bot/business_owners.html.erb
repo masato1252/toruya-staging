@@ -7,7 +7,7 @@
 
   <% current_social_user.manage_accounts.each do |owner| %>
     <div class="my-2">
-      <%= link_to owner.company_name, { controller: @redirect_controller, action: @redirect_action, business_owner_id: owner.id }, class: "btn btn-tarco mx-1 my1" %>
+      <%= link_to (owner.company_name.presence || t("dashboard.someone_shop", name: owner.name)), { controller: @redirect_controller, action: @redirect_action, business_owner_id: owner.id }, class: "btn btn-tarco mx-1 my1" %>
     </div>
   <% end %>
 </div>
