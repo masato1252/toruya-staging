@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
+  before_action :redirect_to_correct_owner, only: [:show, :edit, :update, :destroy, :delete_option, :preview_modal, :edit_booking_options_order, :update_booking_options_order]
+
   def new
     @booking_shop = Current.business_owner.shops.count == 1 ? Current.business_owner.shops.first : nil
   end
@@ -107,6 +109,18 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   private
+
+  def redirect_to_correct_owner
+    return if Current.business_owner.booking_pages.exists?(id: params[:id])
+
+    correct_owner = current_social_user&.manage_accounts&.find do |owner|
+      owner.booking_pages.exists?(id: params[:id])
+    end
+
+    if correct_owner
+      redirect_to url_for(params.permit!.merge(business_owner_id: correct_owner.id))
+    end
+  end
 
   def menu_options
     Current.business_owner.menus.map do |menu|

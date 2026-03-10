@@ -14,6 +14,11 @@ module UserBotExceptionHandler
       redirect_to lines_user_bot_schedules_path, :alert => "Invalid Request"
     end
 
+    rescue_from ActiveRecord::RecordNotFound do
+      redirect_to lines_user_bot_schedules_path(business_owner_id: business_owner_id),
+                  alert: I18n.t("common.record_not_found", default: "このページは見つかりませんでした。アカウントを確認してください。")
+    end
+
     rescue_from StandardError do |exception|
       SlackErrorNotifier.notify(exception, slack_error_context)
       Rollbar.error(exception) if defined?(Rollbar)
