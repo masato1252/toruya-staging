@@ -182,6 +182,7 @@ tw:
           info_hint: 主要顯示在銷售頁面上。
           staffs: 成員
           consultants: 官方支持者
+          logo_label: Company Logo
         shop:
           shop_management: 商家管理
           shop_info_label: 商家資訊
