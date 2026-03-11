@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :online_services, param_key: :service_id
+
   def new
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = @online_service.chapters.find(params[:chapter_id])

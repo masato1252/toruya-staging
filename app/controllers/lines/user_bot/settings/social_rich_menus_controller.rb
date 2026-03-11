@@ -3,6 +3,8 @@
 require "utils"
 
 class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashboardController
+  before_action :redirect_to_correct_rich_menu_owner, only: [:edit, :show, :destroy, :current]
+
   def index
     @current_rich_menu = Current.business_owner.social_account.current_rich_menu
     # show rollbar when no current rich menu
@@ -97,5 +99,20 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
       keyword_booking_pages_size: keyword_booking_pages_size,
       keyword_booking_options_size: keyword_booking_options_size
     }
+  end
+
+  private
+
+  def redirect_to_correct_rich_menu_owner
+    return if params[:id].blank?
+    return if Current.business_owner.social_account&.social_rich_menus&.exists?(id: params[:id])
+
+    correct_owner = current_social_user&.manage_accounts&.find do |owner|
+      owner.social_account&.social_rich_menus&.exists?(id: params[:id])
+    end
+
+    if correct_owner
+      redirect_to url_for(params.permit!.merge(business_owner_id: correct_owner.id))
+    end
   end
 end

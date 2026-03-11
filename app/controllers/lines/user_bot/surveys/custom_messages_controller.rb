@@ -4,6 +4,9 @@ module Lines
   module UserBot
     module Surveys
       class CustomMessagesController < Lines::UserBotDashboardController
+        include CrossAccountRedirect
+        redirect_to_correct_owner_for :surveys
+
         before_action :set_survey
 
         def index

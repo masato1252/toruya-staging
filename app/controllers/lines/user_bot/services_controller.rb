@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :online_services, only: [:show, :edit, :update, :destroy]
+
   def new
   end
 

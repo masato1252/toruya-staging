@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :customers, param_key: :customer_id
+
   before_action :set_customer, only: [:index]
 
   def index

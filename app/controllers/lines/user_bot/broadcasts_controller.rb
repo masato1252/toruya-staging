@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :broadcasts, only: [:show, :edit, :update, :draft, :activate, :clone]
+
   def index
     @broadcasts = Current.business_owner.broadcasts.ordered.normal
   end

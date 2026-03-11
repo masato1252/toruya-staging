@@ -8,6 +8,8 @@ require "site_routing"
 
 class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   include SchedulesHelper
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :customers, param_key: :customer_id, only: [:form]
   SCHEDULE_CHECKING = "reservations_schedule_checking"
   before_action :set_reservation, only: [:update, :destroy]
 

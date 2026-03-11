@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :shops, param_key: :shop_id, only: [:available_options]
+
   def new
   end
 

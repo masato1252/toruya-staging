@@ -3,6 +3,9 @@
 class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   TOP_SERVICES_NUMBER = 10
   include ::MetricsHelpers
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :booking_pages, only: [:booking_page]
+  redirect_to_correct_owner_for :online_services, only: [:online_service]
 
   def dashboard
     # Calculate the comparison period (previous 30 days before the metric start time)

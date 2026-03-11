@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :shops, only: [:show, :edit, :update]
+
   def index
     @shops = Current.business_owner.shops
   end

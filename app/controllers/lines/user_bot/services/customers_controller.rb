@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :online_services, param_key: :service_id
+
   def index
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     relations = @online_service.all_online_service_customer_relations.includes(:customer, :last_customer_payment, :online_service).to_a

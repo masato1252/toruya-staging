@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::SalesController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :sale_pages, only: [:edit, :update, :destroy, :clone]
+
   def new
   end
 

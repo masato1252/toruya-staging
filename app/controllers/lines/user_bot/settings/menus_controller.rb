@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :menus, only: [:show, :edit, :update, :destroy]
+
   def index
     @menus = Current.business_owner.menus.order("updated_at DESC")
   end

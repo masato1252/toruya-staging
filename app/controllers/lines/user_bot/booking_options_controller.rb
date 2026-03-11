@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :booking_options, only: [:show, :edit, :update, :reorder_menu_priority, :delete_menu, :destroy]
+
   def new
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
     @options = ::BookingPages::AvailableBookingOptions.run!(shop: Current.business_owner.shops.first)

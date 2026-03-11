@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :customers, param_key: :customer_id, only: [:details, :reply_message, :delete_message, :unread_message]
+  redirect_to_correct_owner_for :customers, param_key: :id, only: [:toggle_reminder_permission, :delete]
+
   def index
     authorize! :read, :customers_dashboard
 

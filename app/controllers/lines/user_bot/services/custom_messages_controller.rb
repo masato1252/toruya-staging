@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :online_services, param_key: :service_id
+
   def index
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     scope = CustomMessage.scenario_of(@online_service, CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED)

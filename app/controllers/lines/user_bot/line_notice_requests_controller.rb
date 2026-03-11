@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :line_notice_requests, only: [:show, :approve, :success]
+
   before_action :set_line_notice_request, only: [:show, :approve, :success]
 
   # GET /lines/user_bot/owner/:business_owner_id/line_notice_requests/:id

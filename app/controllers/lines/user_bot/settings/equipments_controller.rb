@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Settings::EquipmentsController < Lines::UserBotDashboardController
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :shops, param_key: :shop_id
+
   before_action :set_shop
   before_action :set_equipment, only: [:show, :edit, :update, :destroy]
 

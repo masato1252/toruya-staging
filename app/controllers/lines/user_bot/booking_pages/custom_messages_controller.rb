@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDashboardController
-  before_action :redirect_to_correct_owner
+  include CrossAccountRedirect
+  redirect_to_correct_owner_for :booking_pages, param_key: :booking_page_id
 
   def index
     @booking_page = Current.business_owner.booking_pages.find(params[:booking_page_id])
@@ -17,17 +18,4 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
     @template = @message ? @message.content : ::CustomMessages::Customers::Template.run!(product: @booking_page, scenario: params[:scenario])
   end
 
-  private
-
-  def redirect_to_correct_owner
-    return if Current.business_owner.booking_pages.exists?(id: params[:booking_page_id])
-
-    correct_owner = current_social_user&.manage_accounts&.find do |owner|
-      owner.booking_pages.exists?(id: params[:booking_page_id])
-    end
-
-    if correct_owner
-      redirect_to url_for(params.permit!.merge(business_owner_id: correct_owner.id))
-    end
-  end
 end

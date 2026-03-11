@@ -4,6 +4,9 @@ module Lines
   module UserBot
     module Surveys
       class ResponsesController < Lines::UserBotDashboardController
+        include CrossAccountRedirect
+        redirect_to_correct_owner_for :surveys
+
         # The response for survey
         before_action :set_survey
         before_action :set_survey_response, only: [:show]
