@@ -10,7 +10,7 @@ class OnlineServiceSerializer
   end
 
   attribute :company_info do |service|
-    CompanyInfoSerializer.new(service.company).attributes_hash
+    CompanyInfoSerializer.new(service.user.shops.first || service.company).attributes_hash
   end
 
   attribute :upsell_sale_page do |service, params|

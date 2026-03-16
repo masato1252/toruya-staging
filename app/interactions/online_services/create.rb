@@ -45,7 +45,7 @@ module OnlineServices
           content_url: content_url,
           external_purchase_url: external_purchase_url,
           upsell_sale_page_id: upsell&.dig(:sale_page_id),
-          company: user.profile,
+          company: user.shops.first || user.profile,
           slug: SecureRandom.alphanumeric(10)
         )
 

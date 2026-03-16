@@ -5,7 +5,7 @@ class CourseSerializer
   attribute :id, :name, :slug
 
   attribute :company_info do |service|
-    CompanyInfoSerializer.new(service.company).attributes_hash
+    CompanyInfoSerializer.new(service.user.shops.first || service.company).attributes_hash
   end
 
   attribute :chapters do |online_service, params|

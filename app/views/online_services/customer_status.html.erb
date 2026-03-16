@@ -1,9 +1,10 @@
 <div class="service-show form">
   <div class="online-service-header">
-    <% if @online_service.company.logo_url %>
-      <%= image_tag @online_service.company.logo_url, class: "logo" %>
+    <% company_source = @online_service.user.shops.first || @online_service.company %>
+    <% if company_source.logo_url %>
+      <%= image_tag company_source.logo_url, class: "logo" %>
     <% else %>
-      <h2><%= @online_service.company.name %></h2>
+      <h2><%= company_source.name %></h2>
     <% end %>
   </div>
   <div class="p6 centerize border-0 border-t border-solid border-gray-500">

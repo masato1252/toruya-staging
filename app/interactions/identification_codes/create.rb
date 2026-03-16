@@ -35,7 +35,7 @@ module IdentificationCodes
             CustomerMailer.with(
               email: email,
               message: message,
-              subject: I18n.t("customer_mailer.custom.title", company_name: user.profile.company_name)
+              subject: I18n.t("customer_mailer.custom.title", company_name: user.shops.first&.name || user.profile&.company_name)
             ).custom.deliver_now
           end
 

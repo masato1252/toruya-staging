@@ -79,7 +79,7 @@ module Reservations
           customer: customer,
           email: mail,
           message: message,
-          subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name),
+          subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.shops.first&.name || business_owner.profile&.company_name),
           reservation: reservation,
           custom_message: custom_message_for_tracking
         )

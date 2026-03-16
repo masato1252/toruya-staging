@@ -38,7 +38,7 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   end
 
   attribute :company_info do |object|
-    CompanyInfoSerializer.new(object.user.profile).attributes_hash
+    CompanyInfoSerializer.new(object.user.shops.first || object.user.profile).attributes_hash
   end
 
   attribute :payable do |object|

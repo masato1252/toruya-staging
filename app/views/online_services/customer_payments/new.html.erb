@@ -4,7 +4,7 @@
     slug: params[:slug],
     encrypted_social_service_user_id: params[:encrypted_social_service_user_id],
     order_id: params[:order_id],
-    company_name: @relation.online_service.company.company_name,
+    company_name: (@relation.online_service.user.shops.first || @relation.online_service.company).name,
     service_name: @relation.online_service.name,
     price: @price.amount_with_currency.format,
     is_subscription: @relation.online_service.recurring_charge_required?,

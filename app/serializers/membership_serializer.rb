@@ -5,6 +5,6 @@ class MembershipSerializer
   attribute :id, :name, :slug, :tags
 
   attribute :company_info do |service|
-    CompanyInfoSerializer.new(service.company).attributes_hash
+    CompanyInfoSerializer.new(service.user.shops.first || service.company).attributes_hash
   end
 end

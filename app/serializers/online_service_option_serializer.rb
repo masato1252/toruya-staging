@@ -14,6 +14,6 @@ class OnlineServiceOptionSerializer
   end
 
   attribute :company_info do |service|
-    CompanyInfoSerializer.new(service.company).attributes_hash
+    CompanyInfoSerializer.new(service.user.shops.first || service.company).attributes_hash
   end
 end

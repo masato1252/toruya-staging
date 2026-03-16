@@ -68,7 +68,7 @@ class Shop < ApplicationRecord
   end
 
   def company_name
-    user.profile&.company_name || read_attribute(:name)
+    read_attribute(:name)
   end
   alias_method :name, :company_name
   alias_method :short_name, :company_name

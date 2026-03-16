@@ -16,10 +16,10 @@ class SalePages::BookingPageSerializer < SalePageSerializer
   end
 
   attribute :shop do |object|
-    CompanyInfoSerializer.new(object.user.profile).attributes_hash
+    CompanyInfoSerializer.new(object.product.shop || object.user.profile).attributes_hash
   end
 
   attribute :company_info do |object|
-    CompanyInfoSerializer.new(object.user.profile).attributes_hash
+    CompanyInfoSerializer.new(object.product.shop || object.user.profile).attributes_hash
   end
 end

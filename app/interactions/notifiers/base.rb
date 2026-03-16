@@ -179,7 +179,7 @@ module Notifiers
             customer: target_email_user,
             email: email,
             message: message,
-            subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.profile.company_name),
+            subject: I18n.t("customer_mailer.custom.title", company_name: business_owner.shops.first&.name || business_owner.profile&.company_name),
             broadcast: try(:broadcast),
             reservation: try(:reservation)
           )

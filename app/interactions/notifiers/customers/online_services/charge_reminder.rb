@@ -16,8 +16,8 @@ module Notifiers
             customer_name: receiver.message_name,
             service_title: online_service.name,
             charge_date: charge_date,
-            shop_name: online_service.company.company_name,
-            shop_phone: online_service.company.phone_number,
+            shop_name: online_service.user.shops.first&.name || online_service.company&.company_name,
+            shop_phone: online_service.user.shops.first&.phone_number || online_service.company&.phone_number,
             customer_status_online_service_url: url_helpers.customer_status_online_service_url(
               slug: online_service_customer_relation.online_service.slug,
               encrypted_social_service_user_id: MessageEncryptor.encrypt(online_service_customer_relation.customer&.social_customer&.social_user_id),

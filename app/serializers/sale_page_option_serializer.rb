@@ -44,7 +44,7 @@ class SalePageOptionSerializer
   end
 
   attribute :shop do |sale_page|
-    CompanyInfoSerializer.new(sale_page.user.profile).attributes_hash
+    CompanyInfoSerializer.new(sale_page.user.shops.first || sale_page.user.profile).attributes_hash
   end
 
   attribute :template do |sale_page|

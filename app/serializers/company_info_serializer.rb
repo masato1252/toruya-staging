@@ -5,19 +5,16 @@ class CompanyInfoSerializer
   attribute :id, :email, :template_variables, :logo_url, :website
 
   attribute :email do |object|
-    if object.class == Shop
-      object.user.profile.company_email
-    else
+    case object
+    when Shop
+      object.email
+    when Profile
       object.company_email
     end
   end
 
   attribute :logo_url do |object|
-    if object.class == Shop
-      object.user.profile.logo_url
-    else
-      object.logo_url
-    end
+    object.logo_url
   end
 
   attribute :type do |object|
@@ -27,7 +24,7 @@ class CompanyInfoSerializer
   attribute :short_name do |object|
     case object
     when Shop
-      object.user.profile.company_name
+      object.read_attribute(:name)
     when Profile
       object.company_name
     end
@@ -36,25 +33,20 @@ class CompanyInfoSerializer
   attribute :name do |object|
     case object
     when Shop
-      object.user.profile.company_name
+      object.read_attribute(:name)
     when Profile
       object.company_name
     end
   end
 
   attribute :label do |object|
-    case object
-    when Shop
-      I18n.t("common.company_info")
-    when Profile
-      I18n.t("common.company_info")
-    end
+    I18n.t("common.company_info")
   end
 
   attribute :address do |object|
     address = case object
     when Shop
-      object.user.profile.company_full_address
+      object.full_address
     when Profile
       object.company_full_address
     end
@@ -71,7 +63,7 @@ class CompanyInfoSerializer
   attribute :phone_number do |object|
     case object
     when Shop
-      object.user.profile.company_phone_number
+      object.phone_number
     when Profile
       object.company_phone_number
     end
