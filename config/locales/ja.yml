@@ -786,6 +786,7 @@ ja:
           attributes:
             staff:
               email_uniqueness_required: "^電子メールは別のスタッフによって使用されています"
+              phone_number_uniqueness_required: "^この電話番号は別のスタッフによって使用されています"
         customers/delete:
           attributes:
             customer:

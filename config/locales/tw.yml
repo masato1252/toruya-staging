@@ -780,6 +780,7 @@ tw:
           attributes:
             staff:
               email_uniqueness_required: "^此電子郵件已被其他成員使用"
+              phone_number_uniqueness_required: "^此電話號碼已被其他成員使用"
         customers/delete:
           attributes:
             customer:
