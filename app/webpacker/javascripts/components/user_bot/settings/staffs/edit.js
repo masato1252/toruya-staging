@@ -6,11 +6,15 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, SwitchButton } from "shared/components"
 import StaffEditComponent from "components/user_bot/sales/staff_edit";
 import { CommonServices } from "user_bot/api"
+import { COUNTRY_CODES, separatePhoneNumber, toInternationalNumber } from "shared/customer_verification";
 import I18n from 'i18n-js/index.js.erb';
 
 const StaffEdit = ({props}) => {
   const [staff, setStaff] = useState(props.staff)
   const [staffMenus, setStaffMenus] = useState(props.staff_menus_options || [])
+  const { countryCode: initialCountryCode, number: initialLocalPhone } = separatePhoneNumber(props.staff.phone_number, props.staff.locale);
+  const [countryCode, setCountryCode] = useState(initialCountryCode);
+  const [localPhone, setLocalPhone] = useState(initialLocalPhone);
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.staff,
@@ -22,12 +26,15 @@ const StaffEdit = ({props}) => {
 
     let error, response;
 
-    // 準備提交數據
     let submitData = _.assign( data, {
       attribute: props.attribute,
       picture: staff.picture,
       introduction: staff.introduction
     });
+
+    if (props.attribute === "phone_number") {
+      submitData.phone_number = toInternationalNumber(countryCode, localPhone);
+    }
 
     if (props.attribute === "staff_menus") {
       submitData.staff_menus = staffMenus;
@@ -94,11 +101,26 @@ const StaffEdit = ({props}) => {
             <div className="field-header">
               {I18n.t("common.cellphone_number")}
             </div>
-            <div className="field-row">
+            <div className="field-row" style={{ display: 'flex', gap: '8px' }}>
+              <select
+                className="form-control"
+                style={{ width: '180px', flexShrink: 0 }}
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+              >
+                {COUNTRY_CODES.map(country => (
+                  <option key={country.code} value={country.code}>
+                    {country.label}
+                  </option>
+                ))}
+              </select>
               <input
-                ref={register()}
                 type="tel"
-                name="phone_number"
+                className="form-control"
+                style={{ flex: 1 }}
+                value={localPhone}
+                onChange={(e) => setLocalPhone(e.target.value)}
+                placeholder="09012345678"
               />
             </div>
           </>

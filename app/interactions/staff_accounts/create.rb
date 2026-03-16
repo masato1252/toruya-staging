@@ -16,9 +16,11 @@ module StaffAccounts
     validate :validate_unique_user
 
     def execute
-      # TODO: We don't have staff international phone input yet
-      # https://www.notion.so/Internal-phone-for-staffs-73e10f8234044651b9b2360de02fdd0e?pvs=4
-      formatted_phone = Phonelib.parse(params[:phone_number], :jp).international(false)
+      formatted_phone = if params[:phone_number].present? && params[:phone_number].start_with?("+")
+        Phonelib.parse(params[:phone_number]).international(false)
+      else
+        Phonelib.parse(params[:phone_number], :jp).international(false)
+      end
 
       staff_account = owner.owner_staff_accounts.find_or_initialize_by(staff: staff)
       staff_account.email = params[:email]
@@ -82,7 +84,11 @@ module StaffAccounts
       if params[:email].present? && owner.owner_staff_accounts.where(email: params[:email], active_uniqueness: true).where.not(staff_id: staff.id).exists?
         errors.add(:staff, :email_uniqueness_required)
       elsif params[:phone_number].present?
-        formatted = Phonelib.parse(params[:phone_number], :jp).international(false)
+        formatted = if params[:phone_number].start_with?("+")
+          Phonelib.parse(params[:phone_number]).international(false)
+        else
+          Phonelib.parse(params[:phone_number], :jp).international(false)
+        end
         if owner.owner_staff_accounts.where(phone_number: formatted, active_uniqueness: true).where.not(staff_id: staff.id).exists?
           errors.add(:staff, :phone_number_uniqueness_required)
         end

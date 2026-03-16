@@ -78,9 +78,13 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def resend_activation
-    Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: @staff.staff_account, user: @staff.staff_account.owner)
+    outcome = Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: @staff.staff_account, user: @staff.staff_account.owner)
 
-    flash[:success] = I18n.t("settings.staff_account.sent_message")
+    if outcome.valid?
+      flash[:success] = I18n.t("settings.staff_account.sent_message")
+    else
+      flash[:alert] = outcome.errors.full_messages.join(", ")
+    end
     redirect_back(fallback_location: lines_user_bot_settings_staff_path(Current.business_owner, @staff))
   end
 
@@ -88,7 +92,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
 
   def set_staff
     @staff = Staff.find_by(id: params[:id], user_id: Current.business_owner.id)
-    redirect_to settings_user_staffs_path(Current.business_owner, shop) unless @staff
+    redirect_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id) unless @staff
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

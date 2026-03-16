@@ -4,7 +4,7 @@ module Notifiers
   module Users
     module Notifications
       class ActivateStaffAccount < Base
-        deliver_by_priority [:email, :sms]
+        deliver_by_priority [:sms, :email]
 
         validate :receiver_should_be_staff_account
 
