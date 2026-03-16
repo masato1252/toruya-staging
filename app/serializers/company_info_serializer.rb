@@ -46,7 +46,7 @@ class CompanyInfoSerializer
   attribute :address do |object|
     address = case object
     when Shop
-      object.full_address
+      object.company_full_address
     when Profile
       object.company_full_address
     end
