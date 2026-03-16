@@ -111,8 +111,13 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
       owner.social_account&.social_rich_menus&.exists?(id: params[:id])
     end
 
-    if correct_owner
+    return unless correct_owner
+
+    if request.get? || request.head?
       redirect_to url_for(params.permit!.merge(business_owner_id: correct_owner.id))
+    else
+      Current.business_owner = correct_owner
+      @super_user = correct_owner
     end
   end
 end

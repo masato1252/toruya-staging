@@ -10,16 +10,16 @@ module Sales
 
       def execute
         if relation.assignment?
-          relation.update(payment_state: :canceled, permission_state: :pending)
+          relation.update!(payment_state: :canceled, permission_state: :pending)
         elsif relation.subscription? # subscription might bundler, as well
-          OnlineServiceCustomerRelations::Cancel.run(relation: relation)
+          OnlineServiceCustomerRelations::Cancel.run!(relation: relation)
         elsif relation.online_service.bundler?
           relation.bundled_service_relations.each do |bundled_service_relation|
-            OnlineServiceCustomerRelations::ReconnectBestContract.run(relation: bundled_service_relation)
+            OnlineServiceCustomerRelations::ReconnectBestContract.run!(relation: bundled_service_relation)
           end
-          relation.update(payment_state: :canceled, permission_state: :pending)
+          relation.update!(payment_state: :canceled, permission_state: :pending)
         else
-          OnlineServiceCustomerRelations::ReconnectBestContract.run(relation: relation)
+          OnlineServiceCustomerRelations::ReconnectBestContract.run!(relation: relation)
           relation.canceled_payment_state!
         end
 

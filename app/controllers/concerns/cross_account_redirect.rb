@@ -21,8 +21,13 @@ module CrossAccountRedirect
       owner.public_send(resource).exists?(id: resource_id)
     end
 
-    if correct_owner
+    return unless correct_owner
+
+    if request.get? || request.head?
       redirect_to url_for(params.permit!.merge(business_owner_id: correct_owner.id))
+    else
+      Current.business_owner = correct_owner
+      @super_user = correct_owner
     end
   end
 end
