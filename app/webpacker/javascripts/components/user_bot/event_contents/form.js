@@ -66,10 +66,10 @@ const EventContentForm = ({ props }) => {
       : `?shop_id=${selectedShopId}`;
 
     fetch(baseUrl + query, { headers: { "Accept": "application/json" } })
-      .then(r => r.json())
+      .then(r => r.ok ? r.json() : Promise.reject(r))
       .then(data => {
-        setOnlineServices(data);
-        if (!data.find(os => String(os.id) === String(watch("online_service_id")))) {
+        setOnlineServices(Array.isArray(data) ? data : []);
+        if (!data.find || !data.find(os => String(os.id) === String(watch("online_service_id")))) {
           setValue("online_service_id", "");
         }
       })

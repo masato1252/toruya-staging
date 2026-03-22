@@ -52,7 +52,7 @@ class Lines::UserBot::EventContentsController < Lines::UserBotDashboardControlle
     @event = @event_content.event
     @shops = Current.business_owner.shops.active
     @booking_pages = Current.business_owner.booking_pages.active rescue []
-    @online_services = @event_content.shop&.online_services&.not_deleted || []
+    @online_services = @event_content.shop_id ? OnlineService.where(company_type: "Shop", company_id: @event_content.shop_id).not_deleted : []
   end
 
   def update
@@ -103,7 +103,7 @@ class Lines::UserBot::EventContentsController < Lines::UserBotDashboardControlle
   def online_services_for_shop
     online_services = if params[:shop_id].present?
       shop = Current.business_owner.shops.find_by(id: params[:shop_id])
-      shop ? shop.online_services.not_deleted : OnlineService.none
+      shop ? OnlineService.where(company_type: "Shop", company_id: shop.id).not_deleted : OnlineService.none
     elsif params[:user_id].present? && params[:user_id].to_i == Current.business_owner.id
       Current.business_owner.online_services.not_deleted
     else
