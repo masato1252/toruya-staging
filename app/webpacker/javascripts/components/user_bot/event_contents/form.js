@@ -79,20 +79,15 @@ const EventContentForm = ({ props }) => {
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
 
-    const formData = new FormData();
-    Object.keys(data).forEach(k => {
-      // 「ユーザー直属」選択時は shop_id を空にする
-      if (k === "shop_id" && String(data[k]).startsWith("user_")) {
-        formData.append(k, "");
-      } else {
-        formData.append(k, data[k] ?? "");
-      }
-    });
-    if (thumbnail) formData.append("thumbnail", thumbnail);
+    const payload = { ...data };
+    if (payload.shop_id && String(payload.shop_id).startsWith("user_")) {
+      payload.shop_id = "";
+    }
+    if (thumbnail) payload.thumbnail = thumbnail;
 
     const [error, response] = await (isEdit
-      ? CommonServices.update({ url: props.action_url, data: formData })
-      : CommonServices.create({ url: props.action_url, data: formData })
+      ? CommonServices.update({ url: props.action_url, data: payload })
+      : CommonServices.create({ url: props.action_url, data: payload })
     );
 
     if (error) {

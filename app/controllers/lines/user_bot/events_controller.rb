@@ -23,7 +23,11 @@ class Lines::UserBot::EventsController < Lines::UserBotDashboardController
       published: params[:published]
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_event_path(business_owner_id: business_owner_id, id: outcome.result&.id) })
+    if outcome.valid?
+      render json: { redirect_to: lines_user_bot_event_path(business_owner_id: business_owner_id, id: outcome.result.id) }
+    else
+      return_json_response(outcome, {})
+    end
   end
 
   def show
