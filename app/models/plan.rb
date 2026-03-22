@@ -73,6 +73,9 @@ class Plan < ApplicationRecord
       { rank: 5, max_customers_limit: 1500, cost: 11_660, },
       { rank: 6, max_customers_limit: 2000, cost: 13_970, },
       { rank: 7, max_customers_limit: Float::INFINITY, cost: 13_970, },
+    ],
+    Plan::TEAM_LEVEL => [
+      { rank: 0, max_customers_limit: Float::INFINITY, cost: 0 },
     ]
   }.freeze
 
@@ -111,6 +114,9 @@ class Plan < ApplicationRecord
       { rank: 5, max_customers_limit: 1500, cost: 3_900, },
       { rank: 6, max_customers_limit: 2000, cost: 4_900, },
       { rank: 7, max_customers_limit: Float::INFINITY, cost: 4_900, },
+    ],
+    Plan::TEAM_LEVEL => [
+      { rank: 0, max_customers_limit: Float::INFINITY, cost: 0 },
     ]
   }.freeze
 
