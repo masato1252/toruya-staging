@@ -3,7 +3,7 @@
 class Events::ParticipationsController < Lines::CustomersController
   layout "booking"
 
-  before_action :set_event
+  prepend_before_action :set_event
 
   def new
     @current_social_user = current_toruya_social_user

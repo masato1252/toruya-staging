@@ -18,26 +18,30 @@ class Lines::UserBot::EventContentsController < Lines::UserBotDashboardControlle
       title: params[:title],
       description: params[:description],
       introduction: params[:introduction],
-      shop_id: params[:shop_id],
-      online_service_id: params[:online_service_id],
+      shop_id: params[:shop_id].presence,
+      online_service_id: params[:online_service_id].presence,
       start_at: params[:start_at],
       end_at: params[:end_at],
-      capacity: params[:capacity],
-      position: params[:position],
+      capacity: params[:capacity].presence,
+      position: params[:position].presence || 0,
       pre_ad_video_url: params[:pre_ad_video_url],
       post_ad_video_url: params[:post_ad_video_url],
       direct_download_url: params[:direct_download_url],
-      upsell_booking_page_id: params[:upsell_booking_page_id],
+      upsell_booking_page_id: params[:upsell_booking_page_id].presence,
       upsell_booking_enabled: params[:upsell_booking_enabled],
       monitor_enabled: params[:monitor_enabled],
       monitor_name: params[:monitor_name],
-      monitor_price: params[:monitor_price],
-      monitor_limit: params[:monitor_limit],
+      monitor_price: params[:monitor_price].presence,
+      monitor_limit: params[:monitor_limit].presence,
       monitor_form_url: params[:monitor_form_url],
       thumbnail: params[:thumbnail]
     )
 
-    return_json_response(outcome, { redirect_to: lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: outcome.result&.id) })
+    if outcome.valid?
+      render json: { redirect_to: lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: outcome.result.id) }
+    else
+      return_json_response(outcome, {})
+    end
   end
 
   def show
@@ -58,21 +62,21 @@ class Lines::UserBot::EventContentsController < Lines::UserBotDashboardControlle
       title: params[:title],
       description: params[:description],
       introduction: params[:introduction],
-      shop_id: params[:shop_id],
-      online_service_id: params[:online_service_id],
+      shop_id: params[:shop_id].presence,
+      online_service_id: params[:online_service_id].presence,
       start_at: params[:start_at],
       end_at: params[:end_at],
-      capacity: params[:capacity],
-      position: params[:position],
+      capacity: params[:capacity].presence,
+      position: params[:position].presence || 0,
       pre_ad_video_url: params[:pre_ad_video_url],
       post_ad_video_url: params[:post_ad_video_url],
       direct_download_url: params[:direct_download_url],
-      upsell_booking_page_id: params[:upsell_booking_page_id],
+      upsell_booking_page_id: params[:upsell_booking_page_id].presence,
       upsell_booking_enabled: params[:upsell_booking_enabled],
       monitor_enabled: params[:monitor_enabled],
       monitor_name: params[:monitor_name],
-      monitor_price: params[:monitor_price],
-      monitor_limit: params[:monitor_limit],
+      monitor_price: params[:monitor_price].presence,
+      monitor_limit: params[:monitor_limit].presence,
       monitor_form_url: params[:monitor_form_url],
       thumbnail: params[:thumbnail]
     )
@@ -88,6 +92,25 @@ class Lines::UserBot::EventContentsController < Lines::UserBotDashboardControlle
     else
       redirect_back(fallback_location: lines_user_bot_event_path(business_owner_id: business_owner_id, id: @event_content.event_id))
     end
+  end
+
+  def shops_by_user
+    user = User.find_by(id: params[:user_id])
+    shops = user ? user.shops.active.map { |s| { id: s.id, name: "#{s.name} (user:#{user.id})" } } : []
+    render json: shops
+  end
+
+  def online_services_for_shop
+    online_services = if params[:shop_id].present?
+      shop = Current.business_owner.shops.find_by(id: params[:shop_id])
+      shop ? shop.online_services.not_deleted : OnlineService.none
+    elsif params[:user_id].present? && params[:user_id].to_i == Current.business_owner.id
+      Current.business_owner.online_services.not_deleted
+    else
+      OnlineService.none
+    end
+
+    render json: online_services.map { |os| { id: os.id, name: os.name } }
   end
 
   def upload_image

@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import ImageUploader from "react-images-upload";
 import { TopNavigationBar, BottomNavigationBar, CircleButtonWithWord } from "shared/components";
@@ -14,8 +14,12 @@ const EventContentForm = ({ props }) => {
   const [images, setImages] = useState(props.event_content?.images || []);
   const [monitorEnabled, setMonitorEnabled] = useState(props.event_content?.monitor_enabled || false);
   const [upsellEnabled, setUpsellEnabled] = useState(props.event_content?.upsell_booking_enabled || false);
+  const [onlineServices, setOnlineServices] = useState(props.online_services || []);
+  const [extraShops, setExtraShops] = useState([]);
+  const [userIdInput, setUserIdInput] = useState("");
+  const [userShopSearching, setUserShopSearching] = useState(false);
 
-  const { register, handleSubmit, formState, watch } = useForm({
+  const { register, handleSubmit, formState, watch, setValue } = useForm({
     defaultValues: {
       content_type: props.event_content?.content_type || "seminar",
       title: props.event_content?.title || "",
@@ -41,12 +45,49 @@ const EventContentForm = ({ props }) => {
   });
 
   const contentType = watch("content_type");
+  const selectedShopId = watch("shop_id");
+
+  useEffect(() => {
+    if (!selectedShopId) {
+      setOnlineServices([]);
+      setValue("online_service_id", "");
+      return;
+    }
+
+    const eventId = props.event_id || props.event_content?.event_id;
+    const baseUrl = Routes.online_services_for_shop_lines_user_bot_event_event_contents_path(
+      props.business_owner_id,
+      eventId,
+      { format: "json" }
+    );
+
+    const query = selectedShopId === `user_${props.business_owner_id}`
+      ? `?user_id=${props.business_owner_id}`
+      : `?shop_id=${selectedShopId}`;
+
+    fetch(baseUrl + query, { headers: { "Accept": "application/json" } })
+      .then(r => r.json())
+      .then(data => {
+        setOnlineServices(data);
+        if (!data.find(os => String(os.id) === String(watch("online_service_id")))) {
+          setValue("online_service_id", "");
+        }
+      })
+      .catch(() => setOnlineServices([]));
+  }, [selectedShopId]);
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
 
     const formData = new FormData();
-    Object.keys(data).forEach(k => formData.append(k, data[k] ?? ""));
+    Object.keys(data).forEach(k => {
+      // 「ユーザー直属」選択時は shop_id を空にする
+      if (k === "shop_id" && String(data[k]).startsWith("user_")) {
+        formData.append(k, "");
+      } else {
+        formData.append(k, data[k] ?? "");
+      }
+    });
     if (thumbnail) formData.append("thumbnail", thumbnail);
 
     const [error, response] = await (isEdit
@@ -78,6 +119,32 @@ const EventContentForm = ({ props }) => {
       setImages(prev => prev.filter(img => img.id !== imageId));
     }
   };
+
+  const handleUserShopSearch = () => {
+    if (!userIdInput) return;
+    setUserShopSearching(true);
+    const eventId = props.event_id || props.event_content?.event_id;
+    const baseUrl = Routes.shops_by_user_lines_user_bot_event_event_contents_path(
+      props.business_owner_id,
+      eventId,
+      { format: "json" }
+    );
+    fetch(`${baseUrl}&user_id=${userIdInput}`, { headers: { "Accept": "application/json" } })
+      .then(r => r.json())
+      .then(data => {
+        setExtraShops(prev => {
+          const existingIds = new Set(prev.map(s => s.id));
+          const newShops = data.filter(s => !existingIds.has(s.id));
+          return [...prev, ...newShops];
+        });
+      })
+      .finally(() => setUserShopSearching(false));
+  };
+
+  const allShops = [
+    ...(props.shops || []),
+    ...extraShops.filter(es => !(props.shops || []).find(s => s.id === es.id))
+  ];
 
   const backUrl = isEdit
     ? Routes.lines_user_bot_event_content_path(props.business_owner_id, props.event_content?.id)
@@ -137,16 +204,36 @@ const EventContentForm = ({ props }) => {
             <div className="field-row">
               <select ref={register()} name="shop_id" className="form-control">
                 <option value="">選択してください</option>
-                {(props.shops || []).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                <option value={`user_${props.business_owner_id}`}>（店舗なし／ユーザー直属）</option>
+                {allShops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
+            </div>
+            <div className="field-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input
+                type="number"
+                value={userIdInput}
+                onChange={e => setUserIdInput(e.target.value)}
+                placeholder="別ユーザーIDで店舗を追加検索"
+                className="form-control"
+                style={{ maxWidth: 220 }}
+              />
+              <button
+                type="button"
+                onClick={handleUserShopSearch}
+                disabled={userShopSearching || !userIdInput}
+                className="btn btn-default btn-sm"
+              >
+                {userShopSearching ? <i className="fa fa-spinner fa-spin" /> : "検索"}
+              </button>
             </div>
 
             <div className="field-header">連携オンラインサービス</div>
             <div className="field-row">
               <select ref={register()} name="online_service_id" className="form-control">
                 <option value="">なし</option>
-                {(props.online_services || []).map(os => <option key={os.id} value={os.id}>{os.name}</option>)}
+                {onlineServices.map(os => <option key={os.id} value={os.id}>{os.name}</option>)}
               </select>
+              {!selectedShopId && <small className="text-gray-500">先に掲載店舗を選択してください</small>}
             </div>
 
             <div className="field-header">サービス開始日時</div>

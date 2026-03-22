@@ -232,6 +232,10 @@ Rails.application.routes.draw do
                 post :upload_image
                 delete "images/:image_id", action: :destroy_image, as: :destroy_image
               end
+              collection do
+                get :online_services_for_shop
+                get :shops_by_user
+              end
             end
           end
 

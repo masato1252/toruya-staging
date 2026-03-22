@@ -3,7 +3,7 @@
 class EventContentsController < Lines::CustomersController
   layout "booking"
 
-  before_action :set_event
+  prepend_before_action :set_event
   before_action :set_event_content
 
   def show
