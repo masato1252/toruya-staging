@@ -10,6 +10,6 @@ class CreateEventContentUsages < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    add_index :event_content_usages, [:event_content_id, :social_user_id], unique: true
+    add_index :event_content_usages, [:event_content_id, :social_user_id], unique: true, name: "idx_evt_content_usages_unique"
   end
 end

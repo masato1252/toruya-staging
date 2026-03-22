@@ -11,7 +11,7 @@ class CreateEventUpsellConsultations < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    add_index :event_upsell_consultations, [:event_content_id, :social_user_id], unique: true
+    add_index :event_upsell_consultations, [:event_content_id, :social_user_id], unique: true, name: "idx_evt_upsell_consults_unique"
     add_index :event_upsell_consultations, :status
   end
 end

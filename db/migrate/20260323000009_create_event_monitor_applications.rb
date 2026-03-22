@@ -10,6 +10,6 @@ class CreateEventMonitorApplications < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    add_index :event_monitor_applications, [:event_content_id, :social_user_id], unique: true
+    add_index :event_monitor_applications, [:event_content_id, :social_user_id], unique: true, name: "idx_evt_monitor_apps_unique"
   end
 end
