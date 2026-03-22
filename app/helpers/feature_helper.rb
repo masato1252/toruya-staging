@@ -67,6 +67,10 @@ module FeatureHelper
   alias_method :support_line_keyword_contacts?, :japanese_only?
   alias_method :support_line_keyword_services?, :japanese_only?
 
+  def support_event?
+    japanese_only? && Current.business_owner&.team_plan_member?
+  end
+
   def support_booking_options_menu_concept?
     Current.business_owner&.booking_options_menu_concept
   end

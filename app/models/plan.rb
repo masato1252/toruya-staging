@@ -16,6 +16,7 @@ class Plan < ApplicationRecord
   BASIC_PLAN =  BASIC_LEVEL = "basic".freeze
   PREMIUM_PLAN = PREMIUM_LEVEL = "premium".freeze
   ENTERPRISE_PLAN = ENTERPRISE_LEVEL = "enterprise".freeze
+  TEAM_PLAN = TEAM_LEVEL = "team".freeze
 
   BUSINESS_PLAN = "business".freeze
   CHILD_BASIC_PLAN = "child_basic".freeze
@@ -33,7 +34,8 @@ class Plan < ApplicationRecord
     business: 3,
     child_basic: 4,
     child_premium: 5,
-    enterprise: 6
+    enterprise: 6,
+    team: 7
   }, _suffix: true
 
   DETAILS_JP = {
@@ -173,6 +175,8 @@ class Plan < ApplicationRecord
     case level
     when ENTERPRISE_PLAN
       ENTERPRISE_LEVEL
+    when TEAM_PLAN
+      TEAM_LEVEL
     when FREE_PLAN
       FREE_LEVEL
     when BASIC_PLAN, CHILD_BASIC_PLAN

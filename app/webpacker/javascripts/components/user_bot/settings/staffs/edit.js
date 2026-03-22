@@ -144,17 +144,31 @@ const StaffEdit = ({props}) => {
         break
       case "staff_info":
         return (
-          <StaffEditComponent
-            selected_staff={staff}
-            handleStaffChange={(attr, value) => {
-              setStaff({...staff, introduction: value})
-            }}
-            handlePictureChange={(picture, pictureDataUrl) => {
-              setStaff({
-                ...staff, picture: picture[0], picture_url: pictureDataUrl
-              })
-            }}
-          />
+          <>
+            <div className="field-header">
+              {I18n.t("settings.staff.position")}
+            </div>
+            <div className="field-row">
+              <input
+                ref={register()}
+                name="position"
+                type="text"
+                placeholder={I18n.t("settings.staff.position_placeholder")}
+                defaultValue={props.staff.position || ""}
+              />
+            </div>
+            <StaffEditComponent
+              selected_staff={staff}
+              handleStaffChange={(attr, value) => {
+                setStaff({...staff, introduction: value})
+              }}
+              handlePictureChange={(picture, pictureDataUrl) => {
+                setStaff({
+                  ...staff, picture: picture[0], picture_url: pictureDataUrl
+                })
+              }}
+            />
+          </>
         )
         break
       case "staff_menus":

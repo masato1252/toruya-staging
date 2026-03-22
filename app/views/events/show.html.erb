@@ -1,0 +1,12 @@
+<%= content_for :meta_tags do %>
+  <meta property="og:title" content="<%= @event.title %>" />
+  <meta property="og:description" content="<%= @event.description&.truncate(120) %>" />
+<% end %>
+
+<%= react_component("events/show", {
+  props: {
+    event: @event_hash,
+    line_login_url: @current_social_user ? nil : line_login_url(current_owner.social_account, new_event_participation_url(event_slug: @event.slug)),
+    current_event_path: request.url
+  }
+}, { camelize_props: false }) %>

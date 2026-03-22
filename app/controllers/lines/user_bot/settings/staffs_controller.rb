@@ -60,6 +60,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
       email: params[:email],
       picture: params[:picture],
       introduction: params[:introduction],
+      position: params[:position],
       staff_menus: params[:staff_menus]
     )
 

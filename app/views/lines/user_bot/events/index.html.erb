@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", title: t("sidebar.events.title") %>
+
+        <div class="field-header"><%= t("sidebar.events.title") %></div>
+        <div class="booking-pages-list">
+          <% @events.each do |event| %>
+            <%= content_tag :div, class: "field-row with-next-arrow" do %>
+              <%= link_to lines_user_bot_event_path(event, business_owner_id: business_owner_id) do %>
+                <div class="flex justify-between w-full">
+                  <div>
+                    <h3 class="underline text-gray-700"><%= event.title %></h3>
+                    <div class="desc text-sm">
+                      <%= event.published? ? "公開中" : "非公開" %>
+                      <% if event.start_at %>
+                        | <%= l(event.start_at, format: :short) %> 〜 <%= event.end_at ? l(event.end_at, format: :short) : "" %>
+                      <% end %>
+                    </div>
+                  </div>
+                  <i class="fa fa-angle-right"></i>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+
+          <% if @events.empty? %>
+            <div class="field-row centerize text-gray-500">
+              <p>イベントはまだありません</p>
+            </div>
+          <% end %>
+        </div>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+          <%= link_to new_lines_user_bot_event_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+            <i class="fas fa-plus fa-2x"></i>
+            <div class="word"><%= I18n.t("action.add_more") %></div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

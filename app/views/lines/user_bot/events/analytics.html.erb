@@ -1,0 +1,41 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-8 px-0 settings-view">
+      <div class="form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          title: "#{@event.title} - アクセス解析",
+          back_path: lines_user_bot_event_path(@event, business_owner_id: business_owner_id) %>
+
+        <div class="field-header">コンテンツ別アクセス解析</div>
+
+        <% @event_contents.each do |content| %>
+          <div class="field-row flex-col">
+            <h4 class="font-bold"><%= content.title %></h4>
+            <div class="grid grid-cols-3 gap-2 mt-2">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-tarco"><%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).count %></div>
+                <div class="text-xs text-gray-500">PV</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600"><%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).distinct.count("properties->>'social_user_id'") %></div>
+                <div class="text-xs text-gray-500">来場者(UU)</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600"><%= content.usage_count %></div>
+                <div class="text-xs text-gray-500">リード</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-yellow-600"><%= content.event_upsell_consultations.count %></div>
+                <div class="text-xs text-gray-500">相談予約</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-purple-600"><%= content.event_monitor_applications.count %></div>
+                <div class="text-xs text-gray-500">モニター応募</div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

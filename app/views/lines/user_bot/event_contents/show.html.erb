@@ -1,0 +1,56 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          title: @event_content.title,
+          back_path: lines_user_bot_event_path(@event, business_owner_id: business_owner_id) %>
+
+        <div class="field-row">
+          <% if @event_content.thumbnail.attached? %>
+            <img src="<%= url_for(@event_content.thumbnail) %>" class="w-full rounded" style="max-height: 200px; object-fit: cover;" />
+          <% end %>
+        </div>
+
+        <div class="field-row">
+          <span class="badge badge-info"><%= @event_content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+          <h3 class="mt-2 font-bold"><%= @event_content.title %></h3>
+          <% if @event_content.start_at %>
+            <p class="text-sm text-gray-500">
+              <%= l(@event_content.start_at, format: :long) %> 〜
+              <%= @event_content.end_at ? l(@event_content.end_at, format: :long) : "" %>
+            </p>
+          <% end %>
+          <% if @event_content.capacity %>
+            <p class="text-sm">上限: <%= @event_content.capacity %>人 (利用済: <%= @event_content.usage_count %>人)</p>
+          <% end %>
+        </div>
+
+        <% if @event_content.introduction.present? %>
+          <div class="field-header">紹介文</div>
+          <div class="field-row"><p class="break-line-content"><%= @event_content.introduction %></p></div>
+        <% end %>
+
+        <% if @event_content.description.present? %>
+          <div class="field-header">説明文</div>
+          <div class="field-row"><p class="break-line-content"><%= @event_content.description %></p></div>
+        <% end %>
+
+        <%= render "lines/user_bot/bottom_navigation_bar", klass: "space-around" do %>
+          <%= link_to edit_lines_user_bot_event_content_path(@event_content, business_owner_id: business_owner_id), class: "btn btn-tarco btn-circle btn-with-word" do %>
+            <i class="fas fa-edit fa-2x"></i>
+            <div class="word">編集</div>
+          <% end %>
+          <%= link_to lines_user_bot_event_content_path(@event_content, business_owner_id: business_owner_id),
+            method: :delete,
+            data: { confirm: "このコンテンツを削除しますか？" },
+            class: "btn btn-danger btn-circle btn-with-word" do %>
+            <i class="fas fa-trash fa-2x"></i>
+            <div class="word">削除</div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

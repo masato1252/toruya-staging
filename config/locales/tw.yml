@@ -58,6 +58,8 @@ tw:
     booking_pages:
       title: 線上預約
       list: 預約頁面
+    events:
+      title: 活動管理
     metrics:
       title: 訪問分析
       dashboard_title: 儀表板
@@ -126,6 +128,7 @@ tw:
       business: 代理商
       child_basic: 基本版
       child_premium: 進階版
+      team: 團隊版
   notifications:
     pending_reservation_need_confirm: "有 %{number} 個預約請求需要確認。"
     pending_reservation_confirm: 確認預約

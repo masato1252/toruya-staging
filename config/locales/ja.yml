@@ -62,6 +62,8 @@ ja:
     booking_pages:
       title: オンライン予約
       list: 予約ページ
+    events:
+      title: イベント管理
     metrics:
       title: アクセス解析
       dashboard_title: ダッシュボード
@@ -130,6 +132,7 @@ ja:
       business: 代理店
       child_basic: ベーシック
       child_premium: プレミアム
+      team: チーム
   notifications:
     pending_reservation_need_confirm: "%{number}個の確認が必要な予約があります。"
     pending_reservation_confirm: 予約を確認
@@ -522,6 +525,9 @@ ja:
         user: ユーザー
         user_id: ユーザー
         owner_id: ユーザー
+      staff:
+        position: 肩書き・ポジション
+        position_placeholder: 例：認定セラピスト
       social_account:
         channel_id: チャネルID
         channel_token: チャネルアクセストークン

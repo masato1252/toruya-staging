@@ -84,6 +84,23 @@
           </ul>
         </li>
 
+        <% if support_event? %>
+          <li class="p-1">
+            <%= active_link_to lines_user_bot_events_path(business_owner_id: business_owner_id) do %>
+              <i class="fa fa-star fa-2x"></i> <%= t("sidebar.events.title") %>
+            <% end %>
+
+            <ul class='nav'>
+              <li>
+                <%= link_to t("common.item.new"), new_lines_user_bot_event_path(business_owner_id: business_owner_id) %>
+              </li>
+              <li>
+                <%= link_to t("common.item.list"), lines_user_bot_events_path(business_owner_id: business_owner_id) %>
+              </li>
+            </ul>
+          </li>
+        <% end %>
+
         <% if support_online_service? %>
           <li class="p-1">
             <%= active_link_to lines_user_bot_services_path(business_owner_id: business_owner_id) do %>

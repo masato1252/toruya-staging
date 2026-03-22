@@ -2,7 +2,7 @@
 
 class StaffSerializer
   include JSONAPI::Serializer
-  attribute :id, :introduction
+  attribute :id, :introduction, :position
 
   attribute :name do |staff|
     staff.name

@@ -117,6 +117,7 @@ class User < ApplicationRecord
   has_many :sale_pages, -> { active }
   has_many :all_sale_pages, class_name: "SalePage"
   has_many :online_services
+  has_many :events, dependent: :destroy
   has_many :tickets
   has_many :surveys
   has_many :line_notice_requests, dependent: :destroy
@@ -210,6 +211,10 @@ class User < ApplicationRecord
 
   def business_member?
     member_plan == Plan::BUSINESS_PLAN
+  end
+
+  def team_plan_member?
+    permission_level == Plan::TEAM_LEVEL
   end
 
   def support_toruya_message_reply?

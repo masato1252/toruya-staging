@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardController
+  before_action :redirect_team_plan_user!
+
   def index
     @plans_properties = Plans::Properties.run!(user: Current.business_owner)
     @plan_labels = I18n.t("plans")[:labels]
@@ -19,6 +21,12 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
   end
 
   private
+
+  def redirect_team_plan_user!
+    if Current.business_owner.team_plan_member?
+      redirect_to lines_user_bot_settings_path(business_owner_id: business_owner_id)
+    end
+  end
 
   def plan_change_restricted_today?
     user = Current.business_owner

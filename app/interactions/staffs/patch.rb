@@ -13,6 +13,7 @@ module Staffs
     string :email, default: nil
     file :picture, default: nil
     string :introduction, default: nil
+    string :position, default: nil
     array :staff_menus, default: nil
 
     def execute
@@ -37,6 +38,7 @@ module Staffs
           end
 
           staff.introduction = introduction
+          staff.position = position
           staff.save!
         when "staff_menus"
           staff.transaction do

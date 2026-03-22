@@ -1,0 +1,11 @@
+<%= react_component("event_contents/show", {
+  props: {
+    event_content: @event_content_hash,
+    event_slug: @event.slug,
+    event_title: @event.title,
+    start_usage_url: start_usage_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
+    upsell_consultation_url: upsell_consultation_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
+    monitor_apply_url: monitor_apply_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
+    back_url: event_path(slug: @event.slug)
+  }
+}, { camelize_props: false }) %>

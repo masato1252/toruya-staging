@@ -1,0 +1,38 @@
+<%= react_component("user_bot/event_contents/form", {
+  props: {
+    business_owner_id: business_owner_id,
+    event_id: @event.id,
+    event_title: @event.title,
+    event_content: {
+      id: @event_content.id,
+      content_type: @event_content.content_type,
+      title: @event_content.title,
+      description: @event_content.description,
+      introduction: @event_content.introduction,
+      shop_id: @event_content.shop_id,
+      online_service_id: @event_content.online_service_id,
+      start_at: @event_content.start_at,
+      end_at: @event_content.end_at,
+      capacity: @event_content.capacity,
+      position: @event_content.position,
+      pre_ad_video_url: @event_content.pre_ad_video_url,
+      post_ad_video_url: @event_content.post_ad_video_url,
+      direct_download_url: @event_content.direct_download_url,
+      upsell_booking_page_id: @event_content.upsell_booking_page_id,
+      upsell_booking_enabled: @event_content.upsell_booking_enabled,
+      monitor_enabled: @event_content.monitor_enabled,
+      monitor_name: @event_content.monitor_name,
+      monitor_price: @event_content.monitor_price,
+      monitor_limit: @event_content.monitor_limit,
+      monitor_form_url: @event_content.monitor_form_url,
+      thumbnail_url: @event_content.thumbnail.attached? ? url_for(@event_content.thumbnail) : nil,
+      images: @event_content.event_content_images.map { |img| { id: img.id, url: img.image.attached? ? url_for(img.image) : nil } }
+    },
+    shops: @shops.map { |s| { id: s.id, name: s.name } },
+    online_services: @online_services.map { |os| { id: os.id, name: os.name } },
+    booking_pages: @booking_pages.map { |bp| { id: bp.id, name: bp.name } },
+    upload_image_url: Routes.upload_image_lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, format: "json"),
+    destroy_image_base_url: Routes.destroy_image_lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, image_id: "_IMAGE_ID_", format: "json"),
+    action_url: Routes.lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, format: "json")
+  }
+}, { camelize_props: false }) %>

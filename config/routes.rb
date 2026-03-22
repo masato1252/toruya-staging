@@ -222,6 +222,19 @@ Rails.application.routes.draw do
             resources :online_services, only: [:new, :create]
           end
 
+          resources :events do
+            member do
+              get :analytics
+            end
+
+            resources :event_contents, shallow: true do
+              member do
+                post :upload_image
+                delete "images/:image_id", action: :destroy_image, as: :destroy_image
+              end
+            end
+          end
+
           resources :custom_messages, only: [:destroy] do
             collection do
               put :update
@@ -823,6 +836,18 @@ Rails.application.routes.draw do
   end
   resources :bookings, param: :slug, only: [:show, :destroy]
   resources :sale_pages, param: :slug, only: [:show]
+  resources :events, param: :slug, only: [:show] do
+    scope module: :events do
+      resource :participation, only: [:new, :create]
+    end
+    resources :event_contents, only: [:show] do
+      member do
+        post :start_usage
+        post :upsell_consultation
+        post :monitor_apply
+      end
+    end
+  end
   resources :surveys, param: :slug, only: [:show, :create] do
     member do
       get "reply/:uuid", action: "reply", as: :reply

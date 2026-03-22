@@ -1,0 +1,7 @@
+<%= react_component("user_bot/events/form", {
+  props: {
+    business_owner_id: business_owner_id,
+    event: nil,
+    action_url: Routes.lines_user_bot_events_path(business_owner_id: business_owner_id, format: "json")
+  }
+}, { camelize_props: false }) %>
