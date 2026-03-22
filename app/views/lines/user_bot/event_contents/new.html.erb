@@ -6,6 +6,6 @@
     event_content: nil,
     shops: @shops.map { |s| { id: s.id, name: s.name } },
     booking_pages: @booking_pages.map { |bp| { id: bp.id, name: bp.name } },
-    action_url: Routes.lines_user_bot_event_event_contents_path(business_owner_id: business_owner_id, event_id: @event.id, format: "json")
+    action_url: lines_user_bot_event_event_contents_path(business_owner_id: business_owner_id, event_id: @event.id, format: "json")
   }
 }, { camelize_props: false }) %>

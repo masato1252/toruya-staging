@@ -65,7 +65,7 @@
         <% if Current.business_owner.team_plan_member? %>
           <div class="field-row" id="plans-menu-item">
             <div>
-              <%= t("settings.plans.plan_info.plan_member", plan_name: Current.business_owner.member_plan_name) %>
+              <%= Current.business_owner.member_plan_name %>
             </div>
           </div>
         <% else %>

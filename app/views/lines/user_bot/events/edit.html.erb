@@ -10,6 +10,6 @@
       end_at: @event.end_at,
       published: @event.published
     },
-    action_url: Routes.lines_user_bot_event_path(business_owner_id: business_owner_id, id: @event.id, format: "json")
+    action_url: lines_user_bot_event_path(business_owner_id: business_owner_id, id: @event.id, format: "json")
   }
 }, { camelize_props: false }) %>

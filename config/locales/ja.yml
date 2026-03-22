@@ -132,7 +132,7 @@ ja:
       business: 代理店
       child_basic: ベーシック
       child_premium: プレミアム
-      team: チーム
+      team: チームプラン
   notifications:
     pending_reservation_need_confirm: "%{number}個の確認が必要な予約があります。"
     pending_reservation_confirm: 予約を確認

@@ -31,8 +31,8 @@
     shops: @shops.map { |s| { id: s.id, name: s.name } },
     online_services: @online_services.map { |os| { id: os.id, name: os.name } },
     booking_pages: @booking_pages.map { |bp| { id: bp.id, name: bp.name } },
-    upload_image_url: Routes.upload_image_lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, format: "json"),
-    destroy_image_base_url: Routes.destroy_image_lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, image_id: "_IMAGE_ID_", format: "json"),
-    action_url: Routes.lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, format: "json")
+    upload_image_url: upload_image_lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, format: "json"),
+    destroy_image_base_url: destroy_image_lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, image_id: "_IMAGE_ID_", format: "json"),
+    action_url: lines_user_bot_event_content_path(business_owner_id: business_owner_id, id: @event_content.id, format: "json")
   }
 }, { camelize_props: false }) %>
