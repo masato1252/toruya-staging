@@ -221,7 +221,8 @@ const EventContentForm = ({ props }) => {
                 type="button"
                 onClick={handleUserShopSearch}
                 disabled={userShopSearching || !userIdInput}
-                className="btn btn-default btn-sm"
+                className="btn btn-primary btn-sm"
+                style={{ whiteSpace: "nowrap" }}
               >
                 {userShopSearching ? <i className="fa fa-spinner fa-spin" /> : "検索"}
               </button>

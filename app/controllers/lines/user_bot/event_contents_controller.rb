@@ -102,10 +102,11 @@ class Lines::UserBot::EventContentsController < Lines::UserBotDashboardControlle
 
   def online_services_for_shop
     online_services = if params[:shop_id].present?
-      shop = Current.business_owner.shops.find_by(id: params[:shop_id])
-      shop ? OnlineService.where(company_type: "Shop", company_id: shop.id).not_deleted : OnlineService.none
-    elsif params[:user_id].present? && params[:user_id].to_i == Current.business_owner.id
-      Current.business_owner.online_services.not_deleted
+      shop = Shop.find_by(id: params[:shop_id])
+      shop ? OnlineService.where(user_id: shop.user_id).not_deleted : OnlineService.none
+    elsif params[:user_id].present?
+      user = User.find_by(id: params[:user_id])
+      user ? user.online_services.not_deleted : OnlineService.none
     else
       OnlineService.none
     end
