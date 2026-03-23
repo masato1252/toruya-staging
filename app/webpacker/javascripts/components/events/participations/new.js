@@ -66,6 +66,7 @@ const ParticipationForm = ({ props }) => {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.content },
         body: JSON.stringify({
+          social_user_id: props.social_user_id,
           business_types: selectedBusinessTypes,
           business_age: businessAge,
           concern_label: concernLabel,
