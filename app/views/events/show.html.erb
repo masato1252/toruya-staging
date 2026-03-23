@@ -6,7 +6,8 @@
 <%= react_component("events/show", {
   props: {
     event: @event_hash,
-    line_login_url: @current_social_user ? nil : line_login_url(current_owner.social_account, new_event_participation_url(event_slug: @event.slug)),
+    line_login_url: @current_social_customer ? nil : line_login_url(current_owner.social_account, new_event_participation_url(event_slug: @event.slug)),
+    add_friend_url: current_owner.social_account&.add_friend_url,
     current_event_path: request.url
   }
 }, { camelize_props: false }) %>

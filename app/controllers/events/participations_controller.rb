@@ -6,20 +6,20 @@ class Events::ParticipationsController < Lines::CustomersController
   prepend_before_action :set_event
 
   def new
-    @current_social_user = current_toruya_social_user
-    redirect_to event_path(slug: @event.slug) unless @current_social_user
+    @current_social_customer = current_social_customer
+    redirect_to event_path(slug: @event.slug) and return unless @current_social_customer
 
-    @participant = @event.event_participants.find_by(social_user_id: @current_social_user.id)
-    redirect_to event_path(slug: @event.slug) if @participant
+    @participant = @event.event_participants.find_by(social_customer_id: @current_social_customer.id)
+    redirect_to event_path(slug: @event.slug) and return if @participant
   end
 
   def create
-    @current_social_user = current_toruya_social_user
-    return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless @current_social_user
+    @current_social_customer = current_social_customer
+    return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless @current_social_customer
 
     outcome = Events::RegisterParticipant.run(
       event: @event,
-      social_user: @current_social_user,
+      social_customer: @current_social_customer,
       business_types: params[:business_types],
       business_age: params[:business_age],
       concern_label: params[:concern_label],

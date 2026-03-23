@@ -6,6 +6,8 @@
     start_usage_url: start_usage_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
     upsell_consultation_url: upsell_consultation_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
     monitor_apply_url: monitor_apply_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
-    back_url: event_path(slug: @event.slug)
+    back_url: event_path(slug: @event.slug),
+    line_login_url: @current_social_customer ? nil : line_login_url(current_owner.social_account, new_event_participation_url(event_slug: @event.slug)),
+    add_friend_url: current_owner.social_account&.add_friend_url
   }
 }, { camelize_props: false }) %>

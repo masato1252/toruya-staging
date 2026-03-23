@@ -4,13 +4,71 @@ import React, { useState, useRef, useEffect } from "react";
 
 const getEmbedUrl = (url) => {
   if (!url) return null;
-  // YouTube
   const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
-  // Google Drive
   const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (driveMatch) return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
   return url;
+};
+
+const LineLoginForm = ({ loginUrl, btnText, style }) => {
+  if (!loginUrl) return null;
+
+  const url = new URL(loginUrl, window.location.origin);
+  const params = Object.fromEntries(url.searchParams);
+
+  return (
+    <form method="post" action={url.pathname} style={{ display: "inline-block", ...style }}>
+      <input type="hidden" name="authenticity_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
+      {Object.entries(params).map(([key, value]) => (
+        <input key={key} type="hidden" name={key} value={value} />
+      ))}
+      <button
+        type="submit"
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 8,
+          padding: "14px 28px", background: "#06c755", color: "#fff",
+          borderRadius: 30, fontSize: 15, fontWeight: "bold",
+          border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(6,199,85,0.4)",
+          width: "100%", justifyContent: "center"
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+        {btnText}
+      </button>
+    </form>
+  );
+};
+
+const ShareButtons = ({ title }) => {
+  const encodedUrl = encodeURIComponent(window.location.href);
+  const encodedTitle = encodeURIComponent(title);
+
+  return (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      <a
+        href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+        target="_blank" rel="noopener noreferrer"
+        style={{ width: 36, height: 36, borderRadius: "50%", background: "#1877f2", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", fontSize: 16 }}
+      >
+        <i className="fab fa-facebook-f"></i>
+      </a>
+      <a
+        href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
+        target="_blank" rel="noopener noreferrer"
+        style={{ width: 36, height: 36, borderRadius: "50%", background: "#000", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", fontSize: 16 }}
+      >
+        <i className="fab fa-x-twitter"></i>
+      </a>
+      <a
+        href={`https://www.instagram.com/`}
+        target="_blank" rel="noopener noreferrer"
+        style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", fontSize: 16 }}
+      >
+        <i className="fab fa-instagram"></i>
+      </a>
+    </div>
+  );
 };
 
 const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete }) => {
@@ -34,10 +92,10 @@ const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete }) => {
   const phaseLabel = phase === "pre_ad" ? "広告" : phase === "main" ? "セミナー本編" : "広告";
 
   return (
-    <div style={{ background: "#000", borderRadius: 8, overflow: "hidden" }}>
-      <div style={{ padding: "6px 12px", background: "rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ color: "#fff", fontSize: 12 }}>{phaseLabel}</span>
-        <button onClick={nextPhase} style={{ background: "rgba(255,255,255,0.2)", color: "#fff", border: "none", borderRadius: 4, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
+    <div style={{ background: "#000", borderRadius: 12, overflow: "hidden" }}>
+      <div style={{ padding: "8px 14px", background: "rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>{phaseLabel}</span>
+        <button onClick={nextPhase} style={{ background: "rgba(255,255,255,0.15)", color: "#fff", border: "none", borderRadius: 6, padding: "5px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
           {phase === "post_ad" ? "完了" : "次へ ▶"}
         </button>
       </div>
@@ -62,38 +120,35 @@ const PDFCarousel = ({ images, onlineServiceUrl }) => {
   if (total === 0) return null;
 
   return (
-    <div style={{ background: "#000", borderRadius: 8, overflow: "hidden" }}>
+    <div style={{ background: "#000", borderRadius: 12, overflow: "hidden" }}>
       <div style={{ position: "relative" }}>
-        <img src={images[current].url} style={{ width: "100%", maxHeight: 400, objectFit: "contain", background: "#000" }} />
+        <img src={images[current].url} style={{ width: "100%", maxHeight: 400, objectFit: "contain", background: "#000", display: "block" }} />
         {total > 1 && (
           <>
             <button
               onClick={() => setCurrent(i => (i - 1 + total) % total)}
-              style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.5)", color: "#fff", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", fontSize: 18 }}
+              style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.5)", color: "#fff", border: "none", borderRadius: "50%", width: 40, height: 40, cursor: "pointer", fontSize: 20 }}
             >‹</button>
             <button
               onClick={() => setCurrent(i => (i + 1) % total)}
-              style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.5)", color: "#fff", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", fontSize: 18 }}
+              style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.5)", color: "#fff", border: "none", borderRadius: "50%", width: 40, height: 40, cursor: "pointer", fontSize: 20 }}
             >›</button>
           </>
         )}
-        <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 4 }}>
+      </div>
+      <div style={{ padding: "10px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.05)" }}>
+        <div style={{ display: "flex", gap: 5 }}>
           {images.map((_, i) => (
-            <div key={i} onClick={() => setCurrent(i)} style={{ width: 8, height: 8, borderRadius: "50%", background: i === current ? "#fff" : "rgba(255,255,255,0.4)", cursor: "pointer" }} />
+            <div key={i} onClick={() => setCurrent(i)} style={{ width: 8, height: 8, borderRadius: "50%", background: i === current ? "#fff" : "rgba(255,255,255,0.3)", cursor: "pointer" }} />
           ))}
         </div>
-      </div>
-      <div style={{ padding: "8px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.05)" }}>
-        <span style={{ color: "#fff", fontSize: 12 }}>{current + 1} / {total}</span>
-        {onlineServiceUrl && (
-          <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 11 }}>続きはダウンロードで確認できます</span>
-        )}
+        <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>{current + 1} / {total}</span>
       </div>
     </div>
   );
 };
 
-const UpsellSection = ({ content, startUsageUrl, upsellConsultationUrl, monitorApplyUrl }) => {
+const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl }) => {
   const [consultationStatus, setConsultationStatus] = useState(content.consultation_status);
   const [monitorApplied, setMonitorApplied] = useState(content.has_monitor_applied);
   const [isLoading, setIsLoading] = useState(false);
@@ -122,19 +177,19 @@ const UpsellSection = ({ content, startUsageUrl, upsellConsultationUrl, monitorA
   };
 
   return (
-    <div style={{ marginTop: 24 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {content.upsell_booking_enabled && (
-        <div style={{ background: "#f0fff4", border: "1px solid #9ae6b4", borderRadius: 12, padding: 16, marginBottom: 12 }}>
-          <h4 style={{ fontWeight: "bold", fontSize: 15, marginBottom: 8 }}>💬 無料相談を予約する</h4>
+        <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 16, padding: "20px" }}>
+          <h4 style={{ fontWeight: 700, fontSize: 15, marginBottom: 10, color: "#166534" }}>無料相談を予約する</h4>
           {consultationStatus ? (
-            <div style={{ textAlign: "center", color: "#2f855a", padding: 12, fontWeight: "bold" }}>
-              {consultationStatus === "waitlist" ? "キャンセル待ちを承りました" : "予約済み"}
+            <div style={{ textAlign: "center", color: "#166534", padding: 12, fontWeight: 700, fontSize: 14 }}>
+              {consultationStatus === "waitlist" ? "キャンセル待ちを承りました" : "予約済みです"}
             </div>
           ) : (
             <button
               onClick={handleConsultation}
               disabled={isLoading}
-              style={{ width: "100%", padding: "12px", background: "#276749", color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontWeight: "bold", cursor: "pointer" }}
+              style={{ width: "100%", padding: "12px", background: "#16a34a", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
             >
               {isLoading ? "処理中..." : "無料相談を予約する"}
             </button>
@@ -143,17 +198,17 @@ const UpsellSection = ({ content, startUsageUrl, upsellConsultationUrl, monitorA
       )}
 
       {content.monitor_enabled && (
-        <div style={{ background: "#fffaf0", border: "1px solid #fbd38d", borderRadius: 12, padding: 16 }}>
-          <h4 style={{ fontWeight: "bold", fontSize: 15, marginBottom: 4 }}>⭐ モニターに応募する</h4>
-          {content.monitor_name && <p style={{ fontSize: 13, color: "#666", marginBottom: 4 }}>サービス: {content.monitor_name}</p>}
-          {content.monitor_price !== null && <p style={{ fontSize: 13, color: "#e53e3e", marginBottom: 8 }}>モニター金額: {content.monitor_price.toLocaleString()}円</p>}
+        <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 16, padding: "20px" }}>
+          <h4 style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: "#92400e" }}>モニターに応募する</h4>
+          {content.monitor_name && <p style={{ fontSize: 13, color: "#78716c", marginBottom: 4 }}>サービス: {content.monitor_name}</p>}
+          {content.monitor_price !== null && <p style={{ fontSize: 13, color: "#dc2626", marginBottom: 10, fontWeight: 600 }}>モニター金額: {content.monitor_price.toLocaleString()}円</p>}
           {monitorApplied ? (
-            <div style={{ textAlign: "center", color: "#744210", padding: 12, fontWeight: "bold" }}>応募済みです</div>
+            <div style={{ textAlign: "center", color: "#92400e", padding: 12, fontWeight: 700, fontSize: 14 }}>応募済みです</div>
           ) : (
             <button
               onClick={handleMonitorApply}
               disabled={isLoading}
-              style={{ width: "100%", padding: "12px", background: "#c05621", color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontWeight: "bold", cursor: "pointer" }}
+              style={{ width: "100%", padding: "12px", background: "#d97706", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
             >
               {isLoading ? "処理中..." : "モニターに応募する"}
             </button>
@@ -165,11 +220,19 @@ const UpsellSection = ({ content, startUsageUrl, upsellConsultationUrl, monitorA
 };
 
 const EventContentShow = ({ props }) => {
-  const { event_content, event_slug, event_title, start_usage_url, upsell_consultation_url, monitor_apply_url, back_url } = props;
+  const {
+    event_content, event_slug, event_title,
+    start_usage_url, upsell_consultation_url, monitor_apply_url,
+    back_url, line_login_url, add_friend_url
+  } = props;
+
   const [hasStarted, setHasStarted] = useState(event_content.has_started_usage);
   const [isStarting, setIsStarting] = useState(false);
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  const isParticipant = event_content.is_participant;
+  const isLoggedIn = event_content.is_logged_in;
+  const canStart = event_content.started && !event_content.ended && !event_content.capacity_full;
 
   const handleStartUsage = async () => {
     if (isStarting || hasStarted) return;
@@ -180,33 +243,24 @@ const EventContentShow = ({ props }) => {
     setIsStarting(false);
   };
 
-  const canStart = event_content.started && !event_content.ended && !event_content.capacity_full;
+  const ctaLabel = event_content.content_type === "seminar" ? "セミナーを視聴する" : "出展ブースに入る";
+  const typeColor = event_content.content_type === "seminar" ? "#4f46e5" : "#0ea5e9";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f7f8fc" }}>
+    <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
       {/* Header */}
-      <div style={{ background: "#1a1a2e", color: "#fff", padding: "16px 20px", display: "flex", alignItems: "center", gap: 12 }}>
-        <a href={back_url} style={{ color: "#fff", textDecoration: "none", fontSize: 20 }}>‹</a>
-        <div>
-          <div style={{ fontSize: 12, opacity: 0.7 }}>{event_title}</div>
-          <h1 style={{ fontSize: 18, fontWeight: "bold", margin: 0 }}>{event_content.title}</h1>
+      <div style={{ background: "#0f172a", color: "#fff", padding: "14px 20px", display: "flex", alignItems: "center", gap: 14, position: "sticky", top: 0, zIndex: 20 }}>
+        <a href={back_url} style={{ color: "#fff", textDecoration: "none", fontSize: 22, lineHeight: 1, flexShrink: 0 }}>‹</a>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 11, opacity: 0.6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{event_title}</div>
+          <h1 style={{ fontSize: 15, fontWeight: 700, margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{event_content.title}</h1>
         </div>
       </div>
 
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px" }}>
-        {/* Thumbnail / Content Area */}
-        {!hasStarted ? (
-          <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
-            {event_content.thumbnail_url ? (
-              <img src={event_content.thumbnail_url} style={{ width: "100%", maxHeight: 300, objectFit: "cover" }} />
-            ) : (
-              <div style={{ background: "#2d3748", height: 200, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 48 }}>
-                {event_content.content_type === "seminar" ? "🎬" : "📄"}
-              </div>
-            )}
-          </div>
-        ) : event_content.content_type === "seminar" ? (
-          <div style={{ marginBottom: 16 }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "20px 16px" }}>
+        {/* Thumbnail / Content area */}
+        {hasStarted && event_content.content_type === "seminar" ? (
+          <div style={{ marginBottom: 20 }}>
             <VideoPlayer
               preAdUrl={event_content.pre_ad_video_url}
               contentUrl={event_content.online_service_registration_url}
@@ -215,77 +269,119 @@ const EventContentShow = ({ props }) => {
             {event_content.direct_download_url && (
               <a
                 href={event_content.direct_download_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ display: "block", marginTop: 12, padding: "10px 20px", background: "#3182ce", color: "#fff", borderRadius: 8, textAlign: "center", textDecoration: "none", fontWeight: "bold" }}
+                target="_blank" rel="noopener noreferrer"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 12, padding: "12px 20px", background: "#3b82f6", color: "#fff", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
               >
-                📥 資料をダウンロード
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
+                資料をダウンロード
               </a>
             )}
           </div>
-        ) : (
-          <div style={{ marginBottom: 16 }}>
+        ) : hasStarted && event_content.content_type === "booth" ? (
+          <div style={{ marginBottom: 20 }}>
             <PDFCarousel
               images={event_content.slide_images || []}
               onlineServiceUrl={event_content.online_service_registration_url}
             />
           </div>
+        ) : (
+          <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 20 }}>
+            {event_content.thumbnail_url ? (
+              <img src={event_content.thumbnail_url} style={{ width: "100%", maxHeight: 320, objectFit: "cover", display: "block" }} />
+            ) : (
+              <div style={{ height: 180, background: `linear-gradient(135deg, ${typeColor}, ${typeColor}cc)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: 56 }}>{event_content.content_type === "seminar" ? "🎬" : "📄"}</span>
+              </div>
+            )}
+          </div>
         )}
 
-        {/* Start Usage Button */}
-        {!hasStarted && event_content.is_participant && canStart && (
-          <button
-            onClick={handleStartUsage}
-            disabled={isStarting}
-            style={{ width: "100%", padding: "14px", background: "#00b900", color: "#fff", border: "none", borderRadius: 8, fontSize: 16, fontWeight: "bold", cursor: "pointer", marginBottom: 16 }}
-          >
-            {isStarting ? "..." : event_content.content_type === "seminar" ? "セミナーを視聴する" : "出展ブースに入る"}
-          </button>
+        {/* Preview slides for registered participants (booth, before starting) */}
+        {isParticipant && !hasStarted && event_content.content_type === "booth" && (event_content.slide_images || []).length > 0 && (
+          <div style={{ marginBottom: 20 }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 10 }}>プレビュー</h3>
+            <PDFCarousel
+              images={(event_content.slide_images || []).slice(0, 3)}
+              onlineServiceUrl={null}
+            />
+            {(event_content.slide_images || []).length > 3 && (
+              <p style={{ textAlign: "center", fontSize: 12, color: "#9ca3af", marginTop: 8 }}>
+                全 {event_content.slide_images.length} ページ（利用開始で全て閲覧可能）
+              </p>
+            )}
+          </div>
         )}
 
+        {/* Status messages */}
         {event_content.ended && (
-          <div style={{ background: "#fed7d7", color: "#c53030", padding: "12px 16px", borderRadius: 8, textAlign: "center", marginBottom: 16, fontWeight: "bold" }}>
+          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", padding: "12px 16px", borderRadius: 12, textAlign: "center", marginBottom: 16, fontWeight: 700, fontSize: 14 }}>
             このコンテンツは終了しました
           </div>
         )}
 
-        {!event_content.started && (
-          <div style={{ background: "#fefcbf", color: "#744210", padding: "12px 16px", borderRadius: 8, textAlign: "center", marginBottom: 16 }}>
+        {!event_content.started && !event_content.ended && (
+          <div style={{ background: "#fffbeb", border: "1px solid #fde68a", color: "#92400e", padding: "12px 16px", borderRadius: 12, textAlign: "center", marginBottom: 16, fontSize: 14 }}>
             サービス開始前です。開始をお待ちください。
+          </div>
+        )}
+
+        {/* Start usage button for participants */}
+        {isParticipant && !hasStarted && canStart && (
+          <button
+            onClick={handleStartUsage}
+            disabled={isStarting}
+            style={{
+              width: "100%", padding: "14px", marginBottom: 20,
+              background: typeColor, color: "#fff", border: "none",
+              borderRadius: 12, fontSize: 16, fontWeight: 700,
+              cursor: "pointer", boxShadow: `0 4px 14px ${typeColor}66`
+            }}
+          >
+            {isStarting ? "..." : ctaLabel}
+          </button>
+        )}
+
+        {/* LINE login CTA for non-participants */}
+        {!isParticipant && line_login_url && (
+          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 16, padding: "24px 20px", marginBottom: 20, textAlign: "center" }}>
+            <p style={{ fontSize: 14, color: "#166534", marginBottom: 14, fontWeight: 600 }}>
+              参加登録してコンテンツを利用しましょう
+            </p>
+            <LineLoginForm loginUrl={line_login_url} btnText="LINEで参加登録する" />
           </div>
         )}
 
         {/* Introduction */}
         {event_content.introduction && (
-          <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, border: "1px solid #e2e8f0" }}>
-            <h3 style={{ fontWeight: "bold", fontSize: 15, marginBottom: 8 }}>紹介文</h3>
-            <p style={{ color: "#4a5568", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{event_content.introduction}</p>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
+            <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 10, color: "#111827" }}>紹介文</h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, whiteSpace: "pre-wrap", fontSize: 14 }}>{event_content.introduction}</p>
           </div>
         )}
 
         {/* Description */}
         {event_content.description && (
-          <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, border: "1px solid #e2e8f0" }}>
-            <h3 style={{ fontWeight: "bold", fontSize: 15, marginBottom: 8 }}>説明</h3>
-            <p style={{ color: "#4a5568", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{event_content.description}</p>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
+            <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 10, color: "#111827" }}>説明</h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, whiteSpace: "pre-wrap", fontSize: 14 }}>{event_content.description}</p>
           </div>
         )}
 
-        {/* Exhibitor Info */}
+        {/* Exhibitor */}
         {event_content.exhibitor_staff && (
-          <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, border: "1px solid #e2e8f0" }}>
-            <h3 style={{ fontWeight: "bold", fontSize: 15, marginBottom: 12 }}>出展者情報</h3>
-            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
+            <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14, color: "#111827" }}>出展者情報</h3>
+            <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
               {event_content.exhibitor_staff.picture_url && (
-                <img src={event_content.exhibitor_staff.picture_url} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                <img src={event_content.exhibitor_staff.picture_url} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "3px solid #f3f4f6" }} />
               )}
               <div>
                 {event_content.exhibitor_staff.position && (
-                  <div style={{ fontSize: 12, color: "#888", marginBottom: 2 }}>{event_content.exhibitor_staff.position}</div>
+                  <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 2 }}>{event_content.exhibitor_staff.position}</div>
                 )}
-                <div style={{ fontWeight: "bold", fontSize: 15 }}>{event_content.exhibitor_staff.name}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: "#111827", marginBottom: 6 }}>{event_content.exhibitor_staff.name}</div>
                 {event_content.exhibitor_staff.introduction && (
-                  <p style={{ fontSize: 13, color: "#555", marginTop: 6, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{event_content.exhibitor_staff.introduction}</p>
+                  <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{event_content.exhibitor_staff.introduction}</p>
                 )}
               </div>
             </div>
@@ -293,29 +389,20 @@ const EventContentShow = ({ props }) => {
         )}
 
         {/* Share */}
-        <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, border: "1px solid #e2e8f0" }}>
-          <h3 style={{ fontWeight: "bold", fontSize: 15, marginBottom: 8 }}>シェア</h3>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            {event_content.thumbnail_url && (
-              <a href={event_content.thumbnail_url} download style={{ padding: "8px 16px", background: "#718096", color: "#fff", borderRadius: 20, fontSize: 13, textDecoration: "none" }}>
-                📥 サムネをDL
-              </a>
-            )}
-            <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(event_content.title)}&url=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noopener noreferrer"
-              style={{ padding: "8px 16px", background: "#000", color: "#fff", borderRadius: 20, fontSize: 13, textDecoration: "none" }}>X</a>
-            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noopener noreferrer"
-              style={{ padding: "8px 16px", background: "#1877f2", color: "#fff", borderRadius: 20, fontSize: 13, textDecoration: "none" }}>Facebook</a>
-          </div>
+        <div style={{ background: "#fff", borderRadius: 16, padding: "20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
+          <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 10, color: "#111827" }}>シェア</h3>
+          <ShareButtons title={event_content.title} />
         </div>
 
         {/* Upsell */}
         {(event_content.upsell_booking_enabled || event_content.monitor_enabled) && hasStarted && (
-          <UpsellSection
-            content={event_content}
-            startUsageUrl={start_usage_url}
-            upsellConsultationUrl={upsell_consultation_url}
-            monitorApplyUrl={monitor_apply_url}
-          />
+          <div style={{ marginBottom: 20 }}>
+            <UpsellSection
+              content={event_content}
+              upsellConsultationUrl={upsell_consultation_url}
+              monitorApplyUrl={monitor_apply_url}
+            />
+          </div>
         )}
       </div>
     </div>

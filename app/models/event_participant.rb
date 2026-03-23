@@ -40,13 +40,13 @@ class EventParticipant < ApplicationRecord
   }.freeze
 
   belongs_to :event
-  belongs_to :social_user
+  belongs_to :social_customer
   belongs_to :user, optional: true
 
   enum business_age: { under_one_year: 0, one_to_three_years: 1, over_three_years: 2 }, _suffix: true
 
   validates :registered_at, presence: true
-  validates :social_user_id, uniqueness: { scope: :event_id }
+  validates :social_customer_id, uniqueness: { scope: :event_id }
 
   def self.concern_category_for(label)
     CONCERN_MAPPING[label]&.dig(:category)

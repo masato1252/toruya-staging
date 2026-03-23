@@ -7,22 +7,22 @@ class EventContentsController < Lines::CustomersController
   before_action :set_event_content
 
   def show
-    @current_social_user = current_toruya_social_user
-    @participant = @event.event_participants.find_by(social_user_id: @current_social_user&.id)
-    @usage = @event_content.event_content_usages.find_by(social_user_id: @current_social_user&.id)
-    @consultation = @event_content.event_upsell_consultations.find_by(social_user_id: @current_social_user&.id)
-    @monitor_application = @event_content.event_monitor_applications.find_by(social_user_id: @current_social_user&.id)
+    @current_social_customer = current_social_customer
+    @participant = @event.event_participants.find_by(social_customer_id: @current_social_customer&.id)
+    @usage = @event_content.event_content_usages.find_by(social_customer_id: @current_social_customer&.id)
+    @consultation = @event_content.event_upsell_consultations.find_by(social_customer_id: @current_social_customer&.id)
+    @monitor_application = @event_content.event_monitor_applications.find_by(social_customer_id: @current_social_customer&.id)
 
-    if @current_social_user
+    if @current_social_customer
       ahoy.track("event_content_view", {
         event_content_id: @event_content.id.to_s,
-        social_user_id: @current_social_user.social_service_user_id
+        social_customer_id: @current_social_customer.social_user_id
       })
     end
 
     @event_content_hash = EventContentSerializer.new(@event_content, {
       params: {
-        social_user: @current_social_user,
+        social_customer: @current_social_customer,
         participant: @participant,
         usage: @usage,
         consultation: @consultation,
@@ -32,16 +32,16 @@ class EventContentsController < Lines::CustomersController
   end
 
   def start_usage
-    @current_social_user = current_toruya_social_user
-    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_social_user
-    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @event.event_participants.exists?(social_user_id: @current_social_user.id)
+    @current_social_customer = current_social_customer
+    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_social_customer
+    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @event.event_participants.exists?(social_customer_id: @current_social_customer.id)
 
     if @event_content.capacity_full?
       render json: { error: "利用開始の上限に達しました" }, status: :unprocessable_entity
       return
     end
 
-    usage = @event_content.event_content_usages.find_or_initialize_by(social_user_id: @current_social_user.id)
+    usage = @event_content.event_content_usages.find_or_initialize_by(social_customer_id: @current_social_customer.id)
     if usage.new_record?
       usage.started_at = Time.current
       usage.save!
@@ -51,10 +51,10 @@ class EventContentsController < Lines::CustomersController
   end
 
   def upsell_consultation
-    @current_social_user = current_toruya_social_user
-    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_social_user
+    @current_social_customer = current_social_customer
+    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_social_customer
 
-    consultation = @event_content.event_upsell_consultations.find_or_initialize_by(social_user_id: @current_social_user.id)
+    consultation = @event_content.event_upsell_consultations.find_or_initialize_by(social_customer_id: @current_social_customer.id)
     if consultation.new_record?
       consultation.status = :waitlist
       consultation.save!
@@ -65,16 +65,16 @@ class EventContentsController < Lines::CustomersController
   end
 
   def monitor_apply
-    @current_social_user = current_toruya_social_user
-    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_social_user
+    @current_social_customer = current_social_customer
+    return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_social_customer
 
-    application = @event_content.event_monitor_applications.find_or_initialize_by(social_user_id: @current_social_user.id)
+    application = @event_content.event_monitor_applications.find_or_initialize_by(social_customer_id: @current_social_customer.id)
     if application.new_record?
       application.save!
       Events::NotifyMonitorApplication.run(application: application)
     end
 
-    form_url = build_monitor_form_url(@event_content, @current_social_user)
+    form_url = build_monitor_form_url(@event_content, @current_social_customer)
     render json: { success: true, form_url: form_url }
   end
 
@@ -96,13 +96,13 @@ class EventContentsController < Lines::CustomersController
     @event.user
   end
 
-  def build_monitor_form_url(event_content, social_user)
+  def build_monitor_form_url(event_content, social_customer)
     return nil unless event_content.monitor_form_url.present?
 
     uri = URI.parse(event_content.monitor_form_url)
     query_params = URI.decode_www_form(uri.query || "")
-    query_params << ["entry.social_id", social_user.social_service_user_id]
-    query_params << ["entry.user_id", social_user.users.first&.id.to_s]
+    query_params << ["entry.social_id", social_customer.social_user_id]
+    query_params << ["entry.customer_id", social_customer.customer&.id.to_s]
     uri.query = URI.encode_www_form(query_params)
     uri.to_s
   rescue URI::InvalidURIError

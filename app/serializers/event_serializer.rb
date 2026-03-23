@@ -9,10 +9,16 @@ class EventSerializer
     params[:participant].present?
   end
 
+  attribute :is_logged_in do |event, params|
+    params[:social_customer].present?
+  end
+
   attribute :contents do |event, params|
     event.event_contents.undeleted.order(:position).map do |content|
-      social_user = params[:social_user]
-      usage = social_user ? content.event_content_usages.find_by(social_user_id: social_user.id) : nil
+      social_customer = params[:social_customer]
+      usage = social_customer ? content.event_content_usages.find_by(social_customer_id: social_customer.id) : nil
+
+      staff = content.shop&.staffs&.first
 
       {
         id: content.id,
@@ -32,13 +38,13 @@ class EventSerializer
         monitor_enabled: content.monitor_enabled,
         monitor_name: content.monitor_name,
         monitor_price: content.monitor_price,
-        monitor_limit: content.monitor_limit
+        monitor_limit: content.monitor_limit,
+        exhibitor_staff: staff ? {
+          picture_url: ApplicationController.helpers.staff_picture_url(staff, "360"),
+          position: staff.position,
+          name: staff.name
+        } : nil
       }
     end
-  end
-
-  attribute :line_login_url do |event, params|
-    # Returns the LINE login URL for event participation
-    nil
   end
 end

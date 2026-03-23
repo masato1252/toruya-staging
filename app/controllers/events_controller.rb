@@ -6,14 +6,12 @@ class EventsController < Lines::CustomersController
   prepend_before_action :set_event
 
   def show
-    @current_social_user = current_toruya_social_user
-    @participant = @event.event_participants.find_by(social_user_id: @current_social_user&.id)
-
-    participation_new_url = new_event_participation_url(event_slug: @event.slug)
+    @current_social_customer = current_social_customer
+    @participant = @event.event_participants.find_by(social_customer_id: @current_social_customer&.id)
 
     @event_hash = EventSerializer.new(@event, {
       params: {
-        social_user: @current_social_user,
+        social_customer: @current_social_customer,
         participant: @participant
       }
     }).attributes_hash
