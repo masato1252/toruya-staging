@@ -20,7 +20,7 @@ module Events
       concern_category = concern_label.present? ? EventParticipant.concern_category_for(concern_label) : nil
 
       participant.assign_attributes(
-        user_id: social_customer.customer&.id,
+        user_id: nil,
         business_types: business_types.reject(&:blank?),
         business_age: business_age.presence,
         concern_label: concern_label.presence,
