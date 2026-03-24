@@ -41,6 +41,10 @@ class Settings::BusinessSchedulesController < SettingsController
       end
 
 
+    BookingPage.where(shop_id: shop.id).find_each do |booking_page|
+      BookingPageCacheJob.perform_later(booking_page)
+    end
+
     if session[:settings_tour]
       redirect_to working_schedules_settings_user_working_time_staff_path(super_user, super_user.current_staff(super_user), working_time_menu_scope: :shop)
     else

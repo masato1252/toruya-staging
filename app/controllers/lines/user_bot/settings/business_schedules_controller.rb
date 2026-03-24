@@ -27,6 +27,10 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
       business_schedules: permit_hash[:business_schedules]
     )
 
+    BookingPage.where(shop_id: shop.id).find_each do |booking_page|
+      BookingPageCacheJob.perform_later(booking_page)
+    end
+
     render json: json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: params[:shop_id], business_owner_id: business_owner_id) })
   end
 

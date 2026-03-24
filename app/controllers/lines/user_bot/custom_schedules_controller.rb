@@ -34,6 +34,7 @@ class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardControl
       attrs: custom_schedules_params[:custom_schedules].first.to_h.merge(open: !params[:custom_schedules_closed])
     )
 
+    enqueue_cache_refresh_for_user(current_user)
     redirect_back(fallback_location: SiteRouting.new(view_context).member_path)
   end
 
@@ -47,6 +48,7 @@ class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardControl
         attrs: custom_schedules_params[:custom_schedules].first.to_h.merge(open: !params[:custom_schedules_closed])
       )
 
+      enqueue_cache_refresh_for_custom_schedule(custom_schedule)
       redirect_back(fallback_location: SiteRouting.new(view_context).member_path)
     else
       head :unprocessable_entity
@@ -58,6 +60,7 @@ class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardControl
     custom_schedule = current_user.custom_schedules.find(params[:id])
 
     if custom_schedule_permission(custom_schedule)
+      enqueue_cache_refresh_for_custom_schedule(custom_schedule)
       CustomSchedules::Delete.run(custom_schedule: custom_schedule)
 
       redirect_back(fallback_location: SiteRouting.new(view_context).member_path)
@@ -78,5 +81,25 @@ class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardControl
 
   def represent_staff_ids
     @represent_staff_ids ||= Current.business_owner.staff_ids
+  end
+
+  def enqueue_cache_refresh_for_user(user)
+    BookingPage.where(shop_id: user.shops.select(:id)).find_each do |booking_page|
+      BookingPageCacheJob.perform_later(booking_page)
+    end
+  end
+
+  def enqueue_cache_refresh_for_custom_schedule(custom_schedule)
+    if custom_schedule.shop_id.present?
+      BookingPage.where(shop_id: custom_schedule.shop_id).find_each do |booking_page|
+        BookingPageCacheJob.perform_later(booking_page)
+      end
+    elsif custom_schedule.staff_id.present? && custom_schedule.staff.present?
+      BookingPage.where(shop_id: custom_schedule.staff.shops.select(:id)).find_each do |booking_page|
+        BookingPageCacheJob.perform_later(booking_page)
+      end
+    elsif custom_schedule.user_id.present? && custom_schedule.user.present?
+      enqueue_cache_refresh_for_user(custom_schedule.user)
+    end
   end
 end

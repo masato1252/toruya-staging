@@ -72,6 +72,12 @@ class Settings::WorkingTime::StaffsController < SettingsController
       end
     end
 
+    @staff.shops.each do |s|
+      BookingPage.where(shop_id: s.id).find_each do |booking_page|
+        BookingPageCacheJob.perform_later(booking_page)
+      end
+    end
+
     if can?(:manage, Settings)
       if session[:settings_tour]
         redirect_to settings_user_reservation_settings_path(super_user)

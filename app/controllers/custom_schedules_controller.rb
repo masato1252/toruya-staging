@@ -9,9 +9,11 @@ class CustomSchedulesController < DashboardController
           CustomSchedules::Change.run(owner: staff, attrs: attrs.to_h.merge(shop_id: shop_id))
         end
       end
+      enqueue_cache_refresh_for_shops(params[:shop_ids])
     else
       # create from personal schedule
       CustomSchedules::PersonalCreate.run!(user: current_user, attrs: custom_schedules_params[:custom_schedules].first.to_h)
+      enqueue_cache_refresh_for_user(current_user)
     end
 
     redirect_back(fallback_location: member_path)
@@ -23,6 +25,7 @@ class CustomSchedulesController < DashboardController
 
     if custom_schedule_permission(custom_schedule)
       CustomSchedules::Update.run(custom_schedule: custom_schedule, attrs: custom_schedules_params[:custom_schedules].first.to_h)
+      enqueue_cache_refresh_for_custom_schedule(custom_schedule)
 
       redirect_back(fallback_location: member_path)
     else
@@ -35,6 +38,7 @@ class CustomSchedulesController < DashboardController
     custom_schedule = CustomSchedule.find(params[:id])
 
     if custom_schedule_permission(custom_schedule)
+      enqueue_cache_refresh_for_custom_schedule(custom_schedule)
       CustomSchedules::Delete.run(custom_schedule: custom_schedule)
 
       redirect_back(fallback_location: member_path)
@@ -55,5 +59,27 @@ class CustomSchedulesController < DashboardController
 
   def represent_staff_ids
     @represent_staff_ids ||= working_shop_options(include_user_own: true).map(&:staff_id)
+  end
+
+  def enqueue_cache_refresh_for_shops(shop_ids)
+    BookingPage.where(shop_id: shop_ids).find_each do |booking_page|
+      BookingPageCacheJob.perform_later(booking_page)
+    end
+  end
+
+  def enqueue_cache_refresh_for_user(user)
+    BookingPage.where(shop_id: user.shops.select(:id)).find_each do |booking_page|
+      BookingPageCacheJob.perform_later(booking_page)
+    end
+  end
+
+  def enqueue_cache_refresh_for_custom_schedule(custom_schedule)
+    if custom_schedule.shop_id.present?
+      enqueue_cache_refresh_for_shops([custom_schedule.shop_id])
+    elsif custom_schedule.staff_id.present? && custom_schedule.staff.present?
+      enqueue_cache_refresh_for_shops(custom_schedule.staff.shops.pluck(:id))
+    elsif custom_schedule.user_id.present? && custom_schedule.user.present?
+      enqueue_cache_refresh_for_user(custom_schedule.user)
+    end
   end
 end
