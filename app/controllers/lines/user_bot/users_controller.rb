@@ -107,6 +107,12 @@ class Lines::UserBot::UsersController < Lines::UserBotController
   end
 
   def create_shop_profile
+    if (pending_sa = find_pending_staff_account(current_user))
+      activate_pending_staff_account(pending_sa, current_user)
+      head :ok
+      return
+    end
+
     user = Profiles::UpdateShopInfo.run!(
       user: current_user,
       social_user: social_user,
@@ -158,8 +164,55 @@ class Lines::UserBot::UsersController < Lines::UserBotController
         is_shop_profile_created: true,
         redirect_url: lines_user_bot_settings_path(business_owner_id: staff_account.owner_id)
       }
+    elsif current_user && (pending_sa = find_pending_staff_account(current_user))
+      activate_pending_staff_account(pending_sa, current_user)
+
+      render json: {
+        is_shop_profile_created: true,
+        redirect_url: lines_user_bot_settings_path(business_owner_id: pending_sa.owner_id)
+      }
     else
       render json: { is_shop_profile_created: current_user&.profile&.company_address_details&.present? }
     end
+  end
+
+  private
+
+  def find_pending_staff_account(user)
+    return nil unless user&.phone_number.present?
+
+    StaffAccount.pending
+      .where(phone_number: user.phone_number)
+      .where.not(owner_id: user.id)
+      .first
+  end
+
+  def activate_pending_staff_account(staff_account, user)
+    staff_account.user = user
+    staff_account.mark_active
+
+    return unless staff_account.save
+
+    staff = staff_account.staff
+    staff.update(
+      last_name: staff.last_name.presence || user.profile&.last_name,
+      first_name: staff.first_name.presence || user.profile&.first_name,
+      phonetic_last_name: staff.phonetic_last_name.presence || user.profile&.phonetic_last_name,
+      phonetic_first_name: staff.phonetic_first_name.presence || user.profile&.phonetic_first_name
+    )
+
+    begin
+      social = user.social_user
+      if social && Rails.env.production?
+        dashboard_menu = SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY, locale: social.locale)
+        if dashboard_menu
+          RichMenus::Connect.run(social_target: social, social_rich_menu: dashboard_menu)
+        end
+      end
+    rescue => e
+      Rails.logger.error "[activate_pending_staff_account] Rich menu switch failed for user##{user.id}: #{e.class} #{e.message}"
+    end
+
+    Notifiers::Users::Notifications::StaffJoined.perform_later(receiver: staff_account.owner, staff_name: staff.name)
   end
 end

@@ -5,6 +5,8 @@ module Users
     object :user
 
     def execute
+      return if staff_for_another_owner?
+
       if user.profile && !user.shops.exists?
         shop_name = user.profile.company_name.presence || "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
         user.profile.update(company_name: shop_name) if user.profile.company_name.blank?
@@ -106,6 +108,16 @@ module Users
     end
 
     private
+
+    def staff_for_another_owner?
+      return false if user.shops.exists?
+
+      StaffAccount.where(user: user).where.not(owner_id: user.id).exists? ||
+        (user.phone_number.present? &&
+          StaffAccount.pending
+            .where(phone_number: user.phone_number)
+            .where.not(owner_id: user.id).exists?)
+    end
 
     def profile
       @profile ||= user.profile
