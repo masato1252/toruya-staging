@@ -71,9 +71,17 @@ const ShareButtons = ({ title }) => {
   );
 };
 
-const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete }) => {
+const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete, onMainPhaseStart }) => {
   const [phase, setPhase] = useState(preAdUrl ? "pre_ad" : "main");
   const [iframeKey, setIframeKey] = useState(0);
+  const mainFired = useRef(!preAdUrl);
+
+  useEffect(() => {
+    if (phase === "main" && !mainFired.current) {
+      mainFired.current = true;
+      onMainPhaseStart && onMainPhaseStart();
+    }
+  }, [phase]);
 
   const currentUrl = phase === "pre_ad" ? preAdUrl
     : phase === "main" ? contentUrl
@@ -148,7 +156,7 @@ const PDFCarousel = ({ images, onlineServiceUrl }) => {
   );
 };
 
-const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl }) => {
+const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrackActivity }) => {
   const [consultationStatus, setConsultationStatus] = useState(content.consultation_status);
   const [monitorApplied, setMonitorApplied] = useState(content.has_monitor_applied);
   const [isLoading, setIsLoading] = useState(false);
@@ -158,6 +166,7 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl }) => {
   const handleConsultation = async () => {
     if (consultationStatus || isLoading) return;
     setIsLoading(true);
+    onTrackActivity && onTrackActivity("upsell_click");
     const res = await fetch(upsellConsultationUrl, { method: "POST", headers: { "X-CSRF-Token": csrfToken } });
     const data = await res.json();
     if (data.success) setConsultationStatus(data.status);
@@ -223,7 +232,7 @@ const EventContentShow = ({ props }) => {
   const {
     event_content, event_slug, event_title,
     start_usage_url, upsell_consultation_url, monitor_apply_url,
-    back_url, line_login_url, add_friend_url
+    track_activity_url, back_url, line_login_url, add_friend_url
   } = props;
 
   const [hasStarted, setHasStarted] = useState(event_content.has_started_usage);
@@ -234,12 +243,26 @@ const EventContentShow = ({ props }) => {
   const isLoggedIn = event_content.is_logged_in;
   const canStart = event_content.started && !event_content.ended && !event_content.capacity_full;
 
+  const trackActivity = (activityType, metadata) => {
+    if (!track_activity_url || !isLoggedIn) return;
+    const body = { activity_type: activityType };
+    if (metadata) body.metadata = metadata;
+    fetch(track_activity_url, {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken, "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).catch(() => {});
+  };
+
   const handleStartUsage = async () => {
     if (isStarting || hasStarted) return;
     setIsStarting(true);
     const res = await fetch(start_usage_url, { method: "POST", headers: { "X-CSRF-Token": csrfToken } });
     const data = await res.json();
-    if (data.success) setHasStarted(true);
+    if (data.success) {
+      setHasStarted(true);
+      if (event_content.content_type === "seminar") trackActivity("seminar_view");
+    }
     setIsStarting(false);
   };
 
@@ -265,11 +288,13 @@ const EventContentShow = ({ props }) => {
               preAdUrl={event_content.pre_ad_video_url}
               contentUrl={event_content.online_service_registration_url}
               postAdUrl={event_content.post_ad_video_url}
+              onMainPhaseStart={() => trackActivity("seminar_view")}
             />
             {event_content.direct_download_url && (
               <a
                 href={event_content.direct_download_url}
                 target="_blank" rel="noopener noreferrer"
+                onClick={() => trackActivity("material_download", { url: event_content.direct_download_url })}
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 12, padding: "12px 20px", background: "#3b82f6", color: "#fff", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
               >
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
@@ -283,6 +308,17 @@ const EventContentShow = ({ props }) => {
               images={event_content.slide_images || []}
               onlineServiceUrl={event_content.online_service_registration_url}
             />
+            {event_content.online_service_registration_url && (
+              <a
+                href={event_content.online_service_registration_url}
+                target="_blank" rel="noopener noreferrer"
+                onClick={() => trackActivity("online_service_click", { url: event_content.online_service_registration_url })}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 12, padding: "12px 20px", background: "#0ea5e9", color: "#fff", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
+              >
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd"/></svg>
+                出展企業のサービスページへ
+              </a>
+            )}
           </div>
         ) : (
           <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 20 }}>
@@ -401,6 +437,7 @@ const EventContentShow = ({ props }) => {
               content={event_content}
               upsellConsultationUrl={upsell_consultation_url}
               monitorApplyUrl={monitor_apply_url}
+              onTrackActivity={trackActivity}
             />
           </div>
         )}

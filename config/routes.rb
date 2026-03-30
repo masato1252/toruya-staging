@@ -859,6 +859,7 @@ Rails.application.routes.draw do
         post :start_usage
         post :upsell_consultation
         post :monitor_apply
+        post :track_activity
       end
     end
   end

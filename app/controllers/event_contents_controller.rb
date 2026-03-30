@@ -83,6 +83,26 @@ class EventContentsController < ActionController::Base
     render json: { success: true, form_url: form_url }
   end
 
+  def track_activity
+    @current_event_line_user = current_event_line_user
+    return render json: { error: "ログインが必要です" }, status: :unauthorized unless @current_event_line_user
+
+    activity_type = params[:activity_type]
+    unless EventActivityLog.activity_types.key?(activity_type)
+      return render json: { error: "不正なアクティビティタイプです" }, status: :unprocessable_entity
+    end
+
+    log = EventActivityLog.create!(
+      event: @event,
+      event_content: @event_content,
+      event_line_user: @current_event_line_user,
+      activity_type: activity_type,
+      metadata: params[:metadata]&.to_unsafe_h || {}
+    )
+
+    render json: { success: true, id: log.id }
+  end
+
   private
 
   def set_event
