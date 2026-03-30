@@ -1,17 +1,22 @@
 # frozen_string_literal: true
 
-class EventsController < Lines::CustomersController
+class EventsController < ActionController::Base
   layout "booking"
+  include ControllerHelpers
+
+  protect_from_forgery with: :exception, prepend: true
 
   prepend_before_action :set_event
 
+  helper ApplicationHelper
+
   def show
-    @current_social_customer = current_social_customer
-    @participant = @event.event_participants.find_by(social_customer_id: @current_social_customer&.id)
+    @current_event_line_user = current_event_line_user
+    @participant = @current_event_line_user ? @event.event_participants.find_by(event_line_user_id: @current_event_line_user.id) : nil
 
     @event_hash = EventSerializer.new(@event, {
       params: {
-        social_customer: @current_social_customer,
+        event_line_user: @current_event_line_user,
         participant: @participant
       }
     }).attributes_hash
@@ -25,7 +30,10 @@ class EventsController < Lines::CustomersController
     render plain: "イベントが見つかりません", status: :not_found
   end
 
-  def current_owner
-    @event.user
+  def current_event_line_user
+    return @_current_event_line_user if defined?(@_current_event_line_user)
+
+    @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
+  helper_method :current_event_line_user
 end

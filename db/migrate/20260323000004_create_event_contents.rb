@@ -38,5 +38,14 @@ class CreateEventContents < ActiveRecord::Migration[7.0]
 
     add_index :event_contents, :deleted_at
     add_index :event_contents, [:event_id, :position]
+
+    create_table :event_content_images do |t|
+      t.references :event_content, null: false, foreign_key: true
+      t.integer :position, default: 0, null: false
+
+      t.timestamps
+    end
+
+    add_index :event_content_images, [:event_content_id, :position]
   end
 end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Event < ApplicationRecord
-  belongs_to :user
   has_many :event_contents, -> { order(:position) }, dependent: :destroy
   has_many :event_participants, dependent: :destroy
 

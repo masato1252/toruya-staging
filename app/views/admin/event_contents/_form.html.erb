@@ -1,0 +1,172 @@
+<%= form_with(model: [:admin, event_content], url: form_url, local: true, html: { class: "admin-event-form", multipart: true }) do |f| %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">基本情報</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">
+        コンテンツ種別<span class="required-mark">*</span>
+      </label>
+      <div class="admin-form-input">
+        <div class="admin-form-radio-group">
+          <label>
+            <%= f.radio_button :content_type, "seminar" %> セミナー動画
+          </label>
+          <label>
+            <%= f.radio_button :content_type, "booth" %> 展示ブース(PDF)
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">
+        タイトル<span class="required-mark">*</span>
+      </label>
+      <div class="admin-form-input">
+        <%= f.text_field :title, class: "form-control #{'field-error-border' if event_content.errors[:title].any?}", placeholder: "コンテンツタイトル" %>
+        <% if event_content.errors[:title].any? %>
+          <span class="admin-form-error"><%= event_content.errors.full_messages_for(:title).join(", ") %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">サムネイル画像</label>
+      <div class="admin-form-input">
+        <% if event_content.thumbnail.attached? %>
+          <div style="margin-bottom: 8px;">
+            <%= image_tag url_for(event_content.thumbnail), style: "max-height: 150px; max-width: 100%; object-fit: cover; border-radius: 4px;" %>
+          </div>
+        <% end %>
+        <%= f.file_field :thumbnail, accept: "image/jpeg,image/png,image/gif" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">紹介文</label>
+      <div class="admin-form-input">
+        <%= f.text_area :introduction, class: "form-control", rows: 3, placeholder: "コンテンツの一言紹介（カード一覧表示用）" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">説明文</label>
+      <div class="admin-form-input">
+        <%= f.text_area :description, class: "form-control", rows: 5, placeholder: "コンテンツの詳細説明" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">開催設定</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">サービス開始日時</label>
+      <div class="admin-form-input">
+        <%= f.datetime_local_field :start_at, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">サービス終了日時</label>
+      <div class="admin-form-input">
+        <%= f.datetime_local_field :end_at, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">利用開始上限人数</label>
+      <div class="admin-form-input">
+        <%= f.number_field :capacity, class: "form-control", min: 1, placeholder: "空欄で無制限" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">表示順</label>
+      <div class="admin-form-input">
+        <%= f.number_field :position, class: "form-control", min: 0 %>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">動画・資料設定（セミナー向け）</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">広告動画URL（前）</label>
+      <div class="admin-form-input">
+        <%= f.url_field :pre_ad_video_url, class: "form-control", placeholder: "https://www.youtube.com/watch?v=..." %>
+        <span class="admin-form-help">YouTube または Google ドライブの共有URL</span>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">広告動画URL（後）</label>
+      <div class="admin-form-input">
+        <%= f.url_field :post_ad_video_url, class: "form-control", placeholder: "https://www.youtube.com/watch?v=..." %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">資料ダウンロードURL（直接DL）</label>
+      <div class="admin-form-input">
+        <%= f.url_field :direct_download_url, class: "form-control", placeholder: "https://..." %>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">アップセル設定</div>
+
+    <div class="admin-form-group">
+      <div class="admin-form-checkbox">
+        <%= f.check_box :upsell_booking_enabled, id: "ec_upsell" %>
+        <label for="ec_upsell">無料相談予約を設定する</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">モニター募集設定</div>
+
+    <div class="admin-form-group">
+      <div class="admin-form-checkbox">
+        <%= f.check_box :monitor_enabled, id: "ec_monitor" %>
+        <label for="ec_monitor">モニター募集を設定する</label>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">モニターサービス名</label>
+      <div class="admin-form-input">
+        <%= f.text_field :monitor_name, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">モニター金額（円）</label>
+      <div class="admin-form-input">
+        <%= f.number_field :monitor_price, class: "form-control", min: 0 %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">モニター上限人数</label>
+      <div class="admin-form-input">
+        <%= f.number_field :monitor_limit, class: "form-control", min: 1 %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">応募フォームURL</label>
+      <div class="admin-form-input">
+        <%= f.url_field :monitor_form_url, class: "form-control", placeholder: "https://forms.gle/..." %>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-actions">
+    <%= link_to "キャンセル", event_content.persisted? ? admin_event_content_path(event_content) : admin_event_path(event_content.event || @event), class: "btn btn-gray" %>
+    <%= f.submit event_content.persisted? ? "更新" : "作成", class: "btn btn-tarco" %>
+  </div>
+<% end %>

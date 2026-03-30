@@ -10,13 +10,13 @@ class EventSerializer
   end
 
   attribute :is_logged_in do |event, params|
-    params[:social_customer].present?
+    params[:event_line_user].present?
   end
 
   attribute :contents do |event, params|
     event.event_contents.undeleted.order(:position).map do |content|
-      social_customer = params[:social_customer]
-      usage = social_customer ? content.event_content_usages.find_by(social_customer_id: social_customer.id) : nil
+      event_line_user = params[:event_line_user]
+      usage = event_line_user ? content.event_content_usages.find_by(event_line_user_id: event_line_user.id) : nil
 
       staff = content.shop&.staffs&.first
 

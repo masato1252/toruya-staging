@@ -96,7 +96,6 @@ class Ability
       cannot :create, Staff
       cannot :create_course, OnlineService
       cannot :create_membership, OnlineService
-      can :manage_event, :all
     when Plan::PREMIUM_LEVEL
       cannot :create, Shop if super_user.shops.exists?
       cannot :create, Staff

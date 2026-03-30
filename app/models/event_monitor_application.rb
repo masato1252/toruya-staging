@@ -2,7 +2,7 @@
 
 class EventMonitorApplication < ApplicationRecord
   belongs_to :event_content
-  belongs_to :social_customer
+  belongs_to :event_line_user
 
-  validates :social_customer_id, uniqueness: { scope: :event_content_id }
+  validates :event_line_user_id, uniqueness: { scope: :event_content_id }
 end

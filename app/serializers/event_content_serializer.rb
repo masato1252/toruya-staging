@@ -43,7 +43,7 @@ class EventContentSerializer
   end
 
   attribute :is_logged_in do |_, params|
-    params[:social_customer].present?
+    params[:event_line_user].present?
   end
 
   attribute :has_started_usage do |_, params|

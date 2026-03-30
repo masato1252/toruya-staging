@@ -154,6 +154,17 @@ module ApplicationHelper
     user_line_omniauth_authorize_path(options)
   end
 
+  def event_line_login_url(oauth_redirect_to_url)
+    encrypted_content = MessageEncryptor.encrypt(CallbacksController::EVENT_LINE_USER)
+
+    user_line_omniauth_authorize_path(
+      prompt: "consent",
+      bot_prompt: "aggressive",
+      oauth_redirect_to_url: oauth_redirect_to_url,
+      who: encrypted_content
+    )
+  end
+
   def toruya_new_line_account_url(oauth_redirect_to_url, *args)
     options = args.extract_options!
     toruya_user = Current.business_owner.locale_is?(:tw) ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER

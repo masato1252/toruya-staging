@@ -1,0 +1,34 @@
+<%= render "admin/features" %>
+
+<div class="admin-event-list">
+  <div class="admin-event-list-header">
+    <h2>イベント一覧</h2>
+    <%= link_to "新規作成", new_admin_event_path, class: "btn btn-tarco" %>
+  </div>
+
+  <% if @events.any? %>
+    <% @events.each do |event| %>
+      <%= link_to admin_event_path(event), class: "admin-event-card" do %>
+        <div class="admin-event-card-title">
+          <%= event.title %>
+          <% if event.published? %>
+            <span class="admin-badge admin-badge-success">公開中</span>
+          <% else %>
+            <span class="admin-badge admin-badge-secondary">非公開</span>
+          <% end %>
+        </div>
+        <div class="admin-event-card-meta">
+          /events/<%= event.slug %>
+          <% if event.start_at %>
+            &middot; <%= l(event.start_at, format: :short) %> 〜 <%= event.end_at ? l(event.end_at, format: :short) : "未設定" %>
+          <% end %>
+          &middot; 参加者: <%= event.event_participants.count %>人
+        </div>
+      <% end %>
+    <% end %>
+  <% else %>
+    <div class="admin-event-empty">
+      イベントはまだありません
+    </div>
+  <% end %>
+</div>

@@ -1,29 +1,37 @@
 # frozen_string_literal: true
 
-class Events::ParticipationsController < Lines::CustomersController
+class Events::ParticipationsController < ActionController::Base
   layout "booking"
+  include ControllerHelpers
+
+  protect_from_forgery with: :exception, prepend: true
 
   prepend_before_action :set_event
 
-  def new
-    @current_social_customer = current_social_customer
-    redirect_to event_path(slug: @event.slug) and return unless @current_social_customer
+  helper ApplicationHelper
 
-    @participant = @event.event_participants.find_by(social_customer_id: @current_social_customer.id)
+  def new
+    @current_event_line_user = current_event_line_user
+    redirect_to event_path(slug: @event.slug) and return unless @current_event_line_user
+
+    @participant = @event.event_participants.find_by(event_line_user_id: @current_event_line_user.id)
     redirect_to event_path(slug: @event.slug) and return if @participant
   end
 
   def create
-    @current_social_customer = current_social_customer
-    return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless @current_social_customer
+    @current_event_line_user = current_event_line_user
+    return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless @current_event_line_user
 
     outcome = Events::RegisterParticipant.run(
       event: @event,
-      social_customer: @current_social_customer,
+      event_line_user: @current_event_line_user,
       business_types: params[:business_types],
       business_age: params[:business_age],
-      concern_label: params[:concern_label],
-      concern_other: params[:concern_other]
+      concern_labels: params[:concern_labels],
+      concern_other: params[:concern_other],
+      first_name: params[:first_name],
+      last_name: params[:last_name],
+      phone_number: params[:phone_number]
     )
 
     if outcome.valid?
@@ -41,7 +49,10 @@ class Events::ParticipationsController < Lines::CustomersController
     render plain: "イベントが見つかりません", status: :not_found
   end
 
-  def current_owner
-    @event.user
+  def current_event_line_user
+    return @_current_event_line_user if defined?(@_current_event_line_user)
+
+    @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
+  helper_method :current_event_line_user
 end

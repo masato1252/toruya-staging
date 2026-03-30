@@ -1,0 +1,74 @@
+<%= form_with(model: [:admin, event], local: true, html: { class: "admin-event-form", multipart: true }) do |f| %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">基本情報</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">
+        タイトル<span class="required-mark">*</span>
+      </label>
+      <div class="admin-form-input">
+        <%= f.text_field :title, class: "form-control #{'field-error-border' if event.errors[:title].any?}", placeholder: "イベントタイトル" %>
+        <% if event.errors[:title].any? %>
+          <span class="admin-form-error"><%= event.errors.full_messages_for(:title).join(", ") %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">
+        スラッグ（URL用英数字）<span class="required-mark">*</span>
+      </label>
+      <div class="admin-form-input">
+        <%= f.text_field :slug, class: "form-control #{'field-error-border' if event.errors[:slug].any?}", placeholder: "event-slug-2026" %>
+        <span class="admin-form-help">/events/[スラッグ] で公開されます（半角英数字とハイフンのみ）</span>
+        <% if event.errors[:slug].any? %>
+          <span class="admin-form-error"><%= event.errors.full_messages_for(:slug).join(", ") %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">概要</label>
+      <div class="admin-form-input">
+        <%= f.text_area :description, class: "form-control", rows: 4, placeholder: "イベントの概要説明" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">開催期間</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">開催開始日時</label>
+      <div class="admin-form-input">
+        <%= f.datetime_local_field :start_at, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">開催終了日時</label>
+      <div class="admin-form-input">
+        <%= f.datetime_local_field :end_at, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">公開設定</div>
+
+    <div class="admin-form-group">
+      <div class="admin-form-checkbox">
+        <%= f.check_box :published, id: "event_published" %>
+        <label for="event_published">公開する</label>
+      </div>
+      <div class="admin-form-input">
+        <span class="admin-form-help">公開にすると、イベントページが一般にアクセス可能になります</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-actions">
+    <%= link_to "キャンセル", event.persisted? ? admin_event_path(event) : admin_events_path, class: "btn btn-gray" %>
+    <%= f.submit event.persisted? ? "更新" : "作成", class: "btn btn-tarco" %>
+  </div>
+<% end %>

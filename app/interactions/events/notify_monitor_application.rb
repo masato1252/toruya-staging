@@ -6,23 +6,23 @@ module Events
 
     def execute
       event_content = application.event_content
-      event = event_content.event
-      social_user = application.social_user
+      event_line_user = application.event_line_user
+      return unless event_line_user
 
-      social_customer = find_social_customer(event, social_user)
-      return unless social_customer
+      message = "Toruyaイベント『#{event_content.title}』参加者限定でご提供するモニターへのご応募を承りました。\n\nモニター当選者には、イベント終了後にご案内させていただきますので、それまでお待ちください。"
 
-      message = "ToruyaランサーマッチングEXPO『#{event_content.title}』参加者限定でご提供するモニターへのご応募を承りました。\n\nモニター当選者には、イベント終了後にご案内させていただきますので、それまで待ちください。"
-
-      LineClient.send(social_customer, message)
+      send_line_message(event_line_user.line_user_id, message)
     rescue => e
       Rollbar.error(e, "Failed to send monitor application notification", application_id: application.id)
     end
 
     private
 
-    def find_social_customer(event, social_user)
-      event.user.social_customers.find_by(social_user_id: social_user.social_service_user_id)
+    def send_line_message(line_user_id, message)
+      client = UserBotSocialAccount.client
+      client.push_message(line_user_id, { type: "text", text: message })
+    rescue => e
+      Rails.logger.error("[NotifyMonitorApplication] LINE message send failed: #{e.class} #{e.message}")
     end
   end
 end

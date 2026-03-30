@@ -1,0 +1,99 @@
+<%= render "admin/features" %>
+
+<div class="admin-event-detail">
+  <div class="admin-detail-header">
+    <h2><%= @event_content.title %></h2>
+    <div class="admin-detail-actions">
+      <%= link_to "編集", edit_admin_event_content_path(@event_content), class: "btn btn-tarco" %>
+      <%= link_to "削除", admin_event_content_path(@event_content), method: :delete, data: { confirm: "このコンテンツを削除しますか？" }, class: "btn btn-danger" %>
+      <%= link_to "イベントに戻る", admin_event_path(@event), class: "btn btn-gray" %>
+    </div>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">コンテンツ情報</div>
+
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">種別</div>
+      <div class="admin-detail-value">
+        <span class="admin-badge admin-badge-info"><%= @event_content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+      </div>
+    </div>
+
+    <% if @event_content.thumbnail.attached? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">サムネイル</div>
+        <div class="admin-detail-value">
+          <%= image_tag url_for(@event_content.thumbnail), style: "max-height: 150px; border-radius: 4px;" %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @event_content.introduction.present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">紹介文</div>
+        <div class="admin-detail-value"><%= simple_format(@event_content.introduction) %></div>
+      </div>
+    <% end %>
+
+    <% if @event_content.description.present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">説明文</div>
+        <div class="admin-detail-value"><%= simple_format(@event_content.description) %></div>
+      </div>
+    <% end %>
+
+    <% if @event_content.start_at %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">開催期間</div>
+        <div class="admin-detail-value">
+          <%= l(@event_content.start_at, format: :long) %> 〜 <%= @event_content.end_at ? l(@event_content.end_at, format: :long) : "未設定" %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @event_content.capacity %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">上限人数</div>
+        <div class="admin-detail-value"><%= @event_content.capacity %>人（利用済: <%= @event_content.usage_count %>人）</div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @event_content.seminar_content_type? %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title">動画・資料</div>
+      <% if @event_content.pre_ad_video_url.present? %>
+        <div class="admin-detail-row">
+          <div class="admin-detail-label">広告動画（前）</div>
+          <div class="admin-detail-value"><%= link_to @event_content.pre_ad_video_url, @event_content.pre_ad_video_url, target: "_blank" %></div>
+        </div>
+      <% end %>
+      <% if @event_content.post_ad_video_url.present? %>
+        <div class="admin-detail-row">
+          <div class="admin-detail-label">広告動画（後）</div>
+          <div class="admin-detail-value"><%= link_to @event_content.post_ad_video_url, @event_content.post_ad_video_url, target: "_blank" %></div>
+        </div>
+      <% end %>
+      <% if @event_content.direct_download_url.present? %>
+        <div class="admin-detail-row">
+          <div class="admin-detail-label">資料DL</div>
+          <div class="admin-detail-value"><%= link_to @event_content.direct_download_url, @event_content.direct_download_url, target: "_blank" %></div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @event_content.event_content_images.any? %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title">スライド画像</div>
+      <div style="padding: 16px; display: flex; flex-wrap: wrap; gap: 8px;">
+        <% @event_content.event_content_images.each do |img| %>
+          <% if img.image.attached? %>
+            <%= image_tag url_for(img.image), style: "width: 120px; height: 80px; object-fit: cover; border-radius: 4px;" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

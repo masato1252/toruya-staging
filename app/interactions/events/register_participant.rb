@@ -3,28 +3,27 @@
 module Events
   class RegisterParticipant < ActiveInteraction::Base
     object :event
-    object :social_customer
+    object :event_line_user
 
     array :business_types, default: []
     string :business_age, default: nil
-    string :concern_label, default: nil
+    array :concern_labels, default: []
     string :concern_other, default: nil
-
-    TORUYA_OFFICIAL_USER_ID = 2584
+    string :first_name, default: nil
+    string :last_name, default: nil
+    string :phone_number, default: nil
 
     def execute
-      participant = event.event_participants.find_or_initialize_by(social_customer_id: social_customer.id)
+      update_event_line_user_profile
+
+      participant = event.event_participants.find_or_initialize_by(event_line_user_id: event_line_user.id)
 
       return participant unless participant.new_record?
 
-      concern_category = concern_label.present? ? EventParticipant.concern_category_for(concern_label) : nil
-
       participant.assign_attributes(
-        user_id: nil,
         business_types: business_types.reject(&:blank?),
         business_age: business_age.presence,
-        concern_label: concern_label.presence,
-        concern_category: concern_category,
+        concern_labels: sanitized_concern_labels,
         concern_other: concern_other.presence,
         registered_at: Time.current
       )
@@ -34,37 +33,25 @@ module Events
         return
       end
 
-      save_concern_to_toruya_official(participant, social_customer, concern_label, concern_category)
-
       participant
     end
 
     private
 
-    def save_concern_to_toruya_official(participant, social_customer, concern_label, concern_category)
-      return unless concern_label.present? && concern_category.present?
+    def update_event_line_user_profile
+      attrs = {}
+      attrs[:first_name] = first_name if first_name.present? && event_line_user.first_name.blank?
+      attrs[:last_name] = last_name if last_name.present? && event_line_user.last_name.blank?
+      attrs[:phone_number] = phone_number if phone_number.present? && event_line_user.phone_number.blank?
+      attrs[:business_types] = business_types.reject(&:blank?) if business_types.present?
+      attrs[:business_age] = business_age.presence if business_age.present?
 
-      official_user = User.find_by(id: TORUYA_OFFICIAL_USER_ID)
-      return unless official_user
+      event_line_user.update(attrs) if attrs.present?
+    end
 
-      toruya_social_customer = official_user.social_customers.find_by(social_user_id: social_customer.social_user_id)
-      return unless toruya_social_customer
-
-      customer = toruya_social_customer.customer
-      return unless customer
-
-      concern_note = "concern_category:#{concern_category},concern_label:#{concern_label}"
-      existing_memo = customer.memo.to_s
-
-      if existing_memo.include?("concern_category:")
-        updated_memo = existing_memo.gsub(/concern_category:[^,\n]+,concern_label:[^\n]+/, concern_note)
-      else
-        updated_memo = [existing_memo.strip, concern_note].reject(&:blank?).join("\n")
-      end
-
-      customer.update_column(:memo, updated_memo)
-    rescue => e
-      Rollbar.error(e, "Failed to save concern to Toruya official customer", social_customer_id: social_customer.id)
+    def sanitized_concern_labels
+      labels = (concern_labels || []).reject(&:blank?).first(6)
+      labels
     end
   end
 end

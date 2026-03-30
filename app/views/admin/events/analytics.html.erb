@@ -1,0 +1,45 @@
+<%= render "admin/features" %>
+
+<div class="admin-event-detail">
+  <div class="admin-detail-header">
+    <h2><%= @event.title %> - アクセス解析</h2>
+    <div class="admin-detail-actions">
+      <%= link_to "イベント詳細に戻る", admin_event_path(@event), class: "btn btn-gray" %>
+    </div>
+  </div>
+
+  <% @event_contents.each do |content| %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title">
+        <%= content.title %>
+        <span class="admin-badge admin-badge-info" style="margin-left: 8px;"><%= content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+      </div>
+      <div class="admin-analytics-grid">
+        <div class="admin-analytics-card">
+          <div class="analytics-value text-tarco">
+            <%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).count %>
+          </div>
+          <div class="analytics-label">PV</div>
+        </div>
+        <div class="admin-analytics-card">
+          <div class="analytics-value text-blue">
+            <%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).distinct.count("properties->>'social_user_id'") %>
+          </div>
+          <div class="analytics-label">来場者(UU)</div>
+        </div>
+        <div class="admin-analytics-card">
+          <div class="analytics-value text-green"><%= content.usage_count %></div>
+          <div class="analytics-label">リード</div>
+        </div>
+        <div class="admin-analytics-card">
+          <div class="analytics-value text-orange"><%= content.event_upsell_consultations.count %></div>
+          <div class="analytics-label">相談予約</div>
+        </div>
+        <div class="admin-analytics-card">
+          <div class="analytics-value text-purple"><%= content.event_monitor_applications.count %></div>
+          <div class="analytics-label">モニター応募</div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

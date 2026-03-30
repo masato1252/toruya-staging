@@ -2,8 +2,6 @@
 
 module Events
   class Create < ActiveInteraction::Base
-    object :user
-
     string :title
     string :slug
     string :description, default: nil
@@ -15,7 +13,7 @@ module Events
     validates :slug, presence: true
 
     def execute
-      event = user.events.build(
+      event = Event.new(
         title: title,
         slug: slug.downcase.strip,
         description: description,

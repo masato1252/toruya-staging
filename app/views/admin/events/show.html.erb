@@ -1,0 +1,109 @@
+<%= render "admin/features" %>
+
+<div class="admin-event-detail">
+  <div class="admin-detail-header">
+    <h2><%= @event.title %></h2>
+    <div class="admin-detail-actions">
+      <%= link_to "編集", edit_admin_event_path(@event), class: "btn btn-tarco" %>
+      <%= link_to "解析", analytics_admin_event_path(@event), class: "btn btn-gray" %>
+      <%= link_to "削除", admin_event_path(@event), method: :delete, data: { confirm: "このイベントを削除しますか？" }, class: "btn btn-danger" %>
+    </div>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">基本情報</div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">ステータス</div>
+      <div class="admin-detail-value">
+        <% if @event.published? %>
+          <span class="admin-badge admin-badge-success">公開中</span>
+        <% else %>
+          <span class="admin-badge admin-badge-secondary">非公開</span>
+        <% end %>
+      </div>
+    </div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">スラッグ</div>
+      <div class="admin-detail-value"><code>/events/<%= @event.slug %></code></div>
+    </div>
+    <% if @event.description.present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">概要</div>
+        <div class="admin-detail-value"><%= simple_format(@event.description) %></div>
+      </div>
+    <% end %>
+    <% if @event.start_at %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">開催期間</div>
+        <div class="admin-detail-value">
+          <%= l(@event.start_at, format: :long) %> 〜 <%= @event.end_at ? l(@event.end_at, format: :long) : "未設定" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">
+      コンテンツ一覧
+      <span style="float: right;">
+        <%= link_to "＋ コンテンツ追加", new_admin_event_event_content_path(@event), style: "font-size: 12px; font-weight: normal;" %>
+      </span>
+    </div>
+    <% if @event_contents.any? %>
+      <% @event_contents.each do |content| %>
+        <%= link_to admin_event_content_path(content), class: "admin-content-card" do %>
+          <div class="admin-content-card-title">
+            <%= content.title %>
+            <span class="admin-badge admin-badge-info"><%= content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+          </div>
+          <div class="admin-content-card-meta">
+            <% if content.capacity %>
+              上限: <%= content.capacity %>人（利用済: <%= content.usage_count %>人）
+            <% end %>
+            <% if content.start_at %>
+              &middot; <%= l(content.start_at, format: :short) %> 〜
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div style="padding: 20px 16px; text-align: center; color: #8f8f8f;">
+        コンテンツはまだありません
+      </div>
+    <% end %>
+  </div>
+
+  <% if @participants.any? %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title">参加者一覧（<%= @participants.count %>人）</div>
+      <table class="admin-participant-table">
+        <thead>
+          <tr>
+            <th>名前</th>
+            <th>LINE表示名</th>
+            <th>電話番号</th>
+            <th>Toruyaユーザー</th>
+            <th>登録日</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @participants.each do |p| %>
+            <tr>
+              <td><%= p.event_line_user.name %></td>
+              <td><%= p.event_line_user.display_name %></td>
+              <td><%= p.event_line_user.phone_number %></td>
+              <td>
+                <% if p.event_line_user.toruya_registered? %>
+                  <span class="admin-badge admin-badge-success">登録済 (ID: <%= p.event_line_user.toruya_user_id %>)</span>
+                <% else %>
+                  <span class="admin-badge admin-badge-secondary">未登録</span>
+                <% end %>
+              </td>
+              <td><%= l(p.registered_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

@@ -6,6 +6,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   TORUYA_USER = "toruya_user"
   TW_TORUYA_USER = "tw_toruya_user"
   SHOP_OWNER_CUSTOMER_SELF = "shop_owner_customer_self"
+  EVENT_LINE_USER = "event_line_user"
 
   include Devise::Controllers::Rememberable
   include UserBotCookies
@@ -79,7 +80,9 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     Rollbar.info("LineLogin1", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
-    if param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
+    if param["who"] && MessageEncryptor.decrypt(param["who"]) == EVENT_LINE_USER
+      return handle_event_line_login(request.env["omniauth.auth"], param)
+    elsif param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
         who: MessageEncryptor.decrypt(param["who"])
@@ -242,5 +245,39 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
       redirect_to uri.to_s
     end
+  end
+
+  private
+
+  def handle_event_line_login(auth, param)
+    line_user_id = auth.uid
+    profile = auth.info
+
+    event_line_user = EventLineUser.find_or_initialize_by(line_user_id: line_user_id)
+    is_new = event_line_user.new_record?
+
+    event_line_user.display_name = profile.name if profile.name.present?
+    event_line_user.picture_url = profile.image if profile.image.present?
+
+    if is_new
+      event_line_user.check_toruya_user!
+    end
+
+    event_line_user.save! if event_line_user.changed?
+
+    session[:event_line_user_id] = event_line_user.id
+
+    oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url]
+    session.delete(:oauth_redirect_to_url)
+
+    if oauth_redirect_to_url.present?
+      redirect_to Addressable::URI.new(path: oauth_redirect_to_url).to_s
+    else
+      redirect_to root_path
+    end
+  rescue => e
+    Rails.logger.error("[EventLineLogin] Failed: #{e.class} #{e.message}")
+    Rollbar.error(e, "Event LINE Login failed", line_user_id: auth&.uid)
+    redirect_to root_path, alert: "ログインに失敗しました"
   end
 end

@@ -40,13 +40,13 @@ class EventParticipant < ApplicationRecord
   }.freeze
 
   belongs_to :event
-  belongs_to :social_customer
-  belongs_to :user, optional: true
+  belongs_to :event_line_user
 
   enum business_age: { under_one_year: 0, one_to_three_years: 1, over_three_years: 2 }, _suffix: true
 
   validates :registered_at, presence: true
-  validates :social_customer_id, uniqueness: { scope: :event_id }
+  validates :event_line_user_id, uniqueness: { scope: :event_id }
+  validate :concern_labels_max_six
 
   def self.concern_category_for(label)
     CONCERN_MAPPING[label]&.dig(:category)
@@ -54,5 +54,21 @@ class EventParticipant < ApplicationRecord
 
   def self.recommended_roles_for(label)
     CONCERN_MAPPING[label]&.dig(:roles) || []
+  end
+
+  def concern_categories
+    (concern_labels || []).filter_map { |label| CONCERN_MAPPING[label]&.dig(:category) }.uniq
+  end
+
+  def recommended_roles
+    (concern_labels || []).flat_map { |label| CONCERN_MAPPING[label]&.dig(:roles) || [] }.uniq
+  end
+
+  private
+
+  def concern_labels_max_six
+    return if concern_labels.blank?
+
+    errors.add(:concern_labels, "は最大6件までです") if concern_labels.size > 6
   end
 end

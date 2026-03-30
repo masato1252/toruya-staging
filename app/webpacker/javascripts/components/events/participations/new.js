@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import I18n from 'i18n-js/index.js.erb';
 
+const MAX_CONCERNS = 6;
+
 const BUSINESS_TYPES = [
   "セラピスト", "整体師", "ネイリスト", "アイリスト",
   "Yoga講師", "ピラティス講師", "美容師", "スクール講師", "その他"
@@ -18,7 +20,7 @@ const CONCERNS = [
   { category: "集客・認知", items: [
     "新規のお客様がなかなか増えない",
     "SNSやホームページを頑張っているのに予約に繋がらない",
-    "紹介だけに頼っていて、自分で集客する方法が分からない"
+    "紹介だけに頼っていて自分で集客する方法が分からない"
   ]},
   { category: "LINE・デジタルツール活用", items: [
     "LINEを導入したが使いこなせていない",
@@ -32,13 +34,13 @@ const CONCERNS = [
   ]},
   { category: "経営・売上", items: [
     "予約は入っているのに売上が安定しない",
-    "単価を上げたいが、どうすれば良いか分からない",
+    "単価を上げたいがどうすれば良いか分からない",
     "確定申告や税金・お金の管理が不安",
     "売上はあっても手元にお金が残らない"
   ]},
   { category: "時間・仕組み化", items: [
     "集客・事務作業に時間がかかりすぎて施術に集中できない",
-    "リピーターが少なく、毎月集客し直しになっている",
+    "リピーターが少なく毎月集客し直しになっている",
     "予約管理や顧客対応の仕組みをもっと整えたい"
   ]},
   { category: "その他", items: ["その他（自由記述）"] }
@@ -47,14 +49,29 @@ const CONCERNS = [
 const ParticipationForm = ({ props }) => {
   const [selectedBusinessTypes, setSelectedBusinessTypes] = useState([]);
   const [businessAge, setBusinessAge] = useState("");
-  const [concernLabel, setConcernLabel] = useState("");
+  const [concernLabels, setConcernLabels] = useState([]);
   const [concernOther, setConcernOther] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleBusinessType = (type) => {
     setSelectedBusinessTypes(prev =>
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
     );
+  };
+
+  const toggleConcern = (item) => {
+    setConcernLabels(prev => {
+      if (prev.includes(item)) {
+        return prev.filter(c => c !== item);
+      }
+      if (prev.length >= MAX_CONCERNS) {
+        return prev;
+      }
+      return [...prev, item];
+    });
   };
 
   const handleSubmit = async () => {
@@ -66,18 +83,20 @@ const ParticipationForm = ({ props }) => {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.content },
         body: JSON.stringify({
-          social_user_id: props.social_user_id,
           business_types: selectedBusinessTypes,
           business_age: businessAge,
-          concern_label: concernLabel,
-          concern_other: concernOther
+          concern_labels: concernLabels,
+          concern_other: concernOther,
+          first_name: firstName,
+          last_name: lastName,
+          phone_number: phoneNumber
         })
       });
       const data = await response.json();
       if (data.success) {
         window.location = data.redirect_to;
       } else {
-        toastr.error(data.error || "エラーが発生しました");
+        toastr.error(data.error_message || data.error || "エラーが発生しました");
         setIsSubmitting(false);
       }
     } catch (e) {
@@ -86,12 +105,45 @@ const ParticipationForm = ({ props }) => {
     }
   };
 
+  const remainingConcerns = MAX_CONCERNS - concernLabels.length;
+
   return (
     <div className="booking-content" style={{ maxWidth: 600, margin: "0 auto", padding: "0 16px 80px" }}>
       <div style={{ padding: "24px 0 16px", borderBottom: "1px solid #eee", marginBottom: 24 }}>
         <h2 style={{ fontSize: 20, fontWeight: "bold", marginBottom: 4 }}>{props.event_title}</h2>
-        <p style={{ color: "#666", fontSize: 14 }}>参加登録 — プロフィール入力（全て任意）</p>
+        <p style={{ color: "#666", fontSize: 14 }}>参加登録 — プロフィール入力</p>
       </div>
+
+      <section style={{ marginBottom: 32 }}>
+        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>お名前</h3>
+        <div style={{ display: "flex", gap: 8 }}>
+          <input
+            type="text"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+            placeholder="姓"
+            style={{ flex: 1, padding: "10px 12px", border: "1px solid #ddd", borderRadius: 8, fontSize: 14 }}
+          />
+          <input
+            type="text"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+            placeholder="名"
+            style={{ flex: 1, padding: "10px 12px", border: "1px solid #ddd", borderRadius: 8, fontSize: 14 }}
+          />
+        </div>
+      </section>
+
+      <section style={{ marginBottom: 32 }}>
+        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>電話番号</h3>
+        <input
+          type="tel"
+          value={phoneNumber}
+          onChange={e => setPhoneNumber(e.target.value)}
+          placeholder="090-1234-5678"
+          style={{ width: "100%", padding: "10px 12px", border: "1px solid #ddd", borderRadius: 8, fontSize: 14 }}
+        />
+      </section>
 
       <section style={{ marginBottom: 32 }}>
         <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>1. 事業内容（複数選択可）</h3>
@@ -136,39 +188,59 @@ const ParticipationForm = ({ props }) => {
       </section>
 
       <section style={{ marginBottom: 32 }}>
-        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>3. 今の一番の悩み</h3>
+        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 4 }}>3. 今の悩み（複数選択可・最大{MAX_CONCERNS}件）</h3>
+        <p style={{ fontSize: 12, color: "#888", marginBottom: 12 }}>
+          {concernLabels.length > 0
+            ? `${concernLabels.length}件選択中（残り${remainingConcerns}件）`
+            : "当てはまるものを選んでください"
+          }
+        </p>
         {CONCERNS.map(group => (
           <div key={group.category} style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 12, color: "#888", marginBottom: 6, fontWeight: "bold" }}>{group.category}</div>
-            {group.items.map(item => (
-              <label
-                key={item}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "8px 12px",
-                  border: `2px solid ${concernLabel === item ? "#00b900" : "#eee"}`,
-                  borderRadius: 8,
-                  marginBottom: 6,
-                  cursor: "pointer",
-                  background: concernLabel === item ? "#f0fff0" : "#fff"
-                }}
-              >
-                <input
-                  type="radio"
-                  name="concern_label"
-                  value={item}
-                  checked={concernLabel === item}
-                  onChange={() => setConcernLabel(item)}
-                  style={{ display: "none" }}
-                />
-                <span style={{ fontSize: 14 }}>{item}</span>
-              </label>
-            ))}
+            {group.items.map(item => {
+              const isSelected = concernLabels.includes(item);
+              const isDisabled = !isSelected && concernLabels.length >= MAX_CONCERNS;
+              return (
+                <label
+                  key={item}
+                  onClick={() => { if (!isDisabled) toggleConcern(item); }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "8px 12px",
+                    border: `2px solid ${isSelected ? "#00b900" : "#eee"}`,
+                    borderRadius: 8,
+                    marginBottom: 6,
+                    cursor: isDisabled ? "not-allowed" : "pointer",
+                    background: isSelected ? "#f0fff0" : "#fff",
+                    opacity: isDisabled ? 0.5 : 1,
+                    transition: "all 0.15s"
+                  }}
+                >
+                  <span style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 20,
+                    height: 20,
+                    borderRadius: 4,
+                    border: `2px solid ${isSelected ? "#00b900" : "#ccc"}`,
+                    background: isSelected ? "#00b900" : "#fff",
+                    color: "#fff",
+                    fontSize: 12,
+                    flexShrink: 0
+                  }}>
+                    {isSelected && "✓"}
+                  </span>
+                  <span style={{ fontSize: 14 }}>{item}</span>
+                </label>
+              );
+            })}
           </div>
         ))}
-        {concernLabel === "その他（自由記述）" && (
+        {concernLabels.includes("その他（自由記述）") && (
           <textarea
             value={concernOther}
             onChange={e => setConcernOther(e.target.value)}

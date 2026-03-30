@@ -3,7 +3,6 @@
     event_slug: @event.slug,
     event_title: @event.title,
     action_url: event_participation_path(event_slug: @event.slug, format: "json"),
-    back_url: event_path(slug: @event.slug),
-    social_user_id: @current_social_customer.social_user_id
+    back_url: event_path(slug: @event.slug)
   }
 }, { camelize_props: false }) %>

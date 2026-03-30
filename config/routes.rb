@@ -800,6 +800,16 @@ Rails.application.routes.draw do
         get "as_user"
         get "/", to: "dashboards#index"
 
+        resources :events do
+          member { get :analytics }
+          resources :event_contents, shallow: true do
+            member do
+              post :upload_image
+              delete "images/:image_id", action: :destroy_image, as: :destroy_image
+            end
+          end
+        end
+
         resources :business_applications, only: [:index] do
           member do
             post "approve"

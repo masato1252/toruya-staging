@@ -6,23 +6,23 @@ module Events
 
     def execute
       event_content = consultation.event_content
-      event = event_content.event
-      social_user = consultation.social_user
+      event_line_user = consultation.event_line_user
+      return unless event_line_user
 
-      social_customer = find_social_customer(event, social_user)
-      return unless social_customer
+      message = "Toruyaイベント『#{event_content.title}』参加者限定でご提供する無料相談会のキャンセル待ちを承りました。\n\nイベント終了後のご案内をお待ちください。"
 
-      message = "ToruyaランサーマッチングEXPO『#{event_content.title}』参加者限定でご提供する無料相談会のキャンセル待ちを承りました。\n\nイベント終了後のご案内を待ちください。"
-
-      LineClient.send(social_customer, message)
+      send_line_message(event_line_user.line_user_id, message)
     rescue => e
       Rollbar.error(e, "Failed to send waitlist notification", consultation_id: consultation.id)
     end
 
     private
 
-    def find_social_customer(event, social_user)
-      event.user.social_customers.find_by(social_user_id: social_user.social_service_user_id)
+    def send_line_message(line_user_id, message)
+      client = UserBotSocialAccount.client
+      client.push_message(line_user_id, { type: "text", text: message })
+    rescue => e
+      Rails.logger.error("[NotifyWaitlist] LINE message send failed: #{e.class} #{e.message}")
     end
   end
 end
