@@ -18,7 +18,7 @@
           <% end %>
         </div>
         <div class="admin-event-card-meta">
-          /events/<%= event.slug %>
+          /<%= event.slug %>
           <% if event.start_at %>
             &middot; <%= l(event.start_at, format: :short) %> 〜 <%= event.end_at ? l(event.end_at, format: :short) : "未設定" %>
           <% end %>

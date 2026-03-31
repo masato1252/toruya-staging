@@ -5,7 +5,7 @@ class EventContentSerializer
 
   attribute :id, :title, :description, :introduction, :content_type
   attribute :start_at, :end_at, :capacity
-  attribute :pre_ad_video_url, :post_ad_video_url, :direct_download_url
+  attribute :video_url, :pre_ad_video_url, :post_ad_video_url, :direct_download_url
   attribute :upsell_booking_enabled, :monitor_enabled
   attribute :monitor_name, :monitor_price, :monitor_limit, :monitor_form_url
 
@@ -66,7 +66,29 @@ class EventContentSerializer
     content.online_service&.slug ? "/online_services/#{content.online_service.slug}" : nil
   end
 
+  attribute :speakers do |content|
+    content.event_content_speakers.order(:position).map do |speaker|
+      {
+        id: speaker.id,
+        name: speaker.name,
+        position_title: speaker.position_title,
+        introduction: speaker.introduction,
+        profile_image_url: speaker.profile_image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(speaker.profile_image, only_path: true) : nil
+      }
+    end
+  end
+
   attribute :exhibitor_staff do |content|
+    speaker = content.event_content_speakers.order(:position).first
+    if speaker
+      return {
+        picture_url: speaker.profile_image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(speaker.profile_image, only_path: true) : nil,
+        position: speaker.position_title,
+        name: speaker.name,
+        introduction: speaker.introduction
+      }
+    end
+
     staff = content.shop&.staffs&.first
     return nil unless staff
 

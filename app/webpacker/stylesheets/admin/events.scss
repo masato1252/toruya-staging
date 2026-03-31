@@ -334,22 +334,51 @@
   }
 }
 
-.admin-content-card {
-  display: block;
-  padding: 12px 16px;
+.admin-content-card-sortable {
+  display: flex;
+  align-items: center;
   border-bottom: 1px solid $gray;
-  text-decoration: none;
-  color: $black;
-  transition: background-color 0.1s;
-
-  &:hover {
-    background-color: $gray3;
-    text-decoration: none;
-    color: $black;
-  }
 
   &:last-child {
     border-bottom: 0;
+  }
+
+  &.dragging {
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    border-bottom: none;
+    opacity: 0.95;
+  }
+
+  .drag-handle {
+    padding: 12px 6px 12px 12px;
+    cursor: grab;
+    color: $gray7;
+    font-size: 16px;
+    user-select: none;
+    flex-shrink: 0;
+    line-height: 1;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .admin-content-card-body {
+    flex: 1;
+    display: block;
+    padding: 12px 16px 12px 6px;
+    text-decoration: none;
+    color: $black;
+    transition: background-color 0.1s;
+    min-width: 0;
+
+    &:hover {
+      background-color: $gray3;
+      text-decoration: none;
+      color: $black;
+    }
   }
 
   .admin-content-card-title {
@@ -361,6 +390,67 @@
   .admin-content-card-meta {
     font-size: $small-font-size;
     color: $gray11;
+  }
+}
+
+.admin-content-card-placeholder {
+  border: 2px dashed $gray5;
+  border-radius: 4px;
+  background: $gray3;
+}
+
+.admin-speaker-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $gray;
+  padding: 10px 12px;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &.dragging {
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    border-bottom: none;
+    opacity: 0.95;
+  }
+
+  .drag-handle {
+    padding: 0 8px 0 0;
+    cursor: grab;
+    color: $gray7;
+    font-size: 16px;
+    user-select: none;
+    flex-shrink: 0;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .admin-speaker-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .admin-speaker-photo {
+    flex-shrink: 0;
+  }
+
+  .admin-speaker-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-speaker-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
   }
 }
 

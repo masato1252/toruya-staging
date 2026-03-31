@@ -56,7 +56,7 @@ const EventForm = ({ props }) => {
             <div className="field-header">スラッグ（URL用英数字） <span className="text-red-500">*</span></div>
             <div className="field-row">
               <input ref={register({ required: true, pattern: /^[a-z0-9\-]+$/ })} name="slug" type="text" placeholder="event-slug-2026" className="form-control" />
-              <small className="text-gray-500">/events/[スラッグ] で公開されます</small>
+              <small className="text-gray-500">/[スラッグ] で公開されます</small>
             </div>
 
             <div className="field-header">概要</div>

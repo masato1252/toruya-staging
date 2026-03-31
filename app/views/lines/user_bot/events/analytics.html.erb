@@ -13,11 +13,11 @@
             <h4 class="font-bold"><%= content.title %></h4>
             <div class="grid grid-cols-3 gap-2 mt-2">
               <div class="text-center">
-                <div class="text-2xl font-bold text-tarco"><%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).count %></div>
+                <div class="text-2xl font-bold text-tarco"><%= Ahoy::Event.where(name: "event_content_view").where("properties->>'event_content_id' = ?", content.id.to_s).count %></div>
                 <div class="text-xs text-gray-500">PV</div>
               </div>
               <div class="text-center">
-                <div class="text-2xl font-bold text-blue-600"><%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).distinct.count("properties->>'social_user_id'") %></div>
+                <div class="text-2xl font-bold text-blue-600"><%= Ahoy::Event.where(name: "event_content_view").where("properties->>'event_content_id' = ?", content.id.to_s).count(Arel.sql("DISTINCT properties->>'event_line_user_id'")) %></div>
                 <div class="text-xs text-gray-500">来場者(UU)</div>
               </div>
               <div class="text-center">

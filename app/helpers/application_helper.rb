@@ -155,13 +155,15 @@ module ApplicationHelper
   end
 
   def event_line_login_url(oauth_redirect_to_url)
-    encrypted_content = MessageEncryptor.encrypt(CallbacksController::EVENT_LINE_USER)
+    encrypted_who = MessageEncryptor.encrypt(CallbacksController::EVENT_LINE_USER)
+    encrypted_whois = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
 
     user_line_omniauth_authorize_path(
       prompt: "consent",
       bot_prompt: "aggressive",
       oauth_redirect_to_url: oauth_redirect_to_url,
-      who: encrypted_content
+      whois: encrypted_whois,
+      who: encrypted_who
     )
   end
 

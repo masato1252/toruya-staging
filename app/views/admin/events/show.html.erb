@@ -24,7 +24,7 @@
     </div>
     <div class="admin-detail-row">
       <div class="admin-detail-label">スラッグ</div>
-      <div class="admin-detail-value"><code>/events/<%= @event.slug %></code></div>
+      <div class="admin-detail-value"><code>/<%= @event.slug %></code></div>
     </div>
     <% if @event.description.present? %>
       <div class="admin-detail-row">
@@ -50,27 +50,107 @@
       </span>
     </div>
     <% if @event_contents.any? %>
-      <% @event_contents.each do |content| %>
-        <%= link_to admin_event_content_path(content), class: "admin-content-card" do %>
-          <div class="admin-content-card-title">
-            <%= content.title %>
-            <span class="admin-badge admin-badge-info"><%= content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
-          </div>
-          <div class="admin-content-card-meta">
-            <% if content.capacity %>
-              上限: <%= content.capacity %>人（利用済: <%= content.usage_count %>人）
-            <% end %>
-            <% if content.start_at %>
-              &middot; <%= l(content.start_at, format: :short) %> 〜
+      <div id="sortable-contents" data-sort-url="<%= sort_admin_event_event_contents_path(@event) %>">
+        <% @event_contents.each do |content| %>
+          <div class="admin-content-card-sortable" data-id="<%= content.id %>">
+            <div class="drag-handle" title="ドラッグして並び替え">☰</div>
+            <%= link_to edit_admin_event_content_path(content), class: "admin-content-card-body" do %>
+              <div class="admin-content-card-title">
+                <%= content.title %>
+                <span class="admin-badge admin-badge-info"><%= content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+              </div>
+              <div class="admin-content-card-meta">
+                <% if content.capacity %>
+                  上限: <%= content.capacity %>人（利用済: <%= content.usage_count %>人）
+                <% end %>
+                <% if content.start_at %>
+                  &middot; <%= l(content.start_at, format: :short) %> 〜
+                <% end %>
+              </div>
             <% end %>
           </div>
         <% end %>
-      <% end %>
+      </div>
     <% else %>
       <div style="padding: 20px 16px; text-align: center; color: #8f8f8f;">
         コンテンツはまだありません
       </div>
     <% end %>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var container = document.getElementById("sortable-contents");
+        if (!container) return;
+
+        var dragItem = null;
+        var placeholder = document.createElement("div");
+        placeholder.className = "admin-content-card-placeholder";
+
+        container.querySelectorAll(".drag-handle").forEach(function(handle) {
+          handle.addEventListener("mousedown", function(e) {
+            e.preventDefault();
+            dragItem = handle.closest(".admin-content-card-sortable");
+            dragItem.classList.add("dragging");
+
+            var rect = dragItem.getBoundingClientRect();
+            var offsetY = e.clientY - rect.top;
+
+            dragItem.style.width = rect.width + "px";
+            placeholder.style.height = rect.height + "px";
+            dragItem.parentNode.insertBefore(placeholder, dragItem);
+
+            function onMouseMove(e) {
+              dragItem.style.position = "fixed";
+              dragItem.style.zIndex = "1000";
+              dragItem.style.left = rect.left + "px";
+              dragItem.style.top = (e.clientY - offsetY) + "px";
+              dragItem.style.pointerEvents = "none";
+
+              var items = container.querySelectorAll(".admin-content-card-sortable:not(.dragging)");
+              var inserted = false;
+              items.forEach(function(item) {
+                var r = item.getBoundingClientRect();
+                if (e.clientY < r.top + r.height / 2 && !inserted) {
+                  container.insertBefore(placeholder, item);
+                  inserted = true;
+                }
+              });
+              if (!inserted) {
+                container.appendChild(placeholder);
+              }
+            }
+
+            function onMouseUp() {
+              document.removeEventListener("mousemove", onMouseMove);
+              document.removeEventListener("mouseup", onMouseUp);
+
+              dragItem.classList.remove("dragging");
+              dragItem.style.cssText = "";
+              container.insertBefore(dragItem, placeholder);
+              placeholder.remove();
+
+              var ids = Array.from(container.querySelectorAll(".admin-content-card-sortable")).map(function(el) {
+                return parseInt(el.dataset.id);
+              });
+
+              fetch(container.dataset.sortUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                },
+                body: JSON.stringify({ ids: ids })
+              });
+
+              dragItem = null;
+            }
+
+            document.addEventListener("mousemove", onMouseMove);
+            document.addEventListener("mouseup", onMouseUp);
+          });
+        });
+      });
+    </script>
   </div>
 
   <% if @participants.any? %>

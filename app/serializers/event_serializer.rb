@@ -18,7 +18,25 @@ class EventSerializer
       event_line_user = params[:event_line_user]
       usage = event_line_user ? content.event_content_usages.find_by(event_line_user_id: event_line_user.id) : nil
 
-      staff = content.shop&.staffs&.first
+      speakers = content.event_content_speakers.order(:position).map do |speaker|
+        {
+          name: speaker.name,
+          position_title: speaker.position_title,
+          profile_image_url: speaker.profile_image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(speaker.profile_image, only_path: true) : nil
+        }
+      end
+
+      first_speaker = speakers.first
+      if first_speaker
+        exhibitor = { picture_url: first_speaker[:profile_image_url], position: first_speaker[:position_title], name: first_speaker[:name] }
+      else
+        staff = content.shop&.staffs&.first
+        exhibitor = staff ? {
+          picture_url: ApplicationController.helpers.staff_picture_url(staff, "360"),
+          position: staff.position,
+          name: staff.name
+        } : nil
+      end
 
       {
         id: content.id,
@@ -39,11 +57,8 @@ class EventSerializer
         monitor_name: content.monitor_name,
         monitor_price: content.monitor_price,
         monitor_limit: content.monitor_limit,
-        exhibitor_staff: staff ? {
-          picture_url: ApplicationController.helpers.staff_picture_url(staff, "360"),
-          position: staff.position,
-          name: staff.name
-        } : nil
+        speakers: speakers,
+        exhibitor_staff: exhibitor
       }
     end
   end

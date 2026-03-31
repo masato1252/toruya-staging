@@ -85,7 +85,7 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl }) => {
       transition: "box-shadow 0.2s",
       marginBottom: 20
     }}>
-      <a href={`/events/${eventSlug}/event_contents/${content.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+      <a href={`/${eventSlug}/event_contents/${content.id}`} style={{ textDecoration: "none", color: "inherit" }}>
         {content.thumbnail_url ? (
           <div style={{ position: "relative" }}>
             <img src={content.thumbnail_url} style={{ width: "100%", height: 200, objectFit: "cover", display: "block" }} />
@@ -107,7 +107,7 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl }) => {
       </a>
 
       <div style={{ padding: "16px 20px" }}>
-        <a href={`/events/${eventSlug}/event_contents/${content.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+        <a href={`/${eventSlug}/event_contents/${content.id}`} style={{ textDecoration: "none", color: "inherit" }}>
           <h3 style={{ fontWeight: 700, fontSize: 17, marginBottom: 8, lineHeight: 1.4, color: "#111827" }}>{content.title}</h3>
         </a>
 
@@ -117,7 +117,25 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl }) => {
           </p>
         )}
 
-        {content.exhibitor_staff && (
+        {(content.speakers || []).length > 0 ? (
+          <div style={{ marginBottom: 14, display: "flex", flexDirection: "column", gap: 6 }}>
+            {content.speakers.map((speaker, idx) => (
+              <div key={idx} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#f9fafb", borderRadius: 10 }}>
+                {speaker.profile_image_url ? (
+                  <img src={speaker.profile_image_url} style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                ) : (
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#e5e7eb", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 16, color: "#9ca3af" }}>👤</div>
+                )}
+                <div>
+                  {speaker.position_title && (
+                    <div style={{ fontSize: 11, color: "#9ca3af" }}>{speaker.position_title}</div>
+                  )}
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{speaker.name}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : content.exhibitor_staff ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, padding: "10px 12px", background: "#f9fafb", borderRadius: 10 }}>
             {content.exhibitor_staff.picture_url && (
               <img src={content.exhibitor_staff.picture_url} style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
@@ -129,7 +147,7 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl }) => {
               <div style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{content.exhibitor_staff.name}</div>
             </div>
           </div>
-        )}
+        ) : null}
 
         {content.capacity && !content.ended && (
           <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 12 }}>
@@ -140,7 +158,7 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl }) => {
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {isParticipant && !content.ended ? (
             <a
-              href={`/events/${eventSlug}/event_contents/${content.id}`}
+              href={`/${eventSlug}/event_contents/${content.id}`}
               style={{
                 flex: 1, display: "block", padding: "12px 16px", textAlign: "center",
                 background: content.content_type === "seminar" ? "#4f46e5" : "#0ea5e9",
@@ -152,7 +170,7 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl }) => {
             </a>
           ) : (
             <a
-              href={`/events/${eventSlug}/event_contents/${content.id}`}
+              href={`/${eventSlug}/event_contents/${content.id}`}
               style={{
                 flex: 1, display: "block", padding: "12px 16px", textAlign: "center",
                 background: "#f3f4f6", color: "#374151", borderRadius: 10,

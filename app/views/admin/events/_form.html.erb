@@ -20,7 +20,7 @@
       </label>
       <div class="admin-form-input">
         <%= f.text_field :slug, class: "form-control #{'field-error-border' if event.errors[:slug].any?}", placeholder: "event-slug-2026" %>
-        <span class="admin-form-help">/events/[スラッグ] で公開されます（半角英数字とハイフンのみ）</span>
+        <span class="admin-form-help">/[スラッグ] で公開されます（半角英数字とハイフンのみ）</span>
         <% if event.errors[:slug].any? %>
           <span class="admin-form-error"><%= event.errors.full_messages_for(:slug).join(", ") %></span>
         <% end %>

@@ -7,6 +7,7 @@ class EventContent < ApplicationRecord
   belongs_to :upsell_booking_page, class_name: "BookingPage", optional: true
 
   has_many :event_content_images, -> { order(:position) }, dependent: :destroy
+  has_many :event_content_speakers, -> { order(:position) }, dependent: :destroy
   has_many :event_content_usages, dependent: :destroy
   has_many :event_upsell_consultations, dependent: :destroy
   has_many :event_monitor_applications, dependent: :destroy

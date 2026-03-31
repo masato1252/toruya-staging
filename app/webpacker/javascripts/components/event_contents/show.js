@@ -286,7 +286,7 @@ const EventContentShow = ({ props }) => {
           <div style={{ marginBottom: 20 }}>
             <VideoPlayer
               preAdUrl={event_content.pre_ad_video_url}
-              contentUrl={event_content.online_service_registration_url}
+              contentUrl={event_content.video_url || event_content.online_service_registration_url}
               postAdUrl={event_content.post_ad_video_url}
               onMainPhaseStart={() => trackActivity("seminar_view")}
             />
@@ -403,8 +403,35 @@ const EventContentShow = ({ props }) => {
           </div>
         )}
 
-        {/* Exhibitor */}
-        {event_content.exhibitor_staff && (
+        {/* Speakers */}
+        {(event_content.speakers || []).length > 0 && (
+          <div style={{ background: "#fff", borderRadius: 16, padding: "20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
+            <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14, color: "#111827" }}>出演者情報</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {event_content.speakers.map((speaker, idx) => (
+                <div key={speaker.id || idx} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                  {speaker.profile_image_url ? (
+                    <img src={speaker.profile_image_url} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "3px solid #f3f4f6" }} />
+                  ) : (
+                    <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#e5e7eb", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 28, color: "#9ca3af" }}>👤</div>
+                  )}
+                  <div>
+                    {speaker.position_title && (
+                      <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 2 }}>{speaker.position_title}</div>
+                    )}
+                    <div style={{ fontWeight: 700, fontSize: 16, color: "#111827", marginBottom: 6 }}>{speaker.name}</div>
+                    {speaker.introduction && (
+                      <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{speaker.introduction}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Exhibitor (fallback) */}
+        {(event_content.speakers || []).length === 0 && event_content.exhibitor_staff && (
           <div style={{ background: "#fff", borderRadius: 16, padding: "20px", marginBottom: 16, border: "1px solid #e5e7eb" }}>
             <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14, color: "#111827" }}>出展者情報</h3>
             <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>

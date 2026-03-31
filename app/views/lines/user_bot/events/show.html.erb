@@ -19,7 +19,7 @@
               開催期間: <%= l(@event.start_at, format: :long) %> 〜 <%= @event.end_at ? l(@event.end_at, format: :long) : "未設定" %>
             <% end %>
             <br>
-            公開URL: <code>/events/<%= @event.slug %></code>
+            公開URL: <code>/<%= @event.slug %></code>
           </div>
         </div>
 

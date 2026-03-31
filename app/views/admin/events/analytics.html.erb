@@ -39,13 +39,13 @@
       <div class="admin-analytics-grid">
         <div class="admin-analytics-card">
           <div class="analytics-value text-tarco">
-            <%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).count %>
+            <%= Ahoy::Event.where(name: "event_content_view").where("properties->>'event_content_id' = ?", content.id.to_s).count %>
           </div>
           <div class="analytics-label">PV</div>
         </div>
         <div class="admin-analytics-card">
           <div class="analytics-value text-blue">
-            <%= Ahoy::Event.where(name: "event_content_view", "properties->>'event_content_id'": content.id.to_s).distinct.count("properties->>'event_line_user_id'") %>
+            <%= Ahoy::Event.where(name: "event_content_view").where("properties->>'event_content_id' = ?", content.id.to_s).count(Arel.sql("DISTINCT properties->>'event_line_user_id'")) %>
           </div>
           <div class="analytics-label">来場者(UU)</div>
         </div>
@@ -102,8 +102,8 @@
           <% @activity_logs.limit(100).each do |log| %>
             <tr>
               <td><%= l(log.created_at, format: :short) %></td>
-              <td><%= log.event_line_user.name.presence || log.event_line_user.display_name %></td>
-              <td><%= log.event_content.title %></td>
+              <td><%= log.event_line_user&.name.presence || log.event_line_user&.display_name || "-" %></td>
+              <td><%= log.event_content&.title || "-" %></td>
               <td>
                 <% case log.activity_type %>
                 <% when "seminar_view" %>

@@ -803,9 +803,20 @@ Rails.application.routes.draw do
         resources :events do
           member { get :analytics }
           resources :event_contents, shallow: true do
+            collection do
+              post :sort
+              get :shops_by_user
+              get :online_services_for_shop
+              get :booking_pages_for_shop
+            end
             member do
               post :upload_image
               delete "images/:image_id", action: :destroy_image, as: :destroy_image
+              post :sort_images
+              post :add_speaker
+              put "speakers/:speaker_id", action: :update_speaker, as: :update_speaker
+              delete "speakers/:speaker_id", action: :destroy_speaker, as: :destroy_speaker
+              post :sort_speakers
             end
           end
         end
@@ -850,19 +861,6 @@ Rails.application.routes.draw do
   end
   resources :bookings, param: :slug, only: [:show, :destroy]
   resources :sale_pages, param: :slug, only: [:show]
-  resources :events, param: :slug, only: [:show] do
-    scope module: :events do
-      resource :participation, only: [:new, :create]
-    end
-    resources :event_contents, only: [:show] do
-      member do
-        post :start_usage
-        post :upsell_consultation
-        post :monitor_apply
-        post :track_activity
-      end
-    end
-  end
   resources :surveys, param: :slug, only: [:show, :create] do
     member do
       get "reply/:uuid", action: "reply", as: :reply
@@ -912,6 +910,20 @@ Rails.application.routes.draw do
       collection do
         post :clean
         post :verify
+      end
+    end
+  end
+
+  resources :events, param: :slug, only: [:show], path: "" do
+    scope module: :events do
+      resource :participation, only: [:new, :create]
+    end
+    resources :event_contents, only: [:show] do
+      member do
+        post :start_usage
+        post :upsell_consultation
+        post :monitor_apply
+        post :track_activity
       end
     end
   end

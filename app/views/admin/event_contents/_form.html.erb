@@ -1,4 +1,6 @@
 <%= form_with(model: [:admin, event_content], url: form_url, local: true, html: { class: "admin-event-form", multipart: true }) do |f| %>
+
+  <%# === 基本情報 === %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">基本情報</div>
 
@@ -9,10 +11,10 @@
       <div class="admin-form-input">
         <div class="admin-form-radio-group">
           <label>
-            <%= f.radio_button :content_type, "seminar" %> セミナー動画
+            <%= f.radio_button :content_type, "seminar", id: "ct_seminar" %> セミナー動画
           </label>
           <label>
-            <%= f.radio_button :content_type, "booth" %> 展示ブース(PDF)
+            <%= f.radio_button :content_type, "booth", id: "ct_booth" %> 展示ブース(PDF)
           </label>
         </div>
       </div>
@@ -57,6 +59,7 @@
     </div>
   </div>
 
+  <%# === 開催設定 === %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">開催設定</div>
 
@@ -80,23 +83,24 @@
         <%= f.number_field :capacity, class: "form-control", min: 1, placeholder: "空欄で無制限" %>
       </div>
     </div>
-
-    <div class="admin-form-group">
-      <label class="admin-form-label">表示順</label>
-      <div class="admin-form-input">
-        <%= f.number_field :position, class: "form-control", min: 0 %>
-      </div>
-    </div>
   </div>
 
-  <div class="admin-form-section">
+  <%# === 動画・資料設定（セミナー向け） === %>
+  <div class="admin-form-section seminar-only">
     <div class="admin-form-section-title">動画・資料設定（セミナー向け）</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">動画本編URL</label>
+      <div class="admin-form-input">
+        <%= f.url_field :video_url, class: "form-control", placeholder: "https://www.youtube.com/watch?v=..." %>
+        <span class="admin-form-help">YouTube または Google ドライブの共有URL</span>
+      </div>
+    </div>
 
     <div class="admin-form-group">
       <label class="admin-form-label">広告動画URL（前）</label>
       <div class="admin-form-input">
         <%= f.url_field :pre_ad_video_url, class: "form-control", placeholder: "https://www.youtube.com/watch?v=..." %>
-        <span class="admin-form-help">YouTube または Google ドライブの共有URL</span>
       </div>
     </div>
 
@@ -115,6 +119,134 @@
     </div>
   </div>
 
+  <%# === 出演者（セミナー向け） === %>
+  <div class="admin-form-section seminar-only">
+    <div class="admin-form-section-title">出演者（セミナー向け）</div>
+    <% if event_content.persisted? %>
+      <div id="speakers-container"
+           data-add-url="<%= add_speaker_admin_event_content_path(event_content) %>"
+           data-sort-url="<%= sort_speakers_admin_event_content_path(event_content) %>"
+           data-csrf="<%= form_authenticity_token %>">
+        <div id="speakers-list">
+          <% event_content.event_content_speakers.order(:position).each do |speaker| %>
+            <div class="admin-speaker-row" data-id="<%= speaker.id %>">
+              <div class="drag-handle" title="ドラッグして並び替え">☰</div>
+              <div class="admin-speaker-content">
+                <div class="admin-speaker-photo">
+                  <% if speaker.profile_image.attached? %>
+                    <%= image_tag url_for(speaker.profile_image), style: "width:56px;height:56px;border-radius:50%;object-fit:cover;" %>
+                  <% else %>
+                    <div style="width:56px;height:56px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:20px;">👤</div>
+                  <% end %>
+                </div>
+                <div class="admin-speaker-info">
+                  <div style="font-weight:bold;"><%= speaker.name %></div>
+                  <% if speaker.position_title.present? %>
+                    <div style="font-size:12px;color:#6b7280;"><%= speaker.position_title %></div>
+                  <% end %>
+                </div>
+                <div class="admin-speaker-actions">
+                  <button type="button" class="btn-edit-speaker" data-id="<%= speaker.id %>"
+                          data-name="<%= speaker.name %>"
+                          data-position-title="<%= speaker.position_title %>"
+                          data-introduction="<%= speaker.introduction %>"
+                          data-update-url="<%= update_speaker_admin_event_content_path(event_content, speaker_id: speaker.id) %>"
+                          style="font-size:12px;cursor:pointer;background:none;border:1px solid #d1d5db;border-radius:4px;padding:4px 10px;">編集</button>
+                  <button type="button" class="btn-delete-speaker"
+                          data-url="<%= destroy_speaker_admin_event_content_path(event_content, speaker_id: speaker.id) %>"
+                          style="font-size:12px;cursor:pointer;background:none;border:1px solid #fca5a5;border-radius:4px;padding:4px 10px;color:#dc2626;">削除</button>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div style="padding:12px 16px;">
+          <button type="button" id="btn-add-speaker" style="width:100%;padding:10px;border:2px dashed #d1d5db;border-radius:8px;background:none;cursor:pointer;color:#6b7280;font-size:14px;">＋ 出演者を追加</button>
+        </div>
+      </div>
+    <% else %>
+      <div style="padding:20px 16px;text-align:center;color:#8f8f8f;">
+        コンテンツを保存後に出演者を追加できます
+      </div>
+    <% end %>
+  </div>
+
+  <%# === 展示ブース詳細設定 === %>
+  <div class="admin-form-section booth-only">
+    <div class="admin-form-section-title">展示ブース詳細設定</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">出展店舗・オンラインサービス紐付け</label>
+      <div class="admin-form-input">
+        <div class="admin-lookup-group" id="booth-lookup"
+             data-shops-url="<%= shops_by_user_admin_event_event_contents_path(event_content.event || @event) %>"
+             data-services-url="<%= online_services_for_shop_admin_event_event_contents_path(event_content.event || @event) %>">
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <input type="number" id="booth-user-id" class="form-control" placeholder="ユーザID" style="width:120px;" value="<%= event_content.shop&.user_id %>" />
+            <button type="button" id="booth-search-btn" style="padding:8px 16px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;">検索</button>
+          </div>
+          <div id="booth-shop-select" style="margin-bottom:8px;<%= 'display:none;' unless event_content.shop_id %>">
+            <label style="font-size:12px;color:#6b7280;">店舗</label>
+            <select id="booth-shop-id" class="form-control" style="margin-top:4px;">
+              <option value="">選択してください</option>
+              <% if event_content.shop %>
+                <option value="<%= event_content.shop.id %>" selected><%= event_content.shop.display_name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div id="booth-service-select" style="<%= 'display:none;' unless event_content.online_service_id %>">
+            <label style="font-size:12px;color:#6b7280;">オンラインサービス</label>
+            <select id="booth-service-id" class="form-control" style="margin-top:4px;">
+              <option value="">選択してください</option>
+              <% if event_content.online_service %>
+                <option value="<%= event_content.online_service.id %>" selected><%= event_content.online_service.title %></option>
+              <% end %>
+            </select>
+          </div>
+          <%= f.hidden_field :shop_id, id: "field-shop-id" %>
+          <%= f.hidden_field :online_service_id, id: "field-online-service-id" %>
+        </div>
+      </div>
+    </div>
+
+    <% if event_content.persisted? %>
+      <div class="admin-form-group">
+        <label class="admin-form-label">資料プレビュー（スライド画像）</label>
+        <div class="admin-form-input">
+          <div id="slide-images-container"
+               data-upload-url="<%= upload_image_admin_event_content_path(event_content) %>"
+               data-sort-url="<%= sort_images_admin_event_content_path(event_content) %>"
+               data-csrf="<%= form_authenticity_token %>">
+            <div id="slide-images-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+              <% event_content.event_content_images.order(:position).each do |img| %>
+                <% if img.image.attached? %>
+                  <div class="slide-image-item" data-id="<%= img.id %>" style="position:relative;cursor:grab;">
+                    <%= image_tag url_for(img.image), style: "width:120px;height:80px;object-fit:cover;border-radius:4px;border:1px solid #e5e7eb;" %>
+                    <button type="button" class="btn-delete-image"
+                            data-url="<%= destroy_image_admin_event_content_path(event_content, image_id: img.id) %>"
+                            style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ef4444;color:#fff;border:none;cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;">×</button>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+            <div>
+              <input type="file" id="slide-image-input" accept="image/jpeg,image/png,image/gif" style="display:none;" />
+              <button type="button" id="btn-add-slide-image" style="padding:8px 16px;border:2px dashed #d1d5db;border-radius:8px;background:none;cursor:pointer;color:#6b7280;font-size:13px;">＋ 画像を追加</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="admin-form-group">
+        <label class="admin-form-label">資料プレビュー（スライド画像）</label>
+        <div class="admin-form-input">
+          <span style="color:#8f8f8f;">コンテンツを保存後にスライド画像を追加できます</span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# === アップセル設定 === %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">アップセル設定</div>
 
@@ -124,8 +256,44 @@
         <label for="ec_upsell">無料相談予約を設定する</label>
       </div>
     </div>
+
+    <div id="upsell-detail" style="<%= 'display:none;' unless event_content.upsell_booking_enabled? %>">
+      <div class="admin-form-group">
+        <label class="admin-form-label">予約ページ紐付け</label>
+        <div class="admin-form-input">
+          <div class="admin-lookup-group" id="upsell-lookup"
+               data-shops-url="<%= shops_by_user_admin_event_event_contents_path(event_content.event || @event) %>"
+               data-pages-url="<%= booking_pages_for_shop_admin_event_event_contents_path(event_content.event || @event) %>">
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+              <input type="number" id="upsell-user-id" class="form-control" placeholder="ユーザID" style="width:120px;" value="<%= event_content.upsell_booking_page&.user_id %>" />
+              <button type="button" id="upsell-search-btn" style="padding:8px 16px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;">検索</button>
+            </div>
+            <div id="upsell-shop-select" style="margin-bottom:8px;<%= 'display:none;' unless event_content.upsell_booking_page_id %>">
+              <label style="font-size:12px;color:#6b7280;">店舗</label>
+              <select id="upsell-shop-id" class="form-control" style="margin-top:4px;">
+                <option value="">選択してください</option>
+                <% if event_content.upsell_booking_page&.shop %>
+                  <option value="<%= event_content.upsell_booking_page.shop.id %>" selected><%= event_content.upsell_booking_page.shop.display_name %></option>
+                <% end %>
+              </select>
+            </div>
+            <div id="upsell-page-select" style="<%= 'display:none;' unless event_content.upsell_booking_page_id %>">
+              <label style="font-size:12px;color:#6b7280;">予約ページ</label>
+              <select id="upsell-page-id" class="form-control" style="margin-top:4px;">
+                <option value="">選択してください</option>
+                <% if event_content.upsell_booking_page %>
+                  <option value="<%= event_content.upsell_booking_page.id %>" selected><%= event_content.upsell_booking_page.title %></option>
+                <% end %>
+              </select>
+            </div>
+            <%= f.hidden_field :upsell_booking_page_id, id: "field-upsell-booking-page-id" %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <%# === モニター募集設定 === %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">モニター募集設定</div>
 
@@ -136,37 +304,278 @@
       </div>
     </div>
 
-    <div class="admin-form-group">
-      <label class="admin-form-label">モニターサービス名</label>
-      <div class="admin-form-input">
-        <%= f.text_field :monitor_name, class: "form-control" %>
+    <div id="monitor-detail" style="<%= 'display:none;' unless event_content.monitor_enabled? %>">
+      <div class="admin-form-group">
+        <label class="admin-form-label">モニターサービス名</label>
+        <div class="admin-form-input">
+          <%= f.text_field :monitor_name, class: "form-control" %>
+        </div>
       </div>
-    </div>
 
-    <div class="admin-form-group">
-      <label class="admin-form-label">モニター金額（円）</label>
-      <div class="admin-form-input">
-        <%= f.number_field :monitor_price, class: "form-control", min: 0 %>
+      <div class="admin-form-group">
+        <label class="admin-form-label">モニター金額（円）</label>
+        <div class="admin-form-input">
+          <%= f.number_field :monitor_price, class: "form-control", min: 0 %>
+        </div>
       </div>
-    </div>
 
-    <div class="admin-form-group">
-      <label class="admin-form-label">モニター上限人数</label>
-      <div class="admin-form-input">
-        <%= f.number_field :monitor_limit, class: "form-control", min: 1 %>
+      <div class="admin-form-group">
+        <label class="admin-form-label">モニター上限人数</label>
+        <div class="admin-form-input">
+          <%= f.number_field :monitor_limit, class: "form-control", min: 1 %>
+        </div>
       </div>
-    </div>
 
-    <div class="admin-form-group">
-      <label class="admin-form-label">応募フォームURL</label>
-      <div class="admin-form-input">
-        <%= f.url_field :monitor_form_url, class: "form-control", placeholder: "https://forms.gle/..." %>
+      <div class="admin-form-group">
+        <label class="admin-form-label">応募フォームURL</label>
+        <div class="admin-form-input">
+          <%= f.url_field :monitor_form_url, class: "form-control", placeholder: "https://forms.gle/..." %>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="admin-form-actions">
-    <%= link_to "キャンセル", event_content.persisted? ? admin_event_content_path(event_content) : admin_event_path(event_content.event || @event), class: "btn btn-gray" %>
+    <%= link_to "キャンセル", admin_event_path(event_content.event || @event), class: "btn btn-gray" %>
     <%= f.submit event_content.persisted? ? "更新" : "作成", class: "btn btn-tarco" %>
   </div>
 <% end %>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
+
+  // === Content type toggle ===
+  function toggleSections() {
+    var isSeminar = document.getElementById("ct_seminar")?.checked;
+    document.querySelectorAll(".seminar-only").forEach(function(el) { el.style.display = isSeminar ? "" : "none"; });
+    document.querySelectorAll(".booth-only").forEach(function(el) { el.style.display = isSeminar ? "none" : ""; });
+  }
+  document.getElementById("ct_seminar")?.addEventListener("change", toggleSections);
+  document.getElementById("ct_booth")?.addEventListener("change", toggleSections);
+  toggleSections();
+
+  // === Monitor toggle ===
+  var monitorCb = document.getElementById("ec_monitor");
+  var monitorDetail = document.getElementById("monitor-detail");
+  if (monitorCb && monitorDetail) {
+    monitorCb.addEventListener("change", function() { monitorDetail.style.display = this.checked ? "" : "none"; });
+  }
+
+  // === Upsell toggle ===
+  var upsellCb = document.getElementById("ec_upsell");
+  var upsellDetail = document.getElementById("upsell-detail");
+  if (upsellCb && upsellDetail) {
+    upsellCb.addEventListener("change", function() { upsellDetail.style.display = this.checked ? "" : "none"; });
+  }
+
+  // === Lookup helper ===
+  function setupLookup(opts) {
+    var searchBtn = document.getElementById(opts.searchBtn);
+    var userIdInput = document.getElementById(opts.userIdInput);
+    if (!searchBtn) return;
+
+    searchBtn.addEventListener("click", function() {
+      var userId = userIdInput.value.trim();
+      if (!userId) return;
+      fetch(opts.shopsUrl + "?user_id=" + userId).then(function(r) { return r.json(); }).then(function(shops) {
+        var shopSelect = document.getElementById(opts.shopSelect);
+        var shopWrapper = document.getElementById(opts.shopWrapper);
+        shopSelect.innerHTML = '<option value="">選択してください</option>';
+        shops.forEach(function(s) {
+          shopSelect.innerHTML += '<option value="' + s.id + '">' + (s.name || "Shop #" + s.id) + '</option>';
+        });
+        shopWrapper.style.display = "";
+        document.getElementById(opts.itemWrapper).style.display = "none";
+        if (opts.hiddenShopField) document.getElementById(opts.hiddenShopField).value = "";
+        document.getElementById(opts.hiddenField).value = "";
+      });
+    });
+
+    document.getElementById(opts.shopSelect)?.addEventListener("change", function() {
+      var shopId = this.value;
+      if (opts.hiddenShopField) document.getElementById(opts.hiddenShopField).value = shopId;
+      if (!shopId) { document.getElementById(opts.itemWrapper).style.display = "none"; return; }
+      fetch(opts.itemsUrl + "?shop_id=" + shopId).then(function(r) { return r.json(); }).then(function(items) {
+        var itemSelect = document.getElementById(opts.itemSelect);
+        itemSelect.innerHTML = '<option value="">選択してください</option>';
+        items.forEach(function(item) {
+          itemSelect.innerHTML += '<option value="' + item.id + '">' + (item.title || item.name || "ID:" + item.id) + '</option>';
+        });
+        document.getElementById(opts.itemWrapper).style.display = "";
+      });
+    });
+
+    document.getElementById(opts.itemSelect)?.addEventListener("change", function() {
+      document.getElementById(opts.hiddenField).value = this.value;
+    });
+  }
+
+  // Booth: user → shop → online_service
+  var boothLookup = document.getElementById("booth-lookup");
+  if (boothLookup) {
+    setupLookup({
+      searchBtn: "booth-search-btn", userIdInput: "booth-user-id",
+      shopsUrl: boothLookup.dataset.shopsUrl,
+      shopSelect: "booth-shop-id", shopWrapper: "booth-shop-select",
+      itemsUrl: boothLookup.dataset.servicesUrl,
+      itemSelect: "booth-service-id", itemWrapper: "booth-service-select",
+      hiddenShopField: "field-shop-id", hiddenField: "field-online-service-id"
+    });
+  }
+
+  // Upsell: user → shop → booking_page
+  var upsellLookup = document.getElementById("upsell-lookup");
+  if (upsellLookup) {
+    setupLookup({
+      searchBtn: "upsell-search-btn", userIdInput: "upsell-user-id",
+      shopsUrl: upsellLookup.dataset.shopsUrl,
+      shopSelect: "upsell-shop-id", shopWrapper: "upsell-shop-select",
+      itemsUrl: upsellLookup.dataset.pagesUrl,
+      itemSelect: "upsell-page-id", itemWrapper: "upsell-page-select",
+      hiddenShopField: null, hiddenField: "field-upsell-booking-page-id"
+    });
+  }
+
+  // === Speakers D&D and CRUD ===
+  var speakersContainer = document.getElementById("speakers-container");
+  if (speakersContainer) {
+    var speakersList = document.getElementById("speakers-list");
+    var addUrl = speakersContainer.dataset.addUrl;
+    var sortUrl = speakersContainer.dataset.sortUrl;
+
+    document.getElementById("btn-add-speaker")?.addEventListener("click", function() {
+      var name = prompt("出演者名を入力してください");
+      if (!name) return;
+      var posTitle = prompt("肩書き（任意）") || "";
+      var intro = prompt("紹介文（任意）") || "";
+
+      var formData = new FormData();
+      formData.append("name", name);
+      formData.append("position_title", posTitle);
+      formData.append("introduction", intro);
+
+      fetch(addUrl, { method: "POST", headers: { "X-CSRF-Token": csrfToken }, body: formData })
+        .then(function(r) { return r.json(); })
+        .then(function() { location.reload(); });
+    });
+
+    speakersList.addEventListener("click", function(e) {
+      var editBtn = e.target.closest(".btn-edit-speaker");
+      if (editBtn) {
+        var name = prompt("出演者名", editBtn.dataset.name);
+        if (!name) return;
+        var posTitle = prompt("肩書き", editBtn.dataset.positionTitle) || "";
+        var intro = prompt("紹介文", editBtn.dataset.introduction) || "";
+
+        var formData = new FormData();
+        formData.append("name", name);
+        formData.append("position_title", posTitle);
+        formData.append("introduction", intro);
+
+        fetch(editBtn.dataset.updateUrl, { method: "PUT", headers: { "X-CSRF-Token": csrfToken }, body: formData })
+          .then(function() { location.reload(); });
+        return;
+      }
+
+      var delBtn = e.target.closest(".btn-delete-speaker");
+      if (delBtn) {
+        if (!confirm("この出演者を削除しますか？")) return;
+        fetch(delBtn.dataset.url, { method: "DELETE", headers: { "X-CSRF-Token": csrfToken } })
+          .then(function() { location.reload(); });
+      }
+    });
+
+    // D&D for speakers
+    initDragAndDrop(speakersList, ".admin-speaker-row", ".drag-handle", sortUrl);
+  }
+
+  // === Slide images ===
+  var slideContainer = document.getElementById("slide-images-container");
+  if (slideContainer) {
+    var slideList = document.getElementById("slide-images-list");
+    var uploadUrl = slideContainer.dataset.uploadUrl;
+    var slideSortUrl = slideContainer.dataset.sortUrl;
+
+    document.getElementById("btn-add-slide-image")?.addEventListener("click", function() {
+      document.getElementById("slide-image-input").click();
+    });
+
+    document.getElementById("slide-image-input")?.addEventListener("change", function() {
+      if (!this.files[0]) return;
+      var formData = new FormData();
+      formData.append("image", this.files[0]);
+      fetch(uploadUrl, { method: "POST", headers: { "X-CSRF-Token": csrfToken }, body: formData })
+        .then(function(r) { return r.json(); })
+        .then(function() { location.reload(); });
+      this.value = "";
+    });
+
+    slideList.addEventListener("click", function(e) {
+      var delBtn = e.target.closest(".btn-delete-image");
+      if (!delBtn) return;
+      if (!confirm("この画像を削除しますか？")) return;
+      fetch(delBtn.dataset.url, { method: "DELETE", headers: { "X-CSRF-Token": csrfToken } })
+        .then(function() { location.reload(); });
+    });
+
+    initDragAndDrop(slideList, ".slide-image-item", null, slideSortUrl);
+  }
+
+  // === Generic D&D helper ===
+  function initDragAndDrop(container, itemSelector, handleSelector, sortUrl) {
+    var dragItem = null;
+    var placeholder = document.createElement("div");
+    placeholder.className = "admin-content-card-placeholder";
+
+    function getHandles() {
+      if (handleSelector) return container.querySelectorAll(handleSelector);
+      return container.querySelectorAll(itemSelector);
+    }
+
+    getHandles().forEach(function(handle) {
+      handle.addEventListener("mousedown", function(e) {
+        e.preventDefault();
+        dragItem = handleSelector ? handle.closest(itemSelector) : handle;
+        if (!dragItem) return;
+        dragItem.classList.add("dragging");
+        var rect = dragItem.getBoundingClientRect();
+        var offsetY = e.clientY - rect.top;
+        dragItem.style.width = rect.width + "px";
+        placeholder.style.height = rect.height + "px";
+        dragItem.parentNode.insertBefore(placeholder, dragItem);
+
+        function onMouseMove(e) {
+          dragItem.style.position = "fixed";
+          dragItem.style.zIndex = "1000";
+          dragItem.style.left = rect.left + "px";
+          dragItem.style.top = (e.clientY - offsetY) + "px";
+          dragItem.style.pointerEvents = "none";
+          var items = container.querySelectorAll(itemSelector + ":not(.dragging)");
+          var inserted = false;
+          items.forEach(function(item) {
+            var r = item.getBoundingClientRect();
+            if (e.clientY < r.top + r.height / 2 && !inserted) { container.insertBefore(placeholder, item); inserted = true; }
+          });
+          if (!inserted) container.appendChild(placeholder);
+        }
+
+        function onMouseUp() {
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+          dragItem.classList.remove("dragging");
+          dragItem.style.cssText = "";
+          container.insertBefore(dragItem, placeholder);
+          placeholder.remove();
+          var ids = Array.from(container.querySelectorAll(itemSelector)).map(function(el) { return parseInt(el.dataset.id); });
+          fetch(sortUrl, { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken }, body: JSON.stringify({ ids: ids }) });
+          dragItem = null;
+        }
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      });
+    });
+  }
+});
+</script>
