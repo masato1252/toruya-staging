@@ -171,6 +171,39 @@
     <% end %>
   </div>
 
+  <%# === 出演者モーダル === %>
+  <div id="speaker-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;">
+    <div id="speaker-modal-overlay" style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.3);width:480px;max-width:calc(100vw - 32px);max-height:calc(100vh - 64px);overflow-y:auto;">
+      <div style="padding:20px 24px 0;">
+        <h3 id="speaker-modal-title" style="font-size:16px;font-weight:700;margin:0 0 20px;">出演者を追加</h3>
+      </div>
+      <div style="padding:0 24px 24px;">
+        <div style="margin-bottom:16px;">
+          <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">プロフィール画像</label>
+          <div id="speaker-modal-photo-preview" style="margin-bottom:8px;"></div>
+          <input type="file" id="speaker-modal-image" accept="image/jpeg,image/png,image/gif" />
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">名前 <span style="color:#ef4444;">*</span></label>
+          <input type="text" id="speaker-modal-name" class="form-control" placeholder="出演者名" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:4px;font-size:14px;" />
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">肩書き</label>
+          <input type="text" id="speaker-modal-position" class="form-control" placeholder="例: 代表取締役 / プロダクトマネージャー" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:4px;font-size:14px;" />
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">紹介文</label>
+          <textarea id="speaker-modal-introduction" rows="4" placeholder="出演者の紹介文（複数行可）" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:4px;font-size:14px;resize:vertical;min-height:80px;font-family:inherit;"></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;">
+          <button type="button" id="speaker-modal-cancel" style="padding:8px 20px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;font-size:14px;color:#374151;">キャンセル</button>
+          <button type="button" id="speaker-modal-save" style="padding:8px 20px;border:none;border-radius:6px;background:#4f46e5;color:#fff;cursor:pointer;font-size:14px;font-weight:600;">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <%# === 展示ブース詳細設定 === %>
   <div class="admin-form-section booth-only">
     <div class="admin-form-section-title">展示ブース詳細設定</div>
@@ -336,6 +369,9 @@
   </div>
 
   <div class="admin-form-actions">
+    <% if event_content.persisted? %>
+      <%= link_to "削除", admin_event_content_path(event_content), method: :delete, data: { confirm: "このコンテンツを削除しますか？この操作は取り消せません。" }, class: "btn btn-danger", style: "margin-right:auto;" %>
+    <% end %>
     <%= link_to "キャンセル", admin_event_path(event_content.event || @event), class: "btn btn-gray" %>
     <%= f.submit event_content.persisted? ? "更新" : "作成", class: "btn btn-tarco" %>
   </div>
@@ -437,6 +473,64 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  // === Speaker Modal ===
+  var speakerModal = document.getElementById("speaker-modal");
+  var speakerModalTitle = document.getElementById("speaker-modal-title");
+  var speakerModalName = document.getElementById("speaker-modal-name");
+  var speakerModalPosition = document.getElementById("speaker-modal-position");
+  var speakerModalIntro = document.getElementById("speaker-modal-introduction");
+  var speakerModalImage = document.getElementById("speaker-modal-image");
+  var speakerModalPhotoPreview = document.getElementById("speaker-modal-photo-preview");
+  var speakerModalSaveUrl = null;
+  var speakerModalMethod = "POST";
+
+  function openSpeakerModal(opts) {
+    speakerModalTitle.textContent = opts.title;
+    speakerModalName.value = opts.name || "";
+    speakerModalPosition.value = opts.positionTitle || "";
+    speakerModalIntro.value = opts.introduction || "";
+    speakerModalImage.value = "";
+    speakerModalSaveUrl = opts.url;
+    speakerModalMethod = opts.method || "POST";
+    if (opts.photoHtml) {
+      speakerModalPhotoPreview.innerHTML = opts.photoHtml;
+    } else {
+      speakerModalPhotoPreview.innerHTML = "";
+    }
+    speakerModal.style.display = "";
+    speakerModalName.focus();
+  }
+
+  function closeSpeakerModal() {
+    speakerModal.style.display = "none";
+  }
+
+  if (speakerModal) {
+    document.getElementById("speaker-modal-cancel").addEventListener("click", closeSpeakerModal);
+    document.getElementById("speaker-modal-overlay").addEventListener("click", closeSpeakerModal);
+
+    document.getElementById("speaker-modal-save").addEventListener("click", function() {
+      var name = speakerModalName.value.trim();
+      if (!name) { speakerModalName.style.borderColor = "#ef4444"; speakerModalName.focus(); return; }
+
+      var formData = new FormData();
+      formData.append("name", name);
+      formData.append("position_title", speakerModalPosition.value.trim());
+      formData.append("introduction", speakerModalIntro.value);
+      if (speakerModalImage.files[0]) {
+        formData.append("profile_image", speakerModalImage.files[0]);
+      }
+
+      this.disabled = true;
+      this.textContent = "保存中...";
+      fetch(speakerModalSaveUrl, { method: speakerModalMethod, headers: { "X-CSRF-Token": csrfToken }, body: formData })
+        .then(function() { location.reload(); })
+        .catch(function() { this.disabled = false; this.textContent = "保存"; }.bind(this));
+    });
+
+    speakerModalName.addEventListener("input", function() { this.style.borderColor = "#d1d5db"; });
+  }
+
   // === Speakers D&D and CRUD ===
   var speakersContainer = document.getElementById("speakers-container");
   if (speakersContainer) {
@@ -445,36 +539,23 @@ document.addEventListener("DOMContentLoaded", function() {
     var sortUrl = speakersContainer.dataset.sortUrl;
 
     document.getElementById("btn-add-speaker")?.addEventListener("click", function() {
-      var name = prompt("出演者名を入力してください");
-      if (!name) return;
-      var posTitle = prompt("肩書き（任意）") || "";
-      var intro = prompt("紹介文（任意）") || "";
-
-      var formData = new FormData();
-      formData.append("name", name);
-      formData.append("position_title", posTitle);
-      formData.append("introduction", intro);
-
-      fetch(addUrl, { method: "POST", headers: { "X-CSRF-Token": csrfToken }, body: formData })
-        .then(function(r) { return r.json(); })
-        .then(function() { location.reload(); });
+      openSpeakerModal({ title: "出演者を追加", url: addUrl, method: "POST" });
     });
 
     speakersList.addEventListener("click", function(e) {
       var editBtn = e.target.closest(".btn-edit-speaker");
       if (editBtn) {
-        var name = prompt("出演者名", editBtn.dataset.name);
-        if (!name) return;
-        var posTitle = prompt("肩書き", editBtn.dataset.positionTitle) || "";
-        var intro = prompt("紹介文", editBtn.dataset.introduction) || "";
-
-        var formData = new FormData();
-        formData.append("name", name);
-        formData.append("position_title", posTitle);
-        formData.append("introduction", intro);
-
-        fetch(editBtn.dataset.updateUrl, { method: "PUT", headers: { "X-CSRF-Token": csrfToken }, body: formData })
-          .then(function() { location.reload(); });
+        var row = editBtn.closest(".admin-speaker-row");
+        var photoEl = row.querySelector(".admin-speaker-photo");
+        openSpeakerModal({
+          title: "出演者を編集",
+          url: editBtn.dataset.updateUrl,
+          method: "PUT",
+          name: editBtn.dataset.name,
+          positionTitle: editBtn.dataset.positionTitle,
+          introduction: editBtn.dataset.introduction,
+          photoHtml: photoEl ? photoEl.innerHTML : ""
+        });
         return;
       }
 
