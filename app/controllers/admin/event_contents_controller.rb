@@ -159,7 +159,7 @@ class Admin::EventContentsController < AdminController
     user = User.find_by(id: params[:user_id])
     return render json: [] unless user
 
-    shops = user.shops.map { |s| { id: s.id, name: s.display_name } }
+    shops = user.shops.map { |s| { id: s.id, name: s.name } }
     render json: shops
   end
 
@@ -167,7 +167,7 @@ class Admin::EventContentsController < AdminController
     shop = Shop.find_by(id: params[:shop_id])
     return render json: [] unless shop
 
-    services = shop.user.online_services.map { |s| { id: s.id, title: s.title, slug: s.slug } }
+    services = shop.user.online_services.map { |s| { id: s.id, title: s.name, slug: s.slug } }
     render json: services
   end
 
@@ -175,7 +175,7 @@ class Admin::EventContentsController < AdminController
     shop = Shop.find_by(id: params[:shop_id])
     return render json: [] unless shop
 
-    pages = shop.booking_pages.map { |p| { id: p.id, title: p.title, slug: p.slug } }
+    pages = BookingPage.where(shop_id: shop.id).map { |p| { id: p.id, title: p.title || p.name, slug: p.slug } }
     render json: pages
   end
 
