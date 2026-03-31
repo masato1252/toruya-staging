@@ -117,7 +117,9 @@ module ApplicationHelper
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
     
-    # パラメータベースの認証情報伝達（Cookieは使わない）
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
+    cookies.set_across_domains(:oauth_social_account_id, encrypted_id, expires: 5.minutes)
+    
     options.merge!(
       prompt: "consent",
       bot_prompt: "aggressive",

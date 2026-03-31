@@ -26,6 +26,15 @@ module SocialAccounts
       begin
         SocialAccount.transaction do
           account = user.social_accounts.first || user.social_accounts.new
+
+          if %w[channel_id login_channel_id].include?(update_attribute)
+            old_value = account.send(update_attribute)
+            new_value = attrs[update_attribute]
+            if old_value.present? && new_value.present? && old_value != new_value
+              user.social_customers.where(is_owner: true).update_all(is_owner: false)
+            end
+          end
+
           case update_attribute
           when "channel_id", "label", "basic_id", "login_channel_id"
             account.update(attrs.slice(update_attribute))

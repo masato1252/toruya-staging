@@ -103,10 +103,10 @@ class CallbacksController < Devise::OmniauthCallbacksController
         sign_in(user)
         write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
         
-        # Session cleanup for store login flow
         session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
         session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
         session.delete(:line_oauth_who) if session[:line_oauth_who].present?
+        cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
 
         if param["existing_owner_id"] # existing user add another line account
           existing_user = User.find(param["existing_owner_id"])
@@ -200,18 +200,17 @@ class CallbacksController < Devise::OmniauthCallbacksController
         return
       end
       
-      # Sessionから取得した場合はクリア
       session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
       session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
       session.delete(:line_oauth_who) if session[:line_oauth_who].present?
       session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
+      cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
       
-      # 予約情報とcustomer_idもクリア
       %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
         session.delete("oauth_#{key}") if session["oauth_#{key}"].present?
       end
       
-      Rails.logger.info("[CallbacksController] Sessionクリア完了")
+      Rails.logger.info("[CallbacksController] Session/Cookieクリア完了")
 
       uri = URI.parse(oauth_redirect_to_url)
       
