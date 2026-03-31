@@ -75,8 +75,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
   def line
     param = request.env["omniauth.params"]
 
-    param["who"] ||= cookies[:who]
-    param["oauth_redirect_to_url"] ||= cookies[:oauth_redirect_to_url]
+    param["who"] ||= session[:line_oauth_who_routing] || cookies[:who]
+    param["oauth_redirect_to_url"] ||= session[:oauth_redirect_to_url]
 
     Rollbar.info("LineLogin1", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
@@ -112,6 +112,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
         session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
         session.delete(:line_oauth_who) if session[:line_oauth_who].present?
+        session.delete(:line_oauth_who_routing) if session[:line_oauth_who_routing].present?
         cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
 
         if param["existing_owner_id"] # existing user add another line account
@@ -207,6 +208,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
       session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
       session.delete(:line_oauth_who) if session[:line_oauth_who].present?
+      session.delete(:line_oauth_who_routing) if session[:line_oauth_who_routing].present?
       session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
       cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
       
@@ -269,6 +271,10 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url]
     session.delete(:oauth_redirect_to_url)
+    session.delete(:line_oauth_who_routing)
+    session.delete(:line_oauth_credentials)
+    session.delete(:line_oauth_who)
+    cookies.clear_across_domains(:who, :whois)
 
     if oauth_redirect_to_url.present?
       redirect_to Addressable::URI.new(path: oauth_redirect_to_url).to_s

@@ -158,6 +158,10 @@ module ApplicationHelper
     encrypted_who = MessageEncryptor.encrypt(CallbacksController::EVENT_LINE_USER)
     encrypted_whois = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
 
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
+    cookies.set_across_domains(:whois, encrypted_whois, expires: 5.minutes)
+    cookies.set_across_domains(:who, encrypted_who, expires: 5.minutes)
+
     user_line_omniauth_authorize_path(
       prompt: "consent",
       bot_prompt: "aggressive",
