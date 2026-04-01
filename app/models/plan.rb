@@ -134,7 +134,9 @@ class Plan < ApplicationRecord
   end
 
   def self.max_customers_limit(plan_level, rank)
-    plans[plan_level][rank]&.[](:max_customers_limit) || plans[plan_level][max_legal_rank(plan_level)][:max_customers_limit]
+    plan_data = plans[plan_level]
+    return nil unless plan_data
+    plan_data[rank]&.[](:max_customers_limit) || plan_data[max_legal_rank(plan_level)]&.[](:max_customers_limit)
   end
 
   def self.plan_details(plan_level, rank)

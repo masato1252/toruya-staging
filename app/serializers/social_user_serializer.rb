@@ -113,7 +113,11 @@ class SocialUserSerializer
   end
 
   attribute :staffs_count do |social_user|
-    social_user&.staffs&.size || 0
+    if social_user&.user
+      Staff.where(user: social_user.user).undeleted.joins(:staff_account).merge(StaffAccount.visible).count
+    else
+      0
+    end
   end
 
   attribute :accounts_count do |social_user|
