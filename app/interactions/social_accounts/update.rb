@@ -31,7 +31,12 @@ module SocialAccounts
             old_value = account.send(update_attribute)
             new_value = attrs[update_attribute]
             if old_value.present? && new_value.present? && old_value != new_value
-              user.social_customers.where(is_owner: true).update_all(is_owner: false)
+              stale_customer_ids = account.social_customers.pluck(:id)
+              if stale_customer_ids.any?
+                SocialMessage.where(social_customer_id: stale_customer_ids)
+                             .update_all(social_customer_id: nil)
+                account.social_customers.delete_all
+              end
             end
           end
 
