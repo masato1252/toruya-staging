@@ -38,13 +38,26 @@ class Lines::VerificationController < ActionController::Base
       Notifiers::Users::LineSettings::LineLoginVerificationVideo.run(receiver: current_user.social_user)
 
       all_requests_result = []
-      # IMPORTANT: Somehow even customer use the same line account, they have different id from line login and join in by chat.
-      # So if which one we could send the message successfully, that one is the real owner customer
-      current_user.social_customers.where(social_user_name: current_user.owner_social_customer.social_user_name).each do |social_customer|
-        outcome = Notifiers::Customers::LineSettings::LineLoginVerificationFlex.run(receiver: social_customer)
-        all_requests_result << outcome.valid?
+      target_social_account = current_user.social_account
 
-        if outcome.valid?
+      verification_candidates(target_social_account).each do |social_customer|
+        uid_reachable = messaging_api_uid_reachable?(target_social_account, social_customer.social_user_id)
+
+        unless uid_reachable
+          Rails.logger.warn("[LineVerification] UID unreachable via Messaging API: social_customer_id=#{social_customer.id}, uid=#{social_customer.social_user_id}, social_account_id=#{target_social_account.id}")
+          all_requests_result << false
+          social_customer.update_columns(is_owner: false)
+          next
+        end
+
+        outcome = Notifiers::Customers::LineSettings::LineLoginVerificationFlex.run(receiver: social_customer)
+        sent_ok = outcome.valid?
+        all_requests_result << sent_ok
+
+        Rails.logger.info("[LineVerification] Flex send: social_customer_id=#{social_customer.id}, uid=#{social_customer.social_user_id}, social_account_id=#{target_social_account.id}, success=#{sent_ok}")
+        Rollbar.info("[LineVerification] Flex send result", social_customer_id: social_customer.id, uid: social_customer.social_user_id, social_account_id: target_social_account.id, success: sent_ok) unless sent_ok
+
+        if sent_ok
           social_customer.update_columns(is_owner: true)
           profile = social_customer.user.profile
           SocialCustomers::FindOrCreateCustomer.run(
@@ -60,7 +73,8 @@ class Lines::VerificationController < ActionController::Base
         end
       end
 
-      if all_requests_result.all?(false)
+      if all_requests_result.empty? || all_requests_result.all?(false)
+        Rails.logger.error("[LineVerification] All Flex sends failed: user_id=#{current_user.id}, social_account_id=#{target_social_account.id}, candidates=#{all_requests_result.size}")
         Notifiers::Users::LineSettings::VerifyFailedMessage.run(receiver: current_user.social_user)
         Notifiers::Users::LineSettings::VerifyFailedVideo.run(receiver: current_user.social_user)
       end
@@ -82,6 +96,27 @@ class Lines::VerificationController < ActionController::Base
   helper_method :current_user
 
   private
+
+  # Same social_account に属する全 social_customer を候補にする。
+  # LINE Login UID と Messaging API UID が異なるケースでは、
+  # webhook (follow/message) 経由で作られた social_customer が正しい UID を持つ。
+  # social_user_name マッチだと、名前変更・非同期プロファイル取得遅延で漏れるため
+  # social_account_id ベースで候補を広げる。
+  def verification_candidates(target_social_account)
+    current_user.social_customers.where(social_account_id: target_social_account.id)
+  end
+
+  # Messaging API の get_profile で UID が到達可能か（友だち追加済みか）を事前チェック。
+  # push_message 失敗を Flex 送信前に検知して無駄な SocialMessage レコード作成を防ぐ。
+  def messaging_api_uid_reachable?(social_account, uid)
+    return false if uid.blank? || social_account.client.nil?
+
+    response = social_account.client.get_profile(uid)
+    response.is_a?(Net::HTTPSuccess)
+  rescue => e
+    Rails.logger.warn("[LineVerification] get_profile failed: uid=#{uid}, error=#{e.class} #{e.message}")
+    false
+  end
 
   def line_settings_required
     if !current_user&.social_account&.is_login_available?
