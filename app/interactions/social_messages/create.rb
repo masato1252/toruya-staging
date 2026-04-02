@@ -59,8 +59,24 @@ module SocialMessages
       if is_message_from_customer
         # Shop owner customer self send a confirmation message to toruya shop owner user
         # Check this FIRST before HandleUnread to avoid interruption by errors
-        if social_customer.is_owner && content == social_customer.social_user_id
-          # Immediate execution for better UX - user sees completion message right away
+        stripped_content = content.strip
+        owner_verification = social_customer.is_owner && stripped_content == social_customer.social_user_id
+
+        # Fallback: LINE Login UID ≠ Messaging API UID の場合のクロスUID検証
+        unless owner_verification
+          if stripped_content.match?(/\AU[0-9a-f]{32}\z/)
+            owner_verification = SocialCustomer.exists?(
+              user_id: social_customer.user_id,
+              social_account_id: social_account.id,
+              social_user_id: stripped_content,
+              is_owner: true
+            )
+            Rails.logger.info("[LineVerification] Create fallback check: sc=#{social_customer.id}, content=#{stripped_content}, is_owner=#{social_customer.is_owner}, sc_uid=#{social_customer.social_user_id}, fallback_match=#{owner_verification}")
+          end
+        end
+
+        if owner_verification
+          Rails.logger.info("[LineVerification] Completion triggered: sc=#{social_customer.id}, content=#{stripped_content}")
           Notifiers::Users::LineSettingsVerified.run(receiver: social_user.user)
 
           if social_account.line_settings_verified?

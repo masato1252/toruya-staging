@@ -68,14 +68,37 @@ class Lines::MessageEvent < ActiveInteraction::Base
         end
 
         is_toruya_customer_message = !is_keyword
+        stripped_text = event["message"]["text"].strip
+
         is_owner_verification_message = social_customer.is_owner &&
-          event["message"]["text"].strip == social_customer.social_user_id
+          stripped_text == social_customer.social_user_id
+
+        # Fallback: LINE Login UID ≠ Messaging API UID の場合、
+        # Flexボタンが送るUIDと webhook の source.userId が異なる。
+        # content が別の is_owner social_customer の UID に一致するかチェック。
+        verification_sc = social_customer
+        unless is_owner_verification_message
+          if stripped_text.match?(/\AU[0-9a-f]{32}\z/)
+            owner_sc = SocialCustomer.find_by(
+              user_id: social_customer.user_id,
+              social_account_id: social_customer.social_account_id,
+              social_user_id: stripped_text,
+              is_owner: true
+            )
+            if owner_sc
+              is_owner_verification_message = true
+              verification_sc = owner_sc
+              Rails.logger.info("[LineVerification] Cross-UID fallback: webhook_sc=#{social_customer.id}(#{social_customer.social_user_id}), owner_sc=#{owner_sc.id}(#{owner_sc.social_user_id})")
+            end
+          end
+        end
 
         if is_owner_verification_message
+          Rails.logger.info("[LineVerification] Owner verification message detected: sc=#{verification_sc.id}, uid=#{verification_sc.social_user_id}, text=#{stripped_text}")
           compose(
             SocialMessages::Create,
-            social_customer: social_customer,
-            content: event["message"]["text"],
+            social_customer: verification_sc,
+            content: stripped_text,
             readed: false,
             message_type: SocialMessage.message_types[:customer]
           )

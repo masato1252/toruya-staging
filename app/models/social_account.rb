@@ -61,13 +61,19 @@ class SocialAccount < ApplicationRecord
     osc = user.owner_social_customer
     return false unless osc
 
-    # 新方式: owner_social_customer.social_user_id（店舗Messaging API UID）
-    # 旧方式: social_user.social_service_user_id（Toruya共通LINE Login UID）
-    # 既存の検証メッセージとの後方互換性のため、両方をチェック
     possible_contents = [osc.social_user_id, user.social_user&.social_service_user_id].compact.uniq
 
-    social_messages.where(
+    # Primary: owner social_customer に紐づくメッセージ
+    return true if social_messages.where(
       social_customer: osc,
+      raw_content: possible_contents
+    ).from_customer.exists?
+
+    # Fallback: LINE Login UID ≠ Messaging API UID の場合、
+    # メッセージが別の social_customer に紐づいている可能性がある
+    sc_ids = user.social_customers.where(social_account_id: id).pluck(:id)
+    social_messages.where(
+      social_customer_id: sc_ids,
       raw_content: possible_contents
     ).from_customer.exists?
   end
