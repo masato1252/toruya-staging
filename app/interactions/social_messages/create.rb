@@ -81,11 +81,10 @@ module SocialMessages
 
           if social_account.line_settings_verified?
             social_user.user.user_setting.update(customer_notification_channel: "line")
-            # リッチメニューが未設定の場合のみ、デフォルトのToruya自動リッチメニューを作成
-            # 既存のリッチメニュー設定（手動モード含む）を上書きしない
             unless social_account.current_rich_menu.present?
               SocialAccounts::RichMenus::CustomerReservations.run(social_account: social_account)
             end
+            SocialAccounts::RichMenus::SwitchToOfficial.run(social_account: social_account)
           end
         end
 

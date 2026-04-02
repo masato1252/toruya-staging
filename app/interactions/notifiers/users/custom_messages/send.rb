@@ -26,8 +26,8 @@ module Notifiers
           if custom_message.scenario == ::CustomMessages::Users::Template::NO_LINE_SETTINGS
             !receiver.social_account&.line_settings_verified? && expected_schedule_time && !custom_message.ever_sent_to_user(receiver)
           elsif custom_message.scenario == ::CustomMessages::Users::Template::LINE_SETTINGS_VERIFIED
-            # LINE連携を解除→再設定した場合でも完了メッセージを再送する
-            expected_schedule_time
+            # 完了するたびに毎回即時送信（ever_sent / schedule_time チェック不要）
+            true
           else
             expected_schedule_time && !custom_message.ever_sent_to_user(receiver)
           end
