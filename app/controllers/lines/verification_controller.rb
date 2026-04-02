@@ -84,7 +84,7 @@ class Lines::VerificationController < ActionController::Base
     end
 
     if current_user.social_account&.line_settings_verified?
-      SocialAccounts::RichMenus::SwitchToOfficial.run(social_account: current_user.social_account)
+      SocialAccounts::RichMenus::CustomerReservations.run(social_account: current_user.social_account)
     end
   end
 

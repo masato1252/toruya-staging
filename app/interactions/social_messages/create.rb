@@ -81,10 +81,7 @@ module SocialMessages
 
           if social_account.line_settings_verified?
             social_user.user.user_setting.update(customer_notification_channel: "line")
-            unless social_account.current_rich_menu.present?
-              SocialAccounts::RichMenus::CustomerReservations.run(social_account: social_account)
-            end
-            SocialAccounts::RichMenus::SwitchToOfficial.run(social_account: social_account)
+            SocialAccounts::RichMenus::CustomerReservations.run(social_account: social_account)
           end
         end
 
