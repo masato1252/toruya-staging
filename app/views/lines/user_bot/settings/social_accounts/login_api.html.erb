@@ -23,6 +23,17 @@
           <%= render "lines/user_bot/settings/social_accounts/line_verification", social_account: @social_account %>
         <% end %>
 
+        <div class="field-group-header" style="margin-top: 40px;"><%= t("settings.social_account.danger_zone", default: "設定リセット") %></div>
+        <div style="padding: 12px 16px;">
+          <%= button_to reset_lines_user_bot_settings_social_account_path(business_owner_id),
+            method: :post,
+            remote: false,
+            form_class: "inline-block",
+            data: { confirm: t("settings.social_account.reset_confirm", default: "LINE連携設定をリセットします。本当によろしいですか？") } do %>
+            <span class="btn btn-danger btn-block"><i class="fa fa-refresh"></i> <%= t("settings.social_account.reset_btn", default: "LINE連携設定をリセット") %></span>
+          <% end %>
+        </div>
+
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
           <span></span>
           <% if @social_account.is_login_available? %>
