@@ -68,8 +68,18 @@ class Lines::MessageEvent < ActiveInteraction::Base
         end
 
         is_toruya_customer_message = !is_keyword
+        is_owner_verification_message = social_customer.is_owner &&
+          event["message"]["text"].strip == social_customer.social_user_id
 
-        if !social_customer.customer && is_toruya_customer_message
+        if is_owner_verification_message
+          compose(
+            SocialMessages::Create,
+            social_customer: social_customer,
+            content: event["message"]["text"],
+            readed: false,
+            message_type: SocialMessage.message_types[:customer]
+          )
+        elsif !social_customer.customer && is_toruya_customer_message
           if social_customer.user.line_contact_customer_name_required
             compose(
               SocialMessages::Create,

@@ -60,14 +60,17 @@ class Lines::VerificationController < ActionController::Base
         if sent_ok
           social_customer.update_columns(is_owner: true)
           profile = social_customer.user.profile
-          SocialCustomers::FindOrCreateCustomer.run(
+          foc_outcome = SocialCustomers::FindOrCreateCustomer.run(
             social_customer: social_customer,
-            customer_last_name: profile.last_name,
-            customer_first_name: profile.first_name,
+            customer_last_name: profile.last_name || "",
+            customer_first_name: profile.first_name || "",
             customer_phonetic_last_name: profile.phonetic_last_name,
             customer_phonetic_first_name: profile.phonetic_first_name,
-            customer_phone_number: profile.phone_number
+            customer_phone_number: profile.phone_number || ""
           )
+          if foc_outcome.invalid?
+            Rails.logger.warn("[LineVerification] FindOrCreateCustomer failed: social_customer_id=#{social_customer.id}, errors=#{foc_outcome.errors.full_messages.join(', ')}")
+          end
         else
           social_customer.update_columns(is_owner: false)
         end
