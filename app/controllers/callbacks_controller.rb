@@ -74,6 +74,9 @@ class CallbacksController < Devise::OmniauthCallbacksController
   def line
     param = request.env["omniauth.params"]
 
+    param["who"] ||= cookies[:who]
+    param["oauth_redirect_to_url"] ||= cookies[:oauth_redirect_to_url]
+
     Rollbar.info("LineLogin1", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
     if param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
@@ -106,7 +109,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
         session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
         session.delete(:line_oauth_who) if session[:line_oauth_who].present?
-        cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
+        cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
 
         if param["existing_owner_id"] # existing user add another line account
           existing_user = User.find(param["existing_owner_id"])
@@ -137,8 +140,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
           redirect_to lines_user_bot_settings_path(user.id, consultant_connect_result: consultant_connect_outcome.valid?)
         else
-          # Sessionから oauth_redirect_to_url を復元
-          oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url]
+          oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url] || cookies[:oauth_redirect_to_url]
           session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
           
           Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: oauth_redirect_to_url)
@@ -159,9 +161,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
     else
       Rollbar.info("LineLogin2", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
-      # CallbackフェーズではパラメータがSessionに保存されているので復元
-      param["oauth_social_account_id"] ||= session[:oauth_social_account_id]
-      param["who"] ||= session[:line_oauth_who]
+      param["oauth_social_account_id"] ||= session[:oauth_social_account_id] || cookies[:oauth_social_account_id]
+      param["who"] ||= session[:line_oauth_who] || cookies[:who]
       
       # 予約情報とcustomer_idもSessionから復元
       %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
@@ -191,7 +192,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
       param.delete("bot_prompt")
       param.delete("prompt")
-      oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url]
+      oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url] || cookies[:oauth_redirect_to_url]
 
       # oauth_redirect_to_urlがnilの場合はroot_pathにリダイレクト
       if oauth_redirect_to_url.blank?
@@ -204,7 +205,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
       session.delete(:line_oauth_who) if session[:line_oauth_who].present?
       session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
-      cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
+      cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
       
       %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
         session.delete("oauth_#{key}") if session["oauth_#{key}"].present?

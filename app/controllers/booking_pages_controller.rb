@@ -17,7 +17,7 @@ class BookingPagesController < ActionController::Base
   def show
     # パラメータベースの認証に移行したため、認証関連Cookieをクリア
     # これにより、異なる店舗間での認証情報の混在を防ぐ
-    cookies.clear_across_domains(:oauth_social_account_id, :whois, :who)
+    cookies.clear_across_domains(:oauth_social_account_id, :whois, :who, :oauth_redirect_to_url)
     
     Rails.logger.info("[BookingPagesController] show action - params: #{params.keys.join(', ')}")
     Rails.logger.info("[BookingPagesController]   social_user_id: #{params[:social_user_id].present? ? params[:social_user_id] : 'nil'}")

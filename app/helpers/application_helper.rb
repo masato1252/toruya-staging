@@ -117,8 +117,10 @@ module ApplicationHelper
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
     
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
     cookies.set_across_domains(:oauth_social_account_id, encrypted_id, expires: 5.minutes)
+    cookies.set_across_domains(:oauth_redirect_to_url, oauth_redirect_to_url, expires: 5.minutes) if oauth_redirect_to_url.present?
+    cookies.set_across_domains(:who, options[:who], expires: 5.minutes) if options[:who].present?
     
     options.merge!(
       prompt: "consent",
@@ -135,9 +137,10 @@ module ApplicationHelper
     toruya_user = params[:locale] == 'tw' ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
     
-    # パラメータベースの認証情報伝達（Cookie はフォールバック用に残す）
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
     cookies.set_across_domains(:whois, encrypted_content, expires: 5.minutes)
+    cookies.set_across_domains(:who, encrypted_content, expires: 5.minutes)
+    cookies.set_across_domains(:oauth_redirect_to_url, oauth_redirect_to_url, expires: 5.minutes) if oauth_redirect_to_url.present?
 
     options.merge!(
       prompt: "consent",
@@ -156,9 +159,10 @@ module ApplicationHelper
     toruya_user = Current.business_owner.locale_is?(:tw) ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
     
-    # パラメータベースの認証情報伝達（Cookie はフォールバック用に残す）
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
     cookies.set_across_domains(:whois, encrypted_content, expires: 5.minutes)
+    cookies.set_across_domains(:who, encrypted_content, expires: 5.minutes)
+    cookies.set_across_domains(:oauth_redirect_to_url, oauth_redirect_to_url, expires: 5.minutes) if oauth_redirect_to_url.present?
 
     options.merge!(
       prompt: "consent",
