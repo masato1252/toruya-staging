@@ -106,6 +106,7 @@ class OmniauthSetup
     # oauth_social_account_id（店舗固有ログイン）がパラメータにあれば、Toruya共通の値をセッション・Cookie・変数すべてからクリア
     if @request.parameters["oauth_social_account_id"].present?
       @request.session.delete(:line_oauth_who)
+      @request.session.delete(:line_oauth_who_routing)
       @request.session.delete(:line_oauth_credentials)
       # whoを完全にnilにする（Cookieに残存していても無視）
       who = nil
@@ -115,6 +116,18 @@ class OmniauthSetup
     if who.present?
       @request.session[:line_oauth_who] = who
       Rails.logger.info("[OmniauthSetup]   保存: line_oauth_who")
+    end
+
+    # who_routing: コールバック時のルーティング判定用
+    # oauth_social_account_idがパラメータにある場合（店舗固有ログイン）は、
+    # cookieに残存しているwhoを拾わない（別フローのwhoが混入するのを防ぐ）
+    who_routing = @request.parameters["who"].presence
+    if who_routing.blank? && @request.parameters["oauth_social_account_id"].blank?
+      who_routing = @request.cookies["who"]
+    end
+    if who_routing.present?
+      @request.session[:line_oauth_who_routing] = who_routing
+      Rails.logger.info("[OmniauthSetup]   保存: line_oauth_who_routing (コールバックルーティング用)")
     end
     
     if oauth_social_account_id.present?
