@@ -39,23 +39,18 @@ class Lines::VerificationController < ActionController::Base
 
       all_requests_result = []
       target_social_account = current_user.social_account
+      candidates = verification_candidates(target_social_account)
 
-      verification_candidates(target_social_account).each do |social_customer|
-        uid_reachable = messaging_api_uid_reachable?(target_social_account, social_customer.social_user_id)
+      Rails.logger.info("[LineVerification] Starting verification: user_id=#{current_user.id}, social_account_id=#{target_social_account.id}, candidates=#{candidates.count}")
 
-        unless uid_reachable
-          Rails.logger.warn("[LineVerification] UID unreachable via Messaging API: social_customer_id=#{social_customer.id}, uid=#{social_customer.social_user_id}, social_account_id=#{target_social_account.id}")
-          all_requests_result << false
-          social_customer.update_columns(is_owner: false)
-          next
-        end
+      candidates.each do |social_customer|
+        Rails.logger.info("[LineVerification] Trying Flex send: social_customer_id=#{social_customer.id}, uid=#{social_customer.social_user_id}")
 
         outcome = Notifiers::Customers::LineSettings::LineLoginVerificationFlex.run(receiver: social_customer)
         sent_ok = outcome.valid?
         all_requests_result << sent_ok
 
-        Rails.logger.info("[LineVerification] Flex send: social_customer_id=#{social_customer.id}, uid=#{social_customer.social_user_id}, social_account_id=#{target_social_account.id}, success=#{sent_ok}")
-        Rollbar.info("[LineVerification] Flex send result", social_customer_id: social_customer.id, uid: social_customer.social_user_id, social_account_id: target_social_account.id, success: sent_ok) unless sent_ok
+        Rails.logger.info("[LineVerification] Flex send result: social_customer_id=#{social_customer.id}, uid=#{social_customer.social_user_id}, success=#{sent_ok}")
 
         if sent_ok
           social_customer.update_columns(is_owner: true)
@@ -73,6 +68,7 @@ class Lines::VerificationController < ActionController::Base
           end
         else
           social_customer.update_columns(is_owner: false)
+          Rails.logger.warn("[LineVerification] Flex send failed: social_customer_id=#{social_customer.id}, uid=#{social_customer.social_user_id}, errors=#{outcome.errors.full_messages.join(', ')}")
         end
       end
 
@@ -107,18 +103,6 @@ class Lines::VerificationController < ActionController::Base
   # social_account_id ベースで候補を広げる。
   def verification_candidates(target_social_account)
     current_user.social_customers.where(social_account_id: target_social_account.id)
-  end
-
-  # Messaging API の get_profile で UID が到達可能か（友だち追加済みか）を事前チェック。
-  # push_message 失敗を Flex 送信前に検知して無駄な SocialMessage レコード作成を防ぐ。
-  def messaging_api_uid_reachable?(social_account, uid)
-    return false if uid.blank? || social_account.client.nil?
-
-    response = social_account.client.get_profile(uid)
-    response.is_a?(Net::HTTPSuccess)
-  rescue => e
-    Rails.logger.warn("[LineVerification] get_profile failed: uid=#{uid}, error=#{e.class} #{e.message}")
-    false
   end
 
   def line_settings_required
