@@ -48,7 +48,7 @@ class SocialAccount < ApplicationRecord
   end
 
   def login_api_verified?
-    is_login_available? && user.owner_social_customer.present?
+    is_login_available? && social_customers.where(is_owner: true).exists?
   end
 
   def channel_secret_correctness?
@@ -58,24 +58,19 @@ class SocialAccount < ApplicationRecord
   def message_api_verified?
     return false unless bot_data_finished?
 
-    osc = user.owner_social_customer
+    osc = social_customers.find_by(is_owner: true)
     return false unless osc
 
     possible_contents = [osc.social_user_id, user.social_user&.social_service_user_id].compact.uniq
 
-    # Primary: owner social_customer に紐づくメッセージ
-    return true if social_messages.where(
-      social_customer: osc,
-      raw_content: possible_contents
-    ).from_customer.exists?
-
-    # Fallback: LINE Login UID ≠ Messaging API UID の場合、
-    # メッセージが別の social_customer に紐づいている可能性がある
-    sc_ids = user.social_customers.where(social_account_id: id).pluck(:id)
-    social_messages.where(
-      social_customer_id: sc_ids,
-      raw_content: possible_contents
-    ).from_customer.exists?
+    # owner_social_customer が作成された後に届いたUIDメッセージのみを判定対象にする。
+    # リセット → 再設定後は新しい owner_social_customer が作られるため、
+    # リセット前の古いメッセージは自動的に除外される。
+    social_messages
+      .where(raw_content: possible_contents)
+      .from_customer
+      .where("social_messages.created_at >= ?", osc.created_at)
+      .exists?
   end
 
   def is_login_available?

@@ -43,7 +43,7 @@ module SocialAccounts
           login_channel_id: nil
         )
 
-        Rails.logger.info("[SocialAccounts::Clean] Credentials cleared. Remaining social_customers=#{account.social_customers.count}, owner_sc=#{user.reload.owner_social_customer&.id}")
+        Rails.logger.info("[SocialAccounts::Clean] Credentials cleared. Remaining social_customers=#{account.social_customers.count}, owner_sc=#{account.social_customers.find_by(is_owner: true)&.id}")
       else
         Rails.logger.warn("[SocialAccounts::Clean] No social_account found for user_id=#{user.id}")
       end

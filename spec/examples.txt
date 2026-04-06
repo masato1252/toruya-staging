@@ -1,5 +1,11 @@
 example_id                                                                                | status  | run_time |
 ----------------------------------------------------------------------------------------- | ------- | -------- |
+./spec/interactions/notifiers/users/custom_messages/send_spec.rb[1:1:1]                   | unknown |          |
+./spec/interactions/notifiers/users/custom_messages/send_spec.rb[1:1:2:1]                 | unknown |          |
+./spec/interactions/notifiers/users/custom_messages/send_spec.rb[1:1:3:1]                 | unknown |          |
+./spec/interactions/notifiers/users/custom_messages/send_spec.rb[1:1:4:1]                 | unknown |          |
+./spec/interactions/notifiers/users/custom_messages/send_spec.rb[1:1:5:1]                 | unknown |          |
+./spec/interactions/notifiers/users/custom_messages/send_spec.rb[1:1:6:1]                 | unknown |          |
 ./spec/interactions/notifiers/users/notifications/activate_staff_account_spec.rb[1:1:1:1] | unknown |          |
 ./spec/interactions/users/create_default_settings_spec.rb[1:1:1]                          | unknown |          |
 ./spec/models/subscription_spec.rb[1:1:1:1:1]                                             | unknown |          |
