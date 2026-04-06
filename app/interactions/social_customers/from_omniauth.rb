@@ -69,8 +69,24 @@ module SocialCustomers
         )
       end
 
-      # LINEから取得したemailをcustomerのemails_detailsに保存
-      # （customerにemailが未登録の場合のみ）
+      if social_customer.customer.blank?
+        found = Customers::Find.run!(
+          user: social_account.user,
+          last_name: "",
+          first_name: social_customer.social_user_name || "",
+          email: line_email,
+          phone_number: nil
+        )[:found_customer]
+
+        if found
+          SocialCustomers::ConnectWithCustomer.run(
+            social_customer: social_customer,
+            customer: found
+          )
+          Rails.logger.info("[FromOmniauth] Auto-matched existing customer: customer_id=#{found.id}, social_customer_id=#{social_customer.id}, email=#{line_email}, name=#{social_customer.social_user_name}")
+        end
+      end
+
       if line_email.present? && social_customer.customer.present? && social_customer.customer.email.blank?
         customer = social_customer.customer
         customer.update(emails_details: [{ "type" => "mobile", "value" => line_email }])

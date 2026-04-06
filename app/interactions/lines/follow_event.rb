@@ -15,13 +15,23 @@ class Lines::FollowEvent < ActiveInteraction::Base
         LineProfileJob.perform_now(social_customer)
       end
 
-      customer = compose(
+      found = Customers::Find.run!(
+        user: social_customer.user,
+        last_name: "",
+        first_name: social_customer.social_user_name || ""
+      )[:found_customer]
+
+      customer = found || compose(
         Customers::Create,
         user: social_customer.user,
         customer_last_name: "",
         customer_first_name: social_customer.social_user_name
       )
       social_customer.update!(customer_id: customer.id)
+
+      if found
+        Rails.logger.info("[FollowEvent] Linked to existing customer: customer_id=#{found.id}, social_customer_id=#{social_customer.id}, name=#{social_customer.social_user_name}")
+      end
     end
   end
 end
