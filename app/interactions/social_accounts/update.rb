@@ -37,6 +37,10 @@ module SocialAccounts
                              .update_all(social_customer_id: nil)
                 account.social_customers.delete_all
               end
+              account.social_messages
+                     .where(message_type: SocialMessage.message_types[:customer])
+                     .where("raw_content ~ '^U[0-9a-f]{32}$'")
+                     .delete_all
             end
           end
 

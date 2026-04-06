@@ -12,6 +12,8 @@ class Lines::VerificationController < ActionController::Base
   def show
     @login_api_ready = current_user.social_account&.login_api_verified?
 
+    Rails.logger.info("[LineVerification] show: user_id=#{current_user.id}, login_api_ready=#{@login_api_ready}, owner_sc=#{current_user.owner_social_customer&.id}, is_login_available=#{current_user.social_account&.is_login_available?}")
+
     if @login_api_ready
       redirect_to lines_verification_message_api_status_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], encrypted_business_owner_id: MessageEncryptor.encrypt(current_user.id))
       return
@@ -32,6 +34,7 @@ class Lines::VerificationController < ActionController::Base
     end
 
     @message_api_ready = current_user.social_account&.message_api_verified?
+    Rails.logger.info("[LineVerification] message_api_status: user_id=#{current_user.id}, message_api_ready=#{@message_api_ready}")
 
     if !@message_api_ready
       Notifiers::Users::LineSettings::LineLoginVerificationMessage.run(receiver: current_user.social_user)
