@@ -25,15 +25,21 @@ class Customers::Store < ActiveInteraction::Base
     date :birthday, default: nil
     string :custom_id, default: nil
     string :memo, default: nil
-    array :tags, default: []
+    array :tags, default: nil
   end
 
   def execute
+    tag_texts = params[:tags]&.map { |tag| tag[:text] }
+
     if params[:id].present?
       customer = user.customers.find(params[:id])
-      customer.attributes = params.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id, tags: params[:tags].map { |tag| tag[:text] })
+      merge_attrs = params.except(:tags).merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)
+      merge_attrs[:tags] = tag_texts if tag_texts
+      customer.attributes = merge_attrs
     else
-      customer = user.customers.new(params.merge(updated_by_user_id: current_user.id))
+      merge_attrs = params.except(:tags).merge(updated_by_user_id: current_user.id)
+      merge_attrs[:tags] = tag_texts || []
+      customer = user.customers.new(merge_attrs)
     end
 
     # Normalize email addresses in emails_details
@@ -52,7 +58,9 @@ class Customers::Store < ActiveInteraction::Base
         errors.add(error.attribute, error.message)
       end
     end
-    user.user_setting&.update(customer_tags: Array.wrap(user.user_setting&.customer_tags || []).concat(params[:tags].map { |tag| tag[:text] }).uniq.compact)
+    if tag_texts
+      user.user_setting&.update(customer_tags: Array.wrap(user.user_setting&.customer_tags || []).concat(tag_texts).uniq.compact)
+    end
 
     # first time create customer manually
     if user.customers.left_outer_joins(:social_customer).where("social_customers.id is NULL").count == 1
