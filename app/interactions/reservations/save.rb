@@ -127,6 +127,9 @@ module Reservations
           customer_ids = customers_list.map { |customer| customer[:customer_id] }
           reservation_customers.each do |reservation_customer|
             if customer_ids.exclude?(reservation_customer.customer_id)
+              reservation_customer.customer_tickets.each do |customer_ticket|
+                Tickets::Revert.run!(consumer: reservation_customer, customer_ticket: customer_ticket)
+              end
               reservation_customer.destroy
             end
           end
