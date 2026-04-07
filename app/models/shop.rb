@@ -33,6 +33,8 @@ class Shop < ApplicationRecord
 
   validates :name, presence: true
   validates :short_name, presence: true
+  validates :zip_code, presence: true
+  validates :address, presence: true
 
   has_one_attached :logo
   scan_attachment :logo

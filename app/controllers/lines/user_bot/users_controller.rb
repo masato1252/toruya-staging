@@ -127,7 +127,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       }
     )
 
-    head :ok
+    render json: { redirect_url: lines_user_bot_settings_path(business_owner_id: current_user.id) }
   end
 
   def check_shop_profile

@@ -14,10 +14,10 @@ const SignUpSuccessfulView = ({props}) => {
     });
 
     if (props.is_not_phone) {
-      window.location.href = "/lines/user_bot/owner/bookings/new";
+      window.location.href = "/";
     } else {
       setTimeout(() => {
-        window.location.href = "/lines/user_bot/owner/bookings/new";
+        window.location.href = "/";
       }, 5000);
     }
   }, []);

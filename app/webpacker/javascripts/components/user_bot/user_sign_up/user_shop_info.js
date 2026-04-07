@@ -38,7 +38,15 @@ export const UserShopInfo = ({props, finalView}) => {
     const [error, response] = await UsersServices.createShop({...data, company_name, company_phone_number});
 
     if (response.status == 200) {
-      setShopProfile(true)
+      if (response.data && response.data.redirect_url) {
+        window.gtag('event', 'sign_up_success', {
+          'event_category': 'user',
+          'event_label': 'sign_up'
+        });
+        window.location.href = response.data.redirect_url;
+      } else {
+        setShopProfile(true)
+      }
     }
   }
 

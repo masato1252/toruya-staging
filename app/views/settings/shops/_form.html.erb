@@ -31,13 +31,13 @@
       <dl>
         <dt><%= t("common.zip_code") %><strong>必須項目</strong></dt>
         <dd>
-          <%= f.text_field :zip_code, placeholder: true %>
+          <%= f.text_field :zip_code, placeholder: true, required: true %>
         </dd>
       </dl>
       <dl>
         <dt><%= t("common.address") %><strong>必須項目</strong></dt>
         <dd>
-          <%= f.text_field :address, placeholder: true %>
+          <%= f.text_field :address, placeholder: true, required: true %>
         </dd>
       </dl>
       <dl>
