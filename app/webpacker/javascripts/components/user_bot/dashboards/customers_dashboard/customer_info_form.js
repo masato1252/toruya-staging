@@ -307,16 +307,16 @@ const UserBotCustomerInfoForm = () => {
               type="tel"
               name={`phone_numbers_details[${index}].value`}
               ref={register({
-                pattern: /^[0-9]*$/
+                pattern: /^\+?[0-9-]*$/
               })}
               defaultValue={field.value}
               className="full-width"
-              pattern="[0-9]*"
+              pattern="[+]?[0-9\-]*"
               placeholder="00000000000"
-              inputMode="numeric"
+              inputMode="tel"
               onKeyPress={(e) => {
                 const charCode = e.which ? e.which : e.keyCode;
-                if (charCode < 48 || charCode > 57) {
+                if (charCode !== 43 && charCode !== 45 && (charCode < 48 || charCode > 57)) {
                   e.preventDefault();
                 }
               }}
