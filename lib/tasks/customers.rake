@@ -7,7 +7,9 @@ namespace :customers do
 
     puts dry_run ? "[DRY RUN] Scanning..." : "[LIVE] Normalizing..."
 
-    ja_user_ids = User.where(locale: [nil, "ja"]).pluck(:id)
+    ja_user_ids = User.joins(:social_user)
+                       .where(social_users: { locale: [nil, "ja"] })
+                       .pluck(:id)
     updated = 0
     skipped = 0
     errors = 0
