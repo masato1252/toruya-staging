@@ -145,7 +145,11 @@ module Booking
             end
           else
             # regular customer come
-            if customer ||= social_customer&.customer
+            sc_customer = social_customer&.customer
+            if customer || sc_customer
+              unless customer
+                customer = resolve_customer_with_phone_priority(sc_customer)
+              end
               customer = compose(Customers::Store,
                 user: user,
                 current_user: user,
@@ -489,14 +493,61 @@ module Booking
         customer_reminder_permission: customer_reminder_permission
       )
 
-      # XXX: Don't have to find a available reservation, since customer is invalid
       if customer_outcome.invalid?
-        errors.merge!(customer_outcome.errors)
+        if customer_phone_number.present? && phone_uniqueness_error?(customer_outcome)
+          existing = find_customer_by_phone(customer_phone_number)
+          if existing
+            Rails.logger.info("[CreateReservationForTimeslot] Phone conflict on create: using existing customer_id=#{existing.id} for phone=#{customer_phone_number}")
+            return existing
+          end
+        end
 
+        errors.merge!(customer_outcome.errors)
         raise ActiveRecord::Rollback
       end
 
       customer_outcome.result
+    end
+
+    # FindCustomer がマッチしなかった場合に social_customer.customer を使うが、
+    # その customer と電話番号の持ち主が異なる場合は電話番号の持ち主を優先する
+    def resolve_customer_with_phone_priority(sc_customer)
+      return sc_customer unless customer_phone_number.present?
+
+      phone_owner = find_customer_by_phone(customer_phone_number)
+      if phone_owner && phone_owner.id != sc_customer.id
+        Rails.logger.info(
+          "[CreateReservationForTimeslot] Phone conflict resolved: " \
+          "using customer_id=#{phone_owner.id} (phone owner) instead of #{sc_customer.id} (social_customer.customer)"
+        )
+        if sc_customer.reservation_customers.empty?
+          sc_customer.update(deleted_at: Time.current)
+        end
+        phone_owner
+      else
+        sc_customer
+      end
+    end
+
+    def find_customer_by_phone(phone)
+      return nil unless phone.present?
+
+      home_country = user.locale&.to_s == "tw" ? "TW" : "JP"
+      parsed = Phonelib.parse(phone)
+      parsed = Phonelib.parse(phone, home_country) unless parsed.valid?
+
+      possible_numbers = [phone]
+      if parsed.valid?
+        possible_numbers << parsed.national(false)
+        possible_numbers << parsed.e164
+        possible_numbers << parsed.international(false)
+      end
+
+      user.customers.find_by(customer_phone_number: possible_numbers.compact.uniq)
+    end
+
+    def phone_uniqueness_error?(outcome)
+      outcome.errors.details[:customer_phone_number]&.any? { |e| e[:error] == :taken }
     end
 
     def estimated_booking_amount

@@ -21,16 +21,20 @@ class Lines::FollowEvent < ActiveInteraction::Base
         first_name: social_customer.social_user_name || ""
       )[:found_customer]
 
-      customer = found || compose(
-        Customers::Create,
-        user: social_customer.user,
-        customer_last_name: "",
-        customer_first_name: social_customer.social_user_name
-      )
-      social_customer.update!(customer_id: customer.id)
-
       if found
+        SocialCustomers::ConnectWithCustomer.run(
+          social_customer: social_customer,
+          customer: found
+        )
         Rails.logger.info("[FollowEvent] Linked to existing customer: customer_id=#{found.id}, social_customer_id=#{social_customer.id}, name=#{social_customer.social_user_name}")
+      elsif social_customer.user.customers.count == 0
+        customer = compose(
+          Customers::Create,
+          user: social_customer.user,
+          customer_last_name: "",
+          customer_first_name: social_customer.social_user_name
+        )
+        social_customer.update!(customer_id: customer.id)
       end
     end
   end

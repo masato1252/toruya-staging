@@ -66,6 +66,13 @@ module Customers
         user_id: user.id
       )
     rescue ActiveRecord::RecordInvalid => e
+      if phone_number.present? && e.message.include?("Customer phone number")
+        existing = find_customer_by_phone
+        if existing
+          Rails.logger.info("[FindOrCreateCustomer] Phone conflict on create: using existing customer_id=#{existing.id}")
+          return existing
+        end
+      end
       errors.add(:base, e.message)
       nil
     end
@@ -102,6 +109,21 @@ module Customers
       customer.update(customer_attrs) if customer_attrs.present?
 
       customer
+    end
+
+    def find_customer_by_phone
+      home_country = user.locale&.to_s == "tw" ? "TW" : "JP"
+      parsed = Phonelib.parse(phone_number)
+      parsed = Phonelib.parse(phone_number, home_country) unless parsed.valid?
+
+      possible_numbers = [phone_number]
+      if parsed.valid?
+        possible_numbers << parsed.national(false)
+        possible_numbers << parsed.e164
+        possible_numbers << parsed.international(false)
+      end
+
+      user.customers.find_by(customer_phone_number: possible_numbers.compact.uniq)
     end
 
     def format_phone_numbers

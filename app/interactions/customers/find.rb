@@ -10,25 +10,34 @@ module Customers
 
     def execute
       user_customers = user.customers.order("id")
-      customers = user_customers.where(customer_email: email) if email.present?
+
+      phone_customers = nil
       if phone_number.present?
-        # 店舗localeに応じたホーム国を決定
         home_country = user.locale&.to_s == "tw" ? "TW" : "JP"
 
         parsed_phone = Phonelib.parse(phone_number)
         parsed_phone = Phonelib.parse(phone_number, home_country) unless parsed_phone.valid?
 
-        # 新旧フォーマット両方で検索（移行期間の互換性確保）
         possible_numbers = [phone_number]
         if parsed_phone.valid?
-          possible_numbers << parsed_phone.national(false)     # ローカル形式: 09090841258
-          possible_numbers << parsed_phone.e164                # E.164形式: +819090841258
-          possible_numbers << parsed_phone.international(false) # レガシー形式: 819090841258
+          possible_numbers << parsed_phone.national(false)
+          possible_numbers << parsed_phone.e164
+          possible_numbers << parsed_phone.international(false)
         end
         possible_numbers = possible_numbers.compact.uniq
 
-        customers = customers.presence || user_customers.where(customer_phone_number: possible_numbers)
+        phone_customers = user_customers.where(customer_phone_number: possible_numbers)
       end
+
+      email_customers = nil
+      email_customers = user_customers.where(customer_email: email) if email.present?
+
+      # phone は uniqueness 制約があるため email より信頼性が高い → phone 優先
+      customers = if phone_customers.present?
+                    phone_customers
+                  elsif email_customers.present?
+                    email_customers
+                  end
 
       if customers.present?
         return {
