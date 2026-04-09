@@ -1,0 +1,60 @@
+#lineSetupPromptModal {
+  .line-setup-prompt-dialog {
+    max-width: 460px;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .modal-body p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .line-setup-prompt-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    a {
+      @include border-radius(6px);
+      display: block;
+      height: 50px;
+      line-height: 50px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      border-width: 1px;
+      border-style: solid;
+      cursor: pointer;
+
+      &.BTNyellow {
+        background: $palette-color1;
+        border-color: $palette-color1-1;
+
+        &:hover { background: $palette-color1-1; border-color: $palette-color1-2; }
+      }
+
+      &.BTNtarco {
+        background: $palette-color2;
+        border-color: $palette-color2-1;
+
+        &:hover { background: $palette-color2-1; border-color: $palette-color2-2; }
+      }
+    }
+  }
+}
