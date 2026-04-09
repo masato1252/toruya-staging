@@ -1,14 +1,17 @@
 import { Controller } from "stimulus"
 
-const STORAGE_KEY = "line_setup_prompt_dismissed_at"
+const STORAGE_KEY_PREFIX = "line_setup_prompt_dismissed_at"
 
 export default class extends Controller {
   connect() {
     const status = this.data.get("status")
     if (!status || status === "complete") return
 
+    const ownerId = this.data.get("owner-id")
+    this.storageKey = ownerId ? `${STORAGE_KEY_PREFIX}_${ownerId}` : STORAGE_KEY_PREFIX
+
     const today = new Date().toISOString().slice(0, 10)
-    if (localStorage.getItem(STORAGE_KEY) === today) return
+    if (localStorage.getItem(this.storageKey) === today) return
 
     this.modal = $("#lineSetupPromptModal")
     this.modal.on("hidden.bs.modal", this.onDismiss)
@@ -23,6 +26,6 @@ export default class extends Controller {
 
   onDismiss = () => {
     const today = new Date().toISOString().slice(0, 10)
-    localStorage.setItem(STORAGE_KEY, today)
+    localStorage.setItem(this.storageKey, today)
   }
 }
