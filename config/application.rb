@@ -30,5 +30,8 @@ module Kasaike
 
     require_relative "../app/middleware/slack_error_middleware"
     config.middleware.use SlackErrorMiddleware
+
+    require_relative "../app/middleware/omniauth_csrf_rescue"
+    config.middleware.insert_after ActionDispatch::ShowExceptions, OmniauthCsrfRescue
   end
 end

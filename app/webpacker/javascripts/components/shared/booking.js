@@ -90,15 +90,26 @@ export const AddLineFriendInfo = ({social_account_add_friend_url, children}) => 
 export const LineLoginBtn = ({social_account_login_url, btn_text, children}) => {
   if (!social_account_login_url) return <></>;
   
-  // URLからパス名とパラメータを抽出
   const url = new URL(social_account_login_url, window.location.origin);
   const params = Object.fromEntries(url.searchParams);
+  const formRef = React.useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = formRef.current;
+    if (!form) return;
+    const tokenInput = form.querySelector('input[name="authenticity_token"]');
+    if (tokenInput) {
+      tokenInput.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    }
+    form.submit();
+  };
   
   return (
     <div className="message centerize">
       {children}
-      <form method="post" action={url.pathname}>
-        <input type="hidden" name="authenticity_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')} />
+      <form ref={formRef} method="post" action={url.pathname} onSubmit={handleSubmit}>
+        <input type="hidden" name="authenticity_token" value="" />
         {Object.entries(params).map(([key, value]) => (
           <input key={key} type="hidden" name={key} value={value} />
         ))}

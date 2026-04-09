@@ -7,7 +7,3 @@ OmniAuth.config.full_host = lambda do |env|
   host = ENV['MAIL_DOMAIN'] || env['HTTP_HOST']
   "#{scheme}://#{host}"
 end
-
-# 注: DynamicLineOAuthMiddleware は削除しました。
-# env['omniauth.strategy'] はミドルウェア実行時にnilのため実質No-opであり、
-# 認証情報の設定はすべて OmniauthSetup (lib/omniauth_setup.rb) で行っています。
