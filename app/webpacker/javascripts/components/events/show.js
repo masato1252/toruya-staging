@@ -256,6 +256,69 @@ const EventShow = ({ props }) => {
         </div>
       </div>
 
+      {/* Recommendations */}
+      {event.is_participant && (event.recommended_content_ids || []).length > 0 && (() => {
+        const recContents = (event.recommended_content_ids || [])
+          .map(id => (event.contents || []).find(c => c.id === id))
+          .filter(Boolean);
+        if (recContents.length === 0) return null;
+        return (
+          <div style={{ background: "#fefce8", borderBottom: "1px solid #fde68a", padding: "24px 16px" }}>
+            <div style={{ maxWidth: 720, margin: "0 auto" }}>
+              <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 16, color: "#92400e" }}>
+                🎯 あなたのお悩みにおすすめ
+              </h2>
+              <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4 }}>
+                {recContents.map(content => (
+                  <a
+                    key={content.id}
+                    href={`/${event.slug}/event_contents/${content.id}`}
+                    style={{
+                      flex: "0 0 260px", background: "#fff", borderRadius: 14,
+                      overflow: "hidden", textDecoration: "none", color: "inherit",
+                      boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                      border: "1px solid #fde68a"
+                    }}
+                  >
+                    {content.thumbnail_url ? (
+                      <img src={content.thumbnail_url} style={{ width: "100%", height: 130, objectFit: "cover", display: "block" }} />
+                    ) : (
+                      <div style={{
+                        height: 80,
+                        background: content.content_type === "seminar"
+                          ? "linear-gradient(135deg, #4f46e5, #7c3aed)"
+                          : "linear-gradient(135deg, #0ea5e9, #06b6d4)",
+                        display: "flex", alignItems: "center", justifyContent: "center"
+                      }}>
+                        <span style={{ fontSize: 28 }}>{content.content_type === "seminar" ? "🎬" : "📄"}</span>
+                      </div>
+                    )}
+                    <div style={{ padding: "10px 14px" }}>
+                      <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
+                        <span style={{
+                          fontSize: 10, padding: "2px 8px", borderRadius: 10, fontWeight: 600, color: "#fff",
+                          background: content.content_type === "seminar" ? "rgba(79,70,229,0.85)" : "rgba(14,165,233,0.85)"
+                        }}>
+                          {content.content_type === "seminar" ? "セミナー" : "展示ブース"}
+                        </span>
+                      </div>
+                      <div style={{ fontWeight: 700, fontSize: 14, lineHeight: 1.4, color: "#111827",
+                        display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden"
+                      }}>
+                        {content.title}
+                      </div>
+                      {content.exhibitor_staff && (
+                        <div style={{ fontSize: 12, color: "#6b7280", marginTop: 4 }}>{content.exhibitor_staff.name}</div>
+                      )}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Tabs */}
       {seminars.length > 0 && booths.length > 0 && (
         <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 10 }}>

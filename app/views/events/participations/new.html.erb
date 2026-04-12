@@ -3,6 +3,9 @@
     event_slug: @event.slug,
     event_title: @event.title,
     action_url: event_participation_path(event_slug: @event.slug, format: "json"),
-    back_url: event_path(slug: @event.slug)
+    back_url: event_path(slug: @event.slug),
+    initial_first_name: @initial_first_name,
+    initial_last_name: @initial_last_name,
+    initial_phone_number: @initial_phone_number
   }
 }, { camelize_props: false }) %>

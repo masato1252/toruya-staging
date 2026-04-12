@@ -1,4 +1,4 @@
-\restrict pIXOorpeWtFsT6Qa1ngEWugQ5fDJfSaAAlPduRuQfr0f2TJJiDcCIxufqRcRAJK
+\restrict rON6vldVhikAWW1vKrzmeJ9gBy2cJRdTsckYZXYyxQCpVWAp0h5LkQlnraMPnR4
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 18.0
@@ -1988,7 +1988,8 @@ CREATE TABLE public.event_contents (
     updated_at timestamp(6) without time zone NOT NULL,
     video_url character varying,
     exhibitor_company_name character varying,
-    exhibitor_description text
+    exhibitor_description text,
+    exhibitor_roles jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -2093,18 +2094,17 @@ ALTER SEQUENCE public.event_monitor_applications_id_seq OWNED BY public.event_mo
 CREATE TABLE public.event_participants (
     id bigint NOT NULL,
     event_id bigint NOT NULL,
-    social_customer_id bigint NOT NULL,
+    social_customer_id bigint,
     user_id bigint,
     business_types jsonb DEFAULT '[]'::jsonb NOT NULL,
     business_age integer,
-    concern_label character varying,
-    concern_category character varying,
     concern_other character varying,
     registered_at timestamp(6) without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     event_line_user_id bigint,
-    concern_labels jsonb DEFAULT '[]'::jsonb NOT NULL
+    concern_labels jsonb DEFAULT '[]'::jsonb NOT NULL,
+    concern_categories jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -6937,13 +6937,6 @@ CREATE INDEX index_event_monitor_applications_on_social_customer_id ON public.ev
 
 
 --
--- Name: index_event_participants_on_concern_category; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_event_participants_on_concern_category ON public.event_participants USING btree (concern_category);
-
-
---
 -- Name: index_event_participants_on_event_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8341,7 +8334,7 @@ CREATE EVENT TRIGGER validate_extension ON ddl_command_end
 -- PostgreSQL database dump complete
 --
 
-\unrestrict pIXOorpeWtFsT6Qa1ngEWugQ5fDJfSaAAlPduRuQfr0f2TJJiDcCIxufqRcRAJK
+\unrestrict rON6vldVhikAWW1vKrzmeJ9gBy2cJRdTsckYZXYyxQCpVWAp0h5LkQlnraMPnR4
 
 SET search_path TO "$user", public, heroku_ext;
 
@@ -8637,6 +8630,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260325000001'),
 ('20260331000001'),
 ('20260331000002'),
-('20260402000001');
+('20260402000001'),
+('20260402000002'),
+('20260402000003');
 
 

@@ -200,14 +200,17 @@ class Admin::EventContentsController < AdminController
   end
 
   def event_content_params
-    params.require(:event_content).permit(
+    permitted = params.require(:event_content).permit(
       :content_type, :title, :description, :introduction,
       :start_at, :end_at, :capacity, :position,
       :video_url, :pre_ad_video_url, :post_ad_video_url, :direct_download_url,
       :shop_id, :online_service_id,
       :upsell_booking_enabled, :upsell_booking_page_id,
       :monitor_enabled, :monitor_name, :monitor_price, :monitor_limit, :monitor_form_url,
-      :exhibitor_company_name, :exhibitor_description, :exhibitor_logo
+      :exhibitor_company_name, :exhibitor_description, :exhibitor_logo,
+      exhibitor_roles: []
     )
+    permitted[:exhibitor_roles] = (permitted[:exhibitor_roles] || []).reject(&:blank?)
+    permitted
   end
 end

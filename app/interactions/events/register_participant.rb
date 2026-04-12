@@ -20,10 +20,12 @@ module Events
 
       return participant unless participant.new_record?
 
+      labels = sanitized_concern_labels
       participant.assign_attributes(
         business_types: business_types.reject(&:blank?),
         business_age: business_age.presence,
-        concern_labels: sanitized_concern_labels,
+        concern_labels: labels,
+        concern_categories: derive_concern_categories(labels),
         concern_other: concern_other.presence,
         registered_at: Time.current
       )
@@ -50,8 +52,11 @@ module Events
     end
 
     def sanitized_concern_labels
-      labels = (concern_labels || []).reject(&:blank?).first(6)
-      labels
+      (concern_labels || []).reject(&:blank?).first(6)
+    end
+
+    def derive_concern_categories(labels)
+      labels.filter_map { |label| EventParticipant::CONCERN_MAPPING[label]&.dig(:category) }.uniq
     end
   end
 end

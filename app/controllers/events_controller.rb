@@ -17,12 +17,27 @@ class EventsController < ActionController::Base
     @event_hash = EventSerializer.new(@event, {
       params: {
         event_line_user: @current_event_line_user,
-        participant: @participant
+        participant: @participant,
+        recommended_content_ids: compute_recommended_content_ids
       }
     }).attributes_hash
   end
 
   private
+
+  def compute_recommended_content_ids
+    contents = @event.event_contents.undeleted.order(Arel.sql("CASE content_type WHEN 0 THEN 0 ELSE 1 END"), :position)
+    has_profile = @participant &&
+                  ((@participant.concern_categories || []) - ["other"]).any?
+
+    if has_profile
+      roles = @participant.recommended_roles
+      matched = contents.select { |c| ((c.exhibitor_roles || []) & roles).any? }
+      return matched.first(3).map(&:id) if matched.any?
+    end
+
+    contents.to_a.shuffle.first(3).map(&:id)
+  end
 
   def set_event
     @event = Event.published.undeleted.find_by!(slug: params[:slug])

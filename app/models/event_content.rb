@@ -13,6 +13,7 @@
 #  end_at                 :datetime
 #  exhibitor_company_name :string
 #  exhibitor_description  :text
+#  exhibitor_roles        :jsonb            not null
 #  introduction           :text
 #  monitor_enabled        :boolean          default(FALSE), not null
 #  monitor_form_url       :string

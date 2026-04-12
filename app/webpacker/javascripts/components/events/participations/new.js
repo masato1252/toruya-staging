@@ -51,9 +51,9 @@ const ParticipationForm = ({ props }) => {
   const [businessAge, setBusinessAge] = useState("");
   const [concernLabels, setConcernLabels] = useState([]);
   const [concernOther, setConcernOther] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [firstName, setFirstName] = useState(props.initial_first_name || "");
+  const [lastName, setLastName] = useState(props.initial_last_name || "");
+  const [phoneNumber, setPhoneNumber] = useState(props.initial_phone_number || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleBusinessType = (type) => {
@@ -108,10 +108,19 @@ const ParticipationForm = ({ props }) => {
   const remainingConcerns = MAX_CONCERNS - concernLabels.length;
 
   return (
-    <div className="booking-content" style={{ maxWidth: 600, margin: "0 auto", padding: "0 16px 80px" }}>
-      <div style={{ padding: "24px 0 16px", borderBottom: "1px solid #eee", marginBottom: 24 }}>
+    <div className="booking-content" style={{ maxWidth: 600, margin: "0 auto", padding: "0 16px 40px" }}>
+      <div style={{ padding: "24px 0 16px", borderBottom: "1px solid #eee", marginBottom: 20 }}>
         <h2 style={{ fontSize: 20, fontWeight: "bold", marginBottom: 4 }}>{props.event_title}</h2>
         <p style={{ color: "#666", fontSize: 14 }}>参加登録 — プロフィール入力</p>
+      </div>
+
+      <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 12, padding: "16px 18px", marginBottom: 28 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: "#0369a1" }}>
+          🎯 業種やお悩みに合わせた最適な出展者をお勧めします
+        </div>
+        <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>
+          回答は任意ですが、ご入力いただくとイベントをより活用いただけます！
+        </div>
       </div>
 
       <section style={{ marginBottom: 32 }}>
@@ -251,7 +260,7 @@ const ParticipationForm = ({ props }) => {
         )}
       </section>
 
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", padding: "16px", borderTop: "1px solid #eee" }}>
+      <div style={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
         <button
           onClick={handleSubmit}
           disabled={isSubmitting}
@@ -267,7 +276,22 @@ const ParticipationForm = ({ props }) => {
             cursor: isSubmitting ? "not-allowed" : "pointer"
           }}
         >
-          {isSubmitting ? "登録中..." : "イベントに参加登録する"}
+          {isSubmitting ? "登録中..." : "プロフィール登録する"}
+        </button>
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          style={{
+            background: "none",
+            border: "none",
+            color: "#9ca3af",
+            fontSize: 13,
+            cursor: isSubmitting ? "not-allowed" : "pointer",
+            textDecoration: "underline",
+            padding: "4px 0"
+          }}
+        >
+          スキップする
         </button>
       </div>
     </div>

@@ -16,6 +16,11 @@ class Events::ParticipationsController < ActionController::Base
 
     @participant = @event.event_participants.find_by(event_line_user_id: @current_event_line_user.id)
     redirect_to event_path(slug: @event.slug) and return if @participant
+
+    profile = @current_event_line_user.toruya_user&.profile
+    @initial_first_name = @current_event_line_user.first_name.presence || profile&.first_name
+    @initial_last_name = @current_event_line_user.last_name.presence || profile&.last_name
+    @initial_phone_number = @current_event_line_user.phone_number.presence || profile&.phone_number
   end
 
   def create

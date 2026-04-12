@@ -59,6 +59,27 @@
     </div>
   </div>
 
+  <%# === 出展者業種タグ（セミナー・展示ブース共通） === %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">出展者業種タグ</div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">業種（複数選択可）</label>
+      <div class="admin-form-input">
+        <%= hidden_field_tag "event_content[exhibitor_roles][]", "" %>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <% EventParticipant::EXHIBITOR_ROLES.each do |role| %>
+            <% checked = (event_content.exhibitor_roles || []).include?(role) %>
+            <label style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; border: 2px solid <%= checked ? '#4f46e5' : '#d1d5db' %>; background: <%= checked ? '#eef2ff' : '#fff' %>; cursor: pointer; font-size: 13px; transition: all 0.15s;">
+              <%= check_box_tag "event_content[exhibitor_roles][]", role, checked, style: "display: none;", onchange: "this.closest('label').style.borderColor = this.checked ? '#4f46e5' : '#d1d5db'; this.closest('label').style.background = this.checked ? '#eef2ff' : '#fff';" %>
+              <span><%= role %></span>
+            </label>
+          <% end %>
+        </div>
+        <span class="admin-form-help">参加者の悩みに基づくおすすめ表示に使われます</span>
+      </div>
+    </div>
+  </div>
+
   <%# === 開催設定 === %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">開催設定</div>

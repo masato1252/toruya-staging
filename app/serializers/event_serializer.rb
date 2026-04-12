@@ -72,8 +72,13 @@ class EventSerializer
         monitor_price: content.monitor_price,
         monitor_limit: content.monitor_limit,
         speakers: speakers,
-        exhibitor_staff: exhibitor
+        exhibitor_staff: exhibitor,
+        exhibitor_roles: content.exhibitor_roles || []
       }
     end
+  end
+
+  attribute :recommended_content_ids do |event, params|
+    params[:recommended_content_ids] || []
   end
 end

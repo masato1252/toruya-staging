@@ -7,8 +7,7 @@
 #  id                 :bigint           not null, primary key
 #  business_age       :integer
 #  business_types     :jsonb            not null
-#  concern_category   :string
-#  concern_label      :string
+#  concern_categories :jsonb            not null, default: []
 #  concern_labels     :jsonb            not null
 #  concern_other      :string
 #  registered_at      :datetime         not null
@@ -16,12 +15,11 @@
 #  updated_at         :datetime         not null
 #  event_id           :bigint           not null
 #  event_line_user_id :bigint
-#  social_customer_id :bigint           not null
+#  social_customer_id :bigint
 #  user_id            :bigint
 #
 # Indexes
 #
-#  index_event_participants_on_concern_category                 (concern_category)
 #  index_event_participants_on_event_id                         (event_id)
 #  index_event_participants_on_event_id_and_social_customer_id  (event_id,social_customer_id) UNIQUE
 #  index_event_participants_on_event_line_user_id               (event_line_user_id)
@@ -68,6 +66,17 @@ class EventParticipant < ApplicationRecord
     その他
   ].freeze
 
+  EXHIBITOR_ROLES = [
+    "LINE集客コンサル",
+    "SNS集客コンサル",
+    "WEBデベロッパー",
+    "セミナー講師",
+    "デザイナー",
+    "ライター",
+    "経営コンサル",
+    "税理士"
+  ].freeze
+
   BUSINESS_AGE_LABELS = {
     0 => "1年未満",
     1 => "1〜3年",
@@ -89,10 +98,6 @@ class EventParticipant < ApplicationRecord
 
   def self.recommended_roles_for(label)
     CONCERN_MAPPING[label]&.dig(:roles) || []
-  end
-
-  def concern_categories
-    (concern_labels || []).filter_map { |label| CONCERN_MAPPING[label]&.dig(:category) }.uniq
   end
 
   def recommended_roles
