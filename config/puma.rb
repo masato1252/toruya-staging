@@ -15,7 +15,7 @@ threads min_threads_count, max_threads_count
 port        ENV.fetch("PORT") { 4321 }
 
 # SSL Configuration for development
-if ENV['RAILS_ENV'] == 'development' && File.exist?('config/ssl/localhost.pem')
+if File.exist?('config/ssl/localhost.pem')
   ssl_bind '0.0.0.0', '4322', {
     key: 'config/ssl/localhost-key.pem',
     cert: 'config/ssl/localhost.pem',

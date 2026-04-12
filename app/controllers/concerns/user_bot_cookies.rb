@@ -46,7 +46,7 @@ module UserBotCookies
       expires: 20.years.from_now,
       httponly: true,
       secure: Rails.env.production?,
-      same_site: :none  # Required for cross-site redirects from LINE
+      same_site: Rails.env.production? ? :none : :lax
     }
     
     # Only set domain if not using herokuapp.com

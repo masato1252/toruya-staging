@@ -232,7 +232,7 @@
             <select id="booth-service-id" class="form-control" style="margin-top:4px;">
               <option value="">選択してください</option>
               <% if event_content.online_service %>
-                <option value="<%= event_content.online_service.id %>" selected><%= event_content.online_service.title %></option>
+                <option value="<%= event_content.online_service.id %>" selected><%= event_content.online_service.name %></option>
               <% end %>
             </select>
           </div>
