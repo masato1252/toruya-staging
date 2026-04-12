@@ -25,5 +25,8 @@ dump.rdb
 .solargraph.yml
 .vscode
 
+# Local ActiveStorage uploads
+/storage
+
 # SSL certificates
 config/ssl/*.pem

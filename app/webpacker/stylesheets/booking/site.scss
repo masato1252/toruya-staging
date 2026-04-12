@@ -38,7 +38,10 @@ body {
   &.sale_pages,
   &.online_service_purchases,
   &.surveys,
-  &.online_services {
+  &.online_services,
+  &.events,
+  &.event_contents,
+  &.participations {
     padding: 0;
   }
 

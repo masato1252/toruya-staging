@@ -30,13 +30,20 @@ class EventsController < ActionController::Base
     has_profile = @participant &&
                   ((@participant.concern_categories || []) - ["other"]).any?
 
+    picked = []
+
     if has_profile
       roles = @participant.recommended_roles
       matched = contents.select { |c| ((c.exhibitor_roles || []) & roles).any? }
-      return matched.first(3).map(&:id) if matched.any?
+      picked = matched.first(3)
     end
 
-    contents.to_a.shuffle.first(3).map(&:id)
+    if picked.size < 3
+      remaining = contents.to_a - picked
+      picked += remaining.shuffle.first(3 - picked.size)
+    end
+
+    picked.map(&:id)
   end
 
   def set_event
