@@ -19,6 +19,9 @@ class Admin::EventContentsController < AdminController
     if params[:event_content][:thumbnail].present?
       @event_content.thumbnail.attach(params[:event_content][:thumbnail])
     end
+    if params[:event_content][:exhibitor_logo].present?
+      @event_content.exhibitor_logo.attach(params[:event_content][:exhibitor_logo])
+    end
 
     if @event_content.save
       redirect_to admin_event_path(@event), notice: "コンテンツを作成しました"
@@ -38,6 +41,9 @@ class Admin::EventContentsController < AdminController
   def update
     if params[:event_content][:thumbnail].present?
       @event_content.thumbnail.attach(params[:event_content][:thumbnail])
+    end
+    if params[:event_content][:exhibitor_logo].present?
+      @event_content.exhibitor_logo.attach(params[:event_content][:exhibitor_logo])
     end
 
     if @event_content.update(event_content_params)
@@ -200,7 +206,8 @@ class Admin::EventContentsController < AdminController
       :video_url, :pre_ad_video_url, :post_ad_video_url, :direct_download_url,
       :shop_id, :online_service_id,
       :upsell_booking_enabled, :upsell_booking_page_id,
-      :monitor_enabled, :monitor_name, :monitor_price, :monitor_limit, :monitor_form_url
+      :monitor_enabled, :monitor_name, :monitor_price, :monitor_limit, :monitor_form_url,
+      :exhibitor_company_name, :exhibitor_description, :exhibitor_logo
     )
   end
 end

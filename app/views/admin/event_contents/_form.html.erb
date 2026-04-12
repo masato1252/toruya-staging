@@ -204,6 +204,43 @@
     </div>
   </div>
 
+  <%# === 出展者情報（展示ブース向け） === %>
+  <div class="admin-form-section booth-only">
+    <div class="admin-form-section-title">出展者情報</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">
+        企業名<span class="required-mark">*</span>
+      </label>
+      <div class="admin-form-input">
+        <%= f.text_field :exhibitor_company_name, class: "form-control #{'field-error-border' if event_content.errors[:exhibitor_company_name].any?}", placeholder: "出展企業名" %>
+        <% if event_content.errors[:exhibitor_company_name].any? %>
+          <span class="admin-form-error"><%= event_content.errors.full_messages_for(:exhibitor_company_name).join(", ") %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">説明</label>
+      <div class="admin-form-input">
+        <%= f.text_area :exhibitor_description, class: "form-control", rows: 3, placeholder: "出展者の説明（任意）" %>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">ロゴ画像</label>
+      <div class="admin-form-input">
+        <% if event_content.exhibitor_logo.attached? %>
+          <div style="margin-bottom: 8px;">
+            <%= image_tag event_content.exhibitor_logo, style: "max-width: 200px; max-height: 100px; object-fit: contain; border-radius: 4px;" %>
+          </div>
+        <% end %>
+        <%= f.file_field :exhibitor_logo, accept: "image/*", class: "form-control" %>
+        <span class="admin-form-help">企業ロゴ画像（任意）</span>
+      </div>
+    </div>
+  </div>
+
   <%# === 展示ブース詳細設定 === %>
   <div class="admin-form-section booth-only">
     <div class="admin-form-section-title">展示ブース詳細設定</div>

@@ -11,7 +11,7 @@
 #  details                :jsonb
 #  error_message          :text
 #  is_free_trial          :boolean          default(FALSE), not null
-#  state                  :integer          default(0), not null
+#  state                  :integer          default("pending"), not null
 #  stripe_charge_details  :jsonb
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null

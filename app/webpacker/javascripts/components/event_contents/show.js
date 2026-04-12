@@ -436,7 +436,11 @@ const EventContentShow = ({ props }) => {
             <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14, color: "#111827" }}>出展者情報</h3>
             <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
               {event_content.exhibitor_staff.picture_url && (
-                <img src={event_content.exhibitor_staff.picture_url} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "3px solid #f3f4f6" }} />
+                event_content.content_type === "booth" && !event_content.exhibitor_staff.position ? (
+                  <img src={event_content.exhibitor_staff.picture_url} style={{ width: 72, height: 72, borderRadius: 8, objectFit: "contain", flexShrink: 0, background: "#f9fafb", padding: 4 }} />
+                ) : (
+                  <img src={event_content.exhibitor_staff.picture_url} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "3px solid #f3f4f6" }} />
+                )
               )}
               <div>
                 {event_content.exhibitor_staff.position && (

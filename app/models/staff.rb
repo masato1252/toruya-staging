@@ -5,16 +5,17 @@
 # Table name: staffs
 #
 #  id                       :integer          not null, primary key
-#  user_id                  :integer          not null
-#  last_name                :string
+#  deleted_at               :datetime
 #  first_name               :string
-#  phonetic_last_name       :string
+#  introduction             :text
+#  last_name                :string
 #  phonetic_first_name      :string
+#  phonetic_last_name       :string
+#  position                 :string
+#  staff_holiday_permission :boolean          default(FALSE), not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  deleted_at               :datetime
-#  staff_holiday_permission :boolean          default(FALSE), not null
-#  introduction             :text
+#  user_id                  :integer          not null
 #
 # Indexes
 #

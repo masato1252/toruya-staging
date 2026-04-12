@@ -79,9 +79,18 @@ class EventContentSerializer
   end
 
   attribute :exhibitor_staff do |content|
+    if content.booth_content_type? && content.exhibitor_company_name.present?
+      next {
+        name: content.exhibitor_company_name,
+        introduction: content.exhibitor_description,
+        picture_url: content.exhibitor_logo.attached? ? Rails.application.routes.url_helpers.rails_blob_url(content.exhibitor_logo, only_path: true) : nil,
+        position: nil
+      }
+    end
+
     speaker = content.event_content_speakers.order(:position).first
     if speaker
-      return {
+      next {
         picture_url: speaker.profile_image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(speaker.profile_image, only_path: true) : nil,
         position: speaker.position_title,
         name: speaker.name,
@@ -90,7 +99,7 @@ class EventContentSerializer
     end
 
     staff = content.shop&.staffs&.first
-    return nil unless staff
+    next nil unless staff
 
     {
       picture_url: ApplicationController.helpers.staff_picture_url(staff, "360"),

@@ -5,6 +5,12 @@ class EventSerializer
 
   attribute :id, :title, :slug, :description, :start_at, :end_at, :published
 
+  attribute :hero_image_url do |event|
+    if event.hero_image.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(event.hero_image, only_path: true)
+    end
+  end
+
   attribute :is_participant do |event, params|
     params[:participant].present?
   end
@@ -26,16 +32,24 @@ class EventSerializer
         }
       end
 
-      first_speaker = speakers.first
-      if first_speaker
-        exhibitor = { picture_url: first_speaker[:profile_image_url], position: first_speaker[:position_title], name: first_speaker[:name] }
+      if content.booth_content_type? && content.exhibitor_company_name.present?
+        exhibitor = {
+          name: content.exhibitor_company_name,
+          picture_url: content.exhibitor_logo.attached? ? Rails.application.routes.url_helpers.rails_blob_url(content.exhibitor_logo, only_path: true) : nil,
+          position: nil
+        }
       else
-        staff = content.shop&.staffs&.first
-        exhibitor = staff ? {
-          picture_url: ApplicationController.helpers.staff_picture_url(staff, "360"),
-          position: staff.position,
-          name: staff.name
-        } : nil
+        first_speaker = speakers.first
+        if first_speaker
+          exhibitor = { picture_url: first_speaker[:profile_image_url], position: first_speaker[:position_title], name: first_speaker[:name] }
+        else
+          staff = content.shop&.staffs&.first
+          exhibitor = staff ? {
+            picture_url: ApplicationController.helpers.staff_picture_url(staff, "360"),
+            position: staff.position,
+            name: staff.name
+          } : nil
+        end
       end
 
       {

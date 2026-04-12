@@ -33,6 +33,19 @@
         <%= f.text_area :description, class: "form-control", rows: 4, placeholder: "イベントの概要説明" %>
       </div>
     </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">ヒーロー画像（公開ページ上部）</label>
+      <div class="admin-form-input">
+        <% if event.hero_image.attached? %>
+          <div style="margin-bottom: 8px;">
+            <%= image_tag event.hero_image, style: "max-width: 400px; max-height: 200px; border-radius: 8px; object-fit: cover;" %>
+          </div>
+        <% end %>
+        <%= f.file_field :hero_image, accept: "image/*", class: "form-control" %>
+        <span class="admin-form-help">未設定の場合はデフォルトのグラデーション背景が表示されます</span>
+      </div>
+    </div>
   </div>
 
   <div class="admin-form-section">

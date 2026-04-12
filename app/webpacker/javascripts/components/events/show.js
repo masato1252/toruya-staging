@@ -138,7 +138,11 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl }) => {
         ) : content.exhibitor_staff ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, padding: "10px 12px", background: "#f9fafb", borderRadius: 10 }}>
             {content.exhibitor_staff.picture_url && (
-              <img src={content.exhibitor_staff.picture_url} style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+              content.content_type === "booth" && !content.exhibitor_staff.position ? (
+                <img src={content.exhibitor_staff.picture_url} style={{ width: 40, height: 40, borderRadius: 6, objectFit: "contain", flexShrink: 0, background: "#fff" }} />
+              ) : (
+                <img src={content.exhibitor_staff.picture_url} style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+              )
             )}
             <div>
               {content.exhibitor_staff.position && (
@@ -201,14 +205,21 @@ const EventShow = ({ props }) => {
     <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
       {/* Hero */}
       <div style={{
-        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #334155 100%)",
+        background: event.hero_image_url
+          ? `url(${event.hero_image_url}) center/cover no-repeat`
+          : "linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #334155 100%)",
         color: "#fff", padding: "48px 20px 40px", position: "relative", overflow: "hidden"
       }}>
-        <div style={{
-          position: "absolute", top: 0, left: 0, right: 0, bottom: 0, opacity: 0.06,
-          backgroundImage: "radial-gradient(circle at 25% 25%, #fff 1px, transparent 1px), radial-gradient(circle at 75% 75%, #fff 1px, transparent 1px)",
-          backgroundSize: "40px 40px"
-        }} />
+        {event.hero_image_url && (
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)" }} />
+        )}
+        {!event.hero_image_url && (
+          <div style={{
+            position: "absolute", top: 0, left: 0, right: 0, bottom: 0, opacity: 0.06,
+            backgroundImage: "radial-gradient(circle at 25% 25%, #fff 1px, transparent 1px), radial-gradient(circle at 75% 75%, #fff 1px, transparent 1px)",
+            backgroundSize: "40px 40px"
+          }} />
+        )}
         <div style={{ maxWidth: 720, margin: "0 auto", position: "relative", zIndex: 1 }}>
           {event.is_participant && (
             <div style={{

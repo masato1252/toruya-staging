@@ -1,5 +1,31 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: event_line_users
+#
+#  id                     :bigint           not null, primary key
+#  business_age           :integer
+#  business_types         :jsonb            not null
+#  display_name           :string
+#  first_name             :string
+#  last_name              :string
+#  phone_number           :string
+#  picture_url            :string
+#  toruya_user_checked_at :datetime
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  line_user_id           :string           not null
+#  toruya_social_user_id  :bigint
+#  toruya_user_id         :bigint
+#
+# Indexes
+#
+#  index_event_line_users_on_line_user_id           (line_user_id) UNIQUE
+#  index_event_line_users_on_phone_number           (phone_number)
+#  index_event_line_users_on_toruya_social_user_id  (toruya_social_user_id)
+#  index_event_line_users_on_toruya_user_id         (toruya_user_id)
+#
 class EventLineUser < ApplicationRecord
   belongs_to :toruya_user, class_name: "User", optional: true
   belongs_to :toruya_social_user, class_name: "SocialUser", optional: true

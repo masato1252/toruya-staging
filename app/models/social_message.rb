@@ -14,7 +14,9 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  broadcast_id       :integer
+#  custom_message_id  :integer
 #  customer_id        :integer
+#  reservation_id     :integer
 #  social_account_id  :integer
 #  social_customer_id :integer
 #  staff_id           :integer
@@ -24,6 +26,8 @@
 #
 #  index_social_messages_on_broadcast_id             (broadcast_id)
 #  index_social_messages_on_customer_id_and_channel  (customer_id,channel)
+#  index_social_messages_on_duplicate_check          (customer_id,reservation_id,custom_message_id)
+#  index_social_messages_on_reservation_id           (reservation_id)
 #  index_social_messages_on_user_id_and_channel      (user_id,channel)
 #  social_message_customer_index                     (social_account_id,social_customer_id)
 #

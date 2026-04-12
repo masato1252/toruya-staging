@@ -1,4 +1,4 @@
-\restrict famd8XepDBKW7QAzVfxqGUuLmYVKkiEwpKHQlgJZwDTL6ctwYrawjN7X3DO4kBF
+\restrict pIXOorpeWtFsT6Qa1ngEWugQ5fDJfSaAAlPduRuQfr0f2TJJiDcCIxufqRcRAJK
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 18.0
@@ -94,8 +94,7 @@ DECLARE
   r RECORD;
 
 BEGIN
-
-  IF tg_tag OPERATOR(pg_catalog.=) 'CREATE EXTENSION' AND current_user OPERATOR(pg_catalog.!=) 'rds_superuser' THEN
+  IF tg_tag OPERATOR(pg_catalog.=) 'CREATE EXTENSION' THEN
     PERFORM _heroku.validate_search_path();
 
     FOR r IN SELECT * FROM pg_catalog.pg_event_trigger_ddl_commands()
@@ -121,16 +120,47 @@ BEGIN
             PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'us_lex');
             PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'us_rules');
         ELSIF r.object_identity = 'amcheck' THEN
-            EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %I.bt_index_check TO %I;', schemaname, databaseowner);
-            EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %I.bt_index_parent_check TO %I;', schemaname, databaseowner);
+            -- Grant execute permissions on amcheck functions (bt_*, gin_*, and verify_*)
+            PERFORM _heroku.grant_function_execute_for_extension(r.objid, schemaname, databaseowner, ARRAY['bt_%', 'gin_%', 'verify_%'], NULL);
+        ELSIF r.object_identity = 'dblink' THEN
+            -- Grant execute permissions on dblink functions, excluding dblink_connect_u()
+            -- which allows unauthenticated connections and should remain superuser-only
+            PERFORM _heroku.grant_function_execute_for_extension(r.objid, schemaname, databaseowner, ARRAY['dblink%'], 'dblink_connect_u%');
+            -- Explicitly revoke permissions on dblink_connect_u functions as a safety measure
+            -- in case they were granted by default or in a previous version
+            BEGIN
+                EXECUTE pg_catalog.format('REVOKE EXECUTE ON FUNCTION %I.dblink_connect_u(text) FROM %I;', schemaname, databaseowner);
+            EXCEPTION WHEN OTHERS THEN
+                -- Function might not exist, continue
+                NULL;
+            END;
+            BEGIN
+                EXECUTE pg_catalog.format('REVOKE EXECUTE ON FUNCTION %I.dblink_connect_u(text, text) FROM %I;', schemaname, databaseowner);
+            EXCEPTION WHEN OTHERS THEN
+                -- Function might not exist, continue
+                NULL;
+            END;
         ELSIF r.object_identity = 'dict_int' THEN
             EXECUTE pg_catalog.format('ALTER TEXT SEARCH DICTIONARY %I.intdict OWNER TO %I;', schemaname, databaseowner);
+        ELSIF r.object_identity = 'pg_prewarm' THEN
+            -- Grant execute permissions on pg_prewarm and autoprewarm functions
+            PERFORM _heroku.grant_function_execute_for_extension(
+                r.objid, schemaname, databaseowner, ARRAY['pg_prewarm%', 'autoprewarm%'], NULL
+            );
         ELSIF r.object_identity = 'pg_partman' THEN
             PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'part_config');
             PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'part_config_sub');
             PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT, UPDATE, INSERT, DELETE', databaseowner, 'custom_time_partitions');
         ELSIF r.object_identity = 'pg_stat_statements' THEN
-            EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %I.pg_stat_statements_reset TO %I;', schemaname, databaseowner);
+            -- Grant execute permissions on pg_stat_statements functions
+            PERFORM _heroku.grant_function_execute_for_extension(
+                r.objid, schemaname, databaseowner, ARRAY['pg_stat_statements%'], NULL
+            );
+        ELSIF r.object_identity = 'postgres_fdw' THEN
+            -- Grant USAGE on the foreign data wrapper (required for creating foreign servers and user mappings)
+            EXECUTE pg_catalog.format('GRANT USAGE ON FOREIGN DATA WRAPPER postgres_fdw TO %I;', databaseowner);
+            -- Grant execute permissions on all postgres_fdw functions
+            PERFORM _heroku.grant_function_execute_for_extension(r.objid, schemaname, databaseowner, ARRAY['postgres_fdw%'], NULL);
         ELSIF r.object_identity = 'postgis' THEN
             PERFORM _heroku.postgis_after_create();
         ELSIF r.object_identity = 'postgis_raster' THEN
@@ -139,16 +169,18 @@ BEGIN
             PERFORM _heroku.grant_table_if_exists(schemaname, 'SELECT', databaseowner, 'raster_overviews');
         ELSIF r.object_identity = 'postgis_topology' THEN
             PERFORM _heroku.postgis_after_create();
+            EXECUTE pg_catalog.format('ALTER SCHEMA topology OWNER TO %I;', databaseowner);
             EXECUTE pg_catalog.format('GRANT USAGE ON SCHEMA topology TO %I;', databaseowner);
             EXECUTE pg_catalog.format('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA topology TO %I;', databaseowner);
             PERFORM _heroku.grant_table_if_exists('topology', 'SELECT, UPDATE, INSERT, DELETE', databaseowner);
             EXECUTE pg_catalog.format('GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA topology TO %I;', databaseowner);
         ELSIF r.object_identity = 'postgis_tiger_geocoder' THEN
             PERFORM _heroku.postgis_after_create();
+            EXECUTE pg_catalog.format('ALTER SCHEMA tiger OWNER TO %I;', databaseowner);
             EXECUTE pg_catalog.format('GRANT USAGE ON SCHEMA tiger TO %I;', databaseowner);
             EXECUTE pg_catalog.format('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tiger TO %I;', databaseowner);
             PERFORM _heroku.grant_table_if_exists('tiger', 'SELECT, UPDATE, INSERT, DELETE', databaseowner);
-
+            EXECUTE pg_catalog.format('ALTER SCHEMA tiger_data OWNER TO %I;', databaseowner);
             EXECUTE pg_catalog.format('GRANT USAGE ON SCHEMA tiger_data TO %I;', databaseowner);
             EXECUTE pg_catalog.format('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tiger_data TO %I;', databaseowner);
             PERFORM _heroku.grant_table_if_exists('tiger_data', 'SELECT, UPDATE, INSERT, DELETE', databaseowner);
@@ -175,8 +207,7 @@ DECLARE
   r RECORD;
 
 BEGIN
-
-  IF tg_tag OPERATOR(pg_catalog.=) 'DROP EXTENSION' AND current_user OPERATOR(pg_catalog.!=) 'rds_superuser' THEN
+  IF tg_tag OPERATOR(pg_catalog.=) 'DROP EXTENSION' THEN
     PERFORM _heroku.validate_search_path();
 
     FOR r IN SELECT * FROM pg_catalog.pg_event_trigger_dropped_objects()
@@ -217,6 +248,7 @@ BEGIN
   query := (SELECT pg_catalog.current_query());
 
   -- RAISE NOTICE 'executing extension_before_drop: tg_event: %, tg_tag: %, current_user: %, session_user: %, query: %', tg_event, tg_tag, current_user, session_user, query;
+  -- skip this validation if executed by an rds_superuser
   IF tg_tag OPERATOR(pg_catalog.=) 'DROP EXTENSION' AND NOT pg_catalog.pg_has_role(session_user, 'rds_superuser', 'MEMBER') THEN
     PERFORM _heroku.validate_search_path();
 
@@ -225,6 +257,45 @@ BEGIN
       RAISE EXCEPTION 'The plpgsql extension is required for database management and cannot be dropped.';
     END IF;
   END IF;
+END;
+$$;
+
+
+--
+-- Name: grant_function_execute_for_extension(oid, text, text, text[], text); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.grant_function_execute_for_extension(extension_oid oid, schemaname text, databaseowner text, name_patterns text[] DEFAULT NULL::text[], exclude_pattern text DEFAULT NULL::text) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+
+DECLARE
+    func_rec RECORD;
+
+BEGIN
+    PERFORM _heroku.validate_search_path();
+
+    -- Dynamically grant execute permissions on extension functions.
+    -- Finds functions belonging to the extension via pg_depend and grants execute permissions.
+    FOR func_rec IN
+        SELECT p.oid::regprocedure::text as func_sig
+        FROM pg_catalog.pg_depend d
+        JOIN pg_catalog.pg_proc p ON d.objid = p.oid
+        JOIN pg_catalog.pg_namespace n ON p.pronamespace = n.oid
+        WHERE d.refclassid = 'pg_catalog.pg_extension'::regclass
+          AND d.refobjid = extension_oid
+          AND d.deptype = 'e'
+          AND n.nspname = schemaname
+          AND (name_patterns IS NULL OR p.proname LIKE ANY(name_patterns))
+          AND (exclude_pattern IS NULL OR p.proname NOT LIKE exclude_pattern)
+    LOOP
+        BEGIN
+            EXECUTE pg_catalog.format('GRANT EXECUTE ON FUNCTION %s TO %I;', func_rec.func_sig, databaseowner);
+        EXCEPTION WHEN OTHERS THEN
+            -- Function might not exist or already granted, continue
+            NULL;
+        END;
+    END LOOP;
 END;
 $$;
 
@@ -243,7 +314,7 @@ BEGIN
   IF alias_tablename IS NULL THEN
     EXECUTE pg_catalog.format('GRANT %s ON ALL TABLES IN SCHEMA %I TO %I;', grants, alias_schemaname, databaseowner);
   ELSE
-    IF EXISTS (SELECT 1 FROM pg_tables WHERE pg_tables.schemaname = alias_schemaname AND pg_tables.tablename = alias_tablename) THEN
+    IF EXISTS (SELECT 1 FROM pg_catalog.pg_tables WHERE pg_tables.schemaname = alias_schemaname AND pg_tables.tablename = alias_tablename) THEN
       EXECUTE pg_catalog.format('GRANT %s ON TABLE %I.%I TO %I;', grants, alias_schemaname, alias_tablename, databaseowner);
     END IF;
   END IF;
@@ -283,6 +354,35 @@ $$;
 
 
 --
+-- Name: sanitize_search_path(text); Type: FUNCTION; Schema: _heroku; Owner: -
+--
+
+CREATE FUNCTION _heroku.sanitize_search_path(unsafe_search_path text DEFAULT NULL::text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  search_path_parts TEXT[];
+  safe_search_path TEXT;
+BEGIN
+  IF unsafe_search_path IS NULL THEN
+    unsafe_search_path := pg_catalog.current_setting('search_path');
+  END IF;
+
+  search_path_parts := pg_catalog.string_to_array(unsafe_search_path, ',');
+  search_path_parts := (
+    SELECT pg_catalog.array_agg(TRIM(schema_name::text))
+    FROM pg_catalog.unnest(search_path_parts) AS schema_name
+    WHERE TRIM(schema_name::text) OPERATOR(pg_catalog.!~~) 'pg_temp%'
+  );
+  search_path_parts := (SELECT pg_catalog.array_remove(search_path_parts, 'pg_catalog'));
+  search_path_parts := (SELECT pg_catalog.array_append(search_path_parts, 'pg_temp'));
+  SELECT pg_catalog.array_to_string(search_path_parts, ',') INTO safe_search_path;
+  RETURN safe_search_path;
+END;
+$$;
+
+
+--
 -- Name: validate_extension(); Type: FUNCTION; Schema: _heroku; Owner: -
 --
 
@@ -296,8 +396,7 @@ DECLARE
   r RECORD;
 
 BEGIN
-
-  IF tg_tag OPERATOR(pg_catalog.=) 'CREATE EXTENSION' AND current_user OPERATOR(pg_catalog.!=) 'rds_superuser' THEN
+  IF tg_tag OPERATOR(pg_catalog.=) 'CREATE EXTENSION' THEN
     PERFORM _heroku.validate_search_path();
 
     FOR r IN SELECT * FROM pg_catalog.pg_event_trigger_ddl_commands()
@@ -331,23 +430,24 @@ CREATE FUNCTION _heroku.validate_search_path() RETURNS void
 DECLARE
 
   current_search_path TEXT;
-  schemas TEXT[];
+  safe_search_path TEXT;
+  current_schemas TEXT[];
   pg_catalog_index INTEGER;
 
 BEGIN
 
   current_search_path := pg_catalog.current_setting('search_path');
-  schemas := pg_catalog.string_to_array(current_search_path, ',');
+  current_schemas := (SELECT pg_catalog.current_schemas(true));
+  safe_search_path := _heroku.sanitize_search_path(current_search_path);
 
-  schemas := (
-    SELECT pg_catalog.array_agg(TRIM(schema_name::text))
-    FROM pg_catalog.unnest(schemas) AS schema_name
-  );
+  IF current_schemas[1] OPERATOR(pg_catalog.~~) 'pg_temp%' THEN
+    RAISE EXCEPTION 'Unable to perform this operation with current schema configuration. Try: SET search_path TO %.', safe_search_path;
+  END IF;
 
-  IF ('pg_catalog' OPERATOR(pg_catalog.=) ANY(schemas)) THEN
-    SELECT pg_catalog.array_position(schemas, 'pg_catalog') INTO pg_catalog_index;
+  IF ('pg_catalog' OPERATOR(pg_catalog.=) ANY(current_schemas)) THEN
+    SELECT pg_catalog.array_position(current_schemas, 'pg_catalog') INTO pg_catalog_index;
     IF pg_catalog_index OPERATOR(pg_catalog.!=) 1 THEN
-      RAISE EXCEPTION 'pg_catalog must be first in the search_path for this operation. Current search_path: %', current_search_path;
+      RAISE EXCEPTION 'Unable to perform this operation with current schema configuration. Try: SET search_path TO %.', safe_search_path;
     END IF;
   END IF;
 END;
@@ -1718,6 +1818,386 @@ CREATE SEQUENCE public.equipments_id_seq
 --
 
 ALTER SEQUENCE public.equipments_id_seq OWNED BY public.equipments.id;
+
+
+--
+-- Name: event_activity_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_activity_logs (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    event_content_id bigint NOT NULL,
+    event_line_user_id bigint NOT NULL,
+    activity_type integer NOT NULL,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: event_activity_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_activity_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_activity_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_activity_logs_id_seq OWNED BY public.event_activity_logs.id;
+
+
+--
+-- Name: event_content_images; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_content_images (
+    id bigint NOT NULL,
+    event_content_id bigint NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: event_content_images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_content_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_content_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_content_images_id_seq OWNED BY public.event_content_images.id;
+
+
+--
+-- Name: event_content_speakers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_content_speakers (
+    id bigint NOT NULL,
+    event_content_id bigint NOT NULL,
+    name character varying NOT NULL,
+    position_title character varying,
+    introduction text,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: event_content_speakers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_content_speakers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_content_speakers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_content_speakers_id_seq OWNED BY public.event_content_speakers.id;
+
+
+--
+-- Name: event_content_usages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_content_usages (
+    id bigint NOT NULL,
+    event_content_id bigint NOT NULL,
+    social_customer_id bigint NOT NULL,
+    started_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    event_line_user_id bigint
+);
+
+
+--
+-- Name: event_content_usages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_content_usages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_content_usages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_content_usages_id_seq OWNED BY public.event_content_usages.id;
+
+
+--
+-- Name: event_contents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_contents (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    shop_id bigint,
+    online_service_id bigint,
+    content_type integer DEFAULT 0 NOT NULL,
+    title character varying NOT NULL,
+    description text,
+    introduction text,
+    start_at timestamp(6) without time zone,
+    end_at timestamp(6) without time zone,
+    capacity integer,
+    "position" integer DEFAULT 0 NOT NULL,
+    pre_ad_video_url character varying,
+    post_ad_video_url character varying,
+    direct_download_url character varying,
+    upsell_booking_page_id bigint,
+    upsell_booking_enabled boolean DEFAULT false NOT NULL,
+    monitor_enabled boolean DEFAULT false NOT NULL,
+    monitor_name character varying,
+    monitor_price integer,
+    monitor_limit integer,
+    monitor_form_url character varying,
+    deleted_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    video_url character varying,
+    exhibitor_company_name character varying,
+    exhibitor_description text
+);
+
+
+--
+-- Name: event_contents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_contents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_contents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_contents_id_seq OWNED BY public.event_contents.id;
+
+
+--
+-- Name: event_line_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_line_users (
+    id bigint NOT NULL,
+    line_user_id character varying NOT NULL,
+    display_name character varying,
+    picture_url character varying,
+    first_name character varying,
+    last_name character varying,
+    phone_number character varying,
+    business_types jsonb DEFAULT '[]'::jsonb NOT NULL,
+    business_age integer,
+    toruya_user_id bigint,
+    toruya_social_user_id bigint,
+    toruya_user_checked_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: event_line_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_line_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_line_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_line_users_id_seq OWNED BY public.event_line_users.id;
+
+
+--
+-- Name: event_monitor_applications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_monitor_applications (
+    id bigint NOT NULL,
+    event_content_id bigint NOT NULL,
+    social_customer_id bigint NOT NULL,
+    customer_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    event_line_user_id bigint
+);
+
+
+--
+-- Name: event_monitor_applications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_monitor_applications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_monitor_applications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_monitor_applications_id_seq OWNED BY public.event_monitor_applications.id;
+
+
+--
+-- Name: event_participants; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_participants (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    social_customer_id bigint NOT NULL,
+    user_id bigint,
+    business_types jsonb DEFAULT '[]'::jsonb NOT NULL,
+    business_age integer,
+    concern_label character varying,
+    concern_category character varying,
+    concern_other character varying,
+    registered_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    event_line_user_id bigint,
+    concern_labels jsonb DEFAULT '[]'::jsonb NOT NULL
+);
+
+
+--
+-- Name: event_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_participants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_participants_id_seq OWNED BY public.event_participants.id;
+
+
+--
+-- Name: event_upsell_consultations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_upsell_consultations (
+    id bigint NOT NULL,
+    event_content_id bigint NOT NULL,
+    social_customer_id bigint NOT NULL,
+    customer_id integer,
+    status integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    event_line_user_id bigint
+);
+
+
+--
+-- Name: event_upsell_consultations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_upsell_consultations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_upsell_consultations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_upsell_consultations_id_seq OWNED BY public.event_upsell_consultations.id;
+
+
+--
+-- Name: events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    title character varying NOT NULL,
+    slug character varying NOT NULL,
+    description text,
+    start_at timestamp(6) without time zone,
+    end_at timestamp(6) without time zone,
+    published boolean DEFAULT false NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
 
 
 --
@@ -3182,7 +3662,9 @@ CREATE TABLE public.social_messages (
     content_type character varying,
     channel character varying,
     customer_id integer,
-    user_id integer
+    user_id integer,
+    reservation_id integer,
+    custom_message_id integer
 );
 
 
@@ -3450,7 +3932,8 @@ CREATE TABLE public.staffs (
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
     staff_holiday_permission boolean DEFAULT false NOT NULL,
-    introduction text
+    introduction text,
+    "position" character varying
 );
 
 
@@ -4341,6 +4824,76 @@ ALTER TABLE ONLY public.equipments ALTER COLUMN id SET DEFAULT nextval('public.e
 
 
 --
+-- Name: event_activity_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_activity_logs ALTER COLUMN id SET DEFAULT nextval('public.event_activity_logs_id_seq'::regclass);
+
+
+--
+-- Name: event_content_images id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_images ALTER COLUMN id SET DEFAULT nextval('public.event_content_images_id_seq'::regclass);
+
+
+--
+-- Name: event_content_speakers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_speakers ALTER COLUMN id SET DEFAULT nextval('public.event_content_speakers_id_seq'::regclass);
+
+
+--
+-- Name: event_content_usages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_usages ALTER COLUMN id SET DEFAULT nextval('public.event_content_usages_id_seq'::regclass);
+
+
+--
+-- Name: event_contents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_contents ALTER COLUMN id SET DEFAULT nextval('public.event_contents_id_seq'::regclass);
+
+
+--
+-- Name: event_line_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_line_users ALTER COLUMN id SET DEFAULT nextval('public.event_line_users_id_seq'::regclass);
+
+
+--
+-- Name: event_monitor_applications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_monitor_applications ALTER COLUMN id SET DEFAULT nextval('public.event_monitor_applications_id_seq'::regclass);
+
+
+--
+-- Name: event_participants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants ALTER COLUMN id SET DEFAULT nextval('public.event_participants_id_seq'::regclass);
+
+
+--
+-- Name: event_upsell_consultations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_upsell_consultations ALTER COLUMN id SET DEFAULT nextval('public.event_upsell_consultations_id_seq'::regclass);
+
+
+--
+-- Name: events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events ALTER COLUMN id SET DEFAULT nextval('public.events_id_seq'::regclass);
+
+
+--
 -- Name: filtered_outcomes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5078,6 +5631,86 @@ ALTER TABLE ONLY public.equipments
 
 
 --
+-- Name: event_activity_logs event_activity_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_activity_logs
+    ADD CONSTRAINT event_activity_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_content_images event_content_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_images
+    ADD CONSTRAINT event_content_images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_content_speakers event_content_speakers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_speakers
+    ADD CONSTRAINT event_content_speakers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_content_usages event_content_usages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_usages
+    ADD CONSTRAINT event_content_usages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_contents event_contents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_contents
+    ADD CONSTRAINT event_contents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_line_users event_line_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_line_users
+    ADD CONSTRAINT event_line_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_monitor_applications event_monitor_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_monitor_applications
+    ADD CONSTRAINT event_monitor_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_participants event_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants
+    ADD CONSTRAINT event_participants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_upsell_consultations event_upsell_consultations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_upsell_consultations
+    ADD CONSTRAINT event_upsell_consultations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: filtered_outcomes filtered_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5695,6 +6328,41 @@ CREATE INDEX filtered_outcome_index ON public.filtered_outcomes USING btree (use
 
 
 --
+-- Name: idx_evt_activity_logs_content_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_evt_activity_logs_content_type ON public.event_activity_logs USING btree (event_content_id, activity_type);
+
+
+--
+-- Name: idx_evt_activity_logs_user_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_evt_activity_logs_user_type ON public.event_activity_logs USING btree (event_line_user_id, activity_type);
+
+
+--
+-- Name: idx_evt_content_usages_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_evt_content_usages_unique ON public.event_content_usages USING btree (event_content_id, social_customer_id);
+
+
+--
+-- Name: idx_evt_monitor_apps_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_evt_monitor_apps_unique ON public.event_monitor_applications USING btree (event_content_id, social_customer_id);
+
+
+--
+-- Name: idx_evt_upsell_consults_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_evt_upsell_consults_unique ON public.event_upsell_consultations USING btree (event_content_id, social_customer_id);
+
+
+--
 -- Name: idx_reservations_on_activity_and_slot; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6108,6 +6776,265 @@ CREATE INDEX index_equipments_on_shop_id_and_deleted_at ON public.equipments USI
 
 
 --
+-- Name: index_event_activity_logs_on_event_content_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_activity_logs_on_event_content_id ON public.event_activity_logs USING btree (event_content_id);
+
+
+--
+-- Name: index_event_activity_logs_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_activity_logs_on_event_id ON public.event_activity_logs USING btree (event_id);
+
+
+--
+-- Name: index_event_activity_logs_on_event_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_activity_logs_on_event_line_user_id ON public.event_activity_logs USING btree (event_line_user_id);
+
+
+--
+-- Name: index_event_content_images_on_event_content_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_content_images_on_event_content_id ON public.event_content_images USING btree (event_content_id);
+
+
+--
+-- Name: index_event_content_images_on_event_content_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_content_images_on_event_content_id_and_position ON public.event_content_images USING btree (event_content_id, "position");
+
+
+--
+-- Name: index_event_content_speakers_on_event_content_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_content_speakers_on_event_content_id ON public.event_content_speakers USING btree (event_content_id);
+
+
+--
+-- Name: index_event_content_speakers_on_event_content_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_content_speakers_on_event_content_id_and_position ON public.event_content_speakers USING btree (event_content_id, "position");
+
+
+--
+-- Name: index_event_content_usages_on_event_content_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_content_usages_on_event_content_id ON public.event_content_usages USING btree (event_content_id);
+
+
+--
+-- Name: index_event_content_usages_on_event_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_content_usages_on_event_line_user_id ON public.event_content_usages USING btree (event_line_user_id);
+
+
+--
+-- Name: index_event_content_usages_on_social_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_content_usages_on_social_customer_id ON public.event_content_usages USING btree (social_customer_id);
+
+
+--
+-- Name: index_event_contents_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_contents_on_deleted_at ON public.event_contents USING btree (deleted_at);
+
+
+--
+-- Name: index_event_contents_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_contents_on_event_id ON public.event_contents USING btree (event_id);
+
+
+--
+-- Name: index_event_contents_on_event_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_contents_on_event_id_and_position ON public.event_contents USING btree (event_id, "position");
+
+
+--
+-- Name: index_event_contents_on_online_service_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_contents_on_online_service_id ON public.event_contents USING btree (online_service_id);
+
+
+--
+-- Name: index_event_contents_on_shop_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_contents_on_shop_id ON public.event_contents USING btree (shop_id);
+
+
+--
+-- Name: index_event_contents_on_upsell_booking_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_contents_on_upsell_booking_page_id ON public.event_contents USING btree (upsell_booking_page_id);
+
+
+--
+-- Name: index_event_line_users_on_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_event_line_users_on_line_user_id ON public.event_line_users USING btree (line_user_id);
+
+
+--
+-- Name: index_event_line_users_on_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_line_users_on_phone_number ON public.event_line_users USING btree (phone_number);
+
+
+--
+-- Name: index_event_line_users_on_toruya_social_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_line_users_on_toruya_social_user_id ON public.event_line_users USING btree (toruya_social_user_id);
+
+
+--
+-- Name: index_event_line_users_on_toruya_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_line_users_on_toruya_user_id ON public.event_line_users USING btree (toruya_user_id);
+
+
+--
+-- Name: index_event_monitor_applications_on_event_content_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_monitor_applications_on_event_content_id ON public.event_monitor_applications USING btree (event_content_id);
+
+
+--
+-- Name: index_event_monitor_applications_on_event_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_monitor_applications_on_event_line_user_id ON public.event_monitor_applications USING btree (event_line_user_id);
+
+
+--
+-- Name: index_event_monitor_applications_on_social_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_monitor_applications_on_social_customer_id ON public.event_monitor_applications USING btree (social_customer_id);
+
+
+--
+-- Name: index_event_participants_on_concern_category; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_participants_on_concern_category ON public.event_participants USING btree (concern_category);
+
+
+--
+-- Name: index_event_participants_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_participants_on_event_id ON public.event_participants USING btree (event_id);
+
+
+--
+-- Name: index_event_participants_on_event_id_and_social_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_event_participants_on_event_id_and_social_customer_id ON public.event_participants USING btree (event_id, social_customer_id);
+
+
+--
+-- Name: index_event_participants_on_event_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_participants_on_event_line_user_id ON public.event_participants USING btree (event_line_user_id);
+
+
+--
+-- Name: index_event_participants_on_social_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_participants_on_social_customer_id ON public.event_participants USING btree (social_customer_id);
+
+
+--
+-- Name: index_event_participants_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_participants_on_user_id ON public.event_participants USING btree (user_id);
+
+
+--
+-- Name: index_event_upsell_consultations_on_event_content_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_upsell_consultations_on_event_content_id ON public.event_upsell_consultations USING btree (event_content_id);
+
+
+--
+-- Name: index_event_upsell_consultations_on_event_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_upsell_consultations_on_event_line_user_id ON public.event_upsell_consultations USING btree (event_line_user_id);
+
+
+--
+-- Name: index_event_upsell_consultations_on_social_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_upsell_consultations_on_social_customer_id ON public.event_upsell_consultations USING btree (social_customer_id);
+
+
+--
+-- Name: index_event_upsell_consultations_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_upsell_consultations_on_status ON public.event_upsell_consultations USING btree (status);
+
+
+--
+-- Name: index_events_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_deleted_at ON public.events USING btree (deleted_at);
+
+
+--
+-- Name: index_events_on_published; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_published ON public.events USING btree (published);
+
+
+--
+-- Name: index_events_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_events_on_slug ON public.events USING btree (slug);
+
+
+--
+-- Name: index_events_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_user_id ON public.events USING btree (user_id);
+
+
+--
 -- Name: index_function_accesses_on_content_source_and_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6511,6 +7438,20 @@ CREATE INDEX index_social_messages_on_broadcast_id ON public.social_messages USI
 --
 
 CREATE INDEX index_social_messages_on_customer_id_and_channel ON public.social_messages USING btree (customer_id, channel);
+
+
+--
+-- Name: index_social_messages_on_duplicate_check; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_messages_on_duplicate_check ON public.social_messages USING btree (customer_id, reservation_id, custom_message_id);
+
+
+--
+-- Name: index_social_messages_on_reservation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_messages_on_reservation_id ON public.social_messages USING btree (reservation_id);
 
 
 --
@@ -7109,6 +8050,54 @@ CREATE INDEX user_state_index ON public.subscription_charges USING btree (user_i
 
 
 --
+-- Name: event_upsell_consultations fk_rails_0c9164710c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_upsell_consultations
+    ADD CONSTRAINT fk_rails_0c9164710c FOREIGN KEY (social_customer_id) REFERENCES public.social_customers(id);
+
+
+--
+-- Name: events fk_rails_0cb5590091; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT fk_rails_0cb5590091 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: event_content_speakers fk_rails_14e4e71669; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_speakers
+    ADD CONSTRAINT fk_rails_14e4e71669 FOREIGN KEY (event_content_id) REFERENCES public.event_contents(id);
+
+
+--
+-- Name: event_activity_logs fk_rails_166bf9f3d2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_activity_logs
+    ADD CONSTRAINT fk_rails_166bf9f3d2 FOREIGN KEY (event_content_id) REFERENCES public.event_contents(id);
+
+
+--
+-- Name: event_contents fk_rails_2adccb1c0e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_contents
+    ADD CONSTRAINT fk_rails_2adccb1c0e FOREIGN KEY (shop_id) REFERENCES public.shops(id);
+
+
+--
+-- Name: event_content_usages fk_rails_3c6e6cef1a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_usages
+    ADD CONSTRAINT fk_rails_3c6e6cef1a FOREIGN KEY (social_customer_id) REFERENCES public.social_customers(id);
+
+
+--
 -- Name: line_notice_requests fk_rails_3ed6e77951; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7125,11 +8114,75 @@ ALTER TABLE ONLY public.line_notice_requests
 
 
 --
+-- Name: event_monitor_applications fk_rails_512012bf68; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_monitor_applications
+    ADD CONSTRAINT fk_rails_512012bf68 FOREIGN KEY (event_line_user_id) REFERENCES public.event_line_users(id);
+
+
+--
+-- Name: event_participants fk_rails_565ef9d942; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants
+    ADD CONSTRAINT fk_rails_565ef9d942 FOREIGN KEY (event_id) REFERENCES public.events(id);
+
+
+--
+-- Name: event_activity_logs fk_rails_5863eca081; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_activity_logs
+    ADD CONSTRAINT fk_rails_5863eca081 FOREIGN KEY (event_line_user_id) REFERENCES public.event_line_users(id);
+
+
+--
+-- Name: event_content_images fk_rails_5eac44d132; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_images
+    ADD CONSTRAINT fk_rails_5eac44d132 FOREIGN KEY (event_content_id) REFERENCES public.event_contents(id);
+
+
+--
+-- Name: event_contents fk_rails_67f80554e7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_contents
+    ADD CONSTRAINT fk_rails_67f80554e7 FOREIGN KEY (upsell_booking_page_id) REFERENCES public.booking_pages(id);
+
+
+--
+-- Name: event_monitor_applications fk_rails_6f6919de1c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_monitor_applications
+    ADD CONSTRAINT fk_rails_6f6919de1c FOREIGN KEY (event_content_id) REFERENCES public.event_contents(id);
+
+
+--
 -- Name: line_notice_charges fk_rails_74e0235543; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.line_notice_charges
     ADD CONSTRAINT fk_rails_74e0235543 FOREIGN KEY (reservation_id) REFERENCES public.reservations(id);
+
+
+--
+-- Name: event_content_usages fk_rails_815f731cb1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_usages
+    ADD CONSTRAINT fk_rails_815f731cb1 FOREIGN KEY (event_line_user_id) REFERENCES public.event_line_users(id);
+
+
+--
+-- Name: event_participants fk_rails_8795389dfa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants
+    ADD CONSTRAINT fk_rails_8795389dfa FOREIGN KEY (event_line_user_id) REFERENCES public.event_line_users(id);
 
 
 --
@@ -7141,11 +8194,35 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 
 --
+-- Name: event_contents fk_rails_99db670580; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_contents
+    ADD CONSTRAINT fk_rails_99db670580 FOREIGN KEY (online_service_id) REFERENCES public.online_services(id);
+
+
+--
 -- Name: taggings fk_rails_9fcd2e236b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.taggings
     ADD CONSTRAINT fk_rails_9fcd2e236b FOREIGN KEY (tag_id) REFERENCES public.tags(id);
+
+
+--
+-- Name: event_content_usages fk_rails_a042819ba8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_content_usages
+    ADD CONSTRAINT fk_rails_a042819ba8 FOREIGN KEY (event_content_id) REFERENCES public.event_contents(id);
+
+
+--
+-- Name: event_activity_logs fk_rails_ae9e1667a8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_activity_logs
+    ADD CONSTRAINT fk_rails_ae9e1667a8 FOREIGN KEY (event_id) REFERENCES public.events(id);
 
 
 --
@@ -7157,11 +8234,35 @@ ALTER TABLE ONLY public.active_storage_attachments
 
 
 --
+-- Name: event_participants fk_rails_ca25574c31; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants
+    ADD CONSTRAINT fk_rails_ca25574c31 FOREIGN KEY (social_customer_id) REFERENCES public.social_customers(id);
+
+
+--
+-- Name: event_upsell_consultations fk_rails_ca8465a92f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_upsell_consultations
+    ADD CONSTRAINT fk_rails_ca8465a92f FOREIGN KEY (event_content_id) REFERENCES public.event_contents(id);
+
+
+--
 -- Name: line_notice_charges fk_rails_d2d9fdb86d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.line_notice_charges
     ADD CONSTRAINT fk_rails_d2d9fdb86d FOREIGN KEY (line_notice_request_id) REFERENCES public.line_notice_requests(id);
+
+
+--
+-- Name: event_participants fk_rails_d47e705293; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants
+    ADD CONSTRAINT fk_rails_d47e705293 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -7173,11 +8274,35 @@ ALTER TABLE ONLY public.line_notice_charges
 
 
 --
+-- Name: event_monitor_applications fk_rails_e1b4721a78; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_monitor_applications
+    ADD CONSTRAINT fk_rails_e1b4721a78 FOREIGN KEY (social_customer_id) REFERENCES public.social_customers(id);
+
+
+--
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.profiles
     ADD CONSTRAINT fk_rails_e424190865 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: event_upsell_consultations fk_rails_ec4edcec59; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_upsell_consultations
+    ADD CONSTRAINT fk_rails_ec4edcec59 FOREIGN KEY (event_line_user_id) REFERENCES public.event_line_users(id);
+
+
+--
+-- Name: event_contents fk_rails_fd769d6a3b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_contents
+    ADD CONSTRAINT fk_rails_fd769d6a3b FOREIGN KEY (event_id) REFERENCES public.events(id);
 
 
 --
@@ -7216,7 +8341,7 @@ CREATE EVENT TRIGGER validate_extension ON ddl_command_end
 -- PostgreSQL database dump complete
 --
 
-\unrestrict famd8XepDBKW7QAzVfxqGUuLmYVKkiEwpKHQlgJZwDTL6ctwYrawjN7X3DO4kBF
+\unrestrict pIXOorpeWtFsT6Qa1ngEWugQ5fDJfSaAAlPduRuQfr0f2TJJiDcCIxufqRcRAJK
 
 SET search_path TO "$user", public, heroku_ext;
 
@@ -7495,6 +8620,23 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250612140730'),
 ('20260113031127'),
 ('20260113031241'),
-('20260120024943');
+('20260120024943'),
+('20260128084000'),
+('20260323000001'),
+('20260323000002'),
+('20260323000003'),
+('20260323000004'),
+('20260323000005'),
+('20260323000006'),
+('20260323000007'),
+('20260323000008'),
+('20260323000009'),
+('20260323000010'),
+('20260323000011'),
+('20260324000001'),
+('20260325000001'),
+('20260331000001'),
+('20260331000002'),
+('20260402000001');
 
 
