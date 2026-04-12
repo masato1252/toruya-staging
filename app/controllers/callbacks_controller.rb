@@ -73,6 +73,12 @@ class CallbacksController < Devise::OmniauthCallbacksController
   end
 
   def line
+    # イベント専用ログイン: session[:event_auth_pending] を最優先でチェック
+    # who Cookie/パラメータに依存せず、確実にイベントルートへ分岐する
+    if session[:event_auth_pending].present?
+      return handle_event_line_login(request.env["omniauth.auth"], request.env["omniauth.params"])
+    end
+
     param = request.env["omniauth.params"]
 
     param["who"] ||= session[:line_oauth_who_routing] || cookies[:who]
@@ -269,14 +275,36 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     session[:event_line_user_id] = event_line_user.id
 
-    oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url]
+    # event_auth_pending からイベント情報を取得 (ゲートウェイ経由の場合)
+    event_auth = session.delete(:event_auth_pending)
+
+    # OAuth 関連セッション/Cookie のクリーンアップ
+    oauth_redirect_to_url = param.is_a?(Hash) ? param.delete("oauth_redirect_to_url") : nil
+    oauth_redirect_to_url ||= session[:oauth_redirect_to_url]
     session.delete(:oauth_redirect_to_url)
     session.delete(:line_oauth_who_routing)
     session.delete(:line_oauth_credentials)
     session.delete(:line_oauth_who)
     cookies.clear_across_domains(:who, :whois)
 
-    if oauth_redirect_to_url.present?
+    if event_auth.present?
+      event_slug = event_auth["event_slug"]
+      return_to = event_auth["return_to"]
+      event = Event.published.undeleted.find_by(slug: event_slug)
+
+      if event
+        participant = event.event_participants.find_by(event_line_user_id: event_line_user.id)
+        if participant
+          # 既に参加登録済み → イベントページ or 見ていたコンテンツへ
+          redirect_to return_to.presence || "/#{event_slug}"
+        else
+          # 未参加 → 参加登録フォームへ
+          redirect_to new_event_participation_path(event_slug: event_slug)
+        end
+      else
+        redirect_to root_path
+      end
+    elsif oauth_redirect_to_url.present?
       redirect_to Addressable::URI.new(path: oauth_redirect_to_url).to_s
     else
       redirect_to root_path

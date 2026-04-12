@@ -914,6 +914,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get "event_auth/line", to: "event_auth#authorize", as: :event_auth_line
+
   resources :events, param: :slug, only: [:show], path: "" do
     scope module: :events do
       resource :participation, only: [:new, :create]
