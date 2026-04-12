@@ -7,7 +7,7 @@
 #  id                 :bigint           not null, primary key
 #  business_age       :integer
 #  business_types     :jsonb            not null
-#  concern_categories :jsonb            not null, default: []
+#  concern_categories :jsonb            not null
 #  concern_labels     :jsonb            not null
 #  concern_other      :string
 #  registered_at      :datetime         not null

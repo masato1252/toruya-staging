@@ -67,6 +67,18 @@
   </div>
 
   <div class="admin-form-section">
+    <div class="admin-form-section-title">スタンプラリー</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">スタンプラリー説明文</label>
+      <div class="admin-form-input">
+        <%= f.text_area :stamp_rally_description, class: "form-control", rows: 4, placeholder: "例：全スタンプを集めてAmazonギフト券が当たる抽選にエントリー！" %>
+        <span class="admin-form-help">賞品情報やルール説明を記載してください。公開ページのスタンプラリーセクション上部に表示されます。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
     <div class="admin-form-section-title">公開設定</div>
 
     <div class="admin-form-group">

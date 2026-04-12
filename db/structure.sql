@@ -1,4 +1,4 @@
-\restrict rON6vldVhikAWW1vKrzmeJ9gBy2cJRdTsckYZXYyxQCpVWAp0h5LkQlnraMPnR4
+\restrict EHdU7RBQrXqf7KZJkdDTOIWx0bQ2hChhHK6WVbdkHeei0eqqnrGjJ95pMkdTBD6
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 18.0
@@ -2128,6 +2128,40 @@ ALTER SEQUENCE public.event_participants_id_seq OWNED BY public.event_participan
 
 
 --
+-- Name: event_stamp_entries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_stamp_entries (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    event_content_id bigint NOT NULL,
+    event_line_user_id bigint NOT NULL,
+    action_type integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: event_stamp_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_stamp_entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_stamp_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_stamp_entries_id_seq OWNED BY public.event_stamp_entries.id;
+
+
+--
 -- Name: event_upsell_consultations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2177,7 +2211,8 @@ CREATE TABLE public.events (
     published boolean DEFAULT false NOT NULL,
     deleted_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    stamp_rally_description text
 );
 
 
@@ -4880,6 +4915,13 @@ ALTER TABLE ONLY public.event_participants ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: event_stamp_entries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_stamp_entries ALTER COLUMN id SET DEFAULT nextval('public.event_stamp_entries_id_seq'::regclass);
+
+
+--
 -- Name: event_upsell_consultations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5695,6 +5737,14 @@ ALTER TABLE ONLY public.event_participants
 
 
 --
+-- Name: event_stamp_entries event_stamp_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_stamp_entries
+    ADD CONSTRAINT event_stamp_entries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: event_upsell_consultations event_upsell_consultations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6370,6 +6420,13 @@ CREATE INDEX idx_reservations_on_activity_and_slot ON public.reservations USING 
 
 
 --
+-- Name: idx_stamp_entries_unique_action; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stamp_entries_unique_action ON public.event_stamp_entries USING btree (event_line_user_id, event_content_id, action_type);
+
+
+--
 -- Name: idx_survey_responses_on_activity_and_owner; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6969,6 +7026,27 @@ CREATE INDEX index_event_participants_on_social_customer_id ON public.event_part
 --
 
 CREATE INDEX index_event_participants_on_user_id ON public.event_participants USING btree (user_id);
+
+
+--
+-- Name: index_event_stamp_entries_on_event_content_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_stamp_entries_on_event_content_id ON public.event_stamp_entries USING btree (event_content_id);
+
+
+--
+-- Name: index_event_stamp_entries_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_stamp_entries_on_event_id ON public.event_stamp_entries USING btree (event_id);
+
+
+--
+-- Name: index_event_stamp_entries_on_event_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_stamp_entries_on_event_line_user_id ON public.event_stamp_entries USING btree (event_line_user_id);
 
 
 --
@@ -8043,6 +8121,14 @@ CREATE INDEX user_state_index ON public.subscription_charges USING btree (user_i
 
 
 --
+-- Name: event_stamp_entries fk_rails_04a593c26a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_stamp_entries
+    ADD CONSTRAINT fk_rails_04a593c26a FOREIGN KEY (event_line_user_id) REFERENCES public.event_line_users(id);
+
+
+--
 -- Name: event_upsell_consultations fk_rails_0c9164710c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8099,11 +8185,27 @@ ALTER TABLE ONLY public.line_notice_requests
 
 
 --
+-- Name: event_stamp_entries fk_rails_44b963e0b4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_stamp_entries
+    ADD CONSTRAINT fk_rails_44b963e0b4 FOREIGN KEY (event_id) REFERENCES public.events(id);
+
+
+--
 -- Name: line_notice_requests fk_rails_492783d81a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.line_notice_requests
     ADD CONSTRAINT fk_rails_492783d81a FOREIGN KEY (reservation_id) REFERENCES public.reservations(id);
+
+
+--
+-- Name: event_stamp_entries fk_rails_4e5f0c725b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_stamp_entries
+    ADD CONSTRAINT fk_rails_4e5f0c725b FOREIGN KEY (event_content_id) REFERENCES public.event_contents(id);
 
 
 --
@@ -8334,7 +8436,7 @@ CREATE EVENT TRIGGER validate_extension ON ddl_command_end
 -- PostgreSQL database dump complete
 --
 
-\unrestrict rON6vldVhikAWW1vKrzmeJ9gBy2cJRdTsckYZXYyxQCpVWAp0h5LkQlnraMPnR4
+\unrestrict EHdU7RBQrXqf7KZJkdDTOIWx0bQ2hChhHK6WVbdkHeei0eqqnrGjJ95pMkdTBD6
 
 SET search_path TO "$user", public, heroku_ext;
 
@@ -8632,6 +8734,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260331000002'),
 ('20260402000001'),
 ('20260402000002'),
-('20260402000003');
+('20260402000003'),
+('20260402000004'),
+('20260402000005');
 
 

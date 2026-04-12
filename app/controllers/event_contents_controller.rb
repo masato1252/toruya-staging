@@ -52,6 +52,10 @@ class EventContentsController < ActionController::Base
       usage.save!
     end
 
+    if @event_content.seminar_content_type?
+      record_stamp(:seminar_view)
+    end
+
     render json: { success: true }
   end
 
@@ -63,6 +67,7 @@ class EventContentsController < ActionController::Base
     if consultation.new_record?
       consultation.status = :waitlist
       consultation.save!
+      record_stamp(:upsell_consultation)
       Events::NotifyWaitlist.run(consultation: consultation)
     end
 
@@ -76,6 +81,7 @@ class EventContentsController < ActionController::Base
     application = @event_content.event_monitor_applications.find_or_initialize_by(event_line_user_id: @current_event_line_user.id)
     if application.new_record?
       application.save!
+      record_stamp(:monitor_apply)
       Events::NotifyMonitorApplication.run(application: application)
     end
 
@@ -100,6 +106,10 @@ class EventContentsController < ActionController::Base
       metadata: params[:metadata]&.to_unsafe_h || {}
     )
 
+    if activity_type == "material_download"
+      record_stamp(:material_download)
+    end
+
     render json: { success: true, id: log.id }
   end
 
@@ -123,6 +133,19 @@ class EventContentsController < ActionController::Base
     @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
   helper_method :current_event_line_user
+
+  def record_stamp(action_type)
+    return unless @current_event_line_user
+
+    EventStampEntry.find_or_create_by!(
+      event: @event,
+      event_content: @event_content,
+      event_line_user: @current_event_line_user,
+      action_type: action_type
+    )
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    # Already recorded — ignore
+  end
 
   def build_monitor_form_url(event_content, event_line_user)
     return nil unless event_content.monitor_form_url.present?

@@ -81,4 +81,33 @@ class EventSerializer
   attribute :recommended_content_ids do |event, params|
     params[:recommended_content_ids] || []
   end
+
+  attribute :stamp_rally_description
+
+  attribute :stamp_entries do |event, params|
+    event_line_user = params[:event_line_user]
+    next [] unless event_line_user
+
+    event.event_stamp_entries
+         .where(event_line_user: event_line_user)
+         .includes(:event_content)
+         .order(:created_at)
+         .map do |entry|
+      {
+        action_type: entry.action_type,
+        label: entry.label,
+        content_title: entry.event_content.title,
+        content_type: entry.event_content.content_type,
+        created_at: entry.created_at
+      }
+    end
+  end
+
+  attribute :ticket_count do |event, params|
+    event_line_user = params[:event_line_user]
+    next 0 unless event_line_user
+
+    entries = event.event_stamp_entries.where(event_line_user: event_line_user).to_a
+    EventStampEntry.compute_tickets(entries)
+  end
 end

@@ -4,17 +4,18 @@
 #
 # Table name: events
 #
-#  id          :bigint           not null, primary key
-#  deleted_at  :datetime
-#  description :text
-#  end_at      :datetime
-#  published   :boolean          default(FALSE), not null
-#  slug        :string           not null
-#  start_at    :datetime
-#  title       :string           not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  user_id     :bigint           not null
+#  id                      :bigint           not null, primary key
+#  deleted_at              :datetime
+#  description             :text
+#  end_at                  :datetime
+#  published               :boolean          default(FALSE), not null
+#  slug                    :string           not null
+#  stamp_rally_description :text
+#  start_at                :datetime
+#  title                   :string           not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  user_id                 :bigint           not null
 #
 # Indexes
 #
@@ -31,6 +32,7 @@ class Event < ApplicationRecord
   has_many :event_contents, -> { order(:position) }, dependent: :destroy
   has_many :event_participants, dependent: :destroy
   has_many :event_activity_logs, dependent: :destroy
+  has_many :event_stamp_entries, dependent: :destroy
 
   has_one_attached :hero_image
 

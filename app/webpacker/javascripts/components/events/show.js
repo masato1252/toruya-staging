@@ -467,6 +467,108 @@ const RecommendationCarousel = ({ contents, eventSlug }) => {
   );
 };
 
+const StampRallySection = ({ event }) => {
+  const stamps = event.stamp_entries || [];
+  const ticketCount = event.ticket_count || 0;
+
+  const rotations = useRef([]);
+  if (rotations.current.length !== stamps.length) {
+    rotations.current = stamps.map(() => (Math.random() - 0.5) * 12);
+  }
+
+  return (
+    <div id="stamp-rally" style={{ background: "#fafaf9", padding: "24px 16px" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1c1917", margin: 0, marginBottom: 12 }}>
+          🏅 スタンプラリー
+        </h2>
+
+        {event.stamp_rally_description && (
+          <p style={{
+            fontSize: 12, color: "#78716c", lineHeight: 1.7,
+            whiteSpace: "pre-wrap", marginBottom: 16
+          }}>
+            {event.stamp_rally_description}
+          </p>
+        )}
+
+        <div style={{
+          display: "flex", alignItems: "baseline", gap: 4,
+          marginBottom: 20
+        }}>
+          <span style={{ fontSize: 13, color: "#78716c" }}>現在</span>
+          <span style={{ fontSize: 28, fontWeight: 800, color: "#0d9488" }}>{ticketCount}</span>
+          <span style={{ fontSize: 13, color: "#78716c" }}>口</span>
+        </div>
+
+        {stamps.length > 0 ? (
+          <div style={{
+            overflowX: "auto", WebkitOverflowScrolling: "touch",
+            paddingBottom: 8
+          }}>
+            <div style={{
+              display: "flex", gap: 16, minWidth: "min-content",
+              padding: "4px 0"
+            }}>
+              {stamps.map((stamp, i) => {
+                const date = new Date(stamp.created_at);
+                const dateStr = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
+                const rot = rotations.current[i] || 0;
+
+                return (
+                  <div key={i} style={{
+                    display: "flex", flexDirection: "column", alignItems: "center",
+                    flexShrink: 0
+                  }}>
+                    <div style={{
+                      width: 72, height: 72, borderRadius: "50%",
+                      border: "3px solid #dc2626",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      transform: `rotate(${rot}deg)`,
+                      boxShadow: "0 2px 8px rgba(220,38,38,0.2)",
+                      position: "relative"
+                    }}>
+                      <div style={{
+                        width: 58, height: 58, borderRadius: "50%",
+                        border: "1.5px solid #dc2626",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        background: "rgba(220,38,38,0.06)"
+                      }}>
+                        <span style={{
+                          fontSize: 11, fontWeight: 700, color: "#dc2626",
+                          textAlign: "center", lineHeight: 1.2
+                        }}>
+                          {stamp.label}
+                        </span>
+                      </div>
+                    </div>
+                    <span style={{
+                      fontSize: 11, color: "#dc2626", fontWeight: 600,
+                      marginTop: 6
+                    }}>
+                      {dateStr}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div style={{
+            textAlign: "center", padding: "32px 16px",
+            background: "#fff", border: "1px solid #e7e5e4"
+          }}>
+            <div style={{ fontSize: 36, marginBottom: 8 }}>🎪</div>
+            <p style={{ color: "#a8a29e", fontSize: 13 }}>
+              コンテンツを視聴・ダウンロードしてスタンプを集めよう！
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const EventShow = ({ props }) => {
   const { event, line_login_url, add_friend_url, current_event_path } = props;
   const [activeTab, setActiveTab] = useState("all");
@@ -536,7 +638,7 @@ const EventShow = ({ props }) => {
 
       {/* Share bar */}
       <div style={{ background: "#fff", borderBottom: "1px solid #e7e5e4", padding: "12px 20px" }}>
-        <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
           <button
             onClick={() => setShareOpen(true)}
             style={{
@@ -548,6 +650,22 @@ const EventShow = ({ props }) => {
             <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/></svg>
             シェア
           </button>
+          {event.is_participant && (
+            <button
+              onClick={() => {
+                const el = document.getElementById("stamp-rally");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 18px", border: "1px solid #d6d3d1", borderRadius: 20,
+                background: "#fff", cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#44403c"
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+              スタンプラリー
+            </button>
+          )}
         </div>
       </div>
 
@@ -604,6 +722,11 @@ const EventShow = ({ props }) => {
           ))
         )}
       </div>
+
+      {/* Stamp Rally */}
+      {event.is_participant && (
+        <StampRallySection event={event} />
+      )}
 
       {/* Footer CTA */}
       {!event.is_participant && line_login_url && (
