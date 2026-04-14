@@ -504,7 +504,9 @@ const EventContentShow = ({ props }) => {
     setIsStarting(false);
   };
 
-  const ctaLabel = "詳しく見る";
+  const ctaLabel = event_content.content_type === "booth"
+    ? ((event_content.slide_images || []).length > 0 ? "続きをダウンロード" : "資料をダウンロード")
+    : "詳しく見る";
   const typeColor = event_content.content_type === "seminar" ? "#334155" : "#0d9488";
 
   return (
@@ -648,7 +650,6 @@ const EventContentShow = ({ props }) => {
         {/* Introduction */}
         {event_content.introduction && (
           <div style={{ background: "#fff", padding: "20px", marginBottom: 16, borderBottom: "1px solid #e7e5e4" }}>
-            <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 10, color: "#1c1917" }}>紹介文</h3>
             <p style={{ color: "#57534e", lineHeight: 1.8, whiteSpace: "pre-wrap", fontSize: 14 }}>{event_content.introduction}</p>
           </div>
         )}
@@ -656,7 +657,6 @@ const EventContentShow = ({ props }) => {
         {/* Description */}
         {event_content.description && (
           <div style={{ background: "#fff", padding: "20px", marginBottom: 16, borderBottom: "1px solid #e7e5e4" }}>
-            <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 10, color: "#1c1917" }}>説明</h3>
             <p style={{ color: "#57534e", lineHeight: 1.8, whiteSpace: "pre-wrap", fontSize: 14 }}>{event_content.description}</p>
           </div>
         )}

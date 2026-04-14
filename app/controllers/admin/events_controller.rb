@@ -47,8 +47,8 @@ class Admin::EventsController < AdminController
     @activity_logs = @event.event_activity_logs
                           .includes(:event_content, :event_line_user)
                           .order(created_at: :desc)
-    @activity_counts = @activity_logs.group(:activity_type).count
-    @content_activity_counts = @activity_logs.group(:event_content_id, :activity_type).count
+    @activity_counts = @event.event_activity_logs.group(:activity_type).count
+    @content_activity_counts = @event.event_activity_logs.group(:event_content_id, :activity_type).count
   end
 
   private
