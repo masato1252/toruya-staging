@@ -9,14 +9,20 @@
         コンテンツ種別<span class="required-mark">*</span>
       </label>
       <div class="admin-form-input">
-        <div class="admin-form-radio-group">
+        <% locked = event_content.persisted? %>
+        <div class="admin-form-radio-group" style="<%= 'opacity: 0.6; pointer-events: none;' if locked %>">
           <label>
-            <%= f.radio_button :content_type, "seminar", id: "ct_seminar" %> セミナー動画
+            <%= f.radio_button :content_type, "seminar", id: "ct_seminar", disabled: locked %> セミナー動画
           </label>
           <label>
-            <%= f.radio_button :content_type, "booth", id: "ct_booth" %> 展示ブース(PDF)
+            <%= f.radio_button :content_type, "booth", id: "ct_booth", disabled: locked %> 展示ブース(PDF)
           </label>
         </div>
+        <% if locked %>
+          <%# disabled された radio は送信されないため、現在値を hidden で送る。 %>
+          <%= f.hidden_field :content_type %>
+          <span class="admin-form-help">コンテンツ作成後は種別を変更できません。</span>
+        <% end %>
       </div>
     </div>
 
@@ -102,6 +108,18 @@
       <label class="admin-form-label">利用開始上限人数</label>
       <div class="admin-form-input">
         <%= f.number_field :capacity, class: "form-control", min: 1, placeholder: "空欄で無制限" %>
+
+        <%# === 紐付け先出展店舗の集客数 (referrer_shop_id ベース + 間接連鎖) === %>
+        <% initial_counts = event_content.shop_id ? (event_content.event || @event).shop_acquisition_counts(event_content.shop_id) : { direct: 0, indirect: 0, total: 0 } %>
+        <div id="acquisition-counts-wrapper"
+             data-counts-url="<%= shop_acquisition_counts_admin_event_event_contents_path(event_content.event || @event) %>"
+             style="margin-top:8px;padding:10px 12px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;font-size:13px;color:#374151;<%= 'display:none;' unless event_content.shop_id %>">
+          紐付け先出展店舗の集客数：<strong id="acq-total"><%= initial_counts[:total] %></strong>
+          <br>
+          <span style="color:#6b7280;">
+            （出展者の直接集客数：<span id="acq-direct"><%= initial_counts[:direct] %></span>　間接的な集客数(集客したユーザの拡散による)：<span id="acq-indirect"><%= initial_counts[:indirect] %></span>）
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -225,6 +243,50 @@
     </div>
   </div>
 
+  <%# === 出展者との紐付け（コンテンツ種別共通） === %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">出展者との紐付け</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">出展店舗</label>
+      <div class="admin-form-input">
+        <div class="admin-lookup-group" id="shop-lookup"
+             data-shops-url="<%= shops_by_user_admin_event_event_contents_path(event_content.event || @event) %>"
+             data-services-url="<%= online_services_for_shop_admin_event_event_contents_path(event_content.event || @event) %>">
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <input type="number" id="shop-user-id" class="form-control" placeholder="ユーザID" style="width:120px;" value="<%= event_content.shop&.user_id %>" />
+            <button type="button" id="shop-search-btn" style="padding:8px 16px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;">検索</button>
+          </div>
+          <div id="shop-select-wrapper" style="<%= 'display:none;' unless event_content.shop_id %>">
+            <label style="font-size:12px;color:#6b7280;">店舗</label>
+            <select id="shop-id" class="form-control" style="margin-top:4px;">
+              <option value="">選択してください</option>
+              <% if event_content.shop %>
+                <option value="<%= event_content.shop.id %>" selected><%= event_content.shop.display_name %></option>
+              <% end %>
+            </select>
+          </div>
+          <%= f.hidden_field :shop_id, id: "field-shop-id" %>
+        </div>
+        <span class="admin-form-help">ユーザIDを入力して検索後、表示される店舗から選択してください</span>
+
+        <%# === 出展者紹介リンク (?rs=<shop_id> 付き) === %>
+        <% public_top_base = "#{request.base_url}/#{(event_content.event || @event).slug}" %>
+        <div id="ref-link-wrapper"
+             data-public-top-base="<%= public_top_base %>"
+             style="margin-top:16px;<%= 'display:none;' unless event_content.shop_id %>">
+          <label style="font-size:12px;color:#6b7280;">出展者紹介リンク</label>
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <input type="text" id="ref-link-input" class="form-control" readonly
+                   value="<%= event_content.shop_id ? "#{public_top_base}?rs=#{event_content.shop_id}" : '' %>" />
+            <button type="button" id="ref-link-copy" style="padding:8px 14px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;white-space:nowrap;">コピー</button>
+          </div>
+          <span class="admin-form-help">このリンク経由で参加登録されたユーザは、この出展者の紹介として集計されます</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <%# === 出展者情報（展示ブース向け） === %>
   <div class="admin-form-section booth-only">
     <div class="admin-form-section-title">出展者情報</div>
@@ -267,36 +329,18 @@
     <div class="admin-form-section-title">展示ブース詳細設定</div>
 
     <div class="admin-form-group">
-      <label class="admin-form-label">出展店舗・オンラインサービス紐付け</label>
+      <label class="admin-form-label">オンラインサービス紐付け</label>
       <div class="admin-form-input">
-        <div class="admin-lookup-group" id="booth-lookup"
-             data-shops-url="<%= shops_by_user_admin_event_event_contents_path(event_content.event || @event) %>"
-             data-services-url="<%= online_services_for_shop_admin_event_event_contents_path(event_content.event || @event) %>">
-          <div style="display:flex;gap:8px;margin-bottom:8px;">
-            <input type="number" id="booth-user-id" class="form-control" placeholder="ユーザID" style="width:120px;" value="<%= event_content.shop&.user_id %>" />
-            <button type="button" id="booth-search-btn" style="padding:8px 16px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;">検索</button>
-          </div>
-          <div id="booth-shop-select" style="margin-bottom:8px;<%= 'display:none;' unless event_content.shop_id %>">
-            <label style="font-size:12px;color:#6b7280;">店舗</label>
-            <select id="booth-shop-id" class="form-control" style="margin-top:4px;">
-              <option value="">選択してください</option>
-              <% if event_content.shop %>
-                <option value="<%= event_content.shop.id %>" selected><%= event_content.shop.display_name %></option>
-              <% end %>
-            </select>
-          </div>
-          <div id="booth-service-select" style="<%= 'display:none;' unless event_content.online_service_id %>">
-            <label style="font-size:12px;color:#6b7280;">オンラインサービス</label>
-            <select id="booth-service-id" class="form-control" style="margin-top:4px;">
-              <option value="">選択してください</option>
-              <% if event_content.online_service %>
-                <option value="<%= event_content.online_service.id %>" selected><%= event_content.online_service.name %></option>
-              <% end %>
-            </select>
-          </div>
-          <%= f.hidden_field :shop_id, id: "field-shop-id" %>
-          <%= f.hidden_field :online_service_id, id: "field-online-service-id" %>
+        <div id="online-service-wrapper">
+          <select id="online-service-id" class="form-control">
+            <option value="">選択してください</option>
+            <% if event_content.online_service %>
+              <option value="<%= event_content.online_service.id %>" selected><%= event_content.online_service.name %></option>
+            <% end %>
+          </select>
+          <span class="admin-form-help">「出展者との紐付け」で選択した店舗のオンラインサービスから選択できます</span>
         </div>
+        <%= f.hidden_field :online_service_id, id: "field-online-service-id" %>
       </div>
     </div>
 
@@ -505,16 +549,146 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Booth: user → shop → online_service
-  var boothLookup = document.getElementById("booth-lookup");
-  if (boothLookup) {
-    setupLookup({
-      searchBtn: "booth-search-btn", userIdInput: "booth-user-id",
-      shopsUrl: boothLookup.dataset.shopsUrl,
-      shopSelect: "booth-shop-id", shopWrapper: "booth-shop-select",
-      itemsUrl: boothLookup.dataset.servicesUrl,
-      itemSelect: "booth-service-id", itemWrapper: "booth-service-select",
-      hiddenShopField: "field-shop-id", hiddenField: "field-online-service-id"
+  // === 出展者との紐付け（コンテンツ種別共通: shop 単独選択） ===
+  // 上段で店舗を選ぶと、下段「オンラインサービス紐付け」のプルダウン候補が動的に切替わる。
+  var shopLookup = document.getElementById("shop-lookup");
+  if (shopLookup) {
+    var shopShopsUrl = shopLookup.dataset.shopsUrl;
+    var shopServicesUrl = shopLookup.dataset.servicesUrl;
+    var shopSearchBtn = document.getElementById("shop-search-btn");
+    var shopUserIdInput = document.getElementById("shop-user-id");
+    var shopSelect = document.getElementById("shop-id");
+    var shopSelectWrapper = document.getElementById("shop-select-wrapper");
+    var hiddenShopField = document.getElementById("field-shop-id");
+
+    // === 出展者紹介リンクの表示更新 ===
+    var refLinkWrapper = document.getElementById("ref-link-wrapper");
+    var refLinkInput = document.getElementById("ref-link-input");
+    var refLinkCopyBtn = document.getElementById("ref-link-copy");
+    var publicTopBase = refLinkWrapper ? refLinkWrapper.dataset.publicTopBase : "";
+
+    function updateRefLink() {
+      if (!refLinkWrapper) return;
+      var v = hiddenShopField.value;
+      if (v) {
+        refLinkInput.value = publicTopBase + "?rs=" + v;
+        refLinkWrapper.style.display = "";
+      } else {
+        refLinkInput.value = "";
+        refLinkWrapper.style.display = "none";
+      }
+    }
+
+    // === 紐付け先出展店舗の集客数表示 ===
+    var acqWrapper = document.getElementById("acquisition-counts-wrapper");
+    var acqCountsUrl = acqWrapper ? acqWrapper.dataset.countsUrl : "";
+    var acqTotal = document.getElementById("acq-total");
+    var acqDirect = document.getElementById("acq-direct");
+    var acqIndirect = document.getElementById("acq-indirect");
+
+    function updateAcquisitionCounts() {
+      if (!acqWrapper) return;
+      var v = hiddenShopField.value;
+      if (!v) {
+        acqWrapper.style.display = "none";
+        return;
+      }
+      acqWrapper.style.display = "";
+      fetch(acqCountsUrl + "?shop_id=" + encodeURIComponent(v))
+        .then(function(r) { return r.json(); })
+        .then(function(c) {
+          acqTotal.textContent    = c.total    != null ? c.total    : 0;
+          acqDirect.textContent   = c.direct   != null ? c.direct   : 0;
+          acqIndirect.textContent = c.indirect != null ? c.indirect : 0;
+        })
+        .catch(function() { /* noop */ });
+    }
+
+    if (refLinkCopyBtn) {
+      refLinkCopyBtn.addEventListener("click", function() {
+        if (!refLinkInput.value) return;
+        navigator.clipboard.writeText(refLinkInput.value).then(function() {
+          var prev = refLinkCopyBtn.textContent;
+          refLinkCopyBtn.textContent = "コピー済み";
+          setTimeout(function() { refLinkCopyBtn.textContent = prev; }, 1500);
+        });
+      });
+    }
+
+    function refreshOnlineServices(shopId, opts) {
+      var serviceWrapper = document.getElementById("online-service-wrapper");
+      if (!serviceWrapper) return;
+      var serviceSelect = document.getElementById("online-service-id");
+      var hiddenServiceField = document.getElementById("field-online-service-id");
+      var preserveSelection = opts && opts.preserveSelection;
+      var prevValue = preserveSelection ? hiddenServiceField.value : "";
+
+      if (!shopId) {
+        serviceSelect.innerHTML = '<option value="">選択してください</option>';
+        hiddenServiceField.value = "";
+        return;
+      }
+
+      fetch(shopServicesUrl + "?shop_id=" + encodeURIComponent(shopId))
+        .then(function(r) { return r.json(); })
+        .then(function(items) {
+          serviceSelect.innerHTML = '<option value="">選択してください</option>';
+          items.forEach(function(item) {
+            var selected = (String(item.id) === String(prevValue)) ? ' selected' : '';
+            var label = item.title || item.name || ("ID:" + item.id);
+            serviceSelect.innerHTML += '<option value="' + item.id + '"' + selected + '>' + label + '</option>';
+          });
+          // 候補に残っていない場合は選択を解除
+          hiddenServiceField.value = serviceSelect.value;
+        });
+    }
+
+    shopSearchBtn.addEventListener("click", function() {
+      var userId = shopUserIdInput.value.trim();
+      if (!userId) return;
+      fetch(shopShopsUrl + "?user_id=" + encodeURIComponent(userId))
+        .then(function(r) { return r.json(); })
+        .then(function(shops) {
+          shopSelect.innerHTML = '<option value="">選択してください</option>';
+          shops.forEach(function(s) {
+            shopSelect.innerHTML += '<option value="' + s.id + '">' + (s.name || ("Shop #" + s.id)) + '</option>';
+          });
+          shopSelectWrapper.style.display = "";
+          // 検索結果の先頭店舗を自動選択し、change を発火させて下段サービス候補も更新する。
+          if (shops.length > 0) {
+            shopSelect.value = String(shops[0].id);
+            shopSelect.dispatchEvent(new Event("change"));
+          } else {
+            hiddenShopField.value = "";
+            refreshOnlineServices(null);
+            updateRefLink();
+            updateAcquisitionCounts();
+          }
+        });
+    });
+
+    shopSelect.addEventListener("change", function() {
+      var shopId = this.value;
+      hiddenShopField.value = shopId;
+      // 店舗が変わるとオンラインサービスは選び直しになるため、選択を保持しない。
+      refreshOnlineServices(shopId, { preserveSelection: false });
+      updateRefLink();
+      updateAcquisitionCounts();
+    });
+
+    // ページ読み込み時、既存の shop_id が設定されていれば候補を取得しつつ既存選択を維持。
+    if (hiddenShopField.value) {
+      refreshOnlineServices(hiddenShopField.value, { preserveSelection: true });
+    }
+    updateRefLink();
+    // 初期表示時の集計値はサーバ側で埋まっているのでここでは fetch を呼ばない。
+  }
+
+  // オンラインサービスの選択を hidden に同期。
+  var onlineServiceSelectEl = document.getElementById("online-service-id");
+  if (onlineServiceSelectEl) {
+    onlineServiceSelectEl.addEventListener("change", function() {
+      document.getElementById("field-online-service-id").value = this.value;
     });
   }
 
@@ -661,7 +835,7 @@ document.addEventListener("DOMContentLoaded", function() {
     initDragAndDrop(slideList, ".slide-image-item", null, slideSortUrl);
   }
 
-  // === Generic D&D helper ===
+  // === Generic D&D helper (縦リスト・横並び flex-wrap グリッド両対応) ===
   function initDragAndDrop(container, itemSelector, handleSelector, sortUrl) {
     var dragItem = null;
     var placeholder = document.createElement("div");
@@ -672,6 +846,46 @@ document.addEventListener("DOMContentLoaded", function() {
       return container.querySelectorAll(itemSelector);
     }
 
+    // ポインタ位置からプレースホルダの挿入位置を求める。
+    // 同一行（top が近い）に他アイテムがあれば横方向(X)、なければ縦方向(Y)で前後判定する。
+    function computePlaceholderPosition(x, y) {
+      var items = Array.from(container.querySelectorAll(itemSelector + ":not(.dragging)"));
+      if (items.length === 0) return { mode: "append" };
+
+      var closest = null;
+      var minDist = Infinity;
+      items.forEach(function(item) {
+        var r = item.getBoundingClientRect();
+        var cx = r.left + r.width / 2;
+        var cy = r.top + r.height / 2;
+        var dist = Math.hypot(x - cx, y - cy);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = { item: item, rect: r, cx: cx, cy: cy };
+        }
+      });
+
+      var sameRow = false;
+      items.forEach(function(item) {
+        if (item === closest.item) return;
+        var r = item.getBoundingClientRect();
+        if (Math.abs(r.top - closest.rect.top) < 4) sameRow = true;
+      });
+
+      var insertBefore = sameRow ? (x < closest.cx) : (y < closest.cy);
+      return { mode: insertBefore ? "before" : "after", item: closest.item };
+    }
+
+    function applyPlaceholder(pos) {
+      if (pos.mode === "append") {
+        container.appendChild(placeholder);
+      } else if (pos.mode === "before") {
+        container.insertBefore(placeholder, pos.item);
+      } else {
+        container.insertBefore(placeholder, pos.item.nextSibling);
+      }
+    }
+
     getHandles().forEach(function(handle) {
       handle.addEventListener("mousedown", function(e) {
         e.preventDefault();
@@ -679,31 +893,38 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!dragItem) return;
         dragItem.classList.add("dragging");
         var rect = dragItem.getBoundingClientRect();
+        var offsetX = e.clientX - rect.left;
         var offsetY = e.clientY - rect.top;
-        dragItem.style.width = rect.width + "px";
+        // 元の inline style を保存しておく（mouseup で完全復元するため）。
+        // これをしないと position:relative などが消え、子要素の絶対配置が壊れる。
+        var originalCssText = dragItem.getAttribute("style") || "";
+        // プレースホルダを元アイテムと同サイズに合わせる（横並びでも見た目を維持）。
+        placeholder.style.width = rect.width + "px";
         placeholder.style.height = rect.height + "px";
+        placeholder.style.flex = "0 0 auto";
+        // ドラッグ中は dragItem を fixed 化するため、サイズを固定しておく。
+        dragItem.style.width = rect.width + "px";
+        dragItem.style.height = rect.height + "px";
         dragItem.parentNode.insertBefore(placeholder, dragItem);
+        // 初期位置で fixed 化（mousedown 直後でも視覚的に違和感がない）。
+        dragItem.style.position = "fixed";
+        dragItem.style.zIndex = "1000";
+        dragItem.style.left = (e.clientX - offsetX) + "px";
+        dragItem.style.top = (e.clientY - offsetY) + "px";
+        dragItem.style.pointerEvents = "none";
 
-        function onMouseMove(e) {
-          dragItem.style.position = "fixed";
-          dragItem.style.zIndex = "1000";
-          dragItem.style.left = rect.left + "px";
-          dragItem.style.top = (e.clientY - offsetY) + "px";
-          dragItem.style.pointerEvents = "none";
-          var items = container.querySelectorAll(itemSelector + ":not(.dragging)");
-          var inserted = false;
-          items.forEach(function(item) {
-            var r = item.getBoundingClientRect();
-            if (e.clientY < r.top + r.height / 2 && !inserted) { container.insertBefore(placeholder, item); inserted = true; }
-          });
-          if (!inserted) container.appendChild(placeholder);
+        function onMouseMove(ev) {
+          dragItem.style.left = (ev.clientX - offsetX) + "px";
+          dragItem.style.top = (ev.clientY - offsetY) + "px";
+          applyPlaceholder(computePlaceholderPosition(ev.clientX, ev.clientY));
         }
 
         function onMouseUp() {
           document.removeEventListener("mousemove", onMouseMove);
           document.removeEventListener("mouseup", onMouseUp);
           dragItem.classList.remove("dragging");
-          dragItem.style.cssText = "";
+          // 元々のインラインスタイル（position:relative 等）を復元する。
+          dragItem.setAttribute("style", originalCssText);
           container.insertBefore(dragItem, placeholder);
           placeholder.remove();
           var ids = Array.from(container.querySelectorAll(itemSelector)).map(function(el) { return parseInt(el.dataset.id); });

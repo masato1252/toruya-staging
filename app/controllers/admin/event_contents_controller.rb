@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::EventContentsController < AdminController
-  before_action :set_event, only: [:new, :create, :sort, :shops_by_user, :online_services_for_shop, :booking_pages_for_shop]
+  before_action :set_event, only: [:new, :create, :sort, :shops_by_user, :online_services_for_shop, :booking_pages_for_shop, :shop_acquisition_counts]
   before_action :set_event_content, only: [
     :show, :edit, :update, :destroy,
     :upload_image, :destroy_image, :sort_images,
@@ -14,7 +14,11 @@ class Admin::EventContentsController < AdminController
 
   def create
     @event_content = @event.event_contents.build(event_content_params)
-    @event_content.position ||= @event.event_contents.maximum(:position).to_i + 1
+    # position はカラムデフォルトが 0 (not null) のため ||= では採番されない。
+    # 新規作成時は常に末尾に追加する（既存コンテンツの position は触らない）。
+    if @event_content.position.nil? || @event_content.position.zero?
+      @event_content.position = @event.event_contents.undeleted.maximum(:position).to_i + 1
+    end
 
     if params[:event_content][:thumbnail].present?
       @event_content.thumbnail.attach(params[:event_content][:thumbnail])
@@ -185,6 +189,15 @@ class Admin::EventContentsController < AdminController
     render json: pages
   end
 
+  # 紐付け先 shop の、このイベントにおける集客数 (直接 + 間接) を返す。
+  def shop_acquisition_counts
+    shop_id = params[:shop_id]
+    return render json: { direct: 0, indirect: 0, total: 0 } if shop_id.blank?
+
+    counts = @event.shop_acquisition_counts(shop_id)
+    render json: counts
+  end
+
   private
 
   def set_event
@@ -200,9 +213,11 @@ class Admin::EventContentsController < AdminController
   end
 
   def event_content_params
+    # position は並び替え専用の sort アクションで管理する。
+    # create/update ではユーザー入力を受け付けず、誤って並び順が変わらないようにする。
     permitted = params.require(:event_content).permit(
       :content_type, :title, :description, :introduction,
-      :start_at, :end_at, :capacity, :position,
+      :start_at, :end_at, :capacity,
       :video_url, :pre_ad_video_url, :post_ad_video_url, :direct_download_url,
       :shop_id, :online_service_id,
       :upsell_booking_enabled, :upsell_booking_page_id,

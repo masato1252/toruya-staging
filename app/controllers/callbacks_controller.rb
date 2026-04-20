@@ -267,6 +267,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
     event_line_user.display_name = profile.name if profile.name.present?
     event_line_user.picture_url = profile.image if profile.image.present?
 
+    line_email = extract_line_email(auth)
+    if line_email.present? && event_line_user.email.blank?
+      event_line_user.email = line_email
+    end
+
     if is_new
       event_line_user.check_toruya_user!
     end
@@ -313,5 +318,16 @@ class CallbacksController < Devise::OmniauthCallbacksController
     Rails.logger.error("[EventLineLogin] Failed: #{e.class} #{e.message}")
     Rollbar.error(e, "Event LINE Login failed", line_user_id: auth&.uid)
     redirect_to root_path, alert: "ログインに失敗しました"
+  end
+
+  def extract_line_email(auth)
+    id_token = auth&.credentials&.id_token
+    id_token ||= auth&.info&.respond_to?(:access_token) && auth.info.access_token.is_a?(Hash) ? auth.info.access_token["id_token"] : nil
+    return nil if id_token.blank?
+
+    JWT.decode(id_token, nil, false)[0]["email"]
+  rescue => e
+    Rollbar.info("Event LINE email retrieval failed", error: e.message, line_user_id: auth&.uid)
+    nil
   end
 end

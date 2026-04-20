@@ -12,6 +12,9 @@ module Events
     string :first_name, default: nil
     string :last_name, default: nil
     string :phone_number, default: nil
+    string :email, default: nil
+    integer :referrer_shop_id, default: nil
+    integer :referrer_event_line_user_id, default: nil
 
     def execute
       update_event_line_user_profile
@@ -27,7 +30,9 @@ module Events
         concern_labels: labels,
         concern_categories: derive_concern_categories(labels),
         concern_other: concern_other.presence,
-        registered_at: Time.current
+        registered_at: Time.current,
+        referrer_shop_id: sanitized_referrer_shop_id,
+        referrer_event_line_user_id: sanitized_referrer_event_line_user_id
       )
 
       unless participant.save
@@ -45,6 +50,7 @@ module Events
       attrs[:first_name] = first_name if first_name.present? && event_line_user.first_name.blank?
       attrs[:last_name] = last_name if last_name.present? && event_line_user.last_name.blank?
       attrs[:phone_number] = phone_number if phone_number.present? && event_line_user.phone_number.blank?
+      attrs[:email] = email if email.present? && event_line_user.email.blank?
       attrs[:business_types] = business_types.reject(&:blank?) if business_types.present?
       attrs[:business_age] = business_age.presence if business_age.present?
 
@@ -57,6 +63,17 @@ module Events
 
     def derive_concern_categories(labels)
       labels.filter_map { |label| EventParticipant::CONCERN_MAPPING[label]&.dig(:category) }.uniq
+    end
+
+    def sanitized_referrer_shop_id
+      return nil if referrer_shop_id.blank?
+      Shop.exists?(id: referrer_shop_id) ? referrer_shop_id : nil
+    end
+
+    def sanitized_referrer_event_line_user_id
+      return nil if referrer_event_line_user_id.blank?
+      return nil if referrer_event_line_user_id == event_line_user.id
+      EventLineUser.exists?(id: referrer_event_line_user_id) ? referrer_event_line_user_id : nil
     end
   end
 end

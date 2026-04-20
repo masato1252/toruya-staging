@@ -7,6 +7,7 @@ class EventsController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
 
   prepend_before_action :set_event
+  before_action :capture_event_referrers
 
   helper ApplicationHelper
 

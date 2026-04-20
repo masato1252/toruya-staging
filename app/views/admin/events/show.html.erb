@@ -36,7 +36,7 @@
       <div class="admin-detail-row">
         <div class="admin-detail-label">開催期間</div>
         <div class="admin-detail-value">
-          <%= l(@event.start_at, format: :long) %> 〜 <%= @event.end_at ? l(@event.end_at, format: :long) : "未設定" %>
+          <%= l(@event.start_at, format: :date_with_wday, locale: :ja) %> 〜 <%= @event.end_at ? l(@event.end_at, format: :date_with_wday, locale: :ja) : "未設定" %>
         </div>
       </div>
     <% end %>

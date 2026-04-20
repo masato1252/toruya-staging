@@ -34,16 +34,32 @@
       </div>
     </div>
 
+    <%# ヒーロー画像のアップロードは現在未使用のため非表示。既存値は温存される。 %>
+    <% if false %>
+      <div class="admin-form-group">
+        <label class="admin-form-label">ヒーロー画像（公開ページ上部）</label>
+        <div class="admin-form-input">
+          <% if event.hero_image.attached? %>
+            <div style="margin-bottom: 8px;">
+              <%= image_tag event.hero_image, style: "max-width: 400px; max-height: 200px; border-radius: 8px; object-fit: cover;" %>
+            </div>
+          <% end %>
+          <%= f.file_field :hero_image, accept: "image/*", class: "form-control" %>
+          <span class="admin-form-help">未設定の場合はデフォルトのグラデーション背景が表示されます</span>
+        </div>
+      </div>
+    <% end %>
+
     <div class="admin-form-group">
-      <label class="admin-form-label">ヒーロー画像（公開ページ上部）</label>
+      <label class="admin-form-label">ロゴ画像（公開ページMV中央に表示）</label>
       <div class="admin-form-input">
-        <% if event.hero_image.attached? %>
-          <div style="margin-bottom: 8px;">
-            <%= image_tag event.hero_image, style: "max-width: 400px; max-height: 200px; border-radius: 8px; object-fit: cover;" %>
+        <% if event.logo_image.attached? %>
+          <div style="margin-bottom: 8px; background: #464342; padding: 16px; border-radius: 8px; display: inline-block;">
+            <%= image_tag event.logo_image, style: "max-width: 300px; max-height: 160px; object-fit: contain; display: block;" %>
           </div>
         <% end %>
-        <%= f.file_field :hero_image, accept: "image/*", class: "form-control" %>
-        <span class="admin-form-help">未設定の場合はデフォルトのグラデーション背景が表示されます</span>
+        <%= f.file_field :logo_image, accept: "image/*", class: "form-control" %>
+        <span class="admin-form-help">設定時はMVの中央にロゴを大きく表示します。イベントタイトルの文字表示は行われず、ロゴ画像のALT属性としてタイトルが設定されます。</span>
       </div>
     </div>
   </div>
@@ -76,7 +92,154 @@
         <span class="admin-form-help">賞品情報やルール説明を記載してください。公開ページのスタンプラリーセクション上部に表示されます。</span>
       </div>
     </div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">開催期間（弾）</label>
+      <div class="admin-form-input">
+        <%# 期間を全削除した場合でも `event[stamp_rally_phases]` が送信されない事象を避けるための送信フラグ。 %>
+        <%= hidden_field_tag "event[stamp_rally_phases_present]", "1" %>
+
+        <div id="stamp-rally-phases-list" style="display: flex; flex-direction: column; gap: 8px;">
+          <% (event.stamp_rally_phases || []).each do |phase| %>
+            <div class="phase-row" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px;">
+              <input type="text" name="event[stamp_rally_phases][][title]" value="<%= phase["title"] %>" placeholder="第一弾" class="form-control" style="flex: 1 1 160px; min-width: 140px;">
+              <input type="date" name="event[stamp_rally_phases][][start_on]" value="<%= phase["start_on"] %>" class="form-control" style="flex: 0 1 160px;">
+              <span style="color: #6b7280;">〜</span>
+              <input type="date" name="event[stamp_rally_phases][][end_on]" value="<%= phase["end_on"] %>" class="form-control" style="flex: 0 1 160px;">
+              <button type="button" class="phase-delete btn btn-gray" style="padding: 6px 12px;">削除</button>
+            </div>
+          <% end %>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <button type="button" id="btn-add-phase" class="btn btn-gray" style="padding: 8px 14px;">＋ 期間を追加</button>
+        </div>
+
+        <span class="admin-form-help">
+          期間を区切りたい場合に設定します（例: 第一弾・第二弾）。0件の場合はイベント全期間で集計します。1件の場合はその期間のみ、2件以上の場合は公開ページでタブ切替表示になります。
+        </span>
+
+        <template id="phase-row-template">
+          <div class="phase-row" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px;">
+            <input type="text" name="event[stamp_rally_phases][][title]" placeholder="第一弾" class="form-control" style="flex: 1 1 160px; min-width: 140px;">
+            <input type="date" name="event[stamp_rally_phases][][start_on]" class="form-control" style="flex: 0 1 160px;">
+            <span style="color: #6b7280;">〜</span>
+            <input type="date" name="event[stamp_rally_phases][][end_on]" class="form-control" style="flex: 0 1 160px;">
+            <button type="button" class="phase-delete btn btn-gray" style="padding: 6px 12px;">削除</button>
+          </div>
+        </template>
+      </div>
+    </div>
   </div>
+
+  <script>
+    (function() {
+      document.addEventListener("DOMContentLoaded", function() {
+        var list = document.getElementById("stamp-rally-phases-list");
+        var addBtn = document.getElementById("btn-add-phase");
+        var tpl = document.getElementById("phase-row-template");
+        if (!list || !addBtn || !tpl) return;
+
+        addBtn.addEventListener("click", function() {
+          var node = tpl.content.firstElementChild.cloneNode(true);
+          list.appendChild(node);
+        });
+
+        list.addEventListener("click", function(e) {
+          var target = e.target;
+          if (target && target.classList && target.classList.contains("phase-delete")) {
+            var row = target.closest(".phase-row");
+            if (row) row.remove();
+          }
+        });
+      });
+    })();
+  </script>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">開催前の限定プレビュー</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">全コンテンツプレビュー権限店舗</label>
+      <div class="admin-form-input">
+        <div class="admin-lookup-group" id="master-preview-shop-lookup"
+             data-shops-url="<%= shops_by_user_admin_events_path %>">
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <input type="number" id="master-preview-user-id" class="form-control" placeholder="ユーザID" style="width:120px;" value="<%= event.master_preview_shop&.user_id %>" />
+            <button type="button" id="master-preview-search-btn" style="padding:8px 16px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;">検索</button>
+          </div>
+          <div id="master-preview-shop-select-wrapper" style="<%= 'display:none;' unless event.master_preview_shop_id %>">
+            <label style="font-size:12px;color:#6b7280;">店舗</label>
+            <select id="master-preview-shop-id" class="form-control" style="margin-top:4px;">
+              <option value="">選択してください</option>
+              <% if event.master_preview_shop %>
+                <option value="<%= event.master_preview_shop.id %>" selected><%= event.master_preview_shop.display_name %></option>
+              <% end %>
+            </select>
+          </div>
+          <%= f.hidden_field :master_preview_shop_id, id: "field-master-preview-shop-id" %>
+          <% if event.master_preview_shop_id %>
+            <div style="margin-top:6px;">
+              <button type="button" id="master-preview-clear-btn" class="btn btn-gray" style="padding:6px 12px;">解除</button>
+            </div>
+          <% end %>
+        </div>
+        <span class="admin-form-help">
+          指定した店舗のオーナー/スタッフは、開催開始前でも全コンテンツのプレビュー閲覧ができます。各出展者ユーザは自店舗紐付けコンテンツのみ自動でプレビュー可能です（この設定は不要）。開催期間中以降は本設定は影響しません。
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      document.addEventListener("DOMContentLoaded", function() {
+        var lookup = document.getElementById("master-preview-shop-lookup");
+        if (!lookup) return;
+        var shopsUrl = lookup.dataset.shopsUrl;
+        var searchBtn = document.getElementById("master-preview-search-btn");
+        var userIdInput = document.getElementById("master-preview-user-id");
+        var shopSelect = document.getElementById("master-preview-shop-id");
+        var shopSelectWrapper = document.getElementById("master-preview-shop-select-wrapper");
+        var hiddenField = document.getElementById("field-master-preview-shop-id");
+        var clearBtn = document.getElementById("master-preview-clear-btn");
+
+        searchBtn.addEventListener("click", function() {
+          var userId = userIdInput.value.trim();
+          if (!userId) return;
+          fetch(shopsUrl + "?user_id=" + encodeURIComponent(userId))
+            .then(function(r) { return r.json(); })
+            .then(function(shops) {
+              shopSelect.innerHTML = '<option value="">選択してください</option>';
+              shops.forEach(function(s) {
+                shopSelect.innerHTML += '<option value="' + s.id + '">' + (s.name || ("Shop #" + s.id)) + '</option>';
+              });
+              shopSelectWrapper.style.display = "";
+              // 検索結果の先頭店舗を自動選択し、change を発火させて hidden を更新する。
+              if (shops.length > 0) {
+                shopSelect.value = String(shops[0].id);
+                shopSelect.dispatchEvent(new Event("change"));
+              } else {
+                hiddenField.value = "";
+              }
+            });
+        });
+
+        shopSelect.addEventListener("change", function() {
+          hiddenField.value = this.value;
+        });
+
+        if (clearBtn) {
+          clearBtn.addEventListener("click", function() {
+            hiddenField.value = "";
+            shopSelect.innerHTML = '<option value="">選択してください</option>';
+            shopSelectWrapper.style.display = "none";
+            userIdInput.value = "";
+          });
+        }
+      });
+    })();
+  </script>
 
   <div class="admin-form-section">
     <div class="admin-form-section-title">公開設定</div>

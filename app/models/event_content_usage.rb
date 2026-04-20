@@ -10,7 +10,7 @@
 #  updated_at         :datetime         not null
 #  event_content_id   :bigint           not null
 #  event_line_user_id :bigint
-#  social_customer_id :bigint           not null
+#  social_customer_id :bigint
 #
 # Indexes
 #

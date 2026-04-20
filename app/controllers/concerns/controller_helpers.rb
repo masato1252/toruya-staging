@@ -48,4 +48,34 @@ module ControllerHelpers
   def clean_previous_cookie(cookie_name)
     cookies.clear_across_domains("current_scope_#{cookie_name}")
   end
+
+  # 公開イベントページへの ?rs (出展店舗紹介) / ?ru (ユーザシェア) 由来の
+  # 流入リファラーを encrypted cookie (event_ref_<slug>) に蓄積する。
+  # 参加登録時にこの cookie を読み出して event_participants に永続化する。
+  # last-touch 方式: 同じ event 内で何度踏んでも最後の値が採用される。
+  def capture_event_referrers
+    return if @event.blank?
+
+    cookie_key = "event_ref_#{@event.slug}"
+    current = cookies.encrypted[cookie_key]
+    current = current.is_a?(Hash) ? current.dup : {}
+
+    rs_param = params[:rs].to_s.presence
+    if rs_param && Shop.active.exists?(id: rs_param)
+      current["rs"] = rs_param.to_i
+    end
+
+    ru_param = params[:ru].to_s.presence
+    if ru_param && EventLineUser.exists?(id: ru_param)
+      current["ru"] = ru_param.to_i
+    end
+
+    if current.any?
+      cookies.encrypted[cookie_key] = {
+        value: current,
+        expires: 60.days.from_now,
+        httponly: true
+      }
+    end
+  end
 end

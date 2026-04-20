@@ -1,4 +1,4 @@
-\restrict EHdU7RBQrXqf7KZJkdDTOIWx0bQ2hChhHK6WVbdkHeei0eqqnrGjJ95pMkdTBD6
+\restrict nfCCkjYEiIrwbtBnCq9CLhRa9DnvQiUegyCQD9XylEjh8FdsHdmaIPq1fqWRMKO
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 18.0
@@ -1929,7 +1929,7 @@ ALTER SEQUENCE public.event_content_speakers_id_seq OWNED BY public.event_conten
 CREATE TABLE public.event_content_usages (
     id bigint NOT NULL,
     event_content_id bigint NOT NULL,
-    social_customer_id bigint NOT NULL,
+    social_customer_id bigint,
     started_at timestamp(6) without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -2030,7 +2030,8 @@ CREATE TABLE public.event_line_users (
     toruya_social_user_id bigint,
     toruya_user_checked_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    email character varying
 );
 
 
@@ -2060,7 +2061,7 @@ ALTER SEQUENCE public.event_line_users_id_seq OWNED BY public.event_line_users.i
 CREATE TABLE public.event_monitor_applications (
     id bigint NOT NULL,
     event_content_id bigint NOT NULL,
-    social_customer_id bigint NOT NULL,
+    social_customer_id bigint,
     customer_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -2104,7 +2105,9 @@ CREATE TABLE public.event_participants (
     updated_at timestamp(6) without time zone NOT NULL,
     event_line_user_id bigint,
     concern_labels jsonb DEFAULT '[]'::jsonb NOT NULL,
-    concern_categories jsonb DEFAULT '[]'::jsonb NOT NULL
+    concern_categories jsonb DEFAULT '[]'::jsonb NOT NULL,
+    referrer_shop_id bigint,
+    referrer_event_line_user_id bigint
 );
 
 
@@ -2168,7 +2171,7 @@ ALTER SEQUENCE public.event_stamp_entries_id_seq OWNED BY public.event_stamp_ent
 CREATE TABLE public.event_upsell_consultations (
     id bigint NOT NULL,
     event_content_id bigint NOT NULL,
-    social_customer_id bigint NOT NULL,
+    social_customer_id bigint,
     customer_id integer,
     status integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -2212,7 +2215,9 @@ CREATE TABLE public.events (
     deleted_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    stamp_rally_description text
+    stamp_rally_description text,
+    stamp_rally_phases jsonb DEFAULT '[]'::jsonb NOT NULL,
+    master_preview_shop_id bigint
 );
 
 
@@ -6945,6 +6950,13 @@ CREATE INDEX index_event_contents_on_upsell_booking_page_id ON public.event_cont
 
 
 --
+-- Name: index_event_line_users_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_line_users_on_email ON public.event_line_users USING btree (email);
+
+
+--
 -- Name: index_event_line_users_on_line_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7015,6 +7027,20 @@ CREATE INDEX index_event_participants_on_event_line_user_id ON public.event_part
 
 
 --
+-- Name: index_event_participants_on_referrer_event_line_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_participants_on_referrer_event_line_user_id ON public.event_participants USING btree (referrer_event_line_user_id);
+
+
+--
+-- Name: index_event_participants_on_referrer_shop_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_participants_on_referrer_shop_id ON public.event_participants USING btree (referrer_shop_id);
+
+
+--
 -- Name: index_event_participants_on_social_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7082,6 +7108,13 @@ CREATE INDEX index_event_upsell_consultations_on_status ON public.event_upsell_c
 --
 
 CREATE INDEX index_events_on_deleted_at ON public.events USING btree (deleted_at);
+
+
+--
+-- Name: index_events_on_master_preview_shop_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_master_preview_shop_id ON public.events USING btree (master_preview_shop_id);
 
 
 --
@@ -8281,6 +8314,14 @@ ALTER TABLE ONLY public.event_participants
 
 
 --
+-- Name: event_participants fk_rails_91d84bebb5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants
+    ADD CONSTRAINT fk_rails_91d84bebb5 FOREIGN KEY (referrer_event_line_user_id) REFERENCES public.event_line_users(id);
+
+
+--
 -- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8345,6 +8386,14 @@ ALTER TABLE ONLY public.event_upsell_consultations
 
 
 --
+-- Name: events fk_rails_cf5232b9e9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT fk_rails_cf5232b9e9 FOREIGN KEY (master_preview_shop_id) REFERENCES public.shops(id);
+
+
+--
 -- Name: line_notice_charges fk_rails_d2d9fdb86d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8358,6 +8407,14 @@ ALTER TABLE ONLY public.line_notice_charges
 
 ALTER TABLE ONLY public.event_participants
     ADD CONSTRAINT fk_rails_d47e705293 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: event_participants fk_rails_d4b91714de; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_participants
+    ADD CONSTRAINT fk_rails_d4b91714de FOREIGN KEY (referrer_shop_id) REFERENCES public.shops(id);
 
 
 --
@@ -8436,7 +8493,7 @@ CREATE EVENT TRIGGER validate_extension ON ddl_command_end
 -- PostgreSQL database dump complete
 --
 
-\unrestrict EHdU7RBQrXqf7KZJkdDTOIWx0bQ2hChhHK6WVbdkHeei0eqqnrGjJ95pMkdTBD6
+\unrestrict nfCCkjYEiIrwbtBnCq9CLhRa9DnvQiUegyCQD9XylEjh8FdsHdmaIPq1fqWRMKO
 
 SET search_path TO "$user", public, heroku_ext;
 
@@ -8736,6 +8793,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260402000002'),
 ('20260402000003'),
 ('20260402000004'),
-('20260402000005');
+('20260402000005'),
+('20260414000001'),
+('20260414000002'),
+('20260414000003'),
+('20260414000004'),
+('20260420000001');
 
 

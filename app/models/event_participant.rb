@@ -4,25 +4,29 @@
 #
 # Table name: event_participants
 #
-#  id                 :bigint           not null, primary key
-#  business_age       :integer
-#  business_types     :jsonb            not null
-#  concern_categories :jsonb            not null
-#  concern_labels     :jsonb            not null
-#  concern_other      :string
-#  registered_at      :datetime         not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  event_id           :bigint           not null
-#  event_line_user_id :bigint
-#  social_customer_id :bigint
-#  user_id            :bigint
+#  id                          :bigint           not null, primary key
+#  business_age                :integer
+#  business_types              :jsonb            not null
+#  concern_categories          :jsonb            not null
+#  concern_labels              :jsonb            not null
+#  concern_other               :string
+#  registered_at               :datetime         not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  event_id                    :bigint           not null
+#  event_line_user_id          :bigint
+#  referrer_event_line_user_id :bigint
+#  referrer_shop_id            :bigint
+#  social_customer_id          :bigint
+#  user_id                     :bigint
 #
 # Indexes
 #
 #  index_event_participants_on_event_id                         (event_id)
 #  index_event_participants_on_event_id_and_social_customer_id  (event_id,social_customer_id) UNIQUE
 #  index_event_participants_on_event_line_user_id               (event_line_user_id)
+#  index_event_participants_on_referrer_event_line_user_id      (referrer_event_line_user_id)
+#  index_event_participants_on_referrer_shop_id                 (referrer_shop_id)
 #  index_event_participants_on_social_customer_id               (social_customer_id)
 #  index_event_participants_on_user_id                          (user_id)
 #
@@ -30,6 +34,8 @@
 #
 #  fk_rails_...  (event_id => events.id)
 #  fk_rails_...  (event_line_user_id => event_line_users.id)
+#  fk_rails_...  (referrer_event_line_user_id => event_line_users.id)
+#  fk_rails_...  (referrer_shop_id => shops.id)
 #  fk_rails_...  (social_customer_id => social_customers.id)
 #  fk_rails_...  (user_id => users.id)
 #
@@ -85,6 +91,8 @@ class EventParticipant < ApplicationRecord
 
   belongs_to :event
   belongs_to :event_line_user
+  belongs_to :referrer_shop, class_name: "Shop", optional: true
+  belongs_to :referrer_event_line_user, class_name: "EventLineUser", optional: true
 
   enum business_age: { under_one_year: 0, one_to_three_years: 1, over_three_years: 2 }, _suffix: true
 

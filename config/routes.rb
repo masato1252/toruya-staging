@@ -801,6 +801,9 @@ Rails.application.routes.draw do
         get "/", to: "dashboards#index"
 
         resources :events do
+          collection do
+            get :shops_by_user
+          end
           member { get :analytics }
           resources :event_contents, shallow: true do
             collection do
@@ -808,6 +811,7 @@ Rails.application.routes.draw do
               get :shops_by_user
               get :online_services_for_shop
               get :booking_pages_for_shop
+              get :shop_acquisition_counts
             end
             member do
               post :upload_image

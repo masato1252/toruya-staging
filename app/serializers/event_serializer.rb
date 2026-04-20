@@ -5,9 +5,27 @@ class EventSerializer
 
   attribute :id, :title, :slug, :description, :start_at, :end_at, :published
 
+  attribute :started do |event|
+    event.started?
+  end
+
+  attribute :ended do |event|
+    event.ended?
+  end
+
+  attribute :not_started do |event|
+    event.not_started?
+  end
+
   attribute :hero_image_url do |event|
     if event.hero_image.attached?
       Rails.application.routes.url_helpers.rails_blob_url(event.hero_image, only_path: true)
+    end
+  end
+
+  attribute :logo_image_url do |event|
+    if event.logo_image.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(event.logo_image, only_path: true)
     end
   end
 
@@ -17,6 +35,20 @@ class EventSerializer
 
   attribute :is_logged_in do |event, params|
     params[:event_line_user].present?
+  end
+
+  # 開催前限定プレビュー機能。
+  # マスタ権限店舗(event.master_preview_shop) の owner / staff であれば true。
+  # 開催開始後は常に false を返す（プレビュー仕様は開催前のみ）。
+  attribute :can_preview_all do |event, params|
+    event.master_previewer?(params[:event_line_user])
+  end
+
+  # 開催前限定プレビュー機能。
+  # ログインユーザに紐づく Toruya ユーザが owner / staff である shop に
+  # 紐づくコンテンツ ID 配列を返す。
+  attribute :previewable_content_ids do |event, params|
+    event.previewable_content_ids_for(params[:event_line_user])
   end
 
   attribute :contents do |event, params|
@@ -83,6 +115,10 @@ class EventSerializer
   end
 
   attribute :stamp_rally_description
+
+  attribute :stamp_rally_phases do |event|
+    event.stamp_rally_phases || []
+  end
 
   attribute :stamp_entries do |event, params|
     event_line_user = params[:event_line_user]

@@ -8,6 +8,8 @@ class EventContentsController < ActionController::Base
 
   prepend_before_action :set_event
   before_action :set_event_content
+  before_action :capture_event_referrers, only: [:show]
+  before_action :guard_pre_event_access, only: [:show]
 
   helper ApplicationHelper
 
@@ -133,6 +135,24 @@ class EventContentsController < ActionController::Base
     @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
   helper_method :current_event_line_user
+
+  # 開催前限定プレビュー機能のサーバ側ガード。
+  # 開催開始後はノーオペ（プレビュー仕様は開催前のみ）。
+  # 開催前の場合は、ログイン+参加登録済み かつ プレビュー権限ありの時だけ通過させる。
+  def guard_pre_event_access
+    return unless @event.not_started?
+    return if can_preview_content?(@event_content)
+
+    redirect_to "/#{@event.slug}", alert: "このコンテンツはまだ閲覧できません"
+  end
+
+  def can_preview_content?(content)
+    line_user = current_event_line_user
+    return false unless line_user
+    return false unless @event.event_participants.exists?(event_line_user_id: line_user.id)
+    return true if @event.master_previewer?(line_user)
+    @event.previewable_content_ids_for(line_user).include?(content.id)
+  end
 
   def record_stamp(action_type)
     return unless @current_event_line_user

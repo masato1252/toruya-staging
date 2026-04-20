@@ -2,13 +2,64 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 
+const isYoutubeUrl = (url) => !!url && /(?:youtube\.com|youtu\.be)/.test(url);
+const isDriveUrl = (url) => url && /(?:drive|docs)\.google\.com/.test(url);
+
 const getEmbedUrl = (url) => {
   if (!url) return null;
-  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
-  const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (driveMatch) return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if (ytMatch) {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const params = [
+      "autoplay=1",
+      "rel=0",
+      "modestbranding=1",
+      "iv_load_policy=3",
+      "playsinline=1",
+      "fs=1",
+      "disablekb=1",
+      "enablejsapi=1",
+      `origin=${encodeURIComponent(origin)}`
+    ].join("&");
+    return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?${params}`;
+  }
+
+  if (/(?:drive|docs)\.google\.com/.test(url)) {
+    let driveId = null;
+    const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (fileMatch) driveId = fileMatch[1];
+    if (!driveId) {
+      const idParamMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (idParamMatch) driveId = idParamMatch[1];
+    }
+    if (driveId) return `https://drive.google.com/file/d/${driveId}/preview`;
+    console.warn("[EventContent] Google Drive URL の形式を認識できませんでした:", url);
+  }
+
   return url;
+};
+
+let ytApiPromise = null;
+const loadYouTubeIframeApi = () => {
+  if (typeof window === "undefined") return Promise.resolve(null);
+  if (window.YT && window.YT.Player) return Promise.resolve(window.YT);
+  if (ytApiPromise) return ytApiPromise;
+
+  ytApiPromise = new Promise((resolve) => {
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (typeof prev === "function") { try { prev(); } catch (_) {} }
+      resolve(window.YT);
+    };
+    if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+      const script = document.createElement("script");
+      script.src = "https://www.youtube.com/iframe_api";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  });
+  return ytApiPromise;
 };
 
 const EventLineLoginLink = ({ loginUrl, btnText, style }) => {
@@ -87,7 +138,7 @@ const ShareModal = ({ isOpen, onClose, title, shareTitle, thumbnailUrl, shareUrl
         }}
       >
         <div style={{
-          background: "#134e4a", color: "#fff", padding: "16px 20px",
+          background: "#488479", color: "#fff", padding: "16px 20px",
           display: "flex", alignItems: "center", justifyContent: "center",
           position: "relative"
         }}>
@@ -176,10 +227,13 @@ const ShareModal = ({ isOpen, onClose, title, shareTitle, thumbnailUrl, shareUrl
   );
 };
 
-const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete, onMainPhaseStart }) => {
+const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete, onMainPhaseStart, fullHeight = false }) => {
   const [phase, setPhase] = useState(preAdUrl ? "pre_ad" : "main");
   const [iframeKey, setIframeKey] = useState(0);
   const mainFired = useRef(!preAdUrl);
+  const iframeRef = useRef(null);
+  const playerRef = useRef(null);
+  const nextPhaseRef = useRef(null);
 
   useEffect(() => {
     if (phase === "main" && !mainFired.current) {
@@ -201,26 +255,311 @@ const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete, onMainPhaseS
       onComplete && onComplete();
     }
   };
+  nextPhaseRef.current = nextPhase;
 
   const phaseLabel = phase === "pre_ad" ? "広告" : phase === "main" ? "セミナー本編" : "広告";
+  const isDrive = isDriveUrl(currentUrl);
+  const isYoutube = isYoutubeUrl(currentUrl);
+
+  useEffect(() => {
+    if (!isYoutube || !iframeRef.current) return;
+
+    let cancelled = false;
+    loadYouTubeIframeApi().then((YT) => {
+      if (cancelled || !iframeRef.current || !YT) return;
+      try {
+        playerRef.current = new YT.Player(iframeRef.current, {
+          events: {
+            onStateChange: (e) => {
+              if (e.data === YT.PlayerState.ENDED) {
+                if (nextPhaseRef.current) nextPhaseRef.current();
+              }
+            }
+          }
+        });
+      } catch (err) {
+        console.warn("[EventContent] YT.Player init failed:", err);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      if (playerRef.current) {
+        try { playerRef.current.destroy(); } catch (_) {}
+        playerRef.current = null;
+      }
+    };
+  }, [iframeKey, isYoutube]);
+
+  const videoAreaStyle = fullHeight
+    ? { position: "relative", flex: 1, minHeight: 0 }
+    : { position: "relative", paddingBottom: "56.25%" };
 
   return (
-    <div style={{ background: "#000", overflow: "hidden" }}>
-      <div style={{ padding: "8px 14px", background: "rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div style={{
+      background: "#000", overflow: "hidden",
+      ...(fullHeight ? { display: "flex", flexDirection: "column", height: "100%" } : {})
+    }}>
+      <div style={{ padding: "8px 14px", background: "rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
         <span style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>{phaseLabel}</span>
         <button onClick={nextPhase} style={{ background: "rgba(255,255,255,0.15)", color: "#fff", border: "none", borderRadius: 6, padding: "5px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
           {phase === "post_ad" ? "完了" : "次へ ▶"}
         </button>
       </div>
-      <div style={{ position: "relative", paddingBottom: "56.25%" }}>
+      <div style={videoAreaStyle}>
         <iframe
           key={iframeKey}
+          ref={iframeRef}
           src={getEmbedUrl(currentUrl)}
           frameBorder="0"
           allowFullScreen
-          allow="autoplay; encrypted-media"
+          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+          referrerPolicy="no-referrer-when-downgrade"
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
         />
+        {isYoutube && (
+          <>
+            {/* 左上: タイトル2行分をブロック。右側 110px は音量/設定ボタン用に残す */}
+            <div
+              onClick={(e) => e.preventDefault()}
+              onContextMenu={(e) => e.preventDefault()}
+              style={{
+                position: "absolute", top: 0, left: 0,
+                width: "calc(100% - 110px)", height: 72,
+                background: "transparent", pointerEvents: "auto", zIndex: 2,
+                cursor: "default"
+              }}
+            />
+            {/* 右下: 「その他の動画」+「YouTube」ロゴをブロック。最右端 48px は全画面ボタン用に残す */}
+            <div
+              onClick={(e) => e.preventDefault()}
+              onContextMenu={(e) => e.preventDefault()}
+              style={{
+                position: "absolute", bottom: 0, right: 48,
+                width: 280, height: 56,
+                background: "transparent", pointerEvents: "auto", zIndex: 2,
+                cursor: "default"
+              }}
+            />
+            {/* 左下: 共有リンク（鎖マーク）をブロック。時間表示と重なるが時間表示は非インタラクティブなのでOK */}
+            <div
+              onClick={(e) => e.preventDefault()}
+              onContextMenu={(e) => e.preventDefault()}
+              style={{
+                position: "absolute", bottom: 0, left: 0,
+                width: 56, height: 56,
+                background: "transparent", pointerEvents: "auto", zIndex: 2,
+                cursor: "default"
+              }}
+            />
+          </>
+        )}
+      </div>
+      {isDrive && (
+        <div style={{
+          padding: "8px 14px", background: "rgba(252,190,70,0.1)",
+          color: "#FCBE46", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexShrink: 0
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style={{ flexShrink: 0 }}>
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+            </svg>
+            <span>再生されない場合は別タブで開いてください</span>
+          </div>
+          <a
+            href={currentUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#FCBE46", fontWeight: 700, textDecoration: "underline", flexShrink: 0 }}
+          >
+            別タブで開く
+          </a>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const orientationLockSupported = () =>
+  typeof window !== "undefined" &&
+  window.screen &&
+  window.screen.orientation &&
+  typeof window.screen.orientation.lock === "function";
+
+const VideoPlayerModal = ({ isOpen, onClose, preAdUrl, contentUrl, postAdUrl, onMainPhaseStart }) => {
+  const containerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [orientation, setOrientation] = useState("landscape");
+  const fullscreenEnteredRef = useRef(false);
+
+  const enterFullscreen = useCallback(async () => {
+    const el = containerRef.current;
+    if (!el || document.fullscreenElement) return true;
+    const requestFs = el.requestFullscreen
+      || el.webkitRequestFullscreen
+      || el.webkitEnterFullscreen
+      || el.msRequestFullscreen;
+    if (!requestFs) return false;
+    try {
+      await requestFs.call(el);
+      fullscreenEnteredRef.current = true;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }, []);
+
+  const lockOrientation = useCallback(async (target) => {
+    if (!orientationLockSupported()) return false;
+    const entered = await enterFullscreen();
+    if (!entered) return false;
+    try {
+      await window.screen.orientation.lock(target);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }, [enterFullscreen]);
+
+  const toggleOrientation = useCallback(async () => {
+    const next = orientation === "landscape" ? "portrait" : "landscape";
+    const ok = await lockOrientation(next);
+    if (ok) setOrientation(next);
+  }, [orientation, lockOrientation]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const mobile = window.matchMedia("(max-width: 768px)").matches;
+    setIsMobile(mobile);
+    setOrientation("landscape");
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    if (mobile) {
+      lockOrientation("landscape");
+    }
+
+    const handleKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handleKey);
+
+    const handleOrientationChange = () => {
+      if (window.screen && window.screen.orientation) {
+        const type = window.screen.orientation.type;
+        if (type && type.startsWith("portrait")) setOrientation("portrait");
+        else if (type && type.startsWith("landscape")) setOrientation("landscape");
+      }
+    };
+    if (window.screen && window.screen.orientation) {
+      window.screen.orientation.addEventListener("change", handleOrientationChange);
+    }
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", handleKey);
+      if (window.screen && window.screen.orientation) {
+        window.screen.orientation.removeEventListener("change", handleOrientationChange);
+        if (window.screen.orientation.unlock) {
+          try { window.screen.orientation.unlock(); } catch (_) {}
+        }
+      }
+      if (fullscreenEnteredRef.current && document.fullscreenElement) {
+        const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+        if (exit) { try { exit.call(document); } catch (_) {} }
+      }
+      fullscreenEnteredRef.current = false;
+    };
+  }, [isOpen, onClose, lockOrientation]);
+
+  if (!isOpen) return null;
+
+  const showRotateButton = isMobile && orientationLockSupported();
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: "fixed", inset: 0, zIndex: 1000,
+        background: "rgba(0,0,0,0.92)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: isMobile ? 0 : "40px 20px"
+      }}
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: "absolute", top: 16, right: 16, zIndex: 2,
+          display: "flex", gap: 8
+        }}
+      >
+        {showRotateButton && (
+          <button
+            onClick={toggleOrientation}
+            aria-label={orientation === "landscape" ? "縦画面に切り替え" : "横画面に切り替え"}
+            style={{
+              background: "rgba(255,255,255,0.15)", border: "none", borderRadius: "50%",
+              width: 40, height: 40, cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff"
+            }}
+          >
+            {orientation === "landscape" ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="7" y="2" width="10" height="20" rx="2" ry="2"/>
+                <line x1="11" y1="18" x2="13" y2="18"/>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="7" width="20" height="10" rx="2" ry="2"/>
+                <line x1="18" y1="11" x2="18" y2="13"/>
+              </svg>
+            )}
+          </button>
+        )}
+        <button
+          onClick={onClose}
+          aria-label="閉じる"
+          style={{
+            background: "rgba(255,255,255,0.15)", border: "none", borderRadius: "50%",
+            width: 40, height: 40, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: "#fff"
+          }}
+        >
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "100%",
+          maxWidth: isMobile ? "100%" : 1100,
+          height: isMobile ? "100%" : "auto",
+          display: "flex", flexDirection: "column", justifyContent: "center"
+        }}
+      >
+        <div style={{
+          borderRadius: isMobile ? 0 : 12,
+          overflow: "hidden",
+          boxShadow: isMobile ? "none" : "0 20px 60px rgba(0,0,0,0.5)",
+          height: isMobile ? "100%" : "auto",
+          display: isMobile ? "flex" : "block",
+          flexDirection: "column"
+        }}>
+          <VideoPlayer
+            preAdUrl={preAdUrl}
+            contentUrl={contentUrl}
+            postAdUrl={postAdUrl}
+            onMainPhaseStart={onMainPhaseStart}
+            onComplete={onClose}
+            fullHeight={isMobile}
+          />
+        </div>
       </div>
     </div>
   );
@@ -237,7 +576,7 @@ const SlideImage = ({ src, onLoaded }) => {
         }}>
           <div style={{
             width: 24, height: 24, border: "3px solid #e7e5e4",
-            borderTopColor: "#0d9488", borderRadius: "50%",
+            borderTopColor: "#488479", borderRadius: "50%",
             animation: "spin 0.8s linear infinite"
           }} />
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -350,20 +689,20 @@ const PDFCarousel = ({ images }) => {
               onClick={() => handleArrow(1)}
               style={{
                 position: "absolute", left: -12, top: "50%", transform: "translateY(-50%)", zIndex: 2,
-                background: "#0d9488", border: "none",
+                background: "#488479", border: "none",
                 width: 34, height: 34, borderRadius: "50%", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 2px 8px rgba(13,148,136,0.4)", padding: 0
+                boxShadow: "0 2px 8px rgba(72,132,121,0.4)", padding: 0
               }}
             ><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
             <button
               onClick={() => handleArrow(-1)}
               style={{
                 position: "absolute", right: -12, top: "50%", transform: "translateY(-50%)", zIndex: 2,
-                background: "#0d9488", border: "none",
+                background: "#488479", border: "none",
                 width: 34, height: 34, borderRadius: "50%", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 2px 8px rgba(13,148,136,0.4)", padding: 0
+                boxShadow: "0 2px 8px rgba(72,132,121,0.4)", padding: 0
               }}
             ><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
           </>
@@ -380,7 +719,7 @@ const PDFCarousel = ({ images }) => {
                 style={{
                   width: i === current ? 20 : 8, height: 8,
                   borderRadius: 4, border: "none", padding: 0, cursor: "pointer",
-                  background: i === current ? "#0d9488" : "#d6d3d1",
+                  background: i === current ? "#488479" : "#d6d3d1",
                   transition: "all 0.3s"
                 }}
               />
@@ -400,22 +739,37 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrac
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
+  const safeJsonFetch = async (url) => {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "X-CSRF-Token": csrfToken, "Accept": "application/json" }
+      });
+      if (!res.ok) {
+        console.error("[EventContent] Request failed:", url, res.status);
+        return null;
+      }
+      return await res.json();
+    } catch (err) {
+      console.error("[EventContent] Request error:", url, err);
+      return null;
+    }
+  };
+
   const handleConsultation = async () => {
     if (consultationStatus || isLoading) return;
     setIsLoading(true);
     onTrackActivity && onTrackActivity("upsell_click");
-    const res = await fetch(upsellConsultationUrl, { method: "POST", headers: { "X-CSRF-Token": csrfToken } });
-    const data = await res.json();
-    if (data.success) setConsultationStatus(data.status);
+    const data = await safeJsonFetch(upsellConsultationUrl);
+    if (data && data.success) setConsultationStatus(data.status);
     setIsLoading(false);
   };
 
   const handleMonitorApply = async () => {
     if (monitorApplied || isLoading) return;
     setIsLoading(true);
-    const res = await fetch(monitorApplyUrl, { method: "POST", headers: { "X-CSRF-Token": csrfToken } });
-    const data = await res.json();
-    if (data.success) {
+    const data = await safeJsonFetch(monitorApplyUrl);
+    if (data && data.success) {
       setMonitorApplied(true);
       if (data.form_url) window.open(data.form_url, "_blank");
     }
@@ -435,7 +789,7 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrac
             <button
               onClick={handleConsultation}
               disabled={isLoading}
-              style={{ width: "100%", padding: "12px", background: "#0d9488", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+              style={{ width: "100%", padding: "12px", background: "#488479", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
             >
               {isLoading ? "処理中..." : "無料相談を予約する"}
             </button>
@@ -454,7 +808,7 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrac
             <button
               onClick={handleMonitorApply}
               disabled={isLoading}
-              style={{ width: "100%", padding: "12px", background: "#334155", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+              style={{ width: "100%", padding: "12px", background: "#B95526", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
             >
               {isLoading ? "処理中..." : "モニターに応募する"}
             </button>
@@ -469,12 +823,14 @@ const EventContentShow = ({ props }) => {
   const {
     event_content, event_slug, event_title,
     start_usage_url, upsell_consultation_url, monitor_apply_url,
-    track_activity_url, back_url, line_login_url, add_friend_url
+    track_activity_url, back_url, line_login_url, add_friend_url,
+    current_event_line_user_id
   } = props;
 
   const [hasStarted, setHasStarted] = useState(event_content.has_started_usage);
   const [isStarting, setIsStarting] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
   const isParticipant = event_content.is_participant;
@@ -492,27 +848,53 @@ const EventContentShow = ({ props }) => {
     }).catch(() => {});
   };
 
+  const openVideoModalIfSeminar = () => {
+    if (event_content.content_type === "seminar") setIsVideoModalOpen(true);
+  };
+
   const handleStartUsage = async () => {
-    if (isStarting || hasStarted) return;
+    if (isStarting) return;
+    if (hasStarted) {
+      openVideoModalIfSeminar();
+      return;
+    }
     setIsStarting(true);
-    const res = await fetch(start_usage_url, { method: "POST", headers: { "X-CSRF-Token": csrfToken } });
-    const data = await res.json();
-    if (data.success) {
+    try {
+      const res = await fetch(start_usage_url, {
+        method: "POST",
+        headers: { "X-CSRF-Token": csrfToken, "Accept": "application/json" }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setHasStarted(true);
+          if (event_content.content_type === "seminar") trackActivity("seminar_view");
+          openVideoModalIfSeminar();
+        }
+      } else {
+        console.error("[EventContent] start_usage failed:", res.status);
+        setHasStarted(true);
+        if (event_content.content_type === "seminar") trackActivity("seminar_view");
+        openVideoModalIfSeminar();
+      }
+    } catch (err) {
+      console.error("[EventContent] start_usage error:", err);
       setHasStarted(true);
       if (event_content.content_type === "seminar") trackActivity("seminar_view");
+      openVideoModalIfSeminar();
     }
     setIsStarting(false);
   };
 
   const ctaLabel = event_content.content_type === "booth"
     ? ((event_content.slide_images || []).length > 0 ? "続きをダウンロード" : "資料をダウンロード")
-    : "詳しく見る";
-  const typeColor = event_content.content_type === "seminar" ? "#334155" : "#0d9488";
+    : "動画を見る";
+  const typeColor = event_content.content_type === "seminar" ? "#B95526" : "#488479";
 
   return (
     <div style={{ minHeight: "100vh", background: "#fafaf9" }}>
       {/* Header */}
-      <div style={{ background: "#0f172a", color: "#fff", padding: "14px 20px", display: "flex", alignItems: "center", gap: 8, position: "sticky", top: 0, zIndex: 20 }}>
+      <div style={{ background: "#488479", color: "#fff", padding: "14px 20px", display: "flex", alignItems: "center", gap: 8, position: "sticky", top: 0, zIndex: 20 }}>
         <a href={back_url} style={{ color: "#fff", textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 36, marginLeft: -4 }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </a>
@@ -526,23 +908,35 @@ const EventContentShow = ({ props }) => {
         {/* Thumbnail / Content area */}
         {hasStarted && event_content.content_type === "seminar" ? (
           <div style={{ marginBottom: 20 }}>
-            <VideoPlayer
-              preAdUrl={event_content.pre_ad_video_url}
-              contentUrl={event_content.video_url || event_content.online_service_registration_url}
-              postAdUrl={event_content.post_ad_video_url}
-              onMainPhaseStart={() => trackActivity("seminar_view")}
-            />
-            {event_content.direct_download_url && (
-              <a
-                href={event_content.direct_download_url}
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => trackActivity("material_download", { url: event_content.direct_download_url })}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 12, padding: "12px 20px", background: "#334155", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
-              >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
-                {(event_content.slide_images || []).length > 0 ? "続きをダウンロード" : "資料をダウンロード"}
-              </a>
-            )}
+            <div
+              onClick={() => setIsVideoModalOpen(true)}
+              style={{
+                position: "relative", cursor: "pointer", background: "#000",
+                overflow: "hidden"
+              }}
+            >
+              {event_content.thumbnail_url ? (
+                <img src={event_content.thumbnail_url} style={{ width: "100%", maxHeight: 380, objectFit: "cover", display: "block", opacity: 0.85 }} />
+              ) : (
+                <div style={{ height: 240, background: "linear-gradient(135deg, #B95526, #CF8968)" }} />
+              )}
+              <div style={{
+                position: "absolute", inset: 0,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background: "rgba(0,0,0,0.25)"
+              }}>
+                <div style={{
+                  width: 72, height: 72, borderRadius: "50%",
+                  background: "rgba(255,255,255,0.95)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.4)"
+                }}>
+                  <svg width="28" height="28" viewBox="0 0 20 20" fill="#B95526" style={{ marginLeft: 4 }}>
+                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
         ) : hasStarted && event_content.content_type === "booth" ? (
           <div style={{ marginBottom: 20 }}>
@@ -555,7 +949,7 @@ const EventContentShow = ({ props }) => {
                 href={event_content.online_service_registration_url}
                 target="_blank" rel="noopener noreferrer"
                 onClick={() => trackActivity("online_service_click", { url: event_content.online_service_registration_url })}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 12, padding: "12px 20px", background: "#0d9488", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 12, padding: "12px 20px", background: "#488479", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
               >
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd"/></svg>
                 出展企業のサービスページへ
@@ -623,18 +1017,63 @@ const EventContentShow = ({ props }) => {
 
         {/* Start usage button for participants */}
         {isParticipant && !hasStarted && canStart && (
-          <button
-            onClick={handleStartUsage}
-            disabled={isStarting}
-            style={{
-              width: "100%", padding: "14px", marginBottom: 20,
-              background: typeColor, color: "#fff", border: "none",
-              borderRadius: 8, fontSize: 16, fontWeight: 700,
-              cursor: "pointer", boxShadow: `0 4px 14px ${typeColor}66`
-            }}
-          >
-            {isStarting ? "..." : ctaLabel}
-          </button>
+          <div style={{ marginBottom: 20 }}>
+            <button
+              onClick={handleStartUsage}
+              disabled={isStarting}
+              style={{
+                width: "100%", padding: "14px",
+                background: typeColor, color: "#fff", border: "none",
+                borderRadius: 8, fontSize: 16, fontWeight: 700,
+                cursor: "pointer", boxShadow: `0 4px 14px ${typeColor}66`
+              }}
+            >
+              {isStarting ? "..." : ctaLabel}
+            </button>
+            {event_content.content_type === "seminar" && event_content.direct_download_url && (
+              <a
+                href={event_content.direct_download_url}
+                target="_blank" rel="noopener noreferrer"
+                onClick={() => trackActivity("material_download", { url: event_content.direct_download_url })}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 28, padding: "12px 20px", background: "#fff", color: typeColor, border: `1.5px solid ${typeColor}`, borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
+              >
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
+                資料をダウンロード
+              </a>
+            )}
+          </div>
+        )}
+
+        {/* Replay video button for seminar (after started) */}
+        {isParticipant && hasStarted && event_content.content_type === "seminar" && !event_content.ended && (
+          <div style={{ marginBottom: 20 }}>
+            <button
+              onClick={() => setIsVideoModalOpen(true)}
+              style={{
+                width: "100%", padding: "14px",
+                background: typeColor, color: "#fff", border: "none",
+                borderRadius: 8, fontSize: 16, fontWeight: 700,
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                boxShadow: `0 4px 14px ${typeColor}66`
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+              </svg>
+              動画を再生
+            </button>
+            {event_content.direct_download_url && (
+              <a
+                href={event_content.direct_download_url}
+                target="_blank" rel="noopener noreferrer"
+                onClick={() => trackActivity("material_download", { url: event_content.direct_download_url })}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 28, padding: "12px 20px", background: "#fff", color: typeColor, border: `1.5px solid ${typeColor}`, borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
+              >
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
+                資料をダウンロード
+              </a>
+            )}
+          </div>
         )}
 
         {/* LINE login CTA for non-participants */}
@@ -732,8 +1171,33 @@ const EventContentShow = ({ props }) => {
         title="このコンテンツをシェアする"
         shareTitle={event_content.title}
         thumbnailUrl={event_content.thumbnail_url || null}
-        shareUrl={typeof window !== "undefined" ? window.location.href : ""}
+        shareUrl={(() => {
+          if (typeof window === "undefined") return "";
+          try {
+            const u = new URL(window.location.href);
+            u.searchParams.delete("rs");
+            if (current_event_line_user_id) {
+              u.searchParams.set("ru", String(current_event_line_user_id));
+            } else {
+              u.searchParams.delete("ru");
+            }
+            return u.toString();
+          } catch (e) {
+            return window.location.href;
+          }
+        })()}
       />
+
+      {event_content.content_type === "seminar" && (
+        <VideoPlayerModal
+          isOpen={isVideoModalOpen}
+          onClose={() => setIsVideoModalOpen(false)}
+          preAdUrl={event_content.pre_ad_video_url}
+          contentUrl={event_content.video_url || event_content.online_service_registration_url}
+          postAdUrl={event_content.post_ad_video_url}
+          onMainPhaseStart={() => trackActivity("seminar_view")}
+        />
+      )}
     </div>
   );
 };

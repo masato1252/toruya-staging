@@ -8,6 +8,7 @@
 #  business_age           :integer
 #  business_types         :jsonb            not null
 #  display_name           :string
+#  email                  :string
 #  first_name             :string
 #  last_name              :string
 #  phone_number           :string
@@ -21,6 +22,7 @@
 #
 # Indexes
 #
+#  index_event_line_users_on_email                  (email)
 #  index_event_line_users_on_line_user_id           (line_user_id) UNIQUE
 #  index_event_line_users_on_phone_number           (phone_number)
 #  index_event_line_users_on_toruya_social_user_id  (toruya_social_user_id)

@@ -54,6 +54,7 @@ const ParticipationForm = ({ props }) => {
   const [firstName, setFirstName] = useState(props.initial_first_name || "");
   const [lastName, setLastName] = useState(props.initial_last_name || "");
   const [phoneNumber, setPhoneNumber] = useState(props.initial_phone_number || "");
+  const [email, setEmail] = useState(props.initial_email || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleBusinessType = (type) => {
@@ -89,7 +90,8 @@ const ParticipationForm = ({ props }) => {
           concern_other: concernOther,
           first_name: firstName,
           last_name: lastName,
-          phone_number: phoneNumber
+          phone_number: phoneNumber,
+          email: email
         })
       });
       const data = await response.json();
@@ -114,8 +116,8 @@ const ParticipationForm = ({ props }) => {
         <p style={{ color: "#666", fontSize: 14 }}>参加登録 — プロフィール入力</p>
       </div>
 
-      <div style={{ background: "#f0fdfa", border: "1px solid #99f6e4", padding: "16px 18px", marginBottom: 28 }}>
-        <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: "#134e4a" }}>
+      <div style={{ background: "#FAEACB", border: "1px solid #FFD890", padding: "16px 18px", marginBottom: 28 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: "#488479" }}>
           🎯 業種やお悩みに合わせた最適な出展者をお勧めします
         </div>
         <div style={{ fontSize: 13, color: "#44403c", lineHeight: 1.6 }}>
@@ -155,6 +157,18 @@ const ParticipationForm = ({ props }) => {
       </section>
 
       <section style={{ marginBottom: 32 }}>
+        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>メールアドレス</h3>
+        <input
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="example@example.com"
+          autoComplete="email"
+          style={{ width: "100%", padding: "10px 12px", border: "1px solid #ddd", borderRadius: 8, fontSize: 14 }}
+        />
+      </section>
+
+      <section style={{ marginBottom: 32 }}>
         <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>1. 事業内容（複数選択可）</h3>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {BUSINESS_TYPES.map(type => (
@@ -165,8 +179,8 @@ const ParticipationForm = ({ props }) => {
               style={{
                 padding: "8px 14px",
                 borderRadius: 20,
-                border: `2px solid ${selectedBusinessTypes.includes(type) ? "#0d9488" : "#d6d3d1"}`,
-                background: selectedBusinessTypes.includes(type) ? "#0d9488" : "#fff",
+                border: `2px solid ${selectedBusinessTypes.includes(type) ? "#488479" : "#d6d3d1"}`,
+                background: selectedBusinessTypes.includes(type) ? "#488479" : "#fff",
                 color: selectedBusinessTypes.includes(type) ? "#fff" : "#333",
                 cursor: "pointer",
                 fontSize: 13
@@ -219,10 +233,10 @@ const ParticipationForm = ({ props }) => {
                     alignItems: "center",
                     gap: 10,
                     padding: "8px 12px",
-                    border: `2px solid ${isSelected ? "#0d9488" : "#e7e5e4"}`,
+                    border: `2px solid ${isSelected ? "#488479" : "#e7e5e4"}`,
                     marginBottom: 6,
                     cursor: isDisabled ? "not-allowed" : "pointer",
-                    background: isSelected ? "#f0fdfa" : "#fff",
+                    background: isSelected ? "#FAEACB" : "#fff",
                     opacity: isDisabled ? 0.5 : 1,
                     transition: "all 0.15s"
                   }}
@@ -234,8 +248,8 @@ const ParticipationForm = ({ props }) => {
                     width: 20,
                     height: 20,
                     borderRadius: 4,
-                    border: `2px solid ${isSelected ? "#0d9488" : "#ccc"}`,
-                    background: isSelected ? "#0d9488" : "#fff",
+                    border: `2px solid ${isSelected ? "#488479" : "#ccc"}`,
+                    background: isSelected ? "#488479" : "#fff",
                     color: "#fff",
                     fontSize: 12,
                     flexShrink: 0
@@ -266,7 +280,7 @@ const ParticipationForm = ({ props }) => {
           style={{
             width: "100%",
             padding: "14px",
-            background: isSubmitting ? "#a8a29e" : "#0d9488",
+            background: isSubmitting ? "#a8a29e" : "#488479",
             color: "#fff",
             border: "none",
             borderRadius: 8,

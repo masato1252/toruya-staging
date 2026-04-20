@@ -7,6 +7,7 @@ class Events::ParticipationsController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
 
   prepend_before_action :set_event
+  before_action :capture_event_referrers, only: [:new]
 
   helper ApplicationHelper
 
@@ -21,11 +22,15 @@ class Events::ParticipationsController < ActionController::Base
     @initial_first_name = @current_event_line_user.first_name.presence || profile&.first_name
     @initial_last_name = @current_event_line_user.last_name.presence || profile&.last_name
     @initial_phone_number = @current_event_line_user.phone_number.presence || profile&.phone_number
+    @initial_email = @current_event_line_user.email.presence || @current_event_line_user.toruya_user&.email.presence || profile&.email
   end
 
   def create
     @current_event_line_user = current_event_line_user
     return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless @current_event_line_user
+
+    ref = cookies.encrypted["event_ref_#{@event.slug}"]
+    ref = ref.is_a?(Hash) ? ref : {}
 
     outcome = Events::RegisterParticipant.run(
       event: @event,
@@ -36,7 +41,10 @@ class Events::ParticipationsController < ActionController::Base
       concern_other: params[:concern_other],
       first_name: params[:first_name],
       last_name: params[:last_name],
-      phone_number: params[:phone_number]
+      phone_number: params[:phone_number],
+      email: params[:email],
+      referrer_shop_id: ref["rs"],
+      referrer_event_line_user_id: ref["ru"]
     )
 
     if outcome.valid?
