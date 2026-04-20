@@ -888,6 +888,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     getHandles().forEach(function(handle) {
       handle.addEventListener("mousedown", function(e) {
+        // ハンドル指定がない（アイテム全体がドラッグ対象の）場合、
+        // アイテム内のボタン・リンク・フォーム要素へのクリックはドラッグを開始しない。
+        // これをしないと削除ボタン(×)などのクリックが pointer-events:none によって
+        // 飲み込まれてしまい、削除が効かなくなる。
+        if (!handleSelector && e.target.closest("button, a, input, select, textarea, label")) {
+          return;
+        }
         e.preventDefault();
         dragItem = handleSelector ? handle.closest(itemSelector) : handle;
         if (!dragItem) return;

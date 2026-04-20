@@ -887,7 +887,7 @@ const EventShow = ({ props }) => {
 
                 {!event.is_participant && !event.ended && line_login_url && (
                   <div style={{ marginTop: 24 }}>
-                    <EventLineLoginLink loginUrl={line_login_url} btnText="LINEで参加登録する" />
+                    <EventLineLoginLink loginUrl={line_login_url} btnText="LINEで参加登録／ログイン" />
                   </div>
                 )}
               </div>
@@ -920,7 +920,7 @@ const EventShow = ({ props }) => {
                 )}
 
                 {!event.is_participant && !event.ended && line_login_url && (
-                  <EventLineLoginLink loginUrl={line_login_url} btnText="LINEで参加登録する" />
+                  <EventLineLoginLink loginUrl={line_login_url} btnText="LINEで参加登録／ログイン" />
                 )}
               </div>
             )}
@@ -1075,9 +1075,8 @@ const EventShow = ({ props }) => {
           background: "rgba(255,255,255,0.95)", backdropFilter: "blur(8px)",
           borderTop: "1px solid #e7e5e4", padding: "12px 20px"
         }}>
-          <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#44403c" }}>参加登録して全コンテンツにアクセス</span>
-            <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録" style={{ flexShrink: 0 }} />
+          <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" style={{ flexShrink: 0 }} />
           </div>
         </div>
       )}
