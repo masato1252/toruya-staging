@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+
+cleanup() {
+  if [ -n "$WEBPACK_PID" ]; then
+    kill "$WEBPACK_PID" 2>/dev/null
+    wait "$WEBPACK_PID" 2>/dev/null
+  fi
+}
+trap cleanup EXIT INT TERM
+
+echo "Starting webpack-dev-server..."
+bin/webpack-dev-server &
+WEBPACK_PID=$!
+
+echo "Starting Rails server..."
+rails s

@@ -27,10 +27,20 @@ module.exports = function(api) {
         },
         '@babel/preset-react'
       ],
-      (isProductionEnv || isDevelopmentEnv) && [
+      isProductionEnv && [
         '@babel/preset-env',
         {
           forceAllTransforms: true,
+          useBuiltIns: 'entry',
+          corejs: 3,
+          modules: false,
+          exclude: ['transform-typeof-symbol']
+        }
+      ],
+      isDevelopmentEnv && [
+        '@babel/preset-env',
+        {
+          targets: { browsers: ['last 2 Chrome versions', 'last 2 Firefox versions', 'last 2 Safari versions'] },
           useBuiltIns: 'entry',
           corejs: 3,
           modules: false,
