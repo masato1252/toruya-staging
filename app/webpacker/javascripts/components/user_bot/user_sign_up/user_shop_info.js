@@ -9,6 +9,8 @@ import I18n from 'i18n-js/index.js.erb';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const blankMessage = () => I18n.t("errors.messages.blank").replace(/^を/, "");
+
 export const UserShopInfo = ({props, finalView}) => {
   const [is_shop_profile_created, setShopProfile] = useState(false)
   const [is_shop_profile_checked, setCheckShopProfile] = useState(false)
@@ -44,17 +46,17 @@ export const UserShopInfo = ({props, finalView}) => {
     let valid = true;
 
     if (!company_name || !company_name.trim()) {
-      setCompanyNameError(I18n.t("errors.messages.blank"));
+      setCompanyNameError(blankMessage());
       valid = false;
     } else {
       setCompanyNameError(null);
     }
 
     if (!company_email || !company_email.trim()) {
-      setCompanyEmailError(I18n.t("errors.messages.blank"));
+      setCompanyEmailError(blankMessage());
       valid = false;
     } else if (!EMAIL_REGEX.test(company_email.trim())) {
-      setCompanyEmailError(I18n.t("errors.messages.invalid"));
+      setCompanyEmailError("形式が異なります");
       valid = false;
     } else {
       setCompanyEmailError(null);
@@ -113,44 +115,46 @@ export const UserShopInfo = ({props, finalView}) => {
         <h4>
           <RequiredLabel label={I18n.t("common.shop_name")} required_label={required_label} />
         </h4>
-        <div className="field">
+        <div className="sign-up-field">
           <input
             value={company_name || ''}
             onChange={(e) => setCompanyName(e.target.value)}
             type="text"
-            className={companyNameError ? "field-error" : ""}
+            className={`form-control ${companyNameError ? "field-error" : ""}`}
           />
           {companyNameError && <ErrorMessage error={companyNameError} />}
         </div>
         <h4>
           <label>{I18n.t("common.shop_phone_number")}</label>
         </h4>
-        <div className="field">
+        <div className="sign-up-field">
           <input
             value={company_phone_number || ''}
             onChange={(e) => setCompanyPhoneNumber(e.target.value)}
-            type="text"
+            type="tel"
+            className="form-control"
           />
         </div>
         <h4>
           <RequiredLabel label={I18n.t("common.shop_email")} required_label={required_label} />
         </h4>
-        <div className="field">
+        <div className="sign-up-field">
           <input
             value={company_email || ''}
             onChange={(e) => setCompanyEmail(e.target.value)}
             type="email"
-            className={companyEmailError ? "field-error" : ""}
+            className={`form-control ${companyEmailError ? "field-error" : ""}`}
           />
           {companyEmailError && <ErrorMessage error={companyEmailError} />}
         </div>
       </div>
-      <div className="reminder-mark centerize">
-        {I18n.t("user_bot.guest.user_sign_up.address_required_hint")}
-      </div>
       <AddressView
         save_btn_text={save_btn}
         handleSubmitCallback={onSubmit}
+        showFieldErrors={true}
+        externalValidator={validateLocalFields}
+        fullWidth={true}
+        addressRequiredLabel={`${required_label}（市区町村まで）`}
       />
     </>
   )

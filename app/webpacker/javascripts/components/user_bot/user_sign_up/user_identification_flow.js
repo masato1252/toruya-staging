@@ -13,6 +13,8 @@ import useAddress from "libraries/use_address";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const blankMessage = () => I18n.t("errors.messages.blank").replace(/^を/, "");
+
 export const UserIdentificationFlow = ({props, finalView, next}) => {
   const {
     page_title, trial_info_html, name, last_name, first_name, confirm_customer_info, booking_code, message,
@@ -31,6 +33,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     }
   });
   const { isSubmitting } = formState;
+  const [is_creating_user, setIsCreatingUser] = useState(false);
   const [is_phone_identified, setPhoneIdentified] = useState(!!props.is_user_logged_in)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
@@ -64,6 +67,11 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     setValue("code", "");
     clearErrors(["code"]);
 
+    if (!localPhone || !localPhone.trim()) {
+      setError("phone_number", { message: blankMessage() });
+      return;
+    }
+
     const [error, response] = await IdentificationCodesServices.create(data);
 
     setValue("uuid", response.data?.uuid)
@@ -74,6 +82,15 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
         message: response.data.errors.message
       });
     }
+  }
+
+  const handleGenerateCodeClick = (e) => {
+    if (!localPhone || !localPhone.trim()) {
+      setError("phone_number", { message: blankMessage() });
+    } else {
+      clearErrors(["phone_number"]);
+    }
+    return handleSubmit(generateCode)(e);
   }
 
   const identifyCode = async (data) => {
@@ -104,40 +121,45 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   }
 
   const createUser = async (data) => {
-    const [error, response] = await UsersServices.create(
-      _.merge(
-        {
-          staff_token: props.staff_token,
-          consultant_token: props.consultant_token,
-          locale: props.locale
-        },
-        data
-      )
-    );
+    setIsCreatingUser(true);
+    try {
+      const [error, response] = await UsersServices.create(
+        _.merge(
+          {
+            staff_token: props.staff_token,
+            consultant_token: props.consultant_token,
+            locale: props.locale
+          },
+          data
+        )
+      );
 
-    if (error) {
-      const errResponse = error.response;
-      if (errResponse && errResponse.status === 422 && errResponse.data && errResponse.data.errors) {
-        const serverErrors = errResponse.data.errors;
-        Object.keys(serverErrors).forEach((field) => {
-          setError(field, { message: [].concat(serverErrors[field]).join(", ") });
-        });
+      if (error) {
+        const errResponse = error.response;
+        if (errResponse && errResponse.status === 422 && errResponse.data && errResponse.data.errors) {
+          const serverErrors = errResponse.data.errors;
+          Object.keys(serverErrors).forEach((field) => {
+            setError(field, { message: [].concat(serverErrors[field]).join(", ") });
+          });
+        }
+        return;
       }
-      return;
+
+      const {
+        user_id
+      } = response.data;
+
+      setValue("user_id", user_id)
+    } finally {
+      setIsCreatingUser(false);
     }
-
-    const {
-      user_id
-    } = response.data;
-
-    setValue("user_id", user_id)
   }
 
   const emailErrorMessage = () => {
     if (!errors.email) return null;
-    if (errors.email.type === "pattern") return I18n.t("errors.messages.invalid");
+    if (errors.email.type === "pattern") return "形式が異なります";
     if (errors.email.message) return errors.email.message;
-    return I18n.t("errors.messages.blank");
+    return blankMessage();
   }
 
   const renderUserBasicFields = () => {
@@ -146,30 +168,33 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
         <h4>
           <RequiredLabel label={name} required_label={required_label} />
         </h4>
-        <div className="field">
+        <div className="sign-up-field sign-up-field--row">
           <input
             ref={register({ required: true })}
             name="last_name"
             placeholder={last_name}
             type="text"
+            className={`form-control ${errors.last_name ? "field-error" : ""}`}
           />
           <input
             ref={register({ required: true })}
             name="first_name"
             placeholder={first_name}
             type="text"
+            className={`form-control ${errors.first_name ? "field-error" : ""}`}
           />
         </div>
+        {(errors.last_name || errors.first_name) && <ErrorMessage error={blankMessage()} />}
         <h4>
           <RequiredLabel label={I18n.t("common.email")} required_label={required_label} />
         </h4>
-        <div className="field">
+        <div className="sign-up-field">
           <input
             ref={register({ required: true, pattern: EMAIL_REGEX })}
             name="email"
             type="email"
             placeholder={I18n.t("common.email")}
-            className={errors.email ? "error" : ""}
+            className={`form-control ${errors.email ? "field-error" : ""}`}
           />
           {errors.email && <ErrorMessage error={emailErrorMessage()} />}
         </div>
@@ -201,7 +226,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
         <ErrorMessage error={errors.phone_number?.message} />
         {!watchIsIdentificationCodeExists && (
           <div className="centerize margin-around">
-            <a href="#" className="btn btn-tarco submit" onClick={handleSubmit(generateCode)} disabled={isSubmitting}>
+            <a href="#" className="btn btn-tarco submit" onClick={handleGenerateCodeClick} disabled={isSubmitting}>
               {isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
           </div>
@@ -229,14 +254,16 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             placeholder="012345"
             type="tel"
           />
-          <button
-            onClick={handleSubmit(identifyCode)}
-            className="btn btn-tarco">
-            {confirm}
-          </button>
+          <div className="margin-around">
+            <button
+              onClick={handleSubmit(identifyCode)}
+              className="btn btn-tarco">
+              {confirm}
+            </button>
+          </div>
           <ErrorMessage error={errors.code?.message} />
           <div className="resend-row">
-            <a href="#" onClick={handleSubmit(generateCode)} >
+            <a href="#" onClick={handleGenerateCodeClick} >
               {booking_code.resend}
             </a>
           </div>
@@ -262,25 +289,25 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             <h4>
               <RequiredLabel label={phonetic_name} required_label={required_label} />
             </h4>
-            <div className="field">
+            <div className="sign-up-field sign-up-field--row">
               <input
-              ref={register({ required: true })}
-              placeholder={phonetic_last_name}
-              type="text"
-              name="phonetic_last_name"
-            />
-            <input
-              ref={register({ required: true })}
-              placeholder={phonetic_first_name}
-              type="text"
-              name="phonetic_first_name"
+                ref={register({ required: true })}
+                placeholder={phonetic_last_name}
+                type="text"
+                name="phonetic_last_name"
+                className={`form-control ${errors.phonetic_last_name ? "field-error" : ""}`}
+              />
+              <input
+                ref={register({ required: true })}
+                placeholder={phonetic_first_name}
+                type="text"
+                name="phonetic_first_name"
+                className={`form-control ${errors.phonetic_first_name ? "field-error" : ""}`}
               />
             </div>
+            {(errors.phonetic_last_name || errors.phonetic_first_name) && <ErrorMessage error={blankMessage()} />}
           </>
         )}
-        <div className="reminder-mark centerize">
-          {I18n.t("user_bot.guest.user_sign_up.personal_address_required_hint")}
-        </div>
         <h4>
           <RequiredLabel label={I18n.t("common.zip_code")} required_label={required_label} />
         </h4>
@@ -293,6 +320,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             className={errors.zip_code ? "error" : ""}
           />
         </div>
+        {errors.zip_code && <ErrorMessage error={blankMessage()} />}
         <h4>
           <RequiredLabel label={I18n.t("common.address")} required_label={required_label} />
         </h4>
@@ -305,45 +333,50 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             className={errors.region ? "error" : ""}
           />
         </div>
-        <div className="field">
+        {errors.region && <ErrorMessage error={blankMessage()} />}
+        <div className="sign-up-field">
           <input
             ref={register({ required: true })}
             name="city"
             placeholder={I18n.t("common.address_city")}
             type="text"
-            className={`expanded ${errors.city ? "error" : ""}`}
+            className={`form-control ${errors.city ? "field-error" : ""}`}
           />
         </div>
-        <div className="field">
+        {errors.city && <ErrorMessage error={blankMessage()} />}
+        <div className="sign-up-field">
           <input
             ref={register({ required: true })}
             name="street1"
             placeholder={I18n.t("common.address_street1")}
             type="text"
-            className={`expanded ${errors.street1 ? "error" : ""}`}
+            className={`form-control ${errors.street1 ? "field-error" : ""}`}
           />
         </div>
-        <div className="field">
+        {errors.street1 && <ErrorMessage error={blankMessage()} />}
+        <div className="sign-up-field">
           <input
             ref={register()}
             name="street2"
             placeholder={I18n.t("common.address_street2")}
             type="text"
-            className="expanded"
+            className="form-control"
           />
         </div>
         <h4>{I18n.t("user_bot.guest.user_sign_up.know_more_about_you")}</h4>
-        <div className="field">
+        <div className="sign-up-field">
           <input
             type="text"
             ref={register()}
             placeholder={I18n.t("user_bot.guest.user_sign_up.where_u_find_toruya")}
             name="where_know_toruya"
+            className="form-control"
           />
           <TextareaAutosize
             ref={register()}
             placeholder={I18n.t("user_bot.guest.user_sign_up.what_you_expect_toruya_solve")}
             name="what_main_problem"
+            className="form-control"
           />
         </div>
         <h4>
@@ -358,9 +391,9 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           />
         </div>
         {is_phone_identified && (
-          <div className="centerize">
-            <a href="#" className="btn btn-tarco submit" onClick={handleSubmit(createUser)} disabled={isSubmitting}>
-              {isSubmitting ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : create_customer_info}
+          <div className="centerize margin-around">
+            <a href="#" className="btn btn-tarco submit" onClick={is_creating_user ? undefined : handleSubmit(createUser)} disabled={is_creating_user}>
+              {is_creating_user ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : create_customer_info}
             </a>
           </div>
         )}

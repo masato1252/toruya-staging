@@ -27,6 +27,93 @@
     }
   }
 
+  // form-control を明示した入力は、`.booking-content` 既定の幅制約を外し、
+  // 親幅いっぱいで表示する（ユーザー登録・店舗登録画面などで使用）
+  input.form-control,
+  input[type="text"].form-control,
+  input[type="tel"].form-control,
+  input[type="email"].form-control,
+  textarea.form-control {
+    width: 100%;
+    box-sizing: border-box;
+
+    &.expanded {
+      width: 100%;
+    }
+  }
+
+  // booking の `.field` は 45% inline-block の 2 列前提。
+  // ユーザー登録・店舗登録フォームでは 1 列縦積みにしたいので専用クラスを用意
+  .sign-up-field {
+    display: block;
+    width: 100%;
+    margin: 6px 0 0;
+
+    // 単独 input/textarea は親幅いっぱい
+    > input,
+    > textarea,
+    > .form-control {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    // 複数要素が縦に積まれた場合の段間隔
+    // （横並びモディファイア `.sign-up-field--row` 配下には適用しない）
+    &:not(.sign-up-field--row) {
+      > input + input,
+      > input + textarea,
+      > textarea + input,
+      > textarea + textarea {
+        margin-top: 8px;
+      }
+    }
+
+    // field-error のボーダー(2px)分で高さがぶれないよう、
+    // sign-up-field 配下では outline でエラー枠を描画する
+    > input.field-error,
+    > textarea.field-error,
+    > .form-control.field-error {
+      border: 1px solid $input-border !important;
+      outline: 2px solid #CF0003;
+      outline-offset: -2px;
+    }
+
+    // sign-up-field 配下の input の高さを明示的に揃える
+    // （bootstrap form-control の height 指定 + :invalid 時の box-shadow 差で
+    //   横並び時に左右の input の高さがズレる現象を防ぐ）
+    > input,
+    > .form-control:not(textarea):not(select) {
+      height: 40px;
+      line-height: 1.4;
+      box-shadow: none;
+    }
+
+    // :required / :invalid 由来のブラウザ既定スタイルによる見た目差を打ち消す
+    > input:invalid,
+    > .form-control:invalid {
+      box-shadow: none;
+    }
+
+    // 姓・名やふりがななど、横 2 カラムに並べる用のモディファイア
+    &.sign-up-field--row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+
+      > input,
+      > textarea,
+      > .form-control {
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto;
+        height: 40px;
+        line-height: 1.4;
+        box-sizing: border-box;
+        box-shadow: none;
+      }
+    }
+  }
+
   .header {
     margin-top: 12px;
     margin-bottom: 12px;
