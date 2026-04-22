@@ -4,6 +4,7 @@ tw:
       rich_menu_bar: 使用者選單
       user_sign_up:
         reminder_message: 使用者註冊已完成！
+        address_required_hint: 地址需填寫至鄉鎮市區（街道巷弄以下為選填）
         page_title: 使用者註冊
         name: 姓名
         last_name: 姓

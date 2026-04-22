@@ -7,20 +7,17 @@ module Users
     def execute
       return if staff_for_another_owner?
 
-      if user.profile && !user.shops.exists?
-        shop_name = user.profile.company_name.presence || "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
-        user.profile.update(company_name: shop_name) if user.profile.company_name.blank?
-
+      if user.profile && profile.company_address_details.present? && !user.shops.exists?
         Shops::Create.run(
           user: user,
           params: {
-            name: shop_name,
-            short_name: shop_name,
+            name: profile.company_name,
+            short_name: profile.company_name,
             phone_number: profile.company_phone_number.presence || user.phone_number.presence || profile.phone_number,
-            email: user.email.presence || profile.email,
+            email: profile.company_email.presence || user.email.presence || profile.email,
             website: profile.website,
-            zip_code: profile.company_zip_code.presence || profile.zip_code.presence || I18n.t("common.no_data"),
-            address: profile.company_address.presence || profile.address.presence || I18n.t("common.no_data"),
+            zip_code: profile.company_zip_code.presence || profile.zip_code,
+            address: profile.company_address.presence || profile.address,
             address_details: profile.company_address_details || profile.personal_address_details
           }
         )

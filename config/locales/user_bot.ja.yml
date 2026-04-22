@@ -4,6 +4,7 @@ ja:
       rich_menu_bar: ユーザーメニュー
       user_sign_up:
         reminder_message: ユーザー登録が完了しました！
+        address_required_hint: 住所は市区町村まで必須です（丁目・番地以降は任意）
         page_title: ユーザー登録
         name: お名前
         last_name: 姓
