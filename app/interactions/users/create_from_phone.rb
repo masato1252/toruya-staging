@@ -9,7 +9,12 @@ module Users
     string :phonetic_first_name, default: nil
     string :phone_number
     string :referral_token, default: nil
-    string :email, default: nil
+    string :email
+    string :zip_code
+    string :region
+    string :city
+    string :street1
+    string :street2, default: nil
     string :where_know_toruya, default: nil
     string :what_main_problem, default: nil
     boolean :invited_as_staff, default: false
@@ -48,7 +53,14 @@ module Users
           phonetic_first_name: phonetic_first_name,
           where_know_toruya: where_know_toruya,
           what_main_problem: what_main_problem,
-          email: email
+          email: email,
+          zip_code: zip_code,
+          region: region,
+          city: city,
+          street1: street1,
+          street2: street2,
+          address: personal_address.pure_address,
+          personal_address_details: personal_address.as_json
         })
         user
       end
@@ -65,6 +77,18 @@ module Users
       Users::CreateDefaultSettings.run(user: user)
 
       user
+    end
+
+    private
+
+    def personal_address
+      @personal_address ||= Address.new(
+        zip_code: zip_code,
+        region: region,
+        city: city,
+        street1: street1,
+        street2: street2
+      )
     end
   end
 end

@@ -9,6 +9,9 @@ import I18n from 'i18n-js/index.js.erb';
 
 import { ErrorMessage, RequiredLabel } from "shared/components";
 import { COUNTRY_CODES, separatePhoneNumber, toInternationalNumber } from "shared/customer_verification";
+import useAddress from "libraries/use_address";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const UserIdentificationFlow = ({props, finalView, next}) => {
   const {
@@ -23,13 +26,16 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
 
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm({
     defaultValues: {
-      phone_number: props.phone_number ? toInternationalNumber(initialCountryCode, initialLocalPhone) : ''
+      phone_number: props.phone_number ? toInternationalNumber(initialCountryCode, initialLocalPhone) : '',
+      email: props.social_user_email || ''
     }
   });
   const { isSubmitting } = formState;
   const [is_phone_identified, setPhoneIdentified] = useState(!!props.is_user_logged_in)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
+  const watchZipCode = watch("zip_code")
+  const personalAddress = useAddress(watchZipCode)
 
   useEffect(() => {
     setValue("phone_number", toInternationalNumber(countryCode, localPhone));
@@ -46,6 +52,11 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
       next()
     }
   }, [watchIsUserMatched, is_phone_identified])
+
+  useEffect(() => {
+    if (personalAddress?.prefecture) setValue("region", personalAddress.prefecture);
+    if (personalAddress?.city) setValue("city", personalAddress.city);
+  }, [personalAddress.city])
 
 
   const generateCode = async (data) => {
@@ -104,11 +115,29 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
       )
     );
 
+    if (error) {
+      const errResponse = error.response;
+      if (errResponse && errResponse.status === 422 && errResponse.data && errResponse.data.errors) {
+        const serverErrors = errResponse.data.errors;
+        Object.keys(serverErrors).forEach((field) => {
+          setError(field, { message: [].concat(serverErrors[field]).join(", ") });
+        });
+      }
+      return;
+    }
+
     const {
       user_id
     } = response.data;
 
     setValue("user_id", user_id)
+  }
+
+  const emailErrorMessage = () => {
+    if (!errors.email) return null;
+    if (errors.email.type === "pattern") return I18n.t("errors.messages.invalid");
+    if (errors.email.message) return errors.email.message;
+    return I18n.t("errors.messages.blank");
   }
 
   const renderUserBasicFields = () => {
@@ -130,6 +159,19 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             placeholder={first_name}
             type="text"
           />
+        </div>
+        <h4>
+          <RequiredLabel label={I18n.t("common.email")} required_label={required_label} />
+        </h4>
+        <div className="field">
+          <input
+            ref={register({ required: true, pattern: EMAIL_REGEX })}
+            name="email"
+            type="email"
+            placeholder={I18n.t("common.email")}
+            className={errors.email ? "error" : ""}
+          />
+          {errors.email && <ErrorMessage error={emailErrorMessage()} />}
         </div>
         <h4>
           <RequiredLabel label={props.i18n.user_sign_up.phone_number} required_label={required_label} />
@@ -174,7 +216,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     return (
       <div className="customer-type-options">
         <h4>
-          {booking_code.code}
+          <RequiredLabel label={booking_code.code} required_label={required_label} />
         </h4>
         <div className="centerize">
           <div className="desc">
@@ -236,6 +278,60 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             </div>
           </>
         )}
+        <div className="reminder-mark centerize">
+          {I18n.t("user_bot.guest.user_sign_up.personal_address_required_hint")}
+        </div>
+        <h4>
+          <RequiredLabel label={I18n.t("common.zip_code")} required_label={required_label} />
+        </h4>
+        <div className="field">
+          <input
+            ref={register({ required: true })}
+            name="zip_code"
+            placeholder="1234567"
+            type="tel"
+            className={errors.zip_code ? "error" : ""}
+          />
+        </div>
+        <h4>
+          <RequiredLabel label={I18n.t("common.address")} required_label={required_label} />
+        </h4>
+        <div className="field">
+          <input
+            ref={register({ required: true })}
+            name="region"
+            placeholder={I18n.t("common.address_region")}
+            type="text"
+            className={errors.region ? "error" : ""}
+          />
+        </div>
+        <div className="field">
+          <input
+            ref={register({ required: true })}
+            name="city"
+            placeholder={I18n.t("common.address_city")}
+            type="text"
+            className={`expanded ${errors.city ? "error" : ""}`}
+          />
+        </div>
+        <div className="field">
+          <input
+            ref={register({ required: true })}
+            name="street1"
+            placeholder={I18n.t("common.address_street1")}
+            type="text"
+            className={`expanded ${errors.street1 ? "error" : ""}`}
+          />
+        </div>
+        <div className="field">
+          <input
+            ref={register()}
+            name="street2"
+            placeholder={I18n.t("common.address_street2")}
+            type="text"
+            className="expanded"
+          />
+        </div>
         <h4>{I18n.t("user_bot.guest.user_sign_up.know_more_about_you")}</h4>
         <div className="field">
           <input
