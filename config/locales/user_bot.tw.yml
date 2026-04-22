@@ -5,6 +5,7 @@ tw:
       user_sign_up:
         reminder_message: 使用者註冊已完成！
         address_required_hint: 地址需填寫至鄉鎮市區（街道巷弄以下為選填）
+        personal_address_required_hint: 地址需填寫至街道門牌號碼（建物名稱・房號為選填）
         page_title: 使用者註冊
         name: 姓名
         last_name: 姓

@@ -12,6 +12,11 @@ module Profiles
       string :phone_number, default: nil
       string :email, default: nil
       string :zip_code, default: nil
+      string :region, default: nil
+      string :city, default: nil
+      string :street1, default: nil
+      string :street2, default: nil
+      hash :personal_address_details, strip: false, default: {}
       string :where_know_toruya, default: nil
       string :what_main_problem, default: nil
     end

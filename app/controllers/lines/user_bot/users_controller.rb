@@ -49,19 +49,31 @@ class Lines::UserBot::UsersController < Lines::UserBotController
   end
 
   def create_user
-    user = Users::CreateFromPhone.run!(
+    outcome = Users::CreateFromPhone.run(
       last_name: params[:last_name],
       first_name: params[:first_name],
       phonetic_last_name: params[:phonetic_last_name],
       phonetic_first_name: params[:phonetic_first_name],
       phone_number: params[:phone_number],
       email: params[:email],
+      zip_code: params[:zip_code],
+      region: params[:region],
+      city: params[:city],
+      street1: params[:street1],
+      street2: params[:street2],
       referral_token: params[:referral_token],
       where_know_toruya: params[:where_know_toruya],
       what_main_problem: params[:what_main_problem],
       social_user: social_user,
       invited_as_staff: params[:staff_token].present?
     )
+
+    unless outcome.valid?
+      render json: { errors: outcome.errors.messages }, status: :unprocessable_entity
+      return
+    end
+
+    user = outcome.result
 
     ApplicationRecord.transaction do
       booking_code = BookingCode.find_by!(uuid: params[:uuid])
