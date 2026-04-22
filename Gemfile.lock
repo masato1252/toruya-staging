@@ -500,9 +500,11 @@ GEM
       activerecord (>= 6.0)
       request_store (~> 1.4)
     parallel (1.22.1)
-    pg (1.1.4)
-    pg_query (5.1.0)
-      google-protobuf (>= 3.22.3)
+    pg (1.6.3-arm64-darwin)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
+    pg_query (6.2.2)
+      google-protobuf (>= 3.25.3)
     pghero (2.8.3)
       activerecord (>= 5)
     phonelib (0.7.5)
@@ -707,6 +709,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-23
+  arm64-darwin-25
   x86_64-darwin-20
   x86_64-linux
 
@@ -779,7 +782,7 @@ DEPENDENCIES
   omniauth-stripe-connect
   paper_trail
   parallel
-  pg (~> 1.1.4)
+  pg (~> 1.1)
   pg_query
   pghero (~> 2.8.1)
   phonelib
@@ -820,7 +823,7 @@ DEPENDENCIES
   wkhtmltopdf-binary-edge-alpine
 
 RUBY VERSION
-   ruby 3.1.3p185
+   ruby 3.3.7p123
 
 BUNDLED WITH
    2.3.26

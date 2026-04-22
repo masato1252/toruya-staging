@@ -6,7 +6,7 @@ ruby "3.3.7"
 
 gem "rails", "~> 7.0.4"
 gem "next_rails"
-gem "pg", "~> 1.1.4"
+gem "pg", "~> 1.1"
 gem "pghero", "~> 2.8.1"
 gem "pg_query"
 gem "uglifier", ">= 1.3.0"
