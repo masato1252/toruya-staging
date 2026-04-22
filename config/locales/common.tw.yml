@@ -232,6 +232,7 @@ tw:
     preparing: 準備中
     shop_name: 商家名稱
     shop_phone_number: 商家電話號碼
+    shop_email: 商家電子郵件
     short_shop_name: 簡稱
     company_info: 公司資訊
     shop_info: 商家資訊

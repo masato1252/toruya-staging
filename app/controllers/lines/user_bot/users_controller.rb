@@ -113,12 +113,13 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       return
     end
 
-    user = Profiles::UpdateShopInfo.run!(
+    outcome = Profiles::UpdateShopInfo.run(
       user: current_user,
       social_user: social_user,
       params: {
         company_name: params[:company_name],
         company_phone_number: params[:company_phone_number],
+        company_email: params[:company_email],
         zip_code: params[:zip_code],
         region: params[:region],
         city: params[:city],
@@ -127,7 +128,11 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       }
     )
 
-    render json: { redirect_url: lines_user_bot_settings_path(business_owner_id: current_user.id) }
+    if outcome.valid?
+      render json: { redirect_url: lines_user_bot_settings_path(business_owner_id: current_user.id) }
+    else
+      render json: { errors: outcome.errors.messages }, status: :unprocessable_entity
+    end
   end
 
   def check_shop_profile
