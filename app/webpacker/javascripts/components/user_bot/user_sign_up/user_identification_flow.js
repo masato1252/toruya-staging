@@ -257,7 +257,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           <div className="margin-around">
             <button
               onClick={handleSubmit(identifyCode)}
-              className="btn btn-tarco">
+              className="btn btn-tarco submit">
               {confirm}
             </button>
           </div>
@@ -392,8 +392,8 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
         </div>
         {is_phone_identified && (
           <div className="centerize margin-around">
-            <a href="#" className="btn btn-tarco submit" onClick={is_creating_user ? undefined : handleSubmit(createUser)} disabled={is_creating_user}>
-              {is_creating_user ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : create_customer_info}
+            <a href="#" className="BTNtarco submit" onClick={is_creating_user ? undefined : handleSubmit(createUser)} disabled={is_creating_user}>
+              {is_creating_user ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : "次　へ"}
             </a>
           </div>
         )}
