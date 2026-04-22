@@ -19,6 +19,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   skip_before_action :track_ahoy_visit
   before_action :set_locale
   before_action :redirect_from_rich_menu
+  before_action :require_complete_shop_profile!
 
   def from_line_bot
     true
@@ -67,6 +68,16 @@ class Lines::UserBotDashboardController < ActionController::Base
     cookies.clear_across_domains(:locale)
     cookies.set_across_domains(:locale, I18n.locale, expires: 20.years.from_now)
     Time.zone = ::LOCALE_TIME_ZONE[I18n.locale] || "Asia/Tokyo"
+  end
+
+  def require_complete_shop_profile!
+    return if current_user.blank?
+    return unless Current.business_owner == current_user
+    # 他オーナーの active staff として入場している場合はスルー
+    return if current_user.staff_accounts.active.where.not(owner_id: current_user.id).exists?
+    return if current_user.profile&.company_address_details.present?
+
+    redirect_to lines_user_bot_sign_up_path(social_service_user_id: current_social_user&.social_service_user_id)
   end
 
   def notify_user_customer_reservation_confirmation_message

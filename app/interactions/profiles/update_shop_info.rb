@@ -6,6 +6,7 @@ module Profiles
     object :social_user
     hash :params do
       string :company_name, default: nil
+      string :company_email, default: nil
       string :company_phone_number, default: nil
       string :zip_code, default: nil
       string :region, default: nil
@@ -14,19 +15,20 @@ module Profiles
       string :street2, default: nil
     end
 
+    validate :required_fields_present
+
     def execute
       ApplicationRecord.transaction do
-        logo_params = params.delete(:logo)
         user.profile.update!(
-          params.merge!(
+          params.merge(
             address: address.pure_address,
             company_address: address.pure_address,
             company_zip_code: params[:zip_code],
             phone_number: user.phone_number,
             company_phone_number: params[:company_phone_number].presence || user.phone_number,
-            email: user.email,
-            company_email: user.email,
-            company_name: params[:company_name].presence || "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}",
+            email: user.email.presence || params[:company_email],
+            company_email: params[:company_email],
+            company_name: params[:company_name],
             company_address_details: address.as_json,
             personal_address_details: address.as_json
           )
@@ -43,6 +45,14 @@ module Profiles
     end
 
     private
+
+    def required_fields_present
+      errors.add(:company_name, :blank) if params[:company_name].blank?
+      errors.add(:company_email, :blank) if params[:company_email].blank?
+      errors.add(:zip_code, :blank) if params[:zip_code].blank?
+      errors.add(:region, :blank) if params[:region].blank?
+      errors.add(:city, :blank) if params[:city].blank?
+    end
 
     def address
       @address ||= Address.new(params)
