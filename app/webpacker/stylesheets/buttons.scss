@@ -88,6 +88,42 @@ a.btn {
   border-color: $palette-color2-2 !important;
 }
 
+// `BTNtarco` は manager/manager.scss に定義されている legacy の命名。
+// booking / user_bot pack からも利用できるよう、同等のスタイルをここに複製しておく。
+// booking pack の `a { color: $palette-color2 }`（tarco 色）と同色でテキストが
+// 埋もれないよう、color は !important で白に固定する。
+.BTNtarco,
+a.BTNtarco,
+a.BTNtarco:link,
+a.BTNtarco:visited,
+input.BTNtarco,
+button.BTNtarco {
+  display: inline-block;
+  color: #fff !important;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 12px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 6px;
+  cursor: pointer;
+  text-indent: 0;
+  background: #97bfb8;
+  border-color: #60938a;
+}
+
+.BTNtarco:hover,
+a.BTNtarco:hover,
+input.BTNtarco:hover,
+button.BTNtarco:hover {
+  background: #60938a;
+  border-color: #488479;
+}
+
 .btn-orange {
   background: $palette-color4-1;
   border-color: $palette-color4-2 !important;
