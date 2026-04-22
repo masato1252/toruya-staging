@@ -68,7 +68,7 @@ gem "oj"
 gem "jsonapi-serializer"
 gem "serviceworker-rails"
 gem "webpush", require: false
-gem "js-routes", "~> 1.4.9"
+gem "js-routes", "~> 2.2"
 gem "i18n-js", "~> 3.8.0"
 gem "platform-api"
 gem "mixpanel-ruby"
