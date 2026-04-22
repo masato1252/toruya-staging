@@ -43,4 +43,10 @@ const splitChunksConfig = {
 environment.config.merge(splitChunksConfig)
 environment.loaders.prepend('erb', erb)
 
+environment.loaders.prepend('mjs', {
+  test: /\.mjs$/,
+  include: /node_modules/,
+  type: 'javascript/auto'
+})
+
 module.exports = environment
