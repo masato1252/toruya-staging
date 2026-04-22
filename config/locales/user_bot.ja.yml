@@ -47,7 +47,7 @@ ja:
         street1: 続き住所
         street2: 建物名／部屋番号
         location: 住所
-        page_title: 初期設定
+        page_title: 店舗設定
         save_btn: 保存
     dashboards:
       change_logs:
