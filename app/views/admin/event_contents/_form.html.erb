@@ -332,17 +332,37 @@
         <span class="admin-form-help">ユーザIDを入力して検索後、表示される店舗から選択してください</span>
 
         <%# === 出展者紹介リンク (?rs=<shop_id> 付き) === %>
+        <%# 上段: イベントTOP への紹介リンク (新規/編集どちらでも表示)        %>
+        <%# 下段: このコンテンツ詳細ページへの紹介リンク (編集時のみ。新規は id 未確定) %>
         <% public_top_base = "#{request.base_url}/#{(event_content.event || @event).slug}" %>
+        <% public_content_base = event_content.persisted? ? "#{public_top_base}/event_contents/#{event_content.id}" : nil %>
         <div id="ref-link-wrapper"
              data-public-top-base="<%= public_top_base %>"
+             data-public-content-base="<%= public_content_base %>"
              style="margin-top:16px;<%= 'display:none;' unless event_content.shop_id %>">
-          <label style="font-size:12px;color:#6b7280;">出展者紹介リンク</label>
+          <label style="font-size:12px;color:#6b7280;">出展者紹介リンク（イベントTOP）</label>
           <div style="display:flex;gap:8px;margin-top:4px;">
             <input type="text" id="ref-link-input" class="form-control" readonly
                    value="<%= event_content.shop_id ? "#{public_top_base}?rs=#{event_content.shop_id}" : '' %>" />
             <button type="button" id="ref-link-copy" style="padding:8px 14px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;white-space:nowrap;">コピー</button>
           </div>
-          <span class="admin-form-help">このリンク経由で参加登録されたユーザは、この出展者の紹介として集計されます</span>
+          <span class="admin-form-help">イベントTOPページへの紹介リンク。このリンク経由で参加登録されたユーザは、この出展者の紹介として集計されます。</span>
+
+          <% if public_content_base %>
+            <div id="content-ref-link-row" style="margin-top:12px;">
+              <label style="font-size:12px;color:#6b7280;">コンテンツ紹介リンク（このコンテンツ詳細）</label>
+              <div style="display:flex;gap:8px;margin-top:4px;">
+                <input type="text" id="content-ref-link-input" class="form-control" readonly
+                       value="<%= event_content.shop_id ? "#{public_content_base}?rs=#{event_content.shop_id}" : '' %>" />
+                <button type="button" id="content-ref-link-copy" style="padding:8px 14px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff;white-space:nowrap;">コピー</button>
+              </div>
+              <span class="admin-form-help">このコンテンツ詳細ページへ直接遷移する紹介リンク。集計はTOPリンクと同じく出展者紹介として扱われます。</span>
+            </div>
+          <% else %>
+            <div style="margin-top:12px;font-size:12px;color:#9ca3af;">
+              ※ コンテンツ詳細ページへの紹介リンクは、コンテンツを保存後に表示されます。
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -679,10 +699,15 @@ document.addEventListener("DOMContentLoaded", function() {
     var hiddenShopField = document.getElementById("field-shop-id");
 
     // === 出展者紹介リンクの表示更新 ===
+    // ・refLinkInput        … イベントTOP への紹介リンク (常に存在)
+    // ・contentRefLinkInput … このコンテンツ詳細への紹介リンク (編集時のみ DOM に存在)
     var refLinkWrapper = document.getElementById("ref-link-wrapper");
     var refLinkInput = document.getElementById("ref-link-input");
     var refLinkCopyBtn = document.getElementById("ref-link-copy");
     var publicTopBase = refLinkWrapper ? refLinkWrapper.dataset.publicTopBase : "";
+    var publicContentBase = refLinkWrapper ? refLinkWrapper.dataset.publicContentBase : "";
+    var contentRefLinkInput = document.getElementById("content-ref-link-input");
+    var contentRefLinkCopyBtn = document.getElementById("content-ref-link-copy");
 
     function updateRefLink() {
       if (!refLinkWrapper) return;
@@ -690,9 +715,15 @@ document.addEventListener("DOMContentLoaded", function() {
       if (v) {
         refLinkInput.value = publicTopBase + "?rs=" + v;
         refLinkWrapper.style.display = "";
+        if (contentRefLinkInput && publicContentBase) {
+          contentRefLinkInput.value = publicContentBase + "?rs=" + v;
+        }
       } else {
         refLinkInput.value = "";
         refLinkWrapper.style.display = "none";
+        if (contentRefLinkInput) {
+          contentRefLinkInput.value = "";
+        }
       }
     }
 
@@ -721,16 +752,20 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(function() { /* noop */ });
     }
 
-    if (refLinkCopyBtn) {
-      refLinkCopyBtn.addEventListener("click", function() {
-        if (!refLinkInput.value) return;
-        navigator.clipboard.writeText(refLinkInput.value).then(function() {
-          var prev = refLinkCopyBtn.textContent;
-          refLinkCopyBtn.textContent = "コピー済み";
-          setTimeout(function() { refLinkCopyBtn.textContent = prev; }, 1500);
+    function bindCopyButton(btn, input) {
+      if (!btn || !input) return;
+      btn.addEventListener("click", function() {
+        if (!input.value) return;
+        navigator.clipboard.writeText(input.value).then(function() {
+          var prev = btn.textContent;
+          btn.textContent = "コピー済み";
+          setTimeout(function() { btn.textContent = prev; }, 1500);
         });
       });
     }
+
+    bindCopyButton(refLinkCopyBtn, refLinkInput);
+    bindCopyButton(contentRefLinkCopyBtn, contentRefLinkInput);
 
     function refreshOnlineServices(shopId, opts) {
       var serviceWrapper = document.getElementById("online-service-wrapper");
