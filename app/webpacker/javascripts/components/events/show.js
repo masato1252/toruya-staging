@@ -28,6 +28,16 @@ const formatJaDateWithWeekday = (value) => {
   return `${d.getMonth() + 1}月${d.getDate()}日(${weekdays[d.getDay()]})`;
 };
 
+// "M/D(曜日) HH:MM" 形式で日時をフォーマット。コンテンツカードの公開開始/配信開始表示で使う。
+const formatJaDateTimeShort = (value) => {
+  if (!value) return null;
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getMonth() + 1}/${d.getDate()}(${weekdays[d.getDay()]}) ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
 const ShareModal = ({ isOpen, onClose, title, shareTitle, thumbnailUrl, shareUrl }) => {
   const [copied, setCopied] = useState(false);
   if (!isOpen) return null;
@@ -203,20 +213,17 @@ const ThumbnailFallback = ({ eventLogoUrl, contentType }) => (
   </div>
 );
 
-const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl, disableLinks = false, previewable = false, eventLogoUrl = null }) => {
+const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl, eventLogoUrl = null }) => {
   const ctaLabel = () => "詳しく見る";
   const contentHref = `/${eventSlug}/event_contents/${content.id}`;
-  // 開催前(disableLinks)でも、参加登録済 + プレビュー権限ありなら詳細リンクを許可しラベルを「プレビュー」へ。
-  const showPreviewButton = disableLinks && previewable && isParticipant;
-  const linksEnabled = !disableLinks || showPreviewButton;
-  const ThumbWrapper = linksEnabled ? "a" : "div";
-  const thumbWrapperProps = linksEnabled
-    ? { href: contentHref, style: { textDecoration: "none", color: "inherit", display: "block" } }
-    : { style: { display: "block" } };
-  const TitleWrapper = linksEnabled ? "a" : "div";
-  const titleWrapperProps = linksEnabled
-    ? { href: contentHref, style: { textDecoration: "none", color: "inherit" } }
-    : {};
+  // 公開コンテンツは開催前/中問わず誰でも詳細に飛べる。下書き(status=0)は
+  // プレビュー権限を持つ viewer にのみサーバ側でカードが配信されるため、
+  // ここではリンクを常に有効にしてよい(404 防止のためのガードはサーバが担う)。
+  const isDraft = content.status === "unpublished";
+  const ThumbWrapper = "a";
+  const thumbWrapperProps = { href: contentHref, style: { textDecoration: "none", color: "inherit", display: "block" } };
+  const TitleWrapper = "a";
+  const titleWrapperProps = { href: contentHref, style: { textDecoration: "none", color: "inherit" } };
 
   return (
     <div style={{
@@ -236,15 +243,38 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl, disableL
       </ThumbWrapper>
 
       <div style={{ padding: "16px 20px" }}>
-        <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-          <StatusBadge content={content} />
-          <span style={{
-            background: content.content_type === "seminar" ? "#B95526" : "#488479",
-            color: "#fff", fontSize: 11, padding: "3px 10px", borderRadius: 12, fontWeight: 600
-          }}>
-            {content.content_type === "seminar" ? "セミナー" : "展示ブース"}
-          </span>
-        </div>
+        {(() => {
+          // コンテンツ種別バッジ(塗り) と、その横に並ぶ業種バッジ(反転色 = 背景 #fff / 文字・線は種別色)
+          const typeColor = content.content_type === "seminar" ? "#B95526" : "#488479";
+          return (
+            <div style={{ display: "flex", gap: 6, marginBottom: 8, flexWrap: "wrap", alignItems: "center" }}>
+              <span style={{
+                background: typeColor,
+                color: "#fff", fontSize: 11, padding: "3px 10px", borderRadius: 12, fontWeight: 600
+              }}>
+                {content.content_type === "seminar" ? "セミナー講演" : "展示ブース"}
+              </span>
+              {(content.exhibitor_roles || []).map((role, idx) => (
+                <span key={idx} style={{
+                  background: "#fff",
+                  color: typeColor,
+                  border: `1px solid ${typeColor}`,
+                  fontSize: 11, padding: "2px 9px", borderRadius: 12, fontWeight: 600
+                }}>
+                  {role}
+                </span>
+              ))}
+              {isDraft && (
+                <span style={{
+                  background: "#fef3c7", color: "#92400e", border: "1px solid #fcd34d",
+                  fontSize: 11, padding: "2px 10px", borderRadius: 12, fontWeight: 700
+                }}>
+                  下書き(プレビュー表示)
+                </span>
+              )}
+            </div>
+          );
+        })()}
         <TitleWrapper {...titleWrapperProps}>
           <h3 style={{ fontWeight: 700, fontSize: 17, marginBottom: 8, lineHeight: 1.4, color: "#1c1917" }}>{content.title}</h3>
         </TitleWrapper>
@@ -286,7 +316,7 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl, disableL
               {content.exhibitor_staff.position && (
                 <div style={{ fontSize: 11, color: "#a8a29e" }}>{content.exhibitor_staff.position}</div>
               )}
-              <div style={{ fontSize: 13, fontWeight: 600, color: "#44403c" }}>{content.exhibitor_staff.name}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#44403c", whiteSpace: "pre-line" }}>{content.exhibitor_staff.name}</div>
             </div>
           </div>
         ) : null}
@@ -297,54 +327,49 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl, disableL
           </div>
         )}
 
-        {linksEnabled && (
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            {showPreviewButton ? (
-              <a
-                href={contentHref}
-                style={{
-                  flex: 1, display: "block", padding: "12px 16px", textAlign: "center",
-                  background: "#fff", color: "#488479", border: "2px solid #488479",
-                  borderRadius: 8, fontSize: 14, fontWeight: 700, textDecoration: "none"
-                }}
-              >
-                プレビュー
-              </a>
-            ) : isParticipant && !content.ended ? (
-              <a
-                href={contentHref}
-                style={{
-                  flex: 1, display: "block", padding: "12px 16px", textAlign: "center",
-                  background: "#488479",
-                  color: "#fff", borderRadius: 8, fontSize: 14, fontWeight: 700,
-                  textDecoration: "none"
-                }}
-              >
-                {ctaLabel()}
-              </a>
-            ) : (
-              <a
-                href={contentHref}
-                style={{
-                  flex: 1, display: "block", padding: "12px 16px", textAlign: "center",
-                  background: "#f5f5f4", color: "#44403c", borderRadius: 8,
-                  fontSize: 14, fontWeight: 600, textDecoration: "none"
-                }}
-              >
-                詳細を見る
-              </a>
-            )}
-          </div>
-        )}
+        {(() => {
+          // 詳しく見るボタンの上に、コンテンツの配信開始日時を表示（種別問わず「配信開始」表記で統一）。
+          const formatted = formatJaDateTimeShort(content.start_at);
+          if (!formatted) return null;
+          return (
+            <div style={{ fontSize: 15, color: "#1c1917", marginBottom: 10, fontWeight: 700, textAlign: "center" }}>
+              配信開始：{formatted}〜
+            </div>
+          );
+        })()}
+
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {!content.ended ? (
+            <a
+              href={contentHref}
+              style={{
+                flex: 1, display: "block", padding: "12px 16px", textAlign: "center",
+                background: "#60938a",
+                color: "#fff", borderRadius: 8, fontSize: 14, fontWeight: 700,
+                textDecoration: "none"
+              }}
+            >
+              {ctaLabel()}
+            </a>
+          ) : (
+            <a
+              href={contentHref}
+              style={{
+                flex: 1, display: "block", padding: "12px 16px", textAlign: "center",
+                background: "#60938a", color: "#fff", borderRadius: 8,
+                fontSize: 14, fontWeight: 700, textDecoration: "none"
+              }}
+            >
+              詳細を見る
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
-const RecommendationCarousel = ({ contents, eventSlug, disableLinks = false, eventLogoUrl = null, isParticipant = false, canPreviewAll = false, previewableContentIds = [] }) => {
-  // 開催前(disableLinks)でも、参加登録済 + プレビュー権限ありのコンテンツはリンクを許可。
-  const previewableSet = new Set(previewableContentIds);
-  const isPreviewable = (content) => isParticipant && (canPreviewAll || previewableSet.has(content.id));
+const RecommendationCarousel = ({ contents, eventSlug, eventLogoUrl = null }) => {
   const [current, setCurrent] = useState(0);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
@@ -422,28 +447,18 @@ const RecommendationCarousel = ({ contents, eventSlug, disableLinks = false, eve
               transform: `translateX(${-current * 100 + swipePct}%)`
             }}>
               {contents.map(content => {
-                const linkActive = !disableLinks || isPreviewable(content);
-                const CardWrapper = linkActive ? "a" : "div";
-                const cardWrapperProps = linkActive
-                  ? {
-                      href: `/${eventSlug}/event_contents/${content.id}`,
-                      style: {
-                        flex: "0 0 100%", minWidth: 0,
-                        display: "flex",
-                        textDecoration: "none", color: "inherit",
-                        padding: "0 4px", boxSizing: "border-box"
-                      }
-                    }
-                  : {
-                      style: {
-                        flex: "0 0 100%", minWidth: 0,
-                        display: "flex",
-                        color: "inherit",
-                        padding: "0 4px", boxSizing: "border-box"
-                      }
-                    };
+                const isDraft = content.status === "unpublished";
+                const cardWrapperProps = {
+                  href: `/${eventSlug}/event_contents/${content.id}`,
+                  style: {
+                    flex: "0 0 100%", minWidth: 0,
+                    display: "flex",
+                    textDecoration: "none", color: "inherit",
+                    padding: "0 4px", boxSizing: "border-box"
+                  }
+                };
                 return (
-                <CardWrapper
+                <a
                   key={content.id}
                   {...cardWrapperProps}
                 >
@@ -465,13 +480,13 @@ const RecommendationCarousel = ({ contents, eventSlug, disableLinks = false, eve
                           fontSize: 10, padding: "2px 8px", borderRadius: 10, fontWeight: 600, color: "#fff",
                           background: content.content_type === "seminar" ? "#B95526" : "#488479"
                         }}>
-                          {content.content_type === "seminar" ? "セミナー" : "展示ブース"}
+                          {content.content_type === "seminar" ? "セミナー講演" : "展示ブース"}
                         </span>
-                        {disableLinks && isPreviewable(content) && (
+                        {isDraft && (
                           <span style={{
                             fontSize: 10, padding: "2px 8px", borderRadius: 10, fontWeight: 700,
-                            background: "#fff", color: "#488479", border: "1px solid #488479"
-                          }}>プレビュー</span>
+                            background: "#fef3c7", color: "#92400e", border: "1px solid #fcd34d"
+                          }}>下書き</span>
                         )}
                       </div>
                       <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1.4, color: "#1c1917",
@@ -481,11 +496,11 @@ const RecommendationCarousel = ({ contents, eventSlug, disableLinks = false, eve
                         {content.title}
                       </div>
                       {content.exhibitor_staff && (
-                        <div style={{ fontSize: 12, color: "#78716c", marginTop: 4 }}>{content.exhibitor_staff.name}</div>
+                        <div style={{ fontSize: 12, color: "#78716c", marginTop: 4, whiteSpace: "pre-line" }}>{content.exhibitor_staff.name}</div>
                       )}
                     </div>
                   </div>
-                </CardWrapper>
+                </a>
                 );
               })}
             </div>
@@ -794,7 +809,13 @@ const StampRallySection = ({ event }) => {
 
 const EventShow = ({ props }) => {
   const { event, line_login_url, add_friend_url, current_event_path, current_event_line_user_id } = props;
-  const [activeTab, setActiveTab] = useState("all");
+  // 初期タブはURLクエリ ?tab=seminar / ?tab=booth で指定可能（コンテンツ詳細ページのサブナビからの遷移用）。
+  // SSR 中は window が存在しないため、その場合は "all" にフォールバック。
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window === "undefined") return "all";
+    const t = new URLSearchParams(window.location.search).get("tab");
+    return ["all", "seminar", "booth"].includes(t) ? t : "all";
+  });
   const [shareOpen, setShareOpen] = useState(false);
 
   // ログイン済みユーザだけ ?ru=<event_line_user_id> 付きの URL をシェアさせる。
@@ -887,7 +908,7 @@ const EventShow = ({ props }) => {
 
                 {!event.is_participant && !event.ended && line_login_url && (
                   <div style={{ marginTop: 24 }}>
-                    <EventLineLoginLink loginUrl={line_login_url} btnText="LINEで参加登録／ログイン" />
+                    <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" />
                   </div>
                 )}
               </div>
@@ -920,7 +941,7 @@ const EventShow = ({ props }) => {
                 )}
 
                 {!event.is_participant && !event.ended && line_login_url && (
-                  <EventLineLoginLink loginUrl={line_login_url} btnText="LINEで参加登録／ログイン" />
+                  <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" />
                 )}
               </div>
             )}
@@ -929,10 +950,12 @@ const EventShow = ({ props }) => {
       })()}
 
       {/* Status banner (below MV) — 開催期間自体はMV内に表示 */}
-      {(event.not_started || event.ended) && (
+      {/* 「開始までお待ちください」は参加登録済ユーザにだけ表示する。 */}
+      {/* 未参加ユーザが開催前に訪れた場合はバナー自体を出さない（CTA は MV 内のログインボタンに集約）。 */}
+      {((event.not_started && event.is_participant) || event.ended) && (
         <div style={{ background: "#fafaf9", borderBottom: "1px solid #e7e5e4", padding: "24px 20px" }}>
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
-            {event.not_started && (
+            {event.not_started && event.is_participant && (
               <div style={{
                 border: "2px solid #CA4E0E", background: "#fff",
                 padding: "18px 20px", textAlign: "center",
@@ -957,9 +980,9 @@ const EventShow = ({ props }) => {
         </div>
       )}
 
-      {/* 開催終了後はMVと状態バナー以外は非表示 */}
-      {!event.ended && (
-        <>
+      {/* 開催終了後でもコンテンツ一覧・詳細にはアクセスできるように、開催前/中と同じ要素を表示する。 */}
+      {/* （未参加ユーザ向けの最下部 CTA だけは終了後に出さない。後段で別途制御している） */}
+      <>
           {/* Share bar */}
           <div style={{ background: "#fff", borderBottom: "1px solid #e7e5e4", padding: "12px 20px" }}>
             <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
@@ -1003,20 +1026,19 @@ const EventShow = ({ props }) => {
               <RecommendationCarousel
                 contents={recContents}
                 eventSlug={event.slug}
-                disableLinks={event.not_started}
                 eventLogoUrl={event.logo_image_url}
-                isParticipant={event.is_participant}
-                canPreviewAll={event.can_preview_all}
-                previewableContentIds={event.previewable_content_ids || []}
               />
             );
           })()}
+
+          {/* Tabs + Content list 包括（id="contents" は詳細ページのサブナビ等からのアンカー先） */}
+          <div id="contents" style={{ scrollMarginTop: 16 }}>
 
           {/* Tabs */}
           {seminars.length > 0 && booths.length > 0 && (
             <div style={{ background: "#fff", borderBottom: "1px solid #e7e5e4", position: "sticky", top: 0, zIndex: 10 }}>
               <div style={{ maxWidth: 720, margin: "0 auto", display: "flex" }}>
-                {[["all", `すべて (${(event.contents || []).length})`], ["seminar", `セミナー (${seminars.length})`], ["booth", `展示ブース (${booths.length})`]].map(([val, label]) => (
+                {[["all", `すべて (${(event.contents || []).length})`], ["seminar", `セミナー講演 (${seminars.length})`], ["booth", `展示ブース (${booths.length})`]].map(([val, label]) => (
                   <button
                     key={val}
                     onClick={() => setActiveTab(val)}
@@ -1043,30 +1065,26 @@ const EventShow = ({ props }) => {
                 <p style={{ color: "#a8a29e", fontSize: 15 }}>コンテンツはまだありません</p>
               </div>
             ) : (
-              (() => {
-                const previewableSet = new Set(event.previewable_content_ids || []);
-                return visibleContents.map(content => (
-                  <ContentCard
-                    key={content.id}
-                    content={content}
-                    eventSlug={event.slug}
-                    isParticipant={event.is_participant}
-                    lineLoginUrl={line_login_url}
-                    disableLinks={event.not_started}
-                    previewable={event.can_preview_all || previewableSet.has(content.id)}
-                    eventLogoUrl={event.logo_image_url}
-                  />
-                ));
-              })()
+              visibleContents.map(content => (
+                <ContentCard
+                  key={content.id}
+                  content={content}
+                  eventSlug={event.slug}
+                  isParticipant={event.is_participant}
+                  lineLoginUrl={line_login_url}
+                  eventLogoUrl={event.logo_image_url}
+                />
+              ))
             )}
           </div>
+
+          </div>{/* /#contents */}
 
           {/* Stamp Rally */}
           {event.is_participant && (
             <StampRallySection event={event} />
           )}
         </>
-      )}
 
       {/* Footer CTA (開催終了後は非表示) */}
       {!event.is_participant && !event.ended && line_login_url && (

@@ -13,7 +13,7 @@
         </div>
 
         <div class="field-row">
-          <span class="badge badge-info"><%= @event_content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+          <span class="badge badge-info"><%= @event_content.seminar_content_type? ? "セミナー講演" : "展示ブース" %></span>
           <h3 class="mt-2 font-bold"><%= @event_content.title %></h3>
           <% if @event_content.start_at %>
             <p class="text-sm text-gray-500">

@@ -57,7 +57,12 @@
             <%= link_to edit_admin_event_content_path(content), class: "admin-content-card-body" do %>
               <div class="admin-content-card-title">
                 <%= content.title %>
-                <span class="admin-badge admin-badge-info"><%= content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+                <% if content.status_published? %>
+                  <span class="admin-badge admin-badge-success">公開</span>
+                <% else %>
+                  <span class="admin-badge admin-badge-secondary">下書き</span>
+                <% end %>
+                <span class="admin-badge admin-badge-info"><%= content.seminar_content_type? ? "セミナー講演" : "展示ブース" %></span>
               </div>
               <div class="admin-content-card-meta">
                 <% if content.capacity %>

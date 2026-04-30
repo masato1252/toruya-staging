@@ -27,7 +27,7 @@ class EventsController < ActionController::Base
   private
 
   def compute_recommended_content_ids
-    contents = @event.event_contents.undeleted.order(Arel.sql("CASE content_type WHEN 0 THEN 0 ELSE 1 END"), :position)
+    contents = @event.visible_event_contents_for(@current_event_line_user).order(Arel.sql("CASE content_type WHEN 0 THEN 0 ELSE 1 END"), :position)
     has_profile = @participant &&
                   ((@participant.concern_categories || []) - ["other"]).any?
 

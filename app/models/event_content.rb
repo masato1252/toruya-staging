@@ -24,6 +24,7 @@
 #  post_ad_video_url      :string
 #  pre_ad_video_url       :string
 #  start_at               :datetime
+#  status                 :integer          default(1), not null
 #  title                  :string           not null
 #  upsell_booking_enabled :boolean          default(FALSE), not null
 #  video_url              :string
@@ -41,6 +42,7 @@
 #  index_event_contents_on_event_id_and_position   (event_id,position)
 #  index_event_contents_on_online_service_id       (online_service_id)
 #  index_event_contents_on_shop_id                 (shop_id)
+#  index_event_contents_on_status                  (status)
 #  index_event_contents_on_upsell_booking_page_id  (upsell_booking_page_id)
 #
 # Foreign Keys
@@ -64,10 +66,27 @@ class EventContent < ApplicationRecord
   has_many :event_activity_logs, dependent: :destroy
   has_many :event_stamp_entries, dependent: :destroy
 
+  # 関連コンテンツ（このコンテンツ → 別コンテンツへの紐付け）。
+  has_many :event_content_relations,
+           -> { order(:position) },
+           foreign_key: :event_content_id,
+           dependent: :destroy
+  has_many :related_event_contents,
+           through: :event_content_relations,
+           source: :related_event_content
+  # 逆方向参照（このコンテンツが他から関連付けられている関係）。削除時に整理するためのみ使用。
+  has_many :inverse_event_content_relations,
+           class_name: "EventContentRelation",
+           foreign_key: :related_event_content_id,
+           dependent: :destroy
+
   has_one_attached :thumbnail
   has_one_attached :exhibitor_logo
 
   enum content_type: { seminar: 0, booth: 1 }, _suffix: true
+  # status=0 を下書き/非公開、status=1 を公開とする。
+  # 公開側 (events#show / event_contents#show / EventSerializer) では published のみを表示する。
+  enum status: { unpublished: 0, published: 1 }, _prefix: :status
 
   validates :title, presence: true
   validates :exhibitor_company_name, presence: true, if: :booth_content_type?
@@ -103,5 +122,49 @@ class EventContent < ApplicationRecord
     return false unless upsell_booking_enabled?
     # capacity of booking page is checked separately via booking_page
     false
+  end
+
+  # フォームから [related_content_ids: [id1, id2, ...]] で受け取る用の getter。
+  def related_content_ids
+    event_content_relations.order(:position).pluck(:related_event_content_id)
+  end
+
+  # フォームから受け取った id 配列で event_content_relations を同期する。
+  # - 自身の id, 空文字, 重複は除外
+  # - 同じイベント内のコンテンツのみを対象とする
+  # - 並び順は配列の順番をそのまま position として保存する
+  def related_content_ids=(ids)
+    cleaned = Array(ids)
+              .map { |v| v.to_s.strip }
+              .reject(&:blank?)
+              .map(&:to_i)
+              .reject { |id| id == self.id }
+              .uniq
+
+    if persisted?
+      sync_related_content_ids(cleaned)
+    else
+      @pending_related_content_ids = cleaned
+    end
+  end
+
+  # 新規作成時は after_save で同期する。
+  after_save :persist_pending_related_content_ids, if: -> { @pending_related_content_ids }
+
+  private
+
+  def sync_related_content_ids(ids)
+    transaction do
+      event_content_relations.destroy_all
+      ids.each_with_index do |related_id, idx|
+        event_content_relations.create!(related_event_content_id: related_id, position: idx)
+      end
+    end
+  end
+
+  def persist_pending_related_content_ids
+    ids = @pending_related_content_ids
+    @pending_related_content_ids = nil
+    sync_related_content_ids(ids)
   end
 end

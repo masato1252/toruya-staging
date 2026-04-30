@@ -9,7 +9,6 @@ class EventContentsController < ActionController::Base
   prepend_before_action :set_event
   before_action :set_event_content
   before_action :capture_event_referrers, only: [:show]
-  before_action :guard_pre_event_access, only: [:show]
 
   helper ApplicationHelper
 
@@ -33,7 +32,8 @@ class EventContentsController < ActionController::Base
         participant: @participant,
         usage: @usage,
         consultation: @consultation,
-        monitor_application: @monitor_application
+        monitor_application: @monitor_application,
+        recommended_seminar_contents: compute_recommended_seminar_contents
       }
     }).attributes_hash
   end
@@ -117,6 +117,38 @@ class EventContentsController < ActionController::Base
 
   private
 
+  # コンテンツ詳細(セミナー講演)ページ最下部の「おすすめのセミナー講演」スライダー用に
+  # 同じイベント内の他のセミナー講演コンテンツを最大 8 件、参加者の関心ロールを優先して返す。
+  # ・現在表示中のコンテンツ自身は除外
+  # ・visible_event_contents_for で下書き/プレビュー権限を制御済みの集合のみが対象
+  # ・セミナー以外（展示ブース）は対象外
+  # ・参加プロフィールがあれば recommended_roles に一致するものを優先
+  # ・残り枠はそれ以外のセミナーをシャッフルして埋める
+  def compute_recommended_seminar_contents
+    return [] unless @event_content.seminar_content_type?
+
+    contents = @event.visible_event_contents_for(@current_event_line_user)
+                     .seminar_content_type
+                     .where.not(id: @event_content.id)
+                     .order(:position)
+    has_profile = @participant &&
+                  ((@participant.concern_categories || []) - ["other"]).any?
+
+    picked = []
+    if has_profile
+      roles = @participant.recommended_roles
+      matched = contents.to_a.select { |c| ((c.exhibitor_roles || []) & roles).any? }
+      picked = matched.first(8)
+    end
+
+    if picked.size < 8
+      remaining = contents.to_a - picked
+      picked += remaining.shuffle.first(8 - picked.size)
+    end
+
+    picked
+  end
+
   def set_event
     @event = Event.published.undeleted.find_by!(slug: params[:event_slug])
   rescue ActiveRecord::RecordNotFound
@@ -124,7 +156,10 @@ class EventContentsController < ActionController::Base
   end
 
   def set_event_content
-    @event_content = @event.event_contents.undeleted.find(params[:id])
+    # 公開コンテンツ(status=1)は誰でも閲覧可能。
+    # 下書き(status=0)はプレビュー権限を持つ viewer のみ閲覧可能(下記 visible_event_contents_for 内で制御)。
+    # 権限のない viewer が下書きの URL を直叩きした場合は 404 を返す。
+    @event_content = @event.visible_event_contents_for(current_event_line_user).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render plain: "コンテンツが見つかりません", status: :not_found
   end
@@ -135,24 +170,6 @@ class EventContentsController < ActionController::Base
     @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
   helper_method :current_event_line_user
-
-  # 開催前限定プレビュー機能のサーバ側ガード。
-  # 開催開始後はノーオペ（プレビュー仕様は開催前のみ）。
-  # 開催前の場合は、ログイン+参加登録済み かつ プレビュー権限ありの時だけ通過させる。
-  def guard_pre_event_access
-    return unless @event.not_started?
-    return if can_preview_content?(@event_content)
-
-    redirect_to "/#{@event.slug}", alert: "このコンテンツはまだ閲覧できません"
-  end
-
-  def can_preview_content?(content)
-    line_user = current_event_line_user
-    return false unless line_user
-    return false unless @event.event_participants.exists?(event_line_user_id: line_user.id)
-    return true if @event.master_previewer?(line_user)
-    @event.previewable_content_ids_for(line_user).include?(content.id)
-  end
 
   def record_stamp(action_type)
     return unless @current_event_line_user

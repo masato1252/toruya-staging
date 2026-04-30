@@ -37,22 +37,22 @@ class EventSerializer
     params[:event_line_user].present?
   end
 
-  # 開催前限定プレビュー機能。
+  # 下書きコンテンツの可視化権限。
   # マスタ権限店舗(event.master_preview_shop) の owner / staff であれば true。
-  # 開催開始後は常に false を返す（プレビュー仕様は開催前のみ）。
+  # この値が true のとき、event.contents には全下書きが含まれる。
   attribute :can_preview_all do |event, params|
     event.master_previewer?(params[:event_line_user])
   end
 
-  # 開催前限定プレビュー機能。
-  # ログインユーザに紐づく Toruya ユーザが owner / staff である shop に
-  # 紐づくコンテンツ ID 配列を返す。
+  # 下書きコンテンツの可視化権限。
+  # ログインユーザが owner / staff である shop に紐づく下書きコンテンツの ID 配列。
+  # ここに列挙された下書きは event.contents にも含まれる。
   attribute :previewable_content_ids do |event, params|
     event.previewable_content_ids_for(params[:event_line_user])
   end
 
   attribute :contents do |event, params|
-    event.event_contents.undeleted.order(:position).map do |content|
+    event.visible_event_contents_for(params[:event_line_user]).order(:position).map do |content|
       event_line_user = params[:event_line_user]
       usage = event_line_user ? content.event_content_usages.find_by(event_line_user_id: event_line_user.id) : nil
 
@@ -87,6 +87,7 @@ class EventSerializer
       {
         id: content.id,
         content_type: content.content_type,
+        status: content.status,
         title: content.title,
         introduction: content.introduction,
         thumbnail_url: content.thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(content.thumbnail, only_path: true) : nil,

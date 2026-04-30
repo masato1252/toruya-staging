@@ -1,5 +1,23 @@
 <%= form_with(model: [:admin, event_content], url: form_url, local: true, html: { class: "admin-event-form", multipart: true }) do |f| %>
 
+  <%# === 公開ステータス（一番上） === %>
+  <%# status=1: 公開 / status=0: 下書き(非公開)。下書きの間はイベント公開ページの一覧・スライダー・詳細ページ全てから除外される。 %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">公開ステータス</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">公開状態</label>
+      <div class="admin-form-input">
+        <%= f.select :status,
+                     [["公開", "published"], ["下書き / 非公開", "unpublished"]],
+                     {},
+                     class: "form-control",
+                     style: "max-width: 240px;" %>
+        <span class="admin-form-help">「下書き / 非公開」の間は、イベント公開ページに表示されません。</span>
+      </div>
+    </div>
+  </div>
+
   <%# === 基本情報 === %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">基本情報</div>
@@ -12,7 +30,7 @@
         <% locked = event_content.persisted? %>
         <div class="admin-form-radio-group" style="<%= 'opacity: 0.6; pointer-events: none;' if locked %>">
           <label>
-            <%= f.radio_button :content_type, "seminar", id: "ct_seminar", disabled: locked %> セミナー動画
+            <%= f.radio_button :content_type, "seminar", id: "ct_seminar", disabled: locked %> セミナー講演
           </label>
           <label>
             <%= f.radio_button :content_type, "booth", id: "ct_booth", disabled: locked %> 展示ブース(PDF)
@@ -65,7 +83,7 @@
     </div>
   </div>
 
-  <%# === 出展者業種タグ（セミナー・展示ブース共通） === %>
+  <%# === 出展者業種タグ（セミナー講演・展示ブース共通） === %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">出展者業種タグ</div>
     <div class="admin-form-group">
@@ -124,9 +142,56 @@
     </div>
   </div>
 
-  <%# === 動画・資料設定（セミナー向け） === %>
+  <%# === 関連コンテンツ（コンテンツ種別共通） ===
+       同じイベント内のコンテンツから 0〜N 個を動的に紐付けできる。
+       コンテンツ詳細ページの CTA 下部に、ここで紐付けたコンテンツへの導線が表示される。 %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">関連コンテンツ</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">関連コンテンツ</label>
+      <div class="admin-form-input">
+        <% related_pool = (event_content.event || @event).event_contents.undeleted.where.not(id: event_content.id).order(:position, :id) %>
+        <% existing_related_ids = event_content.persisted? ? event_content.related_content_ids : [] %>
+
+        <%# 必ず空要素を1つ送ることで、すべて削除した時に [] が確定して同期できる %>
+        <%= hidden_field_tag "event_content[related_content_ids][]", "" %>
+
+        <div id="related-contents-container"
+             data-options='<%= related_pool.map { |c| { id: c.id, label: "##{c.id} #{c.title}#{c.content_type == "seminar" ? "（セミナー講演）" : "（展示ブース）"}" } }.to_json %>'>
+          <div id="related-contents-list" style="display:flex;flex-direction:column;gap:8px;">
+            <% existing_related_ids.each do |rid| %>
+              <div class="related-content-row" style="display:flex;gap:8px;align-items:center;">
+                <select name="event_content[related_content_ids][]" class="form-control related-content-select" style="flex:1;">
+                  <option value="">選択してください</option>
+                  <% related_pool.each do |c| %>
+                    <option value="<%= c.id %>" <%= "selected" if c.id == rid %>>
+                      #<%= c.id %> <%= c.title %><%= c.content_type == "seminar" ? "（セミナー講演）" : "（展示ブース）" %>
+                    </option>
+                  <% end %>
+                </select>
+                <button type="button" class="btn-remove-related-content" style="padding:6px 12px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:#dc2626;cursor:pointer;font-size:13px;">削除</button>
+              </div>
+            <% end %>
+          </div>
+          <div style="margin-top:10px;">
+            <button type="button" id="btn-add-related-content"
+                    style="padding:8px 16px;border:2px dashed #d1d5db;border-radius:8px;background:none;cursor:pointer;color:#6b7280;font-size:13px;">
+              ＋ 関連コンテンツを追加
+            </button>
+            <% if related_pool.empty? %>
+              <span style="margin-left:10px;font-size:12px;color:#9ca3af;">同じイベント内に他のコンテンツがありません</span>
+            <% end %>
+          </div>
+        </div>
+        <span class="admin-form-help">紐付けた順にコンテンツ詳細ページに表示されます。同じイベント内のコンテンツのみ選択できます。</span>
+      </div>
+    </div>
+  </div>
+
+  <%# === 動画・資料設定（セミナー講演向け） === %>
   <div class="admin-form-section seminar-only">
-    <div class="admin-form-section-title">動画・資料設定（セミナー向け）</div>
+    <div class="admin-form-section-title">動画・資料設定（セミナー講演向け）</div>
 
     <div class="admin-form-group">
       <label class="admin-form-label">動画本編URL</label>
@@ -150,17 +215,13 @@
       </div>
     </div>
 
-    <div class="admin-form-group">
-      <label class="admin-form-label">資料ダウンロードURL（直接DL）</label>
-      <div class="admin-form-input">
-        <%= f.url_field :direct_download_url, class: "form-control", placeholder: "https://..." %>
-      </div>
-    </div>
+    <%# 資料ダウンロードURL（直接DL）は廃止。以降は「関連コンテンツ」機能から別コンテンツ（展示ブース等）への導線を貼る運用に統一する。
+        既存値はDB上は保持するが、編集画面では非表示にする。 %>
   </div>
 
-  <%# === 出演者（セミナー向け） === %>
+  <%# === 出演者（セミナー講演向け） === %>
   <div class="admin-form-section seminar-only">
-    <div class="admin-form-section-title">出演者（セミナー向け）</div>
+    <div class="admin-form-section-title">出演者（セミナー講演向け）</div>
     <% if event_content.persisted? %>
       <div id="speakers-container"
            data-add-url="<%= add_speaker_admin_event_content_path(event_content) %>"
@@ -248,7 +309,7 @@
     <div class="admin-form-section-title">出展者との紐付け</div>
 
     <div class="admin-form-group">
-      <label class="admin-form-label">出展店舗</label>
+      <label class="admin-form-label">出展店舗（ユーザID）</label>
       <div class="admin-form-input">
         <div class="admin-lookup-group" id="shop-lookup"
              data-shops-url="<%= shops_by_user_admin_event_event_contents_path(event_content.event || @event) %>"
@@ -296,7 +357,8 @@
         企業名<span class="required-mark">*</span>
       </label>
       <div class="admin-form-input">
-        <%= f.text_field :exhibitor_company_name, class: "form-control #{'field-error-border' if event_content.errors[:exhibitor_company_name].any?}", placeholder: "出展企業名" %>
+        <%= f.text_area :exhibitor_company_name, rows: 2, class: "form-control #{'field-error-border' if event_content.errors[:exhibitor_company_name].any?}", placeholder: "出展企業名（複数行可）", style: "resize: vertical;" %>
+        <span class="admin-form-help">改行はそのままコンテンツカード・詳細ページでも反映されます。</span>
         <% if event_content.errors[:exhibitor_company_name].any? %>
           <span class="admin-form-error"><%= event_content.errors.full_messages_for(:exhibitor_company_name).join(", ") %></span>
         <% end %>
@@ -506,6 +568,61 @@ document.addEventListener("DOMContentLoaded", function() {
   if (upsellCb && upsellDetail) {
     upsellCb.addEventListener("change", function() { upsellDetail.style.display = this.checked ? "" : "none"; });
   }
+
+  // === 関連コンテンツ 動的追加・削除 ===
+  (function() {
+    var container = document.getElementById("related-contents-container");
+    if (!container) return;
+    var listEl = document.getElementById("related-contents-list");
+    var addBtn = document.getElementById("btn-add-related-content");
+    var rawOptions = container.getAttribute("data-options") || "[]";
+    var options = [];
+    try { options = JSON.parse(rawOptions); } catch (e) { options = []; }
+
+    function buildSelectMarkup(selectedId) {
+      var html = '<option value="">選択してください</option>';
+      options.forEach(function(opt) {
+        var sel = (selectedId && String(selectedId) === String(opt.id)) ? " selected" : "";
+        html += '<option value="' + opt.id + '"' + sel + '>' + opt.label + '</option>';
+      });
+      return html;
+    }
+
+    function bindRow(row) {
+      var btn = row.querySelector(".btn-remove-related-content");
+      if (btn) {
+        btn.addEventListener("click", function() {
+          row.parentNode.removeChild(row);
+        });
+      }
+    }
+
+    // 既存行のバインド
+    listEl.querySelectorAll(".related-content-row").forEach(bindRow);
+
+    if (addBtn) {
+      addBtn.addEventListener("click", function() {
+        if (options.length === 0) return;
+        var row = document.createElement("div");
+        row.className = "related-content-row";
+        row.style.cssText = "display:flex;gap:8px;align-items:center;";
+        var select = document.createElement("select");
+        select.name = "event_content[related_content_ids][]";
+        select.className = "form-control related-content-select";
+        select.style.flex = "1";
+        select.innerHTML = buildSelectMarkup(null);
+        var rm = document.createElement("button");
+        rm.type = "button";
+        rm.className = "btn-remove-related-content";
+        rm.style.cssText = "padding:6px 12px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:#dc2626;cursor:pointer;font-size:13px;";
+        rm.textContent = "削除";
+        row.appendChild(select);
+        row.appendChild(rm);
+        listEl.appendChild(row);
+        bindRow(row);
+      });
+    }
+  })();
 
   // === Lookup helper ===
   function setupLookup(opts) {

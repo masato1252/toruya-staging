@@ -71,27 +71,40 @@ class Event < ApplicationRecord
     start_at.present? && start_at > Time.current
   end
 
-  # 開催前限定プレビュー機能。
+  # 下書き(status=0)コンテンツのプレビュー権限。
   # 「マスタ権限店舗」(event.master_preview_shop) の owner / staff であれば、
-  # 開催前期間中のみ全コンテンツをプレビューできる。
+  # 開催期間に関わらず、すべての下書きコンテンツを一覧/詳細で閲覧できる。
   def master_previewer?(line_user)
-    return false unless not_started?
     user_id = line_user&.toruya_user_id
     return false if user_id.nil?
     return false if master_preview_shop_id.nil?
     shop_member?(master_preview_shop, user_id)
   end
 
-  # 開催前限定プレビュー機能。
+  # 下書き(status=0)コンテンツのプレビュー権限。
   # line_user に紐づく Toruya ユーザが owner / staff である shop に
-  # 紐づくコンテンツのみプレビューできる。
+  # 紐づく下書きコンテンツの ID 配列を返す。
+  # 公開コンテンツは誰でも見られるため、ここには含めない。
   def previewable_content_ids_for(line_user)
-    return [] unless not_started?
     user_id = line_user&.toruya_user_id
     return [] if user_id.nil?
     shop_ids = shop_ids_for_user(user_id)
     return [] if shop_ids.empty?
-    event_contents.undeleted.where(shop_id: shop_ids).pluck(:id)
+    event_contents.undeleted.status_unpublished.where(shop_id: shop_ids).pluck(:id)
+  end
+
+  # 公開ページで viewer が閲覧できる event_contents の Relation を返す。
+  # - 未ログイン / 通常ユーザ: 公開コンテンツのみ
+  # - 出展店舗 owner/staff: 公開コンテンツ + 自店舗の下書き
+  # - マスタプレビュー店舗 owner/staff: 全コンテンツ (公開 + 全下書き)
+  def visible_event_contents_for(line_user)
+    base = event_contents.undeleted
+    return base.status_published if line_user.nil?
+    return base if master_previewer?(line_user)
+
+    draft_ids = previewable_content_ids_for(line_user)
+    return base.status_published if draft_ids.empty?
+    base.where("event_contents.status = ? OR event_contents.id IN (?)", EventContent.statuses[:published], draft_ids)
   end
 
   # 指定 shop に紐づく集客数を集計する。

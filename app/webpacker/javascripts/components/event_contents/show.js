@@ -40,6 +40,51 @@ const getEmbedUrl = (url) => {
   return url;
 };
 
+// "M/D(曜日) HH:MM" 形式で日時をフォーマット。コンテンツ詳細の配信開始表示で使う。
+const formatJaDateTimeShort = (value) => {
+  if (!value) return null;
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getMonth() + 1}/${d.getDate()}(${weekdays[d.getDay()]}) ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
+// 出展者・出演者の自己紹介文中の http(s) URL を <a> 要素に変換するヘルパ。
+// テキスト末尾に付いた句読点や閉じ括弧は URL から外して trailing として保持する。
+const URL_REGEX = /(https?:\/\/[^\s]+)/g;
+const URL_TRAILING_PUNCT = /[、。！？!?.,;:）)」』】〉》"']+$/;
+
+const linkifyText = (text) => {
+  if (!text) return text;
+  const parts = text.split(URL_REGEX);
+  return parts.map((part, idx) => {
+    if (/^https?:\/\//.test(part)) {
+      let url = part;
+      let trailing = "";
+      const m = url.match(URL_TRAILING_PUNCT);
+      if (m) {
+        trailing = m[0];
+        url = url.slice(0, url.length - trailing.length);
+      }
+      return (
+        <React.Fragment key={idx}>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#488479", textDecoration: "underline", wordBreak: "break-all" }}
+          >
+            {url}
+          </a>
+          {trailing}
+        </React.Fragment>
+      );
+    }
+    return <React.Fragment key={idx}>{part}</React.Fragment>;
+  });
+};
+
 let ytApiPromise = null;
 const loadYouTubeIframeApi = () => {
   if (typeof window === "undefined") return Promise.resolve(null);
@@ -257,7 +302,7 @@ const VideoPlayer = ({ preAdUrl, contentUrl, postAdUrl, onComplete, onMainPhaseS
   };
   nextPhaseRef.current = nextPhase;
 
-  const phaseLabel = phase === "pre_ad" ? "広告" : phase === "main" ? "セミナー本編" : "広告";
+  const phaseLabel = phase === "pre_ad" ? "広告" : phase === "main" ? "セミナー講演本編" : "広告";
   const isDrive = isDriveUrl(currentUrl);
   const isYoutube = isYoutubeUrl(currentUrl);
 
@@ -777,10 +822,10 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrac
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <>
       {content.upsell_booking_enabled && (
-        <div style={{ background: "#fafaf9", border: "1px solid #e7e5e4", padding: "20px" }}>
-          <h4 style={{ fontWeight: 700, fontSize: 15, marginBottom: 10, color: "#1c1917" }}>無料相談を予約する</h4>
+        <div style={{ background: "#fff", padding: "20px", marginBottom: 16, borderBottom: "1px solid #e7e5e4" }}>
+          <h4 style={{ fontWeight: 700, fontSize: 15, margin: "0 0 14px", color: "#1c1917" }}>無料相談予約</h4>
           {consultationStatus ? (
             <div style={{ textAlign: "center", color: "#44403c", padding: 12, fontWeight: 700, fontSize: 14 }}>
               {consultationStatus === "waitlist" ? "キャンセル待ちを承りました" : "予約済みです"}
@@ -789,7 +834,7 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrac
             <button
               onClick={handleConsultation}
               disabled={isLoading}
-              style={{ width: "100%", padding: "12px", background: "#488479", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+              style={{ width: "100%", padding: "12px", background: "#e6a21f", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
             >
               {isLoading ? "処理中..." : "無料相談を予約する"}
             </button>
@@ -798,8 +843,8 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrac
       )}
 
       {content.monitor_enabled && (
-        <div style={{ background: "#fafaf9", border: "1px solid #e7e5e4", padding: "20px" }}>
-          <h4 style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: "#1c1917" }}>モニターに応募する</h4>
+        <div style={{ background: "#fff", padding: "20px", marginBottom: 16, borderBottom: "1px solid #e7e5e4" }}>
+          <h4 style={{ fontWeight: 700, fontSize: 15, margin: "0 0 8px", color: "#1c1917" }}>モニター応募</h4>
           {content.monitor_name && <p style={{ fontSize: 13, color: "#78716c", marginBottom: 4 }}>サービス: {content.monitor_name}</p>}
           {content.monitor_price !== null && <p style={{ fontSize: 13, color: "#44403c", marginBottom: 10, fontWeight: 600 }}>モニター金額: {content.monitor_price.toLocaleString()}円</p>}
           {monitorApplied ? (
@@ -808,13 +853,105 @@ const UpsellSection = ({ content, upsellConsultationUrl, monitorApplyUrl, onTrac
             <button
               onClick={handleMonitorApply}
               disabled={isLoading}
-              style={{ width: "100%", padding: "12px", background: "#B95526", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+              style={{ width: "100%", padding: "12px", background: "#e6a21f", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
             >
               {isLoading ? "処理中..." : "モニターに応募する"}
             </button>
           )}
         </div>
       )}
+    </>
+  );
+};
+
+// セミナー講演の詳細ページ最下部に表示する「あなたへおすすめのセミナー講演」スライダー。
+// TOPページの RecommendationCarousel に比べ、各カードを小さくして横スクロール（スナップ付き）で複数並べるレイアウト。
+// データはサーバー側で参加者プロフィールに合わせて並び替え済み（exhibitor_roles マッチを優先）のものを受け取る。
+const RecommendedSeminarCarousel = ({ contents, eventLogoUrl }) => {
+  if (!contents || contents.length === 0) return null;
+
+  return (
+    <div style={{ background: "#488479", padding: "20px 12px", marginTop: 32 }}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <h2 style={{
+          fontSize: 14, fontWeight: 800, marginTop: 0, marginBottom: 12, color: "#FAEACB",
+          display: "flex", alignItems: "center", gap: 6
+        }}>
+          <span aria-hidden="true">🎯</span>
+          あなたへおすすめのセミナー講演
+        </h2>
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            overflowX: "auto",
+            paddingBottom: 6,
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch"
+          }}
+        >
+          {contents.map((c) => {
+            const isDraft = c.status === "unpublished";
+            return (
+              <a
+                key={c.id}
+                href={c.url}
+                style={{
+                  flex: "0 0 auto",
+                  width: 150,
+                  textDecoration: "none",
+                  color: "inherit",
+                  scrollSnapAlign: "start"
+                }}
+              >
+                <div style={{
+                  background: "#fff", overflow: "hidden",
+                  border: "1px solid rgba(0,0,0,0.06)",
+                  display: "flex", flexDirection: "column", height: "100%"
+                }}>
+                  <div style={{ position: "relative", width: "100%", paddingBottom: "56.25%", flexShrink: 0, background: c.thumbnail_url ? "#f5f5f4" : "rgb(70, 67, 66)" }}>
+                    {c.thumbnail_url ? (
+                      <img src={c.thumbnail_url} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    ) : (
+                      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {eventLogoUrl
+                          ? <img src={eventLogoUrl} style={{ maxWidth: "70%", maxHeight: "70%", objectFit: "contain" }} />
+                          : <span style={{ fontSize: 30 }}>🎬</span>}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ padding: "8px 10px", display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", gap: 4, marginBottom: 4, flexWrap: "wrap" }}>
+                      <span style={{
+                        fontSize: 9, padding: "1px 6px", borderRadius: 8, fontWeight: 700, color: "#fff",
+                        background: "#B95526", lineHeight: 1.4
+                      }}>セミナー講演</span>
+                      {isDraft && (
+                        <span style={{
+                          fontSize: 9, padding: "1px 6px", borderRadius: 8, fontWeight: 700,
+                          background: "#fef3c7", color: "#92400e", border: "1px solid #fcd34d", lineHeight: 1.4
+                        }}>下書き</span>
+                      )}
+                    </div>
+                    <div style={{
+                      fontSize: 12, fontWeight: 700, lineHeight: 1.4, color: "#1c1917",
+                      display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden",
+                      flex: 1
+                    }}>{c.title}</div>
+                    {c.exhibitor_name && (
+                      <div style={{
+                        fontSize: 10, color: "#78716c", marginTop: 4,
+                        whiteSpace: "pre-line",
+                        display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden"
+                      }}>{c.exhibitor_name}</div>
+                    )}
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
@@ -824,7 +961,7 @@ const EventContentShow = ({ props }) => {
     event_content, event_slug, event_title,
     start_usage_url, upsell_consultation_url, monitor_apply_url,
     track_activity_url, back_url, line_login_url, add_friend_url,
-    current_event_line_user_id
+    current_event_line_user_id, event_ended, event_logo_image_url
   } = props;
 
   const [hasStarted, setHasStarted] = useState(event_content.has_started_usage);
@@ -886,90 +1023,104 @@ const EventContentShow = ({ props }) => {
     setIsStarting(false);
   };
 
-  const ctaLabel = event_content.content_type === "booth"
-    ? ((event_content.slide_images || []).length > 0 ? "続きをダウンロード" : "資料をダウンロード")
-    : "動画を見る";
-  const typeColor = event_content.content_type === "seminar" ? "#B95526" : "#488479";
+  const ctaLabel = event_content.content_type === "booth" ? "資料をダウンロード" : "セミナー講演を視聴";
+  const typeColor = "#60938a";
+
+  // ヘッダーサブナビ用のリンクをイベントTOPから組み立てる。
+  // back_url 例: "/expo2026" → セミナー: "/expo2026?tab=seminar#contents", スタンプラリー: "/expo2026#stamp-rally"
+  const subNavLinks = [
+    { label: "セミナー講演", href: `${back_url}?tab=seminar#contents` },
+    { label: "展示ブース", href: `${back_url}?tab=booth#contents` },
+    { label: "スタンプラリー", href: `${back_url}#stamp-rally` }
+  ];
 
   return (
     <div style={{ minHeight: "100vh", background: "#fafaf9" }}>
-      {/* Header */}
-      <div style={{ background: "#488479", color: "#fff", padding: "14px 20px", display: "flex", alignItems: "center", gap: 8, position: "sticky", top: 0, zIndex: 20 }}>
-        <a href={back_url} style={{ color: "#fff", textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 36, marginLeft: -4 }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </a>
-        <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: 11, opacity: 0.6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{event_title}</div>
-          <h1 style={{ fontSize: 15, fontWeight: 700, margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{event_content.title}</h1>
+      {/* Header — 背景はイベント TOP のヒーロー(画像なし時)と同じ #464342 で統一 */}
+      <div style={{ background: "#464342", color: "#fff", padding: "10px 16px 6px", position: "sticky", top: 0, zIndex: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, maxHeight: 28 }}>
+          <a href={back_url} style={{ color: "#fff", textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 36, marginLeft: -4 }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </a>
+          {event_logo_image_url && (
+            <img
+              src={event_logo_image_url}
+              alt={event_title || ""}
+              style={{ height: 28, width: "auto", maxHeight: "100%", display: "block", objectFit: "contain" }}
+            />
+          )}
         </div>
+
+        {/* サブナビ（イベントTOPの該当セクションへの導線）— オーバル枠リンクで横並び */}
+        <nav style={{
+          display: "flex", justifyContent: "center", alignItems: "center",
+          gap: 6, paddingTop: 8
+        }}>
+          {subNavLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              style={{
+                color: "#fff",
+                textDecoration: "none",
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: "0.02em",
+                whiteSpace: "nowrap",
+                lineHeight: 1,
+                padding: "6px 14px",
+                border: "1px solid rgba(255,255,255,0.55)",
+                borderRadius: 999,
+                background: "rgba(255,255,255,0.06)"
+              }}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
       </div>
 
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "20px 16px" }}>
-        {/* Thumbnail / Content area */}
-        {hasStarted && event_content.content_type === "seminar" ? (
-          <div style={{ marginBottom: 20 }}>
-            <div
-              onClick={() => setIsVideoModalOpen(true)}
-              style={{
-                position: "relative", cursor: "pointer", background: "#000",
-                overflow: "hidden"
-              }}
-            >
-              {event_content.thumbnail_url ? (
-                <img src={event_content.thumbnail_url} style={{ width: "100%", maxHeight: 380, objectFit: "cover", display: "block", opacity: 0.85 }} />
-              ) : (
-                <div style={{ height: 240, background: "linear-gradient(135deg, #B95526, #CF8968)" }} />
-              )}
-              <div style={{
-                position: "absolute", inset: 0,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                background: "rgba(0,0,0,0.25)"
-              }}>
-                <div style={{
-                  width: 72, height: 72, borderRadius: "50%",
-                  background: "rgba(255,255,255,0.95)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.4)"
-                }}>
-                  <svg width="28" height="28" viewBox="0 0 20 20" fill="#B95526" style={{ marginLeft: 4 }}>
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : hasStarted && event_content.content_type === "booth" ? (
-          <div style={{ marginBottom: 20 }}>
-            <PDFCarousel
-              images={event_content.slide_images || []}
-              onlineServiceUrl={event_content.online_service_registration_url}
-            />
-            {event_content.online_service_registration_url && (
-              <a
-                href={event_content.online_service_registration_url}
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => trackActivity("online_service_click", { url: event_content.online_service_registration_url })}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 12, padding: "12px 20px", background: "#488479", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
-              >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd"/></svg>
-                出展企業のサービスページへ
-              </a>
-            )}
-          </div>
-        ) : (
-          <div style={{ overflow: "hidden", marginBottom: 0 }}>
-            {event_content.thumbnail_url ? (
-              <img src={event_content.thumbnail_url} style={{ width: "100%", maxHeight: 320, objectFit: "cover", display: "block" }} />
-            ) : (
-              <div style={{ height: 180, background: typeColor, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: 56 }}>{event_content.content_type === "seminar" ? "🎬" : "📄"}</span>
-              </div>
-            )}
+        {/* Draft (unpublished) preview banner — only viewers with preview privilege reach this page for drafts. */}
+        {event_content.status === "unpublished" && (
+          <div style={{
+            background: "#fef3c7", border: "1px solid #fcd34d", color: "#92400e",
+            borderRadius: 8, padding: "10px 14px", fontSize: 13, fontWeight: 700,
+            marginBottom: 16, display: "flex", alignItems: "center", gap: 8
+          }}>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M8.485 2.495a1.75 1.75 0 013.03 0l6.28 10.875A1.75 1.75 0 0116.28 16H3.72a1.75 1.75 0 01-1.515-2.63L8.485 2.495zM10 6a1 1 0 011 1v3a1 1 0 11-2 0V7a1 1 0 011-1zm-1 7a1 1 0 112 0 1 1 0 01-2 0z" clipRule="evenodd"/>
+            </svg>
+            このコンテンツは下書き(非公開)です。プレビュー権限のあるユーザーのみ閲覧できます。
           </div>
         )}
 
+        {/* Thumbnail / Content area
+            セミナー / 展示ブース ともに hasStarted の状態で構成を変えず、常にプレーンなサムネ表示。
+            （何度でも詳細ページに戻ってきても、レイアウトが変わって混乱しないようにするため） */}
+        <div style={{ overflow: "hidden", marginBottom: 0 }}>
+          {event_content.thumbnail_url ? (
+            <img src={event_content.thumbnail_url} style={{ width: "100%", maxHeight: 320, objectFit: "cover", display: "block" }} />
+          ) : (
+            <div style={{ height: 180, background: typeColor, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: 56 }}>{event_content.content_type === "seminar" ? "🎬" : "📄"}</span>
+            </div>
+          )}
+        </div>
+
         {/* Title + Share (below thumbnail) */}
         <div style={{ textAlign: "center", padding: "20px 0 16px" }}>
+          {event_content.status === "unpublished" && (
+            <div style={{ marginBottom: 8 }}>
+              <span style={{
+                display: "inline-block",
+                background: "#fef3c7", color: "#92400e", border: "1px solid #fcd34d",
+                fontSize: 11, padding: "3px 10px", borderRadius: 12, fontWeight: 700
+              }}>
+                下書き(プレビュー表示)
+              </span>
+            </div>
+          )}
           <h2 style={{ fontSize: 20, fontWeight: 800, color: "#1c1917", lineHeight: 1.4, margin: "0 0 14px" }}>
             {event_content.title}
           </h2>
@@ -986,8 +1137,9 @@ const EventContentShow = ({ props }) => {
           </button>
         </div>
 
-        {/* Preview slides for registered participants (booth, before starting) */}
-        {isParticipant && !hasStarted && event_content.content_type === "booth" && (event_content.slide_images || []).length > 0 && (
+        {/* Preview slides for booth participants — 利用開始の有無に関わらず常に表示。
+            （構成が変わるとユーザーが戻ってきたときに混乱するため） */}
+        {isParticipant && event_content.content_type === "booth" && (event_content.slide_images || []).length > 0 && (
           <div style={{ marginBottom: 20 }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 10 }}>プレビュー</h3>
             <PDFCarousel
@@ -996,100 +1148,175 @@ const EventContentShow = ({ props }) => {
             />
             {(event_content.slide_images || []).length > 3 && (
               <p style={{ textAlign: "center", fontSize: 12, color: "#9ca3af", marginTop: 8 }}>
-                全 {event_content.slide_images.length} ページ（利用開始で全て閲覧可能）
+                全 {event_content.slide_images.length} ページ
               </p>
             )}
           </div>
         )}
 
-        {/* Status messages */}
-        {event_content.ended && (
+        {/* Status messages
+            - コンテンツの公開期間が終了した場合に「配信終了しました」を表示。
+            - イベント自体が終了している場合は、コンテンツが公開期間中でも強制的に同表示にし、
+              以降のCTAを全て隠す（イベントが終わっている以上、利用や視聴・DLは出来ないため）。 */}
+        {(event_content.ended || event_ended) && (
           <div style={{ background: "#fafaf9", border: "1px solid #e7e5e4", color: "#57534e", padding: "12px 16px", textAlign: "center", marginBottom: 16, fontWeight: 700, fontSize: 14 }}>
-            このコンテンツは終了しました
+            配信終了しました
           </div>
         )}
 
-        {!event_content.started && !event_content.ended && (
-          <div style={{ background: "#fafaf9", border: "1px solid #e7e5e4", color: "#78716c", padding: "12px 16px", textAlign: "center", marginBottom: 16, fontSize: 14 }}>
-            サービス開始前です。開始をお待ちください。
-          </div>
-        )}
+        {/* 公開開始前: 「サービス開始前」テキストの代わりに配信開始日時を太字・黒文字で表示
+            ※ イベント自体が終了済の場合は表示しない（未来日時を出しても意味がないため）。 */}
+        {!event_content.started && !event_content.ended && !event_ended && (() => {
+          const formatted = formatJaDateTimeShort(event_content.start_at);
+          if (!formatted) return null;
+          return (
+            <div style={{ color: "#1c1917", padding: "12px 16px", marginBottom: 16, fontSize: 18, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <svg width="22" height="22" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style={{ flexShrink: 0 }}>
+                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+              </svg>
+              <span>配信開始：{formatted}〜</span>
+            </div>
+          );
+        })()}
 
-        {/* Start usage button for participants */}
-        {isParticipant && !hasStarted && canStart && (
+        {/* Primary CTA: 展示ブース
+            - hasStarted の有無に関わらず常に表示し、押下時は外部のDL先へ何度でも遷移できる。
+            - 公開開始前 / 定員満了 / コンテンツ終了 のときは disabled な見た目だけ表示し、href を出さない。
+            - イベント自体が終了している場合はブロック自体を非表示。 */}
+        {isParticipant && !event_content.ended && !event_ended && event_content.content_type === "booth" && (() => {
+          const downloadUrl = event_content.online_service_registration_url;
+          const isEnabled = canStart || hasStarted;
+          const baseStyle = {
+            width: "100%", padding: "14px",
+            background: isEnabled ? typeColor : "#d6d3d1",
+            color: "#fff", border: "none",
+            borderRadius: 8, fontSize: 16, fontWeight: 700,
+            cursor: isEnabled ? "pointer" : "not-allowed",
+            boxShadow: isEnabled ? `0 4px 14px ${typeColor}66` : "none",
+            opacity: isEnabled ? 1 : 0.85,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            textDecoration: "none", boxSizing: "border-box"
+          };
+          const icon = (
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/>
+            </svg>
+          );
+          const handleBoothClick = () => {
+            if (downloadUrl) {
+              trackActivity("material_download", { url: downloadUrl });
+            }
+            if (start_usage_url) {
+              fetch(start_usage_url, {
+                method: "POST",
+                headers: { "X-CSRF-Token": csrfToken, "Accept": "application/json" }
+              }).then(() => setHasStarted(true)).catch(() => {});
+            }
+          };
+          return (
+            <div style={{ marginBottom: 20 }}>
+              {isEnabled && downloadUrl ? (
+                <a
+                  href={downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleBoothClick}
+                  style={baseStyle}
+                >
+                  {icon}
+                  {ctaLabel}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  disabled={!isEnabled}
+                  onClick={isEnabled ? handleBoothClick : undefined}
+                  style={baseStyle}
+                >
+                  {icon}
+                  {ctaLabel}
+                </button>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* Primary CTA: セミナー講演
+            - hasStarted の有無に関わらず常に表示する（展示ブースと同じ振る舞い）。
+            - 公開開始前 / コンテンツ終了 / 定員フル のときは disabled な見た目だけ表示。
+            - canStart のときのみ押下可能で、handleStartUsage が初回 / 再生 を判定する。
+            - イベント自体が終了している場合はブロック自体を非表示。 */}
+        {isParticipant && !event_content.ended && !event_ended && event_content.content_type === "seminar" && (
           <div style={{ marginBottom: 20 }}>
             <button
-              onClick={handleStartUsage}
-              disabled={isStarting}
+              onClick={canStart ? handleStartUsage : undefined}
+              disabled={!canStart || isStarting}
               style={{
                 width: "100%", padding: "14px",
-                background: typeColor, color: "#fff", border: "none",
+                background: canStart ? typeColor : "#d6d3d1",
+                color: "#fff", border: "none",
                 borderRadius: 8, fontSize: 16, fontWeight: 700,
-                cursor: "pointer", boxShadow: `0 4px 14px ${typeColor}66`
+                cursor: canStart ? "pointer" : "not-allowed",
+                boxShadow: canStart ? `0 4px 14px ${typeColor}66` : "none",
+                opacity: canStart ? 1 : 0.85,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8
               }}
             >
-              {isStarting ? "..." : ctaLabel}
-            </button>
-            {event_content.content_type === "seminar" && event_content.direct_download_url && (
-              <a
-                href={event_content.direct_download_url}
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => trackActivity("material_download", { url: event_content.direct_download_url })}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 28, padding: "12px 20px", background: "#fff", color: typeColor, border: `1.5px solid ${typeColor}`, borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
-              >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
-                資料をダウンロード
-              </a>
-            )}
-          </div>
-        )}
-
-        {/* Replay video button for seminar (after started) */}
-        {isParticipant && hasStarted && event_content.content_type === "seminar" && !event_content.ended && (
-          <div style={{ marginBottom: 20 }}>
-            <button
-              onClick={() => setIsVideoModalOpen(true)}
-              style={{
-                width: "100%", padding: "14px",
-                background: typeColor, color: "#fff", border: "none",
-                borderRadius: 8, fontSize: 16, fontWeight: 700,
-                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                boxShadow: `0 4px 14px ${typeColor}66`
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
               </svg>
-              動画を再生
+              {isStarting ? "..." : ctaLabel}
             </button>
-            {event_content.direct_download_url && (
-              <a
-                href={event_content.direct_download_url}
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => trackActivity("material_download", { url: event_content.direct_download_url })}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 28, padding: "12px 20px", background: "#fff", color: typeColor, border: `1.5px solid ${typeColor}`, borderRadius: 8, textDecoration: "none", fontWeight: 700, fontSize: 14 }}
-              >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
-                資料をダウンロード
-              </a>
-            )}
+            {/* 資料DLの直リンクは廃止。資料配布や別コンテンツ誘導は「関連コンテンツ」セクションへ統一 */}
           </div>
         )}
 
-        {/* LINE login CTA for non-participants */}
-        {!isParticipant && line_login_url && (
+        {/* 関連コンテンツ
+            - CTA の下に余白を空けて、紐付けたコンテンツへの導線を表示する
+            - イベント開催期間 / コンテンツ公開期間に関わらず常に表示
+            - ボタンは #488479 のセカンダリスタイル */}
+        {(event_content.related_contents || []).length > 0 && (
+          <div style={{ marginTop: 48, marginBottom: 20 }}>
+            <h3 style={{
+              fontSize: 14, fontWeight: 700, color: "#374151",
+              margin: "0 0 12px", textAlign: "center"
+            }}>
+              関連コンテンツ
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {event_content.related_contents.map((rc) => (
+                <a
+                  key={rc.id}
+                  href={rc.url}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    gap: 8,
+                    padding: "12px 18px",
+                    background: "#fff",
+                    color: "#488479",
+                    border: "1.5px solid #488479",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    lineHeight: 1.4,
+                    textAlign: "center"
+                  }}
+                >
+                  {rc.title}
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style={{ flexShrink: 0 }}>
+                    <path fillRule="evenodd" d="M7.05 4.05a.75.75 0 011.06 0l5.366 5.367a.75.75 0 010 1.061L8.11 15.95a.75.75 0 11-1.06-1.06L11.94 10 7.05 5.11a.75.75 0 010-1.06z" clipRule="evenodd"/>
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* LINE login CTA for non-participants（イベント終了後は出さない） */}
+        {!isParticipant && line_login_url && !event_ended && (
           <div style={{ background: "#fafaf9", border: "1px solid #e7e5e4", padding: "24px 20px", marginBottom: 20, textAlign: "center" }}>
-            <p style={{ fontSize: 14, color: "#44403c", marginBottom: 14, fontWeight: 600 }}>
-              参加登録してコンテンツを利用しましょう
-            </p>
-            <EventLineLoginLink loginUrl={line_login_url} btnText="LINEで参加登録する" />
-          </div>
-        )}
-
-        {/* Introduction */}
-        {event_content.introduction && (
-          <div style={{ background: "#fff", padding: "20px", marginBottom: 16, borderBottom: "1px solid #e7e5e4" }}>
-            <p style={{ color: "#57534e", lineHeight: 1.8, whiteSpace: "pre-wrap", fontSize: 14 }}>{event_content.introduction}</p>
+            <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" />
           </div>
         )}
 
@@ -1100,7 +1327,19 @@ const EventContentShow = ({ props }) => {
           </div>
         )}
 
-        {/* Speakers */}
+        {/* Upsell（無料相談予約 / モニター応募）
+            参加登録済かつイベント未終了であれば、コンテンツ未利用 (hasStarted=false) でも常に表示する。
+            未参加ユーザはここでは出さない (上の LINE login CTA で誘導)。 */}
+        {isParticipant && !event_ended && (event_content.upsell_booking_enabled || event_content.monitor_enabled) && (
+          <UpsellSection
+            content={event_content}
+            upsellConsultationUrl={upsell_consultation_url}
+            monitorApplyUrl={monitor_apply_url}
+            onTrackActivity={trackActivity}
+          />
+        )}
+
+        {/* 出演者情報 / 出展者情報 はコンテンツ詳細の最下部に配置する。 */}
         {(event_content.speakers || []).length > 0 && (
           <div style={{ background: "#fff", padding: "20px", marginBottom: 16, borderBottom: "1px solid #e7e5e4" }}>
             <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14, color: "#1c1917" }}>出演者情報</h3>
@@ -1118,7 +1357,7 @@ const EventContentShow = ({ props }) => {
                     )}
                     <div style={{ fontWeight: 700, fontSize: 16, color: "#1c1917", marginBottom: 6 }}>{speaker.name}</div>
                     {speaker.introduction && (
-                      <p style={{ fontSize: 13, color: "#78716c", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{speaker.introduction}</p>
+                      <p style={{ fontSize: 13, color: "#78716c", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{linkifyText(speaker.introduction)}</p>
                     )}
                   </div>
                 </div>
@@ -1127,7 +1366,6 @@ const EventContentShow = ({ props }) => {
           </div>
         )}
 
-        {/* Exhibitor (fallback) */}
         {(event_content.speakers || []).length === 0 && event_content.exhibitor_staff && (
           <div style={{ background: "#fff", padding: "20px", marginBottom: 16, borderBottom: "1px solid #e7e5e4" }}>
             <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14, color: "#1c1917" }}>出展者情報</h3>
@@ -1143,27 +1381,24 @@ const EventContentShow = ({ props }) => {
                 {event_content.exhibitor_staff.position && (
                   <div style={{ fontSize: 12, color: "#a8a29e", marginBottom: 2 }}>{event_content.exhibitor_staff.position}</div>
                 )}
-                <div style={{ fontWeight: 700, fontSize: 16, color: "#1c1917", marginBottom: 6 }}>{event_content.exhibitor_staff.name}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: "#1c1917", marginBottom: 6, whiteSpace: "pre-line" }}>{event_content.exhibitor_staff.name}</div>
                 {event_content.exhibitor_staff.introduction && (
-                  <p style={{ fontSize: 13, color: "#78716c", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{event_content.exhibitor_staff.introduction}</p>
+                  <p style={{ fontSize: 13, color: "#78716c", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{linkifyText(event_content.exhibitor_staff.introduction)}</p>
                 )}
               </div>
             </div>
           </div>
         )}
-
-        {/* Upsell */}
-        {(event_content.upsell_booking_enabled || event_content.monitor_enabled) && hasStarted && (
-          <div style={{ marginBottom: 20 }}>
-            <UpsellSection
-              content={event_content}
-              upsellConsultationUrl={upsell_consultation_url}
-              monitorApplyUrl={monitor_apply_url}
-              onTrackActivity={trackActivity}
-            />
-          </div>
-        )}
       </div>
+
+      {/* セミナー講演詳細ページ最下部の「あなたへおすすめのセミナー講演」スライダー。
+          中央 720px のコンテンツカラムの外に置いて、TOPページのおすすめカルーセルと同じく全幅で表示する。 */}
+      {event_content.content_type === "seminar" && (
+        <RecommendedSeminarCarousel
+          contents={event_content.recommended_seminar_contents || []}
+          eventLogoUrl={event_logo_image_url}
+        />
+      )}
 
       <ShareModal
         isOpen={shareOpen}

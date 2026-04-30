@@ -1989,7 +1989,8 @@ CREATE TABLE public.event_contents (
     video_url character varying,
     exhibitor_company_name character varying,
     exhibitor_description text,
-    exhibitor_roles jsonb DEFAULT '[]'::jsonb NOT NULL
+    exhibitor_roles jsonb DEFAULT '[]'::jsonb NOT NULL,
+    status integer DEFAULT 1 NOT NULL
 );
 
 
@@ -6943,6 +6944,13 @@ CREATE INDEX index_event_contents_on_shop_id ON public.event_contents USING btre
 
 
 --
+-- Name: index_event_contents_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_contents_on_status ON public.event_contents USING btree (status);
+
+
+--
 -- Name: index_event_contents_on_upsell_booking_page_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8798,6 +8806,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260414000002'),
 ('20260414000003'),
 ('20260414000004'),
-('20260420000001');
+('20260420000001'),
+('20260430000001');
 
 

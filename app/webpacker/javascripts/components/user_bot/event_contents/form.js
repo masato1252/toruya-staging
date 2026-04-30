@@ -158,7 +158,7 @@ const EventContentForm = ({ props }) => {
             <div className="field-header">コンテンツ種別 <span className="text-red-500">*</span></div>
             <div className="field-row">
               <label className="mr-4">
-                <input ref={register()} type="radio" name="content_type" value="seminar" /> セミナー動画
+                <input ref={register()} type="radio" name="content_type" value="seminar" /> セミナー講演
               </label>
               <label>
                 <input ref={register()} type="radio" name="content_type" value="booth" /> 展示ブース(PDF)

@@ -13,7 +13,7 @@
     <div class="admin-analytics-grid">
       <div class="admin-analytics-card">
         <div class="analytics-value text-indigo"><%= @activity_counts["seminar_view"] || 0 %></div>
-        <div class="analytics-label">セミナー動画閲覧</div>
+        <div class="analytics-label">セミナー講演閲覧</div>
       </div>
       <div class="admin-analytics-card">
         <div class="analytics-value text-blue"><%= @activity_counts["material_download"] || 0 %></div>
@@ -34,7 +34,7 @@
     <div class="admin-detail-section">
       <div class="admin-form-section-title">
         <%= content.title %>
-        <span class="admin-badge admin-badge-info" style="margin-left: 8px;"><%= content.seminar_content_type? ? "セミナー動画" : "展示ブース" %></span>
+        <span class="admin-badge admin-badge-info" style="margin-left: 8px;"><%= content.seminar_content_type? ? "セミナー講演" : "展示ブース" %></span>
       </div>
       <div class="admin-analytics-grid">
         <div class="admin-analytics-card">

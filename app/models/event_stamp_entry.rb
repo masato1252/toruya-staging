@@ -42,7 +42,7 @@ class EventStampEntry < ApplicationRecord
 
   ACTION_LABELS = {
     "material_download" => "資料DL",
-    "seminar_view"      => "セミナー",
+    "seminar_view"      => "セミナー講演",
     "upsell_consultation" => "相談予約",
     "monitor_apply"     => "モニター"
   }.freeze
