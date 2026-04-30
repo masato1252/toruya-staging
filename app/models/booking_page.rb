@@ -81,7 +81,7 @@ class BookingPage < ApplicationRecord
   end
 
   def primary_product
-    @primary_product ||= booking_options.order(amount_cents: :asc).first
+    @primary_product ||= booking_options.merge(BookingOption.primary).order(amount_cents: :asc).first
   end
 
   def product_name
