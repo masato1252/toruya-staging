@@ -1271,6 +1271,15 @@ const EventContentShow = ({ props }) => {
           </div>
         )}
 
+        {/* LINE login CTA for non-participants（イベント終了後は出さない）
+            参加登録前のユーザーには関連コンテンツより前（シェアボタン直下）に出して、
+            まず参加登録／ログインに誘導する。 */}
+        {!isParticipant && line_login_url && !event_ended && (
+          <div style={{ background: "#fafaf9", border: "1px solid #e7e5e4", padding: "24px 20px", marginBottom: 20, textAlign: "center" }}>
+            <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" />
+          </div>
+        )}
+
         {/* 関連コンテンツ
             - CTA の下に余白を空けて、紐付けたコンテンツへの導線を表示する
             - イベント開催期間 / コンテンツ公開期間に関わらず常に表示
@@ -1310,13 +1319,6 @@ const EventContentShow = ({ props }) => {
                 </a>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* LINE login CTA for non-participants（イベント終了後は出さない） */}
-        {!isParticipant && line_login_url && !event_ended && (
-          <div style={{ background: "#fafaf9", border: "1px solid #e7e5e4", padding: "24px 20px", marginBottom: 20, textAlign: "center" }}>
-            <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" />
           </div>
         )}
 
