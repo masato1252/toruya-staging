@@ -43,6 +43,13 @@ class EventContentsController < ActionController::Base
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_event_line_user
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @event.event_participants.exists?(event_line_user_id: @current_event_line_user.id)
 
+    # UI を迂回した不正リクエスト対策。イベント期間でクランプされた started?/ended? を見るため、
+    # 「開催前」「開催終了後」「コンテンツ自身が公開期間外」のいずれも弾かれる。
+    if @event_content.ended? || !@event_content.started?
+      render json: { error: "現在は利用できません" }, status: :unprocessable_entity
+      return
+    end
+
     if @event_content.capacity_full?
       render json: { error: "利用開始の上限に達しました" }, status: :unprocessable_entity
       return
@@ -64,6 +71,9 @@ class EventContentsController < ActionController::Base
   def upsell_consultation
     @current_event_line_user = current_event_line_user
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_event_line_user
+    if @event_content.ended? || !@event_content.started?
+      return render json: { error: "現在は利用できません" }, status: :unprocessable_entity
+    end
 
     consultation = @event_content.event_upsell_consultations.find_or_initialize_by(event_line_user_id: @current_event_line_user.id)
     if consultation.new_record?
@@ -79,6 +89,9 @@ class EventContentsController < ActionController::Base
   def monitor_apply
     @current_event_line_user = current_event_line_user
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_event_line_user
+    if @event_content.ended? || !@event_content.started?
+      return render json: { error: "現在は利用できません" }, status: :unprocessable_entity
+    end
 
     application = @event_content.event_monitor_applications.find_or_initialize_by(event_line_user_id: @current_event_line_user.id)
     if application.new_record?

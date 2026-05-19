@@ -5,6 +5,14 @@ class EventContentSerializer
 
   attribute :id, :title, :description, :introduction, :content_type, :status
   attribute :start_at, :end_at, :capacity
+
+  attribute :effective_start_at do |content|
+    content.effective_start_at
+  end
+
+  attribute :effective_end_at do |content|
+    content.effective_end_at
+  end
   attribute :video_url, :pre_ad_video_url, :post_ad_video_url, :direct_download_url
   attribute :upsell_booking_enabled, :monitor_enabled
   attribute :monitor_name, :monitor_price, :monitor_limit, :monitor_form_url

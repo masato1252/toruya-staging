@@ -93,6 +93,8 @@ class EventSerializer
         thumbnail_url: content.thumbnail.attached? ? Rails.application.routes.url_helpers.rails_blob_url(content.thumbnail, only_path: true) : nil,
         start_at: content.start_at,
         end_at: content.end_at,
+        effective_start_at: content.effective_start_at,
+        effective_end_at: content.effective_end_at,
         capacity: content.capacity,
         usage_count: content.usage_count,
         capacity_full: content.capacity_full?,

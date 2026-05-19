@@ -1167,7 +1167,7 @@ const EventContentShow = ({ props }) => {
         {/* 公開開始前: 「サービス開始前」テキストの代わりに配信開始日時を太字・黒文字で表示
             ※ イベント自体が終了済の場合は表示しない（未来日時を出しても意味がないため）。 */}
         {!event_content.started && !event_content.ended && !event_ended && (() => {
-          const formatted = formatJaDateTimeShort(event_content.start_at);
+          const formatted = formatJaDateTimeShort(event_content.effective_start_at || event_content.start_at);
           if (!formatted) return null;
           return (
             <div style={{ color: "#1c1917", padding: "12px 16px", marginBottom: 16, fontSize: 18, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>

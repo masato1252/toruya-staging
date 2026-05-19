@@ -329,7 +329,8 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl, eventLog
 
         {(() => {
           // 詳しく見るボタンの上に、コンテンツの配信開始日時を表示（種別問わず「配信開始」表記で統一）。
-          const formatted = formatJaDateTimeShort(content.start_at);
+          // effective_start_at は max(event.start_at, content.start_at) でクランプされた「実効的な配信開始」。
+          const formatted = formatJaDateTimeShort(content.effective_start_at || content.start_at);
           if (!formatted) return null;
           return (
             <div style={{ fontSize: 15, color: "#1c1917", marginBottom: 10, fontWeight: 700, textAlign: "center" }}>

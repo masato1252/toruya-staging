@@ -98,12 +98,31 @@ class EventContent < ApplicationRecord
     update!(deleted_at: Time.current)
   end
 
+  # 親イベントの開催期間でコンテンツ公開期間を強制クランプする。
+  # - 開催前 (event.not_started?) → started? = false (「公開開始前」扱い)
+  # - 開催終了後 (event.ended?)   → ended?   = true  (「配信終了」扱い)
   def started?
+    return false if event.not_started?
     start_at.present? && start_at <= Time.current
   end
 
   def ended?
+    return true if event.ended?
     end_at.present? && end_at < Time.current
+  end
+
+  # 表示用の「実際に公開が始まる / 終わる」日時。
+  # event 側が nil (= 境界なし) の場合はクランプしない。
+  def effective_start_at
+    return start_at if event.start_at.nil?
+    return event.start_at if start_at.nil?
+    [event.start_at, start_at].max
+  end
+
+  def effective_end_at
+    return end_at if event.end_at.nil?
+    return event.end_at if end_at.nil?
+    [event.end_at, end_at].min
   end
 
   def usage_count
