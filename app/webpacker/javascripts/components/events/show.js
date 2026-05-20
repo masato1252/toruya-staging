@@ -329,7 +329,10 @@ const ContentCard = ({ content, eventSlug, isParticipant, lineLoginUrl, eventLog
 
         {(() => {
           // 詳しく見るボタンの上に、コンテンツの配信開始日時を表示（種別問わず「配信開始」表記で統一）。
-          // effective_start_at は max(event.start_at, content.start_at) でクランプされた「実効的な配信開始」。
+          // 表示有無の判定は「コンテンツ側の公開開始日(start_at)が指定されているか」で行う。
+          // effective_start_at は max(event.start_at, content.start_at) でクランプされた「実効的な配信開始」だが、
+          // event.start_at にフォールバックして表示されてしまうのを防ぐため、content.start_at が無い場合は非表示にする。
+          if (!content.start_at) return null;
           const formatted = formatJaDateTimeShort(content.effective_start_at || content.start_at);
           if (!formatted) return null;
           return (
