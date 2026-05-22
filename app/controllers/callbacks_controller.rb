@@ -272,7 +272,9 @@ class CallbacksController < Devise::OmniauthCallbacksController
       event_line_user.email = line_email
     end
 
-    if is_new
+    # 初回作成時に加え、toruya 未紐付けの既存レコードも毎回再照合する
+    # (Toruya 連携後に初めてイベント LINE ログインしたケースや、紐付け修正の反映)。
+    if is_new || event_line_user.toruya_user_id.nil?
       event_line_user.check_toruya_user!
     end
 

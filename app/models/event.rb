@@ -157,7 +157,8 @@ class Event < ApplicationRecord
 
   private
 
-  # user_id が owner または active staff として所属する shop_id 集合を返す。
+  # user_id が owner / staff(staffs.user_id) / 管理者ログイン(staff_accounts.user_id) として所属する shop_id 集合を返す。
+  # Toruya の管理者は staffs.user_id が店舗オーナー側のまま、実際の LINE ログインは staff_accounts.user_id に紐づく。
   def shop_ids_for_user(user_id)
     owned = Shop.active.where(user_id: user_id).pluck(:id)
     staffed = Shop.active
@@ -165,14 +166,26 @@ class Event < ApplicationRecord
                   .joins("INNER JOIN staffs ON staffs.id = shop_staffs.staff_id")
                   .where(staffs: { user_id: user_id, deleted_at: nil })
                   .pluck(:id)
-    (owned + staffed).uniq
+    account_staffed = Shop.active
+                          .joins(shop_staffs: { staff: :staff_account })
+                          .merge(StaffAccount.active)
+                          .where(staff_accounts: { user_id: user_id })
+                          .where(staffs: { deleted_at: nil })
+                          .pluck(:id)
+    (owned + staffed + account_staffed).uniq
   end
 
   def shop_member?(shop, user_id)
     return true if shop.user_id == user_id
-    ShopStaff.joins(:staff)
-             .where(shop_id: shop.id)
-             .where(staffs: { user_id: user_id, deleted_at: nil })
-             .exists?
+    return true if ShopStaff.joins(:staff)
+                            .where(shop_id: shop.id)
+                            .where(staffs: { user_id: user_id, deleted_at: nil })
+                            .exists?
+    StaffAccount.active
+                .joins(staff: :shop_staffs)
+                .where(user_id: user_id, shop_staffs: { shop_id: shop.id })
+                .joins("INNER JOIN staffs ON staffs.id = shop_staffs.staff_id")
+                .where(staffs: { deleted_at: nil })
+                .exists?
   end
 end

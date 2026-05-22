@@ -137,5 +137,49 @@ RSpec.describe Event, type: :model do
           .to contain_exactly(public_content, exhibitor_draft, other_draft)
       end
     end
+
+    # Toruya 管理者は staffs.user_id が店舗オーナー、staff_accounts.user_id が個人ログイン。
+    context "when viewer is admin staff (staff_account.user_id, not staffs.user_id)" do
+      let(:owner_user) { exhibitor_user }
+      let(:admin_user) { FactoryBot.create(:user) }
+      let(:admin_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: admin_user.id) }
+      let!(:admin_staff) do
+        FactoryBot.create(
+          :staff,
+          user: owner_user,
+          shop: exhibitor_shop,
+          mapping_user: admin_user,
+          level: :manager
+        )
+      end
+
+      before do
+        admin_staff # ensure shop_staff + staff_account exist
+        exhibitor_draft # draft on exhibitor_shop
+      end
+
+      it "returns published + drafts for shops linked via staff_account" do
+        expect(event.visible_event_contents_for(admin_line_user))
+          .to contain_exactly(public_content, exhibitor_draft)
+      end
+    end
+
+    context "when viewer is admin staff of master_preview_shop" do
+      let(:master_owner) { FactoryBot.create(:user) }
+      let(:master_shop) { FactoryBot.create(:shop, user: master_owner) }
+      let(:admin_user) { FactoryBot.create(:user) }
+      let(:admin_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: admin_user.id) }
+
+      before do
+        event.update!(master_preview_shop: master_shop)
+        FactoryBot.create(:staff, user: master_owner, shop: master_shop, mapping_user: admin_user, level: :manager)
+      end
+
+      it "returns ALL contents via master_previewer?" do
+        expect(event.master_previewer?(admin_line_user)).to be true
+        expect(event.visible_event_contents_for(admin_line_user))
+          .to contain_exactly(public_content, exhibitor_draft, other_draft)
+      end
+    end
   end
 end
