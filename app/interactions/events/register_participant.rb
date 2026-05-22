@@ -19,6 +19,11 @@ module Events
     def execute
       update_event_line_user_profile
 
+      unless event_line_user.reload.basic_profile_complete?
+        errors.add(:base, "お名前・電話番号・メールアドレスを入力してください")
+        return
+      end
+
       participant = event.event_participants.find_or_initialize_by(event_line_user_id: event_line_user.id)
 
       return participant unless participant.new_record?

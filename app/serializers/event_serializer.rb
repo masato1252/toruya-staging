@@ -37,6 +37,23 @@ class EventSerializer
     params[:event_line_user].present?
   end
 
+  attribute :basic_profile_complete do |_, params|
+    params[:event_line_user]&.basic_profile_complete? == true
+  end
+
+  # LINEログイン済みだが氏名・メール・電話が未入力のとき true（公開ページの促し CTA 用）。
+  attribute :needs_profile_completion do |_, params|
+    elu = params[:event_line_user]
+    elu.present? && !elu.basic_profile_complete?
+  end
+
+  attribute :profile_completion_url do |event, params|
+    elu = params[:event_line_user]
+    next nil if elu.blank? || elu.basic_profile_complete?
+
+    Rails.application.routes.url_helpers.new_event_participation_path(event_slug: event.slug)
+  end
+
   # 下書きコンテンツの可視化権限。
   # マスタ権限店舗(event.master_preview_shop) の owner / staff であれば true。
   # この値が true のとき、event.contents には全下書きが含まれる。

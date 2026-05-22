@@ -75,8 +75,15 @@ const ParticipationForm = ({ props }) => {
     });
   };
 
+  const basicProfileFilled = () =>
+    lastName.trim() && firstName.trim() && phoneNumber.trim() && email.trim();
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
+    if (!basicProfileFilled()) {
+      toastr.error("お名前・電話番号・メールアドレスを入力してください");
+      return;
+    }
     setIsSubmitting(true);
 
     try {
@@ -113,8 +120,19 @@ const ParticipationForm = ({ props }) => {
     <div className="booking-content" style={{ maxWidth: 600, margin: "0 auto", padding: "0 16px 40px" }}>
       <div style={{ padding: "24px 0 16px", borderBottom: "1px solid #eee", marginBottom: 20 }}>
         <h2 style={{ fontSize: 20, fontWeight: "bold", marginBottom: 4 }}>{props.event_title}</h2>
-        <p style={{ color: "#666", fontSize: 14 }}>参加登録 — プロフィール入力</p>
+        <p style={{ color: "#666", fontSize: 14 }}>
+          {props.profile_completion_mode ? "プロフィール登録の続き" : "参加登録 — プロフィール入力"}
+        </p>
       </div>
+
+      {props.profile_completion_mode && (
+        <div style={{
+          background: "#fef3c7", border: "1px solid #fcd34d", padding: "14px 16px",
+          marginBottom: 20, fontSize: 13, color: "#92400e", lineHeight: 1.6
+        }}>
+          お名前・電話番号・メールアドレスの入力がまだ完了していません。ご登録をお願いします。
+        </div>
+      )}
 
       <div style={{ background: "#FAEACB", border: "1px solid #FFD890", padding: "16px 18px", marginBottom: 28 }}>
         <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: "#488479" }}>
@@ -126,7 +144,9 @@ const ParticipationForm = ({ props }) => {
       </div>
 
       <section style={{ marginBottom: 32 }}>
-        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>お名前</h3>
+        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>
+          お名前<span style={{ color: "#CA4E0E", fontSize: 12, marginLeft: 6 }}>必須</span>
+        </h3>
         <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
@@ -146,7 +166,9 @@ const ParticipationForm = ({ props }) => {
       </section>
 
       <section style={{ marginBottom: 32 }}>
-        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>電話番号</h3>
+        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>
+          電話番号<span style={{ color: "#CA4E0E", fontSize: 12, marginLeft: 6 }}>必須</span>
+        </h3>
         <input
           type="tel"
           value={phoneNumber}
@@ -157,7 +179,9 @@ const ParticipationForm = ({ props }) => {
       </section>
 
       <section style={{ marginBottom: 32 }}>
-        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>メールアドレス</h3>
+        <h3 style={{ fontSize: 16, fontWeight: "bold", marginBottom: 12 }}>
+          メールアドレス<span style={{ color: "#CA4E0E", fontSize: 12, marginLeft: 6 }}>必須</span>
+        </h3>
         <input
           type="email"
           value={email}
@@ -289,7 +313,7 @@ const ParticipationForm = ({ props }) => {
             cursor: isSubmitting ? "not-allowed" : "pointer"
           }}
         >
-          {isSubmitting ? "登録中..." : "プロフィール登録する"}
+          {isSubmitting ? "登録中..." : (props.profile_completion_mode ? "プロフィールを登録する" : "プロフィール登録する")}
         </button>
         <button
           onClick={handleSubmit}

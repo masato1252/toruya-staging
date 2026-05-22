@@ -16,7 +16,11 @@ class Events::ParticipationsController < ActionController::Base
     redirect_to event_path(slug: @event.slug) and return unless @current_event_line_user
 
     @participant = @event.event_participants.find_by(event_line_user_id: @current_event_line_user.id)
-    redirect_to event_path(slug: @event.slug) and return if @participant
+    if @participant && @current_event_line_user.basic_profile_complete?
+      redirect_to event_path(slug: @event.slug) and return
+    end
+
+    @profile_completion_mode = @participant.present?
 
     profile = @current_event_line_user.toruya_user&.profile
     @initial_first_name = @current_event_line_user.first_name.presence || profile&.first_name

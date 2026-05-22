@@ -58,7 +58,12 @@ class EventLineUser < ApplicationRecord
   end
 
   def profile_complete?
-    first_name.present? && last_name.present?
+    basic_profile_complete?
+  end
+
+  # イベント参加登録で求める最低限の連絡先（解析・リード用）。
+  def basic_profile_complete?
+    first_name.present? && last_name.present? && email.present? && phone_number.present?
   end
 
   def name

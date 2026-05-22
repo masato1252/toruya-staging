@@ -811,8 +811,40 @@ const StampRallySection = ({ event }) => {
   );
 };
 
+// プロフィール未完了時に公開ページ下部へ追従表示する CTA。
+const ProfileCompletionStickyCta = ({ profileCompletionUrl }) => (
+  <div style={{
+    position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 30,
+    background: "rgba(255,255,255,0.98)", backdropFilter: "blur(8px)",
+    borderTop: "1px solid #e7e5e4",
+    padding: "12px 16px max(12px, env(safe-area-inset-bottom))",
+    boxShadow: "0 -4px 16px rgba(0,0,0,0.08)"
+  }}>
+    <div style={{ maxWidth: 720, margin: "0 auto" }}>
+      <p style={{
+        fontSize: 13, color: "#57534e", marginBottom: 10, lineHeight: 1.55,
+        textAlign: "center", fontWeight: 600
+      }}>
+        まだプロフィール登録が完了していません。
+      </p>
+      <a
+        href={profileCompletionUrl}
+        style={{
+          display: "block", width: "100%", padding: "14px 16px", textAlign: "center",
+          background: "#488479", color: "#fff", borderRadius: 8,
+          fontSize: 15, fontWeight: 700, textDecoration: "none",
+          boxShadow: "0 4px 12px rgba(72,132,121,0.35)"
+        }}
+      >
+        プロフィールを登録する
+      </a>
+    </div>
+  </div>
+);
+
 const EventShow = ({ props }) => {
   const { event, line_login_url, add_friend_url, current_event_path, current_event_line_user_id } = props;
+  const showProfileCompletionCta = event.needs_profile_completion && event.profile_completion_url;
   // 初期タブはURLクエリ ?tab=seminar / ?tab=booth で指定可能（コンテンツ詳細ページのサブナビからの遷移用）。
   // SSR 中は window が存在しないため、その場合は "all" にフォールバック。
   const [activeTab, setActiveTab] = useState(() => {
@@ -848,7 +880,10 @@ const EventShow = ({ props }) => {
     : (event.contents || []);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fafaf9" }}>
+    <div style={{
+      minHeight: "100vh", background: "#fafaf9",
+      paddingBottom: showProfileCompletionCta ? 120 : 0
+    }}>
       {/* Hero */}
       {(() => {
         // ヒーロー画像が未設定かつロゴ画像が設定されているときは、ロゴ中心レイアウト。
@@ -910,7 +945,7 @@ const EventShow = ({ props }) => {
                   </p>
                 )}
 
-                {!event.is_participant && !event.ended && line_login_url && (
+                {!event.is_logged_in && !event.is_participant && !event.ended && line_login_url && (
                   <div style={{ marginTop: 24 }}>
                     <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" />
                   </div>
@@ -944,7 +979,7 @@ const EventShow = ({ props }) => {
                   </p>
                 )}
 
-                {!event.is_participant && !event.ended && line_login_url && (
+                {!event.is_logged_in && !event.is_participant && !event.ended && line_login_url && (
                   <EventLineLoginLink loginUrl={line_login_url} btnText="参加登録／ログイン" />
                 )}
               </div>
@@ -1090,8 +1125,13 @@ const EventShow = ({ props }) => {
           )}
         </>
 
-      {/* Footer CTA (開催終了後は非表示) */}
-      {!event.is_participant && !event.ended && line_login_url && (
+      {/* プロフィール未完了: 画面下部追従 CTA（LINEログイン済み・基本情報未入力） */}
+      {showProfileCompletionCta && (
+        <ProfileCompletionStickyCta profileCompletionUrl={event.profile_completion_url} />
+      )}
+
+      {/* Footer CTA: 未ログイン時の参加登録（開催終了後・プロフィール促し表示中は非表示） */}
+      {!showProfileCompletionCta && !event.is_participant && !event.ended && line_login_url && (
         <div style={{
           position: "sticky", bottom: 0, left: 0, right: 0, zIndex: 20,
           background: "rgba(255,255,255,0.95)", backdropFilter: "blur(8px)",
