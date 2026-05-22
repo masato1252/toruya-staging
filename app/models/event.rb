@@ -107,25 +107,69 @@ class Event < ApplicationRecord
     base.where("event_contents.status = ? OR event_contents.id IN (?)", EventContent.statuses[:published], draft_ids)
   end
 
+  # マスタプレビュー / 出展店舗プレビュー権限を持つ参加者（内部・関係者）。
+  def preview_insider?(line_user)
+    return false if line_user.nil? || line_user.toruya_user_id.nil?
+
+    master_previewer?(line_user) || previewable_content_ids_for(line_user).any?
+  end
+
+  # 解析・集客表示から除外する event_line_user_id 一覧（参加登録済みのプレビュー権限者のみ）。
+  def analytics_excluded_event_line_user_ids
+    @analytics_excluded_event_line_user_ids ||= begin
+      event_participants.includes(:event_line_user).filter_map do |participant|
+        elu = participant.event_line_user
+        elu.id if preview_insider?(elu)
+      end.uniq
+    end
+  end
+
+  def analytics_participants_count
+    excluded = analytics_excluded_event_line_user_ids
+    scope = event_participants
+    excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count
+  end
+
+  def analytics_activity_logs
+    scope = event_activity_logs
+    excluded = analytics_excluded_event_line_user_ids
+    excluded.any? ? scope.where.not(event_line_user_id: excluded) : scope
+  end
+
+  # Ahoy のコンテンツ閲覧イベント（プレビュー権限者を除外した表示用）。
+  def ahoy_content_views(content_id)
+    scope = Ahoy::Event.where(name: "event_content_view")
+                       .where("properties->>'event_content_id' = ?", content_id.to_s)
+    excluded = analytics_excluded_event_line_user_ids
+    return scope if excluded.empty?
+
+    scope.where.not("properties->>'event_line_user_id' IN (?)", excluded.map(&:to_s))
+  end
+
   # 指定 shop に紐づく集客数を集計する。
   # - direct: 参加登録時に referrer_shop_id == shop.id だった参加者数
   # - indirect: 直接参加者がさらにシェアして連れてきた参加者数 (referrer_event_line_user_id を再帰追跡)
   # - total: direct + indirect
-  # 副次的な集客 (BがAをシェアで連れてくる…) は participants.referrer_event_line_user_id の連鎖を辿って計上する。
+  # プレビュー権限者は内部関係者のため人数から除外する。
   def shop_acquisition_counts(shop_id)
     return { direct: 0, indirect: 0, total: 0 } if shop_id.blank?
 
-    direct_user_ids = event_participants.where(referrer_shop_id: shop_id).pluck(:event_line_user_id)
+    excluded = analytics_excluded_event_line_user_ids
+
+    direct_scope = event_participants.where(referrer_shop_id: shop_id)
+    direct_scope = direct_scope.where.not(event_line_user_id: excluded) if excluded.any?
+    direct_user_ids = direct_scope.pluck(:event_line_user_id)
     direct = direct_user_ids.size
 
     indirect_set = []
     visited = direct_user_ids.dup
     frontier = direct_user_ids
     while frontier.any?
-      next_frontier = event_participants
-                        .where(referrer_event_line_user_id: frontier)
-                        .where.not(event_line_user_id: visited)
-                        .pluck(:event_line_user_id)
+      next_scope = event_participants
+                     .where(referrer_event_line_user_id: frontier)
+                     .where.not(event_line_user_id: visited)
+      next_scope = next_scope.where.not(event_line_user_id: excluded) if excluded.any?
+      next_frontier = next_scope.pluck(:event_line_user_id)
       break if next_frontier.empty?
       indirect_set.concat(next_frontier)
       visited.concat(next_frontier)

@@ -129,6 +129,25 @@ class EventContent < ApplicationRecord
     event_content_usages.count
   end
 
+  # 解析表示用（プレビュー権限者を除外）。
+  def analytics_usage_count
+    scope = event_content_usages
+    excluded = event.analytics_excluded_event_line_user_ids
+    excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count
+  end
+
+  def analytics_upsell_consultations_count
+    scope = event_upsell_consultations
+    excluded = event.analytics_excluded_event_line_user_ids
+    excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count
+  end
+
+  def analytics_monitor_applications_count
+    scope = event_monitor_applications
+    excluded = event.analytics_excluded_event_line_user_ids
+    excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count
+  end
+
   def capacity_full?
     capacity.present? && usage_count >= capacity
   end

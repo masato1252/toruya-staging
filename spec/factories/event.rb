@@ -39,6 +39,20 @@ FactoryBot.define do
     trait :published do
       status { :published }
     end
+
+    trait :booth do
+      content_type { :booth }
+      exhibitor_company_name { "テスト出展社" }
+    end
+  end
+
+  factory :event_participant do
+    association :event
+    association :event_line_user
+    business_types { [] }
+    concern_labels { [] }
+    concern_categories { [] }
+    registered_at { Time.current }
   end
 
   factory :event_line_user do

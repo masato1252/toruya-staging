@@ -66,7 +66,7 @@
               </div>
               <div class="admin-content-card-meta">
                 <% if content.capacity %>
-                  上限: <%= content.capacity %>人（利用済: <%= content.usage_count %>人）
+                  上限: <%= content.capacity %>人（利用済: <%= content.analytics_usage_count %>人）
                 <% end %>
                 <% if content.start_at %>
                   &middot; <%= l(content.start_at, format: :short) %> 〜
@@ -160,7 +160,7 @@
 
   <% if @participants.any? %>
     <div class="admin-detail-section">
-      <div class="admin-form-section-title">参加者一覧（<%= @participants.count %>人）</div>
+      <div class="admin-form-section-title">参加者一覧（<%= @event.analytics_participants_count %>人）</div>
       <table class="admin-participant-table">
         <thead>
           <tr>

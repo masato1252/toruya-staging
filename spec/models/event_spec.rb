@@ -182,4 +182,43 @@ RSpec.describe Event, type: :model do
       end
     end
   end
+
+  describe "#analytics_excluded_event_line_user_ids and #shop_acquisition_counts" do
+    let(:event) { FactoryBot.create(:event, :during_event) }
+    let(:exhibitor_shop) { FactoryBot.create(:shop) }
+    let(:exhibitor_user) { exhibitor_shop.user }
+    let!(:booth_content) { FactoryBot.create(:event_content, :unpublished, :booth, event: event, shop: exhibitor_shop) }
+
+    let(:insider_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: exhibitor_user.id) }
+    let(:public_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: FactoryBot.create(:user).id) }
+
+    before do
+      FactoryBot.create(
+        :event_participant,
+        event: event,
+        event_line_user: insider_line_user,
+        referrer_shop_id: exhibitor_shop.id
+      )
+      FactoryBot.create(
+        :event_participant,
+        event: event,
+        event_line_user: public_line_user,
+        referrer_shop_id: exhibitor_shop.id
+      )
+    end
+
+    it "excludes preview insiders from acquisition counts" do
+      expect(event.preview_insider?(insider_line_user)).to be true
+      expect(event.preview_insider?(public_line_user)).to be false
+      expect(event.analytics_excluded_event_line_user_ids).to contain_exactly(insider_line_user.id)
+
+      counts = event.shop_acquisition_counts(exhibitor_shop.id)
+      expect(counts[:direct]).to eq(1)
+      expect(counts[:total]).to eq(1)
+    end
+
+    it "counts only non-insiders in analytics_participants_count" do
+      expect(event.analytics_participants_count).to eq(1)
+    end
+  end
 end

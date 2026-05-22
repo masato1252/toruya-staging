@@ -44,11 +44,10 @@ class Admin::EventsController < AdminController
 
   def analytics
     @event_contents = @event.event_contents.undeleted.order(:position)
-    @activity_logs = @event.event_activity_logs
-                          .includes(:event_content, :event_line_user)
-                          .order(created_at: :desc)
-    @activity_counts = @event.event_activity_logs.group(:activity_type).count
-    @content_activity_counts = @event.event_activity_logs.group(:event_content_id, :activity_type).count
+    logs_scope = @event.analytics_activity_logs
+    @activity_logs = logs_scope.includes(:event_content, :event_line_user).order(created_at: :desc)
+    @activity_counts = logs_scope.group(:activity_type).count
+    @content_activity_counts = logs_scope.group(:event_content_id, :activity_type).count
   end
 
   # イベント新規作成時にも使えるよう、event_contents の同名アクションを events 側にも用意。

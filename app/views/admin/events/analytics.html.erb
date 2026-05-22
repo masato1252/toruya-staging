@@ -39,26 +39,26 @@
       <div class="admin-analytics-grid">
         <div class="admin-analytics-card">
           <div class="analytics-value text-tarco">
-            <%= Ahoy::Event.where(name: "event_content_view").where("properties->>'event_content_id' = ?", content.id.to_s).count %>
+            <%= @event.ahoy_content_views(content.id).count %>
           </div>
           <div class="analytics-label">PV</div>
         </div>
         <div class="admin-analytics-card">
           <div class="analytics-value text-blue">
-            <%= Ahoy::Event.where(name: "event_content_view").where("properties->>'event_content_id' = ?", content.id.to_s).count(Arel.sql("DISTINCT properties->>'event_line_user_id'")) %>
+            <%= @event.ahoy_content_views(content.id).count(Arel.sql("DISTINCT properties->>'event_line_user_id'")) %>
           </div>
           <div class="analytics-label">来場者(UU)</div>
         </div>
         <div class="admin-analytics-card">
-          <div class="analytics-value text-green"><%= content.usage_count %></div>
+          <div class="analytics-value text-green"><%= content.analytics_usage_count %></div>
           <div class="analytics-label">リード</div>
         </div>
         <div class="admin-analytics-card">
-          <div class="analytics-value text-orange"><%= content.event_upsell_consultations.count %></div>
+          <div class="analytics-value text-orange"><%= content.analytics_upsell_consultations_count %></div>
           <div class="analytics-label">相談予約</div>
         </div>
         <div class="admin-analytics-card">
-          <div class="analytics-value text-purple"><%= content.event_monitor_applications.count %></div>
+          <div class="analytics-value text-purple"><%= content.analytics_monitor_applications_count %></div>
           <div class="analytics-label">モニター応募</div>
         </div>
       </div>

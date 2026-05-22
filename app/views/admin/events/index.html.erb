@@ -22,7 +22,7 @@
           <% if event.start_at %>
             &middot; <%= l(event.start_at, format: :short) %> 〜 <%= event.end_at ? l(event.end_at, format: :short) : "未設定" %>
           <% end %>
-          &middot; 参加者: <%= event.event_participants.count %>人
+          &middot; 参加者: <%= event.analytics_participants_count %>人
         </div>
       <% end %>
     <% end %>

@@ -55,7 +55,7 @@
     <% if @event_content.capacity %>
       <div class="admin-detail-row">
         <div class="admin-detail-label">上限人数</div>
-        <div class="admin-detail-value"><%= @event_content.capacity %>人（利用済: <%= @event_content.usage_count %>人）</div>
+        <div class="admin-detail-value"><%= @event_content.capacity %>人（利用済: <%= @event_content.analytics_usage_count %>人）</div>
       </div>
     <% end %>
   </div>
