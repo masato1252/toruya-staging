@@ -1,16 +1,5 @@
 <%= render "info" %>
 <div id="about">
-  <ul class="function">
-    <% admin_only do %>
-      <li>
-        <% if can? :create, Shop %>
-          <%= link_to t("settings.shop.new_button"), new_settings_user_shop_path(super_user), class: "BTNyellow addNew" %>
-        <% else %>
-          <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
   <p><%= t("settings.shop.info_1") %><br /><%= t("settings.shop.info_2") %></p>
 </div>
 
@@ -25,7 +14,13 @@
     <% @shops.each do |shop| %>
       <dl>
         <dt class="rowTTL">
-          <%= link_to shop.name, edit_settings_user_shop_path(super_user, shop) %>
+          <%= link_to shop.read_attribute(:name), edit_settings_user_shop_path(super_user, shop) %>
+          <% if shop.setup_pending? %>
+            <div class="shop-setup-pending-warning">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <%= t("settings.shop.setup_pending_warning") %>
+            </div>
+          <% end %>
         </dt>
         <dd class="updateTime"><%= shop.updated_at.to_fs(:date) %></dd>
         <dd class="function">
@@ -34,10 +29,43 @@
         </dd>
       </dl>
     <% end %>
+    <% if admin? && can?(:create, Shop) %>
+      <dl class="shop-add-row">
+        <dt class="rowTTL">
+          <% add_shop_link_options = { class: "BTNtarco shop-add-btn" } %>
+          <% if super_user.subscription&.in_paid_plan? || super_user.permission_level == Plan::ENTERPRISE_LEVEL %>
+            <% if @shop_fee_required %>
+              <%= link_to "#", **add_shop_link_options, data: { toggle: "modal", target: "#addShopModal" } do %>
+                <i class="fa fa-plus shop-add-row__icon" aria-hidden="true"></i>
+                <%= t("settings.shop.add_button") %>
+              <% end %>
+            <% else %>
+              <%= link_to add_settings_user_shops_path(super_user), **add_shop_link_options, method: :post do %>
+                <i class="fa fa-plus shop-add-row__icon" aria-hidden="true"></i>
+                <%= t("settings.shop.add_button") %>
+              <% end %>
+            <% end %>
+          <% else %>
+            <%= link_to "#", **add_shop_link_options, data: { toggle: "modal", target: "#upgradeModal" } do %>
+              <i class="fa fa-plus shop-add-row__icon" aria-hidden="true"></i>
+              <%= t("settings.shop.add_button") %>
+            <% end %>
+          <% end %>
+        </dt>
+        <dd class="updateTime"></dd>
+        <dd class="function"></dd>
+      </dl>
+    <% end %>
   </div>
 <% end %>
 
 <% admin_only do %>
+  <% if @shop_fee_required && @proration_preview %>
+    <%= render "add_shop_modal",
+      proration_preview: @proration_preview,
+      super_user: super_user %>
+  <% end %>
+
   <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

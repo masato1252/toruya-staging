@@ -5,8 +5,21 @@
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id), title: t("user_bot.dashboards.settings.business_schedules.business_time") %>
         <div class="field-header"><%= t("common.shop_label") %></div>
         <% @shops.each do |shop| %>
-          <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
-            <span><%= shop.name %></span><i class="fa fa-angle-right"></i>
+          <% if shop.setup_pending? %>
+            <%= link_to lines_user_bot_settings_shop_path(business_owner_id, shop.id), class: "field-row" do %>
+              <div>
+                <span><%= shop.read_attribute(:name) %></span>
+                <div class="shop-setup-pending-warning">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <%= t("settings.shop.setup_pending_warning") %>
+                </div>
+              </div>
+              <i class="fa fa-angle-right"></i>
+            <% end %>
+          <% else %>
+            <%= link_to index_lines_user_bot_settings_business_schedules_path(business_owner_id: business_owner_id, shop_id: shop.id), class: "field-row" do %>
+              <span><%= shop.read_attribute(:name) %></span><i class="fa fa-angle-right"></i>
+            <% end %>
           <% end %>
         <% end %>
       </div>

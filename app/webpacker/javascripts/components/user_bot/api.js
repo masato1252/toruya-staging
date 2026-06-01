@@ -589,6 +589,16 @@ const ShopServices = {
       responseType: "json"
     })
   },
+  destroy: ({data}) => {
+    return request({
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.lines_user_bot_settings_shop_path(data.business_owner_id, data.id, {format: "json"}),
+      responseType: "json"
+    })
+  },
 }
 
 const MenuServices = {

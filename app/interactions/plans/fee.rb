@@ -2,16 +2,27 @@
 
 module Plans
   class Fee < ActiveInteraction::Base
-    SHOP_NUMBER_CHARGE_THRESHOLD = 2
-    PER_SHOP_FEE = { "JPY" => 500, "TWD" => 100 }.freeze
+    SHOP_NUMBER_CHARGE_THRESHOLD = 1
+    PER_SHOP_FEE = { "JPY" => 550, "TWD" => 110 }.freeze
 
     object :user
     object :plan
 
     def execute
-      plan.premium_level? ? Money.new(
-        [user.shops.count - SHOP_NUMBER_CHARGE_THRESHOLD, 0].max * PER_SHOP_FEE[user.currency], user.currency
-      ) : Money.zero(user.currency)
+      return Money.zero(user.currency) unless chargeable?
+
+      extra_shops = [user.shops.count - SHOP_NUMBER_CHARGE_THRESHOLD, 0].max
+      Money.new(extra_shops * PER_SHOP_FEE[user.currency], user.currency)
+    end
+
+    def self.chargeable_for?(user, plan)
+      user.subscription&.in_paid_plan? && !plan.enterprise_level?
+    end
+
+    private
+
+    def chargeable?
+      self.class.chargeable_for?(user, plan)
     end
   end
 end

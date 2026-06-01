@@ -1,0 +1,7 @@
+<% html_options = local_assigns.fetch(:html_options, {}) %>
+<%= link_to url, html_options.merge(class: ["field-row", "shop-add-row", html_options[:class]].compact.join(" ")) do %>
+  <div class="shop-add-row__label">
+    <i class="fa fa-plus shop-add-row__icon" aria-hidden="true"></i>
+    <span><%= t("settings.shop.add_button") %></span>
+  </div>
+<% end %>

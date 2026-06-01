@@ -4,6 +4,52 @@
   }
 }
 
+.shop-add-row {
+  .rowTTL {
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    margin-right: 6px;
+  }
+}
+
+.shop-setup-pending-warning {
+  color: #c0392b;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.shop-setup-prompt-dialog {
+  .modal-title {
+    white-space: nowrap;
+  }
+
+  .modal-footer {
+    text-align: center;
+  }
+}
+
+#addShopModal {
+  .modal-footer > div {
+    display: inline-block;
+  }
+
+  .add-shop-checkout-action {
+    margin-left: 12px;
+  }
+
+  .hover_alert {
+    inset: 0;
+    z-index: 2000;
+  }
+
+  .processing-bar {
+    z-index: 2001;
+  }
+}
+
 #settingForm {
   .logo-area {
     div {

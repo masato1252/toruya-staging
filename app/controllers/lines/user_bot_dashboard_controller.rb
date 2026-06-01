@@ -20,11 +20,12 @@ class Lines::UserBotDashboardController < ActionController::Base
   before_action :set_locale
   before_action :redirect_from_rich_menu
   before_action :require_complete_shop_profile!
+  before_action :load_setup_pending_shop
 
   def from_line_bot
     true
   end
-  helper_method :from_line_bot
+  helper_method :from_line_bot, :setup_pending_shop
 
   def site_routing_helper
     @site_routing_helper ||= SiteRouting.new(view_context)
@@ -86,5 +87,15 @@ class Lines::UserBotDashboardController < ActionController::Base
       Current.notify_user_customer_reservation_confirmation_message = false
       flash[:notice] = I18n.t("common.notify_user_customer_reservation_confirmation_message")
     end
+  end
+
+  def load_setup_pending_shop
+    return unless Current.business_owner && admin?
+
+    @setup_pending_shop = Current.business_owner.shops.setup_pending.order(:id).first
+  end
+
+  def setup_pending_shop
+    @setup_pending_shop
   end
 end

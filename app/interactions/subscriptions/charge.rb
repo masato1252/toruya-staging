@@ -21,11 +21,11 @@ module Subscriptions
         order_id = OrderId.generate
         # XXX: business plan charged manually means, it is a registration charge, user need to pay extra signup fee
         amount, charging_rank =
-        if charge_amount && rank
-          [charge_amount, rank]
-        else
-          compose(Plans::Price, user: user, plan: plan, rank: rank)
-        end
+          if charge_amount
+            [charge_amount, rank || user.subscription&.rank || 0]
+          else
+            compose(Plans::Price, user: user, plan: plan, rank: rank)
+          end
 
         description = charge_description || plan.level
 

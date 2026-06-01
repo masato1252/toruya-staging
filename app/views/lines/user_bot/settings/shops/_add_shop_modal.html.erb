@@ -1,0 +1,77 @@
+<div class="modal fade" id="addShopModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t("settings.shop.modal.add_shop_title") %></h4>
+      </div>
+      <div class="modal-body">
+        <%= t("settings.shop.modal.add_shop_content_html",
+              per_shop_fee_price: Plans::Fee::PER_SHOP_FEE[Current.business_owner.currency],
+              prorated_amount: proration_preview[:amount].format,
+              next_renewal_date: l(Current.business_owner.subscription.expired_date)) %>
+      </div>
+      <div class="modal-footer centerize">
+        <%= link_to t("settings.shop.modal.add_shop_cancel_button"), "#", class: "btn btn-tarco", data: { dismiss: "modal" } %>
+        <%= react_component("management/add_shop_checkout", {
+          props: {
+            stripeKey: Rails.application.secrets.stripe_publishable_key,
+            paymentPath: add_lines_user_bot_settings_shops_path(business_owner_id),
+            useSavedCard: Current.business_owner.subscription&.stripe_customer_id.present?,
+            sourceModalId: "addShopModal",
+            fallbackModalId: "addShopCardReentryModal",
+            processingMessage: I18n.t("common.processing"),
+            detailsDesc: t("settings.shop.modal.add_shop_payment_details",
+                           period_start: l(proration_preview[:period_start]),
+                           period_end: l(proration_preview[:period_end]),
+                           amount: proration_preview[:amount].format),
+            i18n: {
+              header: t("settings.shop.modal.add_shop_payment_header"),
+              desc: t("settings.shop.modal.add_shop_payment_desc"),
+              payBtnText: t("settings.shop.modal.add_shop_confirm_button"),
+              processing: t("common.processing"),
+              chargeFailed: t("settings.plans.payment.failed_title")
+            }
+          }
+        }) %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addShopCardReentryModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t("settings.shop.modal.add_shop_retry_title") %></h4>
+      </div>
+      <div class="modal-body">
+        <%= react_component("management/add_shop_checkout", {
+          props: {
+            stripeKey: Rails.application.secrets.stripe_publishable_key,
+            paymentPath: add_lines_user_bot_settings_shops_path(business_owner_id),
+            forceCardEntry: true,
+            processingMessage: I18n.t("common.processing"),
+            detailsDesc: t("settings.shop.modal.add_shop_payment_details",
+                           period_start: l(proration_preview[:period_start]),
+                           period_end: l(proration_preview[:period_end]),
+                           amount: proration_preview[:amount].format),
+            i18n: {
+              fallbackHeader: t("settings.shop.modal.add_shop_retry_header"),
+              fallbackDesc: t("settings.shop.modal.add_shop_retry_desc"),
+              payBtnText: t("settings.shop.modal.add_shop_confirm_button"),
+              processing: t("common.processing"),
+              chargeFailed: t("settings.plans.payment.failed_title")
+            }
+          }
+        }) %>
+      </div>
+      <div class="modal-footer centerize">
+        <button type="button" class="btn btn-tarco" data-dismiss="modal" onclick="$('#addShopModal').modal('show');">
+          <%= t("settings.shop.modal.add_shop_retry_back_button") %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

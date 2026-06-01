@@ -57,6 +57,9 @@ tw:
       info_title: 服務資訊
       new_title: 建立新服務資訊
       new_button: 建立新店鋪
+      add_button: 新增店鋪
+      setup_pending_warning: 店鋪資訊尚未設定
+      add_successfully_message: 已新增店鋪。請設定店鋪資訊。
       info_1: 這是已設定的店鋪列表。
       info_2: Toruya將根據這些設定接受預約。
       new_info_1: 設定服務資訊。
@@ -65,6 +68,13 @@ tw:
       create_successfully_message: 已成功儲存服務資訊。
       update_successfully_message: 已成功更新服務資訊。
       delete_successfully_message: 已成功刪除服務資訊。
+      cannot_delete_default_message: 無法刪除第一間店鋪。
+      delete_confirmation_title: 刪除店鋪
+      delete_confirmation_message: 確定要刪除此店鋪嗎？
+      setup_prompt:
+        title: 需要設定店鋪資訊
+        body: 新增的店鋪資訊尚未設定。請完成設定。
+        confirm_button: 顯示設定畫面
       logo_area:
         title: 商家標誌
         description_about_logo: 在線預約時會顯示在預約頁面上。
@@ -73,9 +83,20 @@ tw:
         no_image: 尚無檔案
       modal:
         upgrade_title: 升級帳戶
-        upgrade_content_html: 您已經建立了一間店舖。<br />若要新增更多店舖，需要升級帳戶。<br /><br />每月支付%{premium_plan_price}即可新增多間店舖。<br /><br />您可以隨時降級帳戶。
+        upgrade_content_html: 您已經建立了一間店舖。<br />若要新增更多店舖，需要加入付費方案。<br /><br />加入付費方案後，第2間店舖起每月550元（含稅）/店舖。<br /><br />您可以隨時刪除店舖。
+        add_shop_title: 新增店鋪
+        add_shop_content_html: 將追加店鋪月費<strong>550元（含稅）/店鋪</strong>。<br /><br />・當月：至下次更新日（%{next_renewal_date}）按日比例立即收取 <strong>%{prorated_amount}</strong><br />・次月起：與基本方案合併自動扣款<br /><br />可隨時刪除店鋪。刪除後下次帳單起不再收費（不退款）。
+        add_shop_cancel_button: 取消
+        add_shop_confirm_button: 支付當月費用並新增店鋪
+        add_shop_payment_header: 追加店鋪使用費
+        add_shop_payment_desc: 當月（日比例）付款
+        add_shop_payment_details: "追加店鋪使用費　1店鋪（%{period_start}〜%{period_end}）　%{amount}"
+        add_shop_retry_title: 重新輸入付款方式
+        add_shop_retry_header: 請重新輸入卡片資訊
+        add_shop_retry_desc: 使用既有卡片付款失敗
+        add_shop_retry_back_button: 返回
         premium:
-          upgrade_content_html: 您已經建立了%{shop_number}間店舖。<br />若要新增更多店舖，需要支付額外費用。<br /><br />每月支付%{per_shop_fee_price}元即可新增一間店舖。<br /><br />您可以隨時刪除店舖。
+          upgrade_content_html: 您已經建立了%{shop_number}間店舖。<br />若要新增更多店舖，需要支付額外費用。<br /><br />每月支付%{per_shop_fee_price}元（含稅）即可新增一間店舖。<br /><br />您可以隨時刪除店舖。
           cancel_button: 不用了，謝謝
           upgrade_button: "支付%{per_shop_fee_price}元新增一間店舖"
     business_hours:
@@ -323,7 +344,8 @@ tw:
         refund: 退款
         refund_successfully_message: 退款程序完成
         refund_failed_message: 退款程序失敗。請再試一次。
-        extra_shop: 額外店鋪
+        extra_shop: 追加店鋪使用費
+        extra_shop_prorated: 追加店鋪使用費（首月付款）
         line_notice_request: LINE通知請求
       upgrade:
         caption_title: 升級項目

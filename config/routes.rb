@@ -367,8 +367,10 @@ Rails.application.routes.draw do
               end
             end
 
-            resources :shops, only: [:index, :show, :update, :edit] do
+            resources :shops, only: [:index, :show, :update, :edit, :destroy] do
               collection do
+                post :add
+                get :proration_preview
                 get :custom_messages
               end
 
@@ -684,6 +686,10 @@ Rails.application.routes.draw do
         end
 
         resources :shops, except: [:show] do
+          collection do
+            post :add
+            get :proration_preview
+          end
           resources :business_schedules, only: [] do
             collection do
               get "edit"

@@ -57,6 +57,9 @@ ja:
       info_title:  店舗情報
       new_title: 店舗情報の新規作成
       new_button: 新規店舗作成
+      add_button: 店舗追加
+      setup_pending_warning: 店舗情報が未設定です
+      add_successfully_message: 店舗を追加しました。店舗情報を設定してください。
       info_1: 設定された店舗一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       new_info_1: 店舗情報を設定します。
@@ -64,7 +67,14 @@ ja:
       name: 店舗名
       create_successfully_message: 店舗情報を保存しました。
       update_successfully_message: 店舗情報を更新しました。
-      delete_successfully_message: 店舗情報を削除しました。
+      delete_successfully_message: 店舗を削除しました。
+      cannot_delete_default_message: 先頭の店舗は削除できません。
+      delete_confirmation_title: 店舗を削除
+      delete_confirmation_message: この店舗を削除します。よろしいですか？
+      setup_prompt:
+        title: 店舗情報の設定が必要です
+        body: 追加した店舗の情報が未設定です。設定を完了してください。
+        confirm_button: 設定画面を表示
       logo_area:
         title: 店舗ロゴ
         description_about_logo: オンライン予約を受ける際の予約ページに表示されます。
@@ -73,9 +83,20 @@ ja:
         no_image: ファイルがありません
       modal:
         upgrade_title: アカウントをアップグレード
-        upgrade_content_html: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数の店舗を追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_content_html: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するには有料プランへの加入が必要です。<br /><br />有料プラン加入後、2店舗目以降は月額550円（税込）/店舗で追加できます。<br /><br />店舗はいつでも削除することができます。
+        add_shop_title: 店舗を追加
+        add_shop_content_html: 追加店舗の月額利用料として、<strong>550円（税込）/店舗</strong>が加算されます。<br /><br />・当月分：次回更新日（%{next_renewal_date}）までの日割り分 <strong>%{prorated_amount}</strong> を即時チャージします<br />・翌月以降：基本プラン料金に合算して自動請求されます<br /><br />店舗はいつでも削除できます。削除後は次回請求から追加料金は発生しません。
+        add_shop_cancel_button: キャンセル
+        add_shop_confirm_button: 了承して店舗を追加する
+        add_shop_payment_header: 追加店舗利用料
+        add_shop_payment_desc: 当月分（日割り）のお支払い
+        add_shop_payment_details: "追加店舗利用料　1店舗（%{period_start}〜%{period_end}）　%{amount}"
+        add_shop_retry_title: お支払い方法の再入力
+        add_shop_retry_header: カード情報を再入力してください
+        add_shop_retry_desc: 登録済みカードでの決済に失敗しました
+        add_shop_retry_back_button: 戻る
         premium:
-          upgrade_content_html: 既に%{shop_number}店舗を作成しています。<br />さらに店舗を追加するには追加料金が必要です。<br /><br />月額%{per_shop_fee_price}円でもう１店舗を追加することができます。<br /><br />店舗はいつでも削除することができます。
+          upgrade_content_html: 既に%{shop_number}店舗を作成しています。<br />さらに店舗を追加するには追加料金が必要です。<br /><br />月額%{per_shop_fee_price}円（税込）でもう１店舗を追加することができます。<br /><br />店舗はいつでも削除することができます。
           cancel_button: いいえ、結構です
           upgrade_button: "%{per_shop_fee_price}円払って１店舗追加する"
     business_hours:
@@ -323,7 +344,8 @@ ja:
         refund: 払戻し
         refund_successfully_message: 返金手続き完了
         refund_failed_message: 返金手続き失敗。もう一度手続きしてください。
-        extra_shop: 追加店舗
+        extra_shop: 追加店舗利用料
+        extra_shop_prorated: 追加店舗利用料（初月決済分）
         line_notice_request: LINE通知リクエスト
       upgrade:
         caption_title: アップグレードのオプション

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="settings-dashboard form with-top-bar">
-        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id), title: t("user_bot.dashboards.settings.shop.shop_info_label") %>
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_shops_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.shop.shop_info_label") %>
         <div class="field-header"><%= t("user_bot.dashboards.settings.shop.name_label") %></div>
         <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_path(id: @shop.id, business_owner_id: business_owner_id, attribute: :name) do %>
           <div>
@@ -29,6 +29,14 @@
             <%= shop_logo(@shop, "390x135", image_class: "logo") %>
           </div>
         <% end %>
+
+        <% if @can_delete_shop %>
+          <div class="centerize margin-around">
+            <button type="button" class="btn btn-orange" data-toggle="modal" data-target="#deleteShopModal">
+              <%= t("action.delete") %>
+            </button>
+          </div>
+        <% end %>
       </div>
     </div>
 
@@ -43,3 +51,26 @@
     </div>
   </div>
 </div>
+
+<% if @can_delete_shop %>
+  <div class="modal fade" id="deleteShopModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><%= t("settings.shop.delete_confirmation_title") %></h4>
+        </div>
+        <div class="modal-body">
+          <%= t("settings.shop.delete_confirmation_message") %>
+        </div>
+        <div class="modal-footer centerize">
+          <button type="button" class="btn btn-tarco" data-dismiss="modal"><%= t("common.cancel") %></button>
+          <%= link_to t("action.delete"),
+                      lines_user_bot_settings_shop_path(business_owner_id, @shop),
+                      class: "btn btn-orange",
+                      method: :delete %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

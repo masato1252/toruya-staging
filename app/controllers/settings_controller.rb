@@ -16,6 +16,7 @@ class SettingsController < ActionController::Base
   before_action :authorize_manager_level_permission
   before_action :profile_required
   before_action :enable_tour_warning
+  before_action :load_setup_pending_shop
   skip_before_action :track_ahoy_visit
 
   def profile_required
@@ -34,9 +35,19 @@ class SettingsController < ActionController::Base
   def from_line_bot
     false
   end
-  helper_method :from_line_bot
+  helper_method :from_line_bot, :setup_pending_shop
 
   private
+
+  def load_setup_pending_shop
+    return unless admin?
+
+    @setup_pending_shop = super_user.shops.setup_pending.order(:id).first
+  end
+
+  def setup_pending_shop
+    @setup_pending_shop
+  end
 
   def enable_tour_warning
     if request.query_parameters["enable_tour_warning"]

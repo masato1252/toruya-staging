@@ -3,6 +3,7 @@
     business_owner_id: business_owner_id,
     shop: CompanyInfoSerializer.new(@shop).attributes_hash.merge!(@shop.slice(:name, :address_details, :holiday_working_option)),
     attribute: params[:attribute],
+    can_delete_shop: @can_delete_shop,
     business_schedules: @business_schedules&.map { |business_schedule| BusinessScheduleSerializer.new(business_schedule).attributes_hash },
     previous_path: @previous_path,
     title: @title,

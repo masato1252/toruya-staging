@@ -22,7 +22,7 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 
-const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleFailure}) => {
+const CheckoutForm = ({header, desc, pay_btn, pay_btn_class = "btn btn-success btn-extend btn-large", details_desc, handleToken, handleFailure}) => {
   const [processing, setProcessing] = useState(false)
   const stripe = useStripe();
   const elements = useElements();
@@ -59,7 +59,7 @@ const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleF
         {details_desc}
       </div>
       <CardElement options={CARD_ELEMENT_OPTIONS} />
-      <button type="submit" disabled={!stripe || processing} className="btn btn-success btn-extend btn-large">
+      <button type="submit" disabled={!stripe || processing} className={pay_btn_class}>
         {pay_btn}
       </button>
     </form>

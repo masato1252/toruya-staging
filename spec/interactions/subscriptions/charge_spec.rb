@@ -22,6 +22,42 @@ RSpec.describe Subscriptions::Charge do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    context "when manual charge_amount is provided without rank" do
+      let(:rank) { nil }
+      let(:custom_amount) { Money.new(71, :jpy) }
+      let(:args) do
+        {
+          user: user,
+          plan: plan,
+          rank: rank,
+          manual: manual,
+          charge_amount: custom_amount,
+          charge_description: SubscriptionCharge::TYPES[:shop_fee]
+        }
+      end
+
+      before do
+        successful_intent = double(
+          status: "succeeded",
+          as_json: {
+            "id" => "pi_success_123",
+            "status" => "succeeded",
+            "amount" => 71,
+            "currency" => "jpy"
+          }
+        )
+        allow(Stripe::PaymentIntent).to receive(:create).and_return(successful_intent)
+        allow_any_instance_of(described_class).to receive(:get_selected_payment_method).and_return("pm_test_123")
+      end
+
+      it "charges with the provided custom amount" do
+        outcome
+
+        charge = user.subscription_charges.order(created_at: :desc).first
+        expect(charge.amount_cents.to_i).to eq(71)
+      end
+    end
+
     context "when payment succeeds" do
       before do
         # Mock successful PaymentIntent

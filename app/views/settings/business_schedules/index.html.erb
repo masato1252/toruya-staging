@@ -15,10 +15,24 @@
     </ul>
     <% @shops.each do |shop| %>
       <dl>
-        <dt class="rowTTL"><%= link_to shop.name, edit_settings_user_shop_business_schedules_path(super_user, shop) %></dt>
+        <dt class="rowTTL">
+          <% if shop.setup_pending? %>
+            <%= link_to shop.read_attribute(:name), edit_settings_user_shop_path(super_user, shop) %>
+            <div class="shop-setup-pending-warning">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <%= t("settings.shop.setup_pending_warning") %>
+            </div>
+          <% else %>
+            <%= link_to shop.read_attribute(:name), edit_settings_user_shop_business_schedules_path(super_user, shop) %>
+          <% end %>
+        </dt>
         <dd class="updateTime"><%= shop.updated_at.to_fs(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_settings_user_shop_business_schedules_path(super_user, shop), class: "BTNtarco" %>
+          <% if shop.setup_pending? %>
+            <%= link_to t("action.edit"), edit_settings_user_shop_path(super_user, shop), class: "BTNtarco" %>
+          <% else %>
+            <%= link_to t("action.edit"), edit_settings_user_shop_business_schedules_path(super_user, shop), class: "BTNtarco" %>
+          <% end %>
         </dd>
       </dl>
     <% end %>

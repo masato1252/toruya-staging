@@ -60,7 +60,12 @@
           <% if @charge.shop_fee? %>
             <tr>
               <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>
-              <td>1<%= I18n.t("settings.subscription.receipt.shop") %></td>
+              <td>
+                1<%= I18n.t("settings.subscription.receipt.shop") %>
+                <% if @charge.details["period_start"].present? && @charge.details["period_end"].present? %>
+                  （<%= l(Date.parse(@charge.details["period_start"]), format: :year_month_date) %> ~ <%= l(Date.parse(@charge.details["period_end"]), format: :year_month_date) %>）
+                <% end %>
+              </td>
               <td><%= @charge.is_a?(LineNoticeCharge) ? @charge.amount_money.format : @charge.amount.format %></td>
             </tr>
           <% else %>
@@ -69,12 +74,13 @@
               <td>
                 <%= @charge.details["plan_name"] %>(<%= l(@charge.charge_date, format: :year_month_date) %> ~ <%= l(@charge.expired_date, format: :year_month_date) %>)
               </td>
-              <td><%= @charge.details["charge_amount"] %></td>
+              <td><%= @charge.details["plan_amount"] %></td>
             </tr>
             <% if @charge.with_shop_fee? %>
+              <% extra_shop_count = [@charge.user.shops.count - Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD, 0].max %>
               <tr>
                 <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>
-                <td><%= @charge.details["shop_ids"].length - Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD %><%= I18n.t("settings.subscription.receipt.shop") %></td>
+                <td><%= extra_shop_count %><%= I18n.t("settings.subscription.receipt.shop") %></td>
                 <td><%= @charge.details["shop_fee_format"] %></td>
               </tr>
             <% end %>

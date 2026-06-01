@@ -22,12 +22,16 @@ module Subscriptions
       else
         # Paid plan, need to process charge
         subscription.with_lock do
-          # Reuse Charge service, but set manual: false to trigger recurring charge logic
+          plan_amount, charging_rank = compose(Plans::Price, user: user, plan: charging_plan, rank: subscription.rank)
+          shop_fee = compose(Plans::Fee, user: user, plan: charging_plan)
+          total_amount = plan_amount + shop_fee
+
           charge_outcome = Subscriptions::Charge.run(
             user: user,
             plan: charging_plan,
-            rank: subscription.rank,
-            manual: false  # Trigger recurring charge logic
+            rank: charging_rank,
+            charge_amount: total_amount,
+            manual: false
           )
 
           if charge_outcome.valid?

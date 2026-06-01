@@ -51,6 +51,26 @@ const SocialAccountEdit =({props}) => {
     }
   }
 
+  const onDelete = async () => {
+    if (formState.isSubmitting) return;
+    const shopId = watch("id");
+    let error, response;
+
+    [error, response] = await ShopServices.destroy({
+      data: { business_owner_id: props.business_owner_id, id: shopId }
+    });
+
+    if (error) {
+      toastr.error(error.response?.data?.error_message || I18n.t("settings.plans.payment.failed_desc2"));
+      return;
+    }
+
+    toastr.success(response.data.notice || I18n.t("settings.shop.delete_successfully_message"));
+    setTimeout(() => {
+      window.location = response.data.redirect_to;
+    }, 300);
+  };
+
   const zip_code = watch("address_details[zip_code]");
   const address = useAddress(zip_code)
   const logo_url = watch("logo_url")
@@ -284,6 +304,13 @@ const SocialAccountEdit =({props}) => {
                 word={I18n.t("action.save")}
               />
             </BottomNavigationBar>
+            {props.can_delete_shop && (
+              <div className="centerize margin-around">
+                <button type="button" className="btn btn-orange" data-toggle="modal" data-target="#deleteShopModal">
+                  {I18n.t("action.delete")}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -334,6 +361,31 @@ const SocialAccountEdit =({props}) => {
           )}
         </div>
       </div>
+      {props.can_delete_shop && (
+        <div className="modal fade" id="deleteShopModal" tabIndex="-1" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 className="modal-title">{I18n.t("settings.shop.delete_confirmation_title")}</h4>
+              </div>
+              <div className="modal-body">
+                {I18n.t("settings.shop.delete_confirmation_message")}
+              </div>
+              <div className="modal-footer centerize">
+                <button type="button" className="btn btn-tarco" data-dismiss="modal">
+                  {I18n.t("common.cancel")}
+                </button>
+                <button type="button" className="btn btn-orange" onClick={onDelete}>
+                  {I18n.t("action.delete")}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

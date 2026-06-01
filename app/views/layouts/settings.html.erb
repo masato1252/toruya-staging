@@ -34,6 +34,9 @@
         <%= flash_messages %>
         <%= yield %>
         <%= render "layouts/upgrade_modals" %>
+        <% if admin? && setup_pending_shop %>
+          <%= render "settings/shops/setup_pending_prompt", super_user: super_user, setup_pending_shop: setup_pending_shop %>
+        <% end %>
       </div>
     </div>
   </body>

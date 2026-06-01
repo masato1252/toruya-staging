@@ -51,6 +51,11 @@ class Shop < ApplicationRecord
   belongs_to :user
 
   scope :active, -> { where(deleted_at: nil) }
+  scope :setup_pending, -> { where(info_setup_completed: false) }
+
+  def setup_pending?
+    !info_setup_completed
+  end
 
   enum holiday_working_option: {
     business_schedule_overlap_holiday_using_holiday_schedule: "business_schedule_overlap_holiday_using_holiday_schedule",

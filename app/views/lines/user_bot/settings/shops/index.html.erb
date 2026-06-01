@@ -2,11 +2,33 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="settings-dashboard form with-top-bar">
-        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.shop.shop_management") %>
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.shop.shop_info_label") %>
         <div class="field-header"><%= t("common.shop_label") %></div>
         <% @shops.each do |shop| %>
           <%= link_to lines_user_bot_settings_shop_path(business_owner_id, shop.id), class: "field-row" do %>
-            <span><%= shop.name %></span><i class="fa fa-angle-right"></i>
+            <div>
+              <span><%= shop.read_attribute(:name) %></span>
+              <% if shop.setup_pending? %>
+                <div class="shop-setup-pending-warning">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <%= t("settings.shop.setup_pending_warning") %>
+                </div>
+              <% end %>
+            </div>
+            <i class="fa fa-angle-right"></i>
+          <% end %>
+        <% end %>
+
+        <% if admin? %>
+          <% owner = Current.business_owner %>
+          <% if owner.subscription&.in_paid_plan? || owner.permission_level == Plan::ENTERPRISE_LEVEL %>
+            <% if @shop_fee_required %>
+              <%= render "shop_add_row", url: "#", html_options: { data: { toggle: "modal", target: "#addShopModal" } } %>
+            <% else %>
+              <%= render "shop_add_row", url: add_lines_user_bot_settings_shops_path(business_owner_id), html_options: { method: :post } %>
+            <% end %>
+          <% else %>
+            <%= render "shop_add_row", url: "#", html_options: { data: { toggle: "modal", target: "#upgradeShopModal" } } %>
           <% end %>
         <% end %>
       </div>
@@ -15,3 +37,11 @@
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
 </div>
+
+<% if @shop_fee_required && @proration_preview %>
+  <%= render "add_shop_modal", proration_preview: @proration_preview, business_owner_id: business_owner_id %>
+<% end %>
+
+<% if admin? %>
+  <%= render "upgrade_modal", business_owner_id: business_owner_id %>
+<% end %>
