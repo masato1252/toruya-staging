@@ -16,6 +16,9 @@ module Events
     integer :referrer_shop_id, default: nil
     integer :referrer_event_line_user_id, default: nil
 
+    validate :validate_required_profile_fields
+    validate :validate_required_questionnaire_fields
+
     def execute
       update_event_line_user_profile
 
@@ -79,6 +82,23 @@ module Events
       return nil if referrer_event_line_user_id.blank?
       return nil if referrer_event_line_user_id == event_line_user.id
       EventLineUser.exists?(id: referrer_event_line_user_id) ? referrer_event_line_user_id : nil
+    end
+
+    def validate_required_profile_fields
+      return if first_name.present? && last_name.present? && phone_number.present? && email.present?
+
+      errors.add(:base, "お名前・電話番号・メールアドレスを入力してください")
+    end
+
+    def validate_required_questionnaire_fields
+      missing = []
+      missing << "事業内容" if business_types.reject(&:blank?).empty?
+      missing << "開業歴" if business_age.blank?
+      missing << "今のお悩み" if concern_labels.reject(&:blank?).empty?
+
+      return if missing.empty?
+
+      errors.add(:base, "#{missing.join('・')}を入力してください")
     end
   end
 end

@@ -78,10 +78,17 @@ const ParticipationForm = ({ props }) => {
   const basicProfileFilled = () =>
     lastName.trim() && firstName.trim() && phoneNumber.trim() && email.trim();
 
+  const questionnaireFilled = () =>
+    selectedBusinessTypes.length > 0 && businessAge && concernLabels.length > 0;
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
     if (!basicProfileFilled()) {
       toastr.error("お名前・電話番号・メールアドレスを入力してください");
+      return;
+    }
+    if (!questionnaireFilled()) {
+      toastr.error("事業内容・開業歴・今のお悩みをすべて選択してください");
       return;
     }
     setIsSubmitting(true);
@@ -139,7 +146,7 @@ const ParticipationForm = ({ props }) => {
           🎯 業種やお悩みに合わせた最適な出展者をお勧めします
         </div>
         <div style={{ fontSize: 13, color: "#44403c", lineHeight: 1.6 }}>
-          回答は任意ですが、ご入力いただくとイベントをより活用いただけます！
+          すべて必須項目です。ご回答のうえ参加登録を完了してください。
         </div>
       </div>
 
@@ -313,22 +320,7 @@ const ParticipationForm = ({ props }) => {
             cursor: isSubmitting ? "not-allowed" : "pointer"
           }}
         >
-          {isSubmitting ? "登録中..." : (props.profile_completion_mode ? "プロフィールを登録する" : "プロフィール登録する")}
-        </button>
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#9ca3af",
-            fontSize: 13,
-            cursor: isSubmitting ? "not-allowed" : "pointer",
-            textDecoration: "underline",
-            padding: "4px 0"
-          }}
-        >
-          スキップする
+          {isSubmitting ? "登録中..." : "参加登録を完了する"}
         </button>
       </div>
     </div>

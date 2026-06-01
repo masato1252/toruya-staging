@@ -301,11 +301,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
       if event
         participant = event.event_participants.find_by(event_line_user_id: event_line_user.id)
-        if participant
+        if participant && event_line_user.basic_profile_complete?
           # 既に参加登録済み → イベントページ or 見ていたコンテンツへ
           redirect_to return_to.presence || "/#{event_slug}"
         else
-          # 未参加 → 参加登録フォームへ
+          # 未参加 or プロフィール未完了 → 参加登録フォームへ
           redirect_to new_event_participation_path(event_slug: event_slug)
         end
       else
