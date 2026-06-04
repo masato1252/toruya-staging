@@ -30,7 +30,7 @@ class SocialUserMessageSerializer
         content["previewImageUrl"] = Images::Process.run!(image: message.image, resize: "750")
       end
       if message.video.attached?
-        content["originalContentUrl"] = Rails.application.routes.url_helpers.url_for(message.video)
+        content["originalContentUrl"] = Rails.application.routes.url_helpers.rails_blob_url(message.video, only_path: true)
       end
 
       case message.content_type

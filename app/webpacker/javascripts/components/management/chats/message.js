@@ -36,13 +36,15 @@ const Message = ({message, reply_ai_message, ai_question}) => {
             <video
               className="w-full"
               controls
-              src={message.text.originalContentUrl || ""}
-              poster={message.text.previewImageUrl || ""}
+              src={(message.text && message.text.originalContentUrl) || ""}
+              poster={(message.text && message.text.previewImageUrl) || ""}
             />
           ) : message.is_image ? (
-            <img className="w-full" src={message.text.previewImageUrl || ""} />
+            <img className="w-full" src={(message.text && message.text.previewImageUrl) || ""} />
           ) : (
-            message.text
+            typeof message.text === "string" || typeof message.text === "number"
+              ? message.text
+              : null
           )}
         </div>
         <div

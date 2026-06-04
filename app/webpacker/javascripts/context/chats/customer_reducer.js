@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 // mapping with
 // app/serializers/social_customer_serializer.rb
 //

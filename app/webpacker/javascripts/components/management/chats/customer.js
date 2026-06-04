@@ -2,6 +2,7 @@
 
 import React, { useContext } from "react";
 import { GlobalContext } from "context/chats/global_state";
+import { DEFAULT_PROFILE_PICTURE_URL, resolveProfilePictureUrl } from "libraries/default_profile_picture";
 
 export default ({ customer }) => {
   const { selected_customer, dispatch, subscription }= useContext(GlobalContext)
@@ -25,7 +26,11 @@ export default ({ customer }) => {
           </i>
         </div>
         <div className="media-left">
-          <img className="media-object img-circle" src={customer.picture_url} />
+          <img
+            className="media-object img-circle"
+            src={resolveProfilePictureUrl(customer.picture_url)}
+            onError={(e) => { e.currentTarget.src = DEFAULT_PROFILE_PICTURE_URL; }}
+          />
         </div>
         <div className="media-body"
           onClick={() => dispatch({

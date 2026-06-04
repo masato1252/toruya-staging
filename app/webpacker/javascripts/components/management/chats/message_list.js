@@ -17,7 +17,7 @@ const MessageList = () => {
   }, [subscription, selected_customer.id])
 
   useLayoutEffect(() => {
-    messageListRef.current.scrollIntoView({ behavior: "auto" });
+    messageListRef.current?.scrollIntoView({ behavior: "auto" });
   }, [latest_message.created_at, selected_customer.id])
 
   if (selected_customer.has_more_messages === true) {

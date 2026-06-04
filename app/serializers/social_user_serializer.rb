@@ -31,7 +31,7 @@ class SocialUserSerializer
   end
 
   attribute :picture_url do |social_user|
-    social_user.social_user_picture_url.presence || "https://via.placeholder.com/60"
+    social_user.social_user_picture_url.presence
   end
 
   attribute :memo do |social_user|

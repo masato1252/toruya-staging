@@ -25,6 +25,6 @@ class SocialCustomerSerializer
   end
 
   attribute :picture_url do |customer|
-    customer.social_user_picture_url.presence || "https://via.placeholder.com/60"
+    customer.social_user_picture_url.presence
   end
 end
