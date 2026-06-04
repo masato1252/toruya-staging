@@ -69,4 +69,38 @@ class EventLineUser < ApplicationRecord
   def name
     "#{last_name} #{first_name}".strip
   end
+
+  # 管理画面の参加者一覧用。プロフィール未完了時は「-」。
+  def admin_display_name
+    return "-" unless basic_profile_complete?
+
+    name.presence || "-"
+  end
+
+  # 管理画面表示用。日本の電話番号は 0 始まりの国内形式に正規化する。
+  def formatted_phone_number
+    raw = phone_number.presence
+    return nil if raw.blank?
+
+    parsed = Phonelib.parse(raw)
+    parsed = Phonelib.parse(raw, "JP") unless parsed.valid?
+
+    if parsed.valid? && parsed.countries.include?("JP")
+      parsed.national(false)
+    elsif parsed.valid?
+      parsed.international(false).presence || raw
+    else
+      normalize_japanese_phone_digits(raw)
+    end
+  end
+
+  private
+
+  def normalize_japanese_phone_digits(raw)
+    digits = raw.gsub(/\D/, "")
+    return digits if digits.match?(/\A0\d{9,10}\z/)
+    return "0#{digits[2..]}" if digits.match?(/\A81\d{9,10}\z/)
+
+    digits.presence || raw
+  end
 end

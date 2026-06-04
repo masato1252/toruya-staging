@@ -158,37 +158,70 @@
     </script>
   </div>
 
-  <% if @participants.any? %>
-    <div class="admin-detail-section">
-      <div class="admin-form-section-title">参加者一覧（<%= @event.analytics_participants_count %>人）</div>
-      <table class="admin-participant-table">
-        <thead>
-          <tr>
-            <th>名前</th>
-            <th>LINE表示名</th>
-            <th>電話番号</th>
-            <th>Toruyaユーザー</th>
-            <th>登録日</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @participants.each do |p| %>
+  <% if @participant_rows.any? %>
+    <div class="admin-detail-section admin-detail-section--participants">
+      <div class="admin-form-section-title">参加者一覧</div>
+      <div class="admin-participant-summary">
+        <% [["一般", @participant_counts[:general]], ["出展者", @participant_counts[:exhibitor]]].each do |label, counts| %>
+          <div class="admin-participant-stat">
+            <div class="admin-participant-stat__head">
+              <span class="admin-participant-stat__label"><%= label %></span>
+              <span class="admin-participant-stat__total"><%= counts[:total] %><small>人</small></span>
+            </div>
+            <ul class="admin-participant-stat__details">
+              <li><span>プロフ登録済み</span><strong><%= counts[:profile_complete] %>人</strong></li>
+              <li><span>未登録</span><strong><%= counts[:profile_incomplete] %>人</strong></li>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+      <div class="admin-participant-table-wrap">
+        <table class="admin-participant-table">
+          <thead>
             <tr>
-              <td><%= p.event_line_user.name %></td>
-              <td><%= p.event_line_user.display_name %></td>
-              <td><%= p.event_line_user.phone_number %></td>
-              <td>
-                <% if p.event_line_user.toruya_registered? %>
-                  <span class="admin-badge admin-badge-success">登録済 (ID: <%= p.event_line_user.toruya_user_id %>)</span>
-                <% else %>
-                  <span class="admin-badge admin-badge-secondary">未登録</span>
-                <% end %>
-              </td>
-              <td><%= l(p.registered_at, format: :short) %></td>
+              <th>名前</th>
+              <th>LINE表示名</th>
+              <th>電話番号</th>
+              <th>Toruyaユーザー</th>
+              <th>区分</th>
+              <th>プロフ登録</th>
+              <th>登録日</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% @participant_rows.each do |row| %>
+              <% elu = row.event_line_user %>
+              <tr>
+                <td><%= elu.admin_display_name %></td>
+                <td><%= elu.display_name %></td>
+                <td><%= elu.formatted_phone_number.presence || "-" %></td>
+                <td>
+                  <% if elu.toruya_registered? %>
+                    <span class="admin-badge admin-badge-success">登録済 (ID: <%= elu.toruya_user_id %>)</span>
+                  <% else %>
+                    <span class="admin-badge admin-badge-secondary">未登録</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if row.exhibitor %>
+                    <span class="admin-badge admin-badge-info">出展者</span>
+                  <% else %>
+                    <span class="admin-badge admin-badge-secondary">一般</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if row.profile_complete %>
+                    <span class="admin-badge admin-badge-success">登録済み</span>
+                  <% else %>
+                    <span class="admin-badge admin-badge-warning">未登録</span>
+                  <% end %>
+                </td>
+                <td><%= l(row.registered_at, format: :short) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   <% end %>
 </div>

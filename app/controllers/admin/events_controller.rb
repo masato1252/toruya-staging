@@ -23,7 +23,8 @@ class Admin::EventsController < AdminController
 
   def show
     @event_contents = @event.event_contents.undeleted.order(:position)
-    @participants = @event.event_participants.includes(:event_line_user).order(registered_at: :desc)
+    @participant_rows = @event.admin_participant_rows
+    @participant_counts = @event.admin_participant_count_breakdown
   end
 
   def edit

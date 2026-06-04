@@ -130,6 +130,66 @@ class Event < ApplicationRecord
     excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count
   end
 
+  # 管理画面「参加者一覧」に載せる event_line_user_id。
+  # 参加登録済み + イベント上でアクティビティのある未登録ユーザ（プロフィール未完了含む）。
+  def admin_participant_line_user_ids
+    registered_ids = event_participants.pluck(:event_line_user_id)
+    activity_ids = event_activity_logs.distinct.pluck(:event_line_user_id)
+    ahoy_ids = admin_participant_ahoy_line_user_ids
+    (registered_ids + activity_ids + ahoy_ids).uniq
+  end
+
+  # 管理画面参加者一覧の行データ（新しい順）。
+  AdminParticipantRow = Struct.new(
+    :event_line_user,
+    :participant,
+    :exhibitor,
+    :profile_complete,
+    :registered_at,
+    keyword_init: true
+  )
+
+  def admin_participant_rows
+    return @admin_participant_rows if defined?(@admin_participant_rows)
+
+    ids = admin_participant_line_user_ids
+    return @admin_participant_rows = [] if ids.empty?
+
+    participants_by_elu_id = event_participants.where(event_line_user_id: ids)
+                                              .includes(:event_line_user)
+                                              .index_by(&:event_line_user_id)
+    line_users = EventLineUser.where(id: ids).index_by(&:id)
+    first_activity_at = event_activity_logs.where(event_line_user_id: ids)
+                                           .group(:event_line_user_id)
+                                           .minimum(:created_at)
+
+    ids.filter_map do |elu_id|
+      elu = line_users[elu_id]
+      next unless elu
+
+      participant = participants_by_elu_id[elu_id]
+      AdminParticipantRow.new(
+        event_line_user: elu,
+        participant: participant,
+        exhibitor: preview_insider?(elu),
+        profile_complete: elu.basic_profile_complete?,
+        registered_at: participant&.registered_at || first_activity_at[elu_id] || elu.created_at
+      )
+    end.sort_by(&:registered_at).reverse.tap { |rows| @admin_participant_rows = rows }
+  end
+
+  # { general: { total:, profile_complete:, profile_incomplete: }, exhibitor: { ... } }
+  def admin_participant_count_breakdown
+    rows = admin_participant_rows
+    general_rows = rows.reject(&:exhibitor)
+    exhibitor_rows = rows.select(&:exhibitor)
+
+    {
+      general: count_breakdown_for(general_rows),
+      exhibitor: count_breakdown_for(exhibitor_rows)
+    }
+  end
+
   def analytics_activity_logs
     scope = event_activity_logs
     excluded = analytics_excluded_event_line_user_ids
@@ -200,6 +260,27 @@ class Event < ApplicationRecord
   end
 
   private
+
+  def admin_participant_ahoy_line_user_ids
+    content_ids = event_contents.undeleted.pluck(:id).map(&:to_s)
+    return [] if content_ids.empty?
+
+    Ahoy::Event.where(name: "event_content_view")
+               .where("properties->>'event_content_id' IN (?)", content_ids)
+               .distinct
+               .pluck(Arel.sql("properties->>'event_line_user_id'"))
+               .filter_map { |id| id.presence&.to_i }
+               .select(&:positive?)
+  end
+
+  def count_breakdown_for(rows)
+    profile_complete = rows.count(&:profile_complete)
+    {
+      total: rows.size,
+      profile_complete: profile_complete,
+      profile_incomplete: rows.size - profile_complete
+    }
+  end
 
   # user_id が owner / staff(staffs.user_id) / 管理者ログイン(staff_accounts.user_id) として所属する shop_id 集合を返す。
   # Toruya の管理者は staffs.user_id が店舗オーナー側のまま、実際の LINE ログインは staff_accounts.user_id に紐づく。

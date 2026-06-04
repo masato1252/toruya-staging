@@ -221,4 +221,46 @@ RSpec.describe Event, type: :model do
       expect(event.analytics_participants_count).to eq(1)
     end
   end
+
+  describe "#admin_participant_rows and #admin_participant_count_breakdown" do
+    let(:event) { FactoryBot.create(:event, :during_event) }
+    let(:exhibitor_shop) { FactoryBot.create(:shop) }
+    let!(:booth_content) { FactoryBot.create(:event_content, :unpublished, :booth, event: event, shop: exhibitor_shop) }
+
+    let(:exhibitor_line_user) do
+      FactoryBot.create(:event_line_user, toruya_user_id: exhibitor_shop.user_id, first_name: "出展", last_name: "太郎",
+                                         email: "exhibitor@example.com", phone_number: "09011112222")
+    end
+    let(:general_complete_line_user) do
+      FactoryBot.create(:event_line_user, first_name: "一般", last_name: "花子",
+                                         email: "general@example.com", phone_number: "09033334444")
+    end
+    let(:incomplete_line_user) do
+      FactoryBot.create(:event_line_user, display_name: "未登録LINE", first_name: nil, last_name: nil)
+    end
+
+    before do
+      FactoryBot.create(:event_participant, event: event, event_line_user: exhibitor_line_user)
+      FactoryBot.create(:event_participant, event: event, event_line_user: general_complete_line_user)
+      FactoryBot.create(:event_activity_log, event: event, event_line_user: incomplete_line_user,
+                                             event_content: booth_content, activity_type: :seminar_view)
+    end
+
+    it "includes participants and activity-only users with incomplete profiles" do
+      rows = event.admin_participant_rows
+      expect(rows.map(&:event_line_user)).to contain_exactly(
+        exhibitor_line_user, general_complete_line_user, incomplete_line_user
+      )
+      incomplete_row = rows.find { |r| r.event_line_user == incomplete_line_user }
+      expect(incomplete_row.participant).to be_nil
+      expect(incomplete_row.profile_complete).to be false
+      expect(incomplete_line_user.admin_display_name).to eq("-")
+    end
+
+    it "breaks down counts by exhibitor role and profile completion" do
+      breakdown = event.admin_participant_count_breakdown
+      expect(breakdown[:general]).to eq(total: 2, profile_complete: 1, profile_incomplete: 1)
+      expect(breakdown[:exhibitor]).to eq(total: 1, profile_complete: 1, profile_incomplete: 0)
+    end
+  end
 end

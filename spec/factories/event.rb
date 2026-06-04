@@ -59,4 +59,11 @@ FactoryBot.define do
     sequence(:line_user_id) { |n| "U#{format('%015d', n)}" }
     sequence(:display_name) { |n| "line-user-#{n}" }
   end
+
+  factory :event_activity_log do
+    association :event
+    association :event_content
+    association :event_line_user
+    activity_type { :seminar_view }
+  end
 end

@@ -1,7 +1,10 @@
 @import "../variables";
 
+// イベント管理画面（一覧・詳細・解析）のコンテンツ幅
+$admin-event-page-max-width: 1280px;
+
 .admin-event-form {
-  max-width: 720px;
+  max-width: $admin-event-page-max-width;
   margin: 24px auto;
   padding: 0 16px 40px;
 }
@@ -150,7 +153,7 @@
 }
 
 .admin-form-actions {
-  max-width: 720px;
+  max-width: $admin-event-page-max-width;
   margin: 0 auto;
   padding: 16px;
   display: flex;
@@ -199,7 +202,7 @@
 }
 
 .admin-event-list {
-  max-width: 720px;
+  max-width: $admin-event-page-max-width;
   margin: 24px auto;
   padding: 0 16px;
 
@@ -255,9 +258,11 @@
 }
 
 .admin-event-detail {
-  max-width: 720px;
+  max-width: $admin-event-page-max-width;
   margin: 24px auto;
-  padding: 0 16px;
+  padding: 0 20px 40px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-detail-section {
@@ -266,6 +271,10 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
   overflow: hidden;
+
+  &.admin-detail-section--participants {
+    overflow: visible;
+  }
 }
 
 .admin-detail-header {
@@ -332,6 +341,91 @@
     background-color: #e3f2fd;
     color: #1565c0;
   }
+
+  &.admin-badge-warning {
+    background-color: #fff3e0;
+    color: #e65100;
+  }
+}
+
+.admin-participant-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-participant-stat {
+  background: $gray3;
+  border: 1px solid $gray;
+  border-radius: 8px;
+  padding: 14px 16px;
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $gray;
+  }
+
+  &__label {
+    font-size: $normal-font-size;
+    font-weight: bold;
+    color: $black;
+  }
+
+  &__total {
+    font-size: 22px;
+    font-weight: bold;
+    color: $palette-color2;
+    line-height: 1;
+
+    small {
+      margin-left: 2px;
+      font-size: $small-font-size;
+      font-weight: bold;
+      color: $gray8;
+    }
+  }
+
+  &__details {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: $small-font-size;
+      color: $gray8;
+
+      span {
+        color: $gray11;
+      }
+
+      strong {
+        font-weight: bold;
+        color: $black;
+      }
+    }
+  }
+}
+
+.admin-participant-table-wrap {
+  padding: 0 16px 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-content-card-sortable {
@@ -456,27 +550,34 @@
 
 .admin-participant-table {
   width: 100%;
+  min-width: 960px;
   font-size: $small-font-size;
   border-collapse: collapse;
+  table-layout: auto;
 
   th {
     background-color: $gray4;
-    padding: 8px 12px;
+    padding: 10px 12px;
     text-align: left;
     font-weight: bold;
     color: $gray8;
     border-bottom: 1px solid $gray;
+    white-space: nowrap;
   }
 
   td {
-    padding: 8px 12px;
+    padding: 10px 12px;
     border-bottom: 1px solid $gray;
     color: $black;
-    vertical-align: top;
+    vertical-align: middle;
   }
 
   tr:last-child td {
     border-bottom: 0;
+  }
+
+  .admin-badge {
+    white-space: nowrap;
   }
 }
 
