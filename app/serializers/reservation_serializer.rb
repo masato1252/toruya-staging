@@ -4,7 +4,7 @@ class ReservationSerializer
   include JSONAPI::Serializer
 
   # TODO: Form bug, it won't send with_warnings https://github.com/ilake/kasaike/commit/bc56b28579e6e74a04cc746c0253c18699f27361
-  attributes :id, :with_warnings, :shop
+  attributes :id, :with_warnings, :shop, :shop_id
   attribute :start_time_date_part, &:start_time_date
   attribute :start_time_time_part, &:start_time_time
   attribute :end_time_date_part, &:end_time_date

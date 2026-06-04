@@ -24,7 +24,7 @@
         <% if !user_ability.can?(:check_content, reservation)%>
           <%= modal_link_to(
             t("reservation.recheck_in"),
-            check_reservation_content_lines_user_bot_warnings_path,
+            check_reservation_content_lines_user_bot_warnings_path(business_owner_id: reservation_owner_id),
             class: "btn enhanced BTNyellow",
             modal_target: "#dummyModal2"
           ) %>
@@ -41,7 +41,7 @@
         <% if !user_ability.can?(:check_content, reservation)%>
           <%= modal_link_to(
             t("reservation.accept_in_canceled"),
-            check_reservation_content_lines_user_bot_warnings_path,
+            check_reservation_content_lines_user_bot_warnings_path(business_owner_id: reservation_owner_id),
             class: "btn enhanced BTNyellow",
             modal_target: "#dummyModal2"
           ) %>
@@ -62,7 +62,7 @@
         <% if !user_ability.can?(:check_content, reservation)%>
           <%= modal_link_to(
             t("reservation.pend"),
-            check_reservation_content_lines_user_bot_warnings_path,
+            check_reservation_content_lines_user_bot_warnings_path(business_owner_id: reservation_owner_id),
             class: "btn enhanced BTNyellow",
             modal_target: "#dummyModal2"
           ) %>
@@ -104,7 +104,7 @@
         <% if !user_ability.can?(:check_content, reservation)%>
           <%= modal_link_to(
             t("reservation.details"),
-            check_reservation_content_lines_user_bot_warnings_path,
+            check_reservation_content_lines_user_bot_warnings_path(business_owner_id: reservation_owner_id),
             class: "btn enhanced BTNyellow",
             modal_target: "#dummyModal2"
           ) %>

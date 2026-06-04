@@ -64,7 +64,8 @@ class Lines::CustomersController < ActionController::Base
   helper_method :current_owner
 
   def current_toruya_social_user
-    @current_toruya_social_user ||= SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+    ssid = user_bot_cookies(:social_service_user_id)
+    @current_toruya_social_user ||= SocialUser.linked_for_line(ssid) || SocialUser.find_by(social_service_user_id: ssid)
   end
   helper_method :current_toruya_social_user
 

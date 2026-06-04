@@ -91,7 +91,8 @@ class LinesController < ActionController::Base
 
   def authenticate_social_user
     if user_bot_cookies(:social_service_user_id)
-      @social_user ||= SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+      ssid = user_bot_cookies(:social_service_user_id)
+      @social_user ||= SocialUser.linked_for_line(ssid) || SocialUser.find_by(social_service_user_id: ssid)
       if @social_user&.user
         redirect_to lines_user_bot_schedules_path(business_owner_id: @social_user.user.id)
       end

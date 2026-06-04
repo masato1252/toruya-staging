@@ -61,6 +61,16 @@ class SocialUser < ApplicationRecord
     social_service_user_id
   end
 
+  # Toruya アカウントに紐づいた行（退避で user_id が NULL の古い行より優先）
+  def self.linked_for_line(social_service_user_id)
+    where(social_service_user_id: social_service_user_id).where.not(user_id: nil).order(:id).first
+  end
+
+  # Slack 通知など: 自行の user_id、なければ同一 LINE の有効アカウント
+  def toruya_user_id
+    user_id || root_user&.id
+  end
+
   def same_social_user_scope
     SocialUser.where(social_service_user_id: social_service_user_id).where.not(user_id: nil)
   end

@@ -33,7 +33,7 @@ module SocialUserMessages
         end
 
         if response.code == "429"
-          SlackClient.send(channel: 'sayhi', text: "💣 Toruya: message_id: #{social_user_message.id}, user_id: #{social_user.user_id} #{I18n.t("notifier.notifications.line_reached_monthly_limit.message")}")
+          SlackClient.send(channel: 'sayhi', text: "💣 Toruya: message_id: #{social_user_message.id}, user_id: #{social_user.toruya_user_id} #{I18n.t("notifier.notifications.line_reached_monthly_limit.message")}")
         end
 
         errors.add(:social_user_message, :sent_failed, message: "^#{error_message}")

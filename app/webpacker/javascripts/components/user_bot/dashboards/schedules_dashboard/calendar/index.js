@@ -438,7 +438,8 @@ const SchedulesCalendar = ({ props }) => {
     }
     if (event.type === 'reservation') {
       const reservationOwnerId = event.user_id || business_owner_id;
-      const modalUrl = Routes.lines_user_bot_shop_reservation_path(reservationOwnerId, event.shop.id, event.id, {
+      const shopId = event.shop_id ?? (typeof event.shop === 'object' ? event.shop?.id : event.shop);
+      const modalUrl = Routes.lines_user_bot_shop_reservation_path(reservationOwnerId, shopId, event.id, {
         reservations_approval_flow: reservations_approval_flow,
         _from: _from
       });

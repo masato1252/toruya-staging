@@ -15,20 +15,24 @@ module SocialUsers
         who
       end
 
-      social_user =
-        begin
-          SocialUser.transaction do
-            SocialUser
-              .create_with(
-                social_rich_menu_key: UserBotLines::RichMenus::Guest::KEY,
-                locale: _who == CallbacksController::TW_TORUYA_USER ? "tw" : "ja"
-              )
-              .order("id")
-              .find_or_create_by(social_service_user_id: social_service_user_id)
+      social_user = SocialUser.linked_for_line(social_service_user_id)
+
+      unless social_user
+        social_user =
+          begin
+            SocialUser.transaction do
+              SocialUser
+                .create_with(
+                  social_rich_menu_key: UserBotLines::RichMenus::Guest::KEY,
+                  locale: _who == CallbacksController::TW_TORUYA_USER ? "tw" : "ja"
+                )
+                .order("id")
+                .find_or_create_by(social_service_user_id: social_service_user_id)
+            end
+          rescue ActiveRecord::RecordNotUnique
+            retry
           end
-        rescue ActiveRecord::RecordNotUnique
-          retry
-        end
+      end
 
       social_user.update(email: email) if email.present?
 

@@ -35,7 +35,10 @@ module Users
       user.save!
 
       if social_service_user_id
-        compose(SocialUsers::Connect, user: user, social_user: SocialUser.find_by!(social_service_user_id: social_service_user_id))
+        social_user =
+          SocialUser.linked_for_line(social_service_user_id) ||
+          SocialUser.order(:id).find_by!(social_service_user_id: social_service_user_id)
+        compose(SocialUsers::Connect, user: user, social_user: social_user)
       end
 
       user

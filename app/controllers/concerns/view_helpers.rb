@@ -52,7 +52,8 @@ module ViewHelpers
         write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
         _social_user
       elsif respond_to?(:user_bot_cookies, true) && user_bot_cookies(:social_service_user_id)
-        SocialUser.where.not(user_id: nil).find_by(social_service_user_id: user_bot_cookies(:social_service_user_id)) || SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+        ssid = user_bot_cookies(:social_service_user_id)
+        SocialUser.linked_for_line(ssid) || SocialUser.find_by(social_service_user_id: ssid)
       else
         privileged_session_user&.social_user
       end

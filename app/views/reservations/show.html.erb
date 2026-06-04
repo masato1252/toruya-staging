@@ -14,7 +14,7 @@
             <% elsif !@user_ability.can?(:check_content, customer)%>
               <%= modal_link_to(
                 customer.name,
-                check_reservation_content_lines_user_bot_warnings_path,
+                check_reservation_content_lines_user_bot_warnings_path(business_owner_id: @shop_user.id),
                 class: "customer-link",
                 modal_target: "#dummyModal2"
               ) %>
