@@ -14,18 +14,23 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
       if event.present?
         case event["message"]["type"]
         when "image"
-        compose(
-          SocialUserMessages::Create,
-          social_user: social_user,
-          content: {
-            messageId: event["message"]["id"],
-            originalContentUrl: event["message"]["contentProvider"]["originalContentUrl"],
-            previewImageUrl: event["message"]["contentProvider"]["previewImageUrl"]
-          }.to_json,
-          readed: false,
-          content_type: SocialUserMessages::Create::IMAGE_TYPE,
-          message_type: SocialUserMessage.message_types[:user]
-        )
+          compose(
+            SocialUserMessages::Create,
+            social_user: social_user,
+            content: media_content(event),
+            readed: false,
+            content_type: SocialUserMessages::Create::IMAGE_TYPE,
+            message_type: SocialUserMessage.message_types[:user]
+          )
+        when "video"
+          compose(
+            SocialUserMessages::Create,
+            social_user: social_user,
+            content: media_content(event),
+            readed: false,
+            content_type: SocialUserMessages::Create::VIDEO_TYPE,
+            message_type: SocialUserMessage.message_types[:user]
+          )
         when "text"
           compose(
             SocialUserMessages::Create,
@@ -55,6 +60,17 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
   end
 
   private
+
+  def media_content(event)
+    content_provider = event.dig("message", "contentProvider") || {}
+
+    {
+      messageId: event.dig("message", "id"),
+      originalContentUrl: content_provider["originalContentUrl"],
+      previewImageUrl: content_provider["previewImageUrl"],
+      duration: event.dig("message", "duration")
+    }.compact.to_json
+  end
 
   def url_helpers
     Rails.application.routes.url_helpers

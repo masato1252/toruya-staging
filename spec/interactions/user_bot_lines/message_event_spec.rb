@@ -42,6 +42,34 @@ RSpec.describe UserBotLines::MessageEvent do
       end
     end
 
+    context "when message type is video" do
+      let(:message_type) { "video" }
+      let(:event) do
+        super().tap do |payload|
+          payload["message"] = {
+            "type" => "video",
+            "id" => "8521501055275",
+            "duration" => 60_000,
+            "contentProvider" => { "type" => "line" }
+          }
+        end
+      end
+
+      it "creates a video social user message without sending unsupported reply" do
+        expect(LineClient).not_to receive(:send)
+
+        expect {
+          outcome
+        }.to change {
+          SocialUserMessage.where(
+            social_user: social_user,
+            message_type: SocialUserMessage.message_types[:user],
+            content_type: SocialUserMessages::Create::VIDEO_TYPE
+          ).count
+        }.by(1)
+      end
+    end
+
     context "when message match keyword" do
       context "message is USER_SIGN_OUT" do
         let(:content) { described_class::USER_SIGN_OUT }

@@ -32,7 +32,18 @@ const Message = ({message, reply_ai_message, ai_question}) => {
       <ProcessingBar processing={processing} processingMessage={I18n.t("admin.chat.ai_processing")} />
       <div className={`${message.message_type} ${message.id} ${!!message.formatted_schedule_at && !message.sent ? 'scheduled' : ''}`} >
         <div className={`col-sm-10 break-line-content message-content ${message.sent ? "" : "unsend"}`}>
-          {message.is_image ? <img className="w-full" src={message.text.previewImageUrl || ""} /> : message.text}
+          {message.is_video ? (
+            <video
+              className="w-full"
+              controls
+              src={message.text.originalContentUrl || ""}
+              poster={message.text.previewImageUrl || ""}
+            />
+          ) : message.is_image ? (
+            <img className="w-full" src={message.text.previewImageUrl || ""} />
+          ) : (
+            message.text
+          )}
         </div>
         <div
           className="message-icons"

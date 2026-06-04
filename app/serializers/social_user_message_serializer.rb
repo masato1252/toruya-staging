@@ -9,12 +9,18 @@ class SocialUserMessageSerializer
   end
 
   attribute :is_image do |message|
+    return false unless message.content_type == SocialUserMessages::Create::IMAGE_TYPE
+
     begin
       JSON.parse(message.raw_content)
-      message.content_type != SocialUserMessages::Create::FLEX_TYPE
-    rescue TypeError, JSON::ParserError => e
+      true
+    rescue TypeError, JSON::ParserError
       false
     end
+  end
+
+  attribute :is_video do |message|
+    message.content_type == SocialUserMessages::Create::VIDEO_TYPE
   end
 
   attribute :text do |message|
@@ -22,6 +28,9 @@ class SocialUserMessageSerializer
       content = JSON.parse(message.raw_content)
       if message.image.attached?
         content["previewImageUrl"] = Images::Process.run!(image: message.image, resize: "750")
+      end
+      if message.video.attached?
+        content["originalContentUrl"] = Rails.application.routes.url_helpers.url_for(message.video)
       end
 
       case message.content_type

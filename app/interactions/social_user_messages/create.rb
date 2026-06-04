@@ -65,6 +65,8 @@ module SocialUserMessages
         case content_type
         when IMAGE_TYPE
           SocialUserMessages::FetchImage.perform_later(social_user_message: message)
+        when VIDEO_TYPE
+          SocialUserMessages::FetchVideo.perform_later(social_user_message: message)
         end
       end
 

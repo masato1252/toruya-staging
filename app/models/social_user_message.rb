@@ -35,7 +35,8 @@ class SocialUserMessage < ApplicationRecord
   belongs_to :social_user, touch: true
   belongs_to :admin_user, class_name: "User", required: false
   has_one_attached :image
-  scan_attachment :image
+  has_one_attached :video
+  scan_attachment :image, :video
 
   scope :unread, -> { where(readed_at: nil) }
   scope :sent, -> { where.not(sent_at: nil) }
@@ -61,6 +62,8 @@ class SocialUserMessage < ApplicationRecord
 
         if image.attached?
           "<#{Images::Process.run!(image: image, resize: "750")}|content>"
+        elsif content_type == SocialUserMessages::Create::VIDEO_TYPE && video.attached?
+          "<#{Rails.application.routes.url_helpers.url_for(video)}|video>"
         elsif content_type == SocialUserMessages::Create::FLEX_TYPE
           content["altText"]
         else
