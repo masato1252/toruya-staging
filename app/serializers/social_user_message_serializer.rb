@@ -9,14 +9,12 @@ class SocialUserMessageSerializer
   end
 
   attribute :is_image do |message|
-    if message.content_type == SocialUserMessages::Create::IMAGE_TYPE
-      begin
-        JSON.parse(message.raw_content)
-        true
-      rescue TypeError, JSON::ParserError
-        false
-      end
-    else
+    return false unless message.content_type == SocialUserMessages::Create::IMAGE_TYPE
+
+    begin
+      JSON.parse(message.raw_content)
+      true
+    rescue TypeError, JSON::ParserError
       false
     end
   end
