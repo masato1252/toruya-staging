@@ -1,7 +1,7 @@
 <%= notification_messages %>
 <%= t("user_bot.dashboards.change_logs.notification_message_html", change_log_path: lines_user_bot_change_log_path) %>
 
-<%= jump_out_modal(lines_user_bot_shop_reservation_path(business_owner_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
+<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.user_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
 
 <%= react_component(
   "user_bot/shared/view_toggle_button", {

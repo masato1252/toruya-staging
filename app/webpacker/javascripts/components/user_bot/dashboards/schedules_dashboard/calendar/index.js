@@ -437,7 +437,8 @@ const SchedulesCalendar = ({ props }) => {
       console.log('🛑 Stopped event propagation');
     }
     if (event.type === 'reservation') {
-      const modalUrl = Routes.lines_user_bot_shop_reservation_path(business_owner_id, event.shop.id, event.id, {
+      const reservationOwnerId = event.user_id || business_owner_id;
+      const modalUrl = Routes.lines_user_bot_shop_reservation_path(reservationOwnerId, event.shop.id, event.id, {
         reservations_approval_flow: reservations_approval_flow,
         _from: _from
       });

@@ -54,4 +54,9 @@ class ReservationSerializer
   attribute :shop_name do |reservation|
     reservation.shop.display_name
   end
+
+  # 予約を所有する Toruya アカウント（Myカレンダー等で business_owner_id と一致しない場合がある）
+  attribute :user_id do |reservation|
+    reservation.user_id
+  end
 end
