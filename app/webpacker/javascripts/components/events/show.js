@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { LineLoginBtn } from "shared/booking";
 
-// コンテンツサムネイルの表示アスペクト比（16:9）
-const THUMBNAIL_ASPECT_PADDING = "56.25%";
+// コンテンツサムネイルの表示アスペクト比（推奨サイズ 1672×941）
+const THUMBNAIL_ASPECT_PADDING = `${(941 / 1672) * 100}%`;
 
 const PlatformIcon = ({ name }) => {
   const s = { width: 22, height: 22 };
@@ -961,30 +961,33 @@ const EventShow = ({ props }) => {
       {/* Status banner (below MV) — 開催期間自体はMV内に表示 */}
       {/* 「開始までお待ちください」は参加登録済ユーザにだけ表示する。 */}
       {/* 未参加ユーザが開催前に訪れた場合はバナー自体を出さない（CTA は MV 内のログインボタンに集約）。 */}
-      {((event.not_started && event.is_participant) || event.ended) && (
+      {event.not_started && event.is_participant && (
         <div style={{ background: "#fafaf9", borderBottom: "1px solid #e7e5e4", padding: "24px 20px" }}>
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
-            {event.not_started && event.is_participant && (
-              <div style={{
-                border: "2px solid #CA4E0E", background: "#fff",
-                padding: "18px 20px", textAlign: "center",
-                fontWeight: 800, fontSize: 16, color: "#CA4E0E",
-                letterSpacing: "0.02em"
-              }}>
-                イベント開始までお待ちください
-              </div>
-            )}
+            <div style={{
+              border: "2px solid #CA4E0E", background: "#fff",
+              padding: "18px 20px", textAlign: "center",
+              fontWeight: 800, fontSize: 16, color: "#CA4E0E",
+              letterSpacing: "0.02em"
+            }}>
+              イベント開始までお待ちください
+            </div>
+          </div>
+        </div>
+      )}
 
-            {event.ended && (
-              <div style={{
-                border: "2px solid #57534e", background: "#fff",
-                padding: "18px 20px", textAlign: "center",
-                fontWeight: 800, fontSize: 16, color: "#44403c",
-                letterSpacing: "0.02em"
-              }}>
-                イベントは終了しました
-              </div>
-            )}
+      {/* 「イベントは終了しました」は未参加・ログイン済みを問わず全訪問者に表示する。 */}
+      {event.ended && (
+        <div style={{ background: "#fafaf9", borderBottom: "1px solid #e7e5e4", padding: "24px 20px" }}>
+          <div style={{ maxWidth: 720, margin: "0 auto" }}>
+            <div style={{
+              border: "2px solid #57534e", background: "#fff",
+              padding: "18px 20px", textAlign: "center",
+              fontWeight: 800, fontSize: 16, color: "#44403c",
+              letterSpacing: "0.02em"
+            }}>
+              イベントは終了しました
+            </div>
           </div>
         </div>
       )}

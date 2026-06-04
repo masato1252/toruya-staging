@@ -2,6 +2,9 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 
+// コンテンツサムネイルの表示アスペクト比（推奨サイズ 1672×941）
+const THUMBNAIL_ASPECT_PADDING = `${(941 / 1672) * 100}%`;
+
 const isYoutubeUrl = (url) => !!url && /(?:youtube\.com|youtu\.be)/.test(url);
 const isDriveUrl = (url) => url && /(?:drive|docs)\.google\.com/.test(url);
 
@@ -909,7 +912,7 @@ const RecommendedSeminarCarousel = ({ contents, eventLogoUrl }) => {
                   border: "1px solid rgba(0,0,0,0.06)",
                   display: "flex", flexDirection: "column", height: "100%"
                 }}>
-                  <div style={{ position: "relative", width: "100%", paddingBottom: "56.25%", flexShrink: 0, background: c.thumbnail_url ? "#f5f5f4" : "rgb(70, 67, 66)" }}>
+                  <div style={{ position: "relative", width: "100%", paddingBottom: THUMBNAIL_ASPECT_PADDING, flexShrink: 0, background: c.thumbnail_url ? "#f5f5f4" : "rgb(70, 67, 66)" }}>
                     {c.thumbnail_url ? (
                       <img src={c.thumbnail_url} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     ) : (
@@ -961,7 +964,7 @@ const EventContentShow = ({ props }) => {
     event_content, event_slug, event_title,
     start_usage_url, upsell_consultation_url, monitor_apply_url,
     track_activity_url, back_url, line_login_url, add_friend_url,
-    current_event_line_user_id, event_ended, event_logo_image_url
+    current_event_line_user_id, event_ended, event_not_started, event_logo_image_url
   } = props;
 
   const [hasStarted, setHasStarted] = useState(event_content.has_started_usage);
@@ -1099,13 +1102,15 @@ const EventContentShow = ({ props }) => {
             セミナー / 展示ブース ともに hasStarted の状態で構成を変えず、常にプレーンなサムネ表示。
             （何度でも詳細ページに戻ってきても、レイアウトが変わって混乱しないようにするため） */}
         <div style={{ overflow: "hidden", marginBottom: 0 }}>
-          {event_content.thumbnail_url ? (
-            <img src={event_content.thumbnail_url} style={{ width: "100%", maxHeight: 320, objectFit: "cover", display: "block" }} />
-          ) : (
-            <div style={{ height: 180, background: typeColor, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ fontSize: 56 }}>{event_content.content_type === "seminar" ? "🎬" : "📄"}</span>
-            </div>
-          )}
+          <div style={{ position: "relative", width: "100%", paddingBottom: THUMBNAIL_ASPECT_PADDING }}>
+            {event_content.thumbnail_url ? (
+              <img src={event_content.thumbnail_url} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            ) : (
+              <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", background: typeColor, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: 56 }}>{event_content.content_type === "seminar" ? "🎬" : "📄"}</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Title + Share (below thumbnail) */}
@@ -1136,6 +1141,34 @@ const EventContentShow = ({ props }) => {
             シェア
           </button>
         </div>
+
+        {/* イベント全体の開催前バナー（参加登録済みのみ・イベントTOPと同条件） */}
+        {event_not_started && isParticipant && (
+          <div style={{ marginBottom: 20 }}>
+            <div style={{
+              border: "2px solid #CA4E0E", background: "#fff",
+              padding: "18px 20px", textAlign: "center",
+              fontWeight: 800, fontSize: 16, color: "#CA4E0E",
+              letterSpacing: "0.02em"
+            }}>
+              イベント開始までお待ちください
+            </div>
+          </div>
+        )}
+
+        {/* イベント終了バナー（未参加・ログイン済みを問わず全訪問者に表示） */}
+        {event_ended && (
+          <div style={{ marginBottom: 20 }}>
+            <div style={{
+              border: "2px solid #57534e", background: "#fff",
+              padding: "18px 20px", textAlign: "center",
+              fontWeight: 800, fontSize: 16, color: "#44403c",
+              letterSpacing: "0.02em"
+            }}>
+              イベントは終了しました
+            </div>
+          </div>
+        )}
 
         {/* Preview slides for booth participants — 利用開始の有無に関わらず常に表示。
             （構成が変わるとユーザーが戻ってきたときに混乱するため） */}

@@ -12,6 +12,7 @@
     add_friend_url: Rails.application.secrets.dig(:ja, :toruya_official_line_add_friend_url),
     current_event_line_user_id: @current_event_line_user&.id,
     event_ended: @event.ended?,
+    event_not_started: @event.not_started?,
     event_logo_image_url: @event.logo_image.attached? ? rails_blob_path(@event.logo_image, only_path: true) : nil
   }
 }, { camelize_props: false }) %>
