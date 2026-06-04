@@ -118,13 +118,8 @@ class OmniauthSetup
       Rails.logger.info("[OmniauthSetup]   保存: line_oauth_who")
     end
 
-    # who_routing: コールバック時のルーティング判定用
-    # oauth_social_account_idがパラメータにある場合（店舗固有ログイン）は、
-    # cookieに残存しているwhoを拾わない（別フローのwhoが混入するのを防ぐ）
-    who_routing = @request.parameters["who"].presence
-    if who_routing.blank? && @request.parameters["oauth_social_account_id"].blank?
-      who_routing = @request.cookies["who"]
-    end
+    # who_routing: コールバック時のルーティング判定用（SocialCustomers::FromOmniauth の is_owner 判定にも使用）
+    who_routing = @request.parameters["who"].presence || @request.cookies["who"]
     if who_routing.present?
       @request.session[:line_oauth_who_routing] = who_routing
       Rails.logger.info("[OmniauthSetup]   保存: line_oauth_who_routing (コールバックルーティング用)")

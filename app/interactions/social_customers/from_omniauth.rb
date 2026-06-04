@@ -99,7 +99,10 @@ module SocialCustomers
     private
 
     def customer_is_owner?
-      who == CallbacksController::SHOP_OWNER_CUSTOMER_SELF
+      return true if who == CallbacksController::SHOP_OWNER_CUSTOMER_SELF
+
+      # who Cookie/Session が OAuth リダイレクト中に失われた場合のフォールバック
+      param["oauth_redirect_to_url"].to_s.include?("/verification")
     end
 
     def secret

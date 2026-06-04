@@ -52,6 +52,21 @@ RSpec.describe SocialCustomers::FromOmniauth, :with_line do
       end
     end
 
+    context "when oauth_redirect_to_url is a verification page" do
+      let(:args) do
+        super().deep_merge(
+          param: {
+            "oauth_social_account_id" => MessageEncryptor.encrypt(social_account.id),
+            "oauth_redirect_to_url" => "https://example.com/lines/verification/abc?encrypted_business_owner_id=xyz"
+          }
+        )
+      end
+
+      it "marks the social customer as owner" do
+        expect(outcome.is_owner).to eq(true)
+      end
+    end
+
     context "when a owner customer exists" do
       let!(:existing_owner_customer) { FactoryBot.create(:social_customer, user_id: social_account.user_id, social_user_id: uid, social_account_id: social_account.id, is_owner: true) }
 

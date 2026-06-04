@@ -81,8 +81,14 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     param = request.env["omniauth.params"]
 
-    param["who"] ||= session[:line_oauth_who_routing] || cookies[:who]
+    param["oauth_social_account_id"] ||= session[:oauth_social_account_id] || cookies[:oauth_social_account_id]
     param["oauth_redirect_to_url"] ||= session[:oauth_redirect_to_url]
+    param["who"] ||= session[:line_oauth_who_routing] || cookies[:who]
+
+    # 店舗固有 LINE Login（動作確認・予約画面等）は、残存 Toruya 用 who Cookie に左右されず SocialCustomers へ
+    if param["oauth_social_account_id"].present?
+      return handle_shop_line_login(request.env["omniauth.auth"], param)
+    end
 
     Rollbar.info("LineLogin1", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
@@ -157,7 +163,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
           Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: oauth_redirect_to_url)
           
           if oauth_redirect_to_url.present?
-            redirect_to Addressable::URI.new(path: oauth_redirect_to_url).to_s
+            redirect_to_oauth_url(oauth_redirect_to_url)
           else
             # oauth_redirect_to_urlが無い場合は、デフォルトでスケジュール画面へ
             redirect_to lines_user_bot_schedules_path(business_owner_id: user.id)
@@ -170,93 +176,97 @@ class CallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_path
       end
     else
-      Rollbar.info("LineLogin2", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
-
-      param["oauth_social_account_id"] ||= session[:oauth_social_account_id] || cookies[:oauth_social_account_id]
-      param["who"] ||= session[:line_oauth_who] || cookies[:who]
-      
-      # 予約情報とcustomer_idもSessionから復元
-      %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
-        param[key] ||= session["oauth_#{key}"]
-      end
-      
-      Rails.logger.info("[CallbacksController] Callback phase - param keys: #{param.keys.join(', ')}")
-      Rails.logger.info("[CallbacksController]   oauth_social_account_id: #{param["oauth_social_account_id"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[CallbacksController]   who: #{param["who"].present? ? 'present' : 'nil'}")
-      Rails.logger.info("[CallbacksController]   customer_id: #{param["customer_id"].present? ? 'present' : 'nil'}")
-
-      outcome = ::SocialCustomers::FromOmniauth.run(
-        auth: request.env["omniauth.auth"],
-        param: param,
-        who: param["who"] && MessageEncryptor.decrypt(param["who"])
-      )
-      
-      Rails.logger.info("[CallbacksController] SocialCustomers::FromOmniauth result:")
-      Rails.logger.info("[CallbacksController]   outcome.valid?: #{outcome.valid?}")
-      if outcome.valid?
-        Rails.logger.info("[CallbacksController]   social_customer_id: #{outcome.result.id}")
-        Rails.logger.info("[CallbacksController]   social_user_id: #{outcome.result.social_user_id}")
-        Rails.logger.info("[CallbacksController]   customer_id: #{outcome.result.customer_id}")
-      else
-        Rails.logger.error("[CallbacksController]   errors: #{outcome.errors.full_messages.join(', ')}")
-      end
-
-      param.delete("bot_prompt")
-      param.delete("prompt")
-      oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url] || cookies[:oauth_redirect_to_url]
-
-      # oauth_redirect_to_urlがnilの場合はroot_pathにリダイレクト
-      if oauth_redirect_to_url.blank?
-        Rails.logger.warn("[CallbacksController] oauth_redirect_to_url is blank, redirecting to root")
-        redirect_to root_path
-        return
-      end
-      
-      session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
-      session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
-      session.delete(:line_oauth_who) if session[:line_oauth_who].present?
-      session.delete(:line_oauth_who_routing) if session[:line_oauth_who_routing].present?
-      session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
-      cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
-      
-      %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
-        session.delete("oauth_#{key}") if session["oauth_#{key}"].present?
-      end
-      
-      Rails.logger.info("[CallbacksController] Session/Cookieクリア完了")
-
-      uri = URI.parse(oauth_redirect_to_url)
-      
-      # デバッグ: paramの内容を確認
-      Rails.logger.info("[CallbacksController] リダイレクト前のparam: #{param.keys.join(', ')}")
-      Rails.logger.info("[CallbacksController]   booking_option_ids: #{param['booking_option_ids'].inspect}")
-      Rails.logger.info("[CallbacksController]   booking_date: #{param['booking_date'].inspect}")
-      Rails.logger.info("[CallbacksController]   booking_at: #{param['booking_at'].inspect}")
-      Rails.logger.info("[CallbacksController]   staff_id: #{param['staff_id'].inspect}")
-      Rails.logger.info("[CallbacksController] oauth_redirect_to_url: #{oauth_redirect_to_url}")
-      
-      queries = {
-        status: outcome.valid?,
-        social_user_id: outcome.result.social_user_id
-      }.merge(param, Rack::Utils.parse_nested_query(uri.query || {}))
-
-      uri.query = URI.encode_www_form(queries)
-
-      if outcome.result.social_user_id.present?
-        cookies.clear_across_domains(:line_social_user_id_of_customer)
-        cookies.set_across_domains(:line_social_user_id_of_customer, outcome.result.social_user_id, expires: 20.years.from_now)
-        
-        # LINEから取得したemailをCookieに保存（20年有効 = social_user_idと同じ期間）
-        if outcome.respond_to?(:compositions) && outcome.compositions[:line_email].present?
-          cookies.set_across_domains(:line_customer_email, outcome.compositions[:line_email], expires: 20.years.from_now)
-        end
-      end
-
-      redirect_to uri.to_s
+      handle_shop_line_login(request.env["omniauth.auth"], param)
     end
   end
 
   private
+
+  def handle_shop_line_login(auth, param)
+    Rollbar.info("LineLogin2", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
+
+    param["oauth_social_account_id"] ||= session[:oauth_social_account_id] || cookies[:oauth_social_account_id]
+    param["who"] ||= session[:line_oauth_who_routing] || session[:line_oauth_who] || cookies[:who]
+
+    # 予約情報とcustomer_idもSessionから復元
+    %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
+      param[key] ||= session["oauth_#{key}"]
+    end
+
+    Rails.logger.info("[CallbacksController] Shop LINE Login callback - param keys: #{param.keys.join(', ')}")
+    Rails.logger.info("[CallbacksController]   oauth_social_account_id: #{param["oauth_social_account_id"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[CallbacksController]   who: #{param["who"].present? ? 'present' : 'nil'}")
+    Rails.logger.info("[CallbacksController]   customer_id: #{param["customer_id"].present? ? 'present' : 'nil'}")
+
+    outcome = ::SocialCustomers::FromOmniauth.run(
+      auth: auth,
+      param: param,
+      who: param["who"] && MessageEncryptor.decrypt(param["who"])
+    )
+
+    Rails.logger.info("[CallbacksController] SocialCustomers::FromOmniauth result:")
+    Rails.logger.info("[CallbacksController]   outcome.valid?: #{outcome.valid?}")
+    if outcome.valid?
+      Rails.logger.info("[CallbacksController]   social_customer_id: #{outcome.result.id}")
+      Rails.logger.info("[CallbacksController]   social_user_id: #{outcome.result.social_user_id}")
+      Rails.logger.info("[CallbacksController]   customer_id: #{outcome.result.customer_id}")
+    else
+      Rails.logger.error("[CallbacksController]   errors: #{outcome.errors.full_messages.join(', ')}")
+    end
+
+    param.delete("bot_prompt")
+    param.delete("prompt")
+    oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url] || cookies[:oauth_redirect_to_url]
+
+    if oauth_redirect_to_url.blank?
+      Rails.logger.warn("[CallbacksController] oauth_redirect_to_url is blank, redirecting to root")
+      redirect_to root_path
+      return
+    end
+
+    session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
+    session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
+    session.delete(:line_oauth_who) if session[:line_oauth_who].present?
+    session.delete(:line_oauth_who_routing) if session[:line_oauth_who_routing].present?
+    session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
+    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
+
+    %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
+      session.delete("oauth_#{key}") if session["oauth_#{key}"].present?
+    end
+
+    Rails.logger.info("[CallbacksController] Session/Cookieクリア完了")
+
+    uri = URI.parse(oauth_redirect_to_url)
+
+    Rails.logger.info("[CallbacksController] リダイレクト前のparam: #{param.keys.join(', ')}")
+    Rails.logger.info("[CallbacksController] oauth_redirect_to_url: #{oauth_redirect_to_url}")
+
+    queries = {
+      status: outcome.valid?,
+      social_user_id: outcome.result.social_user_id
+    }.merge(param, Rack::Utils.parse_nested_query(uri.query || {}))
+
+    uri.query = URI.encode_www_form(queries)
+
+    if outcome.result.social_user_id.present?
+      cookies.clear_across_domains(:line_social_user_id_of_customer)
+      cookies.set_across_domains(:line_social_user_id_of_customer, outcome.result.social_user_id, expires: 20.years.from_now)
+
+      if outcome.respond_to?(:compositions) && outcome.compositions[:line_email].present?
+        cookies.set_across_domains(:line_customer_email, outcome.compositions[:line_email], expires: 20.years.from_now)
+      end
+    end
+
+    redirect_to uri.to_s
+  end
+
+  def redirect_to_oauth_url(oauth_redirect_to_url)
+    redirect_to URI.parse(oauth_redirect_to_url).to_s
+  rescue URI::InvalidURIError
+    Rails.logger.warn("[CallbacksController] Invalid oauth_redirect_to_url: #{oauth_redirect_to_url.inspect}")
+    redirect_to root_path
+  end
 
   def handle_event_line_login(auth, param)
     line_user_id = auth.uid
@@ -313,7 +323,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         redirect_to root_path
       end
     elsif oauth_redirect_to_url.present?
-      redirect_to Addressable::URI.new(path: oauth_redirect_to_url).to_s
+      redirect_to_oauth_url(oauth_redirect_to_url)
     else
       redirect_to root_path
     end

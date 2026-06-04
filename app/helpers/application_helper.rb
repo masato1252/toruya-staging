@@ -122,12 +122,15 @@ module ApplicationHelper
     cookies.set_across_domains(:oauth_redirect_to_url, oauth_redirect_to_url, expires: 5.minutes) if oauth_redirect_to_url.present?
     cookies.set_across_domains(:who, options[:who], expires: 5.minutes) if options[:who].present?
     
+    who = options.delete(:who)
+
     options.merge!(
       prompt: "consent",
       bot_prompt: "aggressive",
       oauth_redirect_to_url: oauth_redirect_to_url,
       oauth_social_account_id: encrypted_id
     )
+    options[:who] = who if who.present?
 
     user_line_omniauth_authorize_path(options)
   end
