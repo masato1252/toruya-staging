@@ -4,6 +4,7 @@ class AdminController < ApplicationController
   include Devise::Controllers::Rememberable
   include ControllerHelpers
   include UserBotCookies
+  include AdminAccess
 
   def as_user
     user = User.find(params[:as_user_id])

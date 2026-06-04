@@ -114,6 +114,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         remember_me(user)
         sign_in(user)
         write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
+        write_user_bot_cookies(:current_user_id, user.id)
         
         session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
         session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?

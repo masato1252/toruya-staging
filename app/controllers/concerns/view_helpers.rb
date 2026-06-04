@@ -51,8 +51,10 @@ module ViewHelpers
         _social_user = User.find_by(id: user_id).social_user
         write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
         _social_user
-      elsif respond_to?(:user_bot_cookies) && user_bot_cookies(:social_service_user_id)
+      elsif respond_to?(:user_bot_cookies, true) && user_bot_cookies(:social_service_user_id)
         SocialUser.where.not(user_id: nil).find_by(social_service_user_id: user_bot_cookies(:social_service_user_id)) || SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+      else
+        privileged_session_user&.social_user
       end
   end
   alias_method :current_social_user, :social_user
@@ -68,13 +70,16 @@ module ViewHelpers
   def current_user
     @current_user ||=
       begin
-        user = current_user_of_owner(business_owner)
+        user = current_users&.find { |u| u.current_staff_account(super_user)&.present? }
 
         if !user && social_user&.user&.super_admin?
           user = business_owner
           Current.admin_debug = true
         end
-        write_user_bot_cookies(:current_user_id, user.id) if user
+
+        user ||= privileged_session_user
+
+        write_user_bot_cookies(:current_user_id, user.id) if user && respond_to?(:write_user_bot_cookies, true)
 
         user
       end
@@ -103,10 +108,20 @@ module ViewHelpers
       elsif params[:business_owner_id]
         User.find_by(id: params[:business_owner_id])
       else
-        root_user
+        root_user || privileged_session_user
       end
   end
   alias_method :business_owner, :super_user
+
+  def privileged_session_user
+    return @privileged_session_user if defined?(@privileged_session_user)
+
+    user = warden.authenticate(scope: :user) if respond_to?(:warden, true)
+    @privileged_session_user =
+      if user&.super_admin? || user&.can_admin_chat?
+        user
+      end
+  end
 
   def business_owner_id
     params[:business_owner_id].presence || business_owner&.id || current_user&.id

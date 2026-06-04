@@ -5,6 +5,8 @@ class AdminChannel < ApplicationCable::Channel
   MESSAGES_PER_PAGE = 50
 
   def subscribed
+    reject unless admin_cable_user
+
     @super_user = User.find(params[:user_id])
 
     Rails.logger.debug("===AdminChannel subscribed")
@@ -80,5 +82,11 @@ class AdminChannel < ApplicationCable::Channel
 
   def staff
     @staff ||= current_user.current_staff(@super_user)
+  end
+
+  private
+
+  def admin_cable_user
+    current_user&.super_admin? || current_user&.can_admin_chat?
   end
 end

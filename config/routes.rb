@@ -756,49 +756,45 @@ Rails.application.routes.draw do
       end
     end
 
-    authenticated :user, -> user { user.super_admin? || user.can_admin_chat? || Rails.env.development? || Rails.configuration.x.env.staging? } do
-      scope "(:locale)", locale: /tw|ja/, defaults: { locale: "ja" } do
-        namespace :admin do
-          resource :memo, only: [:create]
-          resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id do
-            member do
-              post :line_finished_message
-            end
-          end
-          resources :chats, only: [:index, :create, :destroy]
-          resources :sale_pages, only: [:index]
-          resources :booking_pages, only: [:index]
-          resources :online_service_customer_relations, only: [:index]
-          resource :subscription, only: [:destroy, :update]
-          get "logs"
-
-          resources :custom_messages, only: [] do
-            collection do
-              get "scenario/:scenario", action: "scenario", as: :scenario
-              get "scenario/:scenario/new", action: "new", as: :new
-              get "scenario/:scenario/edit/:id", action: "edit", as: :edit
-              post "scenario/:scenario", action: "create", as: :create
-              put "scenario/:scenario/:id", action: "update", as: :update
-              get "scenarios", action: "scenarios"
-              post "scenario/:scenario/demo", action: "demo", as: :demo
-              get "bulk_send/:bulk_type", action: "bulk_send", as: :bulk_send
-              post "bulk_send/:bulk_type/save", action: "save_bulk_message", as: :save_bulk_message
-              post "bulk_send/:bulk_type/send", action: "execute_bulk_send", as: :execute_bulk_send
-            end
-          end
-        end
-      end
-    end
-
     authenticated :user, -> user { user.super_admin? || Rails.env.development? || Rails.configuration.x.env.staging? } do
       mount Delayed::Web::Engine, at: "/_jobs"
       mount PgHero::Engine, at: "/_pghero"
       mount Blazer::Engine, at: "_blazer"
       mount DelayedJobWeb, at: "/_delayed_job"
+    end
 
+    scope "(:locale)", locale: /tw|ja/, defaults: { locale: "ja" } do
       namespace :admin do
         get "as_user"
         get "/", to: "dashboards#index"
+        get "logs"
+
+        resource :memo, only: [:create]
+        resource :social_account, only: [:edit, :update, :destroy], param: :social_service_user_id do
+          member do
+            post :line_finished_message
+          end
+        end
+        resources :chats, only: [:index, :create, :destroy]
+        resources :sale_pages, only: [:index]
+        resources :booking_pages, only: [:index]
+        resources :online_service_customer_relations, only: [:index]
+        resource :subscription, only: [:destroy, :update]
+
+        resources :custom_messages, only: [] do
+          collection do
+            get "scenario/:scenario", action: "scenario", as: :scenario
+            get "scenario/:scenario/new", action: "new", as: :new
+            get "scenario/:scenario/edit/:id", action: "edit", as: :edit
+            post "scenario/:scenario", action: "create", as: :create
+            put "scenario/:scenario/:id", action: "update", as: :update
+            get "scenarios", action: "scenarios"
+            post "scenario/:scenario/demo", action: "demo", as: :demo
+            get "bulk_send/:bulk_type", action: "bulk_send", as: :bulk_send
+            post "bulk_send/:bulk_type/save", action: "save_bulk_message", as: :save_bulk_message
+            post "bulk_send/:bulk_type/send", action: "execute_bulk_send", as: :execute_bulk_send
+          end
+        end
 
         resources :events do
           collection do
