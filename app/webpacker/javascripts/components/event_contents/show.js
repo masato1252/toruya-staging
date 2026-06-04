@@ -1143,14 +1143,9 @@ const EventContentShow = ({ props }) => {
           <div style={{ marginBottom: 20 }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: "#374151", marginBottom: 10 }}>プレビュー</h3>
             <PDFCarousel
-              images={(event_content.slide_images || []).slice(0, 3)}
+              images={event_content.slide_images || []}
               onlineServiceUrl={null}
             />
-            {(event_content.slide_images || []).length > 3 && (
-              <p style={{ textAlign: "center", fontSize: 12, color: "#9ca3af", marginTop: 8 }}>
-                全 {event_content.slide_images.length} ページ
-              </p>
-            )}
           </div>
         )}
 
