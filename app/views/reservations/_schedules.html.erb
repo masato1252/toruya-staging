@@ -21,7 +21,7 @@
           <dd class="menu"><%= reservation.menus.map(&:display_name).join(", ")%></dd>
           <dd class="customer"><%= customer_names_sentence %></dd>
           <% if in_personal_dashboard? %>
-            <dd class="shop"><%= reservation.shop.display_name %></dd>
+            <dd class="shop"><%= reservation.display_shop_name %></dd>
           <% end %>
           <% if reservation.with_warnings %>
             <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>

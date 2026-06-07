@@ -69,6 +69,12 @@ const BookingOptionEdit =({props}) => {
       data.booking_page_ids = [data.booking_page_ids];
     }
 
+    if (!data.shop_ids) {
+      data.shop_ids = [];
+    } else if (!Array.isArray(data.shop_ids)) {
+      data.shop_ids = [data.shop_ids];
+    }
+
     [error, response] = await BookingOptionServices.update({
       booking_option_id: props.booking_option.id,
       data: _.assign( data, { attribute: props.attribute, business_owner_id: props.business_owner_id })
@@ -241,6 +247,25 @@ const BookingOptionEdit =({props}) => {
               </a>
             </div>
           </div>
+        )
+      case "detail_settings":
+        return (
+          <>
+            <div className="field-header">{I18n.t("settings.booking_option.form.sale_shops")}</div>
+            <CheckboxSearchFields
+              setValue={setValue}
+              watch={watch}
+              register={register}
+              field_name="shop_ids[]"
+              options={props.shop_options}
+              checked_option_ids={props.shop_ids}
+              search_placeholder={I18n.t("settings.booking_page.form.search_placeholder")}
+            />
+            <div className="field-header">{I18n.t("settings.booking_option.form.sale_start")}</div>
+            <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />
+            <div className="field-header">{I18n.t("settings.booking_option.form.sale_end")}</div>
+            <BookingEndAtField i18n={i18n} register={register} watch={watch} control={control} />
+          </>
         )
       case "start_at":
         return <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />

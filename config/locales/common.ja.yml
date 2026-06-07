@@ -229,6 +229,7 @@ ja:
     apply_now: お申し込みは今すぐ
     preparing: 準備中
     shop_name: 店舗名
+    deleted_shop_name: 削除済み店舗
     shop_phone_number: 店舗の電話番号
     shop_email: 店舗のメールアドレス
     short_shop_name: 短縮店舗名

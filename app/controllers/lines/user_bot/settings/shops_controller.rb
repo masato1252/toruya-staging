@@ -40,6 +40,7 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
   def add
     @outcome = Shops::AddWithFee.run(
       user: Current.business_owner,
+      acting_staff: current_user.current_staff(Current.business_owner),
       authorize_token: params[:token],
       payment_intent_id: params[:payment_intent_id]
     )

@@ -51,11 +51,15 @@ RSpec.describe Shops::AddWithFee do
 
       it "charges prorated fee and creates shop with copied schedules" do
         schedule_count = source_shop.business_schedules.for_shop.count
+        acting_staff = user.staffs.first
 
-        outcome = described_class.run(user: user, authorize_token: "pm_test_123")
+        outcome = described_class.run(user: user, acting_staff: acting_staff, authorize_token: "pm_test_123")
 
         expect(outcome).to be_valid
         shop = outcome.result
+        expect(shop.name).to end_with("(NEW)")
+        expect(shop.short_name).to end_with("(NEW)")
+        expect(acting_staff.reload.shop_ids).to include(shop.id)
         expect(shop.info_setup_completed).to be(false)
         expect(schedule_count).to be >= 1
         expect(shop.business_schedules.for_shop.count).to eq(schedule_count)

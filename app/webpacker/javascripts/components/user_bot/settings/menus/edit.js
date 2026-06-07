@@ -90,7 +90,7 @@ const MenuEdit =({props}) => {
             {menu_shops_options.map((option) => {
               return (
                 <div className="field-row flex-start" key={option.shop_id}>
-                  {false && (
+                  {props.multi_shop ? (
                     <div className="flex justify-between w-full">
                       {option.name}
                       <SwitchButton
@@ -110,6 +110,8 @@ const MenuEdit =({props}) => {
                         }}
                       />
                     </div>
+                  ) : (
+                    <div className="w-full">{option.name}</div>
                   )}
 
                   {option.checked && (

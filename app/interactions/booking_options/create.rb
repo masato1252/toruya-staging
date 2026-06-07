@@ -20,6 +20,7 @@ module BookingOptions
 
     integer :ticket_quota, default: 1
     integer :ticket_expire_month, default: 1
+    integer :shop_id, default: nil
     array :booking_page_ids, default: [] do
       integer
     end
@@ -105,7 +106,7 @@ module BookingOptions
     end
 
     def shop
-      user.shops.first
+      @shop ||= shop_id.present? ? user.shops.find(shop_id) : user.shops.first
     end
   end
 end

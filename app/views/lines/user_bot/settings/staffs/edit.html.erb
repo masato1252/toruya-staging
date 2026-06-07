@@ -9,6 +9,8 @@
     attribute: params[:attribute],
     title: @staff.display_name,
     staff_menus_options: defined?(@staff_menus_options) ? @staff_menus_options : nil,
+    shop_ids_options: defined?(@shop_ids_options) ? @shop_ids_options : nil,
+    multi_shop: multi_shop_mode?(Current.business_owner),
     support_feature_flags: support_feature_flags
   }
 },

@@ -5,6 +5,7 @@
     attribute: params[:attribute],
     menu_shops_options: @menu_shops_options,
     menu_staffs_options: @menu_staffs_options,
+    multi_shop: multi_shop_mode?(Current.business_owner),
     back_path: params[:back_path]
   }
 },

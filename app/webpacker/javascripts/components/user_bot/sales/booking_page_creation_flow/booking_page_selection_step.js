@@ -7,7 +7,11 @@ import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
 const BookingPageSelectionStep = ({next, step}) => {
-  const { props, initial, selected_booking_page, dispatch } = useGlobalContext()
+  const { props, initial, selected_booking_page, selected_shop, dispatch } = useGlobalContext()
+
+  const booking_pages = selected_shop?.id
+    ? props.booking_pages.filter((page) => page.value.shop_id === selected_shop.id)
+    : props.booking_pages
 
   useEffect(() => {
     if (initial && selected_booking_page) {
@@ -24,7 +28,7 @@ const BookingPageSelectionStep = ({next, step}) => {
           Value={selected_booking_page ? { label: selected_booking_page.name } : ""}
           defaultValue={selected_booking_page ? { label: selected_booking_page.name } : ""}
           placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.select_booking_page")}
-          options={props.booking_pages}
+          options={booking_pages}
           onChange={
             (booking_page_option)=> {
               dispatch({

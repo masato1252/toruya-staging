@@ -3,6 +3,7 @@
 require "message_encryptor"
 
 module ApplicationHelper
+  include MultiShopHelper
  BOOTSTRAP_FLASH_MSG = {
     'success' => 'alert-success',
     'error' => 'alert-danger',

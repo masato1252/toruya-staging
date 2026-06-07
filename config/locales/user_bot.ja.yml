@@ -436,6 +436,8 @@ ja:
           authority: 権限
           introduction: 紹介文
           staff_menus: 提供サービス
+          work_shops: 勤務店舗
+          shop_ids_title: 勤務店舗
           authorities:
             admin: 管理者
             owner: 所有者

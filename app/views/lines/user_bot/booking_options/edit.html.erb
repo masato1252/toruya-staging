@@ -4,6 +4,9 @@
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes),
     booking_page_options: custom_options(@booking_pages),
     booking_page_ids: @booking_option.booking_page_ids,
+    shop_options: custom_options(Current.business_owner.shops),
+    shop_ids: @booking_option.booking_pages.active.normal.pluck(:shop_id).uniq,
+    multi_shop: multi_shop_mode?(Current.business_owner),
     editing_menu: @editing_menu,
     ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
     booking_option: @booking_option.attributes.merge!(

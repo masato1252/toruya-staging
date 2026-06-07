@@ -349,10 +349,12 @@ class BookingPagesController < ActionController::Base
                           .pluck('booking_option_menus.menu_id')
                           .uniq
 
-    # Get all staffs that can handle these menus
+    # Get all staffs that can handle these menus and work at this shop
+    shop_staff_ids = @booking_page.shop.staffs.active.pluck(:id)
     staff_ids = StaffMenu.where(menu_id: menu_ids)
                          .joins(:staff)
                          .merge(Staff.active)
+                         .where(staff_id: shop_staff_ids)
                          .pluck(:staff_id)
                          .uniq
 

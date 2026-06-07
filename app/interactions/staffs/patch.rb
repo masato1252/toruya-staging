@@ -15,6 +15,7 @@ module Staffs
     string :introduction, default: nil
     string :position, default: nil
     array :staff_menus, default: nil
+    array :shop_ids, default: nil
 
     def execute
       staff.with_lock do
@@ -50,6 +51,8 @@ module Staffs
 
             staff.staff_menus.create(new_menu_attrs)
           end
+        when "shop_ids"
+          staff.update!(shop_ids: Array.wrap(shop_ids).map(&:to_i).reject(&:zero?))
         end
 
         if staff.errors.present?

@@ -17,7 +17,7 @@ class CalendarsController < DashboardController
       PersonalCalendar.run!(
         user: current_user,
         working_shop_options: member_shops_options,
-        all_shop_ids: working_shop_options(include_user_own: true).map(&:shop_id).uniq,
+        all_shop_ids: current_user.calendar_shop_ids,
         date: date
       )
 

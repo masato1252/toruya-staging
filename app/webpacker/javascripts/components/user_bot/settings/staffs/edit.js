@@ -12,6 +12,7 @@ import I18n from 'i18n-js/index.js.erb';
 const StaffEdit = ({props}) => {
   const [staff, setStaff] = useState(props.staff)
   const [staffMenus, setStaffMenus] = useState(props.staff_menus_options || [])
+  const [shopIdsOptions, setShopIdsOptions] = useState(props.shop_ids_options || [])
   const { countryCode: initialCountryCode, number: initialLocalPhone } = separatePhoneNumber(props.staff.phone_number, props.staff.locale);
   const [countryCode, setCountryCode] = useState(initialCountryCode);
   const [localPhone, setLocalPhone] = useState(initialLocalPhone);
@@ -38,6 +39,10 @@ const StaffEdit = ({props}) => {
 
     if (props.attribute === "staff_menus") {
       submitData.staff_menus = staffMenus;
+    }
+
+    if (props.attribute === "shop_ids") {
+      submitData.shop_ids = shopIdsOptions.filter((option) => option.checked).map((option) => option.shop_id);
     }
 
     [error, response] = await CommonServices.update({
@@ -222,6 +227,33 @@ const StaffEdit = ({props}) => {
             <div className="field-row warning no-border margin-around justify-center">
               <div className="centerize" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.menu.form.hint") }} />
             </div>
+          </>
+        )
+        break
+      case "shop_ids":
+        return (
+          <>
+            {shopIdsOptions.map((option) => (
+              <div className="field-row flex-start" key={option.shop_id}>
+                <div className="flex justify-between w-full">
+                  {option.name}
+                  <SwitchButton
+                    offWord="OFF"
+                    onWord="ON"
+                    checked={option.checked}
+                    name={option.name}
+                    nosize={true}
+                    onChange={() => {
+                      setShopIdsOptions((shop_options) =>
+                        shop_options.map((shop_option) =>
+                          shop_option.shop_id == option.shop_id ? { ...shop_option, checked: !shop_option.checked } : shop_option
+                        )
+                      )
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
           </>
         )
         break

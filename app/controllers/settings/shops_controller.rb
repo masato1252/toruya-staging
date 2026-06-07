@@ -37,6 +37,7 @@ class Settings::ShopsController < SettingsController
 
     @outcome = Shops::AddWithFee.run(
       user: super_user,
+      acting_staff: current_user.current_staff(super_user),
       authorize_token: params[:token],
       payment_intent_id: params[:payment_intent_id]
     )

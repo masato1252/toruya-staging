@@ -8,13 +8,43 @@
   <div class="field-header" id="display_name"><%= I18n.t("settings.booking_option.form.display_name") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :display_name), title: @booking_option.display_name %>
 
-  <div class="field-header" id="booking_pages"><%= I18n.t("settings.booking_option.form.booking_pages") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :booking_page_ids) do %>
-    <% if @booking_option.booking_pages.active.normal.empty? %>
-      <span class="warning"><%= I18n.t("settings.booking_option.form.form_errors.no_booking_page") %></span>
-    <% else %>
-      <span><%= @booking_option.booking_pages.active.normal.pluck(:name).join(", ") %></span>
+  <% if multi_shop_mode?(Current.business_owner) %>
+    <div class="field-group-header" id="detail_settings"><%= I18n.t("settings.booking_option.form.detail_settings") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :detail_settings) do %>
+      <div>
+        <strong><%= I18n.t("settings.booking_option.form.sale_shops") %>:</strong>
+        <%= Current.business_owner.shops.where(id: @booking_option.booking_pages.active.normal.select(:shop_id)).pluck(:name).join(", ").presence || t("common.no_data") %>
+      </div>
+      <div>
+        <strong><%= I18n.t("settings.booking_option.form.sale_start") %>:</strong>
+        <%= @booking_option.start_at ? I18n.l(@booking_option.start_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_now") %>
+      </div>
+      <div>
+        <strong><%= I18n.t("settings.booking_option.form.sale_end") %>:</strong>
+        <%= @booking_option.end_at ? I18n.l(@booking_option.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_forever") %>
+      </div>
     <% end %>
+  <% else %>
+    <div class="field-header" id="booking_pages"><%= I18n.t("settings.booking_option.form.booking_pages") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :booking_page_ids) do %>
+      <% if @booking_option.booking_pages.active.normal.empty? %>
+        <span class="warning"><%= I18n.t("settings.booking_option.form.form_errors.no_booking_page") %></span>
+      <% else %>
+        <span><%= @booking_option.booking_pages.active.normal.pluck(:name).join(", ") %></span>
+      <% end %>
+    <% end %>
+
+    <div class="field-header" id="start_at"><%= I18n.t("settings.booking_option.form.sale_start") %></div>
+    <%= render "lines/user_bot/field_row",
+      path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :start_at),
+      title: @booking_option.start_at ? I18n.l(@booking_option.start_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_now")
+    %>
+
+    <div class="field-header" id="end_at"><%= I18n.t("settings.booking_option.form.sale_end") %></div>
+    <%= render "lines/user_bot/field_row",
+      path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :end_at),
+      title: @booking_option.end_at ? I18n.l(@booking_option.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_forever")
+    %>
   <% end %>
 
   <div class="field-header" id="option_type"><%= I18n.t("settings.booking_option.form.option_type") %></div>
@@ -71,24 +101,11 @@
   <div class="field-header" id="price"><%= I18n.t("settings.booking_option.form.price_label") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :price), title: booking_price_desc(@booking_option) %>
 
-  <div class="field-header" id="start_at"><%= I18n.t("settings.booking_option.form.sale_start") %></div>
-  <%= render "lines/user_bot/field_row",
-    path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :start_at),
-    title: @booking_option.start_at ? I18n.l(@booking_option.start_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_now")
-  %>
-
-  <div class="field-header" id="end_at"><%= I18n.t("settings.booking_option.form.sale_end") %></div>
-  <%= render "lines/user_bot/field_row",
-    path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :end_at),
-    title: @booking_option.end_at ? I18n.l(@booking_option.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_option.form.sale_forever")
-  %>
-
   <% if !support_booking_options_menu_concept? %>
     <div class="field-header"><%= t("user_bot.dashboards.settings.menu.minutes") %></div>
     <% @booking_option.menus.each do |menu| %>
       <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :minutes, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: menu.minutes %>
     <% end %>
-
 
     <div class="field-header"><%= t("user_bot.dashboards.settings.menu.interval") %></div>
     <% @booking_option.menus.each do |menu| %>
@@ -97,7 +114,7 @@
 
     <div class="field-header"><%= t("user_bot.dashboards.settings.menu.menu_shops") %></div>
     <% @booking_option.menus.each do |menu| %>
-      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :menu_shops, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: ShopMenu.find_by(shop_id: @booking_option.user.shops.first.id, menu_id: menu.id).max_seat_number %>
+      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :menu_shops, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: ShopMenu.find_by(shop_id: @booking_option.user.shops.first.id, menu_id: menu.id)&.max_seat_number %>
     <% end %>
 
     <div class="field-header"><%= t("user_bot.dashboards.settings.menu.method") %></div>
@@ -105,7 +122,6 @@
       <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(business_owner_id, id: menu.id, attribute: :online, back_path: lines_user_bot_booking_option_path(business_owner_id, @booking_option)), title: t("user_bot.dashboards.settings.menu.methods.#{menu.online ? "online" : "local"}") %>
     <% end %>
   <% end %>
-
 
   <div class="field-group-header" id="memo"><%= I18n.t("settings.booking_option.form.note_label") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_option_path(business_owner_id, @booking_option, attribute: :memo), title: @booking_option.memo %>

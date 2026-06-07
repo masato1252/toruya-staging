@@ -4,6 +4,7 @@ import React from "react";
 import FlowController from "shared/flow_controller";
 import { GlobalProvider, GlobalContext } from "./context/global_state"
 import BookingPageSelectionStep from "./booking_page_selection_step";
+import ShopSelectionStep from "./shop_selection_step";
 import HeaderTemplateSelectionStep from "./header_template_selection_step";
 import HeaderSetupStep from "./header_setup_step";
 import HeaderColorEditStep from "./header_color_edit_step";
@@ -20,7 +21,8 @@ const SalesBookingPageCreationFlow = ({props}) => {
         <div className="col-sm-6 px-0 settings-view">
           <GlobalProvider props={props}>
             <FlowController new_version={true}>
-              <BookingPageSelectionStep key="booking_page_selection_step" /> 
+              <ShopSelectionStep key="shop_selection_step" />
+              <BookingPageSelectionStep key="booking_page_selection_step" />
               <HeaderTemplateSelectionStep key="header_template_selection_step" />
               <HeaderSetupStep key="header_setup_step" />
               <HeaderColorEditStep key="header_color_edit_step" />

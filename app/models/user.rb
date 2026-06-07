@@ -391,6 +391,11 @@ class User < ApplicationRecord
     shops.count == 1
   end
 
+  # 削除済み店舗の過去予約もカレンダー表示対象に含める
+  def calendar_shop_ids
+    (shops.pluck(:id) + all_reservations.distinct.pluck(:shop_id)).uniq
+  end
+
   # LINE通知関連メソッド
   def line_notice_free_trial_available?
     !line_notice_charges.free_trials.successful.exists?

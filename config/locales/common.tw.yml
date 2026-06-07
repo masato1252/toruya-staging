@@ -231,6 +231,7 @@ tw:
     apply_now: 立即申請
     preparing: 準備中
     shop_name: 商家名稱
+    deleted_shop_name: 已刪除店舖
     shop_phone_number: 商家電話號碼
     shop_email: 商家電子郵件
     short_shop_name: 簡稱

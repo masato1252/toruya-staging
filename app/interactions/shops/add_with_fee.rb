@@ -3,6 +3,7 @@
 module Shops
   class AddWithFee < ActiveInteraction::Base
     object :user
+    object :acting_staff, class: Staff, default: nil
     string :authorize_token, default: nil
     string :payment_intent_id, default: nil
 
@@ -31,7 +32,7 @@ module Shops
       Shop.transaction do
         shop = create_shop_from_source!
         copy_business_schedules!(shop)
-        assign_owner_staff_shops!
+        assign_acting_staff_to_shop!(shop)
       end
 
       if charge && shop
@@ -65,9 +66,12 @@ module Shops
     end
 
     def create_shop_from_source!
+      default_name = source_shop.read_attribute(:name)
+      default_short_name = source_shop.read_attribute(:short_name).presence || default_name
+
       user.shops.create!(
-        name: source_shop.read_attribute(:name),
-        short_name: source_shop.read_attribute(:short_name),
+        name: "#{default_name} (NEW)",
+        short_name: "#{default_short_name} (NEW)",
         zip_code: source_shop.zip_code,
         address: source_shop.address,
         address_details: source_shop.address_details,
@@ -94,9 +98,9 @@ module Shops
       end
     end
 
-    def assign_owner_staff_shops!
-      staff = user.staffs.first || compose(Staffs::CreateOwner, user: user).staff
-      staff.shop_ids = Shop.where(user: user).active.pluck(:id)
+    def assign_acting_staff_to_shop!(shop)
+      staff = acting_staff || user.staffs.first || compose(Staffs::CreateOwner, user: user).staff
+      staff.shop_ids = (staff.shop_ids + [shop.id]).uniq
     end
   end
 end

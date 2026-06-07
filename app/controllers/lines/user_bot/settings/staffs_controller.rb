@@ -15,6 +15,14 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
 
   def edit
     case params[:attribute]
+    when "shop_ids"
+      @shop_ids_options = Current.business_owner.shops.map do |shop|
+        Option.new(
+          name: shop.display_name,
+          shop_id: shop.id,
+          checked: @staff.shop_ids.include?(shop.id)
+        )
+      end
     when "staff_menus"
       staff_menus = @staff.staff_menus.includes(:menu).to_a
       @staff_menus_options = Current.business_owner.menus.active.order(:name).map do |menu|
@@ -41,7 +49,8 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
     outcome = Staffs::Invite.run(user: Current.business_owner, phone_number_or_email: params[:phone_number_or_email])
 
     if outcome.valid?
-      redirect_to edit_lines_user_bot_settings_staff_path(business_owner_id: Current.business_owner.id, id: outcome.result.id, attribute: :staff_menus), notice: I18n.t("common.create_successfully_message")
+      next_attribute = multi_shop_mode?(Current.business_owner) ? :shop_ids : :staff_menus
+      redirect_to edit_lines_user_bot_settings_staff_path(business_owner_id: Current.business_owner.id, id: outcome.result.id, attribute: next_attribute), notice: I18n.t("common.create_successfully_message")
     else
       flash.now[:alert] = outcome.errors.full_messages.join(", ")
       render :new
@@ -61,7 +70,8 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
       picture: params[:picture],
       introduction: params[:introduction],
       position: params[:position],
-      staff_menus: params[:staff_menus]
+      staff_menus: params[:staff_menus],
+      shop_ids: params[:shop_ids]
     )
 
     return_json_response(outcome, { redirect_to: lines_user_bot_settings_staff_path(Current.business_owner, @staff) })

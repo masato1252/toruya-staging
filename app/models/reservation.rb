@@ -51,6 +51,12 @@ class Reservation < ApplicationRecord
 
   belongs_to :user
   belongs_to :shop
+
+  before_validation :sync_shop_name_snapshot, if: -> { shop_id.present? && (shop_id_changed? || shop_name_snapshot.blank?) }
+
+  def display_shop_name
+    shop_name_snapshot.presence || shop&.display_name || I18n.t("common.deleted_shop_name")
+  end
   belongs_to :by_staff, class_name: "Staff", required: false
   # has_one :reservation_booking_option
   # has_one :booking_option, through: :reservation_booking_option
@@ -157,12 +163,13 @@ class Reservation < ApplicationRecord
       booking_info_url: reservation_customer ? reservation_customer.booking_info_url : "",
       reservation_popup_url: reservation_popup_url
     )
+    variables[:shop_name] = display_shop_name
 
     if survey_activity
       variables.merge!(survey_activity.survey.message_template_variables(customer, reservation_customer))
-    else
-      variables
     end
+
+    variables
   end
 
   def reservation_popup_url
@@ -252,6 +259,10 @@ class Reservation < ApplicationRecord
   end
 
   private
+
+  def sync_shop_name_snapshot
+    self.shop_name_snapshot = shop&.display_name
+  end
 
   def end_time_larger_than_start_time
     if start_time && end_time

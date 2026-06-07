@@ -9,7 +9,7 @@ class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
       PersonalCalendar.run!(
         user: Current.business_owner,
         working_shop_options: shop_options,
-        all_shop_ids: Current.business_owner.shop_ids,
+        all_shop_ids: Current.business_owner.calendar_shop_ids,
         date: date
     )
 
