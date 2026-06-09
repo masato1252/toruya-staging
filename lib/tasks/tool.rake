@@ -468,4 +468,131 @@ namespace :tools do
     puts "Wrote #{row_count} rows (#{accounts.size} accounts, #{dates.size} dates, granularity=#{granularity}) to #{output_path}"
     puts "Rows with empty metrics or errors: #{error_count}"
   end
+
+  desc <<~DESC
+    Add LINE demographic insight (gender/age/area ratios) to an existing follower-insight CSV.
+    ENV: INPUT=path OUTPUT=path SLEEP_MS=200
+    If the first month of an account fails with API error, skip all later months for that account.
+  DESC
+  task enrich_line_follower_insights_with_demographics: :environment do
+    require Rails.root.join("lib/line_insight_client")
+
+    input_path = ENV.fetch("INPUT", Rails.root.join("tmp", "user_line_follower_insights_production.csv").to_s)
+    output_path = ENV.fetch("OUTPUT", Rails.root.join("tmp", "user_line_follower_insights_production_with_demographics.csv").to_s)
+    sleep_sec = ENV.fetch("SLEEP_MS", "200").to_i / 1000.0
+
+    rows = CSV.read(input_path, headers: true)
+    rows_with_index = rows.each_with_index.map { |row, idx| [row, idx] }
+    grouped_rows = rows_with_index.group_by { |(row, _idx)| row["social_account_id"].to_s }
+
+    ratio_hash = lambda do |items, key_name|
+      return {} unless items.is_a?(Array)
+
+      items.each_with_object({}) do |item, result|
+        next unless item.is_a?(Hash)
+
+        raw_key = item[key_name] || item[key_name.to_sym]
+        percentage = item["percentage"] || item[:percentage]
+        next if raw_key.blank? || percentage.nil?
+
+        result[raw_key] = percentage
+      end
+    end
+
+    enrichments = {}
+    api_error_count = 0
+    skipped_count = 0
+
+    grouped_rows.each do |social_account_id, account_rows|
+      sorted_rows = account_rows.sort_by do |(row, _idx)|
+        Date.parse(row["date"])
+      rescue StandardError
+        Date.new(9999, 12, 31)
+      end
+
+      account = SocialAccount.find_by(id: social_account_id)
+      token = account&.raw_channel_token
+      first_month_failed = false
+
+      sorted_rows.each_with_index do |(row, idx), row_index|
+        if first_month_failed
+          enrichments[idx] = {
+            "gender_ratios" => "APIエラー",
+            "age_ratios" => "APIエラー",
+            "area_ratios" => "APIエラー",
+            "demographic_api_status" => "APIエラー",
+            "demographic_error" => "first_month_api_error_skip"
+          }
+          skipped_count += 1
+          next
+        end
+
+        begin
+          raise LineInsightClient::Error, "missing_social_account" if account.nil?
+          raise LineInsightClient::Error, "missing_token" if token.blank?
+
+          date = Date.parse(row["date"])
+          attempt = 0
+          begin
+            attempt += 1
+            body = LineInsightClient.get_demographic(channel_token: token, date: date.strftime("%Y%m%d"))
+          rescue LineInsightClient::Error => e
+            # LINE demographic API may return temporary 429; retry before failing the month.
+            if e.message.include?("HTTP 429") && attempt < 5
+              sleep(0.5 * (2**(attempt - 1)))
+              retry
+            end
+            raise
+          end
+          # demographic API returns "available" instead of follower API's "status".
+          available = body["available"]
+          status = body["status"] || (available == true ? "available" : "unavailable")
+
+          genders = ratio_hash.call(body["genders"] || body["gender"], "gender")
+          ages = ratio_hash.call(body["ages"] || body["age"], "age")
+          areas = ratio_hash.call(body["areas"] || body["area"], "area")
+
+          enrichments[idx] = {
+            "gender_ratios" => (available == true ? genders.to_json : nil),
+            "age_ratios" => (available == true ? ages.to_json : nil),
+            "area_ratios" => (available == true ? areas.to_json : nil),
+            "demographic_api_status" => status,
+            "demographic_error" => nil
+          }
+        rescue LineInsightClient::Error, StandardError => e
+          enrichments[idx] = {
+            "gender_ratios" => "APIエラー",
+            "age_ratios" => "APIエラー",
+            "area_ratios" => "APIエラー",
+            "demographic_api_status" => "APIエラー",
+            "demographic_error" => e.message
+          }
+          api_error_count += 1
+          first_month_failed = true if row_index.zero?
+        ensure
+          sleep(sleep_sec) if sleep_sec.positive?
+        end
+      end
+    end
+
+    additional_headers = %w[
+      gender_ratios
+      age_ratios
+      area_ratios
+      demographic_api_status
+      demographic_error
+    ]
+    headers = rows.headers + additional_headers.reject { |h| rows.headers.include?(h) }
+
+    CSV.open(output_path, "w", write_headers: true, headers: headers) do |csv|
+      rows_with_index.each do |row, idx|
+        enrichment = enrichments[idx] || {}
+        csv << headers.map { |header| row[header] || enrichment[header] }
+      end
+    end
+
+    puts "Wrote #{rows.size} rows to #{output_path}"
+    puts "Demographic API errors: #{api_error_count}"
+    puts "Rows skipped due to first-month API error: #{skipped_count}"
+  end
 end

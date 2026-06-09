@@ -7,8 +7,38 @@ import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js'
 import ProcessingBar from "shared/processing_bar";
 
+const parseMediaPayload = (text) => {
+  if (!text) return null;
+  if (typeof text === "object") return text;
+
+  if (typeof text === "string") {
+    try {
+      return JSON.parse(text);
+    } catch (_e) {
+      return null;
+    }
+  }
+
+  return null;
+};
+
+const mediaUrl = (payload, preferredKey, fallbackKey) => {
+  if (!payload) return "";
+
+  const normalized = {
+    previewImageUrl: payload.previewImageUrl || payload.preview_image_url,
+    originalContentUrl: payload.originalContentUrl || payload.original_content_url
+  };
+
+  return normalized[preferredKey] || normalized[fallbackKey] || "";
+};
+
 const Message = ({message, reply_ai_message, ai_question}) => {
   const [processing, setProcessing] = useState(false)
+  const mediaPayload = parseMediaPayload(message.text)
+  const imageSrc = mediaUrl(mediaPayload, "previewImageUrl", "originalContentUrl")
+  const videoSrc = mediaUrl(mediaPayload, "originalContentUrl", "previewImageUrl")
+  const videoPoster = mediaUrl(mediaPayload, "previewImageUrl", "originalContentUrl")
 
   const aiReply = async () => {
     setProcessing(true)
@@ -34,13 +64,13 @@ const Message = ({message, reply_ai_message, ai_question}) => {
         <div className={`col-sm-10 break-line-content message-content ${message.sent ? "" : "unsend"}`}>
           {message.is_video ? (
             <video
-              className="w-full"
+              className="chat-media"
               controls
-              src={(message.text && message.text.originalContentUrl) || ""}
-              poster={(message.text && message.text.previewImageUrl) || ""}
+              src={videoSrc}
+              poster={videoPoster}
             />
           ) : message.is_image ? (
-            <img className="w-full" src={(message.text && message.text.previewImageUrl) || ""} />
+            <img className="chat-media" src={imageSrc} />
           ) : (
             typeof message.text === "string" || typeof message.text === "number"
               ? message.text
