@@ -45,8 +45,15 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
   def update
     menu = Current.business_owner.menus.find(params[:id])
     outcome = ::Menus::UpdateAttribute.run(menu: menu, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+    response_payload = {
+      redirect_to: params[:back_path] || lines_user_bot_settings_menu_path(business_owner_id, params[:id], anchor: params[:attribute])
+    }
 
-    return_json_response(outcome, { redirect_to: params[:back_path] || lines_user_bot_settings_menu_path(business_owner_id, params[:id], anchor: params[:attribute]) })
+    if outcome.valid? && params[:attribute] == "menu_shops" && !Current.business_owner.has_single_shop?
+      response_payload[:notice] = I18n.t("common.update_successfully_message")
+    end
+
+    return_json_response(outcome, response_payload)
   end
 
   def destroy

@@ -251,20 +251,18 @@ const BookingOptionEdit =({props}) => {
       case "detail_settings":
         return (
           <>
-            <div className="field-header">{I18n.t("settings.booking_option.form.sale_shops")}</div>
-            <CheckboxSearchFields
-              setValue={setValue}
-              watch={watch}
-              register={register}
-              field_name="shop_ids[]"
-              options={props.shop_options}
-              checked_option_ids={props.shop_ids}
-              search_placeholder={I18n.t("settings.booking_page.form.search_placeholder")}
-            />
-            <div className="field-header">{I18n.t("settings.booking_option.form.sale_start")}</div>
-            <BookingStartAtField i18n={i18n} register={register} watch={watch} control={control} />
-            <div className="field-header">{I18n.t("settings.booking_option.form.sale_end")}</div>
-            <BookingEndAtField i18n={i18n} register={register} watch={watch} control={control} />
+            {props.shop_options.map((shopOption) => (
+              <label className="field-row flex-start" key={shopOption.value}>
+                <input
+                  name="shop_ids[]"
+                  type="checkbox"
+                  value={shopOption.value}
+                  defaultChecked={props.shop_ids.includes(shopOption.value)}
+                  ref={register}
+                />
+                {shopOption.label}
+              </label>
+            ))}
           </>
         )
       case "start_at":

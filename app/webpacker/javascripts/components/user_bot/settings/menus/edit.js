@@ -32,7 +32,15 @@ const MenuEdit =({props}) => {
       toastr.error(error.response.data.error_message)
     }
     else {
-      window.location = response.data.redirect_to
+      if (response.data.notice) {
+        toastr.success(response.data.notice)
+        setTimeout(() => {
+          window.location = response.data.redirect_to
+        }, 500)
+      }
+      else {
+        window.location = response.data.redirect_to
+      }
     }
   }
 

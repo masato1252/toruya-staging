@@ -43,12 +43,6 @@ const BookingReservationFormFunction = ({props}) => {
     });
   }, []);
 
-  useEffect(() => {
-    if (booking_reservation_form_values?.selected_staff_id) {
-      set_booking_reservation_form_values(prev => ({...prev, booking_options: props.booking_reservation_form.staff_booking_options_map[booking_reservation_form_values.selected_staff_id]}))
-    }
-  }, [booking_reservation_form_values?.selected_staff_id])
-
   const [booking_reservation_form_values, set_booking_reservation_form_values] = useState(() => {
     const baseState = {
       ...props.booking_reservation_form,
@@ -58,6 +52,13 @@ const BookingReservationFormFunction = ({props}) => {
 
     return baseState;
   })
+
+  useEffect(() => {
+    if (booking_reservation_form_values?.selected_staff_id) {
+      set_booking_reservation_form_values(prev => ({...prev, booking_options: props.booking_reservation_form.staff_booking_options_map[booking_reservation_form_values.selected_staff_id]}))
+    }
+  }, [booking_reservation_form_values?.selected_staff_id])
+
   const stripe_token_ref = useRef();
   const square_token_ref = useRef();
   const address_ref = useRef();

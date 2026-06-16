@@ -331,13 +331,19 @@ class BookingPagesController < ActionController::Base
 
   def staff_ids
     @staff_ids ||= begin
+      shop_staff_ids = booking_page.shop.staffs.active.pluck(:id)
+
       # If a specific staff is selected, use that staff
       if params[:staff_id].present?
-        [params[:staff_id].to_i]
+        [params[:staff_id].to_i] & shop_staff_ids
       else
         # Original logic: find staff that can handle all selected booking options
         menu_ids = BookingOptionMenu.where(booking_option_id: booking_option_ids).pluck(:menu_id)
-        StaffMenu.where(menu_id: menu_ids).group(:staff_id).having("COUNT(menu_id) = ?", menu_ids.size).pluck(:staff_id)
+        StaffMenu.where(menu_id: menu_ids)
+                 .where(staff_id: shop_staff_ids)
+                 .group(:staff_id)
+                 .having("COUNT(menu_id) = ?", menu_ids.size)
+                 .pluck(:staff_id)
       end
     end
   end

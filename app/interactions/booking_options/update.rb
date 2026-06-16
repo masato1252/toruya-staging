@@ -74,11 +74,6 @@ module BookingOptions
             rich_menu_pages = booking_option.booking_pages.for_option_in_rich_menu.pluck(:id)
             booking_option.update(booking_page_ids: (page_ids + rich_menu_pages).uniq)
           end
-
-          booking_option.update(
-            start_at: attrs[:start_at_date_part].present? ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil,
-            end_at: attrs[:end_at_date_part].present? ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil
-          )
         when "new_pure_menu"
           ApplicationRecord.transaction do
             category = user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
