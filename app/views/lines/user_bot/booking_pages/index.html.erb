@@ -49,15 +49,30 @@
           <% end %>
 
           <div class="margin-around centerize">
-            <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow", data: {
-              controller: "gtag",
-              action: "click->gtag#sendEvent",
-              gtag_event_value: "add_booking_page",
-              gtag_event_category: "booking_pages",
-              gtag_event_label: "add_more"
-            } do %>
-            <i class="fa fa-plus"></i>
-              <%= t("action.add_more") %>
+            <% if multi_shop_mode? %>
+              <%= button_tag type: "button", class: "btn btn-yellow", data: {
+                toggle: "modal",
+                target: "#booking-page-shop-modal",
+                controller: "gtag",
+                action: "click->gtag#sendEvent",
+                gtag_event_value: "add_booking_page",
+                gtag_event_category: "booking_pages",
+                gtag_event_label: "add_more"
+              } do %>
+                <i class="fa fa-plus"></i>
+                <%= t("action.add_more") %>
+              <% end %>
+            <% else %>
+              <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow", data: {
+                controller: "gtag",
+                action: "click->gtag#sendEvent",
+                gtag_event_value: "add_booking_page",
+                gtag_event_category: "booking_pages",
+                gtag_event_label: "add_more"
+              } do %>
+                <i class="fa fa-plus"></i>
+                <%= t("action.add_more") %>
+              <% end %>
             <% end %>
           </div>
 
@@ -78,15 +93,30 @@
             <% end %>
           <% end %>
 
-          <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: {
-            controller: "gtag",
-            action: "click->gtag#sendEvent",
-            gtag_event_value: "add_booking_page",
-            gtag_event_category: "booking_pages",
-            gtag_event_label: "add_more_circle"
-          } do %>
-            <i class="fas fa-plus fa-2x"></i>
-            <div class="word"><%= I18n.t("action.add_more") %></div>
+          <% if multi_shop_mode? %>
+            <%= button_tag type: "button", class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: {
+              toggle: "modal",
+              target: "#booking-page-shop-modal",
+              controller: "gtag",
+              action: "click->gtag#sendEvent",
+              gtag_event_value: "add_booking_page",
+              gtag_event_category: "booking_pages",
+              gtag_event_label: "add_more_circle"
+            } do %>
+              <i class="fas fa-plus fa-2x"></i>
+              <div class="word"><%= I18n.t("action.add_more") %></div>
+            <% end %>
+          <% else %>
+            <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word", data: {
+              controller: "gtag",
+              action: "click->gtag#sendEvent",
+              gtag_event_value: "add_booking_page",
+              gtag_event_category: "booking_pages",
+              gtag_event_label: "add_more_circle"
+            } do %>
+              <i class="fas fa-plus fa-2x"></i>
+              <div class="word"><%= I18n.t("action.add_more") %></div>
+            <% end %>
           <% end %>
         <% end %>
       </div>
@@ -95,3 +125,32 @@
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
 </div>
+
+<% if multi_shop_mode? %>
+  <div class="modal fade" id="booking-page-shop-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 class="modal-title">
+            <%= t("common.select_a_shop") %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="shops-list centerize">
+            <% @booking_page_shop_options.each do |shop| %>
+              <div class="shop-cell my-2">
+                <%= button_to page_lines_user_bot_bookings_path(business_owner_id: business_owner_id),
+                  params: { shop_id: shop.id },
+                  class: "btn btn-tweak btn-tarco btn-big btn-extend",
+                  method: :post do %>
+                  <%= shop.display_name %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

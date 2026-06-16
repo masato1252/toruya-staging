@@ -8,9 +8,15 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   end
 
   def page
+    shop = if params[:shop_id].present?
+      Current.business_owner.shops.active.find(params[:shop_id])
+    else
+      Current.business_owner.shops.active.order(:id).first
+    end
+
     outcome = ::BookingPages::SmartCreate.run(attrs: {
       super_user_id: Current.business_owner.id,
-      shop_id: Current.business_owner.shops.first.id,
+      shop_id: shop.id,
     })
 
     redirect_to lines_user_bot_booking_page_path(business_owner_id: business_owner_id, id: outcome.result.id), notice: I18n.t("user_bot.dashboards.booking_page_creation.create_booking_page_successfully")

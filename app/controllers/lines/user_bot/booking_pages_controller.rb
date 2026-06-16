@@ -10,6 +10,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
   def index
     @booking_pages = Current.business_owner.booking_pages.normal.includes(:booking_options, :shop).order("updated_at DESC")
+    @booking_page_shop_options = Current.business_owner.shops.active.order(:id)
     # find booking pages without booking_page_options but don't filter the collection
     @booking_pages_without_option_ids = @booking_pages.select { |booking_page| booking_page.booking_page_options.empty? }.map(&:id)
   end
