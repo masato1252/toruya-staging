@@ -9,28 +9,37 @@
   </div>
 
   <div class="admin-detail-section">
+    <div class="admin-form-section-title">アクセス数（全体）</div>
+    <div class="admin-analytics-grid">
+      <% [["全体", @overall_access_counts[:total], "text-tarco"], ["参加登録前", @overall_access_counts[:before_registration], "text-blue"], ["参加登録後", @overall_access_counts[:after_registration], "text-green"]].each do |label, counts, color_class| %>
+        <div class="admin-analytics-card">
+          <div class="analytics-value <%= color_class %>"><%= counts[:pv] %> / <%= counts[:uu] %></div>
+          <div class="analytics-label"><%= label %> PV / UU</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="admin-detail-section">
     <div class="admin-form-section-title">アクティビティ全体集計</div>
     <div class="admin-analytics-grid">
       <div class="admin-analytics-card">
-        <div class="analytics-value text-indigo"><%= @activity_counts["seminar_view"] || 0 %></div>
-        <div class="analytics-label">セミナー講演閲覧</div>
+        <div class="analytics-value text-indigo"><%= @seminar_activity_counts["seminar_view"] || 0 %></div>
+        <div class="analytics-label">セミナー講演 動画閲覧</div>
       </div>
       <div class="admin-analytics-card">
-        <div class="analytics-value text-blue"><%= @activity_counts["material_download"] || 0 %></div>
-        <div class="analytics-label">資料ダウンロード</div>
+        <div class="analytics-value text-blue"><%= @booth_activity_counts["material_download"] || 0 %></div>
+        <div class="analytics-label">展示ブース 資料DL</div>
       </div>
       <div class="admin-analytics-card">
-        <div class="analytics-value text-tarco"><%= @activity_counts["online_service_click"] || 0 %></div>
-        <div class="analytics-label">オンラインサービス遷移</div>
-      </div>
-      <div class="admin-analytics-card">
-        <div class="analytics-value text-orange"><%= @activity_counts["upsell_click"] || 0 %></div>
-        <div class="analytics-label">アップセルクリック</div>
+        <div class="analytics-value text-tarco"><%= @booth_activity_counts["online_service_click"] || 0 %></div>
+        <div class="analytics-label">展示ブース サービス遷移</div>
       </div>
     </div>
   </div>
 
   <% @event_contents.each do |content| %>
+    <% access_counts = @content_access_counts[content.id] %>
     <div class="admin-detail-section">
       <div class="admin-form-section-title">
         <%= content.title %>
@@ -38,16 +47,16 @@
       </div>
       <div class="admin-analytics-grid">
         <div class="admin-analytics-card">
-          <div class="analytics-value text-tarco">
-            <%= @event.ahoy_content_views(content.id).count %>
-          </div>
-          <div class="analytics-label">PV</div>
+          <div class="analytics-value text-tarco"><%= access_counts[:total][:pv] %> / <%= access_counts[:total][:uu] %></div>
+          <div class="analytics-label">全体 PV / UU</div>
         </div>
         <div class="admin-analytics-card">
-          <div class="analytics-value text-blue">
-            <%= @event.ahoy_content_views(content.id).count(Arel.sql("DISTINCT properties->>'event_line_user_id'")) %>
-          </div>
-          <div class="analytics-label">来場者(UU)</div>
+          <div class="analytics-value text-blue"><%= access_counts[:before_registration][:pv] %> / <%= access_counts[:before_registration][:uu] %></div>
+          <div class="analytics-label">参加登録前 PV / UU</div>
+        </div>
+        <div class="admin-analytics-card">
+          <div class="analytics-value text-green"><%= access_counts[:after_registration][:pv] %> / <%= access_counts[:after_registration][:uu] %></div>
+          <div class="analytics-label">参加登録後 PV / UU</div>
         </div>
         <div class="admin-analytics-card">
           <div class="analytics-value text-green"><%= content.analytics_usage_count %></div>
@@ -65,22 +74,21 @@
 
       <div style="margin-top: 12px;">
         <div class="admin-analytics-grid">
-          <div class="admin-analytics-card">
-            <div class="analytics-value text-indigo"><%= @content_activity_counts[[content.id, "seminar_view"]] || 0 %></div>
-            <div class="analytics-label">動画閲覧</div>
-          </div>
-          <div class="admin-analytics-card">
-            <div class="analytics-value text-blue"><%= @content_activity_counts[[content.id, "material_download"]] || 0 %></div>
-            <div class="analytics-label">資料DL</div>
-          </div>
-          <div class="admin-analytics-card">
-            <div class="analytics-value text-tarco"><%= @content_activity_counts[[content.id, "online_service_click"]] || 0 %></div>
-            <div class="analytics-label">サービス遷移</div>
-          </div>
-          <div class="admin-analytics-card">
-            <div class="analytics-value text-orange"><%= @content_activity_counts[[content.id, "upsell_click"]] || 0 %></div>
-            <div class="analytics-label">アップセル</div>
-          </div>
+          <% if content.seminar_content_type? %>
+            <div class="admin-analytics-card">
+              <div class="analytics-value text-indigo"><%= @content_activity_counts[[content.id, "seminar_view"]] || 0 %></div>
+              <div class="analytics-label">動画閲覧</div>
+            </div>
+          <% else %>
+            <div class="admin-analytics-card">
+              <div class="analytics-value text-blue"><%= @content_activity_counts[[content.id, "material_download"]] || 0 %></div>
+              <div class="analytics-label">資料DL</div>
+            </div>
+            <div class="admin-analytics-card">
+              <div class="analytics-value text-tarco"><%= @content_activity_counts[[content.id, "online_service_click"]] || 0 %></div>
+              <div class="analytics-label">サービス遷移</div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

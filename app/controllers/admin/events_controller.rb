@@ -23,6 +23,7 @@ class Admin::EventsController < AdminController
 
   def show
     @event_contents = @event.event_contents.undeleted.order(:position)
+    @shop_acquisition_rows = @event.admin_shop_acquisition_rows
     @participant_rows = @event.admin_participant_rows
     @participant_counts = @event.admin_participant_count_breakdown
   end
@@ -48,7 +49,19 @@ class Admin::EventsController < AdminController
     logs_scope = @event.analytics_activity_logs
     @activity_logs = logs_scope.includes(:event_content, :event_line_user).order(created_at: :desc)
     @activity_counts = logs_scope.group(:activity_type).count
+    @seminar_activity_counts = logs_scope.joins(:event_content)
+                                         .where(event_contents: { content_type: EventContent.content_types[:seminar] })
+                                         .group(:activity_type)
+                                         .count
+    @booth_activity_counts = logs_scope.joins(:event_content)
+                                       .where(event_contents: { content_type: EventContent.content_types[:booth] })
+                                       .group(:activity_type)
+                                       .count
     @content_activity_counts = logs_scope.group(:event_content_id, :activity_type).count
+    @overall_access_counts = @event.analytics_access_counts
+    @content_access_counts = @event_contents.each_with_object({}) do |content, counts|
+      counts[content.id] = @event.analytics_access_counts(content_id: content.id)
+    end
   end
 
   # イベント新規作成時にも使えるよう、event_contents の同名アクションを events 側にも用意。

@@ -43,7 +43,24 @@ class EventLineUser < ApplicationRecord
   validates :line_user_id, presence: true, uniqueness: true
 
   def toruya_registered?
-    toruya_user_id.present?
+    toruya_user_ids.any?
+  end
+
+  def toruya_user_ids
+    @toruya_user_ids ||= begin
+      ids = []
+      ids << toruya_user_id if toruya_user_id.present?
+      ids.concat(
+        SocialUser.where(social_service_user_id: line_user_id)
+                  .where.not(user_id: nil)
+                  .pluck(:user_id)
+      )
+      ids.compact.uniq
+    end
+  end
+
+  def resolved_toruya_user_id
+    toruya_user_ids.first
   end
 
   def check_toruya_user!
@@ -53,6 +70,7 @@ class EventLineUser < ApplicationRecord
       self.toruya_user_id = social_user.user_id
       self.toruya_social_user_id = social_user.id
     end
+    @toruya_user_ids = nil
     self.toruya_user_checked_at = Time.current
     save! if persisted?
   end
