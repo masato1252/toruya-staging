@@ -5,6 +5,9 @@ class Schedules::Events < ActiveInteraction::Base
   array :user_ids do
     integer
   end
+  array :visible_open_schedule_user_ids, default: nil do
+    integer
+  end
   date :date, default: nil
   date :month_date, default: nil
   date :period_start_date, default: nil
@@ -17,7 +20,7 @@ class Schedules::Events < ActiveInteraction::Base
       .includes(:menus, :customers, :staffs, shop: :user)
       .order("reservations.start_time ASC")
     off_schedules = CustomSchedule.closed.where(user_id: user_ids).includes(user: :profile)
-    open_schedules = CustomSchedule.opened.where(user_id: user_ids).includes(user: :profile)
+    open_schedules = CustomSchedule.opened.where(user_id: visible_open_schedule_user_ids || user_ids).includes(user: :profile)
     event_booking_page_ids = BookingPage.where(shop_id: working_shop_ids, event_booking: true).pluck(:id)
     booking_page_holder_schedules = BookingPageSpecialDate.includes(booking_page: :shop).where(booking_page_id: event_booking_page_ids)
 

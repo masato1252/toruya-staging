@@ -10,6 +10,7 @@ class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
         user: Current.business_owner,
         working_shop_options: shop_options,
         all_shop_ids: Current.business_owner.calendar_shop_ids,
+        visible_open_schedule_user_ids: Current.social_user.current_users.pluck(:id),
         date: date
     )
 
