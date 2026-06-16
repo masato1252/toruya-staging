@@ -5,10 +5,12 @@ require "json"
 
 class SlackErrorNotifier
   WEBHOOK_URL_ENV_KEY = "SLACK_ERROR_WEBHOOK_URL"
+  HTTP_STATUS_NOTIFICATION_THRESHOLD = 500
 
   class << self
     def notify(exception, context = {})
       return unless webhook_url.present?
+      return unless notifyable?(exception, context)
 
       payload = build_payload(exception, context)
 
@@ -21,7 +23,28 @@ class SlackErrorNotifier
       Rails.logger.error("[SlackErrorNotifier] Failed to build payload: #{e.message}")
     end
 
+    def notifyable?(exception, context = {})
+      return true unless request_context?(context)
+
+      exception_http_status(exception, context) >= HTTP_STATUS_NOTIFICATION_THRESHOLD
+    end
+
     private
+
+    def request_context?(context)
+      context[:request_path].present? ||
+        context[:request_method].present? ||
+        context[:source].to_s.include?("Controller") ||
+        context[:source].to_s.include?("Middleware")
+    end
+
+    def exception_http_status(exception, context)
+      return context[:http_status].to_i if context[:http_status].present?
+
+      ActionDispatch::ExceptionWrapper.status_code_for_exception(exception.class.name)
+    rescue StandardError
+      HTTP_STATUS_NOTIFICATION_THRESHOLD
+    end
 
     def webhook_url
       ENV[WEBHOOK_URL_ENV_KEY]
@@ -76,6 +99,7 @@ class SlackErrorNotifier
       if context[:request_method].present? && context[:request_path].present?
         context_lines << "*リクエスト:* `#{context[:request_method]} #{context[:request_path]}`"
       end
+      context_lines << "*HTTPステータス:* #{context[:http_status]}" if context[:http_status].present?
       context_lines << "*IP:* #{context[:remote_ip]}" if context[:remote_ip].present?
       context_lines << "*ジョブ:* `#{context[:job_name]}`" if context[:job_name].present?
       context_lines << "*引数:* #{truncate(context[:job_args].to_s, 300)}" if context[:job_args].present?

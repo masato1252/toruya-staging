@@ -44,7 +44,7 @@ class SlackErrorMiddleware
 
     error = StandardError.new("HTTP #{status} - #{env["REQUEST_METHOD"]} #{env["REQUEST_PATH"] || env["PATH_INFO"]}")
     error.set_backtrace([])
-    context = build_context(env).merge(source: "Middleware (#{status} response)")
+    context = build_context(env).merge(source: "Middleware (#{status} response)", http_status: status)
     SlackErrorNotifier.notify(error, context)
   end
 
