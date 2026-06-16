@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { LineLoginBtn } from "shared/booking";
+import mvBgUnderImage from "../../../assets/events/bg_under.png";
+import mvBgUpperImage from "../../../assets/events/bg_upper.png";
+import stampExpo2026Image from "../../../assets/events/stamp_expo2026.png";
 
 // コンテンツサムネイルの表示アスペクト比（推奨サイズ 1672×941）
 const THUMBNAIL_ASPECT_PADDING = `${(941 / 1672) * 100}%`;
@@ -723,21 +726,13 @@ const StampRallySection = ({ event }) => {
   });
 
   return (
-    <div id="stamp-rally" style={{ background: "#fafaf9", padding: "24px 16px" }}>
-      <div style={{ maxWidth: 720, margin: "0 auto" }}>
-        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1c1917", margin: 0, marginBottom: 12 }}>
-          🏅 スタンプラリー
-        </h2>
-
-        {event.stamp_rally_description && (
-          <p style={{
-            fontSize: 12, color: "#78716c", lineHeight: 1.7,
-            whiteSpace: "pre-wrap", marginBottom: 16
-          }}>
-            {event.stamp_rally_description}
-          </p>
-        )}
-
+    <div id="stamp-rally" style={{ background: "#fafaf9", padding: "0 0 24px" }}>
+      <img
+        src={stampExpo2026Image}
+        alt="スタンプラリー"
+        style={{ display: "block", width: "100%", height: "auto" }}
+      />
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 16px" }}>
         {phases.length >= 2 && (
           <div style={{
             background: "#fff", borderBottom: "1px solid #e7e5e4",
@@ -809,6 +804,15 @@ const StampRallySection = ({ event }) => {
             />
           ))
         )}
+
+        {event.stamp_rally_description && (
+          <p style={{
+            fontSize: 12, color: "#78716c", lineHeight: 1.7,
+            whiteSpace: "pre-wrap", margin: "16px 0 0"
+          }}>
+            {event.stamp_rally_description}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -858,19 +862,52 @@ const EventShow = ({ props }) => {
       {(() => {
         // ヒーロー画像が未設定かつロゴ画像が設定されているときは、ロゴ中心レイアウト。
         const useLogoLayout = !event.hero_image_url && !!event.logo_image_url;
-        // ヒーロー画像がない場合は背景色 #464342 に統一（ロゴ有無を問わず文字色は白）。
+        // ヒーロー画像がない場合は背景色 #232425 に統一（ロゴ有無を問わず文字色は白）。
         const heroBackground = event.hero_image_url
           ? `url(${event.hero_image_url}) center/cover no-repeat`
-          : "#464342";
+          : "#232425";
 
         return (
           <div style={{
             background: heroBackground,
-            color: "#fff", padding: "88px 20px 48px", position: "relative", overflow: "hidden"
+            color: "#fff", padding: "88px 20px 48px", minHeight: 600, position: "relative", overflow: "hidden"
           }}>
             {event.hero_image_url && (
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)" }} />
             )}
+
+            <img
+              src={mvBgUpperImage}
+              alt=""
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "50%",
+                maxWidth: "100%",
+                height: "auto",
+                opacity: 0.9,
+                pointerEvents: "none",
+                zIndex: 0
+              }}
+            />
+            <img
+              src={mvBgUnderImage}
+              alt=""
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                right: 0,
+                bottom: 0,
+                width: "50%",
+                maxWidth: "100%",
+                height: "auto",
+                opacity: 0.9,
+                pointerEvents: "none",
+                zIndex: 0
+              }}
+            />
 
             {event.is_participant && (
               <div style={{

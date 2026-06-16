@@ -422,6 +422,52 @@ $admin-event-page-max-width: 1280px;
   }
 }
 
+.admin-shop-acquisition-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  padding: 14px 16px 16px;
+}
+
+.admin-shop-acquisition-card {
+  background: #ffffff;
+  border: 1px solid $gray;
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-width: 0;
+
+  &__shop {
+    color: $black;
+    font-size: $small-font-size;
+    font-weight: bold;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__total {
+    color: $gray8;
+    font-size: $small-font-size;
+    line-height: 1.4;
+
+    strong {
+      color: $palette-color2;
+      font-size: 18px;
+      line-height: 1;
+      margin: 0 2px;
+    }
+  }
+
+  &__breakdown {
+    color: $gray11;
+    font-size: 11px;
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+}
+
 .admin-participant-table-wrap {
   padding: 0 16px 16px;
   overflow-x: auto;

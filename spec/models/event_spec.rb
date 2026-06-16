@@ -53,6 +53,19 @@ RSpec.describe Event, type: :model do
       end
     end
 
+    context "when line_user is linked through the current SocialUser record" do
+      let(:event) { FactoryBot.create(:event, :pre_event, master_preview_shop: master_shop) }
+      let(:linked_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: nil) }
+
+      before do
+        FactoryBot.create(:social_user, social_service_user_id: linked_line_user.line_user_id, user: owner_user)
+      end
+
+      it "returns true even if event_line_users.toruya_user_id is stale" do
+        expect(event.master_previewer?(linked_line_user)).to be true
+      end
+    end
+
     context "when master_preview_shop is not configured" do
       let(:event) { FactoryBot.create(:event, :pre_event, master_preview_shop: nil) }
 
@@ -87,6 +100,14 @@ RSpec.describe Event, type: :model do
       FactoryBot.create(:event_content, :unpublished, event: event, shop: exhibitor_shop)
 
       expect(event.previewable_content_ids_for(anon_line_user)).to eq([])
+    end
+
+    it "uses the current SocialUser link when event_line_users.toruya_user_id is missing" do
+      linked_line_user = FactoryBot.create(:event_line_user, toruya_user_id: nil)
+      draft = FactoryBot.create(:event_content, :unpublished, event: event, shop: exhibitor_shop)
+      FactoryBot.create(:social_user, social_service_user_id: linked_line_user.line_user_id, user: exhibitor_user)
+
+      expect(event.previewable_content_ids_for(linked_line_user)).to contain_exactly(draft.id)
     end
   end
 
@@ -261,6 +282,112 @@ RSpec.describe Event, type: :model do
       breakdown = event.admin_participant_count_breakdown
       expect(breakdown[:general]).to eq(total: 2, profile_complete: 1, profile_incomplete: 1)
       expect(breakdown[:exhibitor]).to eq(total: 1, profile_complete: 1, profile_incomplete: 0)
+    end
+
+    it "classifies participants linked through SocialUser as exhibitors" do
+      linked_line_user = FactoryBot.create(
+        :event_line_user,
+        toruya_user_id: nil,
+        first_name: "連携",
+        last_name: "出展者",
+        email: "linked-exhibitor@example.com",
+        phone_number: "09055556666"
+      )
+      FactoryBot.create(:social_user, social_service_user_id: linked_line_user.line_user_id, user: exhibitor_shop.user)
+      FactoryBot.create(:event_participant, event: event, event_line_user: linked_line_user)
+
+      row = event.admin_participant_rows.find { |participant_row| participant_row.event_line_user == linked_line_user }
+      expect(row.exhibitor).to be true
+    end
+
+    it "classifies participants as exhibitors when a shop is linked after registration" do
+      later_exhibitor_shop = FactoryBot.create(:shop)
+      later_exhibitor_line_user = FactoryBot.create(
+        :event_line_user,
+        toruya_user_id: later_exhibitor_shop.user_id,
+        first_name: "後付",
+        last_name: "出展者",
+        email: "later-exhibitor@example.com",
+        phone_number: "09077778888"
+      )
+      FactoryBot.create(:event_participant, event: event, event_line_user: later_exhibitor_line_user)
+
+      FactoryBot.create(:event_content, :published, event: event, shop: later_exhibitor_shop)
+
+      row = event.admin_participant_rows.find { |participant_row| participant_row.event_line_user == later_exhibitor_line_user }
+      expect(row.exhibitor).to be true
+    end
+  end
+
+  describe "#admin_shop_acquisition_rows" do
+    let(:event) { FactoryBot.create(:event, :during_event) }
+    let(:shop) { FactoryBot.create(:shop) }
+    let(:unlinked_shop) { FactoryBot.create(:shop) }
+    let!(:content) { FactoryBot.create(:event_content, :unpublished, :booth, event: event, shop: shop) }
+
+    let(:direct_line_user) { FactoryBot.create(:event_line_user) }
+    let(:indirect_line_user) { FactoryBot.create(:event_line_user) }
+
+    before do
+      content
+      FactoryBot.create(:event_participant, event: event, event_line_user: direct_line_user, referrer_shop_id: shop.id)
+      FactoryBot.create(
+        :event_participant,
+        event: event,
+        event_line_user: indirect_line_user,
+        referrer_event_line_user_id: direct_line_user.id
+      )
+      FactoryBot.create(:event_participant, event: event, referrer_shop_id: unlinked_shop.id)
+    end
+
+    it "returns acquisition counts for shops linked to event contents" do
+      rows = event.admin_shop_acquisition_rows
+
+      expect(rows.map(&:shop)).to contain_exactly(shop)
+      expect(rows.first.counts).to eq(direct: 1, indirect: 1, total: 2)
+    end
+  end
+
+  describe "#analytics_access_counts" do
+    let(:event) { FactoryBot.create(:event, :during_event) }
+    let(:content) { FactoryBot.create(:event_content, :published, event: event) }
+    let(:visit) { FactoryBot.create(:ahoy_visit) }
+    let(:line_user) { FactoryBot.create(:event_line_user) }
+    let(:registered_at) { Time.current }
+
+    before do
+      FactoryBot.create(:event_participant, event: event, event_line_user: line_user, registered_at: registered_at)
+      create_event_content_view(content, line_user, registered_at - 5.minutes)
+      create_event_content_view(content, line_user, registered_at + 5.minutes)
+    end
+
+    it "counts PV and UU before and after participant registration" do
+      counts = event.analytics_access_counts(content_id: content.id)
+
+      expect(counts[:total]).to eq(pv: 2, uu: 1)
+      expect(counts[:before_registration]).to eq(pv: 1, uu: 1)
+      expect(counts[:after_registration]).to eq(pv: 1, uu: 1)
+    end
+
+    it "excludes exhibitor content views from access counts" do
+      exhibitor_shop = FactoryBot.create(:shop)
+      FactoryBot.create(:event_content, :unpublished, :booth, event: event, shop: exhibitor_shop)
+      exhibitor_line_user = FactoryBot.create(:event_line_user, toruya_user_id: exhibitor_shop.user_id)
+      create_event_content_view(content, exhibitor_line_user, registered_at + 10.minutes)
+
+      expect(event.analytics_access_counts(content_id: content.id)[:total]).to eq(pv: 2, uu: 1)
+    end
+
+    def create_event_content_view(content, line_user, time)
+      Ahoy::Event.create!(
+        visit: visit,
+        name: "event_content_view",
+        properties: {
+          event_content_id: content.id.to_s,
+          event_line_user_id: line_user.id.to_s
+        },
+        time: time
+      )
     end
   end
 end

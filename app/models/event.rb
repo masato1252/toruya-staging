@@ -75,10 +75,10 @@ class Event < ApplicationRecord
   # 「マスタ権限店舗」(event.master_preview_shop) の owner / staff であれば、
   # 開催期間に関わらず、すべての下書きコンテンツを一覧/詳細で閲覧できる。
   def master_previewer?(line_user)
-    user_id = line_user&.toruya_user_id
-    return false if user_id.nil?
+    user_ids = toruya_user_ids_for(line_user)
+    return false if user_ids.empty?
     return false if master_preview_shop_id.nil?
-    shop_member?(master_preview_shop, user_id)
+    user_ids.any? { |user_id| shop_member?(master_preview_shop, user_id) }
   end
 
   # 下書き(status=0)コンテンツのプレビュー権限。
@@ -86,9 +86,7 @@ class Event < ApplicationRecord
   # 紐づく下書きコンテンツの ID 配列を返す。
   # 公開コンテンツは誰でも見られるため、ここには含めない。
   def previewable_content_ids_for(line_user)
-    user_id = line_user&.toruya_user_id
-    return [] if user_id.nil?
-    shop_ids = shop_ids_for_user(user_id)
+    shop_ids = affiliated_shop_ids_for(line_user)
     return [] if shop_ids.empty?
     event_contents.undeleted.status_unpublished.where(shop_id: shop_ids).pluck(:id)
   end
@@ -109,16 +107,16 @@ class Event < ApplicationRecord
 
   # マスタプレビュー / 出展店舗プレビュー権限を持つ参加者（内部・関係者）。
   def preview_insider?(line_user)
-    return false if line_user.nil? || line_user.toruya_user_id.nil?
+    return false if toruya_user_ids_for(line_user).empty?
 
-    master_previewer?(line_user) || previewable_content_ids_for(line_user).any?
+    master_previewer?(line_user) || exhibitor_shop_member?(line_user)
   end
 
-  # 解析・集客表示から除外する event_line_user_id 一覧（参加登録済みのプレビュー権限者のみ）。
+  # 解析・集客表示から除外する event_line_user_id 一覧。
+  # 参加登録前の PV も Ahoy に event_line_user_id が残るため、既知のアクセス者全体から出展者を除外する。
   def analytics_excluded_event_line_user_ids
     @analytics_excluded_event_line_user_ids ||= begin
-      event_participants.includes(:event_line_user).filter_map do |participant|
-        elu = participant.event_line_user
+      EventLineUser.where(id: admin_participant_line_user_ids).filter_map do |elu|
         elu.id if preview_insider?(elu)
       end.uniq
     end
@@ -146,6 +144,12 @@ class Event < ApplicationRecord
     :exhibitor,
     :profile_complete,
     :registered_at,
+    keyword_init: true
+  )
+
+  AdminShopAcquisitionRow = Struct.new(
+    :shop,
+    :counts,
     keyword_init: true
   )
 
@@ -190,6 +194,28 @@ class Event < ApplicationRecord
     }
   end
 
+  def admin_shop_acquisition_rows
+    return @admin_shop_acquisition_rows if defined?(@admin_shop_acquisition_rows)
+
+    shop_ids = event_contents.undeleted
+                             .where.not(shop_id: nil)
+                             .unscope(:order)
+                             .distinct
+                             .pluck(:shop_id)
+    return @admin_shop_acquisition_rows = [] if shop_ids.empty?
+
+    shops_by_id = Shop.where(id: shop_ids).index_by(&:id)
+    shop_ids.filter_map do |shop_id|
+      shop = shops_by_id[shop_id]
+      next unless shop
+
+      AdminShopAcquisitionRow.new(
+        shop: shop,
+        counts: shop_acquisition_counts(shop.id)
+      )
+    end.sort_by { |row| [-row.counts[:total], row.shop.name.to_s] }.tap { |rows| @admin_shop_acquisition_rows = rows }
+  end
+
   def analytics_activity_logs
     scope = event_activity_logs
     excluded = analytics_excluded_event_line_user_ids
@@ -198,12 +224,16 @@ class Event < ApplicationRecord
 
   # Ahoy のコンテンツ閲覧イベント（プレビュー権限者を除外した表示用）。
   def ahoy_content_views(content_id)
-    scope = Ahoy::Event.where(name: "event_content_view")
-                       .where("properties->>'event_content_id' = ?", content_id.to_s)
-    excluded = analytics_excluded_event_line_user_ids
-    return scope if excluded.empty?
+    analytics_content_view_scope(content_id: content_id)
+  end
 
-    scope.where.not("properties->>'event_line_user_id' IN (?)", excluded.map(&:to_s))
+  def analytics_access_counts(content_id: nil)
+    scope = analytics_content_view_scope(content_id: content_id)
+    {
+      total: analytics_access_count_for(scope),
+      before_registration: analytics_access_count_for(scope.where.not(registered_content_view_exists_sql, id)),
+      after_registration: analytics_access_count_for(scope.where(registered_content_view_exists_sql, id))
+    }
   end
 
   # 指定 shop に紐づく集客数を集計する。
@@ -262,7 +292,7 @@ class Event < ApplicationRecord
   private
 
   def admin_participant_ahoy_line_user_ids
-    content_ids = event_contents.undeleted.pluck(:id).map(&:to_s)
+    content_ids = event_contents.undeleted.unscope(:order).pluck(:id).map(&:to_s)
     return [] if content_ids.empty?
 
     Ahoy::Event.where(name: "event_content_view")
@@ -271,6 +301,41 @@ class Event < ApplicationRecord
                .pluck(Arel.sql("properties->>'event_line_user_id'"))
                .filter_map { |id| id.presence&.to_i }
                .select(&:positive?)
+  end
+
+  def analytics_content_view_scope(content_id: nil)
+    scope = Ahoy::Event.where(name: "event_content_view")
+    content_ids = if content_id.present?
+                    [content_id.to_s]
+                  else
+                    event_contents.undeleted.unscope(:order).pluck(:id).map(&:to_s)
+                  end
+    return scope.none if content_ids.empty?
+
+    scope = scope.where("properties->>'event_content_id' IN (?)", content_ids)
+    excluded = analytics_excluded_event_line_user_ids
+    return scope if excluded.empty?
+
+    scope.where.not("properties->>'event_line_user_id' IN (?)", excluded.map(&:to_s))
+  end
+
+  def analytics_access_count_for(scope)
+    {
+      pv: scope.count,
+      uu: scope.count(Arel.sql("DISTINCT properties->>'event_line_user_id'"))
+    }
+  end
+
+  def registered_content_view_exists_sql
+    <<~SQL.squish
+      EXISTS (
+        SELECT 1
+        FROM event_participants ep
+        WHERE ep.event_id = ?
+          AND ep.event_line_user_id::text = ahoy_events.properties->>'event_line_user_id'
+          AND ep.registered_at <= ahoy_events.time
+      )
+    SQL
   end
 
   def count_breakdown_for(rows)
@@ -312,5 +377,26 @@ class Event < ApplicationRecord
                 .joins("INNER JOIN staffs ON staffs.id = shop_staffs.staff_id")
                 .where(staffs: { deleted_at: nil })
                 .exists?
+  end
+
+  def toruya_user_ids_for(line_user)
+    return [] if line_user.nil?
+
+    if line_user.respond_to?(:toruya_user_ids)
+      line_user.toruya_user_ids
+    else
+      Array(line_user.toruya_user_id).compact
+    end
+  end
+
+  def affiliated_shop_ids_for(line_user)
+    toruya_user_ids_for(line_user).flat_map { |user_id| shop_ids_for_user(user_id) }.uniq
+  end
+
+  def exhibitor_shop_member?(line_user)
+    shop_ids = affiliated_shop_ids_for(line_user)
+    return false if shop_ids.empty?
+
+    event_contents.undeleted.where(shop_id: shop_ids).exists?
   end
 end

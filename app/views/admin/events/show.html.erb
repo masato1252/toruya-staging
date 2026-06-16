@@ -158,6 +158,25 @@
     </script>
   </div>
 
+  <% if @shop_acquisition_rows.any? %>
+    <div class="admin-detail-section admin-detail-section--shop-acquisitions">
+      <div class="admin-form-section-title">出展者別集客数（<%= @shop_acquisition_rows.size %>店舗）</div>
+      <div class="admin-shop-acquisition-list">
+        <% @shop_acquisition_rows.each do |row| %>
+          <div class="admin-shop-acquisition-card">
+            <div class="admin-shop-acquisition-card__shop"><%= row.shop.name %></div>
+            <div class="admin-shop-acquisition-card__total">
+              集客数：<strong><%= row.counts[:total] %></strong>人
+            </div>
+            <div class="admin-shop-acquisition-card__breakdown">
+              （一次：<%= row.counts[:direct] %>人　二次：<%= row.counts[:indirect] %>人）
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
   <% if @participant_rows.any? %>
     <div class="admin-detail-section admin-detail-section--participants">
       <div class="admin-form-section-title">参加者一覧</div>
@@ -197,7 +216,7 @@
                 <td><%= elu.formatted_phone_number.presence || "-" %></td>
                 <td>
                   <% if elu.toruya_registered? %>
-                    <span class="admin-badge admin-badge-success">登録済 (ID: <%= elu.toruya_user_id %>)</span>
+                    <span class="admin-badge admin-badge-success">登録済 (ID: <%= elu.resolved_toruya_user_id %>)</span>
                   <% else %>
                     <span class="admin-badge admin-badge-secondary">未登録</span>
                   <% end %>
