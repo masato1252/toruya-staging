@@ -92,6 +92,17 @@ $message_size: 8px;
     .user_reply_bot > .message-content {
       background-color: $warning;
     }
+
+    .message-content .chat-media {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      padding: 0;
+      float: none;
+      object-fit: contain;
+      border-radius: 6px;
+    }
   }
 }
 

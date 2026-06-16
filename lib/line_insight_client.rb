@@ -5,11 +5,20 @@ require "json"
 
 class LineInsightClient
   FOLLOWERS_PATH = "/v2/bot/insight/followers"
+  DEMOGRAPHIC_PATH = "/v2/bot/insight/demographic"
 
   class Error < StandardError; end
 
   def self.get_number_of_followers(channel_token:, date:)
-    uri = URI("https://api.line.me#{FOLLOWERS_PATH}")
+    get(channel_token:, date:, path: FOLLOWERS_PATH)
+  end
+
+  def self.get_demographic(channel_token:, date:)
+    get(channel_token:, date:, path: DEMOGRAPHIC_PATH)
+  end
+
+  def self.get(channel_token:, date:, path:)
+    uri = URI("https://api.line.me#{path}")
     uri.query = URI.encode_www_form(date: date) if date.present?
 
     request = Net::HTTP::Get.new(uri)
