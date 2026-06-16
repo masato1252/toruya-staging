@@ -4,6 +4,7 @@
   <div class="admin-detail-header">
     <h2><%= @event.title %></h2>
     <div class="admin-detail-actions">
+      <%= link_to "LINEメッセージ設定", line_messages_admin_event_path(@event), class: "btn btn-gray", style: "margin-right: 12px;" %>
       <%= link_to "編集", edit_admin_event_path(@event), class: "btn btn-tarco" %>
       <%= link_to "解析", analytics_admin_event_path(@event), class: "btn btn-gray" %>
       <%= link_to "削除", admin_event_path(@event), method: :delete, data: { confirm: "このイベントを削除しますか？" }, class: "btn btn-danger" %>

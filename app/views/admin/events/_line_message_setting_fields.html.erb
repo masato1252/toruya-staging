@@ -1,0 +1,43 @@
+<% setting = f.object %>
+<div class="admin-form-group js-line-message-setting" style="background:#fff;">
+  <%= f.hidden_field :id if setting.persisted? %>
+  <%= f.hidden_field :position, class: "js-line-message-position" %>
+  <%= f.hidden_field :_destroy, value: "0", class: "js-line-message-destroy" %>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+    <label class="admin-form-checkbox" style="padding:0;">
+      <%= f.check_box :enabled %>
+      <span>送信ON</span>
+    </label>
+    <button type="button" class="btn btn-danger js-remove-line-message-setting" style="padding:6px 12px;font-size:12px;">
+      削除
+    </button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px;">
+    <div class="admin-form-input">
+      <label class="admin-form-label">送信開始日時</label>
+      <%= f.datetime_local_field :starts_at, class: "form-control #{'field-error-border' if setting.errors[:starts_at].any?}" %>
+      <% if setting.errors[:starts_at].any? %>
+        <span class="admin-form-error"><%= setting.errors.full_messages_for(:starts_at).join(", ") %></span>
+      <% end %>
+    </div>
+
+    <div class="admin-form-input">
+      <label class="admin-form-label">送信終了日時</label>
+      <%= f.datetime_local_field :ends_at, class: "form-control #{'field-error-border' if setting.errors[:ends_at].any?}" %>
+      <span class="admin-form-help">空欄の場合、開始日時以降ずっと送信対象</span>
+      <% if setting.errors[:ends_at].any? %>
+        <span class="admin-form-error"><%= setting.errors.full_messages_for(:ends_at).join(", ") %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="admin-form-input">
+    <label class="admin-form-label">メッセージ</label>
+    <%= f.text_area :message, class: "form-control #{'field-error-border' if setting.errors[:message].any?}", rows: 5, placeholder: "参加登録ありがとうございます。\nイベントの楽しみ方はこちら..." %>
+    <% if setting.errors[:message].any? %>
+      <span class="admin-form-error"><%= setting.errors.full_messages_for(:message).join(", ") %></span>
+    <% end %>
+  </div>
+</div>

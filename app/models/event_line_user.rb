@@ -39,6 +39,7 @@ class EventLineUser < ApplicationRecord
   has_many :event_monitor_applications, dependent: :destroy
   has_many :event_activity_logs, dependent: :destroy
   has_many :event_stamp_entries, dependent: :destroy
+  has_many :event_line_message_deliveries, dependent: :destroy
 
   validates :line_user_id, presence: true, uniqueness: true
 
