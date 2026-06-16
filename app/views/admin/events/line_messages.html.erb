@@ -1,0 +1,84 @@
+<%= render "admin/features" %>
+
+<div class="admin-event-form">
+  <div class="admin-detail-header">
+    <h2><%= @event.title %> - LINEメッセージ設定</h2>
+    <div class="admin-detail-actions">
+      <%= link_to "イベント詳細に戻る", admin_event_path(@event), class: "btn btn-gray" %>
+    </div>
+  </div>
+
+  <%= form_with(model: [:admin, @event], url: line_messages_admin_event_path(@event), method: :patch, local: true) do |f| %>
+    <div class="admin-form-section">
+      <div class="admin-form-section-title">参加登録完了時のLINEメッセージ</div>
+
+      <div class="admin-form-group">
+        <span class="admin-form-help" style="font-size: 11px;">
+          LINEログイン完了時（プロフィール入力前）に、送信期間に一致する有効なメッセージを初回だけ送信します。終了日時が空の場合は開始日時以降ずっと送信対象です。
+        </span>
+      </div>
+
+      <div id="line-message-settings-list">
+        <%= f.fields_for :event_line_message_settings do |setting_fields| %>
+          <%= render "line_message_setting_fields", f: setting_fields %>
+        <% end %>
+      </div>
+
+      <div class="admin-form-group">
+        <button type="button" id="add-line-message-setting" class="btn btn-gray" style="padding: 8px 16px;">
+          ＋ 設定を追加
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-form-actions">
+      <%= link_to "キャンセル", admin_event_path(@event), class: "btn btn-gray" %>
+      <%= f.submit "保存", class: "btn btn-tarco" %>
+    </div>
+
+    <template id="line-message-setting-template">
+      <%= f.fields_for :event_line_message_settings, EventLineMessageSetting.new(enabled: true), child_index: "NEW_RECORD" do |setting_fields| %>
+        <%= render "line_message_setting_fields", f: setting_fields %>
+      <% end %>
+    </template>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var list = document.getElementById("line-message-settings-list");
+    var addButton = document.getElementById("add-line-message-setting");
+    var template = document.getElementById("line-message-setting-template");
+    if (!list || !addButton || !template) return;
+
+    function updatePositions() {
+      list.querySelectorAll(".js-line-message-setting:not([style*='display: none'])").forEach(function(row, index) {
+        var positionInput = row.querySelector(".js-line-message-position");
+        if (positionInput) positionInput.value = index;
+      });
+    }
+
+    addButton.addEventListener("click", function() {
+      var key = new Date().getTime();
+      list.insertAdjacentHTML("beforeend", template.innerHTML.replace(/NEW_RECORD/g, key));
+      updatePositions();
+    });
+
+    list.addEventListener("click", function(event) {
+      var button = event.target.closest(".js-remove-line-message-setting");
+      if (!button) return;
+
+      var row = button.closest(".js-line-message-setting");
+      var destroyInput = row.querySelector(".js-line-message-destroy");
+      if (destroyInput) {
+        destroyInput.value = "1";
+        row.style.display = "none";
+      } else {
+        row.remove();
+      }
+      updatePositions();
+    });
+
+    updatePositions();
+  });
+</script>

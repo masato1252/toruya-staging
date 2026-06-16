@@ -806,7 +806,11 @@ Rails.application.routes.draw do
           collection do
             get :shops_by_user
           end
-          member { get :analytics }
+          member do
+            get :analytics
+            get :line_messages
+            patch :line_messages, action: :update_line_messages
+          end
           resources :event_contents, shallow: true do
             collection do
               post :sort

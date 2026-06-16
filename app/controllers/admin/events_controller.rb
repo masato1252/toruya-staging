@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::EventsController < AdminController
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :analytics]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :analytics, :line_messages, :update_line_messages]
 
   def index
     @events = Event.undeleted.order(created_at: :desc)
@@ -64,6 +64,19 @@ class Admin::EventsController < AdminController
     end
   end
 
+  def line_messages
+    build_default_line_message_setting
+  end
+
+  def update_line_messages
+    if @event.update(line_message_params)
+      redirect_to line_messages_admin_event_path(@event), notice: "LINEメッセージ設定を保存しました"
+    else
+      build_default_line_message_setting
+      render :line_messages, status: :unprocessable_entity
+    end
+  end
+
   # イベント新規作成時にも使えるよう、event_contents の同名アクションを events 側にも用意。
   # マスタプレビュー権限店舗の選択用 user_id 検索。
   def shops_by_user
@@ -93,5 +106,29 @@ class Admin::EventsController < AdminController
     # パラメータキー自体が消える。その場合は空配列扱いで上書きする(= 全削除)。
     permitted[:stamp_rally_phases] ||= [] if params[:event].key?(:stamp_rally_phases_present)
     permitted
+  end
+
+  def line_message_params
+    params.require(:event).permit(
+      event_line_message_settings_attributes: [
+        :id,
+        :enabled,
+        :starts_at,
+        :ends_at,
+        :message,
+        :position,
+        :_destroy
+      ]
+    )
+  end
+
+  def build_default_line_message_setting
+    return if @event.event_line_message_settings.any?
+
+    @event.event_line_message_settings.build(
+      enabled: true,
+      starts_at: Time.current.change(sec: 0),
+      position: 0
+    )
   end
 end

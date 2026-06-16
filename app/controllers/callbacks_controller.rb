@@ -311,6 +311,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
       event = Event.published.undeleted.find_by(slug: event_slug)
 
       if event
+        Events::SendLineLoginMessages.run(event: event, event_line_user: event_line_user)
+
         participant = event.event_participants.find_by(event_line_user_id: event_line_user.id)
         if participant && event_line_user.basic_profile_complete?
           # 既に参加登録済み → イベントページ or 見ていたコンテンツへ
