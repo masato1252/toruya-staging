@@ -86,11 +86,12 @@
           <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
+        <%= link_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), class: "field-row" do %>
+          <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
+        <% end %>
+
         <% if Current.business_owner.has_single_shop? %>
           <% shop = Current.business_owner.shops.first %>
-          <%= link_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
           <%= link_to lines_user_bot_settings_shop_equipments_path(shop_id: shop.id, business_owner_id: business_owner_id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.equipments.title") %></span><i class="fa fa-angle-right"></i>
           <% end %>

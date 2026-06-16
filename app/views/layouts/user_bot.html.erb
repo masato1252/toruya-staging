@@ -37,7 +37,7 @@
           <%= content_tag(:i, nil, data: { action: "click->collapse#toggle" }, class: "fa fa-angle-double-left text-white") %>
         </li>
 
-        <% if !Current.social_user&.single_owner? %>
+        <% if multi_shop_mode? || !Current.social_user&.single_owner? %>
           <li class="p-1">
             <%= active_link_to mine_lines_user_bot_schedules_path do %>
               <i class="fa fa-calendar fa-2x"></i> <%= t("sidebar.calendar.mine") %>
