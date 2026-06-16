@@ -5,6 +5,9 @@ class PersonalCalendar < ActiveInteraction::Base
   array :all_shop_ids
   date :date
   object :user
+  array :visible_open_schedule_user_ids, default: nil do
+    integer
+  end
 
   def execute
     working_dates = {
@@ -44,11 +47,19 @@ class PersonalCalendar < ActiveInteraction::Base
     return [
       compose(CalendarSchedules::Create, rules: working_dates, date_range: date_range),
       reservation_dates.uniq,
-      CustomSchedule.where(start_time: date_range).where(user_id: user.all_staff_related_users.pluck(:id)).map(&:dates).flatten.uniq
+      visible_custom_schedule_dates
     ]
   end
 
   private
+
+  def visible_custom_schedule_dates
+    staff_user_ids = user.all_staff_related_users.pluck(:id)
+    schedules = CustomSchedule.where(start_time: date_range)
+                              .where(user_id: staff_user_ids)
+                              .where("open = ? OR user_id IN (?)", false, visible_open_schedule_user_ids || staff_user_ids)
+    schedules.map(&:dates).flatten.uniq
+  end
 
   def beginning_of_month
     @beginning_of_month ||= date.beginning_of_month.beginning_of_day

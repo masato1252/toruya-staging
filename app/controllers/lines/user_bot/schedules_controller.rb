@@ -43,6 +43,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     schedules = Schedules::Events.run!(
       working_shop_ids: working_shop_ids,
       user_ids: Current.business_owner.all_staff_related_users.pluck(:id),
+      visible_open_schedule_user_ids: current_social_user.current_users.pluck(:id),
       date: @date,
       month_date: @month_date
     )
@@ -70,6 +71,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     schedules = Schedules::Events.run!(
       working_shop_ids: working_shop_ids,
       user_ids: Current.business_owner.all_staff_related_users.pluck(:id),
+      visible_open_schedule_user_ids: current_social_user.current_users.pluck(:id),
       period_start_date: Date.parse(params[:schedule_start_date]),
       period_end_date: Date.parse(params[:schedule_end_date])
     )

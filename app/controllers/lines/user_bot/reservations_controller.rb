@@ -237,6 +237,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     schedules = Schedules::Events.run!(
       working_shop_ids: working_shop_ids,
       user_ids: Current.business_owner.all_staff_related_users.pluck(:id),
+      visible_open_schedule_user_ids: current_social_user.current_users.pluck(:id),
       date: @date,
     )
 
