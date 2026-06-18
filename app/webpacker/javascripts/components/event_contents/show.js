@@ -976,6 +976,7 @@ const EventContentShow = ({ props }) => {
   const isParticipant = event_content.is_participant;
   const isLoggedIn = event_content.is_logged_in;
   const canStart = event_content.started && !event_content.ended && !event_content.capacity_full;
+  const isContentAvailablePeriod = event_content.started && !event_content.ended && !event_ended;
 
   const trackActivity = (activityType, metadata) => {
     if (!track_activity_url || !isLoggedIn) return;
@@ -1358,9 +1359,9 @@ const EventContentShow = ({ props }) => {
         )}
 
         {/* Upsell（無料相談予約 / モニター応募）
-            参加登録済かつイベント未終了であれば、コンテンツ未利用 (hasStarted=false) でも常に表示する。
+            資料DL / 動画視聴と同じく、コンテンツの利用可能期間中のみ表示する。
             未参加ユーザはここでは出さない (上の LINE login CTA で誘導)。 */}
-        {isParticipant && !event_ended && (event_content.upsell_booking_enabled || event_content.monitor_enabled) && (
+        {isParticipant && isContentAvailablePeriod && (event_content.upsell_booking_enabled || event_content.monitor_enabled) && (
           <UpsellSection
             content={event_content}
             upsellConsultationUrl={upsell_consultation_url}
