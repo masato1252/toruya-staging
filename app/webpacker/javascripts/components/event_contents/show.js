@@ -210,7 +210,7 @@ const ShareModal = ({ isOpen, onClose, title, shareTitle, thumbnailUrl, shareUrl
             border: "1px solid #e5e7eb", background: "#fafafa"
           }}>
             {thumbnailUrl && (
-              <img src={thumbnailUrl} style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} />
+              <img src={thumbnailUrl} style={{ width: "100%", height: "auto", display: "block" }} />
             )}
             <div style={{ padding: "12px 16px" }}>
               <div style={{ fontWeight: 700, fontSize: 14, color: "#111827", lineHeight: 1.5 }}>{shareTitle}</div>

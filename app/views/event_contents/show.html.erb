@@ -1,3 +1,20 @@
+<%= content_for :title do %>
+  <title><%= @event_content.title %> | <%= @event.title %></title>
+<% end %>
+
+<%= content_for :meta_tags do %>
+  <meta property="og:site_name" content="Toruya">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="<%= @event_content.title %>">
+  <meta property="og:url" content="<%= event_event_content_url(event_slug: @event.slug, id: @event_content.id) %>">
+  <meta property="og:description" content="<%= @event_content.description&.squish&.truncate(120) || @event.description&.squish&.truncate(120) %>">
+  <% if @event_content.thumbnail.attached? %>
+    <meta property="og:image" content="<%= rails_blob_url(@event_content.thumbnail) %>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= rails_blob_url(@event_content.thumbnail) %>">
+  <% end %>
+<% end %>
+
 <%= react_component("event_contents/show", {
   props: {
     event_content: @event_content_hash,
