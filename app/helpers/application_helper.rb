@@ -118,9 +118,6 @@ module ApplicationHelper
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
     
     cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
-    cookies.set_across_domains(:oauth_social_account_id, encrypted_id, expires: 5.minutes)
-    cookies.set_across_domains(:oauth_redirect_to_url, oauth_redirect_to_url, expires: 5.minutes) if oauth_redirect_to_url.present?
-    cookies.set_across_domains(:who, options[:who], expires: 5.minutes) if options[:who].present?
     
     who = options.delete(:who)
 
@@ -141,9 +138,6 @@ module ApplicationHelper
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
     
     cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
-    cookies.set_across_domains(:whois, encrypted_content, expires: 5.minutes)
-    cookies.set_across_domains(:who, encrypted_content, expires: 5.minutes)
-    cookies.set_across_domains(:oauth_redirect_to_url, oauth_redirect_to_url, expires: 5.minutes) if oauth_redirect_to_url.present?
 
     options.merge!(
       prompt: "consent",
@@ -162,8 +156,6 @@ module ApplicationHelper
     encrypted_whois = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
 
     cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
-    cookies.set_across_domains(:whois, encrypted_whois, expires: 5.minutes)
-    cookies.set_across_domains(:who, encrypted_who, expires: 5.minutes)
 
     user_line_omniauth_authorize_path(
       prompt: "consent",
@@ -180,9 +172,6 @@ module ApplicationHelper
     encrypted_content = MessageEncryptor.encrypt(toruya_user)
     
     cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
-    cookies.set_across_domains(:whois, encrypted_content, expires: 5.minutes)
-    cookies.set_across_domains(:who, encrypted_content, expires: 5.minutes)
-    cookies.set_across_domains(:oauth_redirect_to_url, oauth_redirect_to_url, expires: 5.minutes) if oauth_redirect_to_url.present?
 
     options.merge!(
       prompt: "consent",

@@ -27,14 +27,8 @@ class OmniauthSetup
     client_secret = credentials[:client_secret] || credentials["client_secret"]
     
     Rails.logger.info("[OmniauthSetup] Setup called with credentials: client_id=#{client_id.present? ? 'present' : 'nil'}")
-    Rails.logger.info("[OmniauthSetup] Credentials: #{credentials.inspect}")
     Rails.logger.info("[OmniauthSetup] Extracted client_id: #{client_id}")
-    
-    # Store credentials in session for callback phase
-    if client_id.present?
-      @request.session[:line_oauth_credentials] = credentials
-    end
-    
+
     @env['omniauth.strategy'].options[:client_id] = client_id if client_id
     @env['omniauth.strategy'].options[:client_secret] = client_secret if client_secret
     @env['omniauth.strategy'].options[:scope] = "profile openid email"
@@ -83,21 +77,13 @@ class OmniauthSetup
     
     Rails.logger.info("[OmniauthSetup] フェーズ判定: #{is_callback_phase ? 'Callback' : '開始'}")
     
-    # Callbackフェーズでは、Sessionから認証情報を取得
-    if is_callback_phase && @request.session[:line_oauth_credentials].present?
-      Rails.logger.info("[OmniauthSetup] ✅ Using credentials from session (callback phase)")
-      return @request.session[:line_oauth_credentials]
-    end
-    
-    # 開始フェーズ: whoやoauth_social_account_idをSessionに保存（callbackフェーズ用）
-    # 予約画面モードでもSessionに保存（Cookieは使わないが、Sessionは使う）
-    Rails.logger.info("[OmniauthSetup] 💾 開始フェーズ: SessionにIDを保存")
+    Rails.logger.info("[OmniauthSetup] 💾 OAuth識別子をSessionに保存")
+    @request.session.delete(:line_oauth_credentials)
     
     # パラメータで明示的に指定された場合、反対側の認証情報を完全にクリアして混在を防ぐ
     # whois（Toruya共通ログイン）がパラメータにあれば、店舗固有の値をセッション・Cookie・変数すべてからクリア
     if @request.parameters["whois"].present?
       @request.session.delete(:oauth_social_account_id)
-      @request.session.delete(:line_oauth_credentials)
       # oauth_social_account_idを完全にnilにする（Cookieに残存していても無視）
       oauth_social_account_id = nil
       Rails.logger.info("[OmniauthSetup]   whoisパラメータ検出 → oauth_social_account_idを完全にクリア（session/cookie/変数すべて）")
@@ -107,7 +93,6 @@ class OmniauthSetup
     if @request.parameters["oauth_social_account_id"].present?
       @request.session.delete(:line_oauth_who)
       @request.session.delete(:line_oauth_who_routing)
-      @request.session.delete(:line_oauth_credentials)
       # whoを完全にnilにする（Cookieに残存していても無視）
       who = nil
       Rails.logger.info("[OmniauthSetup]   oauth_social_account_idパラメータ検出 → whoisを完全にクリア（session/cookie/変数すべて）")
