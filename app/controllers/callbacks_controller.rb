@@ -315,6 +315,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
         participant = event.event_participants.find_by(event_line_user_id: event_line_user.id)
         if participant && event_line_user.basic_profile_complete?
+          UserBotLines::RichMenus::Expo2026Campaign.link_only_event_menu(event_line_user)
           # 既に参加登録済み → イベントページ or 見ていたコンテンツへ
           redirect_to return_to.presence || "/#{event_slug}"
         else

@@ -52,6 +52,7 @@ class Events::ParticipationsController < ActionController::Base
     )
 
     if outcome.valid?
+      UserBotLines::RichMenus::Expo2026Campaign.link_only_event_menu(@current_event_line_user)
       render json: { success: true, redirect_to: event_path(slug: @event.slug) }
     else
       render json: { error_message: outcome.errors.full_messages.join(", ") }, status: :unprocessable_entity

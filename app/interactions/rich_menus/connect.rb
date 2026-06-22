@@ -16,7 +16,11 @@ module RichMenus
 
         if response.is_a?(Net::HTTPOK)
           if social_target.is_a?(SocialUser)
-            social_target.same_social_user_scope.update_all(social_rich_menu_key: social_rich_menu.social_name)
+            if social_target.user_id.present?
+              social_target.same_social_user_scope.update_all(social_rich_menu_key: social_rich_menu.social_name)
+            else
+              social_target.update(social_rich_menu_key: social_rich_menu.social_name)
+            end
           else
             social_target.update(social_rich_menu_key: social_rich_menu.social_name)
           end
