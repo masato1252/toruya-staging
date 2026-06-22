@@ -4,7 +4,8 @@
   <%= t("line_verification.line_login_confirm_desc_html") %>
   </p>
 
-  <% login_url = line_login_url(current_user.social_account, request.url, who: MessageEncryptor.encrypt(CallbacksController::SHOP_OWNER_CUSTOMER_SELF)) %>
+  <% verification_return_path = lines_verification_path("owner", encrypted_business_owner_id: MessageEncryptor.encrypt(current_user.id)) %>
+  <% login_url = line_login_url(current_user.social_account, verification_return_path, who: MessageEncryptor.encrypt(CallbacksController::SHOP_OWNER_CUSTOMER_SELF)) %>
   <% if login_url.present? %>
     <a href="<%= login_url %>" class="btn line-button with-wording with-logo" data-method="post">
       <%= image_pack_tag "media/assets/booking/btn_login_base.png" %>
