@@ -90,14 +90,15 @@ class CallbacksController < Devise::OmniauthCallbacksController
       return handle_shop_line_login(request.env["omniauth.auth"], param)
     end
 
-    Rollbar.info("LineLogin1", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
+    decrypted_who = decrypt_line_oauth_who(param["who"])
+    Rollbar.info("LineLogin1", who: decrypted_who, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
-    if param["who"] && MessageEncryptor.decrypt(param["who"]) == EVENT_LINE_USER
+    if decrypted_who == EVENT_LINE_USER
       return handle_event_line_login(request.env["omniauth.auth"], param)
-    elsif param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
+    elsif decrypted_who == TORUYA_USER || decrypted_who == TW_TORUYA_USER
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
-        who: MessageEncryptor.decrypt(param["who"])
+        who: decrypted_who
       )
       social_user = outcome.result
       # if param["existing_owner_id"]
@@ -183,10 +184,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
   private
 
   def handle_shop_line_login(auth, param)
-    Rollbar.info("LineLogin2", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
-
     param["oauth_social_account_id"] ||= session[:oauth_social_account_id] || cookies[:oauth_social_account_id]
-    param["who"] ||= session[:line_oauth_who_routing] || session[:line_oauth_who] || cookies[:who]
+    param["who"] = shop_owner_who_token(param["who"], session[:line_oauth_who_routing], session[:line_oauth_who], cookies[:who])
+
+    decrypted_who = decrypt_line_oauth_who(param["who"])
+    Rollbar.info("LineLogin2", who: decrypted_who, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
     # 予約情報とcustomer_idもSessionから復元
     %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
@@ -201,7 +203,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     outcome = ::SocialCustomers::FromOmniauth.run(
       auth: auth,
       param: param,
-      who: param["who"] && MessageEncryptor.decrypt(param["who"])
+      who: decrypted_who
     )
 
     Rails.logger.info("[CallbacksController] SocialCustomers::FromOmniauth result:")
@@ -244,7 +246,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     queries = {
       status: outcome.valid?,
-      social_user_id: outcome.result.social_user_id
+      social_user_id: outcome.result&.social_user_id
     }.merge(param, Rack::Utils.parse_nested_query(uri.query || {}))
 
     uri.query = URI.encode_www_form(queries)
@@ -259,6 +261,19 @@ class CallbacksController < Devise::OmniauthCallbacksController
     end
 
     redirect_to uri.to_s
+  end
+
+  def decrypt_line_oauth_who(token)
+    return nil if token.blank?
+
+    MessageEncryptor.decrypt(token)
+  rescue StandardError => e
+    Rails.logger.warn("[CallbacksController] Failed to decrypt LINE OAuth who: #{e.class}: #{e.message}")
+    nil
+  end
+
+  def shop_owner_who_token(*tokens)
+    tokens.compact.find { |token| decrypt_line_oauth_who(token) == SHOP_OWNER_CUSTOMER_SELF }
   end
 
   def redirect_to_oauth_url(oauth_redirect_to_url)
