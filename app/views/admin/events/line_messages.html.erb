@@ -8,8 +8,61 @@
     </div>
   </div>
 
-  <%= form_with(model: [:admin, @event], url: line_messages_admin_event_path(@event), method: :patch, local: true) do |f| %>
-    <div class="admin-form-section">
+  <% active_line_message_tab = (@editing_event_line_message_broadcast || @event_line_message_broadcast&.errors&.any?) ? "broadcast" : "trigger" %>
+
+  <style>
+    .admin-line-message-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 20px;
+    }
+
+    .admin-line-message-tab {
+      appearance: none;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-bottom: 0;
+      border-radius: 8px 8px 0 0;
+      color: #64748b;
+      cursor: pointer;
+      font-weight: 700;
+      padding: 12px 18px;
+    }
+
+    .admin-line-message-tab.is-active {
+      background: #fff;
+      color: #111827;
+      position: relative;
+      top: 1px;
+    }
+
+    .admin-line-message-panel[hidden] {
+      display: none;
+    }
+
+    .admin-form-input.is-disabled {
+      opacity: 0.55;
+    }
+
+    .admin-form-input.is-disabled input {
+      background: #f3f4f6;
+      cursor: not-allowed;
+    }
+  </style>
+
+  <div class="admin-line-message-tabs" role="tablist" aria-label="LINEメッセージ設定">
+    <button type="button" class="admin-line-message-tab <%= 'is-active' if active_line_message_tab == 'trigger' %>" data-line-message-tab="trigger" role="tab" aria-selected="<%= active_line_message_tab == 'trigger' %>">
+      参加登録完了時のLINEメッセージ
+    </button>
+    <button type="button" class="admin-line-message-tab <%= 'is-active' if active_line_message_tab == 'broadcast' %>" data-line-message-tab="broadcast" role="tab" aria-selected="<%= active_line_message_tab == 'broadcast' %>">
+      参加登録済みユーザーへの一括配信
+    </button>
+  </div>
+
+  <div class="admin-line-message-panel" data-line-message-panel="trigger" <%= "hidden" unless active_line_message_tab == "trigger" %>>
+    <%= form_with(model: [:admin, @event], url: line_messages_admin_event_path(@event), method: :patch, local: true) do |f| %>
+      <div class="admin-form-section">
       <div class="admin-form-section-title">参加登録完了時のLINEメッセージ</div>
 
       <div class="admin-form-group">
@@ -31,19 +84,20 @@
       </div>
     </div>
 
-    <div class="admin-form-actions">
-      <%= link_to "キャンセル", admin_event_path(@event), class: "btn btn-gray" %>
-      <%= f.submit "保存", class: "btn btn-tarco" %>
-    </div>
+      <div class="admin-form-actions">
+        <%= link_to "キャンセル", admin_event_path(@event), class: "btn btn-gray" %>
+        <%= f.submit "保存", class: "btn btn-tarco" %>
+      </div>
 
-    <template id="line-message-setting-template">
-      <%= f.fields_for :event_line_message_settings, EventLineMessageSetting.new(enabled: true), child_index: "NEW_RECORD" do |setting_fields| %>
-        <%= render "line_message_setting_fields", f: setting_fields %>
-      <% end %>
-    </template>
-  <% end %>
+      <template id="line-message-setting-template">
+        <%= f.fields_for :event_line_message_settings, EventLineMessageSetting.new(enabled: true), child_index: "NEW_RECORD" do |setting_fields| %>
+          <%= render "line_message_setting_fields", f: setting_fields %>
+        <% end %>
+      </template>
+    <% end %>
+  </div>
 
-  <div class="admin-form-section">
+  <div class="admin-form-section admin-line-message-panel" data-line-message-panel="broadcast" <%= "hidden" unless active_line_message_tab == "broadcast" %>>
     <div class="admin-form-section-title">参加登録済みユーザーへの一括配信</div>
 
     <div class="admin-form-group">
@@ -136,39 +190,81 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    var list = document.getElementById("line-message-settings-list");
-    var addButton = document.getElementById("add-line-message-setting");
-    var template = document.getElementById("line-message-setting-template");
-    if (!list || !addButton || !template) return;
+    var tabs = document.querySelectorAll("[data-line-message-tab]");
+    var panels = document.querySelectorAll("[data-line-message-panel]");
 
-    function updatePositions() {
-      list.querySelectorAll(".js-line-message-setting:not([style*='display: none'])").forEach(function(row, index) {
-        var positionInput = row.querySelector(".js-line-message-position");
-        if (positionInput) positionInput.value = index;
+    function activateTab(tabName) {
+      tabs.forEach(function(tab) {
+        var active = tab.dataset.lineMessageTab === tabName;
+        tab.classList.toggle("is-active", active);
+        tab.setAttribute("aria-selected", active ? "true" : "false");
+      });
+
+      panels.forEach(function(panel) {
+        panel.hidden = panel.dataset.lineMessagePanel !== tabName;
       });
     }
 
-    addButton.addEventListener("click", function() {
-      var key = new Date().getTime();
-      list.insertAdjacentHTML("beforeend", template.innerHTML.replace(/NEW_RECORD/g, key));
-      updatePositions();
+    tabs.forEach(function(tab) {
+      tab.addEventListener("click", function() {
+        activateTab(tab.dataset.lineMessageTab);
+      });
     });
 
-    list.addEventListener("click", function(event) {
-      var button = event.target.closest(".js-remove-line-message-setting");
-      if (!button) return;
+    var list = document.getElementById("line-message-settings-list");
+    var addButton = document.getElementById("add-line-message-setting");
+    var template = document.getElementById("line-message-setting-template");
 
-      var row = button.closest(".js-line-message-setting");
-      var destroyInput = row.querySelector(".js-line-message-destroy");
-      if (destroyInput) {
-        destroyInput.value = "1";
-        row.style.display = "none";
-      } else {
-        row.remove();
+    if (list && addButton && template) {
+      function updatePositions() {
+        list.querySelectorAll(".js-line-message-setting:not([style*='display: none'])").forEach(function(row, index) {
+          var positionInput = row.querySelector(".js-line-message-position");
+          if (positionInput) positionInput.value = index;
+        });
       }
-      updatePositions();
-    });
 
-    updatePositions();
+      addButton.addEventListener("click", function() {
+        var key = new Date().getTime();
+        list.insertAdjacentHTML("beforeend", template.innerHTML.replace(/NEW_RECORD/g, key));
+        updatePositions();
+      });
+
+      list.addEventListener("click", function(event) {
+        var button = event.target.closest(".js-remove-line-message-setting");
+        if (!button) return;
+
+        var row = button.closest(".js-line-message-setting");
+        var destroyInput = row.querySelector(".js-line-message-destroy");
+        if (destroyInput) {
+          destroyInput.value = "1";
+          row.style.display = "none";
+        } else {
+          row.remove();
+        }
+        updatePositions();
+      });
+
+      updatePositions();
+    }
+
+    document.querySelectorAll(".js-line-message-broadcast-form").forEach(function(form) {
+      var scheduledAtField = form.querySelector(".js-scheduled-at-field");
+      var scheduledAtInput = form.querySelector(".js-scheduled-at-input");
+      var deliveryTypeInputs = form.querySelectorAll(".js-delivery-type");
+      if (!scheduledAtField || !scheduledAtInput || deliveryTypeInputs.length === 0) return;
+
+      function updateScheduledAtInput() {
+        var immediateInput = form.querySelector(".js-delivery-type[value='immediate']");
+        var immediate = immediateInput && immediateInput.checked;
+        scheduledAtInput.disabled = immediate;
+        scheduledAtField.classList.toggle("is-disabled", immediate);
+      }
+
+      deliveryTypeInputs.forEach(function(input) {
+        input.addEventListener("change", updateScheduledAtInput);
+      });
+
+      updateScheduledAtInput();
+    });
   });
 </script>
