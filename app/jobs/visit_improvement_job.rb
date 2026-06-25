@@ -2,6 +2,7 @@
 
 class VisitImprovementJob < ApplicationJob
   queue_as :low_priority
+  before_enqueue { throw(:abort) if ENV["LOW_PRIORITY_ANALYTICS_DISABLED"] == "true" }
 
   def perform(ahoy_visit)
     case ahoy_visit.landing_page
