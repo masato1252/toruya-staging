@@ -42,6 +42,96 @@
       <% end %>
     </template>
   <% end %>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">参加登録済みユーザーへの一括配信</div>
+
+    <div class="admin-form-group">
+      <span class="admin-form-help" style="font-size: 11px;">
+        既にこのイベントへ参加登録しているLINEユーザーを対象に、即時配信または日時指定の予約配信を行います。
+        配信前の一括配信は編集・取消できます。
+      </span>
+    </div>
+
+    <% if @editing_event_line_message_broadcast %>
+      <div class="admin-form-section-title" style="font-size:15px;margin-top:20px;">一括配信を編集</div>
+      <%= render "line_message_broadcast_form",
+                 broadcast: @editing_event_line_message_broadcast,
+                 form_url: line_message_broadcast_admin_event_path(@event, @editing_event_line_message_broadcast),
+                 form_method: :patch,
+                 submit_label: "一括配信を更新" %>
+    <% else %>
+      <div class="admin-form-section-title" style="font-size:15px;margin-top:20px;">新規一括配信</div>
+      <%= render "line_message_broadcast_form",
+                 broadcast: @event_line_message_broadcast,
+                 form_url: line_message_broadcasts_admin_event_path(@event),
+                 form_method: :post,
+                 submit_label: "一括配信を作成" %>
+    <% end %>
+
+    <div class="admin-form-section-title" style="font-size:15px;margin-top:28px;">一括配信リスト</div>
+    <% if @event_line_message_broadcasts.any? %>
+      <div class="admin-participant-table-wrap">
+        <table class="admin-participant-table">
+          <thead>
+            <tr>
+              <th>ステータス</th>
+              <th>配信予定日時</th>
+              <th>配信完了日時</th>
+              <th>配信数</th>
+              <th>メッセージ</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @event_line_message_broadcasts.each do |broadcast| %>
+              <tr>
+                <td>
+                  <% badge_class =
+                    if broadcast.status_delivered?
+                      "admin-badge-success"
+                    elsif broadcast.status_cancelled?
+                      "admin-badge-secondary"
+                    elsif broadcast.status_delivering?
+                      "admin-badge-info"
+                    else
+                      "admin-badge-warning"
+                    end
+                  %>
+                  <span class="admin-badge <%= badge_class %>"><%= broadcast.status_label %></span>
+                </td>
+                <td><%= l(broadcast.scheduled_at, format: :short) %></td>
+                <td><%= broadcast.sent_at ? l(broadcast.sent_at, format: :short) : "-" %></td>
+                <td>
+                  <% if broadcast.status_delivered? || broadcast.status_delivering? %>
+                    <%= broadcast.delivered_count %>名
+                    <% if broadcast.failed_count.positive? %>
+                      <span class="admin-form-help">（失敗 <%= broadcast.failed_count %>名）</span>
+                    <% end %>
+                  <% else %>
+                    配信前
+                  <% end %>
+                </td>
+                <td style="max-width:360px;"><%= simple_format(broadcast.message) %></td>
+                <td>
+                  <% if broadcast.editable? %>
+                    <%= link_to "編集", edit_line_message_broadcast_admin_event_path(@event, broadcast), class: "btn btn-gray", style: "padding:6px 10px;font-size:12px;" %>
+                    <%= link_to "取消", line_message_broadcast_admin_event_path(@event, broadcast), method: :delete, data: { confirm: "この一括配信を取り消しますか？" }, class: "btn btn-danger", style: "padding:6px 10px;font-size:12px;" %>
+                  <% else %>
+                    -
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div style="padding: 20px 16px; text-align: center; color: #8f8f8f;">
+        一括配信はまだありません
+      </div>
+    <% end %>
+  </div>
 </div>
 
 <script>

@@ -38,6 +38,7 @@ class Event < ApplicationRecord
   has_many :event_activity_logs, dependent: :destroy
   has_many :event_stamp_entries, dependent: :destroy
   has_many :event_line_message_settings, -> { ordered }, dependent: :destroy
+  has_many :event_line_message_broadcasts, -> { recent }, dependent: :destroy
 
   accepts_nested_attributes_for :event_line_message_settings, allow_destroy: true
 
