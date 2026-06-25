@@ -3,7 +3,7 @@
 <% form_method ||= :post %>
 <% submit_label ||= "配信を作成" %>
 
-<%= form_with(model: broadcast, url: form_url, method: form_method, local: true) do |f| %>
+<%= form_with(model: broadcast, url: form_url, method: form_method, local: true, html: { class: "js-line-message-broadcast-form" }) do |f| %>
   <% if broadcast.errors.any? %>
     <div class="admin-form-error" style="margin-bottom:12px;">
       <%= broadcast.errors.full_messages.join("、") %>
@@ -14,18 +14,18 @@
     <div class="admin-form-input" style="margin-bottom:12px;">
       <label class="admin-form-label">配信タイミング</label>
       <label class="admin-form-checkbox" style="padding:0;margin-right:16px;display:inline-flex;">
-        <%= radio_button_tag :delivery_type, "immediate", broadcast.scheduled_at.blank? || broadcast.scheduled_at <= Time.current %>
+        <%= radio_button_tag :delivery_type, "immediate", broadcast.scheduled_at.blank? || broadcast.scheduled_at <= Time.current, class: "js-delivery-type" %>
         <span>即時配信</span>
       </label>
       <label class="admin-form-checkbox" style="padding:0;display:inline-flex;">
-        <%= radio_button_tag :delivery_type, "scheduled", broadcast.scheduled_at.present? && broadcast.scheduled_at.future? %>
+        <%= radio_button_tag :delivery_type, "scheduled", broadcast.scheduled_at.present? && broadcast.scheduled_at.future?, class: "js-delivery-type" %>
         <span>予約配信</span>
       </label>
     </div>
 
-    <div class="admin-form-input" style="margin-bottom:12px;">
+    <div class="admin-form-input js-scheduled-at-field" style="margin-bottom:12px;">
       <label class="admin-form-label">配信日時</label>
-      <%= f.datetime_local_field :scheduled_at, class: "form-control #{'field-error-border' if broadcast.errors[:scheduled_at].any?}" %>
+      <%= f.datetime_local_field :scheduled_at, class: "form-control js-scheduled-at-input #{'field-error-border' if broadcast.errors[:scheduled_at].any?}" %>
       <span class="admin-form-help">「即時配信」を選んだ場合、この日時に関係なく保存後すぐ配信します。</span>
     </div>
 
