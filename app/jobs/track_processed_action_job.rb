@@ -2,6 +2,7 @@ require "mixpanel_tracker"
 
 class TrackProcessedActionJob < ApplicationJob
   queue_as :low_priority
+  before_enqueue { throw(:abort) if ENV["LOW_PRIORITY_ANALYTICS_DISABLED"] == "true" }
 
   def perform(tracking_object, event_name, event_properties)
     if tracking_object.is_a?(User)
