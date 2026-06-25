@@ -60,6 +60,12 @@ FactoryBot.define do
     sequence(:display_name) { |n| "line-user-#{n}" }
   end
 
+  factory :event_line_message_broadcast do
+    association :event
+    scheduled_at { Time.current }
+    message { "イベント参加者向けのお知らせです" }
+  end
+
   factory :event_activity_log do
     association :event
     association :event_content

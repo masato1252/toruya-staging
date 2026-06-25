@@ -810,6 +810,10 @@ Rails.application.routes.draw do
             get :analytics
             get :line_messages
             patch :line_messages, action: :update_line_messages
+            post "line_message_broadcasts", action: :create_line_message_broadcast, as: :line_message_broadcasts
+            get "line_message_broadcasts/:broadcast_id/edit", action: :edit_line_message_broadcast, as: :edit_line_message_broadcast
+            patch "line_message_broadcasts/:broadcast_id", action: :update_line_message_broadcast, as: :line_message_broadcast
+            delete "line_message_broadcasts/:broadcast_id", action: :destroy_line_message_broadcast
           end
           resources :event_contents, shallow: true do
             collection do

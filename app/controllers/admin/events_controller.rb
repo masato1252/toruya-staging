@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
 class Admin::EventsController < AdminController
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :analytics, :line_messages, :update_line_messages]
+  before_action :set_event, only: [
+    :show, :edit, :update, :destroy, :analytics, :line_messages, :update_line_messages,
+    :create_line_message_broadcast, :edit_line_message_broadcast,
+    :update_line_message_broadcast, :destroy_line_message_broadcast
+  ]
+  before_action :set_line_message_broadcast, only: [
+    :edit_line_message_broadcast, :update_line_message_broadcast, :destroy_line_message_broadcast
+  ]
 
   def index
     @events = Event.undeleted.order(created_at: :desc)
@@ -66,6 +73,7 @@ class Admin::EventsController < AdminController
 
   def line_messages
     build_default_line_message_setting
+    build_line_message_broadcasts
   end
 
   def update_line_messages
@@ -73,8 +81,63 @@ class Admin::EventsController < AdminController
       redirect_to line_messages_admin_event_path(@event), notice: "LINEメッセージ設定を保存しました"
     else
       build_default_line_message_setting
+      build_line_message_broadcasts
       render :line_messages, status: :unprocessable_entity
     end
+  end
+
+  def create_line_message_broadcast
+    @event_line_message_broadcast = @event.event_line_message_broadcasts.build(line_message_broadcast_params)
+    normalize_broadcast_schedule(@event_line_message_broadcast)
+
+    if @event_line_message_broadcast.save
+      enqueue_line_message_broadcast(@event_line_message_broadcast)
+      redirect_to line_messages_admin_event_path(@event), notice: "一括配信を作成しました"
+    else
+      build_default_line_message_setting
+      build_line_message_broadcasts
+      render :line_messages, status: :unprocessable_entity
+    end
+  end
+
+  def edit_line_message_broadcast
+    unless @event_line_message_broadcast.editable?
+      redirect_to line_messages_admin_event_path(@event), alert: "配信開始後の一括配信は編集できません"
+      return
+    end
+
+    build_default_line_message_setting
+    build_line_message_broadcasts(editing_broadcast: @event_line_message_broadcast)
+    render :line_messages
+  end
+
+  def update_line_message_broadcast
+    unless @event_line_message_broadcast.editable?
+      redirect_to line_messages_admin_event_path(@event), alert: "配信開始後の一括配信は編集できません"
+      return
+    end
+
+    @event_line_message_broadcast.assign_attributes(line_message_broadcast_params)
+    normalize_broadcast_schedule(@event_line_message_broadcast)
+
+    if @event_line_message_broadcast.save
+      enqueue_line_message_broadcast(@event_line_message_broadcast)
+      redirect_to line_messages_admin_event_path(@event), notice: "一括配信を更新しました"
+    else
+      build_default_line_message_setting
+      build_line_message_broadcasts(editing_broadcast: @event_line_message_broadcast)
+      render :line_messages, status: :unprocessable_entity
+    end
+  end
+
+  def destroy_line_message_broadcast
+    unless @event_line_message_broadcast.cancellable?
+      redirect_to line_messages_admin_event_path(@event), alert: "配信開始後の一括配信は取り消しできません"
+      return
+    end
+
+    @event_line_message_broadcast.update!(status: :cancelled)
+    redirect_to line_messages_admin_event_path(@event), notice: "一括配信を取り消しました"
   end
 
   # イベント新規作成時にも使えるよう、event_contents の同名アクションを events 側にも用意。
@@ -93,6 +156,12 @@ class Admin::EventsController < AdminController
     @event = Event.undeleted.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_events_path, alert: "イベントが見つかりません"
+  end
+
+  def set_line_message_broadcast
+    @event_line_message_broadcast = @event.event_line_message_broadcasts.find(params[:broadcast_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to line_messages_admin_event_path(@event), alert: "一括配信が見つかりません"
   end
 
   def event_params
@@ -122,6 +191,10 @@ class Admin::EventsController < AdminController
     )
   end
 
+  def line_message_broadcast_params
+    params.require(:event_line_message_broadcast).permit(:scheduled_at, :message)
+  end
+
   def build_default_line_message_setting
     return if @event.event_line_message_settings.any?
 
@@ -130,5 +203,30 @@ class Admin::EventsController < AdminController
       starts_at: Time.current.change(sec: 0),
       position: 0
     )
+  end
+
+  def build_line_message_broadcasts(editing_broadcast: nil)
+    @event_line_message_broadcast ||= @event.event_line_message_broadcasts.build(
+      scheduled_at: Time.current.change(sec: 0)
+    )
+    @editing_event_line_message_broadcast = editing_broadcast
+    @event_line_message_broadcasts = EventLineMessageBroadcast.where(event: @event).recent.includes(:event_line_message_broadcast_deliveries)
+    @registered_event_line_users_count = @event.event_participants.where.not(event_line_user_id: nil).select(:event_line_user_id).distinct.count
+  end
+
+  def normalize_broadcast_schedule(broadcast)
+    if params[:delivery_type] == "immediate" || broadcast.scheduled_at.blank?
+      broadcast.scheduled_at = Time.current
+    else
+      broadcast.scheduled_at = broadcast.scheduled_at.change(sec: 0)
+    end
+  end
+
+  def enqueue_line_message_broadcast(broadcast)
+    if broadcast.scheduled_at.future?
+      EventLineMessageBroadcastJob.set(wait_until: broadcast.scheduled_at).perform_later(broadcast)
+    else
+      EventLineMessageBroadcastJob.perform_later(broadcast)
+    end
   end
 end

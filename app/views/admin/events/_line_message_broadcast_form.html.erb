@@ -1,0 +1,45 @@
+<% broadcast ||= @event_line_message_broadcast %>
+<% form_url ||= line_message_broadcasts_admin_event_path(@event) %>
+<% form_method ||= :post %>
+<% submit_label ||= "配信を作成" %>
+
+<%= form_with(model: broadcast, url: form_url, method: form_method, local: true) do |f| %>
+  <% if broadcast.errors.any? %>
+    <div class="admin-form-error" style="margin-bottom:12px;">
+      <%= broadcast.errors.full_messages.join("、") %>
+    </div>
+  <% end %>
+
+  <div class="admin-form-group" style="background:#fff;">
+    <div class="admin-form-input" style="margin-bottom:12px;">
+      <label class="admin-form-label">配信タイミング</label>
+      <label class="admin-form-checkbox" style="padding:0;margin-right:16px;display:inline-flex;">
+        <%= radio_button_tag :delivery_type, "immediate", broadcast.scheduled_at.blank? || broadcast.scheduled_at <= Time.current %>
+        <span>即時配信</span>
+      </label>
+      <label class="admin-form-checkbox" style="padding:0;display:inline-flex;">
+        <%= radio_button_tag :delivery_type, "scheduled", broadcast.scheduled_at.present? && broadcast.scheduled_at.future? %>
+        <span>予約配信</span>
+      </label>
+    </div>
+
+    <div class="admin-form-input" style="margin-bottom:12px;">
+      <label class="admin-form-label">配信日時</label>
+      <%= f.datetime_local_field :scheduled_at, class: "form-control #{'field-error-border' if broadcast.errors[:scheduled_at].any?}" %>
+      <span class="admin-form-help">「即時配信」を選んだ場合、この日時に関係なく保存後すぐ配信します。</span>
+    </div>
+
+    <div class="admin-form-input">
+      <label class="admin-form-label">メッセージ</label>
+      <%= f.text_area :message, class: "form-control #{'field-error-border' if broadcast.errors[:message].any?}", rows: 6, placeholder: "イベント参加者の皆さまへ\n本日のご案内です..." %>
+      <span class="admin-form-help">現在の参加登録済みユーザー（<%= @registered_event_line_users_count %>名）へ配信します。</span>
+    </div>
+  </div>
+
+  <div class="admin-form-actions" style="justify-content:flex-start;">
+    <%= f.submit submit_label, class: "btn btn-tarco" %>
+    <% if broadcast.persisted? %>
+      <%= link_to "編集をやめる", line_messages_admin_event_path(@event), class: "btn btn-gray" %>
+    <% end %>
+  </div>
+<% end %>
