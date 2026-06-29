@@ -13,7 +13,7 @@ import toastr from 'toastr';
 
 export default () => {
   const { selected_customer, dispatch, subscription }= useContext(GlobalContext)
-  const { name, address }= selected_customer.shop_customer
+  const { name, personal_address, shops = [] } = selected_customer.shop_customer || {}
   const [memo, setMemo] = useState(selected_customer.memo)
 
   const disconnectCustomer = () => {
@@ -124,9 +124,17 @@ export default () => {
         <p>
           {name}
         </p>
-        <p>
-          {address}
-        </p>
+        {personal_address && (
+          <p>
+            {personal_address}
+          </p>
+        )}
+        {shops.map((shop) => (
+          <div key={shop.id}>
+            <p>{shop.name}</p>
+            {shop.address && <p>{shop.address}</p>}
+          </div>
+        ))}
         </div>
       <button className="btn btn-orange" onClick={disconnectCustomer} >
         Disconnect
