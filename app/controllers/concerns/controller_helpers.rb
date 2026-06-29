@@ -3,6 +3,14 @@
 module ControllerHelpers
   extend ActiveSupport::Concern
 
+  # LINE Login / OAuth 往復で付く referer。資料ランディングの流入元としては記録しない。
+  DOC_REFERRER_IGNORE_HOSTS = %w[
+    access.line.me
+    account.line.biz
+    api.line.me
+    liff.line.me
+  ].freeze
+
   private
 
   def json_response(outcome, data = {})
@@ -94,5 +102,42 @@ module ControllerHelpers
       expires: 60.days.from_now,
       httponly: true
     }
+  end
+
+  # 資料DLランディングの「本当の流入元」referer かどうか。
+  # 自サイト・LINE OAuth 経路は除外する（first-touch のみ session に保存）。
+  def meaningful_doc_referrer(referer)
+    return nil if referer.blank?
+
+    uri = URI.parse(referer)
+    host = uri.host&.downcase
+    return nil if host.blank?
+    return nil if doc_referrer_own_host?(host)
+    return nil if DOC_REFERRER_IGNORE_HOSTS.include?(host)
+
+    referer
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  def doc_referrer_session_key_for(slug)
+    "doc_ref_#{slug}"
+  end
+
+  def capture_doc_landing_referrer(slug)
+    incoming = meaningful_doc_referrer(request.referer)
+    return if incoming.blank?
+
+    session[doc_referrer_session_key_for(slug)] ||= incoming
+  end
+
+  def doc_referrer_own_host?(host)
+    return true if host == request.host.downcase
+
+    app_host = Rails.application.config.action_mailer.default_url_options&.dig(:host)&.downcase
+    return false if app_host.blank?
+
+    normalized = app_host.sub(/\Awww\./, "")
+    host == app_host || host == normalized || host.end_with?(".#{normalized}")
   end
 end

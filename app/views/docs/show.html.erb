@@ -1,0 +1,31 @@
+<%= content_for :title do %>
+  <title><%= @doc.title %> | 資料ダウンロード</title>
+<% end %>
+
+<%= content_for :meta_tags do %>
+  <meta property="og:site_name" content="Toruya">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="<%= @doc.title %>">
+  <meta property="og:url" content="<%= doc_url(slug: @doc.slug) %>">
+  <% if @doc.description.present? %>
+    <meta property="og:description" content="<%= @doc.description.squish.truncate(120) %>">
+  <% end %>
+  <% if @doc.thumbnail.attached? %>
+    <meta property="og:image" content="<%= rails_blob_url(@doc.thumbnail) %>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= rails_blob_url(@doc.thumbnail) %>">
+  <% end %>
+<% end %>
+
+<%= react_component("docs/show", {
+  props: {
+    doc: {
+      title: @doc.title,
+      description: @doc.description,
+      thumbnail_url: @doc.thumbnail.attached? ? rails_blob_path(@doc.thumbnail, only_path: true) : nil
+    },
+    is_logged_in: current_doc_line_user.present?,
+    line_login_url: current_doc_line_user ? nil : doc_auth_line_path(doc_slug: @doc.slug, return_to: request.path),
+    download_url: download_doc_path(slug: @doc.slug)
+  }
+}, { camelize_props: false }) %>
