@@ -58,6 +58,12 @@
           <div class="analytics-value text-green"><%= access_counts[:after_registration][:pv] %> / <%= access_counts[:after_registration][:uu] %></div>
           <div class="analytics-label">参加登録後 PV / UU</div>
         </div>
+        <% if content.booth_content_type? %>
+          <div class="admin-analytics-card">
+            <div class="analytics-value text-teal"><%= content.analytics_registration_count %></div>
+            <div class="analytics-label">参加登録</div>
+          </div>
+        <% end %>
         <div class="admin-analytics-card">
           <div class="analytics-value text-green"><%= content.analytics_usage_count %></div>
           <div class="analytics-label">リード</div>

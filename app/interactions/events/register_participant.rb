@@ -15,6 +15,7 @@ module Events
     string :email, default: nil
     integer :referrer_shop_id, default: nil
     integer :referrer_event_line_user_id, default: nil
+    integer :referrer_event_content_id, default: nil
 
     validate :validate_required_profile_fields
     validate :validate_required_questionnaire_fields
@@ -40,7 +41,8 @@ module Events
         concern_other: concern_other.presence,
         registered_at: Time.current,
         referrer_shop_id: sanitized_referrer_shop_id,
-        referrer_event_line_user_id: sanitized_referrer_event_line_user_id
+        referrer_event_line_user_id: sanitized_referrer_event_line_user_id,
+        referrer_event_content_id: sanitized_referrer_event_content_id
       )
 
       unless participant.save
@@ -82,6 +84,12 @@ module Events
       return nil if referrer_event_line_user_id.blank?
       return nil if referrer_event_line_user_id == event_line_user.id
       EventLineUser.exists?(id: referrer_event_line_user_id) ? referrer_event_line_user_id : nil
+    end
+
+    def sanitized_referrer_event_content_id
+      return nil if referrer_event_content_id.blank?
+
+      event.event_contents.undeleted.booth_content_type.exists?(id: referrer_event_content_id) ? referrer_event_content_id : nil
     end
 
     def validate_required_profile_fields

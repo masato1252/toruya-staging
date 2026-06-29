@@ -934,6 +934,7 @@ Rails.application.routes.draw do
         post :upsell_consultation
         post :monitor_apply
         post :track_activity
+        post :capture_registration_source
       end
     end
   end

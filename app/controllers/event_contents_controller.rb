@@ -128,6 +128,11 @@ class EventContentsController < ActionController::Base
     render json: { success: true, id: log.id }
   end
 
+  def capture_registration_source
+    capture_event_registration_content(@event_content)
+    head :ok
+  end
+
   private
 
   # コンテンツ詳細(セミナー講演)ページ最下部の「おすすめのセミナー講演」スライダー用に
