@@ -1,0 +1,35 @@
+<%= render "admin/features" %>
+
+<div class="admin-event-list">
+  <div class="admin-event-list-header">
+    <h2>資料DL一覧</h2>
+    <%= link_to "新規追加", new_admin_doc_path, class: "btn btn-tarco" %>
+  </div>
+
+  <% if @docs.any? %>
+    <% @docs.each do |doc| %>
+      <div class="admin-event-card" style="display: block; text-decoration: none; color: inherit;">
+        <div class="admin-event-card-title">
+          <%= link_to doc.title, admin_doc_path(doc), style: "color: inherit; text-decoration: none;" %>
+          <% if doc.status_published? %>
+            <span class="admin-badge admin-badge-success">公開中</span>
+          <% else %>
+            <span class="admin-badge admin-badge-secondary">非公開</span>
+          <% end %>
+        </div>
+        <div class="admin-event-card-meta">
+          動線URL:
+          <code><%= doc_url(slug: doc.slug) %></code>
+        </div>
+        <div class="admin-event-card-meta" style="margin-top: 6px;">
+          <%= link_to "詳細", admin_doc_path(doc), class: "btn btn-gray btn-sm" %>
+          <%= link_to "編集", edit_admin_doc_path(doc), class: "btn btn-tarco btn-sm" %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-event-empty">
+      資料はまだありません
+    </div>
+  <% end %>
+</div>

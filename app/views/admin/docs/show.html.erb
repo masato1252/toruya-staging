@@ -1,0 +1,85 @@
+<%= render "admin/features" %>
+
+<div class="admin-event-detail">
+  <div class="admin-detail-header">
+    <h2><%= @doc.title %></h2>
+    <div class="admin-detail-actions">
+      <%= link_to "編集", edit_admin_doc_path(@doc), class: "btn btn-tarco" %>
+      <%= link_to "削除", admin_doc_path(@doc), method: :delete, data: { confirm: "この資料を削除しますか？" }, class: "btn btn-danger" %>
+    </div>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">基本情報</div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">ステータス</div>
+      <div class="admin-detail-value">
+        <% if @doc.status_published? %>
+          <span class="admin-badge admin-badge-success">公開中</span>
+        <% else %>
+          <span class="admin-badge admin-badge-secondary">非公開</span>
+        <% end %>
+      </div>
+    </div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">動線URL</div>
+      <div class="admin-detail-value"><code><%= doc_url(slug: @doc.slug) %></code></div>
+    </div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">資料URL</div>
+      <div class="admin-detail-value"><%= link_to @doc.document_url, @doc.document_url, target: "_blank", rel: "noopener" %></div>
+    </div>
+    <% if @doc.description.present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">説明文</div>
+        <div class="admin-detail-value"><%= simple_format(@doc.description) %></div>
+      </div>
+    <% end %>
+    <% if @doc.thumbnail.attached? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">サムネイル</div>
+        <div class="admin-detail-value">
+          <%= image_tag @doc.thumbnail, style: "max-width: 320px; border-radius: 8px;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">リード一覧（<%= @doc_downloads.size %>件）</div>
+    <% if @doc_downloads.any? %>
+      <div class="admin-participant-table-wrap">
+        <table class="admin-participant-table">
+          <thead>
+            <tr>
+              <th>LINE表示名</th>
+              <th>メール</th>
+              <th>初回訪問</th>
+              <th>初回DL</th>
+              <th>DL回数</th>
+              <th>リファラ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @doc_downloads.each do |download| %>
+              <tr>
+                <td><%= download.doc_line_user.display_label %></td>
+                <td><%= download.doc_line_user.email.presence || "—" %></td>
+                <td><%= download.first_visited_at ? l(download.first_visited_at) : "—" %></td>
+                <td><%= download.first_downloaded_at ? l(download.first_downloaded_at) : "—" %></td>
+                <td><%= download.download_count %></td>
+                <td style="max-width: 240px; word-break: break-all;"><%= download.referrer.presence || "—" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="admin-event-empty">リードはまだありません</div>
+    <% end %>
+  </div>
+
+  <div style="margin-top: 16px;">
+    <%= link_to "一覧に戻る", admin_docs_path, class: "btn btn-gray" %>
+  </div>
+</div>

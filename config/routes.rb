@@ -835,6 +835,8 @@ Rails.application.routes.draw do
           end
         end
 
+        resources :docs
+
         resources :business_applications, only: [:index] do
           member do
             post "approve"
@@ -925,6 +927,14 @@ Rails.application.routes.draw do
         post :clean
         post :verify
       end
+    end
+  end
+
+  get "doc_auth/line", to: "doc_auth#authorize", as: :doc_auth_line
+
+  resources :docs, param: :slug, only: [:show] do
+    member do
+      post :download
     end
   end
 

@@ -7,9 +7,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
   TW_TORUYA_USER = "tw_toruya_user"
   SHOP_OWNER_CUSTOMER_SELF = "shop_owner_customer_self"
   EVENT_LINE_USER = "event_line_user"
+  DOC_LINE_USER = "doc_line_user"
 
   include Devise::Controllers::Rememberable
   include UserBotCookies
+  include ControllerHelpers
 
   def google_oauth2
     param = request.env["omniauth.params"]
@@ -79,6 +81,10 @@ class CallbacksController < Devise::OmniauthCallbacksController
       return handle_event_line_login(request.env["omniauth.auth"], request.env["omniauth.params"])
     end
 
+    if session[:doc_auth_pending].present?
+      return handle_doc_line_login(request.env["omniauth.auth"], request.env["omniauth.params"])
+    end
+
     param = request.env["omniauth.params"]
 
     param["oauth_social_account_id"] ||= session[:oauth_social_account_id] || cookies[:oauth_social_account_id]
@@ -95,6 +101,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     if decrypted_who == EVENT_LINE_USER
       return handle_event_line_login(request.env["omniauth.auth"], param)
+    elsif decrypted_who == DOC_LINE_USER
+      return handle_doc_line_login(request.env["omniauth.auth"], param)
     elsif decrypted_who == TORUYA_USER || decrypted_who == TW_TORUYA_USER
       outcome = ::SocialUsers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
@@ -283,6 +291,51 @@ class CallbacksController < Devise::OmniauthCallbacksController
     redirect_to root_path
   end
 
+  def handle_doc_line_login(auth, param)
+    line_user_id = auth.uid
+    profile = auth.info
+
+    doc_line_user = DocLineUser.find_or_initialize_by(line_user_id: line_user_id)
+    doc_line_user.display_name = profile.name if profile.name.present?
+    doc_line_user.picture_url = profile.image if profile.image.present?
+
+    line_email = extract_line_email(auth)
+    if line_email.present? && doc_line_user.email.blank?
+      doc_line_user.email = line_email
+    end
+
+    doc_line_user.save! if doc_line_user.changed?
+
+    session[:doc_line_user_id] = doc_line_user.id
+
+    doc_auth = session.delete(:doc_auth_pending)
+
+    oauth_redirect_to_url = param.is_a?(Hash) ? param.delete("oauth_redirect_to_url") : nil
+    oauth_redirect_to_url ||= session[:oauth_redirect_to_url]
+    session.delete(:oauth_redirect_to_url)
+    session.delete(:line_oauth_who_routing)
+    session.delete(:line_oauth_credentials)
+    session.delete(:line_oauth_who)
+    cookies.clear_across_domains(:who, :whois)
+
+    if doc_auth.present?
+      slug = doc_auth["doc_slug"]
+      if doc_auth["landing_referrer"].present?
+        session[doc_referrer_session_key_for(slug)] ||= doc_auth["landing_referrer"]
+      end
+      return_to = doc_auth["return_to"]
+      redirect_to return_to.presence || doc_landing_path(slug: slug)
+    elsif oauth_redirect_to_url.present?
+      redirect_to_oauth_url(oauth_redirect_to_url)
+    else
+      redirect_to root_path
+    end
+  rescue => e
+    Rails.logger.error("[DocLineLogin] Failed: #{e.class} #{e.message}")
+    Rollbar.error(e, "Doc LINE Login failed", line_user_id: auth&.uid)
+    redirect_to root_path, alert: "ログインに失敗しました"
+  end
+
   def handle_event_line_login(auth, param)
     line_user_id = auth.uid
     profile = auth.info
@@ -348,6 +401,10 @@ class CallbacksController < Devise::OmniauthCallbacksController
     Rails.logger.error("[EventLineLogin] Failed: #{e.class} #{e.message}")
     Rollbar.error(e, "Event LINE Login failed", line_user_id: auth&.uid)
     redirect_to root_path, alert: "ログインに失敗しました"
+  end
+
+  def doc_landing_path(slug:)
+    Rails.application.routes.url_helpers.doc_path(slug: slug)
   end
 
   def extract_line_email(auth)
