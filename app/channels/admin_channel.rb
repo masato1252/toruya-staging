@@ -47,7 +47,7 @@ class AdminChannel < ApplicationCable::Channel
 
     social_users = SocialUser
       .where(locale: data["locale"])
-      .includes(:social_user_messages, :memos)
+      .includes(:social_user_messages, :memos, user: [:profile, :shops])
       .order("social_users.pinned DESC, social_users.updated_at DESC").limit(20)
 
     if data['last_updated_at']
