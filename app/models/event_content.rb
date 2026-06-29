@@ -60,6 +60,7 @@ class EventContent < ApplicationRecord
 
   has_many :event_content_images, -> { order(:position) }, dependent: :destroy
   has_many :event_content_speakers, -> { order(:position) }, dependent: :destroy
+  has_many :event_content_documents, -> { order(:position) }, dependent: :destroy
   has_many :event_content_usages, dependent: :destroy
   has_many :event_upsell_consultations, dependent: :destroy
   has_many :event_monitor_applications, dependent: :destroy
@@ -222,10 +223,60 @@ class EventContent < ApplicationRecord
     end
   end
 
+  # フォームから [{ title:, url:, id: }, ...] で受け取る用。
+  def related_documents=(docs)
+    cleaned = normalize_related_documents(docs)
+
+    if persisted?
+      sync_related_documents(cleaned)
+    else
+      @pending_related_documents = cleaned
+    end
+  end
+
   # 新規作成時は after_save で同期する。
   after_save :persist_pending_related_content_ids, if: -> { @pending_related_content_ids }
+  after_save :persist_pending_related_documents, if: -> { @pending_related_documents }
 
   private
+
+  def normalize_related_documents(docs)
+    Array(docs).filter_map do |doc|
+      h = doc.respond_to?(:to_unsafe_h) ? doc.to_unsafe_h : doc.to_h
+      h = h.stringify_keys
+      title = h["title"].to_s.strip
+      url = h["url"].to_s.strip
+      next if title.blank? && url.blank?
+
+      { id: h["id"].presence&.to_i, title: title, url: url }
+    end
+  end
+
+  def sync_related_documents(docs)
+    transaction do
+      kept_ids = []
+      docs.each_with_index do |doc, idx|
+        record =
+          if doc[:id].present?
+            event_content_documents.find_by(id: doc[:id])
+          end
+
+        if record
+          record.update!(title: doc[:title], url: doc[:url], position: idx)
+        else
+          record = event_content_documents.create!(title: doc[:title], url: doc[:url], position: idx)
+        end
+        kept_ids << record.id
+      end
+      event_content_documents.where.not(id: kept_ids).destroy_all
+    end
+  end
+
+  def persist_pending_related_documents
+    docs = @pending_related_documents
+    @pending_related_documents = nil
+    sync_related_documents(docs)
+  end
 
   def sync_related_content_ids(ids)
     transaction do
