@@ -8,6 +8,39 @@ import stampExpo2026Image from "../../../assets/events/stamp_expo2026.png";
 
 // コンテンツサムネイルの表示アスペクト比（推奨サイズ 1672×941）
 const THUMBNAIL_ASPECT_PADDING = `${(941 / 1672) * 100}%`;
+const MV_SP_MAX_WIDTH = 767;
+
+const MvBgUnderImage = () => {
+  const [isSp, setIsSp] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia(`(max-width: ${MV_SP_MAX_WIDTH}px)`).matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MV_SP_MAX_WIDTH}px)`);
+    const onChange = (e) => setIsSp(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return (
+    <img
+      src={mvBgUnderImage}
+      alt=""
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        right: 0,
+        bottom: isSp ? "-20vw" : -152,
+        width: "50%",
+        maxWidth: "100%",
+        height: "auto",
+        opacity: 0.9,
+        pointerEvents: "none",
+        zIndex: 0
+      }}
+    />
+  );
+};
 
 const PlatformIcon = ({ name }) => {
   const s = { width: 22, height: 22 };
@@ -894,22 +927,7 @@ const EventShow = ({ props }) => {
                 zIndex: 0
               }}
             />
-            <img
-              src={mvBgUnderImage}
-              alt=""
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                right: 0,
-                bottom: -152,
-                width: "50%",
-                maxWidth: "100%",
-                height: "auto",
-                opacity: 0.9,
-                pointerEvents: "none",
-                zIndex: 0
-              }}
-            />
+            <MvBgUnderImage />
 
             {event.is_participant && (
               <div style={{
