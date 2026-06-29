@@ -274,6 +274,14 @@ class Event < ApplicationRecord
     { direct: direct, indirect: indirect, total: direct + indirect }
   end
 
+  # line_user が指定 shop の owner / staff かどうか（コンテンツ詳細の出展者向け表示など外部から参照）。
+  def member_of_shop?(line_user, shop_id)
+    shop = Shop.find_by(id: shop_id)
+    return false unless shop
+
+    toruya_user_ids_for(line_user).any? { |user_id| shop_member?(shop, user_id) }
+  end
+
   # スタンプラリー期間(弾)の正規化。
   # 配列要素は { title, start_on, end_on } の Hash。全項目空の行は除去する。
   # 根拠データ(event_stamp_entries)の記録は変更せず、表示/集計のみここの設定でフロント側が区切る。
