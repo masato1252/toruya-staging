@@ -151,4 +151,71 @@ RSpec.describe EventContent, type: :model do
       expect(content.effective_end_at).to eq(Time.zone.parse("2026-06-30 10:00"))
     end
   end
+
+  describe "#exhibitor_stats_for" do
+    let(:event) { FactoryBot.create(:event, :during_event) }
+    let(:exhibitor_user) { FactoryBot.create(:user) }
+    let(:exhibitor_shop) { FactoryBot.create(:shop, user: exhibitor_user) }
+    let(:other_user) { FactoryBot.create(:user) }
+    let(:other_shop) { FactoryBot.create(:shop, user: other_user) }
+    let(:exhibitor_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: exhibitor_user.id) }
+    let(:other_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: other_user.id) }
+    let(:plain_line_user) { FactoryBot.create(:event_line_user, toruya_user_id: FactoryBot.create(:user).id) }
+    let(:online_service) { FactoryBot.create(:online_service, user: exhibitor_user) }
+    let!(:booth) do
+      FactoryBot.create(
+        :event_content, :published, :booth,
+        event: event, shop: exhibitor_shop, online_service: online_service
+      )
+    end
+    let(:visit) { FactoryBot.create(:ahoy_visit) }
+
+    before do
+      Ahoy::Event.create!(
+        visit: visit,
+        name: "event_content_view",
+        properties: { event_content_id: booth.id.to_s, event_line_user_id: plain_line_user.id.to_s },
+        time: Time.current
+      )
+      FactoryBot.create(
+        :event_participant,
+        event: event,
+        event_line_user: plain_line_user,
+        referrer_shop_id: exhibitor_shop.id,
+        registered_at: Time.current
+      )
+    end
+
+    it "returns access and acquisition counts for the booth shop owner on a published material-download booth" do
+      stats = booth.exhibitor_stats_for(exhibitor_line_user)
+
+      expect(stats).to eq(access_pv: 1, access_uu: 1, acquisition_count: 1)
+    end
+
+    it "returns nil for unpublished booth" do
+      booth.update!(status: :unpublished)
+
+      expect(booth.exhibitor_stats_for(exhibitor_line_user)).to be_nil
+    end
+
+    it "returns nil for seminar content" do
+      seminar = FactoryBot.create(:event_content, :published, event: event, shop: exhibitor_shop)
+
+      expect(seminar.exhibitor_stats_for(exhibitor_line_user)).to be_nil
+    end
+
+    it "returns nil for other exhibitor" do
+      FactoryBot.create(:event_content, :published, :booth, event: event, shop: other_shop, online_service: online_service)
+
+      expect(booth.exhibitor_stats_for(other_line_user)).to be_nil
+    end
+
+    it "returns nil for general users" do
+      expect(booth.exhibitor_stats_for(plain_line_user)).to be_nil
+    end
+
+    it "returns nil when line_user is nil" do
+      expect(booth.exhibitor_stats_for(nil)).to be_nil
+    end
+  end
 end

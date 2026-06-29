@@ -1170,6 +1170,37 @@ const EventContentShow = ({ props }) => {
           </div>
         )}
 
+        {/* 出展者本人向けの簡易解析（公開中の資料DLブースのみ・サーバー側で権限チェック済み） */}
+        {event_content.exhibitor_stats && (
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 32,
+            marginBottom: 16,
+            padding: "16px 20px",
+            background: "#fff",
+            border: "1px solid #e7e5e4",
+            borderRadius: 8
+          }}>
+            <div style={{ textAlign: "center", minWidth: 110 }}>
+              <div style={{ fontSize: 22, fontWeight: 800, color: typeColor, lineHeight: 1.2 }}>
+                {event_content.exhibitor_stats.access_pv} / {event_content.exhibitor_stats.access_uu}
+              </div>
+              <div style={{ fontSize: 11, color: "#78716c", marginTop: 4, fontWeight: 600 }}>
+                アクセス数 PV / UU
+              </div>
+            </div>
+            <div style={{ textAlign: "center", minWidth: 110 }}>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "#0d9488", lineHeight: 1.2 }}>
+                {event_content.exhibitor_stats.acquisition_count}
+              </div>
+              <div style={{ fontSize: 11, color: "#78716c", marginTop: 4, fontWeight: 600 }}>
+                集客数
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Thumbnail / Content area
             セミナー / 展示ブース ともに hasStarted の状態で構成を変えず、常にプレーンなサムネ表示。
             （何度でも詳細ページに戻ってきても、レイアウトが変わって混乱しないようにするため） */}

@@ -74,6 +74,11 @@ class EventContentSerializer
     content.online_service&.slug ? "/online_services/#{content.online_service.slug}" : nil
   end
 
+  # 公開中の資料DLブースを、紐づく店舗の出展者本人が閲覧したときのみ返す。
+  attribute :exhibitor_stats do |content, params|
+    content.exhibitor_stats_for(params[:event_line_user])
+  end
+
   # 関連コンテンツ。コンテンツ詳細ページの CTA 下部の導線で使う。
   # 関連先が status=unpublished / 削除済 / イベント不一致 のものは除外する。
   attribute :related_contents do |content|

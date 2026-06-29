@@ -155,6 +155,35 @@ class EventContent < ApplicationRecord
     excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count
   end
 
+  # 展示ブース（資料DLカテゴリ）。セミナー講演は対象外。
+  def material_download_booth?
+    booth_content_type?
+  end
+
+  # 公開中の自店舗ブースを閲覧している出展者本人向けの簡易解析。
+  # 権限のない viewer には nil を返す（フロントへ数値を漏らさない）。
+  def exhibitor_stats_for(line_user)
+    return nil unless exhibitor_stats_visible_for?(line_user)
+
+    access = event.analytics_access_counts(content_id: id)[:total]
+    acquisition = event.shop_acquisition_counts(shop_id)[:total]
+
+    {
+      access_pv: access[:pv],
+      access_uu: access[:uu],
+      acquisition_count: acquisition
+    }
+  end
+
+  def exhibitor_stats_visible_for?(line_user)
+    return false if line_user.nil?
+    return false unless material_download_booth?
+    return false unless status_published?
+    return false if shop_id.blank?
+
+    event.member_of_shop?(line_user, shop_id)
+  end
+
   def capacity_full?
     capacity.present? && usage_count >= capacity
   end
