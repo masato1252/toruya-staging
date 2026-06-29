@@ -148,10 +148,8 @@ class EventContent < ApplicationRecord
     excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count
   end
 
-  # 展示ブースの「参加登録」ボタン経由（または過去データの shop 紐付け）での参加登録数。
+  # コンテンツ詳細の「参加登録」ボタン経由（または過去データの shop 紐付け）での参加登録数。
   def analytics_registration_count
-    return 0 unless booth_content_type?
-
     scope = event.event_participants.where(referrer_event_content_id: id)
     excluded = event.analytics_excluded_event_line_user_ids
     excluded.any? ? scope.where.not(event_line_user_id: excluded).count : scope.count

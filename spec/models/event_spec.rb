@@ -365,9 +365,16 @@ RSpec.describe Event, type: :model do
       expect(booth.analytics_registration_count).to eq(1)
     end
 
-    it "does not count seminar contents" do
+    it "counts participants attributed to a seminar" do
       seminar = FactoryBot.create(:event_content, :published, event: event)
-      expect(seminar.analytics_registration_count).to eq(0)
+      FactoryBot.create(
+        :event_participant,
+        event: event,
+        event_line_user: FactoryBot.create(:event_line_user),
+        referrer_event_content_id: seminar.id
+      )
+
+      expect(seminar.analytics_registration_count).to eq(1)
     end
   end
 

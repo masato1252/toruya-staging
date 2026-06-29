@@ -39,11 +39,11 @@ RSpec.describe Events::RegisterParticipant do
     expect(participant.referrer_event_content_id).to be_nil
   end
 
-  it "ignores seminar content as referrer_event_content_id" do
+  it "stores referrer_event_content_id for seminar registrations" do
     seminar = FactoryBot.create(:event_content, :published, event: event)
 
     participant = run_register(referrer_event_content_id: seminar.id)
 
-    expect(participant.referrer_event_content_id).to be_nil
+    expect(participant.referrer_event_content_id).to eq(seminar.id)
   end
 end

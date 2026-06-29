@@ -1047,7 +1047,7 @@ const EventContentShow = ({ props }) => {
     hasStarted &&
     (event_content.upsell_booking_enabled || event_content.monitor_enabled);
 
-  const captureUrl = event_content.content_type === "booth" ? capture_registration_source_url : null;
+  const captureUrl = capture_registration_source_url || null;
 
   const trackActivity = (activityType, metadata) => {
     if (!track_activity_url || !isLoggedIn) return;
