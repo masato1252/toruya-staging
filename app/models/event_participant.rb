@@ -15,6 +15,7 @@
 #  updated_at                  :datetime         not null
 #  event_id                    :bigint           not null
 #  event_line_user_id          :bigint
+#  referrer_event_content_id   :bigint
 #  referrer_event_line_user_id :bigint
 #  referrer_shop_id            :bigint
 #  social_customer_id          :bigint
@@ -93,6 +94,7 @@ class EventParticipant < ApplicationRecord
   belongs_to :event_line_user
   belongs_to :referrer_shop, class_name: "Shop", optional: true
   belongs_to :referrer_event_line_user, class_name: "EventLineUser", optional: true
+  belongs_to :referrer_event_content, class_name: "EventContent", optional: true
 
   enum business_age: { under_one_year: 0, one_to_three_years: 1, over_three_years: 2 }, _suffix: true
 

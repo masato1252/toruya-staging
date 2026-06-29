@@ -48,7 +48,8 @@ class Events::ParticipationsController < ActionController::Base
       phone_number: params[:phone_number],
       email: params[:email],
       referrer_shop_id: ref["rs"],
-      referrer_event_line_user_id: ref["ru"]
+      referrer_event_line_user_id: ref["ru"],
+      referrer_event_content_id: ref["rc"]
     )
 
     if outcome.valid?

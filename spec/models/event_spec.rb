@@ -348,6 +348,29 @@ RSpec.describe Event, type: :model do
     end
   end
 
+  describe "booth registration attribution" do
+    let(:event) { FactoryBot.create(:event, :during_event) }
+    let(:shop) { FactoryBot.create(:shop) }
+    let!(:booth) { FactoryBot.create(:event_content, :published, :booth, event: event, shop: shop) }
+    let(:line_user) { FactoryBot.create(:event_line_user) }
+
+    it "counts participants attributed to a booth" do
+      FactoryBot.create(
+        :event_participant,
+        event: event,
+        event_line_user: line_user,
+        referrer_event_content_id: booth.id
+      )
+
+      expect(booth.analytics_registration_count).to eq(1)
+    end
+
+    it "does not count seminar contents" do
+      seminar = FactoryBot.create(:event_content, :published, event: event)
+      expect(seminar.analytics_registration_count).to eq(0)
+    end
+  end
+
   describe "#analytics_access_counts" do
     let(:event) { FactoryBot.create(:event, :during_event) }
     let(:content) { FactoryBot.create(:event_content, :published, event: event) }
