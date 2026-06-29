@@ -732,6 +732,7 @@ const StampRallySection = ({ event }) => {
         alt="スタンプラリー"
         style={{ display: "block", width: "100%", height: "auto" }}
       />
+      <hr style={{ border: "none", borderTop: "1px solid #d6d3d1", margin: 0 }} />
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 16px" }}>
         {phases.length >= 2 && (
           <div style={{
@@ -775,12 +776,21 @@ const StampRallySection = ({ event }) => {
 
         <div style={{
           display: "flex", alignItems: "baseline", gap: 4,
-          marginBottom: 20
+          marginBottom: event.stamp_rally_description ? 12 : 20
         }}>
           <span style={{ fontSize: 13, color: "#78716c" }}>合計</span>
           <span style={{ fontSize: 28, fontWeight: 800, color: "#488479" }}>{ticketCount}</span>
           <span style={{ fontSize: 13, color: "#78716c" }}>口</span>
         </div>
+
+        {event.stamp_rally_description && (
+          <p style={{
+            fontSize: 12, color: "#78716c", lineHeight: 1.7,
+            whiteSpace: "pre-wrap", margin: "0 0 20px"
+          }}>
+            {event.stamp_rally_description}
+          </p>
+        )}
 
         {/* 未成立グループ: 4種別を常に1ブロックずつ表示 */}
         {groupBlocks.map((g) => (
@@ -805,14 +815,6 @@ const StampRallySection = ({ event }) => {
           ))
         )}
 
-        {event.stamp_rally_description && (
-          <p style={{
-            fontSize: 12, color: "#78716c", lineHeight: 1.7,
-            whiteSpace: "pre-wrap", margin: "16px 0 0"
-          }}>
-            {event.stamp_rally_description}
-          </p>
-        )}
       </div>
     </div>
   );
@@ -870,7 +872,7 @@ const EventShow = ({ props }) => {
         return (
           <div style={{
             background: heroBackground,
-            color: "#fff", padding: "88px 20px 48px", minHeight: 600, position: "relative", overflow: "hidden"
+            color: "#fff", padding: "88px 20px 48px", height: 485, position: "relative", overflow: "hidden"
           }}>
             {event.hero_image_url && (
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)" }} />
@@ -899,7 +901,7 @@ const EventShow = ({ props }) => {
               style={{
                 position: "absolute",
                 right: 0,
-                bottom: 0,
+                bottom: -152,
                 width: "50%",
                 maxWidth: "100%",
                 height: "auto",
