@@ -225,10 +225,14 @@ class Admin::EventContentsController < AdminController
       :monitor_enabled, :monitor_name, :monitor_price, :monitor_limit, :monitor_form_url,
       :exhibitor_company_name, :exhibitor_description, :exhibitor_logo,
       exhibitor_roles: [],
-      related_content_ids: []
+      related_content_ids: [],
+      related_documents: [:id, :title, :url]
     )
     permitted[:exhibitor_roles] = (permitted[:exhibitor_roles] || []).reject(&:blank?)
     permitted[:related_content_ids] = (permitted[:related_content_ids] || []).reject(&:blank?)
+    permitted[:related_documents] = (permitted[:related_documents] || []).map do |doc|
+      doc.respond_to?(:permit) ? doc.permit(:id, :title, :url).to_h : doc
+    end
     permitted
   end
 end

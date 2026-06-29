@@ -142,6 +142,49 @@
     </div>
   </div>
 
+  <%# === 関連資料のダウンロード（コンテンツ種別共通） ===
+       資料名とURLを動的に追加・削除・並び替えできる。
+       コンテンツ詳細ページの関連コンテンツの上にダウンロードボタンとして表示される。 %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">関連資料のダウンロード</div>
+
+    <div class="admin-form-group">
+      <label class="admin-form-label">関連資料</label>
+      <div class="admin-form-input">
+        <div id="related-documents-container">
+          <div id="related-documents-list" style="display:flex;flex-direction:column;gap:0;border:1px solid #e5e7eb;border-radius:8px;">
+            <% event_content.event_content_documents.order(:position).each do |doc| %>
+              <div class="admin-related-document-row" data-id="<%= doc.id %>">
+                <div class="drag-handle" title="ドラッグして並び替え">☰</div>
+                <input type="text"
+                       name="event_content[related_documents][][title]"
+                       value="<%= doc.title %>"
+                       class="form-control related-document-title"
+                       placeholder="資料名"
+                       style="flex:1;" />
+                <input type="url"
+                       name="event_content[related_documents][][url]"
+                       value="<%= doc.url %>"
+                       class="form-control related-document-url"
+                       placeholder="https://..."
+                       style="flex:2;" />
+                <input type="hidden" name="event_content[related_documents][][id]" value="<%= doc.id %>" />
+                <button type="button" class="btn-remove-related-document">削除</button>
+              </div>
+            <% end %>
+          </div>
+          <div style="margin-top:10px;">
+            <button type="button" id="btn-add-related-document"
+                    style="padding:8px 16px;border:2px dashed #d1d5db;border-radius:8px;background:none;cursor:pointer;color:#6b7280;font-size:13px;">
+              ＋ 関連資料を追加
+            </button>
+          </div>
+        </div>
+        <span class="admin-form-help">紐付けた順にコンテンツ詳細ページに表示されます。クリックすると新規タブで資料URLへ遷移します。</span>
+      </div>
+    </div>
+  </div>
+
   <%# === 関連コンテンツ（コンテンツ種別共通） ===
        同じイベント内のコンテンツから 0〜N 個を動的に紐付けできる。
        コンテンツ詳細ページの CTA 下部に、ここで紐付けたコンテンツへの導線が表示される。 %>
@@ -589,6 +632,40 @@ document.addEventListener("DOMContentLoaded", function() {
     upsellCb.addEventListener("change", function() { upsellDetail.style.display = this.checked ? "" : "none"; });
   }
 
+  // === 関連資料 動的追加・削除 ===
+  (function() {
+    var listEl = document.getElementById("related-documents-list");
+    var addBtn = document.getElementById("btn-add-related-document");
+    if (!listEl || !addBtn) return;
+
+    function buildRow() {
+      var row = document.createElement("div");
+      row.className = "admin-related-document-row";
+      row.innerHTML =
+        '<div class="drag-handle" title="ドラッグして並び替え">☰</div>' +
+        '<input type="text" name="event_content[related_documents][][title]" class="form-control related-document-title" placeholder="資料名" style="flex:1;" />' +
+        '<input type="url" name="event_content[related_documents][][url]" class="form-control related-document-url" placeholder="https://..." style="flex:2;" />' +
+        '<button type="button" class="btn-remove-related-document">削除</button>';
+      bindRow(row);
+      return row;
+    }
+
+    function bindRow(row) {
+      var btn = row.querySelector(".btn-remove-related-document");
+      if (btn) {
+        btn.addEventListener("click", function() {
+          row.parentNode.removeChild(row);
+        });
+      }
+    }
+
+    listEl.querySelectorAll(".admin-related-document-row").forEach(bindRow);
+
+    addBtn.addEventListener("click", function() {
+      listEl.appendChild(buildRow());
+    });
+  })();
+
   // === 関連コンテンツ 動的追加・削除 ===
   (function() {
     var container = document.getElementById("related-contents-container");
@@ -993,13 +1070,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var placeholder = document.createElement("div");
     placeholder.className = "admin-content-card-placeholder";
 
-    function getHandles() {
-      if (handleSelector) return container.querySelectorAll(handleSelector);
-      return container.querySelectorAll(itemSelector);
-    }
-
-    // ポインタ位置からプレースホルダの挿入位置を求める。
-    // 同一行（top が近い）に他アイテムがあれば横方向(X)、なければ縦方向(Y)で前後判定する。
     function computePlaceholderPosition(x, y) {
       var items = Array.from(container.querySelectorAll(itemSelector + ":not(.dragging)"));
       if (items.length === 0) return { mode: "append" };
@@ -1038,63 +1108,66 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
 
-    getHandles().forEach(function(handle) {
-      handle.addEventListener("mousedown", function(e) {
-        // ハンドル指定がない（アイテム全体がドラッグ対象の）場合、
-        // アイテム内のボタン・リンク・フォーム要素へのクリックはドラッグを開始しない。
-        // これをしないと削除ボタン(×)などのクリックが pointer-events:none によって
-        // 飲み込まれてしまい、削除が効かなくなる。
-        if (!handleSelector && e.target.closest("button, a, input, select, textarea, label")) {
-          return;
-        }
-        e.preventDefault();
-        dragItem = handleSelector ? handle.closest(itemSelector) : handle;
-        if (!dragItem) return;
-        dragItem.classList.add("dragging");
-        var rect = dragItem.getBoundingClientRect();
-        var offsetX = e.clientX - rect.left;
-        var offsetY = e.clientY - rect.top;
-        // 元の inline style を保存しておく（mouseup で完全復元するため）。
-        // これをしないと position:relative などが消え、子要素の絶対配置が壊れる。
-        var originalCssText = dragItem.getAttribute("style") || "";
-        // プレースホルダを元アイテムと同サイズに合わせる（横並びでも見た目を維持）。
-        placeholder.style.width = rect.width + "px";
-        placeholder.style.height = rect.height + "px";
-        placeholder.style.flex = "0 0 auto";
-        // ドラッグ中は dragItem を fixed 化するため、サイズを固定しておく。
-        dragItem.style.width = rect.width + "px";
-        dragItem.style.height = rect.height + "px";
-        dragItem.parentNode.insertBefore(placeholder, dragItem);
-        // 初期位置で fixed 化（mousedown 直後でも視覚的に違和感がない）。
-        dragItem.style.position = "fixed";
-        dragItem.style.zIndex = "1000";
-        dragItem.style.left = (e.clientX - offsetX) + "px";
-        dragItem.style.top = (e.clientY - offsetY) + "px";
-        dragItem.style.pointerEvents = "none";
+    container.addEventListener("mousedown", function(e) {
+      var dragHandle;
+      if (handleSelector) {
+        dragHandle = e.target.closest(handleSelector);
+        if (!dragHandle || !container.contains(dragHandle)) return;
+      } else {
+        if (e.target.closest("button, a, input, select, textarea, label")) return;
+        dragHandle = e.target.closest(itemSelector);
+        if (!dragHandle || !container.contains(dragHandle)) return;
+      }
 
-        function onMouseMove(ev) {
-          dragItem.style.left = (ev.clientX - offsetX) + "px";
-          dragItem.style.top = (ev.clientY - offsetY) + "px";
-          applyPlaceholder(computePlaceholderPosition(ev.clientX, ev.clientY));
-        }
+      e.preventDefault();
+      dragItem = handleSelector ? dragHandle.closest(itemSelector) : dragHandle;
+      if (!dragItem) return;
+      dragItem.classList.add("dragging");
+      var rect = dragItem.getBoundingClientRect();
+      var offsetX = e.clientX - rect.left;
+      var offsetY = e.clientY - rect.top;
+      var originalCssText = dragItem.getAttribute("style") || "";
+      placeholder.style.width = rect.width + "px";
+      placeholder.style.height = rect.height + "px";
+      placeholder.style.flex = "0 0 auto";
+      dragItem.style.width = rect.width + "px";
+      dragItem.style.height = rect.height + "px";
+      dragItem.parentNode.insertBefore(placeholder, dragItem);
+      dragItem.style.position = "fixed";
+      dragItem.style.zIndex = "1000";
+      dragItem.style.left = (e.clientX - offsetX) + "px";
+      dragItem.style.top = (e.clientY - offsetY) + "px";
+      dragItem.style.pointerEvents = "none";
 
-        function onMouseUp() {
-          document.removeEventListener("mousemove", onMouseMove);
-          document.removeEventListener("mouseup", onMouseUp);
-          dragItem.classList.remove("dragging");
-          // 元々のインラインスタイル（position:relative 等）を復元する。
-          dragItem.setAttribute("style", originalCssText);
-          container.insertBefore(dragItem, placeholder);
-          placeholder.remove();
-          var ids = Array.from(container.querySelectorAll(itemSelector)).map(function(el) { return parseInt(el.dataset.id); });
+      function onMouseMove(ev) {
+        dragItem.style.left = (ev.clientX - offsetX) + "px";
+        dragItem.style.top = (ev.clientY - offsetY) + "px";
+        applyPlaceholder(computePlaceholderPosition(ev.clientX, ev.clientY));
+      }
+
+      function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        dragItem.classList.remove("dragging");
+        dragItem.setAttribute("style", originalCssText);
+        container.insertBefore(dragItem, placeholder);
+        placeholder.remove();
+        if (sortUrl) {
+          var ids = Array.from(container.querySelectorAll(itemSelector)).map(function(el) { return parseInt(el.dataset.id, 10); });
           fetch(sortUrl, { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken }, body: JSON.stringify({ ids: ids }) });
-          dragItem = null;
         }
+        dragItem = null;
+      }
 
-        document.addEventListener("mousemove", onMouseMove);
-        document.addEventListener("mouseup", onMouseUp);
-      });
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
     });
+  }
+
+  // === 関連資料 D&D（initDragAndDrop 定義後に初期化） ===
+  var relatedDocumentsList = document.getElementById("related-documents-list");
+  if (relatedDocumentsList) {
+    initDragAndDrop(relatedDocumentsList, ".admin-related-document-row", ".drag-handle", null);
   }
 });
 </script>

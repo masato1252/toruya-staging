@@ -81,6 +81,12 @@ class EventContentSerializer
 
   # 関連コンテンツ。コンテンツ詳細ページの CTA 下部の導線で使う。
   # 関連先が status=unpublished / 削除済 / イベント不一致 のものは除外する。
+  attribute :related_documents do |content|
+    content.event_content_documents.order(:position).map do |doc|
+      { id: doc.id, title: doc.title, url: doc.url }
+    end
+  end
+
   attribute :related_contents do |content|
     event_slug = content.event&.slug
     content.event_content_relations

@@ -1423,6 +1423,50 @@ const EventContentShow = ({ props }) => {
           </div>
         )}
 
+        {/* 関連資料のダウンロード
+            - 関連コンテンツの上に表示
+            - イベント開催期間 / コンテンツ公開期間に関わらず常に表示
+            - クリックで新規タブで資料URLへ遷移 */}
+        {(event_content.related_documents || []).length > 0 && (
+          <div style={{ marginTop: 48, marginBottom: 20 }}>
+            <h3 style={{
+              fontSize: 14, fontWeight: 700, color: "#374151",
+              margin: "0 0 12px", textAlign: "center"
+            }}>
+              関連資料のダウンロード
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {event_content.related_documents.map((doc) => (
+                <a
+                  key={doc.id}
+                  href={doc.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    gap: 8,
+                    padding: "12px 18px",
+                    background: "#fff",
+                    color: "#488479",
+                    border: "1.5px solid #488479",
+                    borderRadius: 8,
+                    textDecoration: "none",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    lineHeight: 1.4,
+                    textAlign: "center"
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" style={{ flexShrink: 0 }}>
+                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/>
+                  </svg>
+                  {doc.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* 関連コンテンツ
             - CTA の下に余白を空けて、紐付けたコンテンツへの導線を表示する
             - イベント開催期間 / コンテンツ公開期間に関わらず常に表示
