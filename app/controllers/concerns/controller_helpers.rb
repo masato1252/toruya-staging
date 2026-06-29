@@ -79,10 +79,9 @@ module ControllerHelpers
     end
   end
 
-  # 展示ブースの「参加登録」ボタン押下時に、流入元コンテンツ ID を cookie に記録する。
+  # コンテンツ詳細の「参加登録」ボタン押下時に、流入元コンテンツ ID を cookie に記録する。
   def capture_event_registration_content(event_content)
     return if @event.blank? || event_content.blank?
-    return unless event_content.booth_content_type?
     return unless event_content.event_id == @event.id
 
     cookie_key = "event_ref_#{@event.slug}"

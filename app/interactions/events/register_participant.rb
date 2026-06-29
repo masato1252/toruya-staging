@@ -89,7 +89,7 @@ module Events
     def sanitized_referrer_event_content_id
       return nil if referrer_event_content_id.blank?
 
-      event.event_contents.undeleted.booth_content_type.exists?(id: referrer_event_content_id) ? referrer_event_content_id : nil
+      event.event_contents.undeleted.exists?(id: referrer_event_content_id) ? referrer_event_content_id : nil
     end
 
     def validate_required_profile_fields
