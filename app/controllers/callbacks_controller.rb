@@ -75,167 +75,120 @@ class CallbacksController < Devise::OmniauthCallbacksController
   end
 
   def line
-    auth = request.env["omniauth.auth"]
-    param = request.env["omniauth.params"]
-    pending = resolve_line_auth_pending
-
-    if pending.present?
-      Rollbar.info("LineLoginGateway", purpose: pending["purpose"], return_to: pending["return_to"])
-
-      case pending["purpose"]
-      when "event"
-        return handle_event_line_login(auth, param, pending)
-      when "doc"
-        return handle_doc_line_login(auth, param, pending)
-      when "owner_settings", "owner_signup"
-        return handle_owner_line_login(auth, param, pending)
-      when "shop_customer", "shop_owner_customer_self"
-        merge_pending_shop_params!(param, pending)
-        return handle_shop_line_login(auth, param)
-      else
-        Rollbar.warn("Unexpected line callback purpose", purpose: pending["purpose"])
-      end
-    end
-
-    handle_legacy_line_login(auth, param)
-  end
-
-  private
-
-  def resolve_line_auth_pending
-    pending = session.delete(:line_auth_pending)
-    return pending if pending.present?
-
+    # イベント専用ログイン: session[:event_auth_pending] を最優先でチェック
+    # who Cookie/パラメータに依存せず、確実にイベントルートへ分岐する
     if session[:event_auth_pending].present?
-      session.delete(:event_auth_pending).merge("purpose" => "event")
-    elsif session[:doc_auth_pending].present?
-      session.delete(:doc_auth_pending).merge("purpose" => "doc")
+      return handle_event_line_login(request.env["omniauth.auth"], request.env["omniauth.params"])
     end
-  end
 
-  def merge_pending_shop_params!(param, pending)
-    param["oauth_social_account_id"] ||= pending["social_account_id"] || session[:oauth_social_account_id]
-    param["oauth_redirect_to_url"] ||= pending["return_to"] || session[:oauth_redirect_to_url]
-    param["who"] ||= pending["who"] || session[:line_oauth_who_routing]
-
-    %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
-      param[key] ||= pending[key] || session["oauth_#{key}"]
+    if session[:doc_auth_pending].present?
+      return handle_doc_line_login(request.env["omniauth.auth"], request.env["omniauth.params"])
     end
-  end
 
-  def handle_legacy_line_login(auth, param)
+    param = request.env["omniauth.params"]
+
     param["oauth_social_account_id"] ||= session[:oauth_social_account_id] || cookies[:oauth_social_account_id]
     param["oauth_redirect_to_url"] ||= session[:oauth_redirect_to_url]
     param["who"] ||= session[:line_oauth_who_routing] || cookies[:who]
 
+    # 店舗固有 LINE Login（動作確認・予約画面等）は、残存 Toruya 用 who Cookie に左右されず SocialCustomers へ
     if param["oauth_social_account_id"].present?
-      return handle_shop_line_login(auth, param)
+      return handle_shop_line_login(request.env["omniauth.auth"], param)
     end
 
     Rollbar.info("LineLogin1", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
 
     if param["who"] && MessageEncryptor.decrypt(param["who"]) == EVENT_LINE_USER
-      return handle_event_line_login(auth, param)
+      return handle_event_line_login(request.env["omniauth.auth"], param)
     elsif param["who"] && MessageEncryptor.decrypt(param["who"]) == DOC_LINE_USER
-      return handle_doc_line_login(auth, param)
+      return handle_doc_line_login(request.env["omniauth.auth"], param)
     elsif param["who"] && (MessageEncryptor.decrypt(param["who"]) == TORUYA_USER || MessageEncryptor.decrypt(param["who"]) == TW_TORUYA_USER)
-      handle_owner_line_login(auth, param)
-    else
-      Rollbar.warn("Unexpected line callback", who: param["who"], oauth_social_account_id: param["oauth_social_account_id"])
-      handle_shop_line_login(auth, param)
-    end
-  end
-
-  def handle_owner_line_login(auth, param, pending = nil)
-    pending&.each do |key, value|
-      param[key] ||= value if value.present?
-    end
-
-    param["oauth_redirect_to_url"] ||= pending&.dig("return_to") || session[:oauth_redirect_to_url] || cookies[:oauth_redirect_to_url]
-
-    decrypted_who = param["who"] && MessageEncryptor.decrypt(param["who"])
-    unless decrypted_who.in?([TORUYA_USER, TW_TORUYA_USER])
-      Rollbar.warn("Unexpected owner line login who", who: decrypted_who)
-      return redirect_to root_path, alert: "ログインに失敗しました"
-    end
-
-    outcome = ::SocialUsers::FromOmniauth.run(
-      auth: auth,
-      who: decrypted_who
-    )
-    social_user = outcome.result
-
-    if outcome.valid? && social_user&.user
-      user = social_user.user
-
-      Rollbar.info("LineLoginSuccess",
-        user_id: user.id,
-        social_user_id: social_user.id,
-        social_service_user_id: social_user.social_service_user_id,
-        purpose: pending&.dig("purpose")
+      outcome = ::SocialUsers::FromOmniauth.run(
+        auth: request.env["omniauth.auth"],
+        who: MessageEncryptor.decrypt(param["who"])
       )
+      social_user = outcome.result
+      # if param["existing_owner_id"]
+      #   1.2 user login for add another line account
+      # elsif param["staff_token"]
+      #   1.1 user login be other staff
+      # else
+      #   user login
 
-      remember_me(user)
-      sign_in(user)
-      write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
-      write_user_bot_cookies(:current_user_id, user.id)
+      if outcome.valid? && social_user&.user
+        # line sign in
+        user = social_user.user
+        
+        Rollbar.info("LineLoginSuccess", 
+          user_id: user.id, 
+          social_user_id: social_user.id,
+          social_service_user_id: social_user.social_service_user_id
+        )
+        
+        remember_me(user)
+        sign_in(user)
+        write_user_bot_cookies(:social_service_user_id, social_user.social_service_user_id)
+        write_user_bot_cookies(:current_user_id, user.id)
+        
+        session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
+        session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
+        session.delete(:line_oauth_who) if session[:line_oauth_who].present?
+        session.delete(:line_oauth_who_routing) if session[:line_oauth_who_routing].present?
+        cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
 
-      clear_line_oauth_session!
+        if param["existing_owner_id"] # existing user add another line account
+          existing_user = User.find(param["existing_owner_id"])
 
-      if param["existing_owner_id"]
-        existing_user = User.find(param["existing_owner_id"])
+          if existing_user.social_user.social_service_user_id == social_user.social_service_user_id
+            new_user = Users::NewAccount.run!(existing_user: existing_user)
 
-        if existing_user.social_user.social_service_user_id == social_user.social_service_user_id
-          new_user = Users::NewAccount.run!(existing_user: existing_user)
+            write_user_bot_cookies(:current_user_id, new_user.id)
+            remember_me(new_user)
+            sign_in(new_user)
 
-          write_user_bot_cookies(:current_user_id, new_user.id)
-          remember_me(new_user)
-          sign_in(new_user)
+            redirect_to lines_user_bot_settings_path(new_user.id), notice: I18n.t("new_line_account.successful_message")
+          else
+            Rollbar.error("NewAccountCreationFailure", existing_user_id: existing_user.id, existing_social_user_id: existing_user.social_user.id, social_user_id: social_user.id, auth_info: request.env["omniauth.auth"].info)
 
-          redirect_to lines_user_bot_settings_path(new_user.id), notice: I18n.t("new_line_account.successful_message")
+            redirect_to lines_user_bot_settings_path(user.id), alert: I18n.t("common.update_failed_message")
+          end
+        elsif param["staff_token"]
+          staff_connect_outcome = StaffAccounts::ConnectUser.run(token: param["staff_token"], user: user)
+
+          if staff_connect_outcome.valid?
+            redirect_to lines_user_bot_settings_path(staff_connect_outcome.result.owner_id, staff_connect_result: staff_connect_outcome.valid?)
+          else
+            redirect_to lines_user_bot_settings_path(user.id, staff_connect_result: staff_connect_outcome.valid?)
+          end
+        elsif param["consultant_token"]
+          consultant_connect_outcome = StaffAccounts::CreateConsultant.run(token: param["consultant_token"], client: user)
+
+          redirect_to lines_user_bot_settings_path(user.id, consultant_connect_result: consultant_connect_outcome.valid?)
         else
-          Rollbar.error("NewAccountCreationFailure", existing_user_id: existing_user.id, existing_social_user_id: existing_user.social_user.id, social_user_id: social_user.id, auth_info: auth.info)
-
-          redirect_to lines_user_bot_settings_path(user.id), alert: I18n.t("common.update_failed_message")
+          oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url] || cookies[:oauth_redirect_to_url]
+          session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
+          
+          Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: oauth_redirect_to_url)
+          
+          if oauth_redirect_to_url.present?
+            redirect_to_oauth_url(oauth_redirect_to_url)
+          else
+            # oauth_redirect_to_urlが無い場合は、デフォルトでスケジュール画面へ
+            redirect_to lines_user_bot_schedules_path(business_owner_id: user.id)
+          end
         end
-      elsif param["staff_token"]
-        staff_connect_outcome = StaffAccounts::ConnectUser.run(token: param["staff_token"], user: user)
-
-        if staff_connect_outcome.valid?
-          redirect_to lines_user_bot_settings_path(staff_connect_outcome.result.owner_id, staff_connect_result: staff_connect_outcome.valid?)
-        else
-          redirect_to lines_user_bot_settings_path(user.id, staff_connect_result: staff_connect_outcome.valid?)
-        end
-      elsif param["consultant_token"]
-        consultant_connect_outcome = StaffAccounts::CreateConsultant.run(token: param["consultant_token"], client: user)
-
-        redirect_to lines_user_bot_settings_path(user.id, consultant_connect_result: consultant_connect_outcome.valid?)
+      elsif outcome.valid? && outcome.result.user.nil?
+        # user sign up
+        redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"], consultant_token: param["consultant_token"], locale: param["locale"])
       else
-        oauth_redirect_to_url = param.delete("oauth_redirect_to_url") || session[:oauth_redirect_to_url] || cookies[:oauth_redirect_to_url]
-        session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
-
-        Rollbar.info("LineLogin", user_id: user.id, oauth_redirect_to_url: oauth_redirect_to_url, purpose: pending&.dig("purpose"))
-
-        if oauth_redirect_to_url.present?
-          redirect_to_oauth_url(oauth_redirect_to_url)
-        else
-          redirect_to lines_user_bot_schedules_path(business_owner_id: user.id)
-        end
+        redirect_to root_path
       end
-    elsif outcome.valid? && outcome.result.user.nil?
-      redirect_to lines_user_bot_sign_up_path(outcome.result.social_service_user_id, staff_token: param["staff_token"], consultant_token: param["consultant_token"], locale: param["locale"])
     else
-      redirect_to root_path
+      handle_shop_line_login(request.env["omniauth.auth"], param)
     end
   end
 
-  def clear_line_oauth_session!
-    session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
-    session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
-    session.delete(:line_oauth_who) if session[:line_oauth_who].present?
-    session.delete(:line_oauth_who_routing) if session[:line_oauth_who_routing].present?
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
-  end
+  private
 
   def handle_shop_line_login(auth, param)
     Rollbar.info("LineLogin2", who: param["who"] ? MessageEncryptor.decrypt(param["who"]) : nil, oauth_redirect_to_url: param["oauth_redirect_to_url"])
@@ -279,10 +232,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
       return
     end
 
-    session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
+    session.delete(:oauth_redirect_to_url) if session[:oauth_redirect_to_url].present?
     session.delete(:oauth_social_account_id) if session[:oauth_social_account_id].present?
     session.delete(:line_oauth_who) if session[:line_oauth_who].present?
     session.delete(:line_oauth_who_routing) if session[:line_oauth_who_routing].present?
+    session.delete(:line_oauth_credentials) if session[:line_oauth_credentials].present?
     cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
 
     %w[booking_option_ids booking_date booking_at staff_id customer_id].each do |key|
@@ -322,7 +276,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     redirect_to root_path
   end
 
-  def handle_doc_line_login(auth, param, pending = nil)
+  def handle_doc_line_login(auth, param)
     line_user_id = auth.uid
     profile = auth.info
 
@@ -339,12 +293,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     session[:doc_line_user_id] = doc_line_user.id
 
-    doc_auth =
-      if pending&.dig("purpose") == "doc"
-        pending
-      else
-        session.delete(:doc_auth_pending)
-      end
+    doc_auth = session.delete(:doc_auth_pending)
 
     oauth_redirect_to_url = param.is_a?(Hash) ? param.delete("oauth_redirect_to_url") : nil
     oauth_redirect_to_url ||= session[:oauth_redirect_to_url]
@@ -372,7 +321,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     redirect_to root_path, alert: "ログインに失敗しました"
   end
 
-  def handle_event_line_login(auth, param, pending = nil)
+  def handle_event_line_login(auth, param)
     line_user_id = auth.uid
     profile = auth.info
 
@@ -397,12 +346,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     session[:event_line_user_id] = event_line_user.id
 
-    event_auth =
-      if pending&.dig("purpose") == "event"
-        pending
-      else
-        session.delete(:event_auth_pending)
-      end
+    # event_auth_pending からイベント情報を取得 (ゲートウェイ経由の場合)
+    event_auth = session.delete(:event_auth_pending)
 
     # OAuth 関連セッション/Cookie のクリーンアップ
     oauth_redirect_to_url = param.is_a?(Hash) ? param.delete("oauth_redirect_to_url") : nil

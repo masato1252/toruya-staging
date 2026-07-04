@@ -4,7 +4,6 @@
     <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
 
     <%= button_to toruya_line_login_url(lines_user_bot_schedules_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]),
-                method: :get,
                 class: "btn line-button with-wording only-word",
                 style: "display: flex; justify-content: center;",
                 data: { disable_with: "<i class='fa fa-spinner fa-spin fa-fw'></i>".html_safe } do %>
@@ -15,7 +14,7 @@
       <div style="border: 1px solid black; padding: 10px; margin: 10px;">
         <h3>管理者ログイン</h3>
         <p>
-        <%= button_to toruya_line_login_url(admin_chats_path), method: :get, class: "btn line-button with-wording only-word" do %>
+        <%= button_to toruya_line_login_url(admin_chats_path), class: "btn line-button with-wording only-word" do %>
           管理者としてログイン
         <% end %>
         </p>

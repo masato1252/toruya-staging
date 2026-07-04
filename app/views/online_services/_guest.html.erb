@@ -13,7 +13,7 @@
       <div class="message centerize">
         <h3 class="desc break-line-content"><%= t("common.login_to_watch_html") %></h3>
 
-        <a href="<%= line_login_url(current_owner.social_account, request.url) %>" class="btn line-button with-wording with-logo">
+        <a href="<%= line_login_url(current_owner.social_account, request.url) %>" class="btn line-button with-wording with-logo" data-method="post">
           <%= image_pack_tag "media/assets/booking/btn_login_base.png" %>
           <%= I18n.t("common.line_login_btn_word") %>
         </a>
