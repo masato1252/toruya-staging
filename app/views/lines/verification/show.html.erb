@@ -6,7 +6,7 @@
 
   <% login_url = line_login_url(current_user.social_account, request.url, who: MessageEncryptor.encrypt(CallbacksController::SHOP_OWNER_CUSTOMER_SELF)) %>
   <% if login_url.present? %>
-    <a href="<%= login_url %>" class="btn line-button with-wording with-logo" data-method="post">
+    <a href="<%= login_url %>" class="btn line-button with-wording with-logo">
       <%= image_pack_tag "media/assets/booking/btn_login_base.png" %>
       <%= I18n.t("common.line_login_btn_word") %>
     </a>
