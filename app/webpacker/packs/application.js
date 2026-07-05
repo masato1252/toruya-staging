@@ -12,9 +12,12 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
+import { installCompatApi } from '../javascripts/libraries/compat_api';
 import Routes from '../js-routes.js';
 import I18n from 'i18n-js/index.js.erb';
 import toastr from 'toastr';
+
+installCompatApi();
 
 var componentRequireContext = require.context("../javascripts/components", true, /^\.\/(management|shared)/)
 var ReactRailsUJS = require("react_ujs")

@@ -1,0 +1,3 @@
+<% if ENV["COMPAT_API_ORIGIN"].present? %>
+  <meta name="compat-api-origin" content="<%= ENV["COMPAT_API_ORIGIN"].to_s.delete_suffix("/") %>" />
+<% end %>

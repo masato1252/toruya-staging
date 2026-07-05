@@ -4,6 +4,13 @@ require "message_encryptor"
 
 module ApplicationHelper
   include MultiShopHelper
+
+  def compat_api_origin_meta_tag
+    origin = ENV["COMPAT_API_ORIGIN"].presence
+    return unless origin
+
+    tag.meta(name: "compat-api-origin", content: origin.delete_suffix("/"))
+  end
  BOOTSTRAP_FLASH_MSG = {
     'success' => 'alert-success',
     'error' => 'alert-danger',

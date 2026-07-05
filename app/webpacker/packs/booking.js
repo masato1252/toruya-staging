@@ -1,10 +1,13 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import 'bootstrap-sass/assets/javascripts/bootstrap'
+import { installCompatApi } from '../javascripts/libraries/compat_api';
 import Routes from '../js-routes.js';
 import I18n from 'i18n-js/index.js.erb';
 import ahoy from "ahoy.js";
 import toastr from 'toastr';
+
+installCompatApi();
 
 var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|surveys|shared|lines|user_bot\/sales|user_bot\/services|user_bot\/user_sign_up|user_bot\/user_connect|events|event_contents|docs)/)
 var ReactRailsUJS = require("react_ujs")

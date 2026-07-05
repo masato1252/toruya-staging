@@ -3,6 +3,7 @@
   <head>
     <title><%= t("meta.title") %></title>
     <%= csrf_meta_tags %>
+    <%= render "layouts/compat_api" %>
 
     <%= stylesheet_packs_with_chunks_tag "stylesheets" %>
     <%= javascript_packs_with_chunks_tag "application", "stylesheets" %>

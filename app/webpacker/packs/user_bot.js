@@ -2,9 +2,12 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
+import { installCompatApi } from '../javascripts/libraries/compat_api';
 import Routes from '../js-routes.js';
 import I18n from 'i18n-js/index.js.erb';
 import toastr from 'toastr';
+
+installCompatApi();
 
 var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(user_bot|management|shared|line_notice_requests)/)
 var ReactRailsUJS = require("react_ujs")
