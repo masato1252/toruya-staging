@@ -9,6 +9,7 @@ import { SaleServices, CommonServices } from "user_bot/api";
 import CompanyHeader from "shared/company_header";
 import { CheckInLineBtn } from "shared/booking";
 import ChargingView from "components/booking/charging_view";
+import createSalePurchaseCallback from "shared/create_sale_purchase_callback";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purchase_data}) => {
@@ -42,44 +43,11 @@ const FinalPaidPage = ({props, purchase_data}) => {
             solution: "stripe_connect",
             stripe_key: props.stripe_key
           }}
-          handleTokenCallback={async (token, paymentIntentId, stripeSubscriptionId, setupIntentId) => {
-            const [error, response] = await SaleServices.purchase({
-              data: {
-                ...purchase_data,
-                token,
-                payment_type: props.sale_page.payment_type,
-                payment_intent_id: paymentIntentId,
-                stripe_subscription_id: stripeSubscriptionId,
-                setup_intent_id: setupIntentId,
-                function_access_id: props.function_access_id
-              }
-            })
-
-            if (error) {
-              const errorMessage = error.response?.data?.error_message || 'Purchase failed'
-              alert(errorMessage)
-              throw new Error(errorMessage)
-            }
-
-            if (response.data.status === "successful") {
-              window.location = response.data.redirect_to;
-              return { status: "successful" };
-            }
-            else if (response.data.status === "requires_action") {
-              return {
-                requires_action: true,
-                client_secret: response.data.client_secret,
-                setup_intent_id: response.data.setup_intent_id,
-                stripe_subscription_id: response.data.stripe_subscription_id,
-                payment_intent_id: response.data.payment_intent_id
-              }
-            }
-            else if (response.data.status === "failed") {
-              const errorMessage = response.data.error_message || 'Purchase failed'
-              alert(errorMessage)
-              throw new Error(errorMessage)
-            }
-          }}
+          handleTokenCallback={createSalePurchaseCallback({
+            purchase_data,
+            payment_type: props.sale_page.payment_type,
+            function_access_id: props.function_access_id
+          })}
           product_name={props.sale_page.company_info.name}
           product_price={props.sale_page.paying_amount_format}
           business_owner_id={props.business_owner_id}
