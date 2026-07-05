@@ -12,6 +12,7 @@ module Sales
       string :payment_type
       string :payment_intent_id, default: nil
       string :stripe_subscription_id, default: nil
+      string :setup_intent_id, default: nil
       integer :function_access_id, default: nil
 
       validate :validate_product

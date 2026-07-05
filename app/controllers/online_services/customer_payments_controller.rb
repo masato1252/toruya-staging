@@ -16,35 +16,46 @@ module OnlineServices
     def create
       relation = online_service.online_service_customer_relations.where(customer: current_customer).last
 
+      store_outcome = nil
       outcome =
         if online_service.recurring_charge_required?
-          customer_outcome = Customers::StoreStripeCustomer.run(
+          store_outcome = Customers::StoreStripeCustomer.run(
             customer: relation.customer,
             authorize_token: params[:token],
-            stripe_subscription_id: params[:stripe_subscription_id]
-          )
-
-          CustomerPayments::SubscribeOnlineService.run(
-            online_service_customer_relation: relation,
             stripe_subscription_id: params[:stripe_subscription_id],
-            payment_method_id: params[:token]
+            setup_intent_id: params[:setup_intent_id]
           )
+
+          if store_outcome.valid?
+            CustomerPayments::SubscribeOnlineService.run(
+              online_service_customer_relation: relation,
+              stripe_subscription_id: params[:stripe_subscription_id],
+              payment_method_id: store_outcome.result
+            )
+          else
+            store_outcome
+          end
         else
-          customer_outcome = Customers::StoreStripeCustomer.run(
+          store_outcome = Customers::StoreStripeCustomer.run(
             customer: relation.customer,
             authorize_token: params[:token],
-            payment_intent_id: params[:payment_intent_id]
-          )
-
-          price = relation.price_details.find { |price| price.order_id == params[:order_id] } || relation.price_details.first
-
-          CustomerPayments::PurchaseOnlineService.run(
-            online_service_customer_relation: relation,
-            online_service_customer_price: price,
             payment_intent_id: params[:payment_intent_id],
-            payment_method_id: params[:token],
-            manual: true
+            setup_intent_id: params[:setup_intent_id]
           )
+
+          if store_outcome.valid?
+            price = relation.price_details.find { |price| price.order_id == params[:order_id] } || relation.price_details.first
+
+            CustomerPayments::PurchaseOnlineService.run(
+              online_service_customer_relation: relation,
+              online_service_customer_price: price,
+              payment_intent_id: params[:payment_intent_id],
+              payment_method_id: store_outcome.result,
+              manual: true
+            )
+          else
+            store_outcome
+          end
         end
 
       if outcome.valid?

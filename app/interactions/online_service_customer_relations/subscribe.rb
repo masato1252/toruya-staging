@@ -18,8 +18,11 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
       if stripe_subscription_id
         # 3DS completed, fetch the existing subscription
         stripe_subscription = Stripe::Subscription.retrieve(
-          stripe_subscription_id,
-          stripe_account: customer.user.stripe_provider.uid
+          {
+            id: stripe_subscription_id,
+            expand: ['latest_invoice.payment_intent']
+          },
+          { stripe_account: customer.user.stripe_provider.uid }
         )
       else
         # Delete existing subscription if any
@@ -90,7 +93,7 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
           errors.add(:relation, :subscription_incomplete, client_secret: payment_intent.client_secret, stripe_subscription_id: stripe_subscription.id)
         end
       when 'incomplete_expired'
-        errors.add(:relation, :subscription_expired, client_secret: payment_intent.client_secret, stripe_subscription_id: stripe_subscription.id)
+        errors.add(:relation, :subscription_expired, stripe_subscription_id: stripe_subscription.id)
       else
         # Other statuses like 'trialing', 'past_due', etc.
         relation.paid_payment_state!

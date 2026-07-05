@@ -51,8 +51,11 @@ module Customers
           if stripe_subscription_id
             # Handle subscription completion after 3DS
             stripe_subscription = Stripe::Subscription.retrieve(
-              stripe_subscription_id,
-              stripe_account: customer.user.stripe_provider.uid
+              {
+                id: stripe_subscription_id,
+                expand: ['latest_invoice.payment_intent']
+              },
+              { stripe_account: customer.user.stripe_provider.uid }
             )
 
             case stripe_subscription.status

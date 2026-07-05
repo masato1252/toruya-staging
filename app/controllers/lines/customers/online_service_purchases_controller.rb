@@ -40,6 +40,7 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
       payment_type: params[:payment_type],
       payment_intent_id: params[:payment_intent_id],
       stripe_subscription_id: params[:stripe_subscription_id],
+      setup_intent_id: params[:setup_intent_id],
       function_access_id: params[:function_access_id]
     )
 
@@ -70,6 +71,7 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
 
         render json: {
           status: "failed",
+          error_message: outcome.errors.full_messages.join(", "),
           redirect_to: @sale_page.external? ? @sale_page.product.external_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type])
         }
       end
