@@ -7,7 +7,7 @@ import { CommonServices } from "user_bot/api";
 import ChargingView from "components/booking/charging_view";
 
 export const NewCustomerPayment = ({props}) => {
-  const handleTokenCallback = async (paymentMethodId, paymentIntentId, stripeSubscriptionId) => {
+  const handleTokenCallback = async (paymentMethodId, paymentIntentId, stripeSubscriptionId, setupIntentId) => {
     const [error, response] = await CommonServices.create({
       url: Routes.customer_payments_path(props.slug, {format: "json"}),
       data: {
@@ -15,12 +15,13 @@ export const NewCustomerPayment = ({props}) => {
         order_id: props.order_id,
         encrypted_social_service_user_id: props.encrypted_social_service_user_id,
         payment_intent_id: paymentIntentId,
-        stripe_subscription_id: stripeSubscriptionId
+        stripe_subscription_id: stripeSubscriptionId,
+        setup_intent_id: setupIntentId
       }
     })
 
     if (error) {
-      throw new Error(error.response.data.error_message || 'Payment failed');
+      throw new Error(error.response?.data?.error_message || 'Payment failed');
     }
 
     if (response.data.status === "successful") {
@@ -31,6 +32,7 @@ export const NewCustomerPayment = ({props}) => {
       return {
         requires_action: true,
         client_secret: response.data.client_secret,
+        setup_intent_id: response.data.setup_intent_id,
         stripe_subscription_id: response.data.stripe_subscription_id,
         payment_intent_id: response.data.payment_intent_id
       }

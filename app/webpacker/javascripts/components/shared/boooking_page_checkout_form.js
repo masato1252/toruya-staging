@@ -1,36 +1,37 @@
 "use strict";
 
-import React, { useState } from 'react';
+import React from 'react';
 
-import StripeCheckoutForm from "shared/stripe_checkout_form"
-import { SaleServices } from "user_bot/api";
-import ProcessingBar from "shared/processing_bar";
-import I18n from 'i18n-js/index.js.erb';
+import ChargingView from "components/booking/charging_view";
+import createSalePurchaseCallback from "shared/create_sale_purchase_callback";
 
-const ServiceCheckoutForm = ({stripe_key, purchase_data, company_name, service_name, price}) => {
-  const [processing, setProcessing] = useState(false)
-
-  const handleToken = async (token) => {
-    setProcessing(true)
-    const [error, response] = await SaleServices.purchase({ data: {...purchase_data, token}})
-    setProcessing(false)
-
-    window.location = response.data.redirect_to;
-  }
-
-  const handleFailure = (error) => {
-    console.log(error.message);
-  }
-
+const ServiceCheckoutForm = ({
+  stripe_key,
+  purchase_data,
+  company_name,
+  service_name,
+  price,
+  payment_type,
+  function_access_id,
+  business_owner_id,
+  is_subscription = false
+}) => {
   return (
-    <StripeCheckoutForm
-      stripe_key={stripe_key}
-      handleToken={handleToken}
-      handleFailure={handleFailure}
-      header={company_name}
-      desc={service_name}
-      pay_btn={I18n.t("action.pay")}
-      details_desc={price}
+    <ChargingView
+      booking_details={service_name}
+      payment_solution={{
+        solution: "stripe_connect",
+        stripe_key: stripe_key
+      }}
+      handleTokenCallback={createSalePurchaseCallback({
+        purchase_data,
+        payment_type,
+        function_access_id
+      })}
+      product_name={company_name}
+      product_price={price}
+      business_owner_id={business_owner_id}
+      is_subscription={is_subscription}
     />
   )
 }

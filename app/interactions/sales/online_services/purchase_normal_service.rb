@@ -13,6 +13,7 @@ module Sales
       string :payment_type
       string :payment_intent_id, default: nil
       string :stripe_subscription_id, default: nil
+      string :setup_intent_id, default: nil
 
       validate :validate_product
       validates :payment_type, inclusion: { in: SalePage::PAYMENTS.values }
@@ -39,14 +40,30 @@ module Sales
         if payment_type == SalePage::PAYMENTS[:assignment] || sale_page.free?
           ::Sales::OnlineServices::Approve.run(relation: relation)
         elsif sale_page.recurring?
-          customer_outcome = Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, stripe_subscription_id: stripe_subscription_id)
+          payment_method_id = compose(
+            Customers::StoreStripeCustomer,
+            customer: customer,
+            authorize_token: authorize_token,
+            stripe_subscription_id: stripe_subscription_id,
+            setup_intent_id: setup_intent_id
+          )
 
-          # credit card charge is synchronous request, it would return final status immediately
-          compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation, stripe_subscription_id: stripe_subscription_id, payment_method_id: authorize_token)
+          compose(
+            CustomerPayments::SubscribeOnlineService,
+            online_service_customer_relation: relation,
+            stripe_subscription_id: stripe_subscription_id,
+            payment_method_id: payment_method_id
+          )
         elsif !sale_page.external?
-          customer_outcome = Customers::StoreStripeCustomer.run(customer: customer, authorize_token: authorize_token, payment_intent_id: payment_intent_id)
-          # credit card charge is synchronous request, it would return final status immediately
-          if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true, payment_intent_id: payment_intent_id, payment_method_id: authorize_token)
+          payment_method_id = compose(
+            Customers::StoreStripeCustomer,
+            customer: customer,
+            authorize_token: authorize_token,
+            payment_intent_id: payment_intent_id,
+            setup_intent_id: setup_intent_id
+          )
+
+          if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true, payment_intent_id: payment_intent_id, payment_method_id: payment_method_id)
             Sales::OnlineServices::Approve.run(relation: relation)
             Sales::OnlineServices::ScheduleCharges.run(relation: relation)
           else

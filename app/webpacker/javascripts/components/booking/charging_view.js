@@ -7,76 +7,35 @@ import StripeCheckoutForm from "shared/stripe_checkout_form"
 import SquareCheckoutForm from "shared/square_checkout_form"
 import ProcessingBar from "shared/processing_bar";
 
+const isSetupIntent = (data) =>
+  !!(data.setup_intent_id) || (data.client_secret && data.client_secret.startsWith('seti_'));
+
 const ChargingView = ({booking_details, payment_solution, handleTokenCallback, product_name, product_price, business_owner_id, is_subscription = false}) => {
   const [processing, setProcessing] = useState(false)
 
-  const handleStripeToken = async (paymentMethodId) => {
-    setProcessing(true)
+  const handleRequiresAction = async (actionData, paymentMethodId) => {
+    const stripe = await loadStripe(payment_solution.stripe_key);
 
-    try {
-      // First try the normal payment flow
-      const result = await handleTokenCallback(paymentMethodId)
-
-      // Check if 3DS verification is needed
-      if (result && result.requires_action && result.client_secret) {
-        // Handle 3DS verification
-        const stripe = await loadStripe(payment_solution.stripe_key);
-
-        if (is_subscription && result.stripe_subscription_id) {
-          // Handle subscription 3DS
-          const { error: confirmError } = await stripe.confirmCardPayment(result.client_secret);
-
-          if (confirmError) {
-            setProcessing(false)
-            alert(confirmError.message || '3DS verification failed');
-          } else {
-            // Start polling subscription status
-            return await pollPaymentStatus({ stripeSubscriptionId: result.stripe_subscription_id, paymentMethodId });
-          }
-        }
-        else {
-          // Handle payment intent 3DS
-          const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(
-            result.client_secret
-          );
-
-          if (confirmError) {
-            setProcessing(false)
-            alert(confirmError.message || '3DS verification failed');
-          }
-          else if (paymentIntent.status === 'succeeded') {
-            // 3DS verification successful, retry payment submission
-            const retryResult = await handleTokenCallback(paymentMethodId, paymentIntent.id);
-            setProcessing(false)
-            return retryResult;
-          }
-          else if (paymentIntent.status === 'processing') {
-            // Start polling payment status
-            return await pollPaymentStatus({ paymentIntentId: paymentIntent.id, paymentMethodId });
-          }
-        }
-      }
-
-      setProcessing(false)
-      return result;
+    if (isSetupIntent(actionData)) {
+      return stripe.confirmCardSetup(actionData.client_secret, {
+        payment_method: paymentMethodId
+      });
     }
-     catch (error) {
-      setProcessing(false)
-      throw error;
-    }
+
+    return stripe.confirmCardPayment(actionData.client_secret, {
+      payment_method: paymentMethodId
+    });
   }
 
   const pollPaymentStatus = async ({ stripeSubscriptionId, paymentIntentId, paymentMethodId }) => {
     try {
-      let url, type, isSubscription;
+      let url, isSubscription;
 
       if (stripeSubscriptionId) {
         url = `/stripe_payment_status?stripe_subscription_id=${stripeSubscriptionId}&business_owner_id=${business_owner_id}&type=subscription`;
-        type = 'subscription';
         isSubscription = true;
       } else if (paymentIntentId) {
         url = `/stripe_payment_status?payment_intent_id=${paymentIntentId}&business_owner_id=${business_owner_id}`;
-        type = 'payment_intent';
         isSubscription = false;
       } else {
         throw new Error('Either subscriptionId or paymentIntentId must be provided');
@@ -104,36 +63,36 @@ const ChargingView = ({booking_details, payment_solution, handleTokenCallback, p
             }
           case 'failed':
             setProcessing(false);
-            alert(isSubscription ? 'Subscription payment failed' : 'Payment failed');
+            alert(result.error || (isSubscription ? 'Subscription payment failed' : 'Payment failed'));
             break;
           case 'processing':
-            // Continue polling
             await new Promise(resolve => setTimeout(resolve, 2000));
             return await pollPaymentStatus({ stripeSubscriptionId, paymentIntentId, paymentMethodId });
           case 'requires_action':
-            // Handle cases that require additional actions
-            const stripe = await loadStripe(payment_solution.stripe_key);
+          case 'requires_payment_method':
+          case 'requires_confirmation':
+            {
+              const stripe = await loadStripe(payment_solution.stripe_key);
+              const actionData = {
+                client_secret: result.client_secret,
+                stripe_subscription_id: stripeSubscriptionId
+              };
 
-            if (isSubscription) {
-              const { error } = await stripe.confirmCardPayment(result.client_secret);
+              const { error, setupIntent, paymentIntent } = await handleRequiresAction(actionData, paymentMethodId);
+
               if (error) {
                 setProcessing(false);
                 alert(error.message || 'Payment verification failed');
-              } else {
-                // Continue polling
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                return await pollPaymentStatus({ stripeSubscriptionId, paymentIntentId, paymentMethodId });
-              }
-            } else {
-              const { error, paymentIntent } = await stripe.handleCardAction(result.client_secret);
-              if (error) {
+              } else if (setupIntent?.status === 'succeeded') {
+                return await handleTokenCallback(paymentMethodId, null, null, setupIntent.id);
+              } else if (paymentIntent?.status === 'succeeded') {
                 setProcessing(false);
-                alert(error.message || 'Payment verification failed');
-              } else if (paymentIntent.status === 'succeeded') {
-                setProcessing(false);
-                return await handleTokenCallback(paymentMethodId, paymentIntentId);
+                if (isSubscription) {
+                  return await handleTokenCallback(paymentMethodId, null, stripeSubscriptionId);
+                } else {
+                  return await handleTokenCallback(paymentMethodId, paymentIntentId);
+                }
               } else {
-                // Continue polling
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 return await pollPaymentStatus({ stripeSubscriptionId, paymentIntentId, paymentMethodId });
               }
@@ -146,9 +105,67 @@ const ChargingView = ({booking_details, payment_solution, handleTokenCallback, p
       }
     } catch (err) {
       setProcessing(false);
-      alert(err.message || (isSubscription ? 'Subscription payment failed' : 'Payment failed'));
+      alert(err.message || (stripeSubscriptionId ? 'Subscription payment failed' : 'Payment failed'));
     }
   };
+
+  const handleStripeToken = async (paymentMethodId) => {
+    setProcessing(true)
+
+    try {
+      let result = await handleTokenCallback(paymentMethodId)
+      let iterations = 0
+      const maxIterations = 5
+
+      while (result?.requires_action && result.client_secret && iterations < maxIterations) {
+        iterations += 1
+
+        const { error, setupIntent, paymentIntent } = await handleRequiresAction(result, paymentMethodId)
+
+        if (error) {
+          setProcessing(false)
+          alert(error.message || '3DS verification failed')
+          return
+        }
+
+        if (setupIntent?.status === 'succeeded') {
+          result = await handleTokenCallback(paymentMethodId, null, null, setupIntent.id)
+        } else if (paymentIntent?.status === 'succeeded') {
+          if (is_subscription && result.stripe_subscription_id) {
+            result = await pollPaymentStatus({
+              stripeSubscriptionId: result.stripe_subscription_id,
+              paymentMethodId
+            })
+            break
+          } else {
+            result = await handleTokenCallback(paymentMethodId, paymentIntent.id)
+          }
+        } else if (paymentIntent?.status === 'processing') {
+          result = await pollPaymentStatus({
+            paymentIntentId: paymentIntent.id,
+            paymentMethodId
+          })
+          break
+        } else if (is_subscription && result.stripe_subscription_id) {
+          result = await pollPaymentStatus({
+            stripeSubscriptionId: result.stripe_subscription_id,
+            paymentMethodId
+          })
+          break
+        } else {
+          break
+        }
+      }
+
+      setProcessing(false)
+      return result
+    }
+     catch (error) {
+      setProcessing(false)
+      alert(error.message || 'Payment failed')
+      throw error
+    }
+  }
 
   switch (payment_solution.solution) {
     case "stripe_connect":
