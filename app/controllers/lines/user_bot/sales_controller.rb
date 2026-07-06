@@ -8,6 +8,11 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @sale_pages = []
+      return
+    end
+
     @sale_pages = Current.business_owner.sale_pages.includes(:product).order("updated_at DESC")
   end
 

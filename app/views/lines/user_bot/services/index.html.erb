@@ -8,6 +8,17 @@
 
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
+        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <%= react_component("user_bot/services/index", {
+            businessOwnerId: business_owner_id,
+            newServicePath: (is_not_phone? ? new_lines_user_bot_service_path(business_owner_id: business_owner_id) : nil),
+            newSaleForServicePath: new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id),
+            goalTypeLabels: I18n.t("user_bot.dashboards.online_service_creation.goals").transform_values { |v| v[:title] },
+            noSalePageWarning: I18n.t("user_bot.dashboards.services.warning.no_sale_pages"),
+            draftSalePageWarning: I18n.t("user_bot.dashboards.services.warning.draft_sale_page"),
+            noContentWarning: I18n.t("user_bot.dashboards.settings.course.no_content"),
+          }) %>
+        <% else %>
         <div class="booking-pages-list">
           <% @online_services.each do |service| %>
             <%= content_tag :div, class: "field-row with-next-arrow" do %>
@@ -56,6 +67,7 @@
             </div>
           <% end %>
         </div>
+        <% end %>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
           <%= link_to new_lines_user_bot_service_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>

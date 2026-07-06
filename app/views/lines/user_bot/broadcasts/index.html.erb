@@ -4,6 +4,16 @@
       <div class="form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", title: t("user_bot.dashboards.broadcasts.broadcast_title") %>
 
+        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <%= react_component("user_bot/broadcasts/index", {
+            businessOwnerId: business_owner_id,
+            newBroadcastPath: (is_not_phone? ? new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id) : nil),
+            queryTypeLabels: Broadcast::TYPES.index_with { |type| I18n.t("user_bot.dashboards.broadcast_creation.#{type}") },
+            noBroadcastsTitle: I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_title"),
+            noBroadcastsDesc: I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_desc"),
+            permissionWarning: I18n.t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description"),
+          }) %>
+        <% else %>
         <% @broadcasts.each do |broadcast| %>
           <%= render "lines/user_bot/field_state", state: broadcast.state do %>
             <%= render "lines/user_bot/field_row", path: lines_user_bot_broadcast_path(broadcast, business_owner_id: business_owner_id), state: broadcast.state do %>
@@ -23,6 +33,7 @@
             <h3><%= I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_title") %></h3>
             <div class="desc margin-around"><%= I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_desc") %></div>
           </div>
+        <% end %>
         <% end %>
 
         <% if is_not_phone? %>

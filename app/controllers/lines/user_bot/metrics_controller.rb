@@ -8,6 +8,20 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :online_services, only: [:online_service]
 
   def dashboard
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @days_in_period = 30
+      @active_customers_rate = 0
+      @customers_count = 0
+      @comparison_customers_count = 0
+      @reservations_count = 0
+      @comparison_reservations_count = 0
+      @customers_payment = 0
+      @comparison_customers_payment = 0
+      @services_mapping_total_amount = []
+      @booking_revenue = []
+      return
+    end
+
     # Calculate the comparison period (previous 30 days before the metric start time)
     @days_in_period = (metric_period.end.to_date - metric_period.begin.to_date).to_i
     comparison_period = metric_start_time.advance(days: -@days_in_period)..metric_start_time

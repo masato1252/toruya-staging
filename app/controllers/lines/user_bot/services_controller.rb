@@ -25,6 +25,14 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @online_services = []
+      @online_services_with_sale_page_ids = []
+      @online_services_with_draft_sale_page_ids = {}
+      @course_without_chapter_ids = []
+      return
+    end
+
     @online_services_with_sale_page_ids = Current.business_owner.sale_pages.for_online_service.pluck(:product_id)
     @online_services_with_draft_sale_page_ids = Current.business_owner.sale_pages.for_online_service.with_draft.group_by(&:product_id)
     @online_services = Current.business_owner.online_services.not_deleted.order("online_services.updated_at DESC")

@@ -1,149 +1,68 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { compatRead } from "../../../libraries/compat_api";
 
-import { CommonServices } from "user_bot/api"
-import SurveyBuilder from 'components/shared/survey/builder';
-import SurveyForm from 'components/shared/survey/form';
-import { responseHandler } from 'libraries/helper';
-import { BottomNavigationBar, CircleButtonWithWord, UrlCopyInput } from 'components/shared/components';
+export default function SurveysIndex({ businessOwnerId, surveyUrlBase, introductionHtml }) {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const SurveyIndex = ({ props }) => {
-  const [surveyData, setSurveyData] = useState({
-    id: props.initialData?.id || '',
-    slug: props.initialData?.slug || '',
-    title: props.initialData?.title || '',
-    description: props.initialData?.description || '',
-    questions: props.initialData?.questions || []
-  });
+  useEffect(() => {
+    let cancelled = false;
+    compatRead(`/lines/user_bot/owner/${businessOwnerId}/surveys`)
+      .then((body) => {
+        if (cancelled) return;
+        setItems(body.data || []);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [businessOwnerId]);
 
-  const handleTitleChange = (title) => {
-    setSurveyData(prev => ({
-      ...prev,
-      title
-    }));
-  };
-
-  const handleDescriptionChange = (description) => {
-    setSurveyData(prev => ({
-      ...prev,
-      description
-    }));
-  };
-
-  const handleQuestionsChange = (questions) => {
-    setSurveyData(prev => ({
-      ...prev,
-      questions
-    }));
-  };
-
-  const handleSubmit = async (data) => {
-    const [error, response] = await CommonServices.create({
-      url: Routes.upsert_lines_user_bot_surveys_path({
-        business_owner_id: props.business_owner_id,
-        currency: props.currency
-      }),
-      data: data
-    });
-
-    responseHandler(error, response)
-  };
+  if (loading) return <div className="booking-pages-list"><p>Loading...</p></div>;
+  if (error) return <div className="booking-pages-list danger"><p>{error}</p></div>;
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-sm-6 px-0 settings-view surveys">
-            <div className="p-3">
-              {surveyData?.id && (
-                <a href={Routes.lines_user_bot_survey_responses_path(props.business_owner_id, surveyData?.id)} className="btn btn-yellow mr-2">
-                  {I18n.t('user_bot.dashboards.surveys.responses.title')}
+    <div className="booking-pages-list">
+      {items.map((survey) => {
+        const publicUrl = survey.slug ? `${surveyUrlBase}/surveys/${survey.slug}` : null;
+        return (
+          <div className="field-row with-next-arrow" key={survey.id}>
+            <a className="w-8-12" href={`/lines/user_bot/owner/${businessOwnerId}/surveys/${survey.id}`}>
+              <h3 className="text-gray-700 underline">{survey.name}</h3>
+            </a>
+            {publicUrl && (
+              <div className="w-3-12 flex">
+                <button
+                  type="button"
+                  className="btn btn-icon btn-tarco mr-2"
+                  data-clipboard-text={publicUrl}
+                  data-controller="clipboard"
+                  data-action="clipboard#copy"
+                >
+                  <i className="far fa-clone" />
+                </button>
+                <a className="btn btn-icon btn-tarco" href={publicUrl} target="_blank" rel="noreferrer">
+                  <i className="fas fa-external-link-alt" />
                 </a>
-              )}
-
-              {surveyData?.id && (
-                <a href={Routes.settings_lines_user_bot_survey_path(props.business_owner_id, surveyData?.id)} className="btn btn-yellow mr-2">
-                  {I18n.t('user_bot.dashboards.surveys.settings.title')}
-                </a>
-              )}
+              </div>
+            )}
           </div>
-          <SurveyBuilder
-            mode={props.mode}
-            initialData={surveyData}
-            onSubmit={handleSubmit}
-            onTitleChange={handleTitleChange}
-            onDescriptionChange={handleDescriptionChange}
-            onQuestionsChange={handleQuestionsChange}
-            skip_header={false}
-            business_owner_id={props.business_owner_id}
-            currency={props.currency}
-          />
-
-          {/* Delete Button */}
-          {surveyData?.id && (
-            <div class="action-block centerize mb-14">
-              <button className="btn btn-danger" onClick={async () => {
-                if (confirm(I18n.t('common.delete_confirmation_message'))) {
-                  const [error, response] = await CommonServices.delete({
-                  url: Routes.lines_user_bot_survey_path({ business_owner_id: props.business_owner_id, id: surveyData?.id })
-                });
-                responseHandler(error, response)
-                }
-              }}>{I18n.t('action.delete')}</button>
-            </div>
-          )}
-
-          <BottomNavigationBar klassName="centerize">
-            <CircleButtonWithWord
-              klassName="btn btn-tarco btn-circle btn-save btn-tweak btn-with-word btn-bottom-left"
-              onHandle={() => {
-                $('#survey-preview-modal').modal('show');
-              }}
-              icon={<i className="fa fa-eye fa-2x"></i>}
-              word={I18n.t("action.preview")}
-            />
-            <span></span>
-          </BottomNavigationBar>
-        </div>
-
-        {/* Preview Section */}
-        <div className="col-sm-6 px-0 hidden-xs">
-          <div className="preview-container">
-            <div>
-              {surveyData?.slug && (
-                <UrlCopyInput url={Routes.survey_url(surveyData.slug)} />
-              )}
-            </div>
-            <div className="fake-mobile-layout surveys">
-              <SurveyForm
-                survey={surveyData}
-                onSubmit={() => {}}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="modal fade" id="survey-preview-modal" tabIndex="-1" role="dialog">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-              <h4 className="modal-title" id="myModalLabel">
-                {I18n.t('settings.survey.preview_title')}
-              </h4>
-            </div>
-            <div className="modal-body p-0">
-              <SurveyForm
-                survey={surveyData}
-                onSubmit={() => {}}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+        );
+      })}
+      {introductionHtml && (
+        <div className="margin-around centerize" dangerouslySetInnerHTML={{ __html: introductionHtml }} />
+      )}
     </div>
   );
-};
+}
 
-export default SurveyIndex;
+SurveysIndex.propTypes = {
+  businessOwnerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  surveyUrlBase: PropTypes.string.isRequired,
+  introductionHtml: PropTypes.string,
+};

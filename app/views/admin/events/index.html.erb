@@ -6,7 +6,11 @@
     <%= link_to "新規作成", new_admin_event_path, class: "btn btn-tarco" %>
   </div>
 
-  <% if @events.any? %>
+  <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+    <%= react_component("admin/events/index", {
+      adminEventPathPrefix: "/admin/events",
+    }) %>
+  <% elsif @events.any? %>
     <% @events.each do |event| %>
       <%= link_to admin_event_path(event), class: "admin-event-card" do %>
         <div class="admin-event-card-title">

@@ -11,6 +11,11 @@ class Admin::EventsController < AdminController
   ]
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @events = []
+      return
+    end
+
     @events = Event.undeleted.order(created_at: :desc)
   end
 

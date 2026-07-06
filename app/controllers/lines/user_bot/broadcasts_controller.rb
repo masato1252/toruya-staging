@@ -5,6 +5,11 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :broadcasts, only: [:show, :edit, :update, :draft, :activate, :clone]
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @broadcasts = []
+      return
+    end
+
     @broadcasts = Current.business_owner.broadcasts.ordered.normal
   end
 

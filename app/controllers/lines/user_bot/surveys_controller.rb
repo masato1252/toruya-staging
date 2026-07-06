@@ -2,6 +2,11 @@
 
 class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @surveys = []
+      return
+    end
+
     @surveys = Survey.active
                     .where(owner: Current.business_owner)
                     .where.not(id: Survey.active

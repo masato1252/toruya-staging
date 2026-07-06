@@ -5,6 +5,13 @@
         <%= render "lines/user_bot/top_navigation_bar", title: t("user_bot.dashboards.surveys.title") %>
 
         <div class="booking-pages-list">
+          <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+            <%= react_component("user_bot/surveys/index", {
+              businessOwnerId: business_owner_id,
+              surveyUrlBase: "#{request.protocol}#{request.host_with_port}",
+              introductionHtml: t("user_bot.dashboards.surveys.introduction_message_html"),
+            }) %>
+          <% else %>
           <% @surveys.each do |survey| %>
             <%= content_tag :div, class: "field-row with-next-arrow" do %>
               <%= link_to lines_user_bot_survey_path(survey, business_owner_id: business_owner_id), class: "w-8-12" do %>
@@ -29,6 +36,7 @@
                   <% end %>
               </div>
             <% end %>
+          <% end %>
           <% end %>
 
           <div class="margin-around centerize" style="display: none;">

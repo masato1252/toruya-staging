@@ -7,6 +7,12 @@
         <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.sales.edit.sale_pages") %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
+        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <%= react_component("user_bot/sales/index", {
+            businessOwnerId: business_owner_id,
+            newSalePath: (is_not_phone? ? new_lines_user_bot_sale_path(business_owner_id: business_owner_id) : nil),
+          }) %>
+        <% else %>
         <div class="booking-pages-list">
           <% @sale_pages.each do |sale_page| %>
             <% next unless sale_page.product %>
@@ -22,6 +28,7 @@
             </div>
           <% end %>
         </div>
+        <% end %>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
           <%= link_to new_lines_user_bot_sale_path(business_owner_id: business_owner_id), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
