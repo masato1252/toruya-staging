@@ -7,6 +7,14 @@
         <div class="field-header d-flex justify-content-between align-items-center">
           <span><%= t("user_bot.dashboards.settings.equipments.list_page_header") %></span>
         </div>
+        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <%= react_component("user_bot/settings/equipments/index", {
+            businessOwnerId: business_owner_id,
+            shopId: @shop.id,
+            quantityLabel: t("user_bot.dashboards.settings.equipments.quantity"),
+            emptyLabel: t("user_bot.dashboards.settings.equipments.no_equipments"),
+          }) %>
+        <% else %>
         <% if @equipments.any? %>
           <% @equipments.each do |equipment| %>
             <%= render "lines/user_bot/field_row", path: lines_user_bot_settings_shop_equipment_path(shop_id: @shop.id, business_owner_id: business_owner_id, id: equipment.id) do %>
@@ -22,6 +30,7 @@
           <div class="margin-around centerize">
             <div class="desc"><%= t("user_bot.dashboards.settings.equipments.no_equipments") %></div>
           </div>
+        <% end %>
         <% end %>
 
         <% if is_not_phone? %>

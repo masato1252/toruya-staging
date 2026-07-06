@@ -18,6 +18,8 @@ export default function MetricsDashboard({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [revenueRows, setRevenueRows] = useState([]);
+
   useEffect(() => {
     let cancelled = false;
     const params = new URLSearchParams();
@@ -36,6 +38,23 @@ export default function MetricsDashboard({
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+    return () => { cancelled = true; };
+  }, [businessOwnerId, startDate, endDate]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const params = new URLSearchParams();
+    if (startDate) params.set("start_date", startDate);
+    if (endDate) params.set("end_date", endDate);
+    const suffix = params.toString() ? `?${params.toString()}` : "";
+
+    compatRead(`/lines/user_bot/owner/${businessOwnerId}/metrics/booking_revenue${suffix}`)
+      .then((body) => {
+        if (cancelled) return;
+        setRevenueRows(body.data || []);
+      })
+      .catch(() => {});
+
     return () => { cancelled = true; };
   }, [businessOwnerId, startDate, endDate]);
 
@@ -79,6 +98,29 @@ export default function MetricsDashboard({
         </div>
       </div>
     </div>
+    {revenueRows.length > 0 && (
+      <div className="row mt-4">
+        <div className="col-xs-12">
+          <h5>{labels.bookingPagesRevenue || "Booking pages"}</h5>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Reservations</th>
+              </tr>
+            </thead>
+            <tbody>
+              {revenueRows.map((row) => (
+                <tr key={row.booking_page_id}>
+                  <td>{row.name}</td>
+                  <td>{row.reservation_count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
   );
 }
 

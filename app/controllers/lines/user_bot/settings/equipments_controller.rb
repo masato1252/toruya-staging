@@ -8,6 +8,11 @@ class Lines::UserBot::Settings::EquipmentsController < Lines::UserBotDashboardCo
   before_action :set_equipment, only: [:show, :edit, :update, :destroy]
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @equipments = []
+      return
+    end
+
     @equipments = @shop.active_equipments.order(:name)
   end
 

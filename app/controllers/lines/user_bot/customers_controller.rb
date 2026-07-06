@@ -8,14 +8,23 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def index
     authorize! :read, :customers_dashboard
 
-    unless ENV["COMPAT_API_READ_ENABLED"] == "true"
-      @customers =
-        Current.business_owner
-        .customers
-        .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
-        .order("updated_at DESC")
-        .limit(::Customers::Search::PER_PAGE)
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      # List / counts / notifications load via v1 compat (CustomerServices + read APIs).
+      @customer = nil
+      @reservation = nil
+      @total_customers_number = nil
+      @notification_messages = []
+      draft_message_content = Rails.cache.read(draft_message_content_hash_cache_key)
+      @draft_message_content = draft_message_content ? JSON.parse(draft_message_content) : {}
+      return
     end
+
+    @customers =
+      Current.business_owner
+      .customers
+      .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
+      .order("updated_at DESC")
+      .limit(::Customers::Search::PER_PAGE)
 
     @customer =
       Current.business_owner

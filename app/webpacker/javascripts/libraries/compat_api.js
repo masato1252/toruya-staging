@@ -27,6 +27,8 @@ function readCompatApiReadEnabled() {
   return meta?.content === "true";
 }
 
+export { readCompatApiReadEnabled };
+
 function readCompatApiContext() {
   const context = {};
   const socialServiceUserId = document.querySelector(

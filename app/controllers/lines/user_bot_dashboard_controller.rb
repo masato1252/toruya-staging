@@ -15,6 +15,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   include ParameterConverters
   include UserBotExceptionHandler
   include ControllerHelpers
+  include CompatSession
 
   skip_before_action :track_ahoy_visit
   before_action :set_locale
