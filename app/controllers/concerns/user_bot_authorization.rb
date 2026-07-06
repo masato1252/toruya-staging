@@ -24,7 +24,7 @@ module UserBotAuthorization
       if owner_id.positive?
         session_data = compat_auth_session(owner_id: owner_id, current_user_id: current_user&.id)
         if session_data && session_data["owner_id"].to_i == owner_id
-          Current.business_owner = User.find_by(id: owner_id) || current_user
+          Current.business_owner = CompatBusinessOwner.new(session_data)
           return
         end
       end

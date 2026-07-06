@@ -4,6 +4,11 @@ class Lines::UserBot::Metrics::OnlineServicesController < Lines::UserBotDashboar
   include ::MetricsHelpers
 
   def sale_pages_visits
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      render json: { labels: [], datasets: [] }
+      return
+    end
+
     render json: ::Metrics::SalePagesVisits.run!(
       user: Current.business_owner,
       sale_page_ids: sale_page_ids,
@@ -13,6 +18,11 @@ class Lines::UserBot::Metrics::OnlineServicesController < Lines::UserBotDashboar
   end
 
   def sale_pages_conversions
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      render json: []
+      return
+    end
+
     render json: ::Metrics::SalePagesConversions.run!(
       user: Current.business_owner,
       sale_page_ids: sale_page_ids,
