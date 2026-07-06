@@ -4,6 +4,7 @@
       <%= react_component("user_bot/dashboards/reservation_form_shell", {
         businessOwnerId: business_owner_id,
         shopId: params[:shop_id],
+        reservationId: @compat_reservation_id,
         shellProps: {
           business_owner_id: business_owner_id,
           params: params,

@@ -36,7 +36,8 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def form
-    if compat_read_data_plane? && params[:id].blank? && params[:reservation_id].blank?
+    if compat_read_data_plane? && params[:from] != "adding_customer"
+      @compat_reservation_id = params[:id].presence || params[:reservation_id].presence
       render :form_compat
       return
     end
