@@ -4,7 +4,13 @@ class SurveysController < Lines::CustomersController
   include ProductLocale
   before_action :reject_activity_survey
 
+  skip_before_action :reject_activity_survey, if: -> { ENV["COMPAT_API_READ_ENABLED"] == "true" }
+
   def show
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      render :show_compat, layout: "booking"
+      return
+    end
   end
 
   def create

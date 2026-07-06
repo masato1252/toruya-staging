@@ -27,6 +27,11 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def edit
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      redirect_to lines_user_bot_sale_path(params[:id], business_owner_id: business_owner_id)
+      return
+    end
+
     @sale_page = Current.business_owner.sale_pages.find(params[:id])
   end
 

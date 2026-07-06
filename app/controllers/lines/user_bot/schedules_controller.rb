@@ -4,6 +4,11 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   include SchedulesHelper
 
   def mine
+    if compat_read_data_plane?
+      render_compat_schedules(mine: true)
+      return
+    end
+
     working_shop_ids = current_social_user.shops.map(&:id).uniq
     get_date(working_shop_ids)
 
@@ -42,6 +47,11 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   end
 
   def index
+    if compat_read_data_plane?
+      render_compat_schedules(mine: false)
+      return
+    end
+
     working_shop_ids = Current.business_owner.shop_ids
     get_date(working_shop_ids)
 
@@ -100,6 +110,29 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   end
 
   private
+
+  def render_compat_schedules(mine:)
+    compat_get_date
+    @schedules = []
+    @related_user_ids = []
+    @reservation = nil
+    @notification_messages = []
+    @reservations_approval_flow = []
+    @my_calendar = mine
+    @schedules_for_calendar = []
+    @schedule_mode = "list"
+    render :index_compat
+  end
+
+  def compat_get_date
+    @date =
+      if params[:reservation_date].present?
+        Time.zone.parse(params[:reservation_date]).to_date
+      else
+        Time.zone.now.to_date
+      end
+    @month_date = params[:month_date].present? ? Time.zone.parse(params[:month_date]).to_date : nil
+  end
 
   def get_date(working_shop_ids)
     @date =

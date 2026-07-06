@@ -56,6 +56,11 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def edit
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      redirect_to lines_user_bot_broadcast_path(params[:id], business_owner_id: business_owner_id)
+      return
+    end
+
     @broadcast = Current.business_owner.broadcasts.find(params[:id])
     menus_options =
       Current.business_owner.menus.map do |menu|

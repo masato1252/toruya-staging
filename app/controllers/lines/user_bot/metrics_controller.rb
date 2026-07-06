@@ -59,10 +59,16 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def online_services
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @online_services = []
+      return
+    end
+
     @online_services = Current.business_owner.online_services.order("updated_at DESC")
   end
 
   def rich_menus
+    return if ENV["COMPAT_API_READ_ENABLED"] == "true"
     if !Current.business_owner.social_account.using_line_official_account?
       @start_date = params[:start_date] || 2.week.ago.to_date
       @end_date = params[:end_date] || Time.current.to_date
@@ -74,10 +80,20 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def booking_page
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      redirect_to lines_user_bot_metrics_path(business_owner_id: business_owner_id)
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
   end
 
   def online_service
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      redirect_to lines_user_bot_metrics_path(business_owner_id: business_owner_id)
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:id])
   end
 end

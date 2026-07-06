@@ -1,0 +1,83 @@
+<%= notification_messages %>
+<%= t("user_bot.dashboards.change_logs.notification_message_html", change_log_path: lines_user_bot_change_log_path) %>
+
+<%= react_component(
+  "user_bot/shared/view_toggle_button", {
+    props: {
+      current_mode: "list",
+      business_owner_id: business_owner_id
+    }
+  },
+  { camelize_props: false }
+) %>
+
+<div class="schedule-dashboard">
+  <div class="schedule-dates">
+    <a href="#" data-toggle="modal" data-target="#calendar-modal" class="btn btn-yellow btn-icon calendar-btn">
+      <i class="fa fa-calendar-alt fa-2x"></i>
+      <div class="calendar-hint">
+        <%= I18n.t("user_bot.dashboards.schedules.calendar_hint") %>
+      </div>
+    </a>
+    <%= react_component(
+      "user_bot/dashboards/schedules_dashboard/calendar_modal", {
+        props: {
+          business_owner_id: business_owner_id,
+          my_calendar: @my_calendar,
+          params: params,
+          calendar: {
+            dayNames: I18n.t("date.abbr_day_names"),
+            monthNames: I18n.t("date.abbr_month_names").compact
+          },
+          i18n: t("common").slice(:calendar)
+        }
+      },
+      { camelize_props: false }
+    ) %>
+    <%= react_component(
+      "user_bot/dashboards/schedules_dashboard/dates_list", {
+        props: {
+          is_not_phone: is_not_phone?,
+          business_owner_id: business_owner_id,
+          my_calendar: @my_calendar,
+          selectedDate: @month_date || @date,
+          startDate: params[:schedule_display_start_date] || @month_date || @date,
+          locale: I18n.locale,
+          calendar: {
+            dayNames: I18n.t("date.abbr_day_names"),
+            monthNames: I18n.t("date.abbr_month_names").compact
+          }
+        }
+      },
+      { camelize_props: false }
+    ) %>
+  </div>
+
+  <% if @month_date %>
+    <div class="schedule-date"><%= I18n.l(@month_date, format: :year_month) %></div>
+  <% else %>
+    <div class="schedule-date"><%= I18n.l(@date, format: :long) %></div>
+  <% end %>
+
+  <%= react_component("user_bot/dashboards/schedules_dashboard/events_list", {
+    businessOwnerId: business_owner_id,
+    startDate: (@month_date || @date).to_s,
+    endDate: ((@month_date || @date) + 30.days).to_s,
+    labels: {
+      noSchedule: t("user_bot.dashboards.schedules.no_schedule"),
+    },
+  }) %>
+
+  <div class="margin-around centerize">
+    <a href="#" data-toggle="modal" data-target="#schedule-modal" class="btn btn-yellow">
+      <%= t("user_bot.dashboards.schedules.new_schedule") %>
+    </a>
+  </div>
+  <%= render "lines/user_bot/schedules/schedule_modal", my_calendar: @my_calendar %>
+  <%= render "reservations/new_modal", date: @date, my_calendar: @my_calendar %>
+  <%= render "reservations/off_date_modal", date: @date %>
+</div>
+
+<a href="#" data-toggle="modal" data-target="#schedule-modal" class="new-schedule-button btn btn-yellow btn-circle btn-tweak btn-big">
+  <i class="fa fa-plus fa-2x"></i>
+</a>
