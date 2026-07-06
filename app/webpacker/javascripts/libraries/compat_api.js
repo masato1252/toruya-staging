@@ -4,7 +4,14 @@ const COMPAT_API_PREFIX = "/v1/compat";
 
 const EXCLUDED_PATH_PREFIXES = ["/stripe_", "/api/images"];
 
-const COMPAT_PATH_PREFIXES = ["/lines/", "/surveys/", "/customer_verification/"];
+const COMPAT_PATH_PREFIXES = [
+  "/lines/",
+  "/surveys/",
+  "/customer_verification/",
+  "/booking/",
+  "/sale_pages/",
+  "/admin/",
+];
 
 let compatAxiosConfigured = false;
 let compatFetchInstalled = false;
@@ -13,6 +20,11 @@ function readCompatApiOrigin() {
   const meta = document.querySelector('meta[name="compat-api-origin"]');
   if (!meta || !meta.content) return null;
   return meta.content.replace(/\/$/, "");
+}
+
+function readCompatApiReadEnabled() {
+  const meta = document.querySelector('meta[name="compat-api-read-enabled"]');
+  return meta?.content === "true";
 }
 
 function readCompatApiContext() {
@@ -133,6 +145,10 @@ export function shouldRewriteCompatRequest(url, input, init) {
   if (contentType.includes("application/json")) return true;
   if (method !== "GET" && method !== "HEAD") return true;
 
+  if (method === "GET" && readCompatApiReadEnabled() && accept.includes("application/json")) {
+    return true;
+  }
+
   if (method === "GET" && headers.get("X-Requested-With") === "XMLHttpRequest") {
     if (!accept.includes("application/json") && !pathname.includes(".json")) {
       return false;
@@ -212,4 +228,20 @@ export function configureCompatAxios() {
 export function installCompatApi() {
   configureCompatAxios();
   installCompatFetch();
+}
+
+export async function compatRead(path) {
+  const url = rewriteCompatUrl(path, path, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+  });
+  const response = await fetch(url, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error(`compatRead failed: ${response.status}`);
+  }
+  return response.json();
 }

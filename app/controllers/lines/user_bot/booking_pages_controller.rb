@@ -9,6 +9,13 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @booking_pages = []
+      @booking_pages_without_option_ids = []
+      @booking_page_shop_options = Current.business_owner.shops.active.order(:id)
+      return
+    end
+
     @booking_pages = Current.business_owner.booking_pages.normal.includes(:booking_options, :shop).order("updated_at DESC")
     @booking_page_shop_options = Current.business_owner.shops.active.order(:id)
     # find booking pages without booking_page_options but don't filter the collection
