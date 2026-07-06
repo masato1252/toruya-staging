@@ -36,7 +36,8 @@ class BookingPagesController < ActionController::Base
       end
     end
 
-    if compat_read_data_plane? && params[:booking_option_ids].blank? && params[:booking_date].blank?
+    if compat_read_data_plane? && !booking_page.draft
+      load_compat_booking_customer_context
       render :show_compat
       return
     end
@@ -309,6 +310,49 @@ class BookingPagesController < ActionController::Base
   end
 
   private
+
+  def load_compat_booking_customer_context
+    @booking_page = booking_page
+    @social_customer = nil
+    @customer =
+      if params[:social_user_id] || cookies[:line_social_user_id_of_customer]
+        @social_customer = @booking_page.user.social_customers.find_by(
+          social_user_id: params[:social_user_id] || cookies[:line_social_user_id_of_customer],
+        )
+        @social_customer&.customer
+      end
+
+    @customer ||=
+      if cookies[:booking_customer_id] || cookies[:verified_customer_id]
+        @booking_page.user.customers.find_by(id: cookies[:booking_customer_id] || cookies[:verified_customer_id])
+      end
+
+    @customer_email = cookies[:line_customer_email] || @customer&.email
+
+    @last_selected_option_ids =
+      if params[:last_booking_option_ids] || params[:last_booking_option_id]
+        params[:last_booking_option_ids]&.split(",")&.map(&:to_i) || [params[:last_booking_option_id].to_i]
+      elsif @customer
+        @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_ids
+      else
+        []
+      end
+
+    if @customer
+      Current.customer = @customer
+    else
+      Current.customer = params[:social_user_id] || SecureRandom.uuid
+    end
+
+    @booking_options_quota = {}
+    @social_account = @booking_page.user.social_account
+
+    if @booking_page.product_requirement
+      if !@customer || @booking_page.requirement_customers.exclude?(@customer)
+        @product_requirement = @booking_page.product_requirement
+      end
+    end
+  end
 
   def date
     @date ||= params[:date].present? ? Time.zone.parse(params[:date]).to_date : Time.zone.now.to_date

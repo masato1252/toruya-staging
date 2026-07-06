@@ -2,12 +2,18 @@
 
 class OnlineServicesController < Lines::CustomersController
   include ProductLocale
+  include CompatSession
   layout "booking"
 
   before_action :online_service
   skip_before_action :verify_authenticity_token, only: [:watch_lesson, :watch_episode]
 
   def show
+    if compat_read_data_plane? && current_customer.blank?
+      render :show_compat_guest
+      return
+    end
+
     @service_member = online_service.online_service_customer_relations.where(customer: current_customer).last
 
     @online_service_hash =

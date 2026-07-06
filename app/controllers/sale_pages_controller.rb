@@ -12,6 +12,11 @@ class SalePagesController < ActionController::Base
       return
     end
 
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @main_product = sale_page.product
 
     case @main_product
