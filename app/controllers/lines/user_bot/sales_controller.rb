@@ -17,6 +17,11 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def show
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      render :show_compat
+      return
+    end
+
     @sale_page = Current.business_owner.sale_pages.find_by(id: params[:id])
     @sale_page ||= Current.business_owner.sale_pages.find_by(slug: params[:id])
   end

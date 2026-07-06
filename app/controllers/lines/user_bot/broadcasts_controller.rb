@@ -14,6 +14,11 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def show
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      render :show_compat
+      return
+    end
+
     @broadcast = Current.business_owner.broadcasts.find(params[:id])
     @customers = Broadcasts::FilterCustomers.run!(broadcast: @broadcast)
     @broadcast.update(customers_permission_warning: @customers.any? { |customer| !customer.reminder_permission })

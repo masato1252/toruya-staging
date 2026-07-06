@@ -1,0 +1,12 @@
+<div class="booking-pages form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.notifications.title") %>
+
+  <%= react_component("user_bot/notifications/index", {
+    businessOwnerId: business_owner_id,
+    schedulesPath: lines_user_bot_schedules_path(business_owner_id: business_owner_id),
+    labels: {
+      pendingReservations: I18n.t("user_bot.dashboards.notifications.pending_reservations_label"),
+      unreadMessages: I18n.t("user_bot.dashboards.notifications.unread_message_label"),
+    },
+  }) %>
+</div>

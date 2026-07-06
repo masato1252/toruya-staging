@@ -2,11 +2,12 @@
 
 class SalePagesController < ActionController::Base
   include ProductLocale
+  include CompatSession
 
   layout "booking"
 
   def show
-    if !sale_page.user.subscription.active?
+    unless subscription_active_for_public_sale?(sale_page)
       render inline: t("common.no_service_warning_html")
       return
     end

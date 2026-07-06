@@ -53,6 +53,22 @@ module CompatSession
     body&.dig("includes", "subscription_active")
   end
 
+  def public_sale_subscription_active?(slug)
+    return nil unless compat_read_data_plane?
+
+    body = fetch_v1_json("/sale_pages/#{slug}/page_context")
+    body&.dig("includes", "subscription_active")
+  end
+
+  def subscription_active_for_public_sale?(sale_page)
+    if compat_read_data_plane?
+      active = public_sale_subscription_active?(sale_page.slug)
+      return active unless active.nil?
+    end
+
+    sale_page.user.subscription.active?
+  end
+
   def subscription_active_for_public_booking?(booking_page)
     if compat_read_data_plane?
       active = public_booking_subscription_active?(booking_page.slug)

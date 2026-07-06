@@ -10,6 +10,7 @@
     business_owner_id: business_owner_id,
     compat_read_enabled: compat_read,
     current_user_id: current_user.id,
+    over_free_limit_path: over_free_limit_lines_user_bot_warnings_path(business_owner_id),
     from: params[:from],
     from_options: FROM,
     referrer: request.referrer,

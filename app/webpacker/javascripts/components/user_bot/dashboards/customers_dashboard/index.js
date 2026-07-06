@@ -68,7 +68,11 @@ const UserBotCustomersDashboard = ({props}) => {
           customer_tags: ctx.customer_tags || props.customer_tags || [],
           block_toruya_message_reply: ctx.block_toruya_message_reply ?? props.block_toruya_message_reply,
           is_customer_notification_channel_line: ctx.customer_notification_channel === "line",
+          over_free_limit: ctx.over_free_limit,
         });
+        if (ctx.over_free_limit && props.over_free_limit_path) {
+          window.location.href = props.over_free_limit_path;
+        }
       })
       .catch(() => {
         if (!cancelled) setReadyProps(props);

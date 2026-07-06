@@ -23,6 +23,11 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def show
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      render :show_compat
+      return
+    end
+
     @survey = current_user.surveys.find(params[:id])
   end
 

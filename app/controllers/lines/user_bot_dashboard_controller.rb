@@ -42,6 +42,8 @@ class Lines::UserBotDashboardController < ActionController::Base
   helper_method :device_detector
 
   def shop_menus_options
+    return [] if ENV["COMPAT_API_READ_ENABLED"] == "true"
+
     @shop_menus_options ||=
       ShopMenu.includes(:menu).where(shop: shop).where("menus.deleted_at": nil).references(:menus).map do |shop_menu|
         ::Options::MenuOption.new(
@@ -97,6 +99,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
 
   def load_setup_pending_shop
+    return if ENV["COMPAT_API_READ_ENABLED"] == "true"
     return unless Current.business_owner && admin?
 
     @setup_pending_shop = Current.business_owner.shops.setup_pending.order(:id).first
