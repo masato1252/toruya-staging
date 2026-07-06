@@ -24,13 +24,7 @@ class BookingPagesController < ActionController::Base
     Rails.logger.info("[BookingPagesController]   social_user_id: #{params[:social_user_id].present? ? params[:social_user_id] : 'nil'}")
     Rails.logger.info("[BookingPagesController]   cookie line_social_user_id_of_customer: #{cookies[:line_social_user_id_of_customer].present? ? 'present' : 'nil'}")
     
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
-      active = public_booking_subscription_active?(booking_page.slug)
-      if active == false
-        render inline: t("common.no_service_warning_html")
-        return
-      end
-    elsif !booking_page.user.subscription.active?
+    unless booking_page.user.subscription.active?
       render inline: t("common.no_service_warning_html")
       return
     end
