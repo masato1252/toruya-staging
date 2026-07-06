@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { compatRead } from "../../../libraries/compat_api";
+import { compatRead } from "../../../../libraries/compat_api";
 
 export default function SurveyResponsesIndex({ businessOwnerId, surveyId, surveyPath, labels }) {
   const [items, setItems] = useState([]);

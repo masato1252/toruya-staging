@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { compatRead } from "../../../libraries/compat_api";
+import { compatRead } from "../../../../libraries/compat_api";
 
 function formatEventTime(iso) {
   if (!iso) return "";
