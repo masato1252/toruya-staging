@@ -2,10 +2,20 @@
 
 class Lines::UserBot::Settings::ProfilesController < Lines::UserBotDashboardController
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @profile = Current.business_owner.profile
   end
 
   def company
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @profile = Current.business_owner.profile
   end
 
