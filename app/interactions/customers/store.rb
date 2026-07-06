@@ -1,45 +1,33 @@
 # frozen_string_literal: true
 
 class Customers::Store < ActiveInteraction::Base
+  ASSIGNABLE_ATTRIBUTES = %i[
+    contact_group_id rank_id last_name first_name phonetic_last_name phonetic_first_name
+    address_details phone_numbers_details emails_details birthday custom_id memo tags
+  ].freeze
+
   object :user
   object :current_user, class: User
-
-  hash :params do
-    string :id, default: nil
-    string :contact_group_id, default: nil
-    string :rank_id, default: nil
-    string :last_name, default: nil
-    string :first_name, default: nil
-    string :phonetic_last_name, default: nil
-    string :phonetic_first_name, default: nil
-    hash :address_details, default: nil do
-      string :zip_code, default: nil
-      string :region, default: nil
-      string :city, default: nil
-      string :street1, default: nil
-      string :street2, default: nil
-    end
-
-    array :phone_numbers_details, default: [] # [{ type: "mobile", value: "123" }]
-    array :emails_details, default: [] # [{ type: "mobile", value: "123" }]
-    date :birthday, default: nil
-    string :custom_id, default: nil
-    string :memo, default: nil
-    array :tags, default: nil
-  end
+  # Use a plain hash so partial updates (e.g. booking) do not fill absent keys with nil defaults.
+  record :params, class: Hash, default: {}
 
   def execute
-    tag_texts = params[:tags]&.map { |tag| tag[:text] }
+    customer_params = normalize_params(params)
+    tag_texts = customer_params[:tags]&.map { |tag| tag[:text] || tag["text"] }
 
-    if params[:id].present?
-      customer = user.customers.find(params[:id])
-      merge_attrs = params.except(:tags).merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)
+    if customer_params[:id].present?
+      customer = user.customers.find(customer_params[:id])
+      merge_attrs = customer_params.except(:id, :tags).slice(*ASSIGNABLE_ATTRIBUTES)
       merge_attrs[:tags] = tag_texts if tag_texts
-      customer.attributes = merge_attrs
+      customer.assign_attributes(
+        merge_attrs.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)
+      )
     else
-      merge_attrs = params.except(:tags).merge(updated_by_user_id: current_user.id)
+      merge_attrs = customer_params.except(:tags).slice(*ASSIGNABLE_ATTRIBUTES)
       merge_attrs[:tags] = tag_texts || []
-      customer = user.customers.new(merge_attrs)
+      merge_attrs[:phone_numbers_details] ||= []
+      merge_attrs[:emails_details] ||= []
+      customer = user.customers.new(merge_attrs.merge(updated_by_user_id: current_user.id))
     end
 
     # Normalize email addresses in emails_details
@@ -71,6 +59,16 @@ class Customers::Store < ActiveInteraction::Base
   end
 
   private
+
+  def normalize_params(raw)
+    attrs = raw.deep_symbolize_keys
+
+    if attrs[:birthday].is_a?(String)
+      attrs[:birthday] = attrs[:birthday].present? ? Date.parse(attrs[:birthday]) : nil
+    end
+
+    attrs
+  end
 
   def normalize_email(email)
     email.to_s.gsub('＠', '@')

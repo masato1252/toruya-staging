@@ -56,6 +56,42 @@ RSpec.describe Customers::Store do
       end
     end
 
+    context "when partially updating an existing customer" do
+      let!(:customer) do
+        create(
+          :customer,
+          user: user,
+          custom_id: "TYS000004",
+          birthday: Date.new(1971, 8, 20),
+          last_name: "森本",
+          first_name: "圭子"
+        )
+      end
+      let(:params) do
+        {
+          id: customer.id.to_s,
+          last_name: "森本",
+          first_name: "圭子",
+          phone_numbers_details: [{ "type" => "mobile", "value" => "09012345678" }],
+          emails_details: [{ "type" => "mobile", "value" => "test@example.com" }]
+        }
+      end
+
+      it "preserves custom_id and birthday" do
+        outcome = described_class.run(
+          user: user,
+          current_user: current_user,
+          params: params
+        )
+
+        expect(outcome).to be_valid
+        customer.reload
+        expect(customer.custom_id).to eq("TYS000004")
+        expect(customer.birthday).to eq(Date.new(1971, 8, 20))
+        expect(customer.phone_numbers_details.first["value"]).to eq("09012345678")
+      end
+    end
+
     context "when email contains multiple full-width @ characters" do
       let(:params) do
         {

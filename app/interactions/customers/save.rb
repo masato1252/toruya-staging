@@ -60,12 +60,14 @@ class Customers::Save < ActiveInteraction::Base
     params[:addresses] = [params[:primary_address]] + params[:other_addresses]
     # end
 
-    if params[:dob] && params[:dob][:year].present? && params[:dob][:month].present? && params[:dob][:day].present?
-      params[:birthday] = Date.new(params[:dob][:year].try(:to_i) || Date.current.year,
-                                   params[:dob][:month].try(:to_i) || 1,
-                                   params[:dob][:day].try(:to_i) || 1)
-    else
-      params[:birthday] = nil
+    if params[:dob]
+      if params[:dob][:year].present? && params[:dob][:month].present? && params[:dob][:day].present?
+        params[:birthday] = Date.new(params[:dob][:year].try(:to_i) || Date.current.year,
+                                     params[:dob][:month].try(:to_i) || 1,
+                                     params[:dob][:day].try(:to_i) || 1)
+      else
+        params[:birthday] = nil
+      end
     end
 
     if params[:phone_numbers].present?
@@ -133,11 +135,12 @@ class Customers::Save < ActiveInteraction::Base
     # XXX: How to assign emails, phone_numbers to customer
     # emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
     # phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }]
+    assignable_params = customer_assignable_params
     if params[:id].present?
       customer = user.customers.find(params[:id])
-      customer.attributes = params.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)
+      customer.attributes = assignable_params.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)
     else
-      customer = user.customers.new(params.merge(updated_by_user_id: current_user.id))
+      customer = user.customers.new(assignable_params.merge(updated_by_user_id: current_user.id))
     end
 
     # XXX Always update google_group_id
@@ -181,5 +184,18 @@ class Customers::Save < ActiveInteraction::Base
   rescue => e
     Rollbar.error(e)
     errors.add(:base, :google_down)
+  end
+
+  private
+
+  def customer_assignable_params
+    assignable_params = params.except(:dob)
+    assignable_params.delete(:birthday) unless dob_provided?
+    assignable_params
+  end
+
+  def dob_provided?
+    raw_params = inputs[:params]
+    raw_params&.key?(:dob) || raw_params&.key?("dob")
   end
 end
