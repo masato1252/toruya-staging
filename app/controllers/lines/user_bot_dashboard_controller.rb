@@ -78,6 +78,18 @@ class Lines::UserBotDashboardController < ActionController::Base
     )
   end
 
+  def current_ability
+    if compat_read_data_plane?
+      payload = @compat_session_payload || compat_auth_session(
+        owner_id: business_owner_id,
+        current_user_id: current_user&.id,
+      )
+      return @current_ability ||= CompatAbility.new(payload) if payload.present?
+    end
+
+    @current_ability ||= Ability.new(current_user, Current.business_owner, shop)
+  end
+
   def set_locale
     if compat_read_data_plane? && @compat_session_payload
       I18n.locale = params[:locale].presence || @compat_session_payload["locale"] || cookies[:locale] || I18n.default_locale

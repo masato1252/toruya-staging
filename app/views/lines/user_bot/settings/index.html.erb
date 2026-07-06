@@ -23,9 +23,27 @@
             </div>
           </div>
         <% else %>
+          <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+            <div class="margin-around">
+              <%= react_component("user_bot/metrics/dashboard", {
+                businessOwnerId: business_owner_id,
+                labels: {
+                  activeCustomersRate: t("user_bot.dashboards.metrics.active_customers_rate"),
+                  lastYear: t("user_bot.dashboards.metrics.last_year"),
+                  newCustomers: t("user_bot.dashboards.metrics.new_customers"),
+                  newReservations: t("user_bot.dashboards.metrics.new_reservations"),
+                  totalRevenue: t("user_bot.dashboards.metrics.total_revenue"),
+                  lastNDays: t("user_bot.dashboards.metrics.last_n_days", days: 30),
+                  loading: t("common.processing"),
+                  error: t("common.something_went_wrong_message"),
+                },
+              }) %>
+            </div>
+          <% else %>
           <div class="margin-around">
             <%= render 'lines/user_bot/shared/metrics_dashboard' %>
           </div>
+          <% end %>
           <div class="my-4 centerize">
             <%= link_to t("action.view_more"), lines_user_bot_metrics_dashboard_path(business_owner_id) %>
           </div>

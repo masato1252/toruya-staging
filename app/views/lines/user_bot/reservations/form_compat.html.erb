@@ -1,0 +1,55 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <%= react_component("user_bot/dashboards/reservation_form_shell", {
+        businessOwnerId: business_owner_id,
+        shopId: params[:shop_id],
+        shellProps: {
+          business_owner_id: business_owner_id,
+          params: params,
+          from: request.referrer,
+          book_next_time: params[:book_next_time],
+          timezone: Time.zone.tzinfo.name,
+          locale: I18n.locale,
+          calendar: {
+            dayNames: I18n.t("date.abbr_day_names"),
+            monthNames: I18n.t("date.abbr_month_names").compact,
+          },
+          reservation_properties: {
+            current_staff_name: current_user.current_staff&.name,
+            is_editable: true,
+            existing_staff_states: [],
+            menu_group_options: [],
+            staff_options: [],
+            reservation_staff_states: {
+              pending_state: ReservationStaff::PENDING_STATE,
+              accepted_state: ReservationStaff::ACCEPTED_STATE,
+            },
+          },
+          reservation_form: {
+            shop: shop&.attributes,
+            reservation_id: nil,
+            id: nil,
+            memo: nil,
+            meeting_url: nil,
+            start_time_date_part: params[:start_time_date_part],
+            start_time_time_part: params[:start_time_time_part],
+            end_time_date_part: params[:start_time_date_part],
+            end_time_time_part: params[:start_time_time_part],
+            menu_staffs_list: [],
+            staff_states: [],
+            customers_list: [],
+            by_staff_id: current_user.current_staff&.id,
+          },
+          i18n: {}.merge!([
+            t("reservation"),
+            t("user_bot.dashboards.reservation"),
+            t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar, :meeting_url),
+            t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
+          ].inject(:merge)),
+        },
+      }, { camelize_props: false }) %>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

@@ -4,6 +4,22 @@ class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
   include ::MetricsHelpers
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @subscription = Current.business_owner.subscription
+      @social_account = Current.business_owner.social_account
+      @days_in_period = 30
+      @active_customers_rate = 0
+      @customers_count = 0
+      @comparison_customers_count = 0
+      @reservations_count = 0
+      @comparison_reservations_count = 0
+      @customers_payment = 0
+      @comparison_customers_payment = 0
+      @total_customer_count = 0
+      @total_customer_limit = I18n.t("settings.dashboard.no_limit")
+      return
+    end
+
     @subscription = Current.business_owner.subscription
     @social_account = Current.business_owner.social_account
     @total_customer_count = Current.business_owner.customers.count

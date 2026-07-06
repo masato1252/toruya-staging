@@ -129,6 +129,8 @@ module ViewHelpers
   end
 
   def shops
+    return [] if compat_read_data_plane? && Current.business_owner.is_a?(CompatBusinessOwner)
+
     @shops ||= if admin?
                  Current.business_owner.shops.order("id")
                else

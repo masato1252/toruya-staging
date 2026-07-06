@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+class CompatSubscriptionProxy
+  def initialize(session_data)
+    @session_data = session_data
+  end
+
+  def over_free_limit?
+    @session_data["over_free_limit"] == true
+  end
+
+  def active?
+    @session_data.dig("plan", "active") != false
+  end
+end
+
 # Lightweight stand-in for User when COMPAT_API_READ_ENABLED — no business AR reads.
 class CompatSocialAccountProxy
   def initialize(session_data)
@@ -42,6 +56,22 @@ class CompatBusinessOwner
     session_data["display_name"].presence || company_name.presence || "Owner"
   end
 
+  def customer_notification_channel
+    session_data["customer_notification_channel"] || "email"
+  end
+
+  def support_toruya_message_reply?
+    session_data["toruya_message_reply"] == true
+  end
+
+  def premium_member?
+    session_data.dig("plan", "active") == true
+  end
+
+  def subscription
+    @subscription ||= CompatSubscriptionProxy.new(session_data)
+  end
+
   def social_account
     return nil unless session_data["social_account_present"]
 
@@ -61,5 +91,22 @@ class CompatBusinessOwner
 
   def is_a?(klass)
     klass == User || super
+  end
+
+  # Mutations still delegate to AR until write-path cutover.
+  def ar_user
+    @ar_user ||= User.find_by(id: id)
+  end
+
+  def method_missing(method_name, *args, &block)
+    if ar_user.respond_to?(method_name)
+      ar_user.public_send(method_name, *args, &block)
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(method_name, include_private = false)
+    ar_user.respond_to?(method_name, include_private) || super
   end
 end

@@ -9,6 +9,7 @@ require "site_routing"
 class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   include SchedulesHelper
   include CrossAccountRedirect
+  include CompatSession
   redirect_to_correct_owner_for :customers, param_key: :customer_id, only: [:form]
   SCHEDULE_CHECKING = "reservations_schedule_checking"
   before_action :set_reservation, only: [:update, :destroy]
@@ -35,6 +36,11 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def form
+    if compat_read_data_plane? && params[:id].blank? && params[:reservation_id].blank?
+      render :form_compat
+      return
+    end
+
     all_options
 
     if Rails.cache.read(reservation_params_hash_cache_key) && params[:from] == "adding_customer"
