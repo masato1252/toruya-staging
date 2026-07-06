@@ -15,6 +15,42 @@ function readCompatApiOrigin() {
   return meta.content.replace(/\/$/, "");
 }
 
+function readCompatApiContext() {
+  const context = {};
+  const socialServiceUserId = document.querySelector(
+    'meta[name="compat-api-social-service-user-id"]'
+  )?.content;
+  const businessOwnerId = document.querySelector(
+    'meta[name="compat-api-business-owner-id"]'
+  )?.content;
+  const currentUserId = document.querySelector(
+    'meta[name="compat-api-current-user-id"]'
+  )?.content;
+
+  if (socialServiceUserId) context.social_service_user_id = socialServiceUserId;
+  if (businessOwnerId) context.business_owner_id = businessOwnerId;
+  if (currentUserId) context.current_user_id = currentUserId;
+
+  return context;
+}
+
+function appendCompatContextToUrl(url) {
+  const context = readCompatApiContext();
+  if (!Object.keys(context).length || typeof url !== "string") return url;
+
+  try {
+    const parsed = new URL(url, window.location.origin);
+    Object.entries(context).forEach(([key, value]) => {
+      if (!parsed.searchParams.has(key)) {
+        parsed.searchParams.set(key, value);
+      }
+    });
+    return parsed.toString();
+  } catch (_error) {
+    return url;
+  }
+}
+
 function isExcludedPath(pathname) {
   return EXCLUDED_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 }
@@ -122,13 +158,13 @@ export function rewriteCompatUrl(url, input, init) {
   if (url.startsWith("http://") || url.startsWith("https://")) {
     try {
       const parsed = new URL(url);
-      return `${origin}${compatPath}${parsed.search}${parsed.hash}`;
+      return appendCompatContextToUrl(`${origin}${compatPath}${parsed.search}${parsed.hash}`);
     } catch (_error) {
       return url;
     }
   }
 
-  return `${origin}${compatPath}${suffix}`;
+  return appendCompatContextToUrl(`${origin}${compatPath}${suffix}`);
 }
 
 function withCredentialsInit(init) {

@@ -1,3 +1,12 @@
 <% if ENV["COMPAT_API_ORIGIN"].present? %>
   <meta name="compat-api-origin" content="<%= ENV["COMPAT_API_ORIGIN"].to_s.delete_suffix("/") %>" />
+  <% if defined?(current_social_user) && current_social_user&.social_service_user_id.present? %>
+    <meta name="compat-api-social-service-user-id" content="<%= current_social_user.social_service_user_id %>" />
+  <% end %>
+  <% if defined?(business_owner_id) && business_owner_id.present? %>
+    <meta name="compat-api-business-owner-id" content="<%= business_owner_id %>" />
+  <% end %>
+  <% if defined?(current_user) && current_user&.id.present? %>
+    <meta name="compat-api-current-user-id" content="<%= current_user.id %>" />
+  <% end %>
 <% end %>
