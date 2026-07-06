@@ -36,6 +36,11 @@ class BookingPagesController < ActionController::Base
       end
     end
 
+    if compat_read_data_plane? && params[:booking_option_ids].blank? && params[:booking_date].blank?
+      render :show_compat
+      return
+    end
+
     @social_customer = nil
     @customer =
       if params[:social_user_id] || cookies[:line_social_user_id_of_customer]

@@ -5,6 +5,12 @@
         <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.metrics.title") %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
+        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <%= react_component("user_bot/metrics/online_services_index", {
+            businessOwnerId: business_owner_id,
+            metricsServicePathPrefix: "/lines/user_bot/owner/#{business_owner_id}/metrics/online_services",
+          }) %>
+        <% else %>
         <div class="booking-pages-list">
           <% @online_services.each do |service| %>
             <%= link_to lines_user_bot_metrics_online_service_path(service, business_owner_id: business_owner_id), class: "field-row with-next-arrow" do %>
@@ -16,6 +22,7 @@
             <% end %>
           <% end %>
         </div>
+        <% end %>
       </div>
     </div>
 

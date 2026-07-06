@@ -18,6 +18,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   include CompatSession
 
   skip_before_action :track_ahoy_visit
+  before_action :warm_compat_session_cache
   before_action :set_locale
   before_action :redirect_from_rich_menu
   before_action :require_complete_shop_profile!
@@ -68,8 +69,19 @@ class Lines::UserBotDashboardController < ActionController::Base
     end
   end
 
+  def warm_compat_session_cache
+    return unless compat_read_data_plane?
+
+    @compat_session_payload = compat_auth_session(
+      owner_id: business_owner_id,
+      current_user_id: current_user&.id,
+    )
+  end
+
   def set_locale
-    if compat_read_data_plane?
+    if compat_read_data_plane? && @compat_session_payload
+      I18n.locale = params[:locale].presence || @compat_session_payload["locale"] || cookies[:locale] || I18n.default_locale
+    elsif compat_read_data_plane?
       session = compat_auth_session(owner_id: business_owner_id, current_user_id: current_user&.id)
       I18n.locale = params[:locale].presence || session&.dig("locale") || cookies[:locale] || I18n.default_locale
     else
@@ -87,7 +99,7 @@ class Lines::UserBotDashboardController < ActionController::Base
     return if current_user.staff_accounts.active.where.not(owner_id: current_user.id).exists?
 
     if ENV["COMPAT_API_READ_ENABLED"] == "true"
-      session = compat_auth_session(owner_id: current_user.id, current_user_id: current_user.id)
+      session = @compat_session_payload || compat_auth_session(owner_id: current_user.id, current_user_id: current_user.id)
       return if session && session["shop_profile_complete"]
     end
 

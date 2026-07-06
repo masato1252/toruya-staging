@@ -1,0 +1,4 @@
+<%= react_component("booking/public_bootstrap", {
+  slug: params[:slug] || params[:id],
+  bookingBasePath: booking_page_path(params[:slug] || params[:id]),
+}) %>

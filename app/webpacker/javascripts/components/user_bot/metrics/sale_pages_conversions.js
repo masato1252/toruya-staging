@@ -13,7 +13,7 @@ const SalePagesConversionsMetric = ({demo, metric_path, is_phone, page_label_key
       data: { demo }
     })
 
-    setData(response.data)
+    setData(response.data?.data ?? response.data)
   }
 
   useEffect(() => {

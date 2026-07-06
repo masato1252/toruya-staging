@@ -54,7 +54,7 @@ const SalePagesVisitsMetric = ({demo, metric_path}) => {
       data: { demo }
     })
 
-    setData(response.data)
+    setData(response.data?.data ?? response.data)
   }
 
   useEffect(() => {
