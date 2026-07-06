@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-page-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_booking_pages_path(business_owner_id: business_owner_id),
+          title: I18n.t("user_bot.dashboards.booking_pages.index.title") %>
+
+        <%= react_component("user_bot/booking_pages/show", {
+          businessOwnerId: business_owner_id,
+          bookingPageId: params[:id],
+          labels: {
+            basicInfo: I18n.t("settings.booking_page.form.basic_info_header"),
+            privacy: I18n.t("settings.booking_page.form.privacy_status"),
+            private: I18n.t("settings.booking_page.form.private"),
+            public: I18n.t("settings.booking_page.form.public"),
+            pageName: I18n.t("settings.booking_page.form.page_name"),
+            title: I18n.t("settings.booking_page.form.title_title"),
+            shop: I18n.t("common.shop"),
+            options: I18n.t("settings.booking_page.form.booking_option_header"),
+          },
+        }) %>
+      </div>
+    </div>
+  </div>
+</div>

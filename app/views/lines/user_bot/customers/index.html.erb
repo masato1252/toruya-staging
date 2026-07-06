@@ -1,4 +1,5 @@
-<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id), static: true) if Current.business_owner.subscription.over_free_limit? %>
+<% compat_read = ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<%= jump_out_modal(over_free_limit_lines_user_bot_warnings_path(business_owner_id), static: true) if !compat_read && Current.business_owner.subscription.over_free_limit? %>
 <%= jump_out_modal(lines_user_bot_shop_reservation_path(business_owner_id, @reservation.shop, @reservation, customer_id: params[:customer_id], from: "customer_dashboard")) if @reservation %>
 
 <% today = params[:debug_date] ? Date.parse(params[:debug_date]) : Date.today %>
@@ -7,6 +8,8 @@
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
     business_owner_id: business_owner_id,
+    compat_read_enabled: compat_read,
+    current_user_id: current_user.id,
     from: params[:from],
     from_options: FROM,
     referrer: request.referrer,
@@ -14,18 +17,17 @@
     shop: shop,
     target_view: params[:target_view],
     previous_path: params[:previous_path],
-    customer: CustomerOptionSerializer.new(@customer || Current.business_owner.customers.new).attributes_hash,
+    customer: compat_read ? {} : CustomerOptionSerializer.new(@customer || Current.business_owner.customers.new).attributes_hash,
     notification_messages: @notification_messages,
-    contact_groups: default_options(current_user_staff.readable_contact_groups),
-    ranks: rank_options,
+    contact_groups: compat_read ? [] : default_options(current_user_staff.readable_contact_groups),
+    ranks: compat_read ? [] : rank_options,
     total_customers_number: @total_customers_number,
     draft_message_content: @draft_message_content,
-    customer_tags: current_user.user_setting.customer_tags,
+    customer_tags: compat_read ? [] : current_user.user_setting.customer_tags,
     support_feature_flags: support_feature_flags,
-    block_toruya_message_reply: !Current.business_owner.support_toruya_message_reply?,
+    block_toruya_message_reply: compat_read ? true : !Current.business_owner.support_toruya_message_reply?,
     upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL),
-    support_feature_flags: support_feature_flags,
-    is_customer_notification_channel_line: Current.business_owner.customer_notification_channel == "line",
+    is_customer_notification_channel_line: compat_read ? false : Current.business_owner.customer_notification_channel == "line",
     locale: Current.business_owner.locale,
     i18n: {
     }.merge!([

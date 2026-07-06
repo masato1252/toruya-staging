@@ -4,6 +4,11 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
   skip_before_action :redirect_from_rich_menu
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      redirect_to lines_user_bot_schedules_path(business_owner_id: current_user.id)
+      return
+    end
+
     # Business
     @user_notifications = current_social_user.manage_accounts.map do |user|
       {

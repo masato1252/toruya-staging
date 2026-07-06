@@ -52,4 +52,13 @@ module CompatSession
     body = fetch_v1_json("/booking/#{slug}/page_context")
     body&.dig("includes", "subscription_active")
   end
+
+  def subscription_active_for_public_booking?(booking_page)
+    if compat_read_data_plane?
+      active = public_booking_subscription_active?(booking_page.slug)
+      return active unless active.nil?
+    end
+
+    booking_page.user.subscription.active?
+  end
 end

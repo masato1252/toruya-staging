@@ -40,6 +40,11 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def show
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      render :show_compat
+      return
+    end
+
     @service = Current.business_owner.online_services.find(params[:id])
     @upsell_sale_page = @service.sale_page.serializer.attributes_hash if @service.sale_page
     @registers_count = @service.online_service_customer_relations.uncanceled.count

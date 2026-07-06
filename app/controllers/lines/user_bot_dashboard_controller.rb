@@ -78,6 +78,12 @@ class Lines::UserBotDashboardController < ActionController::Base
     return unless Current.business_owner == current_user
     # 他オーナーの active staff として入場している場合はスルー
     return if current_user.staff_accounts.active.where.not(owner_id: current_user.id).exists?
+
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      session = compat_auth_session(owner_id: current_user.id, current_user_id: current_user.id)
+      return if session && session["shop_profile_complete"]
+    end
+
     return if current_user.profile&.company_address_details.present?
 
     redirect_to lines_user_bot_sign_up_path(social_service_user_id: current_social_user&.social_service_user_id)

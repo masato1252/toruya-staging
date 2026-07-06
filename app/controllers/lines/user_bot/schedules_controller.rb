@@ -21,9 +21,14 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @schedules = schedules_events(schedules)
     @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
 
-    notification_presenter = NotificationsPresenter.new(view_context, Current.user, params.merge(my_calendar: true))
-    @notification_messages = notification_presenter.data
-    @reservations_approval_flow = notification_presenter.reservations_approval_flow
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @notification_messages = []
+      @reservations_approval_flow = []
+    else
+      notification_presenter = NotificationsPresenter.new(view_context, Current.user, params.merge(my_calendar: true))
+      @notification_messages = notification_presenter.data
+      @reservations_approval_flow = notification_presenter.reservations_approval_flow
+    end
 
     @my_calendar = true
     @schedules_for_calendar = @schedules
@@ -51,9 +56,14 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @schedules = schedules_events(schedules)
     @related_user_ids = Current.business_owner.related_users.map(&:id)
     @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
-    notification_presenter = NotificationsPresenter.new(view_context, Current.business_owner, params)
-    @notification_messages = notification_presenter.data
-    @reservations_approval_flow = notification_presenter.reservations_approval_flow
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @notification_messages = []
+      @reservations_approval_flow = []
+    else
+      notification_presenter = NotificationsPresenter.new(view_context, Current.business_owner, params)
+      @notification_messages = notification_presenter.data
+      @reservations_approval_flow = notification_presenter.reservations_approval_flow
+    end
 
     @schedules_for_calendar = @schedules
 

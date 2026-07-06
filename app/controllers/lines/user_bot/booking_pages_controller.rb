@@ -12,7 +12,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     if ENV["COMPAT_API_READ_ENABLED"] == "true"
       @booking_pages = []
       @booking_pages_without_option_ids = []
-      @booking_page_shop_options = Current.business_owner.shops.active.order(:id)
+      @booking_page_shop_options = []
       return
     end
 
@@ -23,6 +23,12 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def show
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      clean_previous_cookie("booking_page_id")
+      render :show_compat
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @booking_option = @booking_page.booking_options.first
 
