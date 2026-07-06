@@ -31,6 +31,11 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @booking_options = []
+      return
+    end
+
     @booking_options = Current.business_owner.booking_options.includes(:menus).order("updated_at DESC")
   end
 

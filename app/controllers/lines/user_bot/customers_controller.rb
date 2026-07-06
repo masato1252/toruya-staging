@@ -8,12 +8,15 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def index
     authorize! :read, :customers_dashboard
 
-    @customers =
-      Current.business_owner
-      .customers
-      .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
-      .order("updated_at DESC")
-      .limit(::Customers::Search::PER_PAGE)
+    unless ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @customers =
+        Current.business_owner
+        .customers
+        .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
+        .order("updated_at DESC")
+        .limit(::Customers::Search::PER_PAGE)
+    end
+
     @customer =
       Current.business_owner
       .customers

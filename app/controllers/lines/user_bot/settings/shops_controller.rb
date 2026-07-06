@@ -7,9 +7,15 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
   redirect_to_correct_owner_for :shops, only: [:show, :edit, :update]
 
   def index
-    @shops = Current.business_owner.shops.order(:id)
     @shop_fee_required = shop_fee_required_for_add?(Current.business_owner)
     @proration_preview = load_shop_add_proration_preview(Current.business_owner) if @shop_fee_required
+
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @shops = []
+      return
+    end
+
+    @shops = Current.business_owner.shops.order(:id)
   end
 
   def show

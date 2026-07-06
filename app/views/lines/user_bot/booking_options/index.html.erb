@@ -5,6 +5,15 @@
         <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("settings.booking_option.booking_option_label") %>
 
         <div class="field-header"><%= I18n.t("settings.booking_option.booking_option_label") %></div>
+        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <%= react_component("user_bot/booking_options/index", {
+            businessOwnerId: business_owner_id,
+            newBookingOptionPath: (is_not_phone? ? new_lines_user_bot_booking_option_path(business_owner_id: business_owner_id, back_path: lines_user_bot_booking_options_path(business_owner_id: business_owner_id)) : nil),
+            lineKeywordPath: (Current.business_owner.social_account&.line_settings_verified? ? edit_booking_options_lines_user_bot_settings_line_keyword_path(business_owner_id: business_owner_id) : nil),
+            requiredTimeLabel: I18n.t("settings.booking_page.form.booking_option_required_time"),
+            minuteLabel: I18n.t("common.minute"),
+          }) %>
+        <% else %>
         <div class="booking-pages-list">
           <% @booking_options.each do |booking_option| %>
             <%= link_to lines_user_bot_booking_option_path(business_owner_id, booking_option), class: "field-row with-next-arrow" do %>
@@ -29,6 +38,7 @@
             </div>
           <% end %>
         </div>
+        <% end %>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
           <% if Current.business_owner.social_account&.line_settings_verified? %>
