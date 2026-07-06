@@ -12,12 +12,9 @@ import { getMomentLocale } from "libraries/helper.js";
 
 const Calendar = ({locale = 'ja', ...props}) => {
   moment.locale(getMomentLocale(locale));
-  let staff_id;
   const startDate = props.selectedDate ? moment(props.selectedDate) : moment().startOf("day");
 
-  if (location.search.length) {
-    staff_id = location.search.replace(/\?staff_id=/, '');
-  }
+  const staff_id = new URLSearchParams(location.search).get("staff_id") || undefined;
 
   const [state, setState] = useState({
     month: startDate.clone(),
