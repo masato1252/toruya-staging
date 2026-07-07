@@ -81,7 +81,8 @@ class EventParticipant < ApplicationRecord
     "デザイナー",
     "ライター",
     "経営コンサル",
-    "税理士"
+    "税理士",
+    "商材メーカー"
   ].freeze
 
   BUSINESS_AGE_LABELS = {
