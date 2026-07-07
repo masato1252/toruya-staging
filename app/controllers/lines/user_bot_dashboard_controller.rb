@@ -74,10 +74,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   def warm_compat_session_cache
     return unless compat_read_data_plane?
 
-    @compat_session_payload = compat_auth_session(
-      owner_id: business_owner_id,
-      current_user_id: current_user&.id,
-    )
+    @compat_session_payload = compat_auth_session
   end
 
   def current_ability

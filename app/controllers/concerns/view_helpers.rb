@@ -105,19 +105,12 @@ module ViewHelpers
 
   def super_user
     @super_user ||=
-      begin
-        if compat_read_enabled? && params[:business_owner_id].present? && respond_to?(:compat_auth_session, true)
-          payload = compat_auth_session(owner_id: params[:business_owner_id])
-          return CompatBusinessOwner.new(payload) if payload.present?
-        end
-
-        if params[:encrypted_user_id]
-          User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
-        elsif params[:business_owner_id]
-          User.find_by(id: params[:business_owner_id])
-        else
-          root_user || privileged_session_user
-        end
+      if params[:encrypted_user_id]
+        User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
+      elsif params[:business_owner_id]
+        User.find_by(id: params[:business_owner_id])
+      else
+        root_user || privileged_session_user
       end
   end
   alias_method :business_owner, :super_user

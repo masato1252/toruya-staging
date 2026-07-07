@@ -35,16 +35,46 @@ module CompatSession
     nil
   end
 
-  def compat_auth_session(owner_id: business_owner_id, current_user_id: current_user&.id)
+  def compat_auth_session(owner_id: nil, current_user_id: nil)
     return nil unless compat_read_data_plane?
 
-    @compat_auth_session ||= fetch_v1_json(
+    owner_id = resolve_compat_owner_id(owner_id)
+    current_user_id = resolve_compat_current_user_id(current_user_id)
+    return nil unless owner_id&.positive?
+
+    @compat_auth_sessions ||= {}
+    cache_key = [owner_id, current_user_id]
+    return @compat_auth_sessions[cache_key] if @compat_auth_sessions.key?(cache_key)
+
+    @compat_auth_sessions[cache_key] = fetch_v1_json(
       "/auth/session",
       {
         business_owner_id: owner_id,
         current_user_id: current_user_id,
       }.compact
     )&.dig("data")
+  end
+
+  def resolve_compat_owner_id(owner_id)
+    return owner_id if owner_id&.positive?
+
+    params[:business_owner_id].presence&.to_i
+  end
+
+  def resolve_compat_current_user_id(current_user_id)
+    return current_user_id if current_user_id&.positive?
+
+    if respond_to?(:user_bot_cookies, true)
+      cookie_id = user_bot_cookies(:current_user_id)
+      return cookie_id.to_i if cookie_id.present?
+    end
+
+    if respond_to?(:privileged_session_user, true)
+      user = privileged_session_user
+      return user.id if user
+    end
+
+    nil
   end
 
   def public_booking_subscription_active?(slug)
