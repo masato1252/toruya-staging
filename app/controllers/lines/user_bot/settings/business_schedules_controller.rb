@@ -9,12 +9,22 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
   end
 
   def index
+    if compat_read_data_plane?
+      render :index_compat
+      return
+    end
+
     @wdays_business_schedules_mapping = shop.business_schedules.opened.for_shop.group_by(&:day_of_week)
     @holiday_working_schedules = shop.business_schedules.opened.for_shop.holiday_working
     set_up_previous_cookie("booking_page_id", params[:booking_page_id]) if params[:booking_page_id]
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @business_schedules = shop.business_schedules.opened.for_shop.where(day_of_week: params[:wday])
   end
 

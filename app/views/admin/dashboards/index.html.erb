@@ -1,3 +1,10 @@
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= react_component("admin/dashboard/index", {
+    applicationsTitle: I18n.t("admin.pending_business_applications.title"),
+    withdrawalsTitle: I18n.t("admin.pending_withdrawals.title"),
+    allApplicationsHref: admin_business_applications_path,
+  }) %>
+<% else %>
 <h1><%= I18n.t("admin.pending_business_applications.title") %> (<%= link_to I18n.t("admin.dashboard.all"), admin_business_applications_path %>)</h1>
 <%= render "applications", applications: @pending_applications %>
 
@@ -5,3 +12,4 @@
 <hr />
 <br />
 <%= render "pending_withdrawals", withdrawals: @pending_withdrawals %>
+<% end %>

@@ -2,10 +2,16 @@
 
 module Admin
   class OnlineServiceCustomerRelationsController < AdminController
-    def index
-      user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id])&.user || User.find_by(id: params[:user_id])
+  def index
+    user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id])&.user || User.find_by(id: params[:user_id])
 
-      @relations = OnlineServiceCustomerRelation.
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @relations = []
+      @lookup_user_id = user&.id
+      return
+    end
+
+    @relations = OnlineServiceCustomerRelation.
         includes(:online_service, :sale_page, :customer).
         where("online_services.user_id": user.id).
         references(:online_services).

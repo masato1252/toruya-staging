@@ -21,6 +21,11 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @social_account = Current.business_owner.social_account || Current.business_owner.social_accounts.new
     @attribute = params[:attribute]
     @previous_path =

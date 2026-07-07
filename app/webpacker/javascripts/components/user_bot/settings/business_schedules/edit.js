@@ -1,25 +1,80 @@
 "use strict"
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton, TimePickerController } from "shared/components"
 import { BusinessScheduleServices } from "user_bot/api"
+import { compatRead } from "../../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 
-const BusinessScheduleEdit =({props}) => {
+const BusinessScheduleEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const wday = encodeURIComponent(initialProps.wday);
+    compatRead(`${initialProps.pageContextPath}?wday=${wday}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form) {
+          setLoadError("Failed to load business schedule edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          business_schedules: form.business_schedules || [],
+          business_state: form.business_state,
+          wday_name: I18n.t("date.day_names")[Number(form.wday) % 7],
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
-      business_schedules: props.business_schedules,
-      business_state: props.business_state
-    }
+      business_schedules: props?.business_schedules || [],
+      business_state: props?.business_state || "closed",
+    },
   });
+
   const business_schedule_fields = useFieldArray({
     control: control,
     name: "business_schedules"
   });
 
-  const business_state = watch("business_state")
+  const business_state = watch("business_state");
+
+  useEffect(() => {
+    if (!props) return;
+    setValue("business_schedules", props.business_schedules || []);
+    setValue("business_state", props.business_state || "closed");
+  }, [props, setValue]);
+
+  useEffect(() => {
+    if (business_state !== "opened" || business_schedule_fields.fields.length !== 0) return;
+    business_schedule_fields.append({
+      start_time: "09:00",
+      end_time: "17:00"
+    });
+  }, [business_state, business_schedule_fields]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
@@ -32,15 +87,6 @@ const BusinessScheduleEdit =({props}) => {
 
     window.location = response.data.redirect_to
   }
-
-  useEffect(() => {
-    if (business_state === 'opened' && business_schedule_fields.fields.length == 0) {
-      business_schedule_fields.append({
-        start_time: "09:00",
-        end_time: "17:00"
-      })
-    }
-  }, [business_state])
 
   return (
     <div className="form with-top-bar">

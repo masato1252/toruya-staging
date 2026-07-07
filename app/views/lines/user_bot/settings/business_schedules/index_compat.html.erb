@@ -1,0 +1,11 @@
+<div class="settings-dashboard form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar",
+    previous_path: previous_path(lines_user_bot_settings_path(business_owner_id: business_owner_id)),
+    title: t("user_bot.dashboards.settings.business_schedules.business_time") %>
+
+  <%= react_component("user_bot/settings/business_schedules/index_shell", {
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/business_schedules/shop/#{params[:shop_id]}/page_context",
+    shopId: params[:shop_id],
+    businessOwnerId: business_owner_id,
+  }) %>
+</div>

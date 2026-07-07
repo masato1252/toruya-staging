@@ -1,3 +1,9 @@
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= react_component("admin/online_service_customer_relations/index", {
+    userId: @lookup_user_id,
+    salePagePathPrefix: sale_page_path("").sub(%r{/$}, ""),
+  }) %>
+<% else %>
 <ul>
   <% @relations.each do |relation| %>
     <li>
@@ -9,3 +15,4 @@
     </li>
 <% end %>
 </ul>
+<% end %>

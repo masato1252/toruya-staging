@@ -1,14 +1,63 @@
 "use strict"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
 import { SocialAccountServices } from "user_bot/api"
+import { compatRead } from "../../../../libraries/compat_api";
 import { responseHandler } from "libraries/helper"
 
-const SocialAccountEdit =({props}) => {
-  const i18n = props.i18n;
+const SocialAccountEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.social_account) {
+          setLoadError("Failed to load social account edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          social_account: form.social_account,
+          previous_path: form.previous_path,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const i18n = props?.i18n;
+  const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
+    defaultValues: props?.social_account || {},
+  });
+
+  useEffect(() => {
+    if (!props?.social_account) return;
+    Object.entries(props.social_account).forEach(([key, value]) => {
+      setValue(key, value);
+    });
+  }, [props, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.social_account || !i18n) return <p>Loading...</p>;
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
@@ -21,12 +70,6 @@ const SocialAccountEdit =({props}) => {
 
     responseHandler(error, response)
   }
-
-  const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
-    defaultValues: {
-      ...props.social_account,
-    }
-  });
 
   const renderCorrespondField = () => {
     switch(props.attribute) {

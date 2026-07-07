@@ -2,9 +2,16 @@
 
 module Admin
   class ChatsController < AdminController
-    def index
-      @selected_social_user = SocialUser.linked_for_line(params[:social_service_user_id]) || User.find_by(id: params[:user_id])&.social_user || SocialUser.find_by(social_service_user_id: params[:social_service_user_id])
+  def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @selected_social_user = nil
+      @lookup_social_service_user_id = params[:social_service_user_id]
+      @lookup_user_id = params[:user_id]
+      return
     end
+
+    @selected_social_user = SocialUser.linked_for_line(params[:social_service_user_id]) || User.find_by(id: params[:user_id])&.social_user || SocialUser.find_by(social_service_user_id: params[:social_service_user_id])
+  end
 
     def create
       if params[:message].present?

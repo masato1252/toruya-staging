@@ -1,2 +1,8 @@
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= react_component("admin/business_applications/index", {
+    title: I18n.t("admin.all_business_applications.title"),
+  }) %>
+<% else %>
 <h1><%= I18n.t("admin.all_business_applications.title") %></h1>
 <%= render "admin/dashboards/applications", applications: @applications %>
+<% end %>
