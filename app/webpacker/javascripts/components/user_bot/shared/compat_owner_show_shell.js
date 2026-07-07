@@ -22,7 +22,13 @@ RowLink.propTypes = {
   dataConfirm: PropTypes.string,
 };
 
-function FieldRow({ row, label, warningLabels }) {
+function resolveRowTitle(row, valueLabels) {
+  if (!row?.title || !row.header || !valueLabels?.[row.header]) return row?.title;
+  return valueLabels[row.header][row.title] ?? row.title;
+}
+
+function FieldRow({ row, label, warningLabels, valueLabels }) {
+  const displayTitle = resolveRowTitle(row, valueLabels);
   const display = row.row_display || (row.row_class === "option-row" ? "option" : "inline");
 
   if (display === "option") {
@@ -92,12 +98,20 @@ function FieldRow({ row, label, warningLabels }) {
   }
 
   if (display === "value" || display === "message") {
+    const titleLines = (displayTitle || "").split("\n");
     return (
       <RowLink
         href={row.href}
         className={`field-row with-next-arrow with-format${row.row_class ? ` ${row.row_class}` : ""}`}
       >
-        <span className="dotdotdot">{row.title}</span>
+        <span className="dotdotdot">
+          {titleLines.map((line, i) => (
+            <React.Fragment key={i}>
+              {line}
+              {i < titleLines.length - 1 ? <br /> : null}
+            </React.Fragment>
+          ))}
+        </span>
         {row.warnings?.map((code) => (
           <div key={code} className="danger warning">
             <i className="fas fa-exclamation-circle" /> {warningLabels?.[code] || code}
@@ -130,7 +144,7 @@ FieldRow.propTypes = {
   warningLabels: PropTypes.object,
 };
 
-function renderGroupRows(group, rowLabels, warningLabels) {
+function renderGroupRows(group, rowLabels, warningLabels, valueLabels) {
   const elements = [];
   let scheduleBuffer = [];
 
@@ -144,6 +158,7 @@ function renderGroupRows(group, rowLabels, warningLabels) {
             row={row}
             label={rowLabels?.[row.header]}
             warningLabels={warningLabels}
+            valueLabels={valueLabels}
           />
         ))}
       </div>,
@@ -157,12 +172,20 @@ function renderGroupRows(group, rowLabels, warningLabels) {
       return;
     }
     flushSchedule();
+    if (rowLabels?.[row.header] && (row.row_display === "value" || row.row_display === "message")) {
+      elements.push(
+        <div key={`${group.id}-header-${row.header}-${idx}`} className="field-header">
+          {rowLabels[row.header]}
+        </div>,
+      );
+    }
     elements.push(
       <FieldRow
         key={`${group.id}-${row.header}-${idx}`}
         row={row}
         label={rowLabels?.[row.header]}
         warningLabels={warningLabels}
+        valueLabels={valueLabels}
       />,
     );
   });
@@ -176,6 +199,7 @@ export default function CompatOwnerShowShell({
   rowLabels,
   warningLabels,
   actionLabels,
+  valueLabels,
 }) {
   const [vm, setVm] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -227,7 +251,7 @@ export default function CompatOwnerShowShell({
               {groupLabels[group.label]}
             </div>
           ) : null}
-          {renderGroupRows(group, rowLabels, warningLabels)}
+          {renderGroupRows(group, rowLabels, warningLabels, valueLabels)}
           {group.action_rows?.length ? (
             <div
               className={`action-block margin-around${
@@ -295,4 +319,5 @@ CompatOwnerShowShell.propTypes = {
   rowLabels: PropTypes.object,
   warningLabels: PropTypes.object,
   actionLabels: PropTypes.object,
+  valueLabels: PropTypes.object,
 };

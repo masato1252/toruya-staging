@@ -1,0 +1,32 @@
+<div class="settings-dashboard form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar",
+    previous_path: lines_user_bot_settings_menus_path(business_owner_id: business_owner_id),
+    title: t("common.menu") %>
+
+  <%= react_component("user_bot/shared/compat_owner_show_shell", {
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/menus/#{params[:id]}/page_context",
+    groupLabels: {
+      basic_settings: t("user_bot.dashboards.settings.menu.basic_settings"),
+    },
+    rowLabels: {
+      name: t("user_bot.dashboards.settings.menu.name"),
+      minutes: t("user_bot.dashboards.settings.menu.minutes"),
+      interval: t("user_bot.dashboards.settings.menu.interval"),
+      min_staffs_number: t("user_bot.dashboards.settings.menu.min_staffs_number"),
+      menu_shops: t("user_bot.dashboards.settings.menu.menu_shops"),
+      staffs: t("user_bot.dashboards.settings.menu.staffs"),
+      method: t("user_bot.dashboards.settings.menu.method"),
+    },
+    actionLabels: {
+      delete: I18n.t("action.delete"),
+      confirm_delete: I18n.t("common.are_you_sure_message"),
+      loading: t("common.processing"),
+    },
+    valueLabels: {
+      method: {
+        online: t("user_bot.dashboards.settings.menu.methods.online"),
+        local: t("user_bot.dashboards.settings.menu.methods.local"),
+      },
+    },
+  }) %>
+</div>

@@ -19,6 +19,11 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @shop = Current.business_owner.shops.find(params[:id])
     @can_delete_shop = @shop.id != Current.business_owner.shops.active.order(:id).first&.id
   end

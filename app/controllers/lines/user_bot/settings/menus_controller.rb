@@ -14,6 +14,11 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @menu = Current.business_owner.menus.find(params[:id])
 
     @menu_shops = @menu.shop_menus.includes(:shop)

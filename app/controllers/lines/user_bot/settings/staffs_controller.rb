@@ -16,6 +16,10 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
   end
 
   def edit

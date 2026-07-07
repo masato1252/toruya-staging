@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="settings-dashboard form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id),
+          title: t("user_bot.dashboards.settings.staffs.list_page_header") %>
+
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/staffs/#{params[:id]}/page_context",
+          groupLabels: {
+            staff_info: "",
+          },
+          rowLabels: {
+            name: t("common.name"),
+            phone_number: t("common.cellphone_number"),
+            email: t("common.email"),
+            authority: t("user_bot.dashboards.settings.staffs.authority"),
+            introduction: t("user_bot.dashboards.settings.staffs.introduction"),
+            staff_menus: t("user_bot.dashboards.settings.staffs.staff_menus"),
+            work_shops: t("user_bot.dashboards.settings.staffs.work_shops"),
+          },
+          actionLabels: {
+            delete: t("user_bot.dashboards.settings.staffs.delete"),
+            confirm_delete: I18n.t("settings.staff.delete_confirmation_message", staff_name: ""),
+            loading: t("common.processing"),
+          },
+          valueLabels: {
+            authority: {
+              employee: t("user_bot.dashboards.settings.staffs.authorities.employee"),
+              owner: t("user_bot.dashboards.settings.staffs.authorities.owner"),
+              admin: t("user_bot.dashboards.settings.staffs.authorities.admin"),
+            },
+          },
+        }) %>
+      </div>
+      <div class="centerize">
+        <%= link_to t("action.invitation_resend"),
+          resend_activation_lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id, id: params[:id]),
+          class: "btn btn-tarco" %>
+      </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>
