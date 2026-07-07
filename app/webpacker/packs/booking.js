@@ -9,7 +9,7 @@ import toastr from 'toastr';
 
 installCompatApi();
 
-var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|surveys|shared|lines|user_bot\/sales|user_bot\/services|user_bot\/user_sign_up|user_bot\/user_connect|events|event_contents|docs)/)
+var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|surveys|shared|lines|sale_pages|user_bot\/sales|user_bot\/services|user_bot\/user_sign_up|user_bot\/user_connect|events|event_contents|docs)/)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(BookingcomponentRequireContext)
 

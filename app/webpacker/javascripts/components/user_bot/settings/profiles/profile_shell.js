@@ -30,13 +30,13 @@ export default function ProfileShell({ businessOwnerId, labels }) {
   if (!profile) return null;
 
   return (
-    <div className="settings-dashboard form with-top-bar">
+    <>
       <div className="field-header">{labels.name}</div>
       <div className="field-row">{profile.name}</div>
 
       <div className="field-header">{labels.phoneNumber}</div>
       <div className="field-row">{profile.phone_number || "-"}</div>
-    </div>
+    </>
   );
 }
 

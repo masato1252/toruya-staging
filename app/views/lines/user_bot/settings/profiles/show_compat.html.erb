@@ -4,7 +4,7 @@
       <div class="settings-dashboard form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("settings.profile.user_info") %>
 
-        <%= react_component("lines/user_bot/settings/profile_shell", {
+        <%= react_component("user_bot/settings/profiles/profile_shell", {
           businessOwnerId: business_owner_id,
           labels: {
             name: t("common.name"),
