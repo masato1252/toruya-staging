@@ -24,6 +24,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
   def show
     if compat_read_enabled?
+      @booking_page = Current.business_owner.booking_pages.find_by(id: params[:id])
       clean_previous_cookie("booking_page_id")
       render :show_compat
       return

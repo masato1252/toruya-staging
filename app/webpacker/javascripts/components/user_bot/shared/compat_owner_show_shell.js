@@ -2,36 +2,53 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
-function copyToClipboard(text) {
-  if (navigator.clipboard?.writeText) {
-    return navigator.clipboard.writeText(text);
+function RowLink({ href, className, children, dataMethod, dataConfirm }) {
+  if (!href) {
+    return <div className={className}>{children}</div>;
   }
-  const el = document.createElement("textarea");
-  el.value = text;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand("copy");
-  document.body.removeChild(el);
-  return Promise.resolve();
+  return (
+    <a href={href} className={className} data-method={dataMethod} data-confirm={dataConfirm}>
+      {children}
+      <i className="fa fa-angle-right" />
+    </a>
+  );
 }
 
-function FieldRow({ row, label, warningLabels }) {
-  const header = label ?? row.header;
+RowLink.propTypes = {
+  href: PropTypes.string,
+  className: PropTypes.string,
+  children: PropTypes.node,
+  dataMethod: PropTypes.string,
+  dataConfirm: PropTypes.string,
+};
 
-  if (row.row_class === "option-row") {
+function FieldRow({ row, label, warningLabels }) {
+  const display = row.row_display || (row.row_class === "option-row" ? "option" : "inline");
+
+  if (display === "option") {
+    const descLines = (row.title || "").split("\n").filter(Boolean);
     return (
       <div className={`field-row option-row${row.href ? " with-next-arrow" : ""}`}>
         <div className="option-info">
           {row.href ? (
-            <a href={row.href} className="break-line-content underline w-full block">
-              <span className="dotdotdot">{row.link_title || row.title}</span>
+            <a href={row.href} className="break-line-content underline">
+              {row.link_title || row.title}
             </a>
           ) : (
-            <span className="dotdotdot">{row.link_title || row.title}</span>
+            <span className="break-line-content underline">{row.link_title || row.title}</span>
           )}
-          {row.title && row.link_title ? <div className="desc">{row.title}</div> : null}
+          {descLines.length ? (
+            <div className="desc">
+              {descLines.map((line, i) => (
+                <React.Fragment key={i}>
+                  {line}
+                  {i < descLines.length - 1 ? <br /> : null}
+                </React.Fragment>
+              ))}
+            </div>
+          ) : null}
           {row.warnings?.map((code) => (
-            <div key={code} className="danger warning">
+            <div key={code} className="warning">
               <i className="fas fa-exclamation-circle" /> {warningLabels?.[code] || code}
             </div>
           ))}
@@ -44,7 +61,7 @@ function FieldRow({ row, label, warningLabels }) {
                   key={`block-${i}`}
                   href={block.href}
                   className="btn btn-orange"
-                  data-method={block.href.includes("unlink") ? "delete" : undefined}
+                  data-method="delete"
                 >
                   <i className="fa fa-minus" /> {block.title}
                 </a>
@@ -56,32 +73,54 @@ function FieldRow({ row, label, warningLabels }) {
     );
   }
 
-  return (
-    <>
-      {header ? <div className="field-header">{header}</div> : null}
-      <div className={`field-row${row.row_class ? ` ${row.row_class}` : ""}${row.href ? " with-next-arrow" : ""}`}>
-        {row.href ? (
-          <a href={row.href} className="w-full block">
-            <span className="dotdotdot">{row.link_title || row.title}</span>
-            {row.title && row.link_title && row.title !== row.link_title && (
-              <div className="desc">{row.title}</div>
-            )}
-          </a>
-        ) : row.html ? (
-          <span className="dotdotdot" dangerouslySetInnerHTML={{ __html: row.html }} />
-        ) : (
-          <span className="dotdotdot">{row.title}</span>
-        )}
+  if (display === "split") {
+    const closeClass = row.title === "CLOSE" ? "danger" : "";
+    return (
+      <RowLink href={row.href} className="field-row with-next-arrow with-format">
+        <span>{row.link_title || label}</span>
+        <span className={closeClass}>{row.title}</span>
+      </RowLink>
+    );
+  }
+
+  if (display === "header_link") {
+    return (
+      <RowLink href={row.href} className="field-row with-next-arrow with-format header-row">
+        <span>{row.title}</span>
+      </RowLink>
+    );
+  }
+
+  if (display === "value" || display === "message") {
+    return (
+      <RowLink
+        href={row.href}
+        className={`field-row with-next-arrow with-format${row.row_class ? ` ${row.row_class}` : ""}`}
+      >
+        <span className="dotdotdot">{row.title}</span>
         {row.warnings?.map((code) => (
           <div key={code} className="danger warning">
             <i className="fas fa-exclamation-circle" /> {warningLabels?.[code] || code}
           </div>
         ))}
-        {row.blocks?.map((block, i) => (
-          <FieldRow key={`block-${i}`} row={block} warningLabels={warningLabels} />
-        ))}
-      </div>
-    </>
+      </RowLink>
+    );
+  }
+
+  return (
+    <RowLink
+      href={row.href}
+      className={`field-row with-next-arrow with-format${row.row_class ? ` ${row.row_class}` : ""}`}
+    >
+      <span>
+        <span>{label}:</span> <span className="text-gray-500">{row.title}</span>
+      </span>
+      {row.warnings?.map((code) => (
+        <div key={code} className="danger warning">
+          <i className="fas fa-exclamation-circle" /> {warningLabels?.[code] || code}
+        </div>
+      ))}
+    </RowLink>
   );
 }
 
@@ -91,18 +130,56 @@ FieldRow.propTypes = {
   warningLabels: PropTypes.object,
 };
 
+function renderGroupRows(group, rowLabels, warningLabels) {
+  const elements = [];
+  let scheduleBuffer = [];
+
+  const flushSchedule = () => {
+    if (!scheduleBuffer.length) return;
+    elements.push(
+      <div key={`schedule-${elements.length}`} className="booking-page-business-schedules">
+        {scheduleBuffer.map((row, idx) => (
+          <FieldRow
+            key={`schedule-${row.header}-${idx}`}
+            row={row}
+            label={rowLabels?.[row.header]}
+            warningLabels={warningLabels}
+          />
+        ))}
+      </div>,
+    );
+    scheduleBuffer = [];
+  };
+
+  group.rows.forEach((row, idx) => {
+    if (row.row_display === "split") {
+      scheduleBuffer.push(row);
+      return;
+    }
+    flushSchedule();
+    elements.push(
+      <FieldRow
+        key={`${group.id}-${row.header}-${idx}`}
+        row={row}
+        label={rowLabels?.[row.header]}
+        warningLabels={warningLabels}
+      />,
+    );
+  });
+  flushSchedule();
+  return elements;
+}
+
 export default function CompatOwnerShowShell({
   pageContextPath,
   groupLabels,
   rowLabels,
   warningLabels,
   actionLabels,
-  showQrForUrl,
 }) {
   const [vm, setVm] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -126,23 +203,20 @@ export default function CompatOwnerShowShell({
   const loadingText = labels.loading || "Loading...";
   const deleteLabel = labels.delete || "Delete";
   const cloneLabel = labels.clone || "Clone";
-  const copyLabel = labels.copy_url || "Copy URL";
   const confirmDelete = labels.confirm_delete || "Are you sure?";
 
   if (loading) return <p>{loadingText}</p>;
   if (error) return <p className="danger">{error}</p>;
   if (!vm?.field_groups) return null;
 
-  const publicUrl = vm.preview?.public_url;
-  const absoluteUrl = publicUrl ? `${window.location.origin}${publicUrl}` : null;
-
-  const handleCopy = () => {
-    if (!absoluteUrl) return;
-    copyToClipboard(absoluteUrl).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
+  const updatedAt = vm.updated_at
+    ? new Date(vm.updated_at).toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "short",
+      })
+    : null;
 
   return (
     <>
@@ -153,26 +227,26 @@ export default function CompatOwnerShowShell({
               {groupLabels[group.label]}
             </div>
           ) : null}
-          {group.rows.map((row, idx) => (
-            <FieldRow
-              key={`${group.id}-${row.header}-${idx}`}
-              row={row}
-              label={rowLabels?.[row.header]}
-              warningLabels={warningLabels}
-            />
-          ))}
-          {group.action_rows?.map((row, idx) => (
+          {renderGroupRows(group, rowLabels, warningLabels)}
+          {group.action_rows?.length ? (
             <div
-              key={`action-${idx}`}
               className={`action-block margin-around${
                 group.id === "booking_options" && !group.rows?.length ? " border-red border-solid" : ""
               }`}
             >
-              <a className="btn btn-yellow" href={row.href}>
-                <i className="fa fa-plus" /> {row.title}
-              </a>
+              {group.action_rows.map((row, idx) =>
+                row.header === "reorder" ? (
+                  <a key={`action-${idx}`} className="btn btn-tarco" href={row.href}>
+                    {row.title}
+                  </a>
+                ) : (
+                  <a key={`action-${idx}`} className="btn btn-yellow" href={row.href}>
+                    <i className="fa fa-plus" /> {row.title}
+                  </a>
+                ),
+              )}
             </div>
-          ))}
+          ) : null}
           {group.id === "booking_options" && !group.rows?.length && warningLabels?.no_booking_option ? (
             <div className="danger margin-around">
               <i className="fas fa-exclamation-circle" /> {warningLabels.no_booking_option}
@@ -180,32 +254,6 @@ export default function CompatOwnerShowShell({
           ) : null}
         </React.Fragment>
       ))}
-
-      {absoluteUrl && (
-        <div className="margin-around">
-          <input readOnly className="extend" value={absoluteUrl} onClick={(e) => e.target.select()} />
-          <div className="centerize margin-around purchase-buttons">
-            <button type="button" className="btn btn-tarco" onClick={handleCopy}>
-              <i className="fas fa-copy" /> {copied ? (labels.copied || "Copied!") : copyLabel}
-            </button>
-            {publicUrl && (
-              <a className="btn btn-tarco" href={publicUrl} target="_blank" rel="noreferrer">
-                <i className="fas fa-external-link-alt" /> {labels.open || "Open"}
-              </a>
-            )}
-          </div>
-          {showQrForUrl && absoluteUrl && (
-            <div className="centerize margin-around">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(absoluteUrl)}`}
-                alt="QR"
-                width={150}
-                height={150}
-              />
-            </div>
-          )}
-        </div>
-      )}
 
       {vm.actions?.clone_href && (
         <div className="action-block margin-around">
@@ -232,9 +280,9 @@ export default function CompatOwnerShowShell({
         </div>
       )}
 
-      {vm.updated_at && (
+      {updatedAt && (
         <div className="margin-around text-center text-gray-500">
-          {new Date(vm.updated_at).toLocaleDateString()}
+          {labels.updated_at_prefix || "更新日"} {updatedAt}
         </div>
       )}
     </>
@@ -247,5 +295,4 @@ CompatOwnerShowShell.propTypes = {
   rowLabels: PropTypes.object,
   warningLabels: PropTypes.object,
   actionLabels: PropTypes.object,
-  showQrForUrl: PropTypes.bool,
 };

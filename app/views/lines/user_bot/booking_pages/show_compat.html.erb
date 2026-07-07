@@ -4,17 +4,16 @@
       <div class="booking-page-show form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar",
           previous_path: lines_user_bot_booking_pages_path(business_owner_id: business_owner_id),
-          title: I18n.t("user_bot.dashboards.booking_pages.index.title") %>
+          title: @booking_page&.name.presence || I18n.t("user_bot.dashboards.booking_pages.index.title") %>
 
         <%= react_component("user_bot/shared/compat_owner_show_shell", {
           pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_pages/#{params[:id]}/page_context",
-          showQrForUrl: true,
           groupLabels: {
             basic_info: I18n.t("settings.booking_page.form.basic_info_header"),
             booking_options: I18n.t("settings.booking_page.form.booking_option_header"),
             booking_period: I18n.t("settings.booking_page.form.booking_period_header"),
             customer_settings: I18n.t("settings.booking_page.form.customer_related_settings"),
-            others_settings: I18n.t("settings.booking_page.form.others_settings", default: "その他の設定"),
+            others_settings: I18n.t("settings.booking_page.form.others_settings"),
           },
           rowLabels: {
             draft: I18n.t("settings.booking_page.form.privacy_status"),
@@ -22,15 +21,6 @@
             title: I18n.t("settings.booking_page.form.title_title"),
             greeting: I18n.t("settings.booking_page.form.greeting"),
             note: I18n.t("settings.booking_page.form.note_label"),
-            booking_type: I18n.t("settings.booking_page.form.booking_type_title"),
-            wday_0: I18n.t("date.day_names")[0],
-            wday_1: I18n.t("date.day_names")[1],
-            wday_2: I18n.t("date.day_names")[2],
-            wday_3: I18n.t("date.day_names")[3],
-            wday_4: I18n.t("date.day_names")[4],
-            wday_5: I18n.t("date.day_names")[5],
-            wday_6: I18n.t("date.day_names")[6],
-            wday_holiday: t("user_bot.dashboards.settings.business_schedules.national_holiday_label"),
             booking_time: I18n.t("settings.booking_page.form.interval_period_header"),
             booking_available_period: I18n.t("settings.booking_page.form.booking_available_period_label"),
             start_at: I18n.t("settings.booking_page.form.start_at"),
@@ -38,12 +28,8 @@
             cut_off_time: I18n.t("settings.booking_page.form.cut_off_time"),
             customer_cancel_request: I18n.t("settings.booking_page.form.customer_cancel_request"),
             multiple_selection: I18n.t("settings.booking_page.form.multiple_selection"),
-            social_account_skippable: I18n.t("settings.booking_page.form.social_account_skippable"),
             customer_address_required: I18n.t("settings.booking_page.form.customer_address_required"),
             payment_option: I18n.t("settings.booking_page.form.payment_option"),
-            custom_messages: I18n.t("settings.booking_page.form.custom_messages", default: "カスタムメッセージ"),
-            survey: I18n.t("settings.booking_page.form.survey", default: "アンケート"),
-            overbooking_restriction: I18n.t("settings.booking_page.form.overbooking_restriction"),
             line_sharing: I18n.t("settings.booking_page.form.line_sharing"),
             requirements: I18n.t("settings.booking_page.form.requirements"),
             shop: I18n.t("common.shop"),
@@ -51,20 +37,19 @@
           warningLabels: {
             no_menu: I18n.t("settings.booking_page.form.form_errors.no_menu"),
             no_booking_option: I18n.t("settings.booking_page.form.form_errors.no_booking_option"),
-            expired: I18n.t("settings.booking_option.form.form_errors.expired"),
-            secondary: I18n.t("booking_page.secondary_option_hint", default: "サブオプション"),
+            expired: I18n.t("settings.booking_page.form.form_errors.expired"),
+            secondary: I18n.t("booking_page.secondary_option_hint"),
             equipment_unavailable: I18n.t("settings.booking_page.warnings.equipment", default: "設備が利用できません"),
             invalid_menu: "このメニューは選択中の店舗では利用できません",
             ticket_max_price_limit: I18n.t("settings.booking_option.form.form_errors.ticket_max_price_limit"),
             selling_price_too_low: I18n.t("errors.selling_price_too_low"),
           },
           actionLabels: {
-            delete: I18n.t("settings.booking_page.form.delete_page", default: I18n.t("action.delete")),
-            clone: I18n.t("action.copy", default: "複製"),
-            copy_url: I18n.t("action.share"),
-            open: I18n.t("action.open", default: "開く"),
+            delete: I18n.t("settings.booking_page.form.delete_page"),
+            clone: I18n.t("action.copy"),
             loading: I18n.t("common.processing"),
             confirm_delete: I18n.t("common.are_you_sure_message"),
+            updated_at_prefix: I18n.t("common.updated_date"),
           },
         }) %>
       </div>
@@ -74,6 +59,14 @@
       <%= react_component("user_bot/shared/compat_owner_show_preview", {
         pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_pages/#{params[:id]}/page_context",
         supportFeatureFlags: support_feature_flags,
+        shareButtonText: I18n.t("settings.booking_page.share_button_label"),
+        previewLabels: {
+          preview: I18n.t("common.preview"),
+          booking_option_required_time: I18n.t("settings.booking_page.form.booking_option_required_time"),
+          minute: I18n.t("common.minute"),
+          copied: I18n.t("common.copied"),
+          copy_button: I18n.t("settings.booking_page.share_button_label"),
+        },
       }) %>
     </div>
   </div>
