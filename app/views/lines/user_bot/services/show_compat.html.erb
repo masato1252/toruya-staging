@@ -6,19 +6,33 @@
           previous_path: lines_user_bot_services_path(business_owner_id: business_owner_id),
           title: I18n.t("user_bot.dashboards.services.service_page") %>
 
-        <%= react_component("user_bot/services/show", {
-          businessOwnerId: business_owner_id,
-          serviceId: params[:id],
-          labels: {
-            about: I18n.t("user_bot.dashboards.services.service_about"),
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:id]}/page_context",
+          groupLabels: {
+            service_about: I18n.t("user_bot.dashboards.services.service_about"),
+            service_content: I18n.t("user_bot.dashboards.services.content"),
+          },
+          rowLabels: {
             name: I18n.t("user_bot.dashboards.services.name"),
-            internalName: I18n.t("user_bot.dashboards.services.internal_name"),
-            noSalePage: t("user_bot.dashboards.services.warning.no_sale_pages"),
-            noChapters: t("user_bot.dashboards.settings.course.no_content"),
-            publicUrl: I18n.t("user_bot.dashboards.services.public_url"),
+            internal_name: I18n.t("user_bot.dashboards.services.internal_name"),
+            sale_pages: I18n.t("user_bot.dashboards.sales.edit.sale_pages"),
+            chapters: t("user_bot.dashboards.settings.course.chapters.title"),
+            content_url: I18n.t("user_bot.dashboards.services.provided_content"),
+            note: I18n.t("user_bot.dashboards.services.form.note_title"),
+            external_purchase_url: I18n.t("user_bot.dashboards.services.form.external_purchase_url_title"),
+            registers_count: I18n.t("user_bot.dashboards.services.registers"),
+            start_at: I18n.t("user_bot.dashboards.services.start_at"),
+            end_at: I18n.t("user_bot.dashboards.services.end_at"),
           },
         }) %>
       </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view">
+      <%= react_component("user_bot/shared/compat_owner_show_preview", {
+        pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:id]}/page_context",
+        supportFeatureFlags: support_feature_flags,
+      }) %>
     </div>
   </div>
 </div>

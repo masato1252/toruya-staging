@@ -6,22 +6,40 @@
           previous_path: lines_user_bot_sales_path(business_owner_id: business_owner_id),
           title: I18n.t("user_bot.dashboards.sales.edit.sale_pages") %>
 
-        <%= react_component("user_bot/sales/show", {
-          businessOwnerId: business_owner_id,
-          saleId: params[:id],
-          labels: {
-            about: I18n.t("user_bot.dashboards.sales.edit.sales_about"),
-            internalName: I18n.t("user_bot.dashboards.sales.edit.internal_name"),
-            slug: "Slug",
-            privacy: I18n.t("settings.booking_page.form.privacy_status"),
-            draft: I18n.t("settings.booking_page.form.private"),
-            published: I18n.t("settings.booking_page.form.public"),
-            price: I18n.t("user_bot.dashboards.sales.edit.selling_price"),
-            noPrice: "—",
-            publicUrl: I18n.t("action.share"),
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/sales/#{params[:id]}/page_context",
+          groupLabels: {
+            sales_about: I18n.t("user_bot.dashboards.sales.edit.sales_about"),
+            selling_solutions: I18n.t("user_bot.dashboards.sales.edit.selling_solutions"),
+            page_content: I18n.t("user_bot.dashboards.sales.edit.page_content"),
+          },
+          rowLabels: {
+            internal_name: I18n.t("user_bot.dashboards.sales.edit.internal_name"),
+            selling_product: I18n.t("user_bot.dashboards.sales.edit.selling_product"),
+            selling_start_at: I18n.t("user_bot.dashboards.sales.edit.selling_start_at"),
+            selling_end_at: I18n.t("user_bot.dashboards.sales.edit.selling_end_at"),
+            selling_price: I18n.t("user_bot.dashboards.sales.edit.selling_price"),
+            normal_price: I18n.t("user_bot.dashboards.sales.edit.normal_price"),
+            selling_number: I18n.t("user_bot.dashboards.sales.edit.selling_number"),
+            content_header: I18n.t("user_bot.dashboards.sales.edit.content_header"),
+            content_video: I18n.t("user_bot.dashboards.sales.edit.content_video"),
+            why_content: I18n.t("user_bot.dashboards.sales.edit.why_content"),
+            benefits: I18n.t("user_bot.dashboards.sales.edit.benefits"),
+            staff: I18n.t("user_bot.dashboards.sales.edit.staff"),
+            reviews: I18n.t("user_bot.dashboards.sales.edit.reviews"),
+            faq: I18n.t("user_bot.dashboards.sales.edit.faq"),
+            flow: I18n.t("user_bot.dashboards.sales.edit.flow"),
+            publish: I18n.t("user_bot.dashboards.sales.edit.publish"),
           },
         }) %>
       </div>
+    </div>
+
+    <div class="col-sm-6 px-0 hidden-xs preview-view">
+      <%= react_component("user_bot/shared/compat_owner_show_preview", {
+        pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/sales/#{params[:id]}/page_context",
+        supportFeatureFlags: support_feature_flags,
+      }) %>
     </div>
   </div>
 </div>

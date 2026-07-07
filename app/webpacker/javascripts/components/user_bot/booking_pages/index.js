@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
+function copyUrl(url) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url);
+  }
+}
+
 export default function BookingPagesIndex({ businessOwnerId, bookingsPagePath, lineKeywordPath }) {
   const [items, setItems] = useState([]);
   const [withoutOptionIds, setWithoutOptionIds] = useState([]);
@@ -39,27 +45,47 @@ export default function BookingPagesIndex({ businessOwnerId, bookingsPagePath, l
 
   return (
     <div className="booking-pages-list">
-      {items.map((bookingPage) => (
-        <div className="field-row with-next-arrow" key={bookingPage.id}>
-          <a className="w-8-12" href={`/lines/user_bot/owner/${businessOwnerId}/booking_pages/${bookingPage.id}`}>
-            <h3 className="text-gray-700 underline">{bookingPage.name}</h3>
-            {bookingPage.draft && (
-              <div className="desc danger"><i className="fas fa-exclamation-triangle" />&nbsp;Draft</div>
+      {items.map((bookingPage) => {
+        const publicUrl = bookingPage.public_url_path
+          ? `${window.location.origin}${bookingPage.public_url_path}`
+          : null;
+        return (
+          <div className="field-row with-next-arrow" key={bookingPage.id}>
+            <a className="w-8-12" href={`/lines/user_bot/owner/${businessOwnerId}/booking_pages/${bookingPage.id}`}>
+              <h3 className="text-gray-700 underline">{bookingPage.name}</h3>
+              {bookingPage.draft && (
+                <div className="desc danger"><i className="fas fa-exclamation-triangle" />&nbsp;Draft</div>
+              )}
+              {withoutOptionIds.includes(bookingPage.id) ? (
+                <div className="desc danger"><i className="fas fa-exclamation-circle" />&nbsp;No option</div>
+              ) : (
+                !bookingPage.draft && (
+                  <>
+                    <div className="desc">{bookingPage.title}</div>
+                    <div className="desc">{bookingPage.booking_option_names?.join(", ")}</div>
+                    <div className="desc">LINE: {bookingPage.line_sharing ? "ON" : "OFF"}</div>
+                    {bookingPage.shop_name && <div className="desc">{bookingPage.shop_name}</div>}
+                  </>
+                )
+              )}
+            </a>
+            {publicUrl && !bookingPage.draft && (
+              <div className="w-3-12 flex">
+                <button
+                  type="button"
+                  className="btn btn-icon btn-tarco mr-2"
+                  onClick={() => copyUrl(publicUrl)}
+                >
+                  <i className="far fa-clone" />
+                </button>
+                <a className="btn btn-icon btn-tarco" href={bookingPage.public_url_path} target="_blank" rel="noreferrer">
+                  <i className="fas fa-external-link-alt" />
+                </a>
+              </div>
             )}
-            {withoutOptionIds.includes(bookingPage.id) ? (
-              <div className="desc danger"><i className="fas fa-exclamation-circle" />&nbsp;No option</div>
-            ) : (
-              !bookingPage.draft && (
-                <>
-                  <div className="desc">{bookingPage.title}</div>
-                  <div className="desc">{bookingPage.booking_option_names?.join(", ")}</div>
-                  <div className="desc">LINE: {bookingPage.line_sharing ? "ON" : "OFF"}</div>
-                </>
-              )
-            )}
-          </a>
-        </div>
-      ))}
+          </div>
+        );
+      })}
 
       <div className="margin-around centerize">
         <a className="btn btn-yellow" href={bookingsPagePath}>

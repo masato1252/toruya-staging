@@ -1,4 +1,5 @@
 <%= react_component("online_services/public_guest_bootstrap", {
   slug: params[:slug],
   episodeId: params[:episode_id],
+  lineLoginPath: line_login_url(current_owner.social_account, request.url),
 }) %>
