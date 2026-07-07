@@ -61,8 +61,8 @@
     calendar: {
       dayNames: I18n.t("date.abbr_day_names"),
       monthNames: I18n.t("date.abbr_month_names").compact,
-      dateSelectedCallbackPath: booking_times_booking_page_path(@booking_page),
-      schedulePath: calendar_booking_page_path(@booking_page, format: :json),
+      dateSelectedCallbackPath: "/booking/#{@booking_page.slug}/booking_times",
+      schedulePath: "/booking/#{@booking_page.slug}/calendar.json",
       selectedDate: nil,
     },
     booking_reservation_form: {
@@ -97,7 +97,7 @@
       booking_options: [],
     },
     path: {
-      save: booking_reservation_booking_page_path(@booking_page, format: :json),
+      save: "/booking/#{@booking_page.slug}/booking_reservation",
       find_customer: find_customer_booking_page_path(@booking_page),
       ask_confirmation_code: ask_confirmation_code_booking_page_path(@booking_page),
       confirm_code: confirm_code_booking_page_path(@booking_page),

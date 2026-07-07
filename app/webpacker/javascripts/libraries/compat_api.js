@@ -9,6 +9,7 @@ const COMPAT_PATH_PREFIXES = [
   "/surveys/",
   "/customer_verification/",
   "/booking/",
+  "/booking_pages/",
   "/sale_pages/",
   "/admin/",
 ];
@@ -162,13 +163,28 @@ export function shouldRewriteCompatRequest(url, input, init) {
   return false;
 }
 
+function rewriteBookingPagesPath(pathname) {
+  const match = pathname.match(/^\/booking_pages\/([^/]+)(\/.*)?$/);
+  if (!match) return pathname;
+  const slug = match[1];
+  const rest = match[2] ?? "";
+  if (rest === "/calendar.json") return `/booking/${slug}/calendar.json`;
+  if (rest === "/booking_times") return `/booking/${slug}/booking_times`;
+  if (rest === "/booking_reservation") return `/booking/${slug}/booking_reservation`;
+  return `/booking/${slug}${rest}`;
+}
+
 export function rewriteCompatUrl(url, input, init) {
   const origin = readCompatApiOrigin();
   if (!origin || typeof url !== "string") return url;
   if (!shouldRewriteCompatRequest(url, input, init)) return url;
 
-  const pathname = extractPathname(url);
+  let pathname = extractPathname(url);
   if (!pathname) return url;
+
+  if (pathname.startsWith("/booking_pages/")) {
+    pathname = rewriteBookingPagesPath(pathname);
+  }
 
   const compatPath = compatApiPath(pathname);
   const suffix = extractSuffix(url);
