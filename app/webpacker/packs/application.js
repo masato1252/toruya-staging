@@ -19,7 +19,7 @@ import toastr from 'toastr';
 
 installCompatApi();
 
-var componentRequireContext = require.context("../javascripts/components", true, /^\.\/(management|shared)/)
+var componentRequireContext = require.context("../javascripts/components", true, /^\.\/(management|shared|admin)/)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(componentRequireContext)
 
