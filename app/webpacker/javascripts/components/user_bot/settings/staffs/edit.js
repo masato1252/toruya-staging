@@ -7,7 +7,7 @@ import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, Cir
 import StaffEditComponent from "components/user_bot/sales/staff_edit";
 import { CommonServices } from "user_bot/api"
 import { COUNTRY_CODES, separatePhoneNumber, toInternationalNumber } from "shared/customer_verification";
-import { compatRead } from "../../../libraries/compat_api";
+import { compatRead } from "../../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 
 const StaffEdit = ({props: initialProps}) => {

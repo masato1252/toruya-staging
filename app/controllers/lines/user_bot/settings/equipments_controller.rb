@@ -20,6 +20,11 @@ class Lines::UserBot::Settings::EquipmentsController < Lines::UserBotDashboardCo
   end
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     @equipment = @shop.equipments.build
     @equipment_menus_options = prepare_equipment_menus_options
   end
@@ -38,6 +43,11 @@ class Lines::UserBot::Settings::EquipmentsController < Lines::UserBotDashboardCo
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @equipment_menus_options = prepare_equipment_menus_options(@equipment)
   end
 

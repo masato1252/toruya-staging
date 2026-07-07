@@ -1,20 +1,69 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { CommonServices } from "user_bot/api"
+import { compatRead } from "../../../../libraries/compat_api";
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton } from "shared/components"
 import { responseHandler } from "libraries/helper";
+import I18n from 'i18n-js/index.js.erb';
 
-const EditEquipment = ({props}) => {
-  const [equipmentMenus, setEquipmentMenus] = useState(props.equipment_menus_options || [])
+const EditEquipment = ({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const equipmentId = encodeURIComponent(initialProps.equipment_id || initialProps.equipment?.id || "");
+    compatRead(`${initialProps.pageContextPath}?equipment_id=${equipmentId}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.equipment) {
+          setLoadError("Failed to load equipment edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          equipment: form.equipment,
+          equipment_menus_options: form.equipment_menus_options || [],
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const [equipmentMenus, setEquipmentMenus] = useState(props?.equipment_menus_options || []);
   const { register, watch, setValue, formState, handleSubmit } = useForm({
-    defaultValues: {
-      name: props.equipment.name,
-      quantity: props.equipment.quantity
-    }
+    defaultValues: props?.equipment
+      ? {
+          name: props.equipment.name,
+          quantity: props.equipment.quantity,
+        }
+      : { name: "", quantity: 1 },
   });
+
+  useEffect(() => {
+    if (!props?.equipment) return;
+    setValue("name", props.equipment.name);
+    setValue("quantity", props.equipment.quantity);
+    setEquipmentMenus(props.equipment_menus_options || []);
+  }, [props, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.equipment) return <p>{I18n.t("common.processing")}</p>;
 
   const isSubmitDisabled = () => {
     return formState.isSubmitting

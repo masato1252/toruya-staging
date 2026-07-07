@@ -1,26 +1,78 @@
 "use strict"
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord } from "shared/components"
 import { UsersServices } from "user_bot/api"
+import { compatRead } from "../../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 import useAddress from "libraries/use_address";
 import SaleDemoPage from "user_bot/sales/demo";
 
-const ProfileEdit =({props}) => {
+const ProfileEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.profile) {
+          setLoadError("Failed to load profile edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          profile: form.profile,
+          previous_path: form.previous_path,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
-    defaultValues: {
-      ...props.profile,
-    }
+    defaultValues: props?.profile || {},
   });
 
-  const address = useAddress(watch(`${props.attribute}[zip_code]`))
+  const address = useAddress(watch(`${props?.attribute}[zip_code]`));
+
   useEffect(() => {
-    setValue(`${props.attribute}[region]`, address?.prefecture)
-    setValue(`${props.attribute}[city]`, address?.city)
-  }, [address.city])
+    if (!props?.profile) return;
+    Object.entries(props.profile).forEach(([key, value]) => {
+      setValue(key, value);
+    });
+  }, [props, setValue]);
+
+  useEffect(() => {
+    if (!props?.attribute) return;
+    setValue(`${props.attribute}[region]`, address?.prefecture);
+    setValue(`${props.attribute}[city]`, address?.city);
+  }, [address?.prefecture, address?.city, props?.attribute, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.profile) return <p>{I18n.t("common.processing")}</p>;
+
+  const title =
+    props.title ??
+    (props.attribute === "name"
+      ? I18n.t("settings.profile.user_info")
+      : I18n.t("settings.profile.company_info"));
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
@@ -201,7 +253,7 @@ const ProfileEdit =({props}) => {
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }
-              title={props.title}
+              title={title}
             />
             {renderCorrespondField()}
             <BottomNavigationBar klassName="centerize transparent">

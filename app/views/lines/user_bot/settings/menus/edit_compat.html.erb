@@ -1,0 +1,11 @@
+<%= react_component("user_bot/settings/menus/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    menu: { id: params[:id].to_i },
+    attribute: params[:attribute],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/menus/#{params[:id]}/page_context",
+    back_path: params[:back_path],
+  }
+},
+{ camelize_props: false }
+) %>

@@ -28,6 +28,11 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @menu = Current.business_owner.menus.find(params[:id])
 
     case params[:attribute]

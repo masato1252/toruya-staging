@@ -1,38 +1,106 @@
 "use strict"
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton, TimePickerController } from "shared/components"
 import { ShopServices } from "user_bot/api"
+import { compatRead } from "../../../../libraries/compat_api";
 import useAddress from "libraries/use_address";
 import I18n from 'i18n-js/index.js.erb';
 import SaleDemoPage from "user_bot/sales/demo";
 import LineCardPreview from "shared/line_card_preview";
 
-const SocialAccountEdit =({props}) => {
+const SocialAccountEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.shop) {
+          setLoadError("Failed to load shop edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          shop: form.shop,
+          business_schedules: form.business_schedules || [],
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
-    defaultValues: {
-      ...props.shop,
-      business_schedules: props.business_schedules || []
-    }
+    defaultValues: props?.shop
+      ? {
+          ...props.shop,
+          business_schedules: props.business_schedules || [],
+        }
+      : {},
   });
+
+  useEffect(() => {
+    if (!props?.shop) return;
+    Object.entries(props.shop).forEach(([key, value]) => {
+      setValue(key, value);
+    });
+    setValue("business_schedules", props.business_schedules || []);
+  }, [props, setValue]);
 
   const business_schedule_fields = useFieldArray({
     control: control,
     name: "business_schedules"
   });
 
-  const holiday_working = watch("holiday_working")
+  const holiday_working = watch("holiday_working");
+  const zip_code = watch("address_details[zip_code]");
+  const address = useAddress(zip_code);
+  const logo_url = watch("logo_url");
 
   useEffect(() => {
-    if (holiday_working && business_schedule_fields.fields.length == 0) {
-      business_schedule_fields.append({
-        start_time: "09:00",
-        end_time: "17:00"
-      })
-    }
-  }, [holiday_working])
+    if (!holiday_working || business_schedule_fields.fields.length !== 0) return;
+    business_schedule_fields.append({
+      start_time: "09:00",
+      end_time: "17:00"
+    });
+  }, [holiday_working, business_schedule_fields]);
+
+  useEffect(() => {
+    if (!address?.prefecture && !address?.city) return;
+    setValue("address_details[region]", address?.prefecture);
+    setValue("address_details[city]", address?.city);
+  }, [address?.prefecture, address?.city, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.shop) return <p>{I18n.t("common.processing")}</p>;
+
+  const title =
+    props.title ??
+    (props.attribute === "holiday_working"
+      ? I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
+      : I18n.t("user_bot.dashboards.settings.shop.shop_info_label"));
+  const header =
+    props.header ??
+    (props.attribute === "holiday_working"
+      ? I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
+      : I18n.t(`user_bot.dashboards.settings.shop.${props.attribute}_label`));
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
@@ -70,15 +138,6 @@ const SocialAccountEdit =({props}) => {
       window.location = response.data.redirect_to;
     }, 300);
   };
-
-  const zip_code = watch("address_details[zip_code]");
-  const address = useAddress(zip_code)
-  const logo_url = watch("logo_url")
-
-  useEffect(() => {
-    setValue("address_details[region]", address?.prefecture)
-    setValue("address_details[city]", address?.city)
-  }, [address.city])
 
   const _handleImageChange = (e) => {
     e.preventDefault();
@@ -291,9 +350,9 @@ const SocialAccountEdit =({props}) => {
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }
-              title={props.title}
+              title={title}
             />
-            <div className="field-header">{props.header}</div>
+            <div className="field-header">{header}</div>
             {renderCorrespondField()}
             <BottomNavigationBar klassName="centerize transparent">
               <span></span>

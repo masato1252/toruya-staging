@@ -6,18 +6,70 @@ import _ from "lodash";
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SwitchButton } from "shared/components"
 import { MenuServices } from "user_bot/api"
+import { compatRead } from "../../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 
-const MenuEdit =({props}) => {
-  const [menu_shops_options, setMenuShops] = useState(props.menu_shops_options)
-  const [menu_staffs_options, setMenuStaffs] = useState(props.menu_staffs_options)
+const MenuEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.menu) {
+          setLoadError("Failed to load menu edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          menu: form.menu,
+          menu_shops_options: form.menu_shops_options || [],
+          menu_staffs_options: form.menu_staffs_options || [],
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const [menu_shops_options, setMenuShops] = useState(props?.menu_shops_options || []);
+  const [menu_staffs_options, setMenuStaffs] = useState(props?.menu_staffs_options || []);
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
-    defaultValues: {
-      ...props.menu,
-      online: String(props.menu.online)
-    }
+    defaultValues: props?.menu
+      ? {
+          ...props.menu,
+          online: String(props.menu.online),
+        }
+      : {},
   });
-  const online = watch("online")
+
+  useEffect(() => {
+    if (!props?.menu) return;
+    Object.entries(props.menu).forEach(([key, value]) => {
+      setValue(key, key === "online" ? String(value) : value);
+    });
+    setMenuShops(props.menu_shops_options || []);
+    setMenuStaffs(props.menu_staffs_options || []);
+  }, [props, setValue]);
+
+  const online = watch("online");
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.menu) return <p>{I18n.t("common.processing")}</p>;
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;

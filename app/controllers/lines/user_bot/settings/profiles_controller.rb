@@ -20,6 +20,11 @@ class Lines::UserBot::Settings::ProfilesController < Lines::UserBotDashboardCont
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @profile = Current.business_owner.profile
     @previous_path =
       case params[:attribute]

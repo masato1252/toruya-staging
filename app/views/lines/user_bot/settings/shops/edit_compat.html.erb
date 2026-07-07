@@ -1,0 +1,11 @@
+<%= react_component("user_bot/settings/shops/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    shop: { id: params[:id].to_i },
+    attribute: params[:attribute],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/shops/#{params[:id]}/page_context",
+    business_schedule_desc_path: asset_pack_path("media/assets/user_bot/business_schedule_desc.png"),
+  }
+},
+{ camelize_props: false }
+) %>
