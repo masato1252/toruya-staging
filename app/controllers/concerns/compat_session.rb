@@ -40,7 +40,7 @@ module CompatSession
 
     owner_id = resolve_compat_owner_id(owner_id)
     current_user_id = resolve_compat_current_user_id(current_user_id)
-    return nil unless owner_id&.positive?
+    return nil unless owner_id
 
     @compat_auth_sessions ||= {}
     cache_key = [owner_id, current_user_id]
@@ -56,17 +56,16 @@ module CompatSession
   end
 
   def resolve_compat_owner_id(owner_id)
-    return owner_id if owner_id&.positive?
-
-    params[:business_owner_id].presence&.to_i
+    resolve_compat_id(owner_id) || resolve_compat_id(params[:business_owner_id])
   end
 
   def resolve_compat_current_user_id(current_user_id)
-    return current_user_id if current_user_id&.positive?
+    resolved = resolve_compat_id(current_user_id)
+    return resolved if resolved
 
     if respond_to?(:user_bot_cookies, true)
       cookie_id = user_bot_cookies(:current_user_id)
-      return cookie_id.to_i if cookie_id.present?
+      return resolve_compat_id(cookie_id) if cookie_id.present?
     end
 
     if respond_to?(:privileged_session_user, true)
@@ -75,6 +74,13 @@ module CompatSession
     end
 
     nil
+  end
+
+  def resolve_compat_id(value)
+    return nil if value.blank?
+
+    id = value.to_i
+    id.positive? ? id : nil
   end
 
   def public_booking_subscription_active?(slug)
