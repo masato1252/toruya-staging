@@ -26,7 +26,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @schedules = schedules_events(schedules)
     @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
 
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @notification_messages = []
       @reservations_approval_flow = []
     else
@@ -66,7 +66,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @schedules = schedules_events(schedules)
     @related_user_ids = Current.business_owner.related_users.map(&:id)
     @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @notification_messages = []
       @reservations_approval_flow = []
     else

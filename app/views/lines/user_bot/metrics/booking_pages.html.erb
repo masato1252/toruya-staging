@@ -23,6 +23,7 @@
         start_date: default_start_date,
         end_date: default_end_date
       }),
+      compatReadPath: compat_read_enabled? ? "/lines/user_bot/owner/#{business_owner_id}/metrics/booking_pages/visits?start_date=#{default_start_date}&end_date=#{default_end_date}" : nil,
     }, { camelize_props: false }) %>
   <% end %>
 
@@ -33,6 +34,7 @@
       start_date: default_start_date,
       end_date: default_end_date
     }),
+    compatReadPath: compat_read_enabled? ? "/lines/user_bot/owner/#{business_owner_id}/metrics/booking_pages/conversions?start_date=#{default_start_date}&end_date=#{default_end_date}" : nil,
     is_phone: is_phone?,
     page_label_key: "booking_page"
   },

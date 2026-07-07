@@ -4,6 +4,20 @@ import { compatRead } from "../../libraries/compat_api";
 import SaleBookingPage from "user_bot/sales/booking_pages";
 import SaleOnlineService from "user_bot/sales/online_services";
 
+function applyMetaTags(meta) {
+  if (!meta) return;
+  if (meta.title) document.title = meta.title;
+  if (meta.description) {
+    let el = document.querySelector('meta[name="description"]');
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute("name", "description");
+      document.head.appendChild(el);
+    }
+    el.setAttribute("content", meta.description);
+  }
+}
+
 export default function PublicSaleShell({ slug, supportFeatureFlags }) {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,6 +33,7 @@ export default function PublicSaleShell({ slug, supportFeatureFlags }) {
           setPayload({ unavailable: true });
           return;
         }
+        applyMetaTags(body.includes?.meta);
         setPayload({
           data: body.data || {},
           reactComponent: body.includes?.react_component,

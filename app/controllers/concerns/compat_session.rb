@@ -6,12 +6,13 @@ require "json"
 # Fetches v1 compat session / public context when COMPAT_API_READ_ENABLED=true.
 module CompatSession
   extend ActiveSupport::Concern
+  include CompatReadFlags
+
+  included do
+    helper_method :compat_read_enabled? if respond_to?(:helper_method)
+  end
 
   private
-
-  def compat_read_data_plane?
-    ENV["COMPAT_API_READ_ENABLED"] == "true" && ENV["COMPAT_API_ORIGIN"].present?
-  end
 
   def fetch_v1_json(path, query = {})
     origin = ENV["COMPAT_API_ORIGIN"].to_s.sub(%r{/$}, "")

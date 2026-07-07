@@ -3,6 +3,38 @@ import PropTypes from "prop-types";
 import { compatRead } from "../../libraries/compat_api";
 import BookingReservationFormFunction from "./booking_reservation_form_function";
 
+function applyMetaTags(meta) {
+  if (!meta) return;
+  if (meta.title) document.title = meta.title;
+  const setMeta = (name, content) => {
+    if (!content) return;
+    let el = document.querySelector(`meta[name="${name}"]`);
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute("name", name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute("content", content);
+  };
+  const setOg = (property, content) => {
+    if (!content) return;
+    let el = document.querySelector(`meta[property="${property}"]`);
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute("property", property);
+      document.head.appendChild(el);
+    }
+    el.setAttribute("content", content);
+  };
+  setMeta("description", meta.description);
+  setOg("og:title", meta.og_title || meta.title);
+  setOg("og:description", meta.description);
+  if (meta.og_url_path) {
+    setOg("og:url", `${window.location.origin}${meta.og_url_path}`);
+  }
+  if (meta.og_image) setOg("og:image", meta.og_image);
+}
+
 function parseBookingOptionIds(searchParams, isSingleOption, fallbackOptions) {
   const raw = searchParams.get("booking_option_ids");
   if (raw) return raw.split(",").map((id) => parseInt(id, 10)).filter(Boolean);
@@ -45,6 +77,8 @@ function buildFormProps(shellProps, body, searchParams) {
     is_ended: page.is_ended ?? shellProps.booking_page?.is_ended,
     is_customer_address_required:
       page.is_customer_address_required ?? shellProps.booking_page?.is_customer_address_required,
+    shop_logo_url: includes.shop_logo_url ?? shellProps.booking_page?.shop_logo_url,
+    shop_name: includes.shop?.short_name ?? includes.shop?.name ?? shellProps.booking_page?.shop_name,
   };
 
   const calendar = {
@@ -57,6 +91,8 @@ function buildFormProps(shellProps, body, searchParams) {
     booking_page: bookingPage,
     calendar,
     business_owner_id: page.user_id ?? shellProps.business_owner_id,
+    booking_options_quota: includes.booking_options_quota ?? shellProps.booking_options_quota ?? {},
+    product_requirement: includes.product_requirement ?? shellProps.product_requirement ?? null,
     booking_reservation_form: {
       ...shellProps.booking_reservation_form,
       booking_option_ids: bookingOptionIds,
@@ -73,7 +109,7 @@ function buildFormProps(shellProps, body, searchParams) {
   };
 }
 
-export default function PublicReservationShell({ slug, shellProps }) {
+export default function PublicReservationShell({ slug, shellProps, customerId }) {
   const [formProps, setFormProps] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -81,13 +117,15 @@ export default function PublicReservationShell({ slug, shellProps }) {
 
   useEffect(() => {
     let cancelled = false;
-    compatRead(`/booking/${slug}/page_context`)
+    const query = customerId ? `?customer_id=${customerId}` : "";
+    compatRead(`/booking/${slug}/page_context${query}`)
       .then((body) => {
         if (cancelled) return;
         if (!body?.data) {
           setError("Booking page not found.");
           return;
         }
+        applyMetaTags(body.includes?.meta);
         setFormProps(buildFormProps(shellProps, body, searchParams));
       })
       .catch((err) => {
@@ -99,7 +137,7 @@ export default function PublicReservationShell({ slug, shellProps }) {
     return () => {
       cancelled = true;
     };
-  }, [slug, shellProps, searchParams]);
+  }, [slug, shellProps, searchParams, customerId]);
 
   if (loading) return <p className="margin-around centerize">Loading...</p>;
   if (error) return <p className="danger margin-around">{error}</p>;
@@ -111,4 +149,5 @@ export default function PublicReservationShell({ slug, shellProps }) {
 PublicReservationShell.propTypes = {
   slug: PropTypes.string.isRequired,
   shellProps: PropTypes.object.isRequired,
+  customerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

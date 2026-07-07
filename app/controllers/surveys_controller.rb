@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class SurveysController < Lines::CustomersController
+  include CompatReadFlags
   include ProductLocale
   before_action :reject_activity_survey
 
-  skip_before_action :reject_activity_survey, if: -> { ENV["COMPAT_API_READ_ENABLED"] == "true" }
+  skip_before_action :reject_activity_survey, if: -> { compat_read_enabled? }
 
   def show
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       render :show_compat, layout: "booking"
       return
     end

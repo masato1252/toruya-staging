@@ -4,7 +4,7 @@ class Lines::UserBot::Metrics::BookingPagesController < Lines::UserBotDashboardC
   include ::MetricsHelpers
 
   def visits
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       render json: { labels: [], datasets: [] }
       return
     end
@@ -18,7 +18,7 @@ class Lines::UserBot::Metrics::BookingPagesController < Lines::UserBotDashboardC
   end
 
   def conversions
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       render json: []
       return
     end

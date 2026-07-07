@@ -2,7 +2,20 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
-function FieldRow({ row, label }) {
+function copyToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text);
+  }
+  const el = document.createElement("textarea");
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand("copy");
+  document.body.removeChild(el);
+  return Promise.resolve();
+}
+
+function FieldRow({ row, label, warningLabels }) {
   const header = label || row.header;
 
   return (
@@ -16,23 +29,42 @@ function FieldRow({ row, label }) {
               <div className="desc">{row.title}</div>
             )}
           </a>
+        ) : row.html ? (
+          <span className="dotdotdot" dangerouslySetInnerHTML={{ __html: row.html }} />
         ) : (
           <span className="dotdotdot">{row.title}</span>
         )}
         {row.warnings?.map((code) => (
           <div key={code} className="danger warning">
-            <i className="fas fa-exclamation-circle" /> {code}
+            <i className="fas fa-exclamation-circle" /> {warningLabels?.[code] || code}
           </div>
+        ))}
+        {row.blocks?.map((block, i) => (
+          <FieldRow key={`block-${i}`} row={block} warningLabels={warningLabels} />
         ))}
       </div>
     </>
   );
 }
 
-export default function CompatOwnerShowShell({ pageContextPath, groupLabels, rowLabels }) {
+FieldRow.propTypes = {
+  row: PropTypes.object.isRequired,
+  label: PropTypes.string,
+  warningLabels: PropTypes.object,
+};
+
+export default function CompatOwnerShowShell({
+  pageContextPath,
+  groupLabels,
+  rowLabels,
+  warningLabels,
+  actionLabels,
+  showQrForUrl,
+}) {
   const [vm, setVm] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,9 +84,27 @@ export default function CompatOwnerShowShell({ pageContextPath, groupLabels, row
     };
   }, [pageContextPath]);
 
-  if (loading) return <p>Loading...</p>;
+  const labels = actionLabels || {};
+  const loadingText = labels.loading || "Loading...";
+  const deleteLabel = labels.delete || "Delete";
+  const cloneLabel = labels.clone || "Clone";
+  const copyLabel = labels.copy_url || "Copy URL";
+  const confirmDelete = labels.confirm_delete || "Are you sure?";
+
+  if (loading) return <p>{loadingText}</p>;
   if (error) return <p className="danger">{error}</p>;
   if (!vm?.field_groups) return null;
+
+  const publicUrl = vm.preview?.public_url;
+  const absoluteUrl = publicUrl ? `${window.location.origin}${publicUrl}` : null;
+
+  const handleCopy = () => {
+    if (!absoluteUrl) return;
+    copyToClipboard(absoluteUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   return (
     <>
@@ -68,6 +118,7 @@ export default function CompatOwnerShowShell({ pageContextPath, groupLabels, row
               key={`${group.id}-${row.header}-${idx}`}
               row={row}
               label={rowLabels?.[row.header]}
+              warningLabels={warningLabels}
             />
           ))}
           {group.action_rows?.map((row, idx) => (
@@ -80,15 +131,53 @@ export default function CompatOwnerShowShell({ pageContextPath, groupLabels, row
         </React.Fragment>
       ))}
 
+      {absoluteUrl && (
+        <div className="margin-around">
+          <input readOnly className="extend" value={absoluteUrl} onClick={(e) => e.target.select()} />
+          <div className="centerize margin-around purchase-buttons">
+            <button type="button" className="btn btn-tarco" onClick={handleCopy}>
+              <i className="fas fa-copy" /> {copied ? (labels.copied || "Copied!") : copyLabel}
+            </button>
+            {publicUrl && (
+              <a className="btn btn-tarco" href={publicUrl} target="_blank" rel="noreferrer">
+                <i className="fas fa-external-link-alt" /> {labels.open || "Open"}
+              </a>
+            )}
+          </div>
+          {showQrForUrl && absoluteUrl && (
+            <div className="centerize margin-around">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(absoluteUrl)}`}
+                alt="QR"
+                width={150}
+                height={150}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {vm.actions?.clone_href && (
+        <div className="action-block margin-around">
+          <a
+            className="btn btn-yellow"
+            href={vm.actions.clone_href}
+            data-method={vm.actions.clone_method || "post"}
+          >
+            <i className="fa fa-copy" /> {cloneLabel}
+          </a>
+        </div>
+      )}
+
       {vm.actions?.delete_href && (
         <div className="action-block margin-around">
           <a
             className="btn btn-orange"
             href={vm.actions.delete_href}
             data-method={vm.actions.delete_method || "delete"}
-            data-confirm="Are you sure?"
+            data-confirm={confirmDelete}
           >
-            <i className="fa fa-minus" /> Delete
+            <i className="fa fa-minus" /> {deleteLabel}
           </a>
         </div>
       )}
@@ -106,4 +195,7 @@ CompatOwnerShowShell.propTypes = {
   pageContextPath: PropTypes.string.isRequired,
   groupLabels: PropTypes.object,
   rowLabels: PropTypes.object,
+  warningLabels: PropTypes.object,
+  actionLabels: PropTypes.object,
+  showQrForUrl: PropTypes.bool,
 };

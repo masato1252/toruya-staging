@@ -8,12 +8,16 @@
 
         <%= react_component("user_bot/shared/compat_owner_show_shell", {
           pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_pages/#{params[:id]}/page_context",
+          showQrForUrl: true,
           groupLabels: {
             basic_info: I18n.t("settings.booking_page.form.basic_info_header"),
             booking_options: I18n.t("settings.booking_page.form.booking_option_header"),
             booking_period: I18n.t("settings.booking_page.form.booking_period_header"),
             customer_settings: I18n.t("settings.booking_page.form.customer_related_settings"),
             shop_info: I18n.t("common.shop"),
+            messaging: I18n.t("settings.booking_page.form.custom_messages", default: "Messages"),
+            survey: I18n.t("settings.booking_page.form.survey", default: "Survey"),
+            overbooking: I18n.t("settings.booking_page.form.overbooking", default: "Overbooking"),
           },
           rowLabels: {
             draft: I18n.t("settings.booking_page.form.privacy_status"),
@@ -30,6 +34,22 @@
             online_payment: I18n.t("settings.booking_page.form.online_payment"),
             payment_option: I18n.t("settings.booking_page.form.payment_option"),
             shop: I18n.t("common.shop"),
+            custom_messages: I18n.t("settings.booking_page.form.custom_messages", default: "Custom messages"),
+            survey: I18n.t("settings.booking_page.form.survey", default: "Survey"),
+            overbooking_restriction: I18n.t("settings.booking_page.form.overbooking", default: "Overbooking"),
+          },
+          warningLabels: {
+            no_menu: I18n.t("settings.booking_page.warnings.no_menu", default: "No menu linked"),
+            expired: I18n.t("settings.booking_page.warnings.expired", default: "Expired"),
+            secondary: I18n.t("settings.booking_page.warnings.secondary", default: "Secondary option"),
+            equipment_unavailable: I18n.t("settings.booking_page.warnings.equipment", default: "Equipment unavailable"),
+          },
+          actionLabels: {
+            delete: I18n.t("action.delete"),
+            clone: I18n.t("action.copy", default: "Clone"),
+            copy_url: I18n.t("action.share"),
+            loading: I18n.t("common.processing"),
+            confirm_delete: I18n.t("common.are_you_sure"),
           },
         }) %>
       </div>

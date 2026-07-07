@@ -8,6 +8,11 @@ function Trend({ value }) {
   return <span>0</span>;
 }
 
+function formatYen(cents) {
+  if (cents == null) return "—";
+  return `¥${Number(cents).toLocaleString("ja-JP")}`;
+}
+
 export default function MetricsDashboard({
   businessOwnerId,
   startDate,
@@ -63,8 +68,10 @@ export default function MetricsDashboard({
   if (!data) return null;
 
   const days = data.days_in_period ?? 30;
+  const osRanking = data.services_mapping_total_amount || [];
 
   return (
+  <>
     <div className="row">
       <div className="col-sm-3 col-xs-6 p-0 flex justify-center centerize">
         <div className="p-4 w-11-12 metric-cell h-full">
@@ -98,22 +105,23 @@ export default function MetricsDashboard({
         </div>
       </div>
     </div>
-    {revenueRows.length > 0 && (
+
+    {osRanking.length > 0 && (
       <div className="row mt-4">
         <div className="col-xs-12">
-          <h5>{labels.bookingPagesRevenue || "Booking pages"}</h5>
+          <h5>{labels.onlineServicesRevenue || "Online services revenue"}</h5>
           <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Reservations</th>
+                <th>{labels.serviceName || "Service"}</th>
+                <th>{labels.totalRevenue || "Revenue"}</th>
               </tr>
             </thead>
             <tbody>
-              {revenueRows.map((row) => (
-                <tr key={row.booking_page_id}>
+              {osRanking.map((row) => (
+                <tr key={row.name}>
                   <td>{row.name}</td>
-                  <td>{row.reservation_count}</td>
+                  <td>{formatYen(row.total_amount)}</td>
                 </tr>
               ))}
             </tbody>
@@ -121,6 +129,33 @@ export default function MetricsDashboard({
         </div>
       </div>
     )}
+
+    {revenueRows.length > 0 && (
+      <div className="row mt-4">
+        <div className="col-xs-12">
+          <h5>{labels.bookingPagesRevenue || "Booking revenue by option"}</h5>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>{labels.optionName || "Option"}</th>
+                <th>{labels.reservationCount || "Count"}</th>
+                <th>{labels.totalRevenue || "Revenue"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {revenueRows.map((row) => (
+                <tr key={row.booking_option_id}>
+                  <td>{row.booking_option_name || row.name}</td>
+                  <td>{row.reservation_count ?? row.count}</td>
+                  <td>{formatYen(row.revenue_cents ?? row.revenue)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
+  </>
   );
 }
 

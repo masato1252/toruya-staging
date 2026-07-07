@@ -11,7 +11,7 @@ class Admin::EventsController < AdminController
   ]
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @events = []
       return
     end

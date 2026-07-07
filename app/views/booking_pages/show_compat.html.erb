@@ -22,6 +22,7 @@
 
 <%= react_component("booking/public_reservation_shell", {
   slug: @booking_page.slug,
+  customerId: @customer&.id,
   shellProps: {
     timezone: Time.zone.tzinfo.name,
     toruya_logo: asset_pack_path("media/assets/booking/logo.png"),

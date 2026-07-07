@@ -1,0 +1,5 @@
+<%= react_component("online_services/public_member_bootstrap", {
+  slug: params[:slug],
+  episodeId: params[:episode_id],
+  customerId: current_customer&.id,
+}) %>

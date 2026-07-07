@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AdminController < ApplicationController
+  include CompatReadFlags
   include Devise::Controllers::Rememberable
   include ControllerHelpers
   include UserBotCookies

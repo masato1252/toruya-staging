@@ -1,24 +1,32 @@
 "use strict";
 
 import React, { useEffect, useState } from "react";
-import { CommonServices } from "components/user_bot/api"
-import I18n from 'i18n-js/index.js.erb';
+import { compatRead } from "../../../libraries/compat_api";
+import { CommonServices } from "components/user_bot/api";
+import I18n from "i18n-js/index.js.erb";
 
-const SalePagesConversionsMetric = ({demo, metric_path, is_phone, page_label_key}) => {
-  const [data, setData] = useState([])
+const SalePagesConversionsMetric = ({ demo, metric_path, compatReadPath, is_phone, page_label_key }) => {
+  const [data, setData] = useState([]);
 
   const fetchData = async () => {
+    if (compatReadPath) {
+      const suffix = demo ? `${compatReadPath.includes("?") ? "&" : "?"}demo=true` : "";
+      const body = await compatRead(`${compatReadPath}${suffix}`);
+      setData(body.data ?? []);
+      return;
+    }
+
     const [_error, response] = await CommonServices.get({
       url: metric_path,
-      data: { demo }
-    })
+      data: { demo },
+    });
 
-    setData(response.data?.data ?? response.data)
-  }
+    setData(response.data?.data ?? response.data);
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, [compatReadPath, metric_path, demo]);
 
   if (is_phone) {
     return (

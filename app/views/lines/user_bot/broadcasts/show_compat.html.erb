@@ -6,17 +6,26 @@
           previous_path: params[:previous_path].presence || lines_user_bot_broadcasts_path(business_owner_id: business_owner_id),
           title: t("user_bot.dashboards.broadcasts.broadcast_conditions") %>
 
-        <%= react_component("user_bot/broadcasts/show", {
-          businessOwnerId: business_owner_id,
-          broadcastId: params[:id],
-          labels: {
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/broadcasts/#{params[:id]}/page_context",
+          groupLabels: {
             content: t("user_bot.dashboards.broadcasts.content"),
             audiences: t("user_bot.dashboards.broadcasts.audiences"),
-            queryType: t("user_bot.dashboards.broadcasts.audiences"),
             state: t("user_bot.dashboards.broadcasts.state"),
-            time: t("user_bot.dashboards.broadcasts.time"),
-            permissionWarning: t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description"),
-            edit: t("action.edit"),
+          },
+          rowLabels: {
+            content: t("user_bot.dashboards.broadcasts.content"),
+            query_type: t("user_bot.dashboards.broadcasts.audiences"),
+            state: t("user_bot.dashboards.broadcasts.state"),
+            deliver_at: t("user_bot.dashboards.broadcasts.time"),
+          },
+          warningLabels: {
+            customers_permission_warning: t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description"),
+          },
+          actionLabels: {
+            delete: t("action.delete"),
+            loading: t("common.processing"),
+            confirm_delete: t("common.are_you_sure"),
           },
         }) %>
       </div>

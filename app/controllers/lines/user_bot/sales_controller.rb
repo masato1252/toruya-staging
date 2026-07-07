@@ -8,7 +8,7 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @sale_pages = []
       return
     end
@@ -17,7 +17,7 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def show
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       render :show_compat
       return
     end
@@ -27,7 +27,7 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def edit
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       redirect_to lines_user_bot_sale_path(params[:id], business_owner_id: business_owner_id)
       return
     end

@@ -6,6 +6,7 @@
 # See toruya-next: doc/phase2/03-legacy-db-independence-roadmap.md
 module CompatReadSkipsBusinessData
   extend ActiveSupport::Concern
+  include CompatReadFlags
 
   class_methods do
     def skip_business_data_load_on_compat_read(*actions)
@@ -14,10 +15,6 @@ module CompatReadSkipsBusinessData
   end
 
   private
-
-  def compat_read_data_plane?
-    ENV["COMPAT_API_READ_ENABLED"] == "true"
-  end
 
   def assert_compat_read_skips_business_ar!
     return unless compat_read_data_plane?

@@ -14,6 +14,11 @@ class OnlineServicesController < Lines::CustomersController
       return
     end
 
+    if compat_read_data_plane? && current_customer.present?
+      render :show_compat_member
+      return
+    end
+
     @service_member = online_service.online_service_customer_relations.where(customer: current_customer).last
 
     @online_service_hash =

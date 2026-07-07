@@ -8,7 +8,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :online_services, only: [:online_service]
 
   def dashboard
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @days_in_period = 30
       @active_customers_rate = 0
       @customers_count = 0
@@ -59,7 +59,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def online_services
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @online_services = []
       return
     end
@@ -68,7 +68,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def rich_menus
-    return if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return if compat_read_enabled?
     if !Current.business_owner.social_account.using_line_official_account?
       @start_date = params[:start_date] || 2.week.ago.to_date
       @end_date = params[:end_date] || Time.current.to_date
@@ -80,7 +80,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def booking_page
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       redirect_to lines_user_bot_metrics_path(business_owner_id: business_owner_id)
       return
     end
@@ -89,7 +89,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
   end
 
   def online_service
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       redirect_to lines_user_bot_metrics_path(business_owner_id: business_owner_id)
       return
     end

@@ -16,9 +16,11 @@ class Lines::UserBotDashboardController < ActionController::Base
   include UserBotExceptionHandler
   include ControllerHelpers
   include CompatSession
+  include CompatReadSkipsBusinessData
 
   skip_before_action :track_ahoy_visit
   before_action :warm_compat_session_cache
+  before_action :assert_compat_read_skips_business_ar!, if: :compat_read_enabled?
   before_action :set_locale
   before_action :redirect_from_rich_menu
   before_action :require_complete_shop_profile!
@@ -43,7 +45,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   helper_method :device_detector
 
   def shop_menus_options
-    return [] if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return [] if compat_read_enabled?
 
     @shop_menus_options ||=
       ShopMenu.includes(:menu).where(shop: shop).where("menus.deleted_at": nil).references(:menus).map do |shop_menu|
@@ -110,7 +112,7 @@ class Lines::UserBotDashboardController < ActionController::Base
     # 他オーナーの active staff として入場している場合はスルー
     return if current_user.staff_accounts.active.where.not(owner_id: current_user.id).exists?
 
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       session = @compat_session_payload || compat_auth_session(owner_id: current_user.id, current_user_id: current_user.id)
       return if session && session["shop_profile_complete"]
     end
@@ -128,7 +130,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   end
 
   def load_setup_pending_shop
-    return if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return if compat_read_enabled?
     return unless Current.business_owner && admin?
 
     @setup_pending_shop = Current.business_owner.shops.setup_pending.order(:id).first

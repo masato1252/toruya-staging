@@ -4,7 +4,7 @@ class Lines::UserBot::NotificationsController < Lines::UserBotDashboardControlle
   skip_before_action :redirect_from_rich_menu
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       render :index_compat
       return
     end

@@ -8,6 +8,7 @@
 
         <%= react_component("user_bot/shared/compat_owner_show_shell", {
           pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/sales/#{params[:id]}/page_context",
+          showQrForUrl: true,
           groupLabels: {
             sales_about: I18n.t("user_bot.dashboards.sales.edit.sales_about"),
             selling_solutions: I18n.t("user_bot.dashboards.sales.edit.selling_solutions"),
@@ -31,6 +32,18 @@
             flow: I18n.t("user_bot.dashboards.sales.edit.flow"),
             publish: I18n.t("user_bot.dashboards.sales.edit.publish"),
           },
+          warningLabels: {
+            expired: I18n.t("user_bot.dashboards.sales.warnings.expired", default: "Expired"),
+            sold_out: I18n.t("user_bot.dashboards.sales.warnings.sold_out", default: "Sold out"),
+          },
+          actionLabels: {
+            delete: I18n.t("action.delete"),
+            clone: I18n.t("action.copy", default: "Clone"),
+            copy_url: I18n.t("action.share"),
+            open: I18n.t("action.open", default: "Open"),
+            loading: I18n.t("common.processing"),
+            confirm_delete: I18n.t("common.are_you_sure"),
+          },
         }) %>
       </div>
     </div>
@@ -39,6 +52,7 @@
       <%= react_component("user_bot/shared/compat_owner_show_preview", {
         pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/sales/#{params[:id]}/page_context",
         supportFeatureFlags: support_feature_flags,
+        mobilePreviewLabel: I18n.t("user_bot.dashboards.sales.edit.mobile_preview", default: "Mobile preview"),
       }) %>
     </div>
   </div>

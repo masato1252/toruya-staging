@@ -9,7 +9,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @booking_pages = []
       @booking_pages_without_option_ids = []
       @booking_page_shop_options = []
@@ -23,7 +23,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def show
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       clean_previous_cookie("booking_page_id")
       render :show_compat
       return
@@ -41,7 +41,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def edit
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       redirect_to lines_user_bot_booking_page_path(params[:id], business_owner_id: business_owner_id)
       return
     end

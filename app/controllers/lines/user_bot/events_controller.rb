@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::EventsController < Lines::UserBotDashboardController
-  before_action :redirect_to_admin
+  before_action :redirect_to_admin, unless: :compat_read_enabled?
 
-  def index; end
+  def index
+    render :index_compat if compat_read_enabled?
+  end
   def new; end
   def create; end
   def show; end

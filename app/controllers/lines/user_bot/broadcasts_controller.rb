@@ -5,7 +5,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :broadcasts, only: [:show, :edit, :update, :draft, :activate, :clone]
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @broadcasts = []
       return
     end
@@ -14,7 +14,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def show
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       render :show_compat
       return
     end
@@ -56,7 +56,7 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def edit
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       redirect_to lines_user_bot_broadcast_path(params[:id], business_owner_id: business_owner_id)
       return
     end

@@ -4,7 +4,7 @@ class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
   include ::MetricsHelpers
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @subscription = Current.business_owner.subscription
       @social_account = Current.business_owner.social_account
       @days_in_period = 30

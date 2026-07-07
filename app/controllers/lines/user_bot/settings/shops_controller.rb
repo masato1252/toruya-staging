@@ -10,7 +10,7 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
     @shop_fee_required = shop_fee_required_for_add?(Current.business_owner)
     @proration_preview = load_shop_add_proration_preview(Current.business_owner) if @shop_fee_required
 
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @shops = []
       return
     end

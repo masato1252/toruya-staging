@@ -12,7 +12,7 @@ module Lines
         before_action :set_survey_response, only: [:show]
 
         def index
-          if ENV["COMPAT_API_READ_ENABLED"] == "true"
+          if compat_read_enabled?
             @survey = nil
             render :index_compat
             return
@@ -22,7 +22,7 @@ module Lines
         end
 
         def show
-          if ENV["COMPAT_API_READ_ENABLED"] == "true"
+          if compat_read_enabled?
             render :show_compat
             return
           end
@@ -31,13 +31,13 @@ module Lines
         private
 
         def set_survey
-          return if ENV["COMPAT_API_READ_ENABLED"] == "true"
+          return if compat_read_enabled?
 
           @survey = Current.business_owner.surveys.find(params[:id])
         end
 
         def set_survey_response
-          return if ENV["COMPAT_API_READ_ENABLED"] == "true"
+          return if compat_read_enabled?
 
           @survey_response = @survey.responses.find(params[:survey_response_id])
         end
