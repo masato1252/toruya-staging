@@ -12,6 +12,26 @@ module CompatSession
     helper_method :compat_read_enabled? if respond_to?(:helper_method)
   end
 
+  def compat_auth_session(owner_id: nil, current_user_id: nil)
+    return nil unless compat_read_data_plane?
+
+    owner_id = resolve_compat_owner_id(owner_id)
+    current_user_id = resolve_compat_current_user_id(current_user_id)
+    return nil unless owner_id
+
+    @compat_auth_sessions ||= {}
+    cache_key = [owner_id, current_user_id]
+    return @compat_auth_sessions[cache_key] if @compat_auth_sessions.key?(cache_key)
+
+    @compat_auth_sessions[cache_key] = fetch_v1_json(
+      "/auth/session",
+      {
+        business_owner_id: owner_id,
+        current_user_id: current_user_id,
+      }.compact
+    )&.dig("data")
+  end
+
   private
 
   def fetch_v1_json(path, query = {})
@@ -35,26 +55,6 @@ module CompatSession
     nil
   end
 
-  def compat_auth_session(owner_id: nil, current_user_id: nil)
-    return nil unless compat_read_data_plane?
-
-    owner_id = resolve_compat_owner_id(owner_id)
-    current_user_id = resolve_compat_current_user_id(current_user_id)
-    return nil unless owner_id
-
-    @compat_auth_sessions ||= {}
-    cache_key = [owner_id, current_user_id]
-    return @compat_auth_sessions[cache_key] if @compat_auth_sessions.key?(cache_key)
-
-    @compat_auth_sessions[cache_key] = fetch_v1_json(
-      "/auth/session",
-      {
-        business_owner_id: owner_id,
-        current_user_id: current_user_id,
-      }.compact
-    )&.dig("data")
-  end
-
   def resolve_compat_owner_id(owner_id)
     resolve_compat_id(owner_id) || resolve_compat_id(params[:business_owner_id])
   end
@@ -74,13 +74,6 @@ module CompatSession
     end
 
     nil
-  end
-
-  def resolve_compat_id(value)
-    return nil if value.blank?
-
-    id = value.to_i
-    id.positive? ? id : nil
   end
 
   def public_booking_subscription_active?(slug)

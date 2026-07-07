@@ -126,7 +126,7 @@ module ViewHelpers
   end
 
   def business_owner_id
-    params[:business_owner_id].presence || business_owner&.id || current_user&.id
+    resolve_compat_id(params[:business_owner_id]) || business_owner&.id || current_user&.id
   end
 
   def shops

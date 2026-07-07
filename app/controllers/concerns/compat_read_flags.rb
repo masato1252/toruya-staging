@@ -15,4 +15,11 @@ module CompatReadFlags
   def compat_read_enabled?
     compat_read_data_plane?
   end
+
+  def resolve_compat_id(value)
+    return nil if value.blank?
+
+    id = value.to_i
+    id.positive? ? id : nil
+  end
 end
