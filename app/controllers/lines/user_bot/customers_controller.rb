@@ -8,7 +8,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def index
     authorize! :read, :customers_dashboard
 
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       # List / counts / notifications load via v1 compat (CustomerServices + read APIs).
       @customer = nil
       @reservation = nil

@@ -6,23 +6,23 @@
 
 | 項目 | 値 |
 |------|-----|
-| 新 API ベース URL | `https://toruya-next-api.vercel.app` |
+| 新 API ベース URL | `https://api.toruya.com` |
 | Compat プレフィックス | `/v1/compat` |
-| 例 | `/lines/user_bot/.../customers.json` → `https://toruya-next-api.vercel.app/v1/compat/lines/user_bot/.../customers.json` |
+| 例 | `/lines/user_bot/.../customers.json` → `https://api.toruya.com/v1/compat/lines/user_bot/.../customers.json` |
 
 HTML 画面・フォーム遷移は従来どおり Heroku Rails が配信します。`fetch` / `axios` による JSON API のみ新 API へルーティングされます。
 
 ## Heroku 設定（toruya-staging）
 
 ```bash
-heroku config:set COMPAT_API_ORIGIN=https://toruya-next-api.vercel.app --app toruya-staging
+heroku config:set COMPAT_API_ORIGIN=https://api.toruya.com --app toruya-staging
 ```
 
 未設定の場合は従来どおり同一オリジン（Rails）へ API を送ります。
 
-## Vercel 側（toruya-next-api）必須設定
+## API 側（api.toruya.com）必須設定
 
-クロスオリジン cookie / CSRF のため、Vercel の環境変数にステージング Heroku のオリジンを追加してください。
+クロスオリジン cookie / CSRF のため、API の環境変数にステージング Heroku のオリジンを追加してください。
 
 ```bash
 CORS_ORIGINS=https://toruya-staging.herokuapp.com,http://localhost:3000
@@ -33,7 +33,7 @@ CORS_ORIGINS=https://toruya-staging.herokuapp.com,http://localhost:3000
 `.env` に追加（任意）:
 
 ```bash
-COMPAT_API_ORIGIN=https://toruya-next-api.vercel.app
+COMPAT_API_ORIGIN=https://api.toruya.com
 ```
 
 ローカル Rails + リモート compat API で動作確認できます。未設定ならローカル Rails API のままです。
@@ -54,8 +54,8 @@ COMPAT_API_ORIGIN=https://toruya-next-api.vercel.app
 
 ## 検証手順
 
-1. Heroku にデプロイ後、ブラウザ DevTools → Network で API リクエストの Host が `toruya-next-api.vercel.app` になっていることを確認
-2. ヘルスチェック: `curl https://toruya-next-api.vercel.app/v1/compat/health`
+1. Heroku にデプロイ後、ブラウザ DevTools → Network で API リクエストの Host が `api.toruya.com` になっていることを確認
+2. ヘルスチェック: `curl https://api.toruya.com/v1/compat/health`
 3. 主要フロー: ログイン、顧客一覧、予約作成、設定保存、ブロードキャスト等
 
 ## 制限事項

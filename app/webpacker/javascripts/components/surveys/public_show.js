@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 import { compatRead } from "../../libraries/compat_api";
 
 function QuestionField({ question, value, onChange }) {
@@ -44,12 +45,14 @@ QuestionField.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default function PublicSurveyShow({ slug, labels, lineIdentificationPath }) {
+export default function PublicSurveyShow({ slug, labels, lineIdentificationPath, customerId }) {
   const [survey, setSurvey] = useState(null);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,9 +76,34 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath 
   if (error) return <p className="danger">{error}</p>;
   if (!survey) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (!customerId) {
+      setError(labels.loginRequired || "LINE login is required before submitting.");
+      return;
+    }
+
+    setSubmitting(true);
+    setError(null);
+    try {
+      const surveyAnswers = Object.entries(answers).map(([questionId, value]) => ({
+        survey_question_id: Number(questionId),
+        text_answer: value,
+      }));
+      await axios.post(`/surveys/${slug}`, {
+        customer_id: customerId,
+        survey_answers: surveyAnswers,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      const message =
+        err.response?.data?.error_message ||
+        err.response?.data?.errors?.message ||
+        err.message;
+      setError(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -109,8 +137,8 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath 
         {!survey.questions?.length && <p>{labels.noQuestions}</p>}
         {survey.questions?.length > 0 && (
           <div className="margin-around">
-            <button type="submit" className="btn btn-yellow">
-              {labels.submit || "Submit"}
+            <button type="submit" className="btn btn-yellow" disabled={submitting}>
+              {submitting ? (labels.submitting || "Submitting...") : (labels.submit || "Submit")}
             </button>
           </div>
         )}
@@ -123,4 +151,5 @@ PublicSurveyShow.propTypes = {
   slug: PropTypes.string.isRequired,
   labels: PropTypes.object.isRequired,
   lineIdentificationPath: PropTypes.string,
+  customerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

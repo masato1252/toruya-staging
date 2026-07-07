@@ -930,6 +930,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get "owner_auth/line", to: "owner_auth#authorize", as: :owner_auth_line
+  get "shop_auth/line", to: "shop_auth#authorize", as: :shop_auth_line
   get "doc_auth/line", to: "doc_auth#authorize", as: :doc_auth_line
 
   resources :docs, param: :slug, only: [:show] do

@@ -31,7 +31,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def index
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       @booking_options = []
       return
     end

@@ -121,77 +121,47 @@ module ApplicationHelper
   # line_login_url(current_owner.social_account, request.url, foo: "bar"),
   def line_login_url(social_account, oauth_redirect_to_url, *args)
     return nil unless social_account&.is_login_available?
-    
+
     options = args.extract_options!
-    encrypted_id = MessageEncryptor.encrypt(social_account&.id)
-    
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
-    
-    who = options.delete(:who)
-
-    options.merge!(
-      prompt: "consent",
-      bot_prompt: "aggressive",
-      oauth_redirect_to_url: oauth_redirect_to_url,
-      oauth_social_account_id: encrypted_id
+    shop_auth_line_path(
+      social_account_id: MessageEncryptor.encrypt(social_account.id),
+      return_to: oauth_redirect_to_url,
+      who: options[:who],
+      customer_id: options[:customer_id],
+      booking_option_ids: options[:booking_option_ids],
+      booking_date: options[:booking_date],
+      booking_at: options[:booking_at],
+      staff_id: options[:staff_id]
     )
-    options[:who] = who if who.present?
-
-    user_line_omniauth_authorize_path(options)
   end
 
   def toruya_line_login_url(oauth_redirect_to_url, *args)
     options = args.extract_options!
-    toruya_user = params[:locale] == 'tw' ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
-    encrypted_content = MessageEncryptor.encrypt(toruya_user)
-    
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
 
-    options.merge!(
-      prompt: "consent",
-      bot_prompt: "aggressive",
-      oauth_redirect_to_url: oauth_redirect_to_url,
-      whois: encrypted_content,
-      who: encrypted_content,
+    owner_auth_line_path(
+      return_to: oauth_redirect_to_url,
+      purpose: options[:purpose] || "owner_settings",
+      staff_token: options[:staff_token],
+      consultant_token: options[:consultant_token],
+      existing_owner_id: options[:existing_owner_id],
       locale: params[:locale]
     )
-
-    user_line_omniauth_authorize_path(options)
   end
 
   def event_line_login_url(oauth_redirect_to_url)
-    encrypted_who = MessageEncryptor.encrypt(CallbacksController::EVENT_LINE_USER)
-    encrypted_whois = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
-
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id)
-
-    user_line_omniauth_authorize_path(
-      prompt: "consent",
-      bot_prompt: "aggressive",
-      oauth_redirect_to_url: oauth_redirect_to_url,
-      whois: encrypted_whois,
-      who: encrypted_who
-    )
+    event_auth_line_path(return_to: oauth_redirect_to_url)
   end
 
   def toruya_new_line_account_url(oauth_redirect_to_url, *args)
     options = args.extract_options!
-    toruya_user = Current.business_owner.locale_is?(:tw) ? CallbacksController::TW_TORUYA_USER : CallbacksController::TORUYA_USER
-    encrypted_content = MessageEncryptor.encrypt(toruya_user)
-    
-    cookies.clear_across_domains(:whois, :who, :oauth_social_account_id, :oauth_redirect_to_url)
 
-    options.merge!(
-      prompt: "consent",
-      bot_prompt: "aggressive",
-      oauth_redirect_to_url: oauth_redirect_to_url,
-      whois: encrypted_content,
-      who: encrypted_content,
+    owner_auth_line_path(
+      return_to: oauth_redirect_to_url,
+      purpose: "owner_settings",
       existing_owner_id: root_user.id,
-      locale: params[:locale]
+      locale: params[:locale],
+      **options
     )
-
-    user_line_omniauth_authorize_path(options)
   end
 
   def embed_tour_video(key)

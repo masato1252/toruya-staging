@@ -4,7 +4,7 @@ class Lines::UserBot::Metrics::OnlineServicesController < Lines::UserBotDashboar
   include ::MetricsHelpers
 
   def sale_pages_visits
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       render json: { labels: [], datasets: [] }
       return
     end
@@ -18,7 +18,7 @@ class Lines::UserBot::Metrics::OnlineServicesController < Lines::UserBotDashboar
   end
 
   def sale_pages_conversions
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       render json: []
       return
     end

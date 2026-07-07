@@ -5,7 +5,7 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
   redirect_to_correct_owner_for :menus, only: [:show, :edit, :update, :destroy]
 
   def index
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       @menus = []
       return
     end

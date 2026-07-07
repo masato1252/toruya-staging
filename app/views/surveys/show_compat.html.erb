@@ -1,5 +1,6 @@
 <%= react_component("surveys/public_show", {
   slug: params[:slug],
+  customerId: current_customer&.id,
   lineIdentificationPath: line_login_url(current_owner&.social_account, request.url),
   labels: {
     noQuestions: t("common.no_data"),

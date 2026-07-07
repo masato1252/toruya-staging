@@ -42,6 +42,15 @@ class OmniauthSetup
   
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
+    if (gateway_creds = @request.session[:line_oauth_credentials]).present?
+      Rails.logger.info("[OmniauthSetup] ✅ gateway session line_oauth_credentials を使用")
+      client_id = gateway_creds[:client_id] || gateway_creds["client_id"]
+      client_secret = gateway_creds[:client_secret] || gateway_creds["client_secret"]
+      if client_id.present? && client_secret.present?
+        return { client_id: client_id, client_secret: client_secret }
+      end
+    end
+
     # パラメータを最優先（URLクエリパラメータ or POSTボディ）
     # 次にCookie、最後にSession
     oauth_social_account_id = @request.parameters["oauth_social_account_id"].presence || 
@@ -78,7 +87,7 @@ class OmniauthSetup
     Rails.logger.info("[OmniauthSetup] フェーズ判定: #{is_callback_phase ? 'Callback' : '開始'}")
     
     Rails.logger.info("[OmniauthSetup] 💾 OAuth識別子をSessionに保存")
-    @request.session.delete(:line_oauth_credentials)
+    @request.session.delete(:line_oauth_credentials) unless gateway_credentials_active?
     
     # パラメータで明示的に指定された場合、反対側の認証情報を完全にクリアして混在を防ぐ
     # whois（Toruya共通ログイン）がパラメータにあれば、店舗固有の値をセッション・Cookie・変数すべてからクリア
@@ -190,5 +199,14 @@ class OmniauthSetup
     Rails.logger.error("[OmniauthSetup]    who: #{who.inspect}")
     Rollbar.error("Unexpected line callback", request: @request, who: who, cookies: @request.cookies.to_h.keys, session_keys: @request.session.to_h.keys) if Rails.configuration.x.env.production?
     {}
+  end
+
+  def gateway_credentials_active?
+    creds = @request.session[:line_oauth_credentials]
+    return false if creds.blank?
+
+    client_id = creds[:client_id] || creds["client_id"]
+    client_secret = creds[:client_secret] || creds["client_secret"]
+    client_id.present? && client_secret.present?
   end
 end

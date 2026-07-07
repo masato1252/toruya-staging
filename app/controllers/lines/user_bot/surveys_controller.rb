@@ -2,7 +2,7 @@
 
 class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   def index
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       @surveys = []
       return
     end
@@ -23,7 +23,7 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def show
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       render :show_compat
       return
     end
@@ -32,7 +32,7 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def edit
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       redirect_to settings_lines_user_bot_survey_path(params[:id], business_owner_id: business_owner_id)
       return
     end
