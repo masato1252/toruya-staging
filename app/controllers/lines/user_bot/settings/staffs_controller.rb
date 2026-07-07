@@ -23,6 +23,11 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     case params[:attribute]
     when "shop_ids"
       @shop_ids_options = Current.business_owner.shops.map do |shop|

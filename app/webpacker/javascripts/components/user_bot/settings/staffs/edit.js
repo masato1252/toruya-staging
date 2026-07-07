@@ -7,20 +7,87 @@ import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, Cir
 import StaffEditComponent from "components/user_bot/sales/staff_edit";
 import { CommonServices } from "user_bot/api"
 import { COUNTRY_CODES, separatePhoneNumber, toInternationalNumber } from "shared/customer_verification";
+import { compatRead } from "../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 
-const StaffEdit = ({props}) => {
-  const [staff, setStaff] = useState(props.staff)
-  const [staffMenus, setStaffMenus] = useState(props.staff_menus_options || [])
-  const [shopIdsOptions, setShopIdsOptions] = useState(props.shop_ids_options || [])
-  const { countryCode: initialCountryCode, number: initialLocalPhone } = separatePhoneNumber(props.staff.phone_number, props.staff.locale);
+const StaffEdit = ({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.staff) {
+          setLoadError("Failed to load staff edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          staff: form.staff,
+          staff_menus_options: form.staff_menus_options || [],
+          shop_ids_options: form.shop_ids_options || [],
+          title: form.title,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const [staff, setStaff] = useState(props?.staff);
+  const [staffMenus, setStaffMenus] = useState(props?.staff_menus_options || []);
+  const [shopIdsOptions, setShopIdsOptions] = useState(props?.shop_ids_options || []);
+
+  useEffect(() => {
+    if (!props) return;
+    setStaff(props.staff);
+    setStaffMenus(props.staff_menus_options || []);
+    setShopIdsOptions(props.shop_ids_options || []);
+  }, [props]);
+
+  const phoneNumber = props?.staff?.phone_number;
+  const locale = props?.staff?.locale;
+  const { countryCode: initialCountryCode, number: initialLocalPhone } = separatePhoneNumber(
+    phoneNumber,
+    locale,
+  );
   const [countryCode, setCountryCode] = useState(initialCountryCode);
   const [localPhone, setLocalPhone] = useState(initialLocalPhone);
+
+  useEffect(() => {
+    if (!phoneNumber) return;
+    const parsed = separatePhoneNumber(phoneNumber, locale);
+    setCountryCode(parsed.countryCode);
+    setLocalPhone(parsed.number);
+  }, [phoneNumber, locale]);
+
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
-    defaultValues: {
-      ...props.staff,
-    }
+    defaultValues: props?.staff || {},
   });
+
+  useEffect(() => {
+    if (!props?.staff) return;
+    Object.entries(props.staff).forEach(([key, value]) => {
+      setValue(key, value);
+    });
+  }, [props, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.staff) return <p>{I18n.t("common.processing")}</p>;
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
