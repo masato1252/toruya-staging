@@ -16,11 +16,49 @@ function copyToClipboard(text) {
 }
 
 function FieldRow({ row, label, warningLabels }) {
-  const header = label || row.header;
+  const header = label ?? row.header;
+
+  if (row.row_class === "option-row") {
+    return (
+      <div className={`field-row option-row${row.href ? " with-next-arrow" : ""}`}>
+        <div className="option-info">
+          {row.href ? (
+            <a href={row.href} className="break-line-content underline w-full block">
+              <span className="dotdotdot">{row.link_title || row.title}</span>
+            </a>
+          ) : (
+            <span className="dotdotdot">{row.link_title || row.title}</span>
+          )}
+          {row.title && row.link_title ? <div className="desc">{row.title}</div> : null}
+          {row.warnings?.map((code) => (
+            <div key={code} className="danger warning">
+              <i className="fas fa-exclamation-circle" /> {warningLabels?.[code] || code}
+            </div>
+          ))}
+        </div>
+        {row.blocks?.length ? (
+          <div className="option-action">
+            {row.blocks.map((block, i) =>
+              block.href ? (
+                <a
+                  key={`block-${i}`}
+                  href={block.href}
+                  className="btn btn-orange"
+                  data-method={block.href.includes("unlink") ? "delete" : undefined}
+                >
+                  <i className="fa fa-minus" /> {block.title}
+                </a>
+              ) : null,
+            )}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <>
-      {header && <div className="field-header">{header}</div>}
+      {header ? <div className="field-header">{header}</div> : null}
       <div className={`field-row${row.row_class ? ` ${row.row_class}` : ""}${row.href ? " with-next-arrow" : ""}`}>
         {row.href ? (
           <a href={row.href} className="w-full block">
@@ -110,9 +148,11 @@ export default function CompatOwnerShowShell({
     <>
       {vm.field_groups.map((group) => (
         <React.Fragment key={group.id || group.label}>
-          {groupLabels?.[group.label] && (
-            <div className="field-group-header">{groupLabels[group.label]}</div>
-          )}
+          {groupLabels?.[group.label] ? (
+            <div className="field-group-header" id={group.id || group.label}>
+              {groupLabels[group.label]}
+            </div>
+          ) : null}
           {group.rows.map((row, idx) => (
             <FieldRow
               key={`${group.id}-${row.header}-${idx}`}
@@ -122,12 +162,22 @@ export default function CompatOwnerShowShell({
             />
           ))}
           {group.action_rows?.map((row, idx) => (
-            <div key={`action-${idx}`} className="action-block margin-around">
+            <div
+              key={`action-${idx}`}
+              className={`action-block margin-around${
+                group.id === "booking_options" && !group.rows?.length ? " border-red border-solid" : ""
+              }`}
+            >
               <a className="btn btn-yellow" href={row.href}>
                 <i className="fa fa-plus" /> {row.title}
               </a>
             </div>
           ))}
+          {group.id === "booking_options" && !group.rows?.length && warningLabels?.no_booking_option ? (
+            <div className="danger margin-around">
+              <i className="fas fa-exclamation-circle" /> {warningLabels.no_booking_option}
+            </div>
+          ) : null}
         </React.Fragment>
       ))}
 
