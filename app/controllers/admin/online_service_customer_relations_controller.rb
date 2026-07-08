@@ -5,7 +5,7 @@ module Admin
   def index
     user = SocialUser.find_by(social_service_user_id: params[:social_service_user_id])&.user || User.find_by(id: params[:user_id])
 
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @relations = []
       @lookup_user_id = user&.id
       return

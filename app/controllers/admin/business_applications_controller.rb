@@ -3,7 +3,7 @@
 module Admin
   class BusinessApplicationsController < AdminController
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @applications = []
       return
     end

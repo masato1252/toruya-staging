@@ -4,7 +4,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   before_action :set_staff, only: [:show, :edit, :update, :destroy, :resend_activation]
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @staffs = []
       return
     end

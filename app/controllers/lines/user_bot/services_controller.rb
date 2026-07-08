@@ -25,7 +25,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       @online_services = []
       @online_services_with_sale_page_ids = []
       @online_services_with_draft_sale_page_ids = {}
@@ -40,7 +40,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def show
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_read_enabled?
       render :show_compat
       return
     end
@@ -63,6 +63,11 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def edit
+    if compat_read_enabled?
+      redirect_to lines_user_bot_service_path(params[:id], business_owner_id: business_owner_id)
+      return
+    end
+
     @service = Current.business_owner.online_services.find(params[:id])
     @attribute = params[:attribute]
   end
