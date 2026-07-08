@@ -7,7 +7,7 @@
         <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.sales.edit.sale_pages") %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
-        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+        <% if compat_read_enabled? %>
           <%= react_component("user_bot/sales/index", {
             businessOwnerId: business_owner_id,
             newSalePath: (is_not_phone? ? new_lines_user_bot_sale_path(business_owner_id: business_owner_id) : nil),

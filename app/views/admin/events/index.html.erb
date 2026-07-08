@@ -6,7 +6,7 @@
     <%= link_to "新規作成", new_admin_event_path, class: "btn btn-tarco" %>
   </div>
 
-  <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <% if compat_read_enabled? %>
     <%= react_component("admin/events/index", {
       adminEventPathPrefix: "/admin/events",
     }) %>

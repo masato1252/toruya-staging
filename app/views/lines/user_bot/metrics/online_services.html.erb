@@ -5,7 +5,7 @@
         <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.metrics.title") %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
-        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+        <% if compat_read_enabled? %>
           <%= react_component("user_bot/metrics/online_services_index", {
             businessOwnerId: business_owner_id,
             metricsServicePathPrefix: "/lines/user_bot/owner/#{business_owner_id}/metrics/online_services",

@@ -1,6 +1,6 @@
 <% if ENV["COMPAT_API_ORIGIN"].present? %>
   <meta name="compat-api-origin" content="<%= ENV["COMPAT_API_ORIGIN"].to_s.delete_suffix("/") %>" />
-  <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <% if compat_read_enabled? %>
     <meta name="compat-api-read-enabled" content="true" />
   <% end %>
   <% if defined?(current_social_user) && current_social_user&.social_service_user_id.present? %>

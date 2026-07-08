@@ -23,7 +23,7 @@
             </div>
           </div>
         <% else %>
-          <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <% if compat_read_enabled? %>
             <div class="margin-around">
               <%= react_component("user_bot/metrics/dashboard", {
                 businessOwnerId: business_owner_id,
@@ -33,7 +33,12 @@
                   newCustomers: t("user_bot.dashboards.metrics.new_customers"),
                   newReservations: t("user_bot.dashboards.metrics.new_reservations"),
                   totalRevenue: t("user_bot.dashboards.metrics.total_revenue"),
-                  lastNDays: t("user_bot.dashboards.metrics.last_n_days", days: 30),
+                  lastNDays: t("user_bot.dashboards.metrics.last_n_days", days: ":days"),
+                  bookingPagesRevenue: t("user_bot.dashboards.metrics.booking_revenue"),
+                  onlineServicesRevenue: t("user_bot.dashboards.metrics.sale_page_ranking"),
+                  optionName: t("user_bot.dashboards.metrics.booking_option"),
+                  reservationCount: t("user_bot.dashboards.metrics.bookings_count"),
+                  serviceName: t("user_bot.dashboards.metrics.product_name"),
                   loading: t("common.processing"),
                   error: t("common.something_went_wrong_message"),
                 },

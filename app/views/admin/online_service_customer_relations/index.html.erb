@@ -1,4 +1,4 @@
-<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<% if compat_read_enabled? %>
   <%= react_component("admin/online_service_customer_relations/index", {
     userId: @lookup_user_id,
     salePagePathPrefix: sale_page_path("").sub(%r{/$}, ""),

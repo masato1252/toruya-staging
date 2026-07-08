@@ -5,7 +5,7 @@
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.staffs.list_page_title") %>
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.staffs.list_page_header") %></div>
-        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+        <% if compat_read_enabled? %>
           <%= react_component("user_bot/settings/staffs/index", { businessOwnerId: business_owner_id }) %>
         <% else %>
         <% @staffs.each do |staff| %>

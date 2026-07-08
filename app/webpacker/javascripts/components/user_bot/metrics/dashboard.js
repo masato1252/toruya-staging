@@ -100,7 +100,7 @@ export default function MetricsDashboard({
         <div className="p-4 w-11-12 metric-cell h-full">
           <h5>{labels.totalRevenue}</h5>
           <p>{labels.lastNDays.replace(":days", String(days))}</p>
-          <span className="text-4xl">{data.customers_payment ?? 0}</span>
+          <span className="text-4xl">{formatYen(data.customers_payment)}</span>
           <Trend value={data.comparison_customers_payment ?? 0} />
         </div>
       </div>

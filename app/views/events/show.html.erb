@@ -3,7 +3,7 @@
   <meta property="og:description" content="<%= @event.description&.truncate(120) %>" />
 <% end %>
 
-<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<% if compat_read_enabled? %>
   <%= render "events/show_compat" %>
 <% else %>
 <%= react_component("events/show", {

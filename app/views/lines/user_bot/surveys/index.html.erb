@@ -5,7 +5,7 @@
         <%= render "lines/user_bot/top_navigation_bar", title: t("user_bot.dashboards.surveys.title") %>
 
         <div class="booking-pages-list">
-          <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+          <% if compat_read_enabled? %>
             <%= react_component("user_bot/surveys/index", {
               businessOwnerId: business_owner_id,
               surveyUrlBase: "#{request.protocol}#{request.host_with_port}",

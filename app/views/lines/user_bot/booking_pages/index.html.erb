@@ -7,7 +7,7 @@
         <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.booking_pages.index.title") %>
 
         <div class="field-header"><%= I18n.t("user_bot.dashboards.booking_pages.index.field_header") %></div>
-        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+        <% if compat_read_enabled? %>
           <%= react_component("user_bot/booking_pages/index", {
             businessOwnerId: business_owner_id,
             bookingsPagePath: page_lines_user_bot_bookings_path(business_owner_id: business_owner_id),

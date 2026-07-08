@@ -4,7 +4,7 @@
       <div class="form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", title: t("user_bot.dashboards.broadcasts.broadcast_title") %>
 
-        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+        <% if compat_read_enabled? %>
           <%= react_component("user_bot/broadcasts/index", {
             businessOwnerId: business_owner_id,
             newBroadcastPath: (is_not_phone? ? new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id) : nil),

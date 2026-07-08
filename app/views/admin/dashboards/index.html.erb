@@ -1,4 +1,4 @@
-<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<% if compat_read_enabled? %>
   <%= react_component("admin/dashboard/index", {
     applicationsTitle: I18n.t("admin.pending_business_applications.title"),
     withdrawalsTitle: I18n.t("admin.pending_withdrawals.title"),

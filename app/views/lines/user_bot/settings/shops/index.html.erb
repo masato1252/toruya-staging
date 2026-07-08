@@ -4,7 +4,7 @@
       <div class="settings-dashboard form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.shop.shop_info_label") %>
         <div class="field-header"><%= t("common.shop_label") %></div>
-        <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+        <% if compat_read_enabled? %>
           <%= react_component("user_bot/settings/shops/index", {
             businessOwnerId: business_owner_id,
             setupPendingWarning: t("settings.shop.setup_pending_warning"),

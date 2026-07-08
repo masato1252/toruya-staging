@@ -11,8 +11,8 @@
     <% end %>
   </div>
 
-  <%= render 'lines/user_bot/shared/metrics_dashboard' unless ENV["COMPAT_API_READ_ENABLED"] == "true" %>
-  <% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= render 'lines/user_bot/shared/metrics_dashboard' unless compat_read_enabled? %>
+  <% if compat_read_enabled? %>
     <%= react_component("user_bot/metrics/dashboard", {
       businessOwnerId: business_owner_id,
       startDate: params[:start_date].presence || 30.days.ago.to_date.to_s,
@@ -24,12 +24,17 @@
         newReservations: t("user_bot.dashboards.metrics.new_reservations"),
         totalRevenue: t("user_bot.dashboards.metrics.total_revenue"),
         lastNDays: t("user_bot.dashboards.metrics.last_n_days", days: ":days"),
+        bookingPagesRevenue: t("user_bot.dashboards.metrics.booking_revenue"),
+        onlineServicesRevenue: t("user_bot.dashboards.metrics.sale_page_ranking"),
+        optionName: t("user_bot.dashboards.metrics.booking_option"),
+        reservationCount: t("user_bot.dashboards.metrics.bookings_count"),
+        serviceName: t("user_bot.dashboards.metrics.product_name"),
       },
     }) %>
   <% end %>
 </div>
 
-<% if ENV["COMPAT_API_READ_ENABLED"] != "true" && @booking_revenue.present? %>
+<% if !compat_read_enabled? && @booking_revenue.present? %>
   <div class="container table margin-around border border-solid border-gray-500">
     <h3 class="p-6"><%= t("user_bot.dashboards.metrics.booking_revenue") %></h3>
     <div class="row">
@@ -53,7 +58,7 @@
   </div>
 <% end %>
 
-<% if ENV["COMPAT_API_READ_ENABLED"] != "true" && @services_mapping_total_amount.present? %>
+<% if !compat_read_enabled? && @services_mapping_total_amount.present? %>
   <div class="container table margin-around border border-solid border-gray-500">
     <h3 class="p-6"><%= t("user_bot.dashboards.metrics.sale_page_ranking") %></h3>
     <div class="row">

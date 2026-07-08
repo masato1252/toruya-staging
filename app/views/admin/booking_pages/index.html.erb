@@ -1,4 +1,4 @@
-<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<% if compat_read_enabled? %>
   <%= react_component("admin/booking_pages/index", {
     userId: @lookup_user_id,
     bookingPagePathPrefix: booking_page_path("").sub(%r{/$}, ""),
