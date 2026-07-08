@@ -4,6 +4,11 @@ class Admin::DocsController < AdminController
   before_action :set_doc, only: [:show, :edit, :update, :destroy]
 
   def index
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      @docs = []
+      return
+    end
+
     @docs = Doc.active.order(created_at: :desc)
   end
 

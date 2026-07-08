@@ -1,5 +1,8 @@
 <%= render "admin/features" %>
 
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= react_component("admin/custom_messages/scenarios", { locale: I18n.locale }) %>
+<% else %>
 <h1>Scenarios</h1>
 <ul>
   <% CustomMessages::Users::Template::NORMAL_SCENARIOS.each do |scenario| %>
@@ -24,3 +27,4 @@
         bulk_send_admin_custom_messages_path("incomplete_line") %>
   </li>
 </ul>
+<% end %>

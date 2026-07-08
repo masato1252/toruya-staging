@@ -101,17 +101,32 @@ class Lines::UserBotDashboardController < ActionController::Base
   def require_complete_shop_profile!
     return if current_user.blank?
     return unless Current.business_owner == current_user
-    # 他オーナーの active staff として入場している場合はスルー
-    return if current_user.staff_accounts.active.where.not(owner_id: current_user.id).exists?
+    return if compat_read_enabled? && current_user.is_a?(CompatCurrentUser) && current_user.session_data["works_as_external_staff"]
 
     if compat_read_enabled?
       session = @compat_session_payload || compat_auth_session(owner_id: current_user.id, current_user_id: current_user.id)
       return if session && session["shop_profile_complete"]
     end
 
+    return if current_user.staff_accounts.active.where.not(owner_id: current_user.id).exists? unless current_user.is_a?(CompatCurrentUser)
+
     return if current_user.profile&.company_address_details.present?
 
     redirect_to lines_user_bot_sign_up_path(social_service_user_id: current_social_user&.social_service_user_id)
+  end
+
+  def load_setup_pending_shop
+    return unless Current.business_owner && admin?
+
+    if compat_read_enabled?
+      session = @compat_session_payload || compat_auth_session
+      if session && session["setup_pending_shop_id"]
+        @setup_pending_shop = OpenStruct.new(id: session["setup_pending_shop_id"])
+      end
+      return
+    end
+
+    @setup_pending_shop = Current.business_owner.shops.setup_pending.order(:id).first
   end
 
   def notify_user_customer_reservation_confirmation_message
@@ -119,13 +134,6 @@ class Lines::UserBotDashboardController < ActionController::Base
       Current.notify_user_customer_reservation_confirmation_message = false
       flash[:notice] = I18n.t("common.notify_user_customer_reservation_confirmation_message")
     end
-  end
-
-  def load_setup_pending_shop
-    return if compat_read_enabled?
-    return unless Current.business_owner && admin?
-
-    @setup_pending_shop = Current.business_owner.shops.setup_pending.order(:id).first
   end
 
   def setup_pending_shop

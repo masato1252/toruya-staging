@@ -1,4 +1,13 @@
 <%= render "admin/features" %>
+
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= react_component("admin/custom_messages/scenario", {
+    scenario: params[:scenario],
+    locale: I18n.locale,
+    newMessageHref: new_admin_custom_messages_path(params[:scenario], locale: I18n.locale),
+    addMoreLabel: I18n.t("action.add_more"),
+  }) %>
+<% else %>
 <h1>Scenario: <%= params[:scenario].titleize %></h1>
 <ul>
 <% @sequence_messages.each.with_index do |message, index| %>
@@ -14,3 +23,4 @@
     <div class="word"><%= I18n.t("action.add_more") %></div>
   <% end %>
 </div>
+<% end %>

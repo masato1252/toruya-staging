@@ -1,5 +1,8 @@
 <%= render "admin/features" %>
 
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= react_component("admin/docs/index", { newDocHref: new_admin_doc_path }) %>
+<% else %>
 <div class="admin-event-list">
   <div class="admin-event-list-header">
     <h2>資料DL一覧</h2>
@@ -33,3 +36,4 @@
     </div>
   <% end %>
 </div>
+<% end %>

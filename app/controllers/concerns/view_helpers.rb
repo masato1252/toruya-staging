@@ -72,6 +72,13 @@ module ViewHelpers
   def current_user
     @current_user ||=
       begin
+        if compat_read_data_plane?
+          payload = compat_view_session_payload
+          if payload && payload["current_user_id"]
+            return CompatCurrentUser.new(payload)
+          end
+        end
+
         user = current_users&.find { |u| u.current_staff_account(super_user)&.present? }
 
         if !user && social_user&.user&.super_admin?
@@ -107,6 +114,16 @@ module ViewHelpers
     @super_user ||=
       if params[:encrypted_user_id]
         User.find_by(id: MessageEncryptor.decrypt(params[:encrypted_user_id]))
+      elsif compat_read_data_plane?
+        owner_id = resolve_compat_id(params[:business_owner_id])
+        payload = compat_view_session_payload(owner_id: owner_id)
+        if payload && owner_id && payload["owner_id"].to_i == owner_id
+          CompatBusinessOwner.new(payload)
+        elsif owner_id
+          User.find_by(id: owner_id)
+        else
+          root_user || privileged_session_user
+        end
       elsif params[:business_owner_id]
         User.find_by(id: params[:business_owner_id])
       else
@@ -123,6 +140,17 @@ module ViewHelpers
       if user&.super_admin? || user&.can_admin_chat?
         user
       end
+  end
+
+  def compat_view_session_payload(owner_id: nil)
+    payload = instance_variable_get(:@compat_session_payload) if instance_variable_defined?(:@compat_session_payload)
+    return payload if payload.present?
+    return nil unless respond_to?(:compat_auth_session, true)
+
+    compat_auth_session(
+      owner_id: owner_id || resolve_compat_id(params[:business_owner_id]),
+      current_user_id: resolve_compat_id(user_bot_cookies(:current_user_id) if respond_to?(:user_bot_cookies, true))
+    )
   end
 
   def business_owner_id

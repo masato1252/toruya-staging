@@ -2,9 +2,16 @@
 
 module Admin
   class CustomMessagesController < AdminController
-    def scenarios; end
+    def scenarios
+      return if ENV["COMPAT_API_READ_ENABLED"] != "true"
+    end
 
     def scenario
+      if ENV["COMPAT_API_READ_ENABLED"] == "true"
+        @sequence_messages = []
+        return
+      end
+
       @sequence_messages = CustomMessage.where(scenario: params[:scenario], locale: I18n.locale).order("nth_time ASC, after_days ASC")
     end
 

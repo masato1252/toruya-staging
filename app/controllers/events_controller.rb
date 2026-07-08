@@ -13,6 +13,11 @@ class EventsController < ActionController::Base
 
   def show
     @current_event_line_user = current_event_line_user
+
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return
+    end
+
     @participant = @current_event_line_user ? @event.event_participants.find_by(event_line_user_id: @current_event_line_user.id) : nil
 
     @event_hash = EventSerializer.new(@event, {
