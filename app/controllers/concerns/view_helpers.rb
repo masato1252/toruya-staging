@@ -147,9 +147,11 @@ module ViewHelpers
     return payload if payload.present?
     return nil unless respond_to?(:compat_auth_session, true)
 
+    cookie_current_user_id = user_bot_cookies(:current_user_id) if respond_to?(:user_bot_cookies, true)
+
     compat_auth_session(
       owner_id: owner_id || resolve_compat_id(params[:business_owner_id]),
-      current_user_id: resolve_compat_id(user_bot_cookies(:current_user_id) if respond_to?(:user_bot_cookies, true))
+      current_user_id: resolve_compat_id(cookie_current_user_id)
     )
   end
 
