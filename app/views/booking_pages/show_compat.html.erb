@@ -56,7 +56,7 @@
       regions: regions,
       url: booking_url,
       is_customer_address_required: @booking_page.customer_address_required,
-      survey: @booking_page.survey ? SurveySerializer.new(@booking_page.survey).attributes_hash : nil,
+      survey: nil,
     }),
     calendar: {
       dayNames: I18n.t("date.abbr_day_names"),

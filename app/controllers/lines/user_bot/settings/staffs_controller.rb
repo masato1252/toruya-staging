@@ -116,6 +116,10 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   private
 
   def set_staff
+    if compat_read_data_plane? && %w[show edit].include?(action_name)
+      return
+    end
+
     @staff = Staff.find_by(id: params[:id], user_id: Current.business_owner.id)
     redirect_to lines_user_bot_settings_staffs_path(business_owner_id: business_owner_id) unless @staff
   end

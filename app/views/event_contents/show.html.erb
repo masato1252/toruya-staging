@@ -15,6 +15,9 @@
   <% end %>
 <% end %>
 
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= render "event_contents/show_compat" %>
+<% else %>
 <%= react_component("event_contents/show", {
   props: {
     event_content: @event_content_hash,
@@ -35,3 +38,4 @@
     event_logo_image_url: @event.logo_image.attached? ? rails_blob_path(@event.logo_image, only_path: true) : nil
   }
 }, { camelize_props: false }) %>
+<% end %>

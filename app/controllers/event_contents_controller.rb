@@ -14,6 +14,11 @@ class EventContentsController < ActionController::Base
 
   def show
     @current_event_line_user = current_event_line_user
+
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return
+    end
+
     @participant = @current_event_line_user ? @event.event_participants.find_by(event_line_user_id: @current_event_line_user.id) : nil
     @usage = @current_event_line_user ? @event_content.event_content_usages.find_by(event_line_user_id: @current_event_line_user.id) : nil
     @consultation = @current_event_line_user ? @event_content.event_upsell_consultations.find_by(event_line_user_id: @current_event_line_user.id) : nil

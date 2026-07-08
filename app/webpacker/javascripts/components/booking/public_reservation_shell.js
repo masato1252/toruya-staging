@@ -79,6 +79,7 @@ function buildFormProps(shellProps, body, searchParams) {
       page.is_customer_address_required ?? shellProps.booking_page?.is_customer_address_required,
     shop_logo_url: includes.shop_logo_url ?? shellProps.booking_page?.shop_logo_url,
     shop_name: includes.shop?.short_name ?? includes.shop?.name ?? shellProps.booking_page?.shop_name,
+    survey: includes.survey ?? shellProps.booking_page?.survey ?? null,
   };
 
   const calendar = {

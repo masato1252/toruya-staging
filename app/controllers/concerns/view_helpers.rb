@@ -46,6 +46,13 @@ module ViewHelpers
 
   def social_user
     @social_user ||=
+      if compat_read_data_plane?
+        payload = compat_view_session_payload
+        if payload && payload["social_service_user_id"].present?
+          return CompatSocialUser.new(payload)
+        end
+      end
+
       if ENV["DEV_USER_ID"]
         User.find(ENV["DEV_USER_ID"]).social_user
       elsif params[:encrypted_user_id] && (user_id = MessageEncryptor.decrypt(params[:encrypted_user_id]))
@@ -95,6 +102,11 @@ module ViewHelpers
   end
 
   def current_users
+    if compat_read_data_plane?
+      payload = compat_view_session_payload
+      return [CompatCurrentUser.new(payload)] if payload&.dig("current_user_id")
+    end
+
     if Current.admin_debug
       business_owner.social_user.current_users
     else
@@ -107,6 +119,11 @@ module ViewHelpers
   end
 
   def root_user
+    if compat_read_data_plane?
+      payload = compat_view_session_payload
+      return CompatBusinessOwner.new(payload) if payload&.dig("owner_id")
+    end
+
     social_user&.root_user
   end
 
@@ -191,6 +208,11 @@ module ViewHelpers
 
 
   def current_ability
+    if compat_read_data_plane?
+      payload = compat_view_session_payload
+      return @current_ability ||= CompatAbility.new(payload) if payload.present?
+    end
+
     @current_ability ||= Ability.new(current_user, Current.business_owner, shop)
   end
 
