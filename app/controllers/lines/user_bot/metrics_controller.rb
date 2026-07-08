@@ -90,7 +90,7 @@ class Lines::UserBot::MetricsController < Lines::UserBotDashboardController
 
   def online_service
     if compat_read_enabled?
-      redirect_to lines_user_bot_metrics_path(business_owner_id: business_owner_id)
+      @online_service = Struct.new(:id, :internal_product_name).new(params[:id], nil)
       return
     end
 

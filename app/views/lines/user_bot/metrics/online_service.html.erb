@@ -1,7 +1,14 @@
 <div class="booking-pages form with-top-bar">
   <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.metrics.title") %>
 
-  <h2><%= I18n.t("user_bot.dashboards.metrics.weekly_service_sale_page_visit_count", service_name: @online_service.internal_product_name) %></h2>
+  <% if compat_read_enabled? %>
+    <%= react_component("user_bot/metrics/online_service_title", {
+      businessOwnerId: business_owner_id,
+      serviceId: params[:id],
+    }) %>
+  <% else %>
+    <h2><%= I18n.t("user_bot.dashboards.metrics.weekly_service_sale_page_visit_count", service_name: @online_service.internal_product_name) %></h2>
+  <% end %>
 
   <div class="margin-around date-range-selector mb-4">
     <% default_start_date = params[:start_date].presence || 30.days.ago.to_date.to_s %>
@@ -25,6 +32,7 @@
         start_date: default_start_date,
         end_date: default_end_date
       }),
+      compatReadPath: compat_read_enabled? ? "/lines/user_bot/owner/#{business_owner_id}/metrics/online_services/#{params[:id]}/sale_pages_visits?start_date=#{default_start_date}&end_date=#{default_end_date}" : nil,
     }, { camelize_props: false }) %>
   <% end %>
 
@@ -37,6 +45,7 @@
       start_date: default_start_date,
       end_date: default_end_date,
     }),
+    compatReadPath: compat_read_enabled? ? "/lines/user_bot/owner/#{business_owner_id}/metrics/online_services/#{params[:id]}/sale_pages_conversions?start_date=#{default_start_date}&end_date=#{default_end_date}" : nil,
     is_phone: is_phone?,
     page_label_key: "online_service"
   }, { camelize_props: false }) %>
