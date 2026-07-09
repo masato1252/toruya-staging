@@ -6,6 +6,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import ProcessingBar from "shared/processing_bar";
 import ChargeFailedModal from "./charge_failed";
 import toastr from "toastr";
+import { PaymentServices } from "user_bot/api";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -422,53 +423,34 @@ class PlanCharge extends React.Component {
     try {
       this.toggleProcessing();
 
-      // paymentPathからdowngradePathを推測
-      // 例: /settings/payments -> /settings/payments/downgrade
-      // 例: /lines/user_bot/owner/82/settings/payments -> /lines/user_bot/owner/82/settings/payments/downgrade
-      const paymentPath = this.props.paymentPath || this.props.props?.paymentPath;
-      const downgradePath = this.props.downgradePath || 
-        (paymentPath ? paymentPath.replace(/\/?$/, '/downgrade') : '/settings/payments/downgrade');
-
-      // social_service_user_idを取得
-      const getSocialServiceUserId = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const socialServiceUserId = urlParams.get('social_service_user_id');
-        if (socialServiceUserId) {
-          return socialServiceUserId;
-        }
-        const pathMatch = window.location.pathname.match(/social_service_user_id\/([^\/\?]+)/);
-        if (pathMatch) {
-          return pathMatch[1];
-        }
-        return null;
-      };
-
-      const socialServiceUserId = getSocialServiceUserId();
-      
-      // 選択されたプラン情報を取得
+      const businessOwnerId =
+        this.props.business_owner_id ||
+        this.props.props?.business_owner_id;
       const planKey = this.props.plan?.key || this.props.plan?.level;
       const rank = this.props.rank || 0;
-      
-      // パラメータを構築
-      const params = new URLSearchParams();
-      if (planKey) {
-        params.append('plan', planKey);
-      }
-      if (rank) {
-        params.append('rank', rank);
-      }
-      if (socialServiceUserId) {
-        params.append('social_service_user_id', socialServiceUserId);
-      }
-      
-      const url = `${downgradePath}?${params.toString()}`;
 
-      // ダウングレードはGETリクエストで、リダイレクトが返されるため、直接window.locationを使用
-      window.location.href = url;
+      const [error, response] = await PaymentServices.downgradePlan({
+        business_owner_id: businessOwnerId,
+        plan: planKey,
+        rank,
+      });
+
+      this.toggleProcessing();
+
+      if (error || !response?.data?.redirect_path) {
+        alert(
+          error?.response?.data?.message ||
+            response?.data?.error_message ||
+            this.props.i18n?.downgradeFailed ||
+            "ダウングレードに失敗しました。ページを再読み込みしてください。",
+        );
+        return;
+      }
+
+      window.location.href = response.data.redirect_path;
     } catch (err) {
       this.toggleProcessing();
       console.error("Downgrade error:", err);
-      // ダウングレード失敗時はエラーモーダルではなく、通常のエラーメッセージを表示
       alert(this.props.i18n?.downgradeFailed || "ダウングレードに失敗しました。ページを再読み込みしてください。");
     }
   };

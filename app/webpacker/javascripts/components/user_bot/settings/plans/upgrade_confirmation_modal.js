@@ -49,7 +49,7 @@ const UpgradeConfirmationModal = ({props, selectedPlan, rank, onConfirm, onCance
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          Accept: 'application/json',
           "X-Requested-With": "XMLHttpRequest",
         },
         credentials: "same-origin"

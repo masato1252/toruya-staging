@@ -332,7 +332,55 @@ const PaymentServices = {
       },
       responseType: "json"
     })
-  }
+  },
+  upgradePreview: ({ business_owner_id, plan, rank }) => {
+    return request({
+      method: "GET",
+      url: Routes.upgrade_preview_lines_user_bot_settings_payments_path(business_owner_id, {
+        plan,
+        rank,
+        format: "json",
+      }),
+      headers: {
+        Accept: "application/json",
+      },
+      responseType: "json",
+    });
+  },
+  downgradePlan: ({ business_owner_id, plan, rank }) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        Accept: "application/json",
+      },
+      url: `/lines/user_bot/owner/${business_owner_id}/settings/payments/downgrade`,
+      data: { plan, rank },
+      responseType: "json",
+    });
+  },
+  cancelDowngradeReservation: ({ business_owner_id }) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        Accept: "application/json",
+      },
+      url: `/lines/user_bot/owner/${business_owner_id}/settings/payments/cancel_downgrade_reservation`,
+      responseType: "json",
+    });
+  },
+  refundSubscription: ({ business_owner_id }) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        Accept: "application/json",
+      },
+      url: `/lines/user_bot/owner/${business_owner_id}/settings/payments/refund`,
+      responseType: "json",
+    });
+  },
 }
 
 const BookingPageServices = {

@@ -13,6 +13,7 @@ import UpgradeConfirmationModal from "./upgrade_confirmation_modal";
 import SupportModal from "shared/support_modal";
 import I18n from 'i18n-js/index.js.erb';
 import { compatRead } from "../../../../libraries/compat_api";
+import { PaymentServices } from "user_bot/api";
 
 const Plans = ({props: initialProps}) => {
   const [readyProps, setReadyProps] = useState(
@@ -128,7 +129,7 @@ const Plans = ({props: initialProps}) => {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          Accept: 'application/json',
           "X-Requested-With": "XMLHttpRequest",
         },
         credentials: "same-origin"
@@ -156,29 +157,24 @@ const Plans = ({props: initialProps}) => {
     $("#subscription-modal").modal("show");
   };
   
-  const cancelDowngradeReservation = () => {
-    // 同日中の制限をチェック
+  const cancelDowngradeReservation = async () => {
     if (props.plan_change_restricted_today) {
       toastr.warning("プラン変更は1日1回までとなります");
       return;
     }
-    
+
     $("#subscription-modal").modal("hide");
-    
-    const url = `/lines/user_bot/owner/${props.business_owner_id}/settings/payments/cancel_downgrade_reservation`;
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = url;
-    
-    // CSRFトークンを追加
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = 'authenticity_token';
-    csrfInput.value = props.formAuthenticityToken;
-    form.appendChild(csrfInput);
-    
-    document.body.appendChild(form);
-    form.submit();
+
+    const [error, response] = await PaymentServices.cancelDowngradeReservation({
+      business_owner_id: props.business_owner_id,
+    });
+
+    if (error || !response?.data?.success) {
+      toastr.error(error?.response?.data?.message || response?.data?.message || "キャンセルに失敗しました");
+      return;
+    }
+
+    window.location = response.data.redirect_path || Routes.lines_user_bot_settings_plans_path(props.business_owner_id);
   };
 
   const subscriptionPlanIndex = (planLevel) => Plans.planOrder.indexOf(planLevel)
