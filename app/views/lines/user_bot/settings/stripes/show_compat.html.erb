@@ -12,6 +12,9 @@
             loading: t("common.processing"),
           },
         }, { camelize_props: false }) %>
+        <%= render "lines/user_bot/settings/stripes/connection",
+          stripe_connected: @stripe_connected,
+          stripe_default_payment: @stripe_default_payment %>
       </div>
     </div>
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>

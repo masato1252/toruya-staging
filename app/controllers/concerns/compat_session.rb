@@ -32,7 +32,41 @@ module CompatSession
     )&.dig("data")
   end
 
+  def compat_fetch_v1_json(path, query = {})
+    fetch_v1_json(path, query)
+  end
+
+  def compat_v1_put(path, body = {})
+    compat_v1_json_request(Net::HTTP::Put, path, body)
+  end
+
+  def compat_v1_post(path, body = {})
+    compat_v1_json_request(Net::HTTP::Post, path, body)
+  end
+
   private
+
+  def compat_v1_json_request(request_class, path, body = {})
+    origin = ENV["COMPAT_API_ORIGIN"].to_s.sub(%r{/$}, "")
+    uri = URI("#{origin}/v1/compat#{path}")
+
+    request = request_class.new(uri)
+    request["Content-Type"] = "application/json"
+    request["Cookie"] = cookies.map { |k, v| "#{k}=#{v}" }.join("; ") if cookies.present?
+    request["Accept"] = "application/json"
+    request.body = body.to_json if body.present?
+
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https", open_timeout: 5, read_timeout: 10) do |http|
+      http.request(request)
+    end
+
+    return nil unless response.is_a?(Net::HTTPSuccess)
+
+    JSON.parse(response.body)
+  rescue StandardError => e
+    Rails.logger.warn("[CompatSession] #{request_class.name.demodulize.upcase} #{path} failed: #{e.message}")
+    nil
+  end
 
   def fetch_v1_json(path, query = {})
     origin = ENV["COMPAT_API_ORIGIN"].to_s.sub(%r{/$}, "")

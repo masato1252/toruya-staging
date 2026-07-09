@@ -5,7 +5,8 @@
   <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: local_assigns[:oauth_redirect_to_url] || lines_user_bot_settings_path(business_owner_id: business_owner_id)),
     class: "btn-stripe-connect btn btn-yellow",
     disabled: !is_owner do %>
-    <%= Current.business_owner.stripe_provider ? t("action.stripe_connected") : t("action.stripe_connect") %>
+    <% stripe_connected = local_assigns.fetch(:stripe_connected) { Current.business_owner.stripe_provider.present? } %>
+    <%= stripe_connected ? t("action.stripe_connected") : t("action.stripe_connect") %>
   <% end %>
   <% if !is_owner %>
     <div class="warning"><%= t("user_bot.dashboards.settings.stripe.owner_warning") %></div>
@@ -20,9 +21,10 @@
   <%= link_to t("action.stripe_sign_up"), "https://stripe.com", class: "btn btn-tarco", target: "_blank" %>
 </div>
 
-<% if Current.business_owner.stripe_provider %>
+<% if local_assigns.fetch(:stripe_connected) { Current.business_owner.stripe_provider.present? } %>
   <hr />
   <div class="margin-around centerize">
-    <%= button_to t("user_bot.dashboards.settings.stripe.default_payment_button"), lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "btn btn-tarco", disabled: Current.business_owner.stripe_provider&.default_payment?, method: :patch %>
+    <% stripe_default_payment = local_assigns.fetch(:stripe_default_payment) { Current.business_owner.stripe_provider&.default_payment? } %>
+    <%= button_to t("user_bot.dashboards.settings.stripe.default_payment_button"), lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "btn btn-tarco", disabled: stripe_default_payment, method: :patch %>
   </div>
 <% end %>

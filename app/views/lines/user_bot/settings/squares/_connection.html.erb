@@ -5,7 +5,8 @@
   <%= button_to user_square_omniauth_authorize_path(oauth_redirect_to_url: lines_user_bot_settings_path(business_owner_id: business_owner_id)),
     class: "btn-square-connect btn btn-yellow",
     disabled: !is_owner do %>
-    <%= Current.business_owner.square_provider ? t("action.square_connected") : t("action.square_connect") %>
+    <% square_connected = local_assigns.fetch(:square_connected) { Current.business_owner.square_provider.present? } %>
+    <%= square_connected ? t("action.square_connected") : t("action.square_connect") %>
   <% end %>
   <% if !is_owner %>
     <div class="warning"><%= t("user_bot.dashboards.settings.square.owner_warning") %></div>
@@ -18,9 +19,10 @@
 <div class="margin-around centerize">
   <%= link_to t("action.square_sign_up"), "https://squareup.com/jp", class: "btn btn-tarco", target: "_blank" %>
 </div>
-<% if Current.business_owner.square_provider %>
+<% if local_assigns.fetch(:square_connected) { Current.business_owner.square_provider.present? } %>
   <hr />
   <div class="margin-around centerize">
-    <%= button_to t("user_bot.dashboards.settings.square.default_payment_button"), lines_user_bot_settings_square_path(business_owner_id: business_owner_id), class: "btn btn-tarco", disabled: Current.business_owner.square_provider&.default_payment?, method: :patch %>
+    <% square_default_payment = local_assigns.fetch(:square_default_payment) { Current.business_owner.square_provider&.default_payment? } %>
+    <%= button_to t("user_bot.dashboards.settings.square.default_payment_button"), lines_user_bot_settings_square_path(business_owner_id: business_owner_id), class: "btn btn-tarco", disabled: square_default_payment, method: :patch %>
   </div>
 <% end %>

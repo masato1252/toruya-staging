@@ -12,6 +12,9 @@
             loading: t("common.processing"),
           },
         }, { camelize_props: false }) %>
+        <%= render "lines/user_bot/settings/squares/connection",
+          square_connected: @square_connected,
+          square_default_payment: @square_default_payment %>
       </div>
     </div>
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>

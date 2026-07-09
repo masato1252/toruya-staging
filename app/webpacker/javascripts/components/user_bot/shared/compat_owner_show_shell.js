@@ -200,6 +200,7 @@ export default function CompatOwnerShowShell({
   warningLabels,
   actionLabels,
   valueLabels,
+  postProcessVm,
 }) {
   const [vm, setVm] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -210,7 +211,11 @@ export default function CompatOwnerShowShell({
     compatRead(pageContextPath)
       .then((body) => {
         if (cancelled) return;
-        setVm(body.data || null);
+        let data = body.data || null;
+        if (data && typeof postProcessVm === "function") {
+          data = postProcessVm(data);
+        }
+        setVm(data);
       })
       .catch((err) => {
         if (!cancelled) setError(err.message);
@@ -221,7 +226,7 @@ export default function CompatOwnerShowShell({
     return () => {
       cancelled = true;
     };
-  }, [pageContextPath]);
+  }, [pageContextPath, postProcessVm]);
 
   const labels = actionLabels || {};
   const loadingText = labels.loading || "Loading...";
@@ -279,6 +284,14 @@ export default function CompatOwnerShowShell({
         </React.Fragment>
       ))}
 
+      {vm.actions?.refund_href && (
+        <div className="action-block margin-around">
+          <a className="btn btn-orange" href={vm.actions.refund_href}>
+            {labels.refund || "クーリングオフ返金"}
+          </a>
+        </div>
+      )}
+
       {vm.actions?.clone_href && (
         <div className="action-block margin-around">
           <a
@@ -320,4 +333,5 @@ CompatOwnerShowShell.propTypes = {
   warningLabels: PropTypes.object,
   actionLabels: PropTypes.object,
   valueLabels: PropTypes.object,
+  postProcessVm: PropTypes.func,
 };

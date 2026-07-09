@@ -218,6 +218,20 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def refund
+    if compat_read_data_plane?
+      result = compat_v1_post("/lines/user_bot/owner/#{business_owner_id}/settings/payments/refund", {})
+      redirect_path = lines_user_bot_settings_payments_path(business_owner_id: business_owner_id)
+
+      if result&.dig("status") == "successful"
+        flash[:notice] = I18n.t("settings.plans.payment.refund_successfully_message")
+        redirect_to "#{redirect_path}?refund_success=1"
+      else
+        flash[:alert] = I18n.t("settings.plans.payment.refund_failed_message")
+        redirect_to redirect_path
+      end
+      return
+    end
+
     outcome = Subscriptions::Refund.run(user: Current.business_owner)
 
     if outcome.valid?
@@ -231,18 +245,32 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
 
   def receipt
     user_id = MessageEncryptor.decrypt(params[:encrypted_user_id])
-    user = User.find(user_id)
-    
-    # SubscriptionChargeまたはLineNoticeChargeを取得
-    if params[:type] == 'line_notice_charge'
-      @charge = user.line_notice_charges.find(params[:id])
-      @charge_type = 'line_notice_charge'
+    @charge_type = params[:type].presence || "subscription_charge"
+
+    if compat_read_data_plane?
+      body = compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{user_id}/settings/payments/#{params[:id]}/receipt_context",
+        { type: @charge_type }
+      )
+      payload = body&.dig("data")
+      unless payload
+        head :not_found
+        return
+      end
+
+      @charge = CompatReceiptPresenter.new(payload)
+      @receipient_name = payload["recipient_name"]
     else
-      @charge = user.subscription_charges.find(params[:id])
-      @charge_type = 'subscription_charge'
+      user = User.find(user_id)
+
+      if @charge_type == "line_notice_charge"
+        @charge = user.line_notice_charges.find(params[:id])
+      else
+        @charge = user.subscription_charges.find(params[:id])
+      end
+
+      @receipient_name = user.name
     end
-    
-    @receipient_name = user.name
 
     options = {
       template: "settings/payments/receipt",
