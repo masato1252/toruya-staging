@@ -12,7 +12,7 @@ import EditTextarea from "shared/edit/textarea_input";
 import EditSelectInput from "shared/edit/select_input";
 import EditSolutionInput from "shared/edit/solution_input";
 import CoursePage from "user_bot/services/online_service_page/course";
-import { compatRead } from "../../../../../libraries/compat_api";
+import { compatRead } from "../../../../../../libraries/compat_api";
 
 const components = {
   name: EditTextInput,
