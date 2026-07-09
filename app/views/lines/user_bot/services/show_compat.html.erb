@@ -24,8 +24,11 @@
             broadcasts: I18n.t("user_bot.dashboards.broadcasts.title", default: "配信"),
             start_at: I18n.t("user_bot.dashboards.services.start_at"),
             end_at: I18n.t("user_bot.dashboards.services.end_at"),
+            upsell_sale_page: I18n.t("user_bot.dashboards.services.form.upsell_sale_page_title"),
+            bundled_services: I18n.t("user_bot.dashboards.services.form.bundled_services_title"),
+            message_template: I18n.t("user_bot.dashboards.services.form.message_template_title"),
           },
-        }) %>
+        }, { camelize_props: false }) %>
       </div>
     </div>
 
@@ -33,7 +36,7 @@
       <%= react_component("user_bot/shared/compat_owner_show_preview", {
         pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:id]}/page_context",
         supportFeatureFlags: support_feature_flags,
-      }) %>
+      }, { camelize_props: false }) %>
     </div>
   </div>
 </div>

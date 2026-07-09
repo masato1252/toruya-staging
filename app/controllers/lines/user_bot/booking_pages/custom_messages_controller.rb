@@ -5,6 +5,11 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
   redirect_to_correct_owner_for :booking_pages, param_key: :booking_page_id
 
   def index
+    if compat_read_data_plane?
+      render :index_compat
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:booking_page_id])
     @booked_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED).right_away.first
     @reservation_confirmed_message = CustomMessage.scenario_of(@booking_page, CustomMessages::Customers::Template::RESERVATION_CONFIRMED).right_away.first
@@ -13,6 +18,11 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
   end
 
   def edit_scenario
+    if compat_read_data_plane?
+      render :edit_scenario_compat
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:booking_page_id])
     @message = CustomMessage.find_by(service: @booking_page, id: params[:id])
     @template = @message ? @message.content : ::CustomMessages::Customers::Template.run!(product: @booking_page, scenario: params[:scenario])

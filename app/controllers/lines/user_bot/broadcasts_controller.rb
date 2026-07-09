@@ -56,6 +56,11 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     if compat_read_enabled?
       redirect_to lines_user_bot_broadcast_path(params[:id], business_owner_id: business_owner_id)
       return

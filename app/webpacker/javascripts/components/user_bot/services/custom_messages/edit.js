@@ -9,10 +9,11 @@ import { CustomMessageServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import { Translator } from "libraries/helper";
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
+import { compatRead } from "../../../../libraries/compat_api";
 
 let personalizeKeyword = "";
 
-const CustomMessageEdit =({props}) => {
+const CustomMessageEditForm =({props}) => {
   const { handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.message
@@ -184,5 +185,51 @@ const CustomMessageEdit =({props}) => {
     </div>
   )
 }
+
+const CustomMessageEdit = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.message) {
+          setLoadError("Failed to load custom message edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          scenario: form.scenario || initialProps.scenario,
+          message: {
+            ...initialProps.message,
+            ...form.message,
+          },
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">Loading...</div>;
+  }
+
+  return <CustomMessageEditForm props={readyProps} />;
+};
 
 export default CustomMessageEdit;

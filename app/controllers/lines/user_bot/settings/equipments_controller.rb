@@ -17,6 +17,10 @@ class Lines::UserBot::Settings::EquipmentsController < Lines::UserBotDashboardCo
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
   end
 
   def new

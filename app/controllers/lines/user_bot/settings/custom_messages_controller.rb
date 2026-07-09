@@ -7,6 +7,11 @@ class Lines::UserBot::Settings::CustomMessagesController < Lines::UserBotDashboa
   before_action :load_shop
 
   def index
+    if compat_read_data_plane?
+      render :index_compat
+      return
+    end
+
     @booked_message = CustomMessage.scenario_of(@shop, CustomMessages::Customers::Template::BOOKING_PAGE_BOOKED).right_away.first
     @reservation_confirmed_message = CustomMessage.scenario_of(@shop, CustomMessages::Customers::Template::RESERVATION_CONFIRMED).right_away.first
     @one_day_reminder_message = CustomMessage.scenario_of(@shop, CustomMessages::Customers::Template::RESERVATION_ONE_DAY_REMINDER).right_away.first
@@ -14,6 +19,11 @@ class Lines::UserBot::Settings::CustomMessagesController < Lines::UserBotDashboa
   end
 
   def edit_scenario
+    if compat_read_data_plane?
+      render :edit_scenario_compat
+      return
+    end
+
     @message = CustomMessage.find_by(service: @shop, id: params[:id])
     @template = @message ? @message.content : ::CustomMessages::Customers::Template.run!(product: @shop, scenario: params[:scenario])
   end

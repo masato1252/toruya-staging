@@ -11,10 +11,11 @@ import { Translator, getMomentLocale } from "libraries/helper";
 import { CommonServices } from "user_bot/api"
 import CustomerWithTagsQuery from "user_bot/broadcasts/creation_flow/customer_with_tags_query";
 import CustomerWithBirthdayQuery from "user_bot/broadcasts/creation_flow/customer_with_birthday_query";
+import { compatRead } from "../../../libraries/compat_api";
 
 let personalizeKeyword = "";
 
-const BroadcastEdit =({props}) => {
+const BroadcastEditForm =({props}) => {
   const locale = props.locale || 'ja';
   moment.locale(getMomentLocale(locale));
 
@@ -372,5 +373,49 @@ const BroadcastEdit =({props}) => {
     </div>
   )
 }
+
+const BroadcastEdit = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.broadcast) {
+          setLoadError("Failed to load broadcast edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          broadcast: form.broadcast,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">Loading...</div>;
+  }
+
+  return <BroadcastEditForm props={readyProps} />;
+};
 
 export default BroadcastEdit

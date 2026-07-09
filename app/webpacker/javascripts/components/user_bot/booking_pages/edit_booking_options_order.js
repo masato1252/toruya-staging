@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactSelect from "react-select";
 import _ from "lodash";
 import {
@@ -24,15 +24,54 @@ import I18n from 'i18n-js/index.js.erb';
 import { CommonServices } from "user_bot/api"
 import { responseHandler } from "libraries/helper";
 import { TopNavigationBar } from "shared/components";
+import { compatRead } from "../../../libraries/compat_api";
 
-const EditBookingOptionsOrder = ({props}) => {
-  const [booking_options, setBookingOptions] = useState(props.booking_options);
+const EditBookingOptionsOrder = ({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(`${initialProps.pageContextPath}?attribute=booking_options_order`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data || {};
+        const bookingOptions = form.booking_options || [];
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          booking_options: bookingOptions,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const [booking_options, setBookingOptions] = useState(props?.booking_options || []);
   const sensors = useSensors(
     useSensor(PointerSensor)
   );
 
+  useEffect(() => {
+    setBookingOptions(props?.booking_options || []);
+  }, [props]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
+
   const handleDragEnd = (event) => {
     const {active, over} = event;
+    if (!over) return;
 
     if (active.id !== over.id) {
       setBookingOptions((booking_options) => {

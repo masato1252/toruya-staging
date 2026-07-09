@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
 import _ from "lodash";
@@ -17,20 +17,77 @@ import EditTextarea from "shared/edit/textarea_input";
 import EditUrlInput from "shared/edit/url_input";
 import OnlineServicePage from "user_bot/services/online_service_page";
 import LineCardPreview from "shared/line_card_preview";
+import { compatRead } from "../../../libraries/compat_api";
 
-const OnlineServiceEdit =({props}) => {
-  const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
-  const [end_time, setEndTime] = useState(props.service.end_time)
-  const [start_time, setStartTime] = useState(props.service.start_time)
-  const [bundled_services, setBundledServices] = useState(props.service.bundled_services)
-  const [message_template, setMessageTemplate] = useState(props.message_template)
+const OnlineServiceEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.service) {
+          setLoadError("Failed to load service edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          service: form.service,
+          companies: form.companies || [],
+          upsell_sales: form.upsell_sales || [],
+          solutions: form.solutions || [],
+          bundled_service_candidates: form.bundled_service_candidates || [],
+          message_template: form.message_template || null,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const [sale_page, setSalePage] = useState(props?.service?.upsell_sale_page || null)
+  const [end_time, setEndTime] = useState(props?.service?.end_time || {})
+  const [start_time, setStartTime] = useState(props?.service?.start_time || {})
+  const [bundled_services, setBundledServices] = useState(props?.service?.bundled_services || [])
+  const [message_template, setMessageTemplate] = useState(props?.message_template || null)
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
-    defaultValues: {
-      ...props.service,
-      customer_address_required: String(props.service.customer_address_required),
-    }
+    defaultValues: props?.service
+      ? {
+        ...props.service,
+        customer_address_required: String(props.service.customer_address_required),
+      }
+      : {},
   });
+
+  useEffect(() => {
+    if (!props?.service) return;
+    Object.entries(props.service).forEach(([key, value]) => {
+      setValue(key, key === "customer_address_required" ? String(value) : value);
+    });
+    setSalePage(props.service.upsell_sale_page || null);
+    setEndTime(props.service.end_time || {});
+    setStartTime(props.service.start_time || {});
+    setBundledServices(props.service.bundled_services || []);
+    setMessageTemplate(props.message_template || null);
+  }, [props, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.service) return <p>{I18n.t("common.processing")}</p>;
 
   const requestData = (data) => {
     let request_data;
@@ -44,7 +101,7 @@ const OnlineServiceEdit =({props}) => {
   const onSubmit = async (data) => {
     let error, response;
 
-    if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
+    if (props.attribute == "message_template" && !message_template?.picture_url?.length && !message_template?.picture) return;
 
     [error, response] = await OnlineServices.update({
       online_service_id: props.service.id,

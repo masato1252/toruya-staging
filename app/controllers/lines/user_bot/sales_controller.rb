@@ -27,8 +27,8 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def edit
-    if compat_read_enabled?
-      redirect_to lines_user_bot_sale_path(params[:id], business_owner_id: business_owner_id)
+    if compat_read_data_plane?
+      render :edit_compat
       return
     end
 

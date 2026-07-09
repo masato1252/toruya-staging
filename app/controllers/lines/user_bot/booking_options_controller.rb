@@ -40,6 +40,11 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @booking_option = Current.business_owner.booking_options.find(params[:id])
     all_menu_options = Current.business_owner.menus.map do |menu|
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval, online: menu.online)
@@ -50,6 +55,11 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @booking_option = Current.business_owner.booking_options.find(params[:id])
     @attribute = params[:attribute]
     option_menu = @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])

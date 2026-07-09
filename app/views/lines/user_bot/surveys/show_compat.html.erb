@@ -19,6 +19,7 @@
             active: t("user_bot.dashboards.broadcasts.state"),
             question_count: t("user_bot.dashboards.surveys.questions", default: "Questions"),
             responses: t("user_bot.dashboards.surveys.responses", default: "Responses"),
+            public_url: t("action.share"),
           },
           warningLabels: {
             no_questions: t("user_bot.dashboards.surveys.no_questions", default: "No questions configured"),
@@ -30,14 +31,14 @@
             loading: t("common.processing"),
             confirm_delete: t("common.are_you_sure"),
           },
-        }) %>
+        }, { camelize_props: false }) %>
       </div>
     </div>
 
     <div class="col-sm-6 px-0 hidden-xs preview-view">
       <%= react_component("user_bot/shared/compat_owner_show_preview", {
         pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/surveys/#{params[:id]}/page_context",
-      }) %>
+      }, { camelize_props: false }) %>
     </div>
   </div>
 </div>

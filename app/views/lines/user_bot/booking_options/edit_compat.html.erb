@@ -1,0 +1,20 @@
+<%= react_component("user_bot/booking_options/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    attribute: params[:attribute],
+    menu_id: params[:menu_id],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_options/#{params[:id]}/page_context",
+    i18n: {}.merge!([
+      t("settings.booking_option.form"),
+      t("action").slice(:save),
+      t("common").slice(:required_time, :select_a_menu, :minute),
+      {
+        page_title: t("settings.booking_option.form.#{params[:attribute]}_title", default: ""),
+        top_bar_header: t("settings.booking_option.form.#{params[:attribute]}_top_bar_header", default: ""),
+        hint: "",
+      },
+    ].inject(:merge)),
+  }
+},
+{ camelize_props: false }
+) %>

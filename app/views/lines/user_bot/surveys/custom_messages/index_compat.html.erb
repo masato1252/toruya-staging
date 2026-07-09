@@ -1,0 +1,22 @@
+<div class="booking-page-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar",
+    previous_path: lines_user_bot_survey_path(params[:id], business_owner_id: business_owner_id),
+    title: t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %>
+
+  <%= react_component("user_bot/shared/compat_owner_show_shell", {
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/surveys/#{params[:id]}/custom_messages/page_context",
+    groupLabels: {
+      custom_message_scenarios: I18n.t("user_bot.dashboards.settings.custom_message.send_message_label"),
+    },
+    rowLabels: {
+      survey_pending_response: I18n.t("user_bot.dashboards.surveys.custom_messages.survey_pending_response"),
+      activity_pending: I18n.t("user_bot.dashboards.surveys.custom_messages.activity_pending_response", default: "Pending"),
+      activity_accepted: I18n.t("user_bot.dashboards.surveys.custom_messages.activity_accepted_response", default: "Accepted"),
+      activity_canceled: I18n.t("user_bot.dashboards.surveys.custom_messages.activity_canceled_response", default: "Canceled"),
+      activity_one_day_reminder: I18n.t("user_bot.dashboards.surveys.custom_messages.activity_one_day_reminder", default: "Reminder"),
+    },
+    actionLabels: {
+      loading: I18n.t("common.processing"),
+    },
+  }, { camelize_props: false }) %>
+</div>

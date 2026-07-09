@@ -1,0 +1,13 @@
+<%= react_component("user_bot/surveys/custom_messages/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    scenario: params[:scenario],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/surveys/#{params[:id]}/custom_messages/scenario_context?scenario=#{CGI.escape(params[:scenario].to_s)}#{%Q(&custom_message_id=#{params[:custom_message_id]}) if params[:custom_message_id].present?}",
+    message: {
+      service_id: params[:id].to_i,
+      service_type: "Survey",
+    },
+  }
+},
+{ camelize_props: false }
+) %>

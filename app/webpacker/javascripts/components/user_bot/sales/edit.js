@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactPlayer from 'react-player';
 import _ from "lodash";
@@ -28,31 +28,92 @@ import SaleOnlineService from "user_bot/sales/online_services";
 import SaleBookingPage from "user_bot/sales/booking_pages";
 
 import I18n from 'i18n-js/index.js.erb';
+import { compatRead } from "../../../libraries/compat_api";
 
-const SalePageEdit =({props}) => {
+const SalePageEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.sale_page) {
+          setLoadError("Failed to load sale edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          sale_page: form.sale_page,
+          staffs: form.staffs || [],
+          flow_tips: form.flow_tips,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
   const [focus_field, setFocusField] = useState()
-  const [template_variables, setTemplateVariables] = useState(props.sale_page.template_variables)
-  const [why_content, setWhyContent] = useState(props.sale_page.content)
-  const [staff, setStaff] = useState(props.sale_page.staff)
-  const [flow, setFlow] = useState(props.sale_page.sections_context?.flow || props.sale_page.flow || ["", ""])
-  const [benefits, setBenefits] = useState(props.sale_page.sections_context?.benefits || ["", ""])
-  const [faq, setFaq] = useState(props.sale_page.sections_context?.faq || ["", ""])
-  const [reviews, setReviews] = useState(props.sale_page.reviews || ["", ""])
-  const [end_time, setEndTime] = useState(props.sale_page.end_time)
-  const [start_time, setStartTime] = useState(props.sale_page.start_time)
-  const [normal_price, setNormalPrice] = useState(props.sale_page.normal_price_option || {
+  const [template_variables, setTemplateVariables] = useState(props?.sale_page?.template_variables || {})
+  const [why_content, setWhyContent] = useState(props?.sale_page?.content || {})
+  const [staff, setStaff] = useState(props?.sale_page?.staff || {})
+  const [flow, setFlow] = useState(props?.sale_page?.sections_context?.flow || props?.sale_page?.flow || ["", ""])
+  const [benefits, setBenefits] = useState(props?.sale_page?.sections_context?.benefits || ["", ""])
+  const [faq, setFaq] = useState(props?.sale_page?.sections_context?.faq || ["", ""])
+  const [reviews, setReviews] = useState(props?.sale_page?.reviews || ["", ""])
+  const [end_time, setEndTime] = useState(props?.sale_page?.end_time || {})
+  const [start_time, setStartTime] = useState(props?.sale_page?.start_time || {})
+  const [normal_price, setNormalPrice] = useState(props?.sale_page?.normal_price_option || {
     price_type: "cost",
     price_amount: null
   })
-  const [selling_price, setSellingPrice] = useState(props.sale_page.price)
-  const [quantity, setQuantity] = useState(props.sale_page.quantity_option)
+  const [selling_price, setSellingPrice] = useState(props?.sale_page?.price)
+  const [quantity, setQuantity] = useState(props?.sale_page?.quantity_option)
 
-  const { register, watch, handleSubmit, formState, errors } = useForm({
-    defaultValues: {
-      ...props.sale_page,
-      published: String(props.sale_page.published),
-    }
+  const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
+    defaultValues: props?.sale_page
+      ? {
+        ...props.sale_page,
+        published: String(props.sale_page.published),
+      }
+      : {},
   });
+
+  useEffect(() => {
+    if (!props?.sale_page) return;
+    Object.entries(props.sale_page).forEach(([key, value]) => {
+      setValue(key, key === "published" ? String(value) : value);
+    });
+    setTemplateVariables(props.sale_page.template_variables || {});
+    setWhyContent(props.sale_page.content || {});
+    setStaff(props.sale_page.staff || {});
+    setFlow(props.sale_page.sections_context?.flow || props.sale_page.flow || ["", ""]);
+    setBenefits(props.sale_page.sections_context?.benefits || ["", ""]);
+    setFaq(props.sale_page.sections_context?.faq || ["", ""]);
+    setReviews(props.sale_page.reviews || ["", ""]);
+    setEndTime(props.sale_page.end_time || {});
+    setStartTime(props.sale_page.start_time || {});
+    setNormalPrice(props.sale_page.normal_price_option || { price_type: "cost", price_amount: null });
+    setSellingPrice(props.sale_page.price);
+    setQuantity(props.sale_page.quantity_option);
+  }, [props, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.sale_page) return <p>{I18n.t("common.processing")}</p>;
 
   const onSubmit = async (data) => {
     let error, response;

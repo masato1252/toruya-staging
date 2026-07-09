@@ -5,6 +5,11 @@ class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboa
   redirect_to_correct_owner_for :online_services, param_key: :service_id
 
   def index
+    if compat_read_data_plane?
+      render :index_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     scope = CustomMessage.scenario_of(@online_service, CustomMessages::Customers::Template::ONLINE_SERVICE_PURCHASED)
     @purchased_message = scope.right_away.first
@@ -12,6 +17,11 @@ class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboa
   end
 
   def edit_scenario
+    if compat_read_data_plane?
+      render :edit_scenario_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @message = CustomMessage.find_by(service: @online_service, id: params[:id])
     @template = @message ? @message.content : (params[:right_away] ? ::CustomMessages::Customers::Template.run!(product: @online_service, scenario: params[:scenario]) : "")

@@ -1,0 +1,11 @@
+<%= react_component("user_bot/broadcasts/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    attribute: params[:attribute],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/broadcasts/#{params[:id]}/page_context",
+    previous_path: params[:previous_path],
+    customer_status_type: params[:customer_status_type],
+  }
+},
+{ camelize_props: false }
+) %>

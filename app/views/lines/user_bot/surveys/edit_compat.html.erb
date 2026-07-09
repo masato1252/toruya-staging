@@ -1,0 +1,10 @@
+<%= react_component("user_bot/surveys/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    survey: { id: params[:id].to_i },
+    attribute: params[:attribute],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/surveys/#{params[:id]}/page_context",
+  }
+},
+{ camelize_props: false }
+) %>

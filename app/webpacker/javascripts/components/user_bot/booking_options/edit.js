@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
@@ -16,8 +16,9 @@ import BookingEndAtField from "components/user_bot/booking_pages/booking_end_at_
 import BookingPriceField from "./booking_price_field";
 import ExistingMenuField from "components/user_bot/booking_options/existing_menu_field";
 import { responseHandler } from "libraries/helper";
+import { compatRead } from "../../../libraries/compat_api";
 
-const BookingOptionEdit =({props}) => {
+const BookingOptionEditForm =({props}) => {
   const i18n = props.i18n;
   const [inputType, setInputType] = useState(() => {
     const content = props.booking_option[props.attribute];
@@ -328,5 +329,51 @@ const BookingOptionEdit =({props}) => {
     </div>
   )
 }
+
+const BookingOptionEdit = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    const menuId = initialProps.menu_id ? `&menu_id=${encodeURIComponent(initialProps.menu_id)}` : "";
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}${menuId}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.booking_option) {
+          setLoadError("Failed to load booking option edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          booking_option: form.booking_option,
+          i18n: { ...initialProps.i18n, ...(form.i18n || {}) },
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">{initialProps.i18n?.loading || "Loading..."}</div>;
+  }
+
+  return <BookingOptionEditForm props={readyProps} />;
+};
 
 export default BookingOptionEdit;

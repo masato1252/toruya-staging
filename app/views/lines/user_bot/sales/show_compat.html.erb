@@ -44,7 +44,7 @@
             loading: I18n.t("common.processing"),
             confirm_delete: I18n.t("common.are_you_sure"),
           },
-        }) %>
+        }, { camelize_props: false }) %>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
         pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/sales/#{params[:id]}/page_context",
         supportFeatureFlags: support_feature_flags,
         mobilePreviewLabel: I18n.t("user_bot.dashboards.sales.edit.mobile_preview", default: "Mobile preview"),
-      }) %>
+      }, { camelize_props: false }) %>
     </div>
   </div>
 </div>

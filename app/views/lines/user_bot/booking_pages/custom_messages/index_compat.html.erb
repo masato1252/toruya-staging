@@ -1,0 +1,23 @@
+<div class="booking-page-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar",
+    previous_path: lines_user_bot_booking_page_path(params[:booking_page_id], business_owner_id: business_owner_id),
+    title: t("user_bot.dashboards.settings.custom_message.auto_message_booking_label") %>
+
+  <%= react_component("user_bot/shared/compat_owner_show_shell", {
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_pages/#{params[:booking_page_id]}/custom_messages/page_context",
+    groupLabels: {
+      message_source: I18n.t("user_bot.dashboards.settings.custom_message.message_source_setting_label"),
+      custom_message_scenarios: I18n.t("user_bot.dashboards.settings.custom_message.send_message_label"),
+    },
+    rowLabels: {
+      use_shop_default_message: I18n.t("user_bot.dashboards.settings.custom_message.message_source_setting_label"),
+      booked: I18n.t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked"),
+      reservation_confirmed: I18n.t("user_bot.dashboards.settings.custom_message.booking_page.reservation_confirmed"),
+      one_day_reminder: I18n.t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_one_day_reminder"),
+      sequence_messages: I18n.t("action.add_more"),
+    },
+    actionLabels: {
+      loading: I18n.t("common.processing"),
+    },
+  }, { camelize_props: false }) %>
+</div>

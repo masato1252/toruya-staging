@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-option-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_booking_options_path(business_owner_id: business_owner_id),
+          title: t("settings.booking_option.index.title", default: "予約メニュー") %>
+
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_options/#{params[:id]}/page_context",
+          groupLabels: {
+            basic: I18n.t("settings.booking_option.form.basic_info_header", default: "基本情報"),
+            menus: I18n.t("settings.booking_option.form.menu_for_sale_label"),
+          },
+          rowLabels: {
+            name: I18n.t("settings.booking_option.form.price_name"),
+            display_name: I18n.t("settings.booking_option.form.display_name"),
+            booking_pages: I18n.t("settings.booking_option.form.booking_pages"),
+            start_at: I18n.t("settings.booking_option.form.sale_start"),
+            end_at: I18n.t("settings.booking_option.form.sale_end"),
+            option_type: I18n.t("settings.booking_option.form.option_type"),
+            new_menu: I18n.t("common.menu"),
+          },
+          actionLabels: {
+            delete: I18n.t("action.delete"),
+            loading: I18n.t("common.processing"),
+            confirm_delete: I18n.t("common.are_you_sure"),
+          },
+        }, { camelize_props: false }) %>
+      </div>
+    </div>
+  </div>
+</div>

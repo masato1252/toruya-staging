@@ -117,6 +117,11 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def edit_booking_options_order
+    if compat_read_data_plane?
+      render :edit_booking_options_order_compat
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @booking_options = @booking_page.booking_options.map { |booking_option| { label: booking_option.name, value: booking_option.id, id: booking_option.id } }
   end
