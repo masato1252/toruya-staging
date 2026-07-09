@@ -13,6 +13,7 @@
 
     <div class="">
       <%= button_to toruya_line_login_url(lines_user_bot_sign_up_path, staff_token: params[:staff_token], consultant_token: params[:consultant_token]),
+                  method: :get,
                   class: "btn line-button with-wording only-word",
                   style: "display: flex; justify-content: center;",
                   data: { disable_with: "<i class='fa fa-spinner fa-spin fa-fw'></i>".html_safe } do %>

@@ -53,7 +53,7 @@ export default function PublicOnlineServiceGuestBootstrap({ slug, episodeId, lin
 
         {lineLoginPath && (
           <div className="message centerize">
-            <a href={lineLoginPath} className="btn line-button with-wording with-logo" data-method="post">
+            <a href={lineLoginPath} className="btn line-button with-wording with-logo">
               LINE Login
             </a>
           </div>
