@@ -1,0 +1,8 @@
+<div class="form with-top-bar settings-flow centerize">
+  <%= react_component("user_bot/settings/line_keywords/booking_pages", {
+    props: {
+      business_owner_id: business_owner_id,
+      pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/line_keyword/booking_pages/page_context",
+    }
+  }, { camelize_props: false }) %>
+</div>

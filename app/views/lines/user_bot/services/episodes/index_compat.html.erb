@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="service-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_service_path(params[:service_id], business_owner_id: business_owner_id),
+          title: I18n.t("user_bot.dashboards.settings.membership.episodes.title") %>
+
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/episodes/page_context#{%Q(?keyword=#{CGI.escape(params[:keyword].to_s)}) if params[:keyword].present?}",
+          groupLabels: {
+            episodes: I18n.t("user_bot.dashboards.settings.membership.episodes.subtitle"),
+          },
+          actionLabels: {
+            loading: I18n.t("common.processing"),
+          },
+        }, { camelize_props: false }) %>
+
+        <div class="action-block margin-around">
+          <%= link_to new_lines_user_bot_service_episode_path(business_owner_id, params[:service_id]), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+            <i class="fas fa-plus fa-2x"></i>
+            <div class="word"><%= I18n.t("action.add_more") %></div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

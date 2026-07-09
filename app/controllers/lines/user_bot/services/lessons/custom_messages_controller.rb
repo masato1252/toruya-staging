@@ -5,6 +5,11 @@ class Lines::UserBot::Services::Lessons::CustomMessagesController < Lines::UserB
   redirect_to_correct_owner_for :online_services, param_key: :service_id
 
   def index
+    if compat_read_data_plane?
+      render :index_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = @chapter.lessons.find(params[:lesson_id])
@@ -13,6 +18,11 @@ class Lines::UserBot::Services::Lessons::CustomMessagesController < Lines::UserB
   end
 
   def edit_scenario
+    if compat_read_data_plane?
+      render :edit_scenario_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = @chapter.lessons.find(params[:lesson_id])

@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="service-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_service_path(params[:service_id], business_owner_id: business_owner_id),
+          title: I18n.t("user_bot.dashboards.settings.course.lessons.show.title") %>
+        <div class="field-group-header" id="content"><%= I18n.t("user_bot.dashboards.settings.course.lessons.show.content_label") %></div>
+
+        <%= react_component("user_bot/services/chapters/index", {
+          props: {
+            business_owner_id: business_owner_id,
+            online_service_id: params[:service_id],
+            pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/chapters/page_context",
+          },
+        }, { camelize_props: false }) %>
+
+        <div class="action-block border-0 border-t border-solid border-gray-500">
+          <%= link_to I18n.t("user_bot.dashboards.settings.course.add_a_chapter"), new_lines_user_bot_service_chapter_path(params[:service_id], business_owner_id: business_owner_id), class: "btn btn-yellow btn-extend my-2" %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view">
+      <%= react_component("user_bot/services/chapters/index_preview", {
+        pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/chapters/page_context",
+      }, { camelize_props: false }) %>
+    </div>
+  </div>
+</div>

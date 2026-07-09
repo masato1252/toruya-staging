@@ -7,8 +7,9 @@ import Routes from 'js-routes.js'
 import { CommonServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
+import { compatRead } from "../../../../libraries/compat_api";
 
-const ChapterEdit =({props}) => {
+const ChapterEditForm =({props}) => {
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.chapter
@@ -69,5 +70,50 @@ const ChapterEdit =({props}) => {
     </div>
   )
 }
+
+const ChapterEdit = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const chapter = body.data?.edit_form?.chapter;
+        if (!chapter) {
+          setLoadError("Failed to load chapter edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          chapter: {
+            ...initialProps.chapter,
+            ...chapter,
+          },
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">Loading...</div>;
+  }
+
+  return <ChapterEditForm props={readyProps} />;
+};
 
 export default ChapterEdit;

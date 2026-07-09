@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactSelect from "react-select";
 import _ from "lodash";
 import {
@@ -21,8 +21,9 @@ import I18n from 'i18n-js/index.js.erb';
 import { CommonServices } from "user_bot/api"
 import { responseHandler } from "libraries/helper";
 import { TopNavigationBar } from "shared/components";
+import { compatRead } from "../../../../libraries/compat_api";
 
-const LineKeywordsOptions = ({props}) => {
+const LineKeywordsOptionsForm = ({props}) => {
   const [options, setOptions] = useState(props.keyword_options);
   const sensors = useSensors(
     useSensor(PointerSensor)
@@ -169,5 +170,49 @@ const SortableOptions= ({id, label, index, deleteCallback, upCallback, downCallb
     </a>
   );
 }
+
+const LineKeywordsOptions = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const data = body.data;
+        if (!data) {
+          setLoadError("Failed to load line keyword booking options");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          keyword_options: data.keyword_options,
+          options: data.options,
+          line_columns_number_limit: data.line_columns_number_limit,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">Loading...</div>;
+  }
+
+  return <LineKeywordsOptionsForm props={readyProps} />;
+};
 
 export default LineKeywordsOptions

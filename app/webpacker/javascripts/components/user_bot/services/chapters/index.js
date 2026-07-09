@@ -22,8 +22,9 @@ import Routes from 'js-routes.js'
 import { CommonServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import { debounce } from "lodash";
+import { compatRead } from "../../../../libraries/compat_api";
 
-const ChaptersIndex =({props}) => {
+const ChaptersIndexForm =({props}) => {
   const [items, setItems] = useState(props.chapter_with_lessons);
   const containers = items.map(item => item.chapter_id)
   const [activeId, setActiveId] = useState(null);
@@ -224,5 +225,47 @@ const SortableItem = ({props, chapter_id, id}) => {
   );
 }
 
+
+const ChaptersIndex = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.index_form;
+        if (!form) {
+          setLoadError("Failed to load chapters");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">Loading...</div>;
+  }
+
+  return <ChaptersIndexForm props={readyProps} />;
+};
 
 export default ChaptersIndex;

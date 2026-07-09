@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="booking-page-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_service_chapter_lesson_path(business_owner_id, params[:service_id], params[:chapter_id], params[:lesson_id]),
+          title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/chapters/#{params[:chapter_id]}/lessons/#{params[:lesson_id]}/custom_messages/page_context",
+          groupLabels: {
+            custom_message_scenarios: I18n.t("user_bot.dashboards.settings.custom_message.send_message_label"),
+          },
+          rowLabels: {
+            lesson_watched: I18n.t("user_bot.dashboards.settings.custom_message.lesson.lesson_watched", lesson_name: ""),
+          },
+          actionLabels: {
+            loading: I18n.t("common.processing"),
+          },
+        }, { camelize_props: false }) %>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

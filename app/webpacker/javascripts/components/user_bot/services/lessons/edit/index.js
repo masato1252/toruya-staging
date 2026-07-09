@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
@@ -12,13 +12,14 @@ import EditTextarea from "shared/edit/textarea_input";
 import EditSelectInput from "shared/edit/select_input";
 import EditSolutionInput from "shared/edit/solution_input";
 import CoursePage from "user_bot/services/online_service_page/course";
+import { compatRead } from "../../../../../libraries/compat_api";
 
 const components = {
   name: EditTextInput,
   note: EditTextarea,
 };
 
-const LessonEdit =({props}) => {
+const LessonEditForm =({props}) => {
   const [start_time, setStartTime] = useState(props.lesson.start_time)
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
@@ -195,5 +196,51 @@ const LessonEdit =({props}) => {
     </div>
   )
 }
+
+const LessonEdit = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.lesson) {
+          setLoadError("Failed to load lesson edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          attribute: form.attribute || initialProps.attribute,
+          lesson: form.lesson,
+          course: form.course,
+          chapter_options: form.chapter_options,
+          solutions: form.solutions,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">Loading...</div>;
+  }
+
+  return <LessonEditForm props={readyProps} />;
+};
 
 export default LessonEdit

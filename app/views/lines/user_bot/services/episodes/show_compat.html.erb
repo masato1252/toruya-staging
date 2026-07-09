@@ -1,0 +1,36 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="service-show form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar",
+          previous_path: lines_user_bot_service_episodes_path(business_owner_id, params[:service_id]),
+          title: I18n.t("user_bot.dashboards.settings.episodes.show.title") %>
+
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/episodes/#{params[:id]}/page_context",
+          groupLabels: {
+            content: I18n.t("user_bot.dashboards.settings.episodes.show.content_label"),
+            content_url: I18n.t("user_bot.dashboards.settings.episodes.show.content_url_label"),
+            start_time: I18n.t("user_bot.dashboards.settings.episodes.show.start_time_label"),
+            auto_message: I18n.t("user_bot.dashboards.settings.custom_message.line_message_title"),
+          },
+          rowLabels: {
+            name: I18n.t("user_bot.dashboards.settings.episodes.form.name_title"),
+            content_url: I18n.t("user_bot.dashboards.settings.episodes.form.content_url_title"),
+            note: I18n.t("user_bot.dashboards.settings.episodes.form.note_title"),
+            start_time: I18n.t("user_bot.dashboards.settings.episodes.form.start_time_title"),
+            end_time: I18n.t("user_bot.dashboards.services.end_time"),
+            tags: I18n.t("user_bot.dashboards.services.tags"),
+            custom_messages: I18n.t("user_bot.dashboards.settings.custom_message.auto_message_label"),
+          },
+          actionLabels: {
+            delete: I18n.t("action.delete"),
+            loading: I18n.t("common.processing"),
+            confirm_delete: I18n.t("common.are_you_sure_message"),
+          },
+        }, { camelize_props: false }) %>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

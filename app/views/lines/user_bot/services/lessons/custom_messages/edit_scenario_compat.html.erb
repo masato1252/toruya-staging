@@ -1,0 +1,14 @@
+<%= react_component("user_bot/services/lessons/custom_messages/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    scenario: params[:scenario],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/chapters/#{params[:chapter_id]}/lessons/#{params[:lesson_id]}/custom_messages/scenario_context?scenario=#{CGI.escape(params[:scenario].to_s)}#{%Q(&id=#{params[:id]}) if params[:id].present?}",
+    message: {
+      service_id: params[:lesson_id].to_i,
+      service_type: "Lesson",
+      online_service_id: params[:service_id].to_i,
+      chapter_id: params[:chapter_id].to_i,
+      lesson_id: params[:lesson_id].to_i,
+    },
+  }
+}, { camelize_props: false }) %>

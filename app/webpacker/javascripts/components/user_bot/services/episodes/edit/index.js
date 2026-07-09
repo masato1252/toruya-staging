@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
@@ -12,13 +12,14 @@ import EditTextarea from "shared/edit/textarea_input";
 import EditSolutionInput from "shared/edit/solution_input";
 import EditTagsInput from "user_bot/services/episodes/shared/edit_tags_input";
 import EpisodeContent from "user_bot/services/episodes/content";
+import { compatRead } from "../../../../../libraries/compat_api";
 
 const components = {
   name: EditTextInput,
   note: EditTextarea,
 };
 
-const EpisodeEdit =({props}) => {
+const EpisodeEditForm =({props}) => {
   const [start_time, setStartTime] = useState(props.episode.start_time)
   const [end_time, setEndTime] = useState(props.episode.end_time)
   const [tags, setTags] = useState(props.episode.tags || [])
@@ -215,5 +216,50 @@ const EpisodeEdit =({props}) => {
     </div>
   )
 }
+
+const EpisodeEdit = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.episode) {
+          setLoadError("Failed to load episode edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          attribute: form.attribute || initialProps.attribute,
+          episode: form.episode,
+          solutions: form.solutions,
+          online_service: form.online_service || initialProps.online_service,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  if (loadError) {
+    return <div className="alert alert-danger margin-around">{loadError}</div>;
+  }
+  if (!readyProps) {
+    return <div className="margin-around">Loading...</div>;
+  }
+
+  return <EpisodeEditForm props={readyProps} />;
+};
 
 export default EpisodeEdit

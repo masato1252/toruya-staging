@@ -1,0 +1,11 @@
+<%= react_component("user_bot/services/chapters/edit", {
+  props: {
+    business_owner_id: business_owner_id,
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/chapters/page_context?chapter_id=#{params[:id].presence || 0}",
+    chapter: {
+      online_service_id: params[:service_id].to_i,
+      id: params[:id].present? ? params[:id].to_i : nil,
+      name: "",
+    },
+  }
+}, { camelize_props: false }) %>

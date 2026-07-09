@@ -27,6 +27,11 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = @chapter.lessons.find(params[:id])
@@ -34,6 +39,11 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = chapter.lessons.find(params[:id])

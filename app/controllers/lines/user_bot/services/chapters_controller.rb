@@ -5,11 +5,21 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
   redirect_to_correct_owner_for :online_services, param_key: :service_id
 
   def index
+    if compat_read_data_plane?
+      render :index_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
   end
 
   def new
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.new
 
@@ -17,6 +27,11 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:id])
   end

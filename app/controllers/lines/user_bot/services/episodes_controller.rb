@@ -5,11 +5,21 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   redirect_to_correct_owner_for :online_services, param_key: :service_id
 
   def index
+    if compat_read_data_plane?
+      render :index_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episodes = ::Episodes::Search.run!(online_service: @online_service, keyword: params[:keyword], available: false)
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episode = @online_service.episodes.find(params[:id])
     @membership_hash = MembershipSerializer.new(@online_service).attributes_hash
@@ -21,6 +31,11 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episode = @online_service.episodes.find(params[:id])
     @attribute = params[:attribute]
