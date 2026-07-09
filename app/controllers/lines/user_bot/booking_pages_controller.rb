@@ -42,6 +42,11 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @attribute = params[:attribute]
 

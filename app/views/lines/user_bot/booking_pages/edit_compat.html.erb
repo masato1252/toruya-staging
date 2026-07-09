@@ -1,0 +1,33 @@
+<% if params[:attribute] == "payment_option" && !Current.business_owner.payment_providers.exists? %>
+  <div class="settings-dashboard form with-top-bar">
+    <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_page_path(params[:id], business_owner_id: business_owner_id), title: t("settings.booking_page.form.payment_option_title") %>
+    <%= render "lines/user_bot/settings/stripes/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, params[:id], attribute: :payment_option) %>
+    <hr />
+    <%= render "lines/user_bot/settings/squares/connection", oauth_redirect_to_url: edit_lines_user_bot_booking_page_path(business_owner_id, params[:id], attribute: :payment_option) %>
+  </div>
+<% else %>
+  <%= react_component("user_bot/booking_pages/edit", {
+    props: {
+      business_owner_id: business_owner_id,
+      booking_page: { id: params[:id].to_i },
+      attribute: params[:attribute],
+      pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_pages/#{params[:id]}/page_context",
+      ticket_expire_date_desc_path: asset_pack_path("media/assets/user_bot/ticket_expire_date_desc.png"),
+      booking_option_introduction_asset_path: asset_pack_path("media/assets/user_bot/booking_option_introduction.png"),
+      support_feature_flags: support_feature_flags,
+      i18n: {
+      }.merge!([
+        t("settings.booking_page.form"),
+        t("action").slice(:save, :delete, :add_more),
+        t("common").slice(:required_time, :select_a_menu, :minute),
+        {
+          page_title: I18n.t("settings.booking_page.form.#{params[:attribute]}_title"),
+          top_bar_header: translation_resuce { I18n.t("settings.booking_page.form.#{params[:attribute]}_top_bar_header", raise: true) },
+          hint: translation_resuce { I18n.t("settings.booking_page.form.#{params[:attribute]}_hint", raise: true) },
+        }
+      ].inject(:merge))
+    }
+  },
+  { camelize_props: false }
+  ) %>
+<% end %>

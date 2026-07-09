@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 import moment from "moment-timezone";
@@ -10,6 +10,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CircleButtonWithWord, TicketOptionsFields } from "shared/components"
 import SurveyBuilder from "components/shared/survey/builder";
 import { BookingPageServices } from "user_bot/api"
+import { compatRead } from "../../../libraries/compat_api";
 
 import BookingTimeField from "./booking_time_field";
 import OverbookingRestrictionField from "./overbooking_restriction_field";
@@ -25,10 +26,54 @@ import BookingCutOffTimeField from "./booking_cut_off_time_field";
 import ShopField from "./shop_field";
 import ExistingMenuField from "components/user_bot/booking_options/existing_menu_field";
 
-const BookingPageEdit =({props}) => {
-  const i18n = props.i18n;
-  const [requirement_online_service, setRequirementOnlineService] = useState(props.booking_page.requirement_online_service)
-  const [booking_page_online_payment_options_ids, setBookingPageOnlinePaymentOptionsIds] = useState(props.booking_page_online_payment_options_ids)
+const BookingPageEdit = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form?.booking_page) {
+          setLoadError("Failed to load booking page edit form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          booking_page: form.booking_page,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const i18n = props?.i18n;
+  const [requirement_online_service, setRequirementOnlineService] = useState(
+    props?.booking_page?.requirement_online_service,
+  );
+  const [booking_page_online_payment_options_ids, setBookingPageOnlinePaymentOptionsIds] = useState(
+    props?.booking_page_online_payment_options_ids,
+  );
+
+  useEffect(() => {
+    if (!props?.booking_page) return;
+    setRequirementOnlineService(props.booking_page.requirement_online_service);
+    setBookingPageOnlinePaymentOptionsIds(props.booking_page_online_payment_options_ids);
+  }, [props]);
 
   const onSubmit = async (data) => {
     console.log(data)
@@ -122,7 +167,12 @@ const BookingPageEdit =({props}) => {
   }
 
   const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
-    defaultValues: {
+    defaultValues: props?.booking_page || {},
+  });
+
+  useEffect(() => {
+    if (!props?.booking_page) return;
+    const defaults = {
       ...props.booking_page,
       overbooking_restriction: String(props.booking_page.overbooking_restriction),
       multiple_selection: String(props.booking_page.multiple_selection),
@@ -138,9 +188,15 @@ const BookingPageEdit =({props}) => {
       had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
       price_type: "regular",
       ticket_quota: 1,
-      business_schedules: props.booking_page.business_schedules
-    }
-  });
+      business_schedules: props.booking_page.business_schedules,
+    };
+    Object.entries(defaults).forEach(([key, value]) => {
+      setValue(key, value);
+    });
+  }, [props, setValue]);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props?.booking_page || !i18n) return <p>{I18n.t("common.processing")}</p>;
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
