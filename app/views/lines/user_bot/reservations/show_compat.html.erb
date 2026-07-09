@@ -1,0 +1,9 @@
+<%= react_component("user_bot/shared/compat_owner_show_shell", {
+  pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/reservations/#{params[:id]}/page_context",
+  groupLabels: {
+    reservation: t("common.reservation_details"),
+  },
+  actionLabels: {
+    loading: t("common.processing"),
+  },
+}, { camelize_props: false }) %>

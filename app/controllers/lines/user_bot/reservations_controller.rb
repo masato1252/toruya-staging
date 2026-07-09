@@ -15,6 +15,11 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   before_action :set_reservation, only: [:update, :destroy]
 
   def show
+    if compat_read_data_plane?
+      render :show_compat, layout: false
+      return
+    end
+
     @reservation = Reservation.find(params[:id])
 
     @sentences = view_context.reservation_staff_sentences(@reservation)

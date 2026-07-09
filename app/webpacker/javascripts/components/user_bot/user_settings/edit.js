@@ -1,16 +1,63 @@
 "use strict"
 
-import React  from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
 import { CommonServices } from "user_bot/api"
 import { responseHandler } from "libraries/helper";
+import { compatRead } from "../../../libraries/compat_api";
 
 import LineVerificationWarning from 'shared/line_verification_warning';
 
-const UserSettingsEdit =({props}) => {
+const UserSettingsEdit =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    compatRead(`${initialProps.pageContextPath}?attribute=${attribute}`)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form;
+        if (!form) {
+          setLoadError("Failed to load user settings form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          user_settings: form.user_settings || initialProps.user_settings,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+
+  const { register, handleSubmit, formState } = useForm({
+    defaultValues: {
+      ...(props?.user_settings || {}),
+      line_contact_customer_name_required: String(props?.user_settings?.line_contact_customer_name_required ?? ""),
+      booking_options_menu_concept: String(props?.user_settings?.booking_options_menu_concept ?? ""),
+    }
+  });
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
+
   const onSubmit = async (data) => {
     console.log(data)
 
@@ -24,14 +71,6 @@ const UserSettingsEdit =({props}) => {
 
     responseHandler(error, response)
   }
-
-  const { register, handleSubmit, formState } = useForm({
-    defaultValues: {
-      ...props.user_settings,
-      line_contact_customer_name_required: String(props.user_settings.line_contact_customer_name_required),
-      booking_options_menu_concept: String(props.user_settings.booking_options_menu_concept),
-    }
-  });
 
   const renderCorrespondField = () => {
     switch(props.attribute) {

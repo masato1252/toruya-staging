@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <div class="payments form with-top-bar">
+        <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path(business_owner_id: business_owner_id), title: t("user_bot.dashboards.settings.dashboard.payments_label") %>
+        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/payments/page_context",
+          groupLabels: {
+            history: t("user_bot.dashboards.settings.dashboard.payments_label"),
+          },
+          rowLabels: {
+            charge_date: t("settings.plans.payment.date"),
+            charge_amount: t("settings.plans.payment.amount"),
+            charge_plan: t("settings.plans.payment.plan"),
+            charge_receipt: t("settings.plans.payment.receipt"),
+          },
+          actionLabels: {
+            loading: t("common.processing"),
+          },
+        }, { camelize_props: false }) %>
+      </div>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>

@@ -25,6 +25,11 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     menus_options =
       Current.business_owner.menus.map do |menu|
         ::Options::MenuOption.new(id: menu.id, name: menu.display_name, online: menu.online)

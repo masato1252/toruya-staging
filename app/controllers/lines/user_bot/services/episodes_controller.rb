@@ -26,6 +26,11 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   end
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @episode = @online_service.episodes.new
   end

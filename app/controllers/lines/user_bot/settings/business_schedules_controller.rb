@@ -5,6 +5,11 @@ class Lines::UserBot::Settings::BusinessSchedulesController < Lines::UserBotDash
   redirect_to_correct_owner_for :shops, param_key: :shop_id
 
   def shops
+    if compat_read_enabled?
+      render :shops_compat
+      return
+    end
+
     @shops = Current.business_owner.shops
   end
 

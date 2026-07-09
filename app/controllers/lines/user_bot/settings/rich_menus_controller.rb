@@ -2,6 +2,11 @@
 
 class Lines::UserBot::Settings::RichMenusController < Lines::UserBotDashboardController
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @social_account = Current.business_owner.social_account
     @current_rich_menu = Current.business_owner.social_account.current_rich_menu
 

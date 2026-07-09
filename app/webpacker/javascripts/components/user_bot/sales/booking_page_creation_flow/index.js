@@ -1,8 +1,10 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FlowController from "shared/flow_controller";
 import { GlobalProvider, GlobalContext } from "./context/global_state"
+import { compatRead } from "../../../../libraries/compat_api";
+import I18n from 'i18n-js/index.js.erb';
 import BookingPageSelectionStep from "./booking_page_selection_step";
 import ShopSelectionStep from "./shop_selection_step";
 import HeaderTemplateSelectionStep from "./header_template_selection_step";
@@ -14,7 +16,40 @@ import FlowSetupStep from "./flow_setup_step";
 import ConfirmationStep from "./confirmation_step";
 import FinalStep from "./final_step";
 
-const SalesBookingPageCreationFlow = ({props}) => {
+const SalesBookingPageCreationFlow = ({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form) {
+          setLoadError("Failed to load sale page creation form");
+          return;
+        }
+        setReadyProps({ ...initialProps, ...form });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
+
   return (
     <div className="container-fluid">
       <div className="row">

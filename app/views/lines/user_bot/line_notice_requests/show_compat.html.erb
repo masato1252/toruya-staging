@@ -1,0 +1,23 @@
+<div class="container" style="padding-bottom: 60px;">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <%= react_component("user_bot/shared/compat_owner_show_shell", {
+        pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/line_notice_requests/#{params[:id]}/page_context",
+        groupLabels: {
+          request: t('line_notice_requests.store.show.title'),
+          reservation: t('common.reservation_details'),
+          charge: t('line_notice_requests.store.show.charge_information'),
+        },
+        rowLabels: {
+          customer_name: t('common.customer_name'),
+          reservation_datetime: t('common.reservation_datetime'),
+          menu: t('common.menu'),
+        },
+        actionLabels: {
+          loading: t('common.processing'),
+          approve: t('line_notice_requests.store.show.approve_confirm'),
+        },
+      }, { camelize_props: false }) %>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,10 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :shops, param_key: :shop_id, only: [:available_options]
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
   end
 
   def page

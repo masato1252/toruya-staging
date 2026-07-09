@@ -5,6 +5,11 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :booking_pages, only: [:show, :edit, :update, :destroy, :delete_option, :preview_modal, :edit_booking_options_order, :update_booking_options_order]
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     @booking_shop = Current.business_owner.shops.count == 1 ? Current.business_owner.shops.first : nil
   end
 

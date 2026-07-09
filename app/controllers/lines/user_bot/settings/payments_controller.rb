@@ -7,6 +7,11 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   skip_before_action :authenticate_super_user, only: [:receipt]
 
   def index
+    if compat_read_enabled?
+      render :index_compat
+      return
+    end
+
     @subscription = Current.business_owner.subscription
     
     # プラン課金履歴を取得

@@ -12,8 +12,46 @@ import SubscriptionModal from "components/management/plans/subscription_modal";
 import UpgradeConfirmationModal from "./upgrade_confirmation_modal";
 import SupportModal from "shared/support_modal";
 import I18n from 'i18n-js/index.js.erb';
+import { compatRead } from "../../../../libraries/compat_api";
 
-const Plans = ({props}) => {
+const Plans = ({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form?.plans) {
+          setLoadError("Failed to load plans");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          plans: form.plans,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
+
   const freePlan = props.plans["free"];
   const basicPlan = props.plans["basic"];
   const premiumPlan = props.plans["premium"];

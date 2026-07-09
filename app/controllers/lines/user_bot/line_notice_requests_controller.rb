@@ -9,6 +9,11 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   # GET /lines/user_bot/owner/:business_owner_id/line_notice_requests/:id
   # リクエスト確認画面
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @reservation = @line_notice_request.reservation
     @customer = @line_notice_request.customer
     
@@ -138,6 +143,10 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   private
 
   def set_line_notice_request
+    if compat_read_data_plane? && action_name == "show"
+      return
+    end
+
     @line_notice_request = Current.business_owner.line_notice_requests.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to lines_user_bot_schedules_path(business_owner_id: business_owner_id), 

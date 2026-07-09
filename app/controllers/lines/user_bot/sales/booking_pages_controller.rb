@@ -2,6 +2,11 @@
 
 class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardController
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     @sale_templates = SaleTemplate.where(locale: Current.business_owner.locale).order("id")
 
     if sale_page = SalePage.find_by(id: params[:sale_page_id])

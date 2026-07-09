@@ -2,6 +2,11 @@
 
 class Lines::UserBot::Settings::ConsultantsController < Lines::UserBotDashboardController
   def index
+    if compat_read_enabled?
+      render :index_compat
+      return
+    end
+
     staff_ids = StaffAccount.where(user: Current.business_owner).where.not(owner: Current.business_owner).pluck(:staff_id)
     @staffs = Staff.where(id: staff_ids).undeleted.includes(:staff_account).visible.includes(:user).order(:id)
     @consultant_accounts = ConsultantAccount.pending.where(consultant_user: Current.business_owner)

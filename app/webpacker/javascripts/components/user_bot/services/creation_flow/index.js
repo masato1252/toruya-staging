@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FlowController from "shared/flow_controller";
 import { GlobalProvider, useGlobalContext } from "./context/global_state"
+import { compatRead } from "../../../../libraries/compat_api";
+import I18n from 'i18n-js/index.js.erb';
 
 import GoalSelectionStep from "./goal_selection_step"
 import SolutionStep from "./solution_step"
@@ -80,7 +82,40 @@ const GoalFlowDispatcher = ({}) => {
   }
 }
 
-const CreationFlow = ({props}) => {
+const CreationFlow = ({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form) {
+          setLoadError("Failed to load service creation form");
+          return;
+        }
+        setReadyProps({ ...initialProps, ...form });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
+
   return (
     <div className="container-fluid">
       <div className="row">

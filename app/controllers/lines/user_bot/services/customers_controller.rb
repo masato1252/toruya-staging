@@ -5,6 +5,11 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
   redirect_to_correct_owner_for :online_services, param_key: :service_id
 
   def index
+    if compat_read_enabled?
+      render :index_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     relations = @online_service.all_online_service_customer_relations.includes(:customer, :last_customer_payment, :online_service).to_a
     state_order = { "pending" => 1, "accessible" => 2, "available" => 3, "inactive" => 4 }
@@ -14,6 +19,11 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @relation = @online_service.all_online_service_customer_relations.find(params[:id])
     @customer = @relation.customer

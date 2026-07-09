@@ -2,6 +2,10 @@
 
 class Lines::UserBot::Settings::StripesController < Lines::UserBotDashboardController
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
   end
 
   def update

@@ -19,6 +19,11 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     @survey = Survey.new(owner: Current.business_owner, user: Current.user)
   end
 
@@ -82,6 +87,11 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def settings
+    if compat_read_data_plane?
+      render :settings_compat
+      return
+    end
+
     @survey = current_user.surveys.find(params[:id])
   end
 end

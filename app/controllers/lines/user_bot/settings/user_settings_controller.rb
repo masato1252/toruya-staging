@@ -2,6 +2,10 @@
 
 class Lines::UserBot::Settings::UserSettingsController < Lines::UserBotDashboardController
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
   end
 
   def update

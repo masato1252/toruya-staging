@@ -1,0 +1,8 @@
+<%= react_component("user_bot/services/lessons/new", {
+  props: {
+    business_owner_id: business_owner_id,
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:service_id]}/chapters/#{params[:chapter_id]}/lessons/page_context?wizard=new",
+  }
+},
+{ camelize_props: false }
+) %>

@@ -5,6 +5,10 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :online_services, only: [:show, :edit, :update, :destroy]
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
   end
 
   def create

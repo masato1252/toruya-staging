@@ -1,0 +1,14 @@
+<div class="modal-dialog toruya-modal" role="document">
+  <div class="modal-content">
+    <%= react_component("user_bot/shared/compat_owner_show_shell", {
+      pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/online_service_customer_relations/#{params[:id]}/page_context",
+      groupLabels: {
+        relation: t("user_bot.dashboards.settings.service_customer_relation.register"),
+      },
+      actionLabels: {
+        loading: t("common.processing"),
+        details: t("action.details"),
+      },
+    }, { camelize_props: false }) %>
+  </div>
+</div>

@@ -4,6 +4,11 @@ class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardCon
   before_action :set_customer, only: [:index]
 
   def index
+    if compat_read_enabled?
+      render json: { messages: [], customers: [] }
+      return
+    end
+
     render json: SocialMessages::Recent.run!(
       customer: @customer,
       oldest_message_at: params[:oldest_message_at],
@@ -14,6 +19,10 @@ class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardCon
   private
 
   def set_customer
+    if compat_read_enabled?
+      return
+    end
+
     @customer = Customer.find(params[:id])
   end
 end

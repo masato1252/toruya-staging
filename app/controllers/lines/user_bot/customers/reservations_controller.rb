@@ -7,6 +7,11 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   before_action :set_customer, only: [:index]
 
   def index
+    if compat_read_enabled?
+      render json: { reservations: [] }
+      return
+    end
+
     head :unprocessable_entity if cannot?(:read, @customer)
 
     reservation_customers =
@@ -133,6 +138,10 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   private
 
   def set_customer
+    if compat_read_enabled?
+      return
+    end
+
     @customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
   end
 end

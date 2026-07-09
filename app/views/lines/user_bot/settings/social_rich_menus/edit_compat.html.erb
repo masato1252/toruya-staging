@@ -1,0 +1,11 @@
+<%= react_component("user_bot/settings/social_rich_menus/upsert", {
+  props: {
+    business_owner_id: business_owner_id,
+    rich_menu: { id: params[:id].presence&.to_i },
+    pageContextPath: params[:id].present? ?
+      "/lines/user_bot/owner/#{business_owner_id}/settings/social_rich_menus/#{params[:id]}/page_context" :
+      "/lines/user_bot/owner/#{business_owner_id}/settings/social_rich_menus/page_context?wizard=new",
+  },
+},
+{ camelize_props: false }
+) %>

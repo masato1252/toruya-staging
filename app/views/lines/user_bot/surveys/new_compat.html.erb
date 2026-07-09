@@ -1,0 +1,10 @@
+<%= react_component("user_bot/surveys/new_wizard", {
+  props: {
+    mode: params[:mode] || "survey",
+    preview: true,
+    business_owner_id: business_owner_id,
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/surveys/page_context?wizard=new",
+  }
+},
+{ camelize_props: false }
+) %>

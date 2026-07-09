@@ -5,6 +5,11 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   redirect_to_correct_owner_for :online_services, param_key: :service_id
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = chapter.lessons.new

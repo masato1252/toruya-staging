@@ -4,6 +4,10 @@ require "message_encryptor"
 
 class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboardController
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
   end
 
   def reset
@@ -13,10 +17,20 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   end
 
   def message_api
+    if compat_read_data_plane?
+      render :message_api_compat
+      return
+    end
+
     @social_account = Current.business_owner.social_account || Current.business_owner.social_accounts.new
   end
 
   def login_api
+    if compat_read_data_plane?
+      render :login_api_compat
+      return
+    end
+
     @social_account = Current.business_owner.social_account || Current.business_owner.social_accounts.new
   end
 

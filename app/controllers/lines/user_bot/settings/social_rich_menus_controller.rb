@@ -6,6 +6,11 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   before_action :redirect_to_correct_rich_menu_owner, only: [:edit, :show, :destroy, :current]
 
   def index
+    if compat_read_enabled?
+      render :index_compat
+      return
+    end
+
     @current_rich_menu = Current.business_owner.social_account.current_rich_menu
     # show rollbar when no current rich menu
     if @current_rich_menu.blank?
@@ -16,6 +21,11 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def new
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @rich_menu = Current.business_owner.social_account.social_rich_menus.new
     @sale_pages = Current.business_owner.sale_pages.includes(:product).order("updated_at DESC")
     @booking_pages = Current.business_owner.booking_pages.started.order("updated_at DESC")
@@ -30,6 +40,11 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def edit
+    if compat_read_data_plane?
+      render :edit_compat
+      return
+    end
+
     @rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
     @sale_pages = Current.business_owner.sale_pages.includes(:product).order("updated_at DESC")
     @booking_pages = Current.business_owner.booking_pages.started.order("updated_at DESC")
@@ -65,6 +80,11 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def show
+    if compat_read_data_plane?
+      render :show_compat
+      return
+    end
+
     @start_date = params[:start_date] || 2.week.ago.to_date
     @end_date = params[:end_date] || Time.current.to_date
     @rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
@@ -104,6 +124,7 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   private
 
   def redirect_to_correct_rich_menu_owner
+    return if compat_read_data_plane? && %w[edit show].include?(action_name)
     return if params[:id].blank?
     return if Current.business_owner.social_account&.social_rich_menus&.exists?(id: params[:id])
 

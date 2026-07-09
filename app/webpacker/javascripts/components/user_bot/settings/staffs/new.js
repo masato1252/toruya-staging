@@ -1,20 +1,54 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Rails from "rails-ujs";
 import { TopNavigationBar } from "shared/components";
 import { COUNTRY_CODES, toInternationalNumber } from "shared/customer_verification";
+import { compatRead } from "../../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 
 const INPUT_MODE_PHONE = "phone";
 const INPUT_MODE_EMAIL = "email";
 
-const StaffNew = ({ props }) => {
+const StaffNew = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
   const [inputMode, setInputMode] = useState(INPUT_MODE_PHONE);
-  const [countryCode, setCountryCode] = useState(props.default_country_code || '+81');
+  const [countryCode, setCountryCode] = useState(initialProps.default_country_code || '+81');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form) {
+          setLoadError("Failed to load staff creation form");
+          return;
+        }
+        setReadyProps({ ...initialProps, ...form });
+        if (form.default_country_code) setCountryCode(form.default_country_code);
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
 
   const handleSubmit = (e) => {
     e.preventDefault();

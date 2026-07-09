@@ -7,6 +7,11 @@ class Lines::UserBot::Customers::PaymentsController < Lines::UserBotDashboardCon
   before_action :set_customer, only: [:index]
 
   def index
+    if compat_read_enabled?
+      render json: { payments: [] }
+      return
+    end
+
     customer_payments = CustomerPayments::All.run!(customer: @customer)
 
     payments = CustomerPaymentSerializer.new(customer_payments).serializable_hash[:data].map do |h|
@@ -45,6 +50,10 @@ class Lines::UserBot::Customers::PaymentsController < Lines::UserBotDashboardCon
   private
 
   def set_customer
+    if compat_read_enabled?
+      return
+    end
+
     @customer = Current.business_owner.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
   end
 end

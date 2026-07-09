@@ -5,39 +5,77 @@ import { useForm } from "react-hook-form";
 import ImageUploader from "react-images-upload";
 import { TopNavigationBar, BottomNavigationBar, CircleButtonWithWord } from "shared/components";
 import { CommonServices } from "user_bot/api";
+import { compatRead } from "../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 
-const EventContentForm = ({ props }) => {
-  const isEdit = !!props.event_content?.id;
+const EventContentForm = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    const path = attribute
+      ? `${initialProps.pageContextPath}?attribute=${attribute}`
+      : initialProps.pageContextPath;
+    compatRead(path)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form) {
+          setLoadError("Failed to load event content form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          event_content: form.event_content ?? initialProps.event_content,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const isEdit = !!props?.event_content?.id;
   const [thumbnail, setThumbnail] = useState(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState(props.event_content?.thumbnail_url || null);
-  const [images, setImages] = useState(props.event_content?.images || []);
-  const [monitorEnabled, setMonitorEnabled] = useState(props.event_content?.monitor_enabled || false);
-  const [upsellEnabled, setUpsellEnabled] = useState(props.event_content?.upsell_booking_enabled || false);
-  const [onlineServices, setOnlineServices] = useState(props.online_services || []);
+  const [thumbnailPreview, setThumbnailPreview] = useState(props?.event_content?.thumbnail_url || null);
+  const [images, setImages] = useState(props?.event_content?.images || []);
+  const [monitorEnabled, setMonitorEnabled] = useState(props?.event_content?.monitor_enabled || false);
+  const [upsellEnabled, setUpsellEnabled] = useState(props?.event_content?.upsell_booking_enabled || false);
+  const [onlineServices, setOnlineServices] = useState(props?.online_services || []);
   const [extraShops, setExtraShops] = useState([]);
   const [userIdInput, setUserIdInput] = useState("");
   const [userShopSearching, setUserShopSearching] = useState(false);
 
   const { register, handleSubmit, formState, watch, setValue } = useForm({
     defaultValues: {
-      content_type: props.event_content?.content_type || "seminar",
-      title: props.event_content?.title || "",
-      description: props.event_content?.description || "",
-      introduction: props.event_content?.introduction || "",
-      shop_id: props.event_content?.shop_id || "",
-      online_service_id: props.event_content?.online_service_id || "",
-      start_at: props.event_content?.start_at ? props.event_content.start_at.slice(0, 16) : "",
-      end_at: props.event_content?.end_at ? props.event_content.end_at.slice(0, 16) : "",
-      capacity: props.event_content?.capacity || "",
-      position: props.event_content?.position || 0,
-      pre_ad_video_url: props.event_content?.pre_ad_video_url || "",
-      post_ad_video_url: props.event_content?.post_ad_video_url || "",
-      direct_download_url: props.event_content?.direct_download_url || "",
-      upsell_booking_page_id: props.event_content?.upsell_booking_page_id || "",
-      upsell_booking_enabled: props.event_content?.upsell_booking_enabled || false,
-      monitor_enabled: props.event_content?.monitor_enabled || false,
-      monitor_name: props.event_content?.monitor_name || "",
+      content_type: props?.event_content?.content_type || "seminar",
+      title: props?.event_content?.title || "",
+      description: props?.event_content?.description || "",
+      introduction: props?.event_content?.introduction || "",
+      shop_id: props?.event_content?.shop_id || "",
+      online_service_id: props?.event_content?.online_service_id || "",
+      start_at: props?.event_content?.start_at ? props.event_content.start_at.slice(0, 16) : "",
+      end_at: props?.event_content?.end_at ? props.event_content.end_at.slice(0, 16) : "",
+      capacity: props?.event_content?.capacity || "",
+      position: props?.event_content?.position || 0,
+      pre_ad_video_url: props?.event_content?.pre_ad_video_url || "",
+      post_ad_video_url: props?.event_content?.post_ad_video_url || "",
+      direct_download_url: props?.event_content?.direct_download_url || "",
+      upsell_booking_page_id: props?.event_content?.upsell_booking_page_id || "",
+      upsell_booking_enabled: props?.event_content?.upsell_booking_enabled || false,
+      monitor_enabled: props?.event_content?.monitor_enabled || false,
+      monitor_name: props?.event_content?.monitor_name || "",
       monitor_price: props.event_content?.monitor_price || "",
       monitor_limit: props.event_content?.monitor_limit || "",
       monitor_form_url: props.event_content?.monitor_form_url || "",
@@ -48,7 +86,7 @@ const EventContentForm = ({ props }) => {
   const selectedShopId = watch("shop_id");
 
   useEffect(() => {
-    if (!selectedShopId) {
+    if (!props || !selectedShopId) {
       setOnlineServices([]);
       setValue("online_service_id", "");
       return;
@@ -144,6 +182,9 @@ const EventContentForm = ({ props }) => {
   const backUrl = isEdit
     ? Routes.lines_user_bot_event_content_path(props.business_owner_id, props.event_content?.id)
     : Routes.lines_user_bot_event_path(props.business_owner_id, props.event_id);
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
 
   return (
     <div className="container-fluid">

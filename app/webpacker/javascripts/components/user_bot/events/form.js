@@ -1,23 +1,60 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { TopNavigationBar, BottomNavigationBar, CircleButtonWithWord } from "shared/components";
 import { CommonServices } from "user_bot/api";
+import { compatRead } from "../../../libraries/compat_api";
 import I18n from 'i18n-js/index.js.erb';
 
-const EventForm = ({ props }) => {
-  const isEdit = !!props.event?.id;
+const EventForm = ({ props: initialProps }) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    const path = attribute
+      ? `${initialProps.pageContextPath}?attribute=${attribute}`
+      : initialProps.pageContextPath;
+    compatRead(path)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form) {
+          setLoadError("Failed to load event form");
+          return;
+        }
+        setReadyProps({ ...initialProps, ...form, event: form.event ?? initialProps.event });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
+  const isEdit = !!props?.event?.id;
   const { register, handleSubmit, formState } = useForm({
     defaultValues: {
-      title: props.event?.title || "",
-      slug: props.event?.slug || "",
-      description: props.event?.description || "",
-      start_at: props.event?.start_at ? props.event.start_at.slice(0, 16) : "",
-      end_at: props.event?.end_at ? props.event.end_at.slice(0, 16) : "",
-      published: props.event?.published || false,
+      title: props?.event?.title || "",
+      slug: props?.event?.slug || "",
+      description: props?.event?.description || "",
+      start_at: props?.event?.start_at ? props.event.start_at.slice(0, 16) : "",
+      end_at: props?.event?.end_at ? props.event.end_at.slice(0, 16) : "",
+      published: props?.event?.published || false,
     }
   });
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;

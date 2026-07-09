@@ -1,11 +1,12 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { CommonServices } from "user_bot/api"
 import { SelectOptions, BottomNavigationBar, TopNavigationBar,CircleButtonWithWord, TicketOptionsFields, CheckboxSearchFields } from "shared/components"
 import { responseHandler } from "libraries/helper";
+import { compatRead } from "../../../libraries/compat_api";
 import ExistingMenuField from "components/user_bot/booking_options/existing_menu_field";
 import TextareaAutosize from 'react-autosize-textarea';
 
@@ -44,10 +45,41 @@ const NewMenuOptionFields = ({register}) => {
   )
 }
 
-const NewBookingOption =({props}) => {
+const NewBookingOption =({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    compatRead(initialProps.pageContextPath)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form) {
+          setLoadError("Failed to load booking option creation form");
+          return;
+        }
+        setReadyProps({ ...initialProps, ...form });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps;
   const { register, watch, setValue, formState, handleSubmit, control } = useForm({ });
-  // existing_booking_option, new_option_existing_menu, new_option_new_menu
   const [newBookingOptionType, setNewBookingOptionType] = useState("new_option_new_menu")
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (!props) return <p>{I18n.t("common.processing")}</p>;
 
   const isSubmitDisabled = () => {
     return formState.isSubmitting

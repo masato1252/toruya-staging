@@ -10,6 +10,7 @@ import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord, SelectOpti
 import ImageSelect from "shared/image_select"
 import { isValidLineUri, isValidLength } from "libraries/helper";
 import { CommonServices } from "user_bot/api";
+import { compatRead } from "../../../../libraries/compat_api";
 
 const ActionTypeFields = ({action_type, register, index, props, watch, keyword_booking_pages_size, keyword_booking_options_size}) => {
   if (_.includes(props.keywords, action_type)) {
@@ -96,8 +97,47 @@ const ActionTypeFields = ({action_type, register, index, props, watch, keyword_b
   }
 }
 
-const SocialRichMenuUpsert = ({props}) => {
+const SocialRichMenuUpsert = ({props: initialProps}) => {
+  const [readyProps, setReadyProps] = useState(
+    initialProps.pageContextPath ? null : initialProps,
+  );
+  const [loadError, setLoadError] = useState(null);
+
   useEffect(() => {
+    if (!initialProps.pageContextPath) return undefined;
+
+    let cancelled = false;
+    const attribute = encodeURIComponent(initialProps.attribute || "");
+    const path = attribute
+      ? `${initialProps.pageContextPath}?attribute=${attribute}`
+      : initialProps.pageContextPath;
+    compatRead(path)
+      .then((body) => {
+        if (cancelled) return;
+        const form = body.data?.edit_form || body.data;
+        if (!form?.rich_menu) {
+          setLoadError("Failed to load rich menu form");
+          return;
+        }
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          rich_menu: form.rich_menu,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(err.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProps]);
+
+  const props = readyProps || initialProps;
+
+  useEffect(() => {
+    if (!props?.business_owner_id) return undefined;
     const handleRichMenuKeywordModalClosed = async () => {
       const [_error, response] = await CommonServices.get({
         url: Routes.keyword_rich_menu_size_lines_user_bot_settings_social_account_social_rich_menus_path({format: "json"}),
@@ -147,6 +187,9 @@ const SocialRichMenuUpsert = ({props}) => {
     setImage(image[0])
     setValue("image_url", imageDataUrl)
   }
+
+  if (loadError) return <p className="danger">{loadError}</p>;
+  if (initialProps.pageContextPath && !readyProps) return <p>{I18n.t("common.processing")}</p>;
 
   return (
     <div className="container-fluid">

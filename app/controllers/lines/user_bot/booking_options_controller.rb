@@ -5,6 +5,11 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   redirect_to_correct_owner_for :booking_options, only: [:show, :edit, :update, :reorder_menu_priority, :delete_menu, :destroy]
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
+
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
     @options = ::BookingPages::AvailableBookingOptions.run!(shop: Current.business_owner.shops.first)
     @booking_pages = Current.business_owner.booking_pages.order("updated_at DESC").end_yet.filter_map { |booking_page| booking_page if !booking_page.ended? }

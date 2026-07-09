@@ -4,6 +4,11 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
   before_action :redirect_team_plan_user!
 
   def index
+    if compat_read_enabled?
+      render :index_compat
+      return
+    end
+
     @plans_properties = Plans::Properties.run!(user: Current.business_owner)
     @plan_labels = I18n.t("plans")[:labels]
 

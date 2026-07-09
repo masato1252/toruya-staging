@@ -5,6 +5,10 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   redirect_to_correct_owner_for :sale_pages, only: [:edit, :update, :destroy, :clone]
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
   end
 
   def index

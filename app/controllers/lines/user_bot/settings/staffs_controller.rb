@@ -13,6 +13,10 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def new
+    if compat_read_data_plane?
+      render :new_compat
+      return
+    end
   end
 
   def show
