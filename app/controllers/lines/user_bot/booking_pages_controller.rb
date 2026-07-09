@@ -42,11 +42,6 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def edit
-    if compat_read_enabled?
-      redirect_to lines_user_bot_booking_page_path(params[:id], business_owner_id: business_owner_id)
-      return
-    end
-
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @attribute = params[:attribute]
 

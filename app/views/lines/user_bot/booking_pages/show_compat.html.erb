@@ -21,6 +21,8 @@
             title: I18n.t("settings.booking_page.form.title_title"),
             greeting: I18n.t("settings.booking_page.form.greeting"),
             note: I18n.t("settings.booking_page.form.note_label"),
+            booking_type: I18n.t("settings.booking_page.form.booking_type_title"),
+            business_schedules: I18n.t("settings.booking_page.form.business_schedules"),
             booking_time: I18n.t("settings.booking_page.form.interval_period_header"),
             booking_available_period: I18n.t("settings.booking_page.form.booking_available_period_label"),
             start_at: I18n.t("settings.booking_page.form.start_at"),
@@ -28,8 +30,12 @@
             cut_off_time: I18n.t("settings.booking_page.form.cut_off_time"),
             customer_cancel_request: I18n.t("settings.booking_page.form.customer_cancel_request"),
             multiple_selection: I18n.t("settings.booking_page.form.multiple_selection"),
+            social_account_skippable: I18n.t("settings.booking_page.form.social_account_skippable_label"),
             customer_address_required: I18n.t("settings.booking_page.form.customer_address_required"),
             payment_option: I18n.t("settings.booking_page.form.payment_option"),
+            custom_messages: I18n.t("settings.booking_page.form.use_shop_default_message_title"),
+            survey: I18n.t("settings.booking_page.form.survey"),
+            overbooking_restriction: I18n.t("settings.booking_page.form.overbooking_restriction"),
             line_sharing: I18n.t("settings.booking_page.form.line_sharing"),
             requirements: I18n.t("settings.booking_page.form.requirements"),
             shop: I18n.t("common.shop"),
@@ -51,7 +57,7 @@
             confirm_delete: I18n.t("common.are_you_sure_message"),
             updated_at_prefix: I18n.t("common.updated_date"),
           },
-        }) %>
+        }, { camelize_props: false }) %>
       </div>
     </div>
 
@@ -67,7 +73,7 @@
           copied: I18n.t("common.copied"),
           copy_button: I18n.t("settings.booking_page.share_button_label"),
         },
-      }) %>
+      }, { camelize_props: false }) %>
     </div>
   </div>
 </div>
