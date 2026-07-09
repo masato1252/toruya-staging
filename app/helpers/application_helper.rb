@@ -5,6 +5,14 @@ require "message_encryptor"
 module ApplicationHelper
   include MultiShopHelper
 
+  def compat_read_data_plane?
+    ENV["COMPAT_API_READ_ENABLED"] == "true" && ENV["COMPAT_API_ORIGIN"].present?
+  end
+
+  def compat_read_enabled?
+    compat_read_data_plane?
+  end
+
   def compat_api_origin_meta_tag
     origin = ENV["COMPAT_API_ORIGIN"].presence
     return unless origin
