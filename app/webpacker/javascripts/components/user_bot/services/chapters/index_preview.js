@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import CoursePage from "user_bot/services/online_service_page/course";
-import { compatRead } from "../../../libraries/compat_api";
+import { compatRead } from "../../../../libraries/compat_api";
 
 const ChaptersIndexPreview = ({ pageContextPath }) => {
   const [course, setCourse] = useState(null);
