@@ -21,7 +21,7 @@ import I18n from 'i18n-js/index.js.erb';
 import { CommonServices } from "user_bot/api"
 import { responseHandler } from "libraries/helper";
 import { TopNavigationBar } from "shared/components";
-import { compatRead } from "../../../../libraries/compat_api";
+import { compatRead } from "../../../../../libraries/compat_api";
 
 const LineKeywordsOptionsForm = ({props}) => {
   const [options, setOptions] = useState(props.keyword_options);

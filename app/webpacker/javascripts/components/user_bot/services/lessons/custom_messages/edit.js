@@ -8,7 +8,7 @@ import { CustomMessageServices } from "user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
 import { Translator } from "libraries/helper";
 import { BottomNavigationBar, TopNavigationBar, CircleButtonWithWord } from "shared/components"
-import { compatRead } from "../../../../libraries/compat_api";
+import { compatRead } from "../../../../../libraries/compat_api";
 
 let personalizeKeyword = "";
 
