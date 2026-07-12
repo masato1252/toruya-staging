@@ -13,6 +13,7 @@ export default function ShopsIndex({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [adding, setAdding] = useState(false);
+  const [addContext, setAddContext] = useState(null);
 
   const addShop = async (paymentIntentId = null) => {
     setAdding(true);
@@ -46,13 +47,27 @@ export default function ShopsIndex({
     }
   };
 
+  const requestAddShop = () => {
+    if (
+      addContext?.fee_required &&
+      !window.confirm(`追加店舗の日割り料金 ¥${addContext.fee_cents.toLocaleString()} を決済します。よろしいですか？`)
+    ) {
+      return;
+    }
+    addShop();
+  };
+
   useEffect(() => {
     let cancelled = false;
 
-    compatRead(`/lines/user_bot/owner/${businessOwnerId}/settings/shops`)
-      .then((body) => {
+    Promise.all([
+      compatRead(`/lines/user_bot/owner/${businessOwnerId}/settings/shops`),
+      compatRead(`/lines/user_bot/owner/${businessOwnerId}/settings/shops/add_context`),
+    ])
+      .then(([shops, context]) => {
         if (cancelled) return;
-        setItems(body.data || []);
+        setItems(shops.data || []);
+        setAddContext(context.data || null);
       })
       .catch((err) => {
         if (!cancelled) setError(err.message);
@@ -94,12 +109,16 @@ export default function ShopsIndex({
           <i className="fa fa-angle-right" />
         </a>
       ))}
-      <button type="button" className="field-row shop-add-row" onClick={() => addShop()} disabled={adding}>
-        <div className="shop-add-row__label">
-          <i className="fa fa-plus shop-add-row__icon" aria-hidden="true" />
-          <span>{adding ? "処理中..." : addShopLabel}</span>
-        </div>
-      </button>
+      {addContext?.entitled && (
+        <button type="button" className="field-row shop-add-row" onClick={requestAddShop} disabled={adding}>
+          <div className="shop-add-row__label">
+            <i className="fa fa-plus shop-add-row__icon" aria-hidden="true" />
+            <span>{adding ? "処理中..." : addShopLabel}</span>
+          </div>
+          {addContext.fee_required && <small>¥{addContext.fee_cents.toLocaleString()}（日割り）</small>}
+        </button>
+      )}
+      {addContext?.message && <p className="shop-setup-pending-warning">{addContext.message}</p>}
     </>
   );
 }
