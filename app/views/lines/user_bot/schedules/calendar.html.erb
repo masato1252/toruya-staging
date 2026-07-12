@@ -1,7 +1,7 @@
 <%= notification_messages %>
 <%= t("user_bot.dashboards.change_logs.notification_message_html", change_log_path: lines_user_bot_change_log_path) %>
 
-<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.user_id, @reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
+<%= jump_out_modal(reservation_popup_path(@reservation)) if @reservation && params[:popup_disabled].nil? && reservation_popup_path(@reservation) %>
 
 <%= react_component(
   "user_bot/shared/view_toggle_button", {
@@ -23,6 +23,8 @@
       queried_start_date: @month_date.beginning_of_month.to_fs(:date),
       queried_end_date: @month_date.end_of_month.to_fs(:date),
       reservations_approval_flow: @reservations_approval_flow,
+      my_calendar: @my_calendar,
+      current_user_id: current_user&.id,
       _from: params[:_from],
       request_url: request.url
     }

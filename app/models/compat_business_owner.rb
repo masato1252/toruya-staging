@@ -48,6 +48,11 @@ class CompatBusinessOwner
     session_data["locale"] || "ja"
   end
 
+  def timezone
+    locale_key = locale.to_s.to_sym
+    ::LOCALE_TIME_ZONE[locale_key] || "Asia/Tokyo"
+  end
+
   def company_name
     session_data["company_name"]
   end

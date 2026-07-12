@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ostruct"
+
 class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   include SchedulesHelper
 
@@ -112,17 +114,14 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   private
 
   def render_compat_schedules(mine:)
-    @schedules = []
     @related_user_ids = []
-    @reservation = nil
     @notification_messages = []
     @reservations_approval_flow = []
     @my_calendar = mine
-    @schedules_for_calendar = []
     @schedule_mode = compat_schedule_mode
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_id(current_user&.id) || Current.business_owner&.id
 
     if @schedule_mode == "calendar"
-      # Match legacy get_date calendar branch — FullCalendar needs @month_date.
       @month_date =
         if params[:reservation_date].present? || params[:month_date].present?
           Time.zone.parse(params[:reservation_date] || params[:month_date]).to_date
@@ -130,11 +129,93 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
           Time.zone.now.to_date
         end
       @date = Time.zone.now.to_date
-      render :calendar
+      range_start = @month_date.beginning_of_month
+      range_end = @month_date.end_of_month
     else
       compat_get_date
-      render :index_compat
+      if @month_date
+        range_start = @month_date.beginning_of_month
+        range_end = @month_date.end_of_month
+      else
+        range_start = @date
+        range_end = @date
+      end
     end
+
+    @schedules = compat_fetch_schedule_events(
+      owner_id: owner_id,
+      start_date: range_start,
+      end_date: range_end,
+      mine: mine
+    )
+    @schedules_for_calendar = @schedules
+    @reservation = @schedules.find { |s| s[:type] == :reservation && s[:id].to_s == params[:reservation_id].to_s } if params[:reservation_id]
+    @compat_shops = compat_fetch_shops(owner_id)
+
+    if @schedule_mode == "calendar"
+      render :calendar
+    else
+      # Reuse legacy index + _events for full UI/UX parity (modals, date headers, row layout).
+      render :index
+    end
+  end
+
+  def compat_fetch_schedule_events(owner_id:, start_date:, end_date:, mine:)
+    return [] if owner_id.blank?
+
+    query = {
+      schedule_start_date: start_date.to_s,
+      schedule_end_date: end_date.to_s,
+      current_user_id: current_user&.id,
+      visible_open_schedule_user_ids: current_user&.id,
+    }
+    query[:my_calendar] = true if mine
+
+    body = fetch_v1_json(
+      "/lines/user_bot/owner/#{owner_id}/schedules/events",
+      query.compact
+    )
+    events = body.is_a?(Array) ? body : Array(body)
+    events.map { |event| normalize_compat_schedule_event(event) }.compact
+  rescue StandardError => e
+    Rails.logger.warn("[SchedulesController] compat events failed: #{e.message}")
+    []
+  end
+
+  def normalize_compat_schedule_event(raw)
+    return nil unless raw.is_a?(Hash)
+
+    event = raw.deep_symbolize_keys
+    event[:type] = event[:type].to_s.to_sym if event[:type]
+    event[:shop] ||= event[:shop_id]
+    if event[:time].is_a?(String)
+      event[:time] = Time.zone.parse(event[:time]) rescue event[:time]
+    end
+    if event[:sentences].is_a?(Array)
+      event[:sentences] = { deleted_staffs_sentence: nil }
+    elsif event[:sentences].is_a?(Hash)
+      event[:sentences] = event[:sentences].deep_symbolize_keys
+    end
+    event
+  end
+
+  def compat_fetch_shops(owner_id)
+    return [] if owner_id.blank?
+
+    body = compat_fetch_v1_json("/lines/user_bot/owner/#{owner_id}/settings/shops")
+    items = body&.dig("data") || body&.dig("items") || []
+    Array(items).map do |shop|
+      row = shop.is_a?(Hash) ? shop.deep_symbolize_keys : {}
+      OpenStruct.new(
+        id: row[:id],
+        name: row[:name] || row[:short_name],
+        display_name: row[:short_name].presence || row[:name],
+        user_id: owner_id
+      )
+    end
+  rescue StandardError => e
+    Rails.logger.warn("[SchedulesController] compat shops failed: #{e.message}")
+    []
   end
 
   # Always read schedule_mode from Supabase-backed auth/session — never Heroku AR.

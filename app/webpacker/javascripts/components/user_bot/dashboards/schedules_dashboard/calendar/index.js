@@ -178,7 +178,7 @@ $(document).ready(function() {
 });
 
 const SchedulesCalendar = ({ props }) => {
-  const { schedules: initialSchedules, business_owner_id, reservations_approval_flow, _from, queried_start_date, queried_end_date, timezone, month_date } = props;
+  const { schedules: initialSchedules, business_owner_id, reservations_approval_flow, _from, queried_start_date, queried_end_date, timezone, month_date, my_calendar, current_user_id } = props;
 
   // State management
   const [schedules, setSchedules] = useState(initialSchedules);
@@ -255,6 +255,10 @@ const SchedulesCalendar = ({ props }) => {
         schedule_start_date: startDate,
         schedule_end_date: endDate
       });
+      if (my_calendar) {
+        params.set('my_calendar', 'true');
+        if (current_user_id) params.set('current_user_id', String(current_user_id));
+      }
 
       const url = `${Routes.events_lines_user_bot_schedules_path(business_owner_id)}?${params}`;
       console.log('📡 Fetching from URL:', url);
