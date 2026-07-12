@@ -61,6 +61,10 @@ const SocialAccountEdit =({props: initialProps}) => {
     Object.entries(props.shop).forEach(([key, value]) => {
       setValue(key, value);
     });
+    const addressDetails = props.shop.address_details || {};
+    ["zip_code", "region", "city", "street1", "street2"].forEach((key) => {
+      setValue(`address_details[${key}]`, addressDetails[key] || "");
+    });
     setValue("business_schedules", props.business_schedules || []);
   }, [props, setValue]);
 
