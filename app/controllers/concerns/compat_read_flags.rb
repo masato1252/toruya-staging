@@ -24,13 +24,27 @@ module CompatReadFlags
     compat_read_data_plane?
   end
 
+  # Must NOT call business_owner / super_user / business_owner_id helpers — those call
+  # compat_read_data_plane? and recurse when business_owner_id is absent (LIFF rich menu).
   def current_data_plane_owner_id
-    if respond_to?(:business_owner_id, true)
-      id = business_owner_id
-      return id if id.present?
+    id = resolve_compat_id(params[:business_owner_id])
+    return id if id
+
+    if defined?(Current) && Current.respond_to?(:business_owner) && Current.business_owner.respond_to?(:id)
+      id = resolve_compat_id(Current.business_owner.id)
+      return id if id
     end
 
-    resolve_compat_owner_id(nil)
+    if respond_to?(:user_bot_cookies, true)
+      id = resolve_compat_id(user_bot_cookies(:current_user_id))
+      return id if id
+    end
+
+    if respond_to?(:resolve_compat_owner_id, true)
+      return resolve_compat_owner_id(nil)
+    end
+
+    nil
   end
 
   def resolve_compat_id(value)
