@@ -8,6 +8,8 @@
           <%= react_component("user_bot/settings/shops/index", {
             businessOwnerId: business_owner_id,
             setupPendingWarning: t("settings.shop.setup_pending_warning"),
+            addShopLabel: t("settings.shop.add_button"),
+            stripeKey: Rails.application.secrets.stripe_publishable_key,
           }) %>
         <% else %>
         <% @shops.each do |shop| %>
@@ -26,7 +28,7 @@
         <% end %>
         <% end %>
 
-        <% if admin? %>
+        <% if admin? && !compat_read_enabled? %>
           <% owner = Current.business_owner %>
           <% if owner.subscription&.in_paid_plan? || owner.permission_level == Plan::ENTERPRISE_LEVEL %>
             <% if @shop_fee_required %>
