@@ -22,12 +22,12 @@ const BookingOptionEditForm =({props}) => {
   const i18n = props.i18n;
   const [inputType, setInputType] = useState(() => {
     const content = props.booking_option[props.attribute];
-    return content && content.match(/<[^>]*>/) ? 'editor' : 'simple';
+    return typeof content === "string" && content.match(/<[^>]*>/) ? 'editor' : 'simple';
   });
 
   const [editorState, setEditorState] = useState(() => {
     const content = props.booking_option[props.attribute];
-    if (!content) {
+    if (typeof content !== "string" || !content) {
       return EditorState.createEmpty();
     }
     const contentState = ContentState.createFromBlockArray(
@@ -37,7 +37,8 @@ const BookingOptionEditForm =({props}) => {
   });
 
   const [displayName, setDisplayName] = useState(() => {
-    return props.booking_option.display_name?.replace(/<[^>]*>/g, '') || '';
+    const name = props.booking_option.display_name;
+    return typeof name === "string" ? name.replace(/<[^>]*>/g, '') : '';
   });
 
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
@@ -86,9 +87,9 @@ const BookingOptionEditForm =({props}) => {
 
   const handleInputTypeChange = (type) => {
     setInputType(type);
-    if (type === 'simple' && props.booking_option[props.attribute]) {
-      const strippedContent = props.booking_option[props.attribute].replace(/<[^>]*>/g, '');
-      setDisplayName(strippedContent);
+    const content = props.booking_option[props.attribute];
+    if (type === 'simple' && typeof content === "string" && content) {
+      setDisplayName(content.replace(/<[^>]*>/g, ''));
     }
   };
 

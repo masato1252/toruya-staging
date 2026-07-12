@@ -127,7 +127,8 @@ function FieldRow({ row, label, warningLabels, valueLabels }) {
       className={`field-row with-next-arrow with-format${row.row_class ? ` ${row.row_class}` : ""}`}
     >
       <span>
-        <span>{label}:</span> <span className="text-gray-500">{row.title}</span>
+        {label ? <span>{label}: </span> : null}
+        <span className="text-gray-500">{displayTitle ?? row.title}</span>
       </span>
       {row.warnings?.map((code) => (
         <div key={code} className="danger warning">
@@ -142,6 +143,7 @@ FieldRow.propTypes = {
   row: PropTypes.object.isRequired,
   label: PropTypes.string,
   warningLabels: PropTypes.object,
+  valueLabels: PropTypes.object,
 };
 
 function renderGroupRows(group, rowLabels, warningLabels, valueLabels) {
