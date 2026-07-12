@@ -8,8 +8,20 @@
           groupLabels: {
             rich_menu: t("user_bot.dashboards.settings.dashboard.line_rich_menu"),
           },
+          rowLabels: {
+            mode: t("user_bot.dashboards.settings.dashboard.line_rich_menu"),
+            current_menu: t("settings.social_rich_menus.current_rich_menu"),
+          },
+          valueLabels: {
+            mode: {
+              manual: t("user_bot.dashboards.settings.rich_menu.manual"),
+              auto: t("user_bot.dashboards.settings.rich_menu.auto"),
+            },
+          },
           actionLabels: {
             loading: t("common.processing"),
+            clone: t("user_bot.dashboards.settings.rich_menu.auto_switch_btn"),
+            delete: t("user_bot.dashboards.settings.rich_menu.manual_switch_btn"),
           },
         }, { camelize_props: false }) %>
       </div>
