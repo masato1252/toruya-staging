@@ -31,8 +31,11 @@ export default function ShopsIndex({
       const body = await response.json();
       if (body.error_type === "requires_action" && body.client_secret && stripeKey) {
         const stripe = await loadStripe(stripeKey);
-        const result = await stripe?.confirmCardPayment(body.client_secret);
+        const result = body.setup_intent_id
+          ? await stripe?.confirmCardSetup(body.client_secret)
+          : await stripe?.confirmCardPayment(body.client_secret);
         if (result?.error) throw new Error(result.error.message);
+        if (body.setup_intent_id) return addShop();
         if (result?.paymentIntent?.id) return addShop(result.paymentIntent.id);
       }
       if (!response.ok || body.status === "failed") throw new Error(body.error_message || "店舗の追加に失敗しました");
