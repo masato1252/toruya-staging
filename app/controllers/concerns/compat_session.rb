@@ -90,10 +90,11 @@ module CompatSession
   end
 
   def resolve_compat_owner_id(owner_id)
+    # Must NOT call current_user / business_owner — those call compat_read_data_plane?
+    # which calls current_data_plane_owner_id → resolve_compat_owner_id (infinite recursion).
     resolve_compat_id(owner_id) ||
       resolve_compat_id(params[:business_owner_id]) ||
-      (respond_to?(:user_bot_cookies, true) ? resolve_compat_id(user_bot_cookies(:current_user_id)) : nil) ||
-      (respond_to?(:current_user, true) ? resolve_compat_id(current_user&.id) : nil)
+      (respond_to?(:user_bot_cookies, true) ? resolve_compat_id(user_bot_cookies(:current_user_id)) : nil)
   end
 
   def resolve_compat_current_user_id(current_user_id)

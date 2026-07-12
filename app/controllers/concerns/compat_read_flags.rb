@@ -24,8 +24,8 @@ module CompatReadFlags
     compat_read_data_plane?
   end
 
-  # Must NOT call business_owner / super_user / business_owner_id helpers — those call
-  # compat_read_data_plane? and recurse when business_owner_id is absent (LIFF rich menu).
+  # Must NOT call business_owner / super_user / business_owner_id / current_user —
+  # those call compat_read_data_plane? and recurse when business_owner_id is absent.
   def current_data_plane_owner_id
     id = resolve_compat_id(params[:business_owner_id])
     return id if id
@@ -38,10 +38,6 @@ module CompatReadFlags
     if respond_to?(:user_bot_cookies, true)
       id = resolve_compat_id(user_bot_cookies(:current_user_id))
       return id if id
-    end
-
-    if respond_to?(:resolve_compat_owner_id, true)
-      return resolve_compat_owner_id(nil)
     end
 
     nil

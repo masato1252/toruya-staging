@@ -20,8 +20,9 @@ module UserBotAuthorization
 
   def authenticate_super_user
     if compat_read_data_plane?
-      # Mine calendar has no :business_owner_id in the path — resolve from cookie / current_user.
-      owner_id = resolve_compat_owner_id(nil)
+      # Mine calendar has no :business_owner_id — use cookie, then memoized current_user
+      # (safe here: authenticate_current_user! already ran and set @current_user).
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_id(current_user&.id)
       if owner_id&.positive?
         session_data = compat_auth_session(owner_id: owner_id, current_user_id: current_user&.id)
         if session_data && session_data["owner_id"].to_i == owner_id

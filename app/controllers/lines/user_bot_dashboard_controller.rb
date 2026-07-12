@@ -75,7 +75,7 @@ class Lines::UserBotDashboardController < ActionController::Base
     return unless compat_read_data_plane?
 
     @compat_session_payload = compat_auth_session(
-      owner_id: resolve_compat_owner_id(nil),
+      owner_id: resolve_compat_owner_id(nil) || resolve_compat_id(current_user&.id),
       current_user_id: current_user&.id
     )
   end
