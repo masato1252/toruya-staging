@@ -19,6 +19,9 @@
             state: t("user_bot.dashboards.broadcasts.state"),
             deliver_at: t("user_bot.dashboards.broadcasts.time"),
           },
+          valueLabels: {
+            query_type: Broadcast::TYPES.index_with { |type| I18n.t("user_bot.dashboards.broadcast_creation.#{type}") },
+          },
           warningLabels: {
             customers_permission_warning: t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description"),
           },

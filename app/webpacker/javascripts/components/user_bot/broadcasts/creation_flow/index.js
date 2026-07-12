@@ -29,7 +29,13 @@ const CreationFlow = ({props: initialProps}) => {
           setLoadError("Failed to load broadcast creation form");
           return;
         }
-        setReadyProps({ ...initialProps, ...form, broadcast: form.broadcast || {} });
+        setReadyProps({
+          ...initialProps,
+          ...form,
+          support_feature_flags:
+            initialProps.support_feature_flags || form.support_feature_flags || {},
+          broadcast: form.broadcast || {},
+        });
       })
       .catch((err) => {
         if (!cancelled) setLoadError(err.message);

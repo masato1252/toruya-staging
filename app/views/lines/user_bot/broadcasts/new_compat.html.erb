@@ -1,7 +1,10 @@
 <%= react_component("user_bot/broadcasts/creation_flow", {
   props: {
+    support_feature_flags: support_feature_flags,
     business_owner_id: business_owner_id,
-    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/broadcasts/page_context?wizard=new",
+    previous_path: params[:previous_path],
+    customer_status_type: params[:customer_status_type],
+    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/broadcasts/page_context?wizard=new#{%Q(&online_service_id=#{CGI.escape(params[:online_service_id].to_s)}) if params[:online_service_id].present?}",
   }
 },
 { camelize_props: false }

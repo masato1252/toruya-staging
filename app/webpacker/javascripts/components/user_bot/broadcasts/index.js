@@ -4,16 +4,15 @@ import { compatRead } from "../../../libraries/compat_api";
 
 function formatDeliverAt(iso) {
   if (!iso) return "";
-  return new Date(iso).toLocaleString();
+  return new Date(iso).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
 }
 
 export default function BroadcastsIndex({
-  businessOwnerId,
-  newBroadcastPath,
-  queryTypeLabels,
-  noBroadcastsTitle,
-  noBroadcastsDesc,
-  permissionWarning,
+  business_owner_id: businessOwnerId,
+  query_type_labels: queryTypeLabels,
+  no_broadcasts_title: noBroadcastsTitle,
+  no_broadcasts_desc: noBroadcastsDesc,
+  permission_warning: permissionWarning,
 }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,17 +39,10 @@ export default function BroadcastsIndex({
 
   if (!items.length) {
     return (
-      <>
-        <div className="dotdotdot margin-around centerize">
-          <h3>{noBroadcastsTitle}</h3>
-          <div className="desc margin-around">{noBroadcastsDesc}</div>
-        </div>
-        {newBroadcastPath && (
-          <div className="margin-around centerize hidden-xs">
-            <a className="btn btn-yellow" href={newBroadcastPath}><i className="fa fa-plus" /> Add more</a>
-          </div>
-        )}
-      </>
+      <div className="dotdotdot margin-around centerize">
+        <h3>{noBroadcastsTitle}</h3>
+        <div className="desc margin-around">{noBroadcastsDesc}</div>
+      </div>
     );
   }
 
@@ -72,20 +64,14 @@ export default function BroadcastsIndex({
           </div>
         </a>
       ))}
-      {newBroadcastPath && (
-        <div className="margin-around centerize hidden-xs">
-          <a className="btn btn-yellow" href={newBroadcastPath}><i className="fa fa-plus" /> Add more</a>
-        </div>
-      )}
     </>
   );
 }
 
 BroadcastsIndex.propTypes = {
-  businessOwnerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  newBroadcastPath: PropTypes.string,
-  queryTypeLabels: PropTypes.object.isRequired,
-  noBroadcastsTitle: PropTypes.string.isRequired,
-  noBroadcastsDesc: PropTypes.string.isRequired,
-  permissionWarning: PropTypes.string.isRequired,
+  business_owner_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  query_type_labels: PropTypes.object.isRequired,
+  no_broadcasts_title: PropTypes.string.isRequired,
+  no_broadcasts_desc: PropTypes.string.isRequired,
+  permission_warning: PropTypes.string.isRequired,
 };

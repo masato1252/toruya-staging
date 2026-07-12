@@ -396,6 +396,8 @@ const BroadcastEdit = ({ props: initialProps }) => {
         setReadyProps({
           ...initialProps,
           ...form,
+          support_feature_flags:
+            initialProps.support_feature_flags || form.support_feature_flags || {},
           broadcast: form.broadcast,
         });
       })

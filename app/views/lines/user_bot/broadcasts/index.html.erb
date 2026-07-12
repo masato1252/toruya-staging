@@ -6,13 +6,12 @@
 
         <% if compat_read_enabled? %>
           <%= react_component("user_bot/broadcasts/index", {
-            businessOwnerId: business_owner_id,
-            newBroadcastPath: (is_not_phone? ? new_lines_user_bot_broadcast_path(business_owner_id: business_owner_id) : nil),
-            queryTypeLabels: Broadcast::TYPES.index_with { |type| I18n.t("user_bot.dashboards.broadcast_creation.#{type}") },
-            noBroadcastsTitle: I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_title"),
-            noBroadcastsDesc: I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_desc"),
-            permissionWarning: I18n.t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description"),
-          }) %>
+            business_owner_id: business_owner_id,
+            query_type_labels: Broadcast::TYPES.index_with { |type| I18n.t("user_bot.dashboards.broadcast_creation.#{type}") },
+            no_broadcasts_title: I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_title"),
+            no_broadcasts_desc: I18n.t("user_bot.dashboards.broadcasts.no_broadcasts_desc"),
+            permission_warning: I18n.t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description"),
+          }, { camelize_props: false }) %>
         <% else %>
         <% @broadcasts.each do |broadcast| %>
           <%= render "lines/user_bot/field_state", state: broadcast.state do %>
