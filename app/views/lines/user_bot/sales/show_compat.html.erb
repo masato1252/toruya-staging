@@ -33,14 +33,14 @@
             publish: I18n.t("user_bot.dashboards.sales.edit.publish"),
           },
           warningLabels: {
-            expired: I18n.t("user_bot.dashboards.sales.warnings.expired", default: "Expired"),
-            sold_out: I18n.t("user_bot.dashboards.sales.warnings.sold_out", default: "Sold out"),
+            expired: I18n.t("settings.booking_page.form.form_errors.expired", default: "期限切れ"),
+            sold_out: I18n.t("user_bot.dashboards.sales.edit.sold_out"),
           },
           actionLabels: {
-            delete: I18n.t("action.delete"),
+            delete: I18n.t("user_bot.dashboards.sales.edit.delete_sale_page"),
             clone: I18n.t("common.copy"),
             copy_url: I18n.t("action.share"),
-            open: I18n.t("action.open", default: "Open"),
+            open: I18n.t("action.open", default: "開く"),
             loading: I18n.t("common.processing"),
             confirm_delete: I18n.t("common.are_you_sure"),
           },
@@ -52,7 +52,8 @@
       <%= react_component("user_bot/shared/compat_owner_show_preview", {
         pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/sales/#{params[:id]}/page_context",
         supportFeatureFlags: support_feature_flags,
-        mobilePreviewLabel: I18n.t("user_bot.dashboards.sales.edit.mobile_preview", default: "Mobile preview"),
+        mobilePreviewLabel: I18n.t("user_bot.dashboards.sales.edit.mobile_preview", default: "モバイルプレビュー"),
+        shareButtonText: I18n.t("action.share"),
       }, { camelize_props: false }) %>
     </div>
   </div>

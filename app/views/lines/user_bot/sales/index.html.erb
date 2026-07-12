@@ -9,24 +9,26 @@
         <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
         <% if compat_read_enabled? %>
           <%= react_component("user_bot/sales/index", {
-            businessOwnerId: business_owner_id,
-            newSalePath: (is_not_phone? ? new_lines_user_bot_sale_path(business_owner_id: business_owner_id) : nil),
-          }) %>
+            business_owner_id: business_owner_id,
+            draft_label: I18n.t("common.draft"),
+          }, { camelize_props: false }) %>
         <% else %>
         <div class="booking-pages-list">
           <% @sale_pages.each do |sale_page| %>
             <% next unless sale_page.product %>
             <%= render 'lines/user_bot/sales/row', sale_page: sale_page %>
           <% end %>
+        <% end %>
 
-          <% if is_not_phone? %>
-            <div class="margin-around centerize">
-              <%= link_to new_lines_user_bot_sale_path(business_owner_id: business_owner_id), class: "btn btn-yellow" do %>
-            <i class="fa fa-plus"></i>
-                <%= t("action.add_more") %>
-              <% end %>
-            </div>
-          <% end %>
+        <% if is_not_phone? %>
+          <div class="margin-around centerize">
+            <%= link_to new_lines_user_bot_sale_path(business_owner_id: business_owner_id), class: "btn btn-yellow" do %>
+              <i class="fa fa-plus"></i>
+              <%= t("action.add_more") %>
+            <% end %>
+          </div>
+        <% end %>
+        <% unless compat_read_enabled? %>
         </div>
         <% end %>
 

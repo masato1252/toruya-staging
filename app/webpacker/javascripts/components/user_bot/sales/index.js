@@ -8,7 +8,10 @@ function copyUrl(url) {
   }
 }
 
-export default function SalesIndex({ businessOwnerId, newSalePath }) {
+export default function SalesIndex({
+  business_owner_id: businessOwnerId,
+  draft_label: draftLabel,
+}) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,11 +48,11 @@ export default function SalesIndex({ businessOwnerId, newSalePath }) {
             <a className="w-8-12" href={`/lines/user_bot/owner/${businessOwnerId}/sales/${sale.id}`}>
               <h3 className="text-gray-700 underline">
                 <i className={`fa ${sale.is_booking_page ? "fa-calendar" : "fa-mobile-alt"}`} />
-                {sale.draft ? "[Draft]" : ""}{sale.name}
+                {sale.draft ? `[${draftLabel || "下書き"}]` : ""}
+                {sale.name}
               </h3>
-              <div className="desc">{sale.product_name}</div>
-              {sale.row_desc2 && <div className="desc">{sale.row_desc2}</div>}
-              {sale.row_desc3 && <div className="desc">{sale.row_desc3}</div>}
+              {sale.product_name ? <div className="desc">{sale.product_name}</div> : null}
+              {sale.row_desc2 ? <div className="desc">{sale.row_desc2}</div> : null}
             </a>
             {publicUrl && (
               <div className="w-3-12 flex">
@@ -68,16 +71,11 @@ export default function SalesIndex({ businessOwnerId, newSalePath }) {
           </div>
         );
       })}
-      {newSalePath && (
-        <div className="margin-around centerize hidden-xs">
-          <a className="btn btn-yellow" href={newSalePath}><i className="fa fa-plus" /> Add more</a>
-        </div>
-      )}
     </div>
   );
 }
 
 SalesIndex.propTypes = {
-  businessOwnerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  newSalePath: PropTypes.string,
+  business_owner_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  draft_label: PropTypes.string,
 };
