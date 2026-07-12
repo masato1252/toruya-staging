@@ -20,16 +20,42 @@ class CompatSocialAccountProxy
     @session_data = session_data
   end
 
+  # Layout `_line_setup_prompt_modal` and settings rows call these on every page.
+  def line_settings_finished?
+    return true if @session_data["line_settings_finished"] == true
+    return true if line_settings_verified?
+    # Account row exists → treat credentials as configured (verification may still be pending).
+    @session_data["social_account_present"] == true
+  end
+
   def line_settings_verified?
     @session_data["line_settings_verified"] == true
   end
 
   def using_line_official_account?
-    false
+    @session_data["using_line_official_account"] == true
   end
 
   def present?
     @session_data["social_account_present"] == true
+  end
+end
+
+class CompatSocialUserProxy
+  def initialize(session_data)
+    @session_data = session_data
+  end
+
+  def id
+    @session_data["social_user_id"]
+  end
+
+  def social_service_user_id
+    @session_data["social_service_user_id"]
+  end
+
+  def present?
+    social_service_user_id.present?
   end
 end
 
@@ -88,6 +114,12 @@ class CompatBusinessOwner
     return nil unless session_data["social_account_present"]
 
     @social_account ||= CompatSocialAccountProxy.new(session_data)
+  end
+
+  def social_user
+    return nil unless session_data["social_service_user_id"].present?
+
+    @social_user ||= CompatSocialUserProxy.new(session_data)
   end
 
   def ==(other)
