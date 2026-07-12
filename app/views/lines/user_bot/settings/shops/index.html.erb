@@ -49,6 +49,6 @@
   <%= render "add_shop_modal", proration_preview: @proration_preview, business_owner_id: business_owner_id %>
 <% end %>
 
-<% if admin? %>
+<% if admin? && !compat_read_enabled? %>
   <%= render "upgrade_modal", business_owner_id: business_owner_id %>
 <% end %>
