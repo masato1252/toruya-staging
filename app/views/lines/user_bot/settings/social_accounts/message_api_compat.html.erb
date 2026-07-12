@@ -6,7 +6,15 @@
         <%= react_component("user_bot/shared/compat_owner_show_shell", {
           pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/social_account/page_context?attribute=message_api",
           groupLabels: {
-            message_api: t("user_bot.dashboards.settings.dashboard.line_message_api_label"),
+            info1: t("settings.social_account.info1_label"),
+            info2: t("settings.social_account.info2_label"),
+          },
+          rowLabels: {
+            label: t("settings.social_account.form.channel_name"),
+            channel_id: t("settings.social_account.form.channel_id"),
+            channel_secret: t("settings.social_account.form.channel_secret"),
+            basic_id: t("settings.social_account.form.channel_basic_id"),
+            channel_token: t("settings.social_account.form.channel_token"),
           },
           actionLabels: {
             loading: t("common.processing"),
