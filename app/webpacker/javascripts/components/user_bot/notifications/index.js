@@ -2,6 +2,41 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
+function NotificationSection({ title, items, empty }) {
+  if (!items?.length) return null;
+  return (
+    <>
+      <div className="field-header">{title}</div>
+      <div className="booking-pages-list">
+        {items.map((item) => (
+          <a key={item.id} className="field-row with-next-arrow" href={item.href}>
+            <div>
+              <h3>
+                {item.customer_name || item.title}
+                {item.company_name || item.shop_name ? (
+                  <span className="border p-1 border-solid border-gray-500 text-gray-500 text-10px ml-2">
+                    {item.company_name || item.shop_name}
+                  </span>
+                ) : null}
+              </h3>
+              {item.preview || item.customers || item.goal_type ? (
+                <div className="desc dotdotdot">{item.preview || item.customers || item.goal_type}</div>
+              ) : null}
+            </div>
+            <i className="fa fa-angle-right" />
+          </a>
+        ))}
+      </div>
+    </>
+  );
+}
+
+NotificationSection.propTypes = {
+  title: PropTypes.string.isRequired,
+  items: PropTypes.array,
+  empty: PropTypes.bool,
+};
+
 export default function NotificationsIndex({ businessOwnerId, schedulesPath, labels }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,22 +64,24 @@ export default function NotificationsIndex({ businessOwnerId, schedulesPath, lab
     };
   }, [businessOwnerId, schedulesPath]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>処理中...</p>;
   if (error) return <p className="danger">{error}</p>;
   if (!data?.has_notifications) return null;
 
   return (
-    <div className="booking-pages-list">
-      {data.pending_reservations_count > 0 && (
-        <a className="field-row with-next-arrow" href={schedulesPath}>
-          <span>{labels.pendingReservations}: {data.pending_reservations_count}</span>
-        </a>
-      )}
-      {data.unread_messages_count > 0 && (
-        <div className="field-row">
-          <span>{labels.unreadMessages}: {data.unread_messages_count}</span>
-        </div>
-      )}
+    <div>
+      <NotificationSection
+        title={labels.unreadMessages}
+        items={data.unread_messages}
+      />
+      <NotificationSection
+        title={labels.pendingReservations}
+        items={data.pending_reservations}
+      />
+      <NotificationSection
+        title={labels.pendingCustomerServices || "承認待ちサービス"}
+        items={data.pending_customer_services}
+      />
     </div>
   );
 }

@@ -12,10 +12,30 @@
           customer_name: t('common.customer_name'),
           reservation_datetime: t('common.reservation_datetime'),
           menu: t('common.menu'),
+          charge_info: t('line_notice_requests.store.show.charge_information'),
+          this_charge: t('line_notice_requests.store.payment.charge_amount_label', default: '今回の料金'),
+          status: t('user_bot.dashboards.broadcasts.state'),
+          approved_at: t('common.updated_date', default: '承認日時'),
         },
         actionLabels: {
           loading: t('common.processing'),
-          approve: t('line_notice_requests.store.show.approve_confirm'),
+          activate: t('line_notice_requests.store.show.approve_free', default: '無料でリクエストを承認する'),
+          confirm_draft: t('line_notice_requests.store.show.approve_confirm'),
+        },
+      }, { camelize_props: false }) %>
+
+      <%# Paid approve still uses Rails Stripe modal; free-trial uses shell activate_href POST. %>
+      <%= react_component("line_notice_requests/compat_approve", {
+        pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/line_notice_requests/#{params[:id]}/page_context",
+        stripeKey: Rails.application.secrets.stripe_publishable_key,
+        businessOwnerId: business_owner_id,
+        lineNoticeRequestId: params[:id].to_i,
+        i18n: {
+          modalTitle: t('line_notice_requests.store.payment.modal_title'),
+          chargeAmountLabel: t('line_notice_requests.store.payment.charge_amount_label'),
+          cardNumberLabel: t('line_notice_requests.store.payment.card_number_label'),
+          submitButton: t('line_notice_requests.store.payment.submit_button'),
+          paidApprove: t('line_notice_requests.store.show.approve_paid', default: '料金を支払って承認する'),
         },
       }, { camelize_props: false }) %>
     </div>

@@ -4,6 +4,7 @@ import { compatRead } from "../../../libraries/compat_api";
 import SaleBookingPage from "user_bot/sales/booking_pages";
 import SaleOnlineService from "user_bot/sales/online_services";
 import BookingPagePreview from "user_bot/bookings/booking_page_preview";
+import SaleDemoPage from "user_bot/sales/demo";
 
 function copyToClipboard(text) {
   if (navigator.clipboard?.writeText) {
@@ -44,10 +45,14 @@ export default function CompatOwnerShowPreview({
     };
   }, [pageContextPath]);
 
-  if (loading || !preview?.public_url) return null;
+  if (loading) return null;
+
+  // Shop demo preview has no public URL; still render the phone mock.
+  if (!preview) return null;
+  if (!preview.public_url && preview.react_component !== "sales_demo") return null;
 
   const { public_url: publicUrl, react_component: reactComponent, props } = preview;
-  const absoluteUrl = `${window.location.origin}${publicUrl}`;
+  const absoluteUrl = publicUrl ? `${window.location.origin}${publicUrl}` : "";
   const labels = previewLabels || {};
 
   const previewNode = (() => {
@@ -68,10 +73,14 @@ export default function CompatOwnerShowPreview({
         />
       );
     }
+    if (reactComponent === "sales_demo") {
+      return <SaleDemoPage shop={props.shop} />;
+    }
     return null;
   })();
 
   const handleCopyUrl = () => {
+    if (!absoluteUrl) return;
     copyToClipboard(absoluteUrl).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -80,29 +89,33 @@ export default function CompatOwnerShowPreview({
 
   return (
     <>
-      <input
-        readOnly
-        className="extend"
-        value={absoluteUrl}
-        onClick={(e) => e.target.select()}
-      />
-      <div className="centerize margin-around purchase-buttons">
-        <button type="button" className="btn btn-tarco" onClick={handleCopyUrl}>
-          <i className="fas fa-copy" /> {copied ? labels.copied || "コピーしました" : shareButtonText || labels.copy_button || "予約ボタンをコピー"}
-        </button>
-      </div>
-      <div className="centerize margin-around">
-        <img
-          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(absoluteUrl)}`}
-          alt="QR"
-          width={150}
-          height={150}
-        />
-      </div>
+      {absoluteUrl ? (
+        <>
+          <input
+            readOnly
+            className="extend"
+            value={absoluteUrl}
+            onClick={(e) => e.target.select()}
+          />
+          <div className="centerize margin-around purchase-buttons">
+            <button type="button" className="btn btn-tarco" onClick={handleCopyUrl}>
+              <i className="fas fa-copy" /> {copied ? labels.copied || "コピーしました" : shareButtonText || labels.copy_button || "予約ボタンをコピー"}
+            </button>
+          </div>
+          <div className="centerize margin-around">
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(absoluteUrl)}`}
+              alt="QR"
+              width={150}
+              height={150}
+            />
+          </div>
+        </>
+      ) : null}
       {previewNode ? (
         <div className="fake-mobile-layout hidden-xs">
           {previewNode}
-          {props.other_options_count > 0 ? (
+          {props?.other_options_count > 0 ? (
             <div className="others-options">
               {labels.other_options || `その他${props.other_options_count}価格`}
             </div>

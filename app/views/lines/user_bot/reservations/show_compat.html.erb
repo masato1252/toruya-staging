@@ -2,8 +2,21 @@
   pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/reservations/#{params[:id]}/page_context",
   groupLabels: {
     reservation: t("common.reservation_details"),
+    customers: t("common.customers", default: "お客様"),
+    staffs: t("common.staffs", default: "スタッフ"),
+  },
+  rowLabels: {
+    state: t("user_bot.dashboards.broadcasts.state"),
+    shop: t("common.shop", default: "店舗"),
+    start: t("common.start_time", default: "開始"),
+    end: t("common.end_time", default: "終了"),
+    menus: t("common.menu"),
+    online: t("common.method", default: "形式"),
+    memo: t("common.memo", default: "メモ"),
+    meeting_url: t("common.meeting_url", default: "ミーティングURL"),
   },
   actionLabels: {
     loading: t("common.processing"),
+    clone: t("action.details"),
   },
 }, { camelize_props: false }) %>
