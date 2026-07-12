@@ -5,18 +5,7 @@ class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
 
   def index
     if compat_read_enabled?
-      @subscription = Current.business_owner.subscription
-      @social_account = Current.business_owner.social_account
-      @days_in_period = 30
-      @active_customers_rate = 0
-      @customers_count = 0
-      @comparison_customers_count = 0
-      @reservations_count = 0
-      @comparison_reservations_count = 0
-      @customers_payment = 0
-      @comparison_customers_payment = 0
-      @total_customer_count = 0
-      @total_customer_limit = I18n.t("settings.dashboard.no_limit")
+      apply_compat_settings_index!
       return
     end
 
@@ -50,5 +39,50 @@ class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
     if params[:consultant_connect_result].present?
       params[:consultant_connect_result] == 'true' ? flash.now[:success] = I18n.t("settings.consultant.consultant_connected_successfully") : flash.now[:alert] = I18n.t("settings.consultant.consultant_connected_failed")
     end
+  end
+
+  private
+
+  def apply_compat_settings_index!
+    form = compat_fetch_v1_json(
+      "/lines/user_bot/owner/#{business_owner_id}/settings/page_context"
+    )&.dig("data", "edit_form")
+
+    @subscription = Current.business_owner.subscription
+    @social_account = Current.business_owner.social_account
+    @days_in_period = form&.dig("days_in_period").presence || 30
+    @active_customers_rate = 0
+    @customers_count = 0
+    @comparison_customers_count = 0
+    @reservations_count = 0
+    @comparison_reservations_count = 0
+    @comparison_customers_payment = 0
+
+    @total_customer_count = form&.dig("total_customer_count").to_i
+    limit = form&.dig("total_customer_limit")
+    @total_customer_limit =
+      if form.nil?
+        I18n.t("settings.dashboard.no_limit")
+      elsif limit.nil?
+        I18n.t("settings.dashboard.no_limit")
+      else
+        limit
+      end
+    @customers_payment = form&.dig("customers_payment").to_i
+
+    @compat_settings = form
+    return if form.blank?
+
+    @member_plan_name = form["member_plan_name"]
+    @subscription_status_label = form["subscription_status"]
+    @subscription_active = form["subscription_active"] == true
+    @charge_required = form["charge_required"] == true
+    @expired_date_label = form["expired_date"]
+    @next_plan_name = form["next_plan_name"]
+    @team_plan_member = form["team_plan_member"] == true
+    @has_single_shop = form["has_single_shop"] == true
+    @first_shop_id = form["first_shop_id"]
+    @line_settings_verified = form["line_settings_verified"] == true
+    @using_line_official_account = form["using_line_official_account"] == true
   end
 end

@@ -79,20 +79,29 @@
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
 
-        <% if Current.business_owner.team_plan_member? %>
+        <% use_compat = @compat_settings.present? %>
+        <% team_plan = use_compat ? @team_plan_member : Current.business_owner.team_plan_member? %>
+        <% member_plan_name = @member_plan_name.presence || Current.business_owner.member_plan_name %>
+        <% if team_plan %>
           <div class="field-row" id="plans-menu-item">
             <div>
-              <%= Current.business_owner.member_plan_name %>
+              <%= member_plan_name %>
             </div>
           </div>
         <% else %>
           <%= link_to lines_user_bot_settings_plans_path(business_owner_id: business_owner_id), class: "field-row", id: "plans-menu-item" do %>
             <div>
-              <%= t("settings.plans.plan_info.plan_member", plan_name: Current.business_owner.member_plan_name) %><br />
+              <%= t("settings.plans.plan_info.plan_member", plan_name: member_plan_name) %><br />
               <div class="desc">
-                <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
-                <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
-                <%= " (#{@subscription.next_plan.name}#{t("action.ready_to_change")})" if @subscription.active? && @subscription.next_plan %>
+                <% if use_compat && @subscription_status_label.present? %>
+                  <%= t("settings.plans.plan_info.status") %>: <%= @subscription_status_label %><br />
+                  <%= @expired_date_label if @subscription_active && @charge_required %>
+                  <%= " (#{@next_plan_name}#{t("action.ready_to_change")})" if @subscription_active && @next_plan_name.present? %>
+                <% else %>
+                  <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
+                  <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
+                  <%= " (#{@subscription.next_plan.name}#{t("action.ready_to_change")})" if @subscription.active? && @subscription.next_plan %>
+                <% end %>
               </div>
             </div>
             <i class="fa fa-angle-right"></i>
@@ -113,13 +122,16 @@
           <span><%= t("user_bot.dashboards.settings.company.staffs") %></span><i class="fa fa-angle-right"></i>
         <% end %>
 
-        <% if Current.business_owner.has_single_shop? %>
-          <% shop = Current.business_owner.shops.first %>
-          <%= link_to lines_user_bot_settings_shop_equipments_path(shop_id: shop.id, business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.equipments.title") %></span><i class="fa fa-angle-right"></i>
-          <% end %>
-          <%= link_to lines_user_bot_settings_shop_custom_messages_path(shop_id: shop.id, business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
+        <% has_single_shop = use_compat ? @has_single_shop : Current.business_owner.has_single_shop? %>
+        <% if has_single_shop %>
+          <% shop_id = use_compat ? @first_shop_id : Current.business_owner.shops.first&.id %>
+          <% if shop_id.present? %>
+            <%= link_to lines_user_bot_settings_shop_equipments_path(shop_id: shop_id, business_owner_id: business_owner_id), class: "field-row" do %>
+              <span><%= t("user_bot.dashboards.settings.equipments.title") %></span><i class="fa fa-angle-right"></i>
+            <% end %>
+            <%= link_to lines_user_bot_settings_shop_custom_messages_path(shop_id: shop_id, business_owner_id: business_owner_id), class: "field-row" do %>
+              <span><%= t("user_bot.dashboards.settings.custom_messages.auto_message") %></span><i class="fa fa-angle-right"></i>
+            <% end %>
           <% end %>
         <% else %>
           <%= link_to company_lines_user_bot_settings_profile_path(business_owner_id: business_owner_id), class: "field-row" do %>
@@ -137,12 +149,14 @@
         <%= link_to login_api_lines_user_bot_settings_social_account_path(business_owner_id: business_owner_id), class: "field-row" do %>
           <span><%= t("user_bot.dashboards.settings.dashboard.line_login_api_label") %></span><i class="fa fa-angle-right"></i>
         <% end %>
-        <% if @social_account && @social_account.line_settings_verified? %>
+        <% line_verified = use_compat ? @line_settings_verified : (@social_account && @social_account.line_settings_verified?) %>
+        <% if line_verified %>
           <%= link_to edit_lines_user_bot_settings_social_account_rich_menu_path(business_owner_id: business_owner_id), class: "field-row" do %>
             <span><%= t("user_bot.dashboards.settings.dashboard.line_rich_menu") %></span>
             <span>
               <span>
-                <%= @social_account.using_line_official_account? ? t("user_bot.dashboards.settings.rich_menu.manual") : t("user_bot.dashboards.settings.rich_menu.auto") %>
+                <% using_official = use_compat ? @using_line_official_account : @social_account&.using_line_official_account? %>
+                <%= using_official ? t("user_bot.dashboards.settings.rich_menu.manual") : t("user_bot.dashboards.settings.rich_menu.auto") %>
               </span>
               <i class="fa fa-angle-right"></i>
             </span>
