@@ -19,6 +19,10 @@ const ScheduleModal = ({i18n, selectedDate, props}) => {
     }
 
     const [error, response] = await ReservationServices.schedule({ business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, params })
+    if (error || !response?.data) {
+      setBody("")
+      return
+    }
     setBody(response.data)
   }
 
