@@ -140,6 +140,8 @@ export function shouldRewriteCompatRequest(url, input, init) {
 
   // LINE notice approve + Stripe payment stay on Rails (AR + secrets).
   if (/\/line_notice_requests\/\d+\/approve\/?$/.test(pathname)) return false;
+  // Reservation state transitions (accept/cancel/checkout) stay on Rails AASM.
+  if (/\/reservations\/\d+\/states\//.test(pathname)) return false;
 
   const headers = getRequestHeaders(input, init);
   const accept = (headers.get("Accept") || "").toLowerCase();

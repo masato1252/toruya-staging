@@ -309,6 +309,24 @@ export default function CompatOwnerShowShell({
         </div>
       )}
 
+      {vm.actions?.state_buttons?.length ? (
+        <div className="action-block margin-around centerize">
+          <dl className="modal-footer" style={{ display: "contents" }}>
+            {vm.actions.state_buttons.map((btn) => (
+              <dd key={btn.key} style={{ display: "inline-block", margin: "4px" }}>
+                <a
+                  className={btn.class_name || "btn enhanced BTNtarco"}
+                  href={btn.href}
+                  data-confirm={btn.confirm || undefined}
+                >
+                  {btn.label}
+                </a>
+              </dd>
+            ))}
+          </dl>
+        </div>
+      ) : null}
+
       {(vm.actions?.clone_href || vm.actions?.activate_href || vm.actions?.draft_href) && (
         <div className="action-block margin-around centerize">
           {vm.actions?.clone_href ? (

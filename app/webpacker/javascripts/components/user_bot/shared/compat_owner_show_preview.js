@@ -5,6 +5,8 @@ import SaleBookingPage from "user_bot/sales/booking_pages";
 import SaleOnlineService from "user_bot/sales/online_services";
 import BookingPagePreview from "user_bot/bookings/booking_page_preview";
 import SaleDemoPage from "user_bot/sales/demo";
+import CoursePage from "user_bot/services/online_service_page/course";
+import OnlineServicePage from "user_bot/services/online_service_page";
 
 function copyToClipboard(text) {
   if (navigator.clipboard?.writeText) {
@@ -75,6 +77,19 @@ export default function CompatOwnerShowPreview({
     }
     if (reactComponent === "sales_demo") {
       return <SaleDemoPage shop={props.shop} />;
+    }
+    if (reactComponent === "online_service_course") {
+      return (
+        <CoursePage
+          course={props.course}
+          lesson_ids={props.lesson_ids || []}
+          preview={props.preview !== false}
+          lesson_id={props.lesson_id}
+        />
+      );
+    }
+    if (reactComponent === "online_service_page") {
+      return <OnlineServicePage {...props} />;
     }
     return null;
   })();

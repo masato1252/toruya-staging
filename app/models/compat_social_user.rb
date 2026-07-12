@@ -53,6 +53,12 @@ class CompatSocialUser
   end
 
   def manage_accounts
+    # Prefer linked SocialUser accounts when AR is available (multi-account owners).
+    linked = ar_social_user
+    if linked&.respond_to?(:manage_accounts)
+      accounts = linked.manage_accounts
+      return accounts if accounts.present?
+    end
     [CompatBusinessOwner.new(session_data)]
   end
 
