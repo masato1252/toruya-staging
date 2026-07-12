@@ -1,5 +1,6 @@
 class BookingsController < ActionController::Base
   include ProductLocale
+  include CompatSession
 
   skip_before_action :verify_authenticity_token
 
@@ -12,6 +13,19 @@ class BookingsController < ActionController::Base
   end
 
   def destroy
+    if compat_read_data_plane?
+      result = compat_v1_delete(
+        "/bookings/#{params[:slug]}",
+        cancel_reason: params[:cancel_reason],
+        other_reason: params[:other_reason]
+      )
+      unless result&.dig("status") == "successful"
+        Rails.logger.warn("[BookingCancel] compat cancellation failed", slug: params[:slug])
+      end
+      redirect_to booking_path(params[:slug])
+      return
+    end
+
     outcome = ReservationCustomers::CustomerCancel.run(
       reservation_customer: reservation_customer,
       cancel_reason: "#{params[:cancel_reason]&.join(',')},#{params[:other_reason]}"

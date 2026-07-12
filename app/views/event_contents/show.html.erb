@@ -15,7 +15,7 @@
   <% end %>
 <% end %>
 
-<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<% if @compat_public_read %>
   <%= render "event_contents/show_compat" %>
 <% else %>
 <%= react_component("event_contents/show", {

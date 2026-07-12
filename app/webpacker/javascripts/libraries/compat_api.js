@@ -2,7 +2,7 @@ import axios from "axios";
 
 const COMPAT_API_PREFIX = "/v1/compat";
 
-const EXCLUDED_PATH_PREFIXES = ["/stripe_", "/api/images"];
+const EXCLUDED_PATH_PREFIXES = ["/stripe_", "/api/images", "/admin/compat_read"];
 
 const COMPAT_PATH_PREFIXES = [
   "/lines/",
@@ -138,10 +138,9 @@ export function shouldRewriteCompatRequest(url, input, init) {
   if (!pathname || isExcludedPath(pathname)) return false;
   if (!isCompatCandidatePath(pathname)) return false;
 
-  // LINE notice approve + Stripe payment stay on Rails (AR + secrets).
+  // Paid LINE notice approval stays on Rails for its Stripe/3DS flow. Rails
+  // proxies a migrated owner's free-trial approval to v1 server-side.
   if (/\/line_notice_requests\/\d+\/approve\/?$/.test(pathname)) return false;
-  // Reservation state transitions (accept/cancel/checkout) stay on Rails AASM.
-  if (/\/reservations\/\d+\/states\//.test(pathname)) return false;
   // Admin mutations not yet on v1 — keep Rails until write cutover.
   if (/\/admin\/business_applications\/\d+\/(approve|reject|mark_paid)\/?$/.test(pathname)) return false;
   if (/\/admin\/chats(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
@@ -194,6 +193,13 @@ export function rewriteCompatUrl(url, input, init) {
 
   if (pathname.startsWith("/booking_pages/")) {
     pathname = rewriteBookingPagesPath(pathname);
+  }
+
+  // Admin authorization is evaluated from the Devise session in Rails. Keep
+  // browser admin reads same-origin so Rails can sign the v1 request; never
+  // expose a user id or proxy secret to the client.
+  if (pathname.startsWith("/admin/") && getRequestMethod(input, init) === "GET") {
+    return `/admin/compat_read?path=${encodeURIComponent(`${pathname}${extractSuffix(url)}`)}`;
   }
 
   const compatPath = compatApiPath(pathname);

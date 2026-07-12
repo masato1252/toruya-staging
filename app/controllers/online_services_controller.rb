@@ -49,12 +49,20 @@ class OnlineServicesController < Lines::CustomersController
   end
 
   def watch_lesson
+    if compat_public_read_for_owner?(online_service.user_id)
+      return render_compat_watch_response(:lesson, params[:lesson_id])
+    end
+
     outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: online_service.lessons.find(params[:lesson_id]))
 
     return_json_response(outcome, { watched_lesson_ids: outcome.result&.watched_lesson_ids || []})
   end
 
   def watch_episode
+    if compat_public_read_for_owner?(online_service.user_id)
+      return render_compat_watch_response(:episode, params[:episode_id])
+    end
+
     outcome = Episodes::Watch.run(customer: current_customer, episode: online_service.episodes.find(params[:episode_id]))
 
     return_json_response(outcome, { watched_episode_ids: outcome.result&.watched_episode_ids || []})
@@ -84,5 +92,31 @@ class OnlineServicesController < Lines::CustomersController
 
   def product_social_user
     online_service.user.social_user
+  end
+
+  def render_compat_watch_response(content_type, content_id)
+    customer = current_customer
+    unless customer
+      render json: { status: "failed", error_message: "顧客情報が見つかりません" }, status: :unprocessable_entity
+      return
+    end
+
+    social_customer = current_social_customer
+    response = compat_v1_put_response(
+      "/online_services/#{params[:slug]}/#{content_type == :lesson ? "lessons" : "episodes"}/#{content_id}",
+      {
+        customer_id: customer.id,
+        social_service_user_id: social_customer&.social_user_id,
+        encrypted_customer_id: params[:encrypted_customer_id],
+        encrypted_social_service_user_id: params[:encrypted_social_service_user_id]
+      }.compact
+    )
+
+    unless response
+      render json: { status: "failed", error_message: "視聴状態を更新できません" }, status: :bad_gateway
+      return
+    end
+
+    render json: response[:body], status: response[:status]
   end
 end

@@ -2,6 +2,7 @@
 
 class AdminController < ApplicationController
   include CompatReadFlags
+  include CompatSession
   include Devise::Controllers::Rememberable
   include ControllerHelpers
   include UserBotCookies

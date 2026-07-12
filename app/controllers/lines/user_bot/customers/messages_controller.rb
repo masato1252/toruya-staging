@@ -5,7 +5,21 @@ class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardCon
 
   def index
     if compat_read_enabled?
-      render json: { messages: [], customers: [] }
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      payload = owner_id && compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/customer/messages",
+        {
+          customer_id: params[:id],
+          oldest_message_at: params[:oldest_message_at],
+          oldest_message_id: params[:oldest_message_id]
+        }.compact
+      )
+
+      if payload
+        render json: payload
+      else
+        render json: { status: "failed", error_message: "メッセージの取得に失敗しました" }, status: :bad_gateway
+      end
       return
     end
 

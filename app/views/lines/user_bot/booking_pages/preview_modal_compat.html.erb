@@ -1,0 +1,13 @@
+<%= react_component("user_bot/booking_pages/compat_preview_modal", {
+  pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/booking_pages/#{params[:id]}/preview_modal",
+  labels: {
+    title: t("settings.booking_page.preview_title"),
+    preview: t("common.preview"),
+    booking_option_required_time: t("settings.booking_page.form.booking_option_required_time"),
+    minute: t("common.minute"),
+    copy_url: t("action.copy_url2"),
+    copy_code: t("action.copy_code"),
+    copied: t("common.copied"),
+    share_button: t("settings.booking_page.share_button_text"),
+  },
+}, { camelize_props: false }) %>

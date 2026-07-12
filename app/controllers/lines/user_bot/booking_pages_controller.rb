@@ -70,6 +70,15 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def update
+    if compat_read_data_plane?
+      owner_id = compat_booking_page_owner_id
+      result = compat_v1_put(
+        "/lines/user_bot/owner/#{owner_id}/booking_pages/#{params[:id]}",
+        params.permit!.to_h
+      )
+      return render_compat_booking_page_result(result)
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     outcome = ::BookingPages::Update.run(booking_page: @booking_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
@@ -88,6 +97,21 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def delete_option
+    if compat_read_data_plane?
+      owner_id = compat_booking_page_owner_id
+      result = compat_v1_delete(
+        "/lines/user_bot/owner/#{owner_id}/booking_pages/#{params[:id]}/booking_options/#{params[:booking_option_id]}"
+      )
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_booking_page_path(owner_id, params[:id], anchor: "new_option")
+      else
+        redirect_to lines_user_bot_booking_page_path(owner_id, params[:id], anchor: "new_option"),
+          alert: result&.dig("error_message") || I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     if @booking_page.booking_page_options.count > 1
@@ -100,6 +124,20 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/booking_pages/#{params[:id]}")
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_booking_pages_path(business_owner_id: owner_id),
+          notice: I18n.t("common.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_booking_pages_path(business_owner_id: owner_id),
+          alert: result&.dig("error_message")
+      end
+      return
+    end
+
     booking_page = Current.business_owner.booking_pages.find(params[:id])
 
     if booking_page.update(deleted_at: Time.current)
@@ -110,6 +148,11 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def preview_modal
+    if compat_read_data_plane?
+      render :preview_modal_compat, layout: false
+      return
+    end
+
     @booking_page = Current.business_owner.booking_pages.find(params[:id])
     @booking_option = @booking_page.booking_options.first
 
@@ -131,6 +174,15 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   def update_booking_options_order
+    if compat_read_data_plane?
+      owner_id = compat_booking_page_owner_id
+      result = compat_v1_put(
+        "/lines/user_bot/owner/#{owner_id}/booking_pages/#{params[:id]}/update_booking_options_order",
+        booking_option_ids: Array(params[:booking_option_ids])
+      )
+      return render_compat_booking_page_result(result)
+    end
+
     booking_page = Current.business_owner.booking_pages.find(params[:id])
     outcome = BookingPages::BookingOptionsOrder.run(booking_page: booking_page, booking_option_ids: params[:booking_option_ids])
 
@@ -139,6 +191,19 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   end
 
   private
+
+  def compat_booking_page_owner_id
+    resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+  end
+
+  def render_compat_booking_page_result(result)
+    if result&.dig("status") == "successful"
+      render json: result
+    else
+      render json: result || { status: "failed", error_message: "予約ページの更新に失敗しました" },
+             status: :unprocessable_entity
+    end
+  end
 
   def menu_options
     Current.business_owner.menus.map do |menu|

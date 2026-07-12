@@ -14,6 +14,37 @@ module OnlineServices
     end
 
     def create
+      if compat_public_read_for_owner?(online_service.user_id)
+        customer = current_customer
+        unless customer
+          render json: { status: "failed", error_message: "顧客情報が見つかりません" }, status: :unprocessable_entity
+          return
+        end
+
+        response = compat_v1_post_response(
+          "/online_services/#{params[:slug]}/customer_payments",
+          {
+            customer_id: customer.id,
+            social_service_user_id: current_social_customer&.social_user_id,
+            encrypted_customer_id: params[:encrypted_customer_id],
+            encrypted_social_service_user_id: params[:encrypted_social_service_user_id],
+            token: params[:token],
+            payment_intent_id: params[:payment_intent_id],
+            setup_intent_id: params[:setup_intent_id],
+            stripe_subscription_id: params[:stripe_subscription_id],
+            order_id: params[:order_id]
+          }.compact
+        )
+
+        unless response
+          render json: { status: "failed", error_message: "決済に失敗しました" }, status: :bad_gateway
+          return
+        end
+
+        render json: response[:body], status: response[:status]
+        return
+      end
+
       relation = online_service.online_service_customer_relations.where(customer: current_customer).last
 
       store_outcome = nil
@@ -92,6 +123,34 @@ module OnlineServices
     end
 
     def change_card
+      if compat_public_read_for_owner?(online_service.user_id)
+        customer = current_customer
+        social_customer = current_social_customer
+        unless customer
+          render json: { message: "顧客情報が見つかりません" }, status: :unprocessable_entity
+          return
+        end
+
+        response = compat_v1_put_response(
+          "/online_services/#{params[:slug]}/customer_payments/change_card",
+          {
+            customer_id: customer.id,
+            social_service_user_id: social_customer&.social_user_id,
+            encrypted_customer_id: params[:encrypted_customer_id],
+            token: params[:token],
+            setup_intent_id: params[:setup_intent_id]
+          }.compact
+        )
+
+        unless response
+          render json: { message: "カード情報の更新に失敗しました" }, status: :unprocessable_entity
+          return
+        end
+
+        render json: response[:body], status: response[:status]
+        return
+      end
+
       outcome = Customers::StoreStripeCustomer.run(
         customer: current_customer,
         authorize_token: params[:token],

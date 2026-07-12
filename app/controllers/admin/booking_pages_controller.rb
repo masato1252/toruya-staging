@@ -3,7 +3,7 @@
 module Admin
   class BookingPagesController < AdminController
     def index
-      if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      if compat_read_data_plane?
         @booking_pages = []
         @lookup_user_id = params[:user_id].presence&.to_i
         @lookup_user_id = nil if @lookup_user_id && !@lookup_user_id.positive?

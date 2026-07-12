@@ -19,6 +19,12 @@ class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardCon
   end
 
   def create
+    if compat_read_data_plane?
+      return render_compat_sale_creation(
+        "/lines/user_bot/owner/#{compat_sale_owner_id}/sales/booking_pages"
+      )
+    end
+
     outcome = ::Sales::BookingPages::Create.run(
       user: Current.business_owner,
       id: params[:id],
@@ -32,5 +38,30 @@ class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardCon
     )
 
     return_json_response(outcome, { sale_page_id: outcome.result&.slug, redirect_to: lines_user_bot_sales_path })
+  end
+
+  private
+
+  def compat_sale_owner_id
+    resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+  end
+
+  def render_compat_sale_creation(path)
+    response = compat_v1_post_response(path, compat_sale_creation_payload)
+    return render json: { status: "failed", error_message: "販売ページの保存に失敗しました" }, status: :bad_gateway unless response
+
+    render json: response[:body], status: response[:status]
+  end
+
+  def compat_sale_creation_payload
+    params.to_unsafe_h.except(
+      "action",
+      "authenticity_token",
+      "business_owner_id",
+      "commit",
+      "controller",
+      "format",
+      "utf8"
+    )
   end
 end

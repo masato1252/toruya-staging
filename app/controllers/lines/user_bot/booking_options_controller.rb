@@ -16,6 +16,15 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def create
+    if compat_read_data_plane?
+      owner_id = compat_booking_option_owner_id
+      result = compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/booking_options",
+        params.permit!.to_h
+      )
+      return render_compat_booking_option_result(result)
+    end
+
     outcome = ::BookingOptions::Create.run(params.permit!.to_h.merge(user: Current.business_owner))
 
     if outcome.valid?
@@ -78,6 +87,15 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def update
+    if compat_read_data_plane?
+      owner_id = compat_booking_option_owner_id
+      result = compat_v1_put(
+        "/lines/user_bot/owner/#{owner_id}/booking_options/#{params[:id]}",
+        params.permit!.to_h
+      )
+      return render_compat_booking_option_result(result)
+    end
+
     @booking_option = Current.business_owner.booking_options.find(params[:id])
 
     outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: params.permit!.to_h, update_attribute: params[:attribute])
@@ -86,6 +104,15 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def reorder_menu_priority
+    if compat_read_data_plane?
+      owner_id = compat_booking_option_owner_id
+      result = compat_v1_patch(
+        "/lines/user_bot/owner/#{owner_id}/booking_options/#{params[:id]}/reorder_menu_priority",
+        params.permit(sorted_menus_ids: []).to_h
+      )
+      return head(result ? :ok : :unprocessable_entity)
+    end
+
     @booking_option = Current.business_owner.booking_options.find(params[:id])
 
     outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: params.permit!.to_h, update_attribute: "menus_priority")
@@ -94,6 +121,19 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def delete_menu
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/booking_options/#{params[:id]}/menus/#{params[:menu_id]}")
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_booking_option_path(owner_id, params[:id], anchor: "new_menu")
+      else
+        redirect_to lines_user_bot_booking_option_path(owner_id, params[:id], anchor: "new_menu"),
+          alert: result&.dig("error_message") || I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      return
+    end
+
     @booking_option = Current.business_owner.booking_options.find(params[:id])
 
     @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])&.destroy
@@ -103,6 +143,22 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/booking_options/#{params[:id]}")
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_booking_options_path(owner_id), notice: I18n.t("common.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_booking_option_path(owner_id, params[:id]),
+          flash: {
+            alert: result&.dig("error_message") ||
+              I18n.t("active_interaction.errors.models.booking_options/delete.attributes.booking_option.be_used_by_booking_page")
+          }
+      end
+      return
+    end
+
     booking_option = Current.business_owner.booking_options.find(params[:id])
 
     outcome = BookingOptions::Delete.run(booking_option: booking_option)
@@ -115,6 +171,19 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   end
 
   private
+
+  def compat_booking_option_owner_id
+    resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+  end
+
+  def render_compat_booking_option_result(result)
+    if result&.dig("status") == "successful"
+      render json: result
+    else
+      render json: result || { status: "failed", error_message: "予約メニューの更新に失敗しました" },
+             status: :unprocessable_entity
+    end
+  end
 
   def menu_options
     Current.business_owner.menus.map do |menu|

@@ -7,6 +7,51 @@
       </h4>
     </div>
     <div class="modal-body">
+      <% if @data_change %>
+        <% current = @data_change.fetch("current", {}) %>
+        <% requested = @data_change.fetch("requested", {}) %>
+        <% current_address = current.fetch("address_details", {}) %>
+        <% requested_address = requested.fetch("address_details", {}) %>
+        <% name_fields = %w[last_name first_name phonetic_last_name phonetic_first_name] %>
+        <% address_fields = %w[zip_code region city street1 street2] %>
+        <%= t("dashboard.modal.customer.customer_change_request_desc", customer_name: [current["last_name"], current["first_name"]].compact.join(" ")) %><br /><br />
+        <div class="reservation-info-row">
+          <strong><%= I18n.t("dashboard.modal.customer.current_info") %>:</strong>
+          <p>
+            <% name_fields.each do |field| %>
+              <% next unless requested.key?(field) && !requested[field].nil? %>
+              <%= Customer.human_attribute_name(field) %>: <%= current[field].presence || "No-data" %><br />
+            <% end %>
+            <% if requested.key?("phone_number") && !requested["phone_number"].nil? %>
+              <%= Customer.human_attribute_name("phone_number") %>: <%= current["phone_number"].presence || "No-data" %><br />
+            <% end %>
+            <% if requested.key?("email") && !requested["email"].nil? %>
+              <%= Customer.human_attribute_name("email") %>: <%= current["email"].presence || "No-data" %><br />
+            <% end %>
+            <% if requested_address.present? %>
+              <%= Customer.human_attribute_name("address") %>: <%= address_fields.map { |field| current_address[field] }.compact.join %><br />
+            <% end %>
+          </p>
+        </div>
+        <div class="reservation-info-row">
+          <strong><%= I18n.t("dashboard.modal.customer.change_request_info") %>:</strong>
+          <p>
+            <% name_fields.each do |field| %>
+              <% next unless requested.key?(field) && !requested[field].nil? %>
+              <%= Customer.human_attribute_name(field) %>: <%= requested[field] %><br />
+            <% end %>
+            <% if requested.key?("phone_number") && !requested["phone_number"].nil? %>
+              <%= Customer.human_attribute_name("phone_number") %>: <%= requested["phone_number"] %><br />
+            <% end %>
+            <% if requested.key?("email") && !requested["email"].nil? %>
+              <%= Customer.human_attribute_name("email") %>: <%= requested["email"] %><br />
+            <% end %>
+            <% if requested_address.present? %>
+              <%= Customer.human_attribute_name("address") %>: <%= address_fields.map { |field| requested_address[field].presence || current_address[field] }.compact.join %><br />
+            <% end %>
+          </p>
+        </div>
+      <% else %>
       <%= t("dashboard.modal.customer.customer_change_request_desc", customer_name: @customer.name) %><br /><br />
 
       <div class="reservation-info-row">
@@ -43,14 +88,20 @@
         </p>
       </div>
       <%= render "reservations/show_modal/booking_from", reservation_customer: @reservation_customer, reservation: @reservation %>
+      <% end %>
     </div>
     <div class="modal-footer">
       <%= link_to t("action.save_changes"),
-        site_routing_helper.save_changes_user_customers_path(@reservation_customer),
+        @data_change ?
+          save_changes_lines_user_bot_customers_path(@compat_owner_id, params[:reservation_customer_id]) :
+          site_routing_helper.save_changes_user_customers_path(@reservation_customer),
         class: "btn btn-yellow",
         remote: true,
         method: :patch,
-        data: { controller: "save-customer-changes", save_customer_changes_customer_id: @reservation_customer.customer_id }
+        data: {
+          controller: "save-customer-changes",
+          save_customer_changes_customer_id: @data_change ? @data_change["customer_id"] : @reservation_customer.customer_id
+        }
       %>
       <%= link_to t("action.ignore"), "#", class: "btn btn-gray", data: { dismiss: "modal" } %>
     </div>

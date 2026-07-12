@@ -4,6 +4,7 @@ require "message_encryptor"
 
 class LinesController < ActionController::Base
   include ControllerHelpers
+  include CompatSession
   include ProductLocale
   include UserBotCookies
 
@@ -35,12 +36,27 @@ class LinesController < ActionController::Base
   end
 
   def update_customer_address
-    if customer && social_customer.customer != customer
+    current_social_customer = social_customer
+    if current_social_customer.blank? || (customer && current_social_customer.customer != customer)
       head :unprocessable_entity
       return
     end
 
-    Customers::UpdateAddress.run(customer: social_customer.customer, address_details: params.permit!.to_h[:address_details])
+    if compat_public_read_for_owner?(current_social_customer.user_id)
+      result = compat_v1_put(
+        "/lines/update_customer_address",
+        {
+          owner_user_id: current_social_customer.user_id,
+          customer_id: current_social_customer.customer_id,
+          social_service_user_id: current_social_customer.social_user_id,
+          address_details: params.permit!.to_h[:address_details]
+        }
+      )
+      head(result ? :ok : :unprocessable_entity)
+      return
+    end
+
+    Customers::UpdateAddress.run(customer: current_social_customer.customer, address_details: params.permit!.to_h[:address_details])
 
     head :ok
   end

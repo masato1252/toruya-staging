@@ -123,6 +123,17 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/settings/shops/#{params[:id]}")
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_settings_shops_path(owner_id), notice: I18n.t("settings.shop.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_settings_shops_path(owner_id), alert: result&.dig("error_message") || I18n.t("settings.shop.cannot_delete_default_message")
+      end
+      return
+    end
+
     shop = Current.business_owner.shops.find(params[:id])
     default_shop = Current.business_owner.shops.active.order(:id).first
 

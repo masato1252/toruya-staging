@@ -3,6 +3,8 @@
 module Admin
   class WithdrawalsController < AdminController
     def mark_paid
+      return compat_mark_paid if ENV["COMPAT_API_READ_ENABLED"] == "true"
+
       PaymentWithdrawals::MarkPaid.run!(payment_withdrawal: PaymentWithdrawal.find(params[:id]))
 
       redirect_to admin_path
@@ -28,6 +30,20 @@ module Admin
       }
 
       render options
+    end
+
+    private
+
+    def compat_mark_paid
+      response = compat_v1_post_response("/admin/withdrawals/#{params[:id]}/mark_paid")
+      unless response&.dig(:success)
+        redirect_to admin_path, alert: "出金の更新に失敗しました"
+        return
+      end
+
+      # v1 only transitions pending -> completed; it does not initiate a
+      # Stripe, Square, or bank payout.
+      redirect_to response[:body]["redirect_to"].presence || admin_path
     end
   end
 end

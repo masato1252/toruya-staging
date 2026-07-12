@@ -3,6 +3,7 @@
 class EventsController < ActionController::Base
   layout "booking"
   include ControllerHelpers
+  include CompatReadFlags
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -13,8 +14,9 @@ class EventsController < ActionController::Base
 
   def show
     @current_event_line_user = current_event_line_user
+    @compat_public_read = compat_public_read_for_owner?(@event.user_id)
 
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if @compat_public_read
       return
     end
 

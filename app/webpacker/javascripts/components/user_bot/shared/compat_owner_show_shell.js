@@ -219,6 +219,7 @@ export default function CompatOwnerShowShell({
   const [vm, setVm] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [stateActionLoading, setStateActionLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -250,6 +251,31 @@ export default function CompatOwnerShowShell({
   const draftLabel = labels.draft || "配信中止";
   const confirmDelete = labels.confirm_delete || "よろしいですか？";
   const confirmDraft = labels.confirm_draft || labels.confirm_delete || "よろしいですか？";
+  const runStateAction = async (event, btn) => {
+    event.preventDefault();
+    if (stateActionLoading) return;
+    if (btn.confirm && !window.confirm(btn.confirm)) return;
+
+    setStateActionLoading(true);
+    try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+      const response = await fetch(btn.href, {
+        method: btn.method || "POST",
+        headers: {
+          Accept: "application/json",
+          ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
+        },
+      });
+      const body = await response.json().catch(() => null);
+      if (!response.ok || body?.status === "failed") {
+        throw new Error(body?.error_message || `状態更新に失敗しました (${response.status})`);
+      }
+      window.location.reload();
+    } catch (stateError) {
+      setError(stateError.message || "状態更新に失敗しました");
+      setStateActionLoading(false);
+    }
+  };
 
   if (loading) return <p>{loadingText}</p>;
   if (error) return <p className="danger">{error}</p>;
@@ -317,9 +343,10 @@ export default function CompatOwnerShowShell({
                 <a
                   className={btn.class_name || "btn enhanced BTNtarco"}
                   href={btn.href}
-                  data-confirm={btn.confirm || undefined}
+                  onClick={(event) => runStateAction(event, btn)}
+                  aria-disabled={stateActionLoading}
                 >
-                  {btn.label}
+                  {stateActionLoading ? loadingText : btn.label}
                 </a>
               </dd>
             ))}

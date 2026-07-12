@@ -103,6 +103,18 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def data_changed
     authorize! :edit, Customer
 
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil)
+      payload = owner_id && compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/customers/data_changed/#{params[:reservation_customer_id]}"
+      )
+      @data_change = payload&.dig("data")
+      return head :not_found unless @data_change
+
+      @compat_owner_id = owner_id
+      return render template: "customers/data_changed", layout: false
+    end
+
     @reservation_customer = ReservationCustomer.find(params[:reservation_customer_id])
     @customer = @reservation_customer.customer
     @reservation = @reservation_customer.reservation
@@ -112,6 +124,14 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
   def save_changes
     authorize! :edit, Customer
+
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil)
+      result = owner_id && compat_v1_patch(
+        "/lines/user_bot/owner/#{owner_id}/customers/save_changes/#{params[:reservation_customer_id]}"
+      )
+      return head(result&.dig("status") == "successful" ? :ok : :unprocessable_entity)
+    end
 
     outcome = ::Customers::RequestUpdate.run(reservation_customer: ReservationCustomer.find(params[:reservation_customer_id]))
 

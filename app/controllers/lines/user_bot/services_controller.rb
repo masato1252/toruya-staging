@@ -85,6 +85,19 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/services/#{params[:id]}")
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_services_path(owner_id), notice: I18n.t("common.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_service_path(owner_id, params[:id]),
+          alert: result&.dig("error_message") || I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      return
+    end
+
     service = Current.business_owner.online_services.find(params[:id])
     outcome = OnlineServices::Delete.run(online_service: service)
 

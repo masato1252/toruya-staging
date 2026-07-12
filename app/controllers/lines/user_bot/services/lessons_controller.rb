@@ -64,6 +64,19 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete(
+        "/lines/user_bot/owner/#{owner_id}/services/#{params[:service_id]}/lessons/#{params[:id]}"
+      )
+
+      if result&.dig("status") != "successful"
+        flash[:alert] = result&.dig("error_message") || I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      redirect_to lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: owner_id)
+      return
+    end
+
     lesson = Lesson.find(params[:id])
 
     lesson.destroy!

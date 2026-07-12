@@ -4,6 +4,7 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   include CrossAccountRedirect
   redirect_to_correct_owner_for :line_notice_requests, only: [:show, :approve, :success]
 
+  before_action :proxy_compat_free_approval, only: [:approve]
   before_action :set_line_notice_request, only: [:show, :approve, :success]
 
   # GET /lines/user_bot/owner/:business_owner_id/line_notice_requests/:id
@@ -141,6 +142,38 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   end
 
   private
+
+  # The browser intentionally keeps this endpoint on Rails: paid approval owns
+  # the existing Stripe/3DS interaction. For a migrated owner, proxy only the
+  # no-charge free-trial mutation to v1 so Rails never falls back to an AR write
+  # after v1 has identified the request as a free trial.
+  def proxy_compat_free_approval
+    return unless compat_read_data_plane?
+
+    request_id = params[:id].to_i
+    return unless request_id.positive?
+
+    path = "/lines/user_bot/owner/#{business_owner_id}/line_notice_requests/#{request_id}"
+    context = compat_fetch_v1_json("#{path}/page_context")
+    form = context&.dig("data", "edit_form") || {}
+    return unless form["can_approve"] && form["is_free_trial"]
+
+    result = compat_v1_post("#{path}/approve", {})
+    if result&.dig("status") == "successful"
+      # The success page still renders legacy AR associations. Return to the
+      # v1-backed show page instead, which now displays the approved state.
+      redirect_to lines_user_bot_line_notice_request_path(
+        business_owner_id: business_owner_id,
+        id: request_id
+      ), notice: "リクエストを承認しました"
+    else
+      redirect_to lines_user_bot_line_notice_request_path(
+        business_owner_id: business_owner_id,
+        id: request_id
+      ),
+                  alert: I18n.t("line_notice_requests.errors.cannot_be_approved")
+    end
+  end
 
   def set_line_notice_request
     if compat_read_data_plane? && action_name == "show"

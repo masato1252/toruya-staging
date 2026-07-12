@@ -31,6 +31,8 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
   end
 
   def assign
+    return compat_service_customer_mutation("assign", customer_id: params[:customer_id]) if compat_read_data_plane?
+
     @online_service = Current.business_owner.online_services.find(params[:service_id])
     @customer = current_user.customers.find(params[:customer_id])
 
@@ -54,6 +56,8 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
   end
 
   def approve
+    return compat_service_customer_mutation("approve") if compat_read_data_plane?
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     relation = online_service.online_service_customer_relations.find(params[:id])
 
@@ -67,6 +71,8 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
   end
 
   def cancel
+    return compat_service_customer_mutation("cancel") if compat_read_data_plane?
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     relation = online_service.online_service_customer_relations.find(params[:id])
 
@@ -96,5 +102,28 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
       stripe_subscription_id: params[:stripe_subscription_id]
     )
     redirect_to lines_user_bot_service_customer_path(business_owner_id: business_owner_id, service_id: online_service.id, id: relation.id)
+  end
+
+  private
+
+  def compat_service_customer_mutation(action, customer_id: nil)
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+    path = "/lines/user_bot/owner/#{owner_id}/services/#{params[:service_id]}/customers"
+    path = "#{path}/assign" if action == "assign"
+    path = "#{path}/#{params[:id]}/#{action}" unless action == "assign"
+    body = customer_id ? { customer_id: customer_id } : {}
+    result =
+      if action == "cancel"
+        compat_v1_delete(path, body)
+      else
+        compat_v1_post(path, body)
+      end
+
+    if result&.dig("status") == "successful"
+      redirect_to(result.dig("data", "redirect_to").presence || lines_user_bot_service_customers_path(business_owner_id: owner_id, service_id: params[:service_id]))
+    else
+      flash[:alert] = I18n.t("common.update_failed_message")
+      redirect_to lines_user_bot_service_customers_path(business_owner_id: owner_id, service_id: params[:service_id])
+    end
   end
 end

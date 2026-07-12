@@ -14,6 +14,8 @@ module Admin
   end
 
     def create
+      return compat_create if ENV["COMPAT_API_READ_ENABLED"] == "true"
+
       if params[:message].present?
         SocialUserMessages::Create.run!(
           social_user: SocialUser.find_by!(social_service_user_id: params[:customer_id]),
@@ -48,6 +50,8 @@ module Admin
     end
 
     def destroy
+      return compat_destroy if ENV["COMPAT_API_READ_ENABLED"] == "true"
+
       message = SocialUserMessage.find(params[:id])
 
       unless message.sent_at
@@ -65,6 +69,40 @@ module Admin
 
       outcome = Ai::Query.run(user_id: "toruya", question: params[:question], prompt: params[:prompt])
       return_json_response(outcome, outcome.result)
+    end
+
+    private
+
+    def compat_create
+      payload = {
+        customer_id: params[:customer_id],
+        message: params[:message],
+        schedule_at: params[:schedule_at]
+      }
+      response =
+        if params[:image].present?
+          compat_v1_multipart_response(Net::HTTP::Post, "/admin/chats", payload, image: params[:image])
+        else
+          compat_v1_post_response("/admin/chats", payload)
+        end
+      render_compat_chat_response(response)
+    end
+
+    def compat_destroy
+      response = compat_v1_json_response(
+        Net::HTTP::Delete,
+        "/admin/chats/#{params[:id]}",
+        customer_id: params[:customer_id]
+      )
+      return render json: { status: "failed", error_message: "メッセージの削除に失敗しました" }, status: :bad_gateway unless response
+
+      render json: response[:body], status: response[:status]
+    end
+
+    def render_compat_chat_response(response)
+      return render json: { status: "failed", error_message: "メッセージの送信に失敗しました" }, status: :bad_gateway unless response
+
+      render json: response[:body], status: response[:status]
     end
   end
 end

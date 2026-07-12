@@ -196,6 +196,31 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete(
+        "/lines/user_bot/owner/#{owner_id}/shops/#{params[:shop_id]}/reservations/#{params[:id]}"
+      )
+
+      if result&.dig("status") == "successful"
+        if params[:from] == "customer_dashboard" && params[:customer_id].present?
+          redirect_to SiteRouting.new(view_context).customers_path(
+            owner_id,
+            shop_id: params[:shop_id],
+            customer_id: params[:customer_id]
+          )
+        else
+          redirect_to lines_user_bot_schedules_path(business_owner_id: owner_id),
+            notice: I18n.t("reservation.delete_successfully_message")
+        end
+      else
+        redirect_to lines_user_bot_schedules_path(business_owner_id: owner_id),
+          alert: result&.dig("error_message") ||
+            I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      return
+    end
+
     authorize! :edit, @reservation
 
     Reservations::Delete.run!(reservation: @reservation)
@@ -263,6 +288,8 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_reservation
+    return if compat_read_data_plane?
+
     @reservation = shop.reservations.find(params[:id])
   end
 

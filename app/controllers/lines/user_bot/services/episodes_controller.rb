@@ -72,6 +72,19 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete(
+        "/lines/user_bot/owner/#{owner_id}/services/#{params[:service_id]}/episodes/#{params[:id]}"
+      )
+
+      if result&.dig("status") != "successful"
+        flash[:alert] = result&.dig("error_message") || I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      redirect_to lines_user_bot_service_episodes_path(owner_id, params[:service_id])
+      return
+    end
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     episode = online_service.episodes.find(params[:id])
 

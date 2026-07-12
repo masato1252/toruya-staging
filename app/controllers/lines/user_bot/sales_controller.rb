@@ -48,6 +48,18 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/sales/#{params[:id]}")
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_sales_path(business_owner_id: owner_id), notice: I18n.t("common.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_sales_path(business_owner_id: owner_id)
+      end
+      return
+    end
+
     sale_page = Current.business_owner.sale_pages.find(params[:id])
 
     if sale_page.update(deleted_at: Time.current)

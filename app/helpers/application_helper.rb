@@ -6,7 +6,9 @@ module ApplicationHelper
   include MultiShopHelper
 
   def compat_read_data_plane?
-    ENV["COMPAT_API_READ_ENABLED"] == "true" && ENV["COMPAT_API_ORIGIN"].present?
+    return false unless controller.respond_to?(:compat_read_data_plane?)
+
+    controller.compat_read_data_plane?
   end
 
   def compat_read_enabled?

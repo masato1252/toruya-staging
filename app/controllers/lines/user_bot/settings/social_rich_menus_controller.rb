@@ -92,6 +92,21 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete(
+        "/lines/user_bot/owner/#{owner_id}/settings/social_account/social_rich_menus/#{params[:id]}"
+      )
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: owner_id)
+      else
+        redirect_to lines_user_bot_settings_social_account_social_rich_menu_path(params[:id], business_owner_id: owner_id),
+          alert: result&.dig("error_message") || I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      return
+    end
+
     @rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
     outcome = RichMenus::Delete.run(social_rich_menu: @rich_menu)
 

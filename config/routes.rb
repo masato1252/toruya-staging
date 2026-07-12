@@ -143,7 +143,7 @@ Rails.application.routes.draw do
             end
           end
 
-          resources :broadcasts, only: [:index, :new, :create, :show, :update, :edit] do
+          resources :broadcasts, only: [:index, :new, :create, :show, :update, :edit, :destroy] do
             collection do
               get "/new/social_service_user_id/:social_service_user_id", action: "new"
               get "/social_service_user_id/:social_service_user_id", action: "index"
@@ -470,7 +470,7 @@ Rails.application.routes.draw do
 
           resources :online_service_customer_relations, only: [:show]
           resources :custom_schedules, only: [:show, :create, :update, :destroy]
-          resources :booking_page_special_dates, only: [:show]
+          resources :booking_page_special_dates, only: [:show, :create, :update, :destroy]
 
           resources :warnings, only: [], constraints: ::XhrConstraint do
             collection do
@@ -772,6 +772,7 @@ Rails.application.routes.draw do
     scope "(:locale)", locale: /tw|ja/, defaults: { locale: "ja" } do
       namespace :admin do
         get "as_user"
+        get "compat_read", to: "compat_reads#show"
         get "/", to: "dashboards#index"
         get "logs"
 

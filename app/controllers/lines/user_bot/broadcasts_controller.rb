@@ -2,7 +2,7 @@
 
 class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   include CrossAccountRedirect
-  redirect_to_correct_owner_for :broadcasts, only: [:show, :edit, :update, :draft, :activate, :clone]
+  redirect_to_correct_owner_for :broadcasts, only: [:show, :edit, :update, :draft, :activate, :clone, :destroy]
 
   def index
     if compat_read_enabled?
@@ -126,6 +126,26 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
     Broadcasts::Clone.run!(broadcast: broadcast)
 
     redirect_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id), notice: I18n.t("user_bot.dashboards.broadcasts.clone_successfully")
+  end
+
+  def destroy
+    unless compat_read_data_plane?
+      redirect_to lines_user_bot_broadcasts_path(business_owner_id: business_owner_id),
+        alert: I18n.t("common.operation_failed", default: "削除に失敗しました")
+      return
+    end
+
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+    result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/broadcasts/#{params[:id]}")
+
+    if result&.dig("status") == "successful"
+      redirect_to lines_user_bot_broadcasts_path(business_owner_id: owner_id),
+        notice: I18n.t("common.delete_successfully_message")
+    else
+      redirect_to lines_user_bot_broadcast_path(params[:id], business_owner_id: owner_id),
+        alert: result&.dig("error_message") ||
+          I18n.t("common.operation_failed", default: "削除に失敗しました")
+    end
   end
 
   def customers_count

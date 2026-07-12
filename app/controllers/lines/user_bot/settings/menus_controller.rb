@@ -72,6 +72,17 @@ class Lines::UserBot::Settings::MenusController < Lines::UserBotDashboardControl
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/settings/menus/#{params[:id]}")
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_settings_menus_path(owner_id), notice: I18n.t("common.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_settings_menu_path(owner_id, params[:id]), flash: { alert: I18n.t("active_interaction.errors.models.menus/delete.attributes.menu.be_used_by_booking_page") }
+      end
+      return
+    end
+
     menu = Current.business_owner.menus.find(params[:id])
     outcome = ::Menus::Delete.run(menu: menu)
 

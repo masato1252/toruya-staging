@@ -1,3 +1,21 @@
+<% content_for :title do %>
+  <title><%= @product_name %></title>
+<% end %>
+<%= content_for :meta_tags do %>
+  <meta name="description" content="<%= @product_name %> <%= @sale_page.content["desc1"] %> <%= @sale_page.content["desc2"] %>" />
+  <meta name="keywords" content="<%= [
+    "TORUYA SALONS", "美容室", "ヘアサロン", "Hair salon", "ヘアーサロン", "美容室", "Best hair", "The beauty salon", "salon school",
+  ].concat(@keywords).join(", ") %>" />
+  <meta property="og:site_name" content="Toruya">
+  <meta property="og:title" content="<%= @product_name %>">
+  <meta property="og:url" content="<%= sale_page_url(@sale_page.slug) %>">
+  <meta property="og:description" content="<%= @product_name %> <%= @sale_page.content["desc1"] %> <%= @sale_page.content["desc2"] %>">
+  <meta property="og:image" content="<%= @sale_page.serializer.attributes_hash.dig(:content, :picture_url) %>">
+  <% unless @sale_page.published %>
+    <meta name="robots" content="noindex">
+  <% end %>
+<% end %>
+
 <%= react_component("sale_pages/public_sale_shell", {
   slug: @sale_page.slug,
   supportFeatureFlags: support_feature_flags,

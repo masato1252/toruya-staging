@@ -64,6 +64,22 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def create
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/settings/staffs",
+        { phone_number_or_email: params[:phone_number_or_email] }
+      )
+
+      if result&.dig("status") == "successful"
+        redirect_to result.dig("redirect_to")
+      else
+        flash.now[:alert] = result&.dig("error_message") || I18n.t("common.operation_failed", default: "スタッフ招待に失敗しました")
+        render :new_compat
+      end
+      return
+    end
+
     outcome = Staffs::Invite.run(user: Current.business_owner, phone_number_or_email: params[:phone_number_or_email])
 
     if outcome.valid?
@@ -96,6 +112,18 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/settings/staffs/#{params[:id]}")
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_settings_staffs_path(owner_id), notice: I18n.t("common.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_settings_staffs_path(owner_id), alert: result&.dig("error_message") || I18n.t("common.operation_failed", default: "削除に失敗しました")
+      end
+      return
+    end
+
     authorize! :delete, Staff
     outcome = Staffs::Delete.run(staff: @staff)
 
@@ -107,6 +135,21 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   end
 
   def resend_activation
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/settings/staffs/#{params[:id]}/resend_activation"
+      )
+
+      if result&.dig("status") == "successful"
+        flash[:success] = I18n.t("settings.staff_account.sent_message")
+      else
+        flash[:alert] = result&.dig("error_message") || I18n.t("common.operation_failed", default: "再送に失敗しました")
+      end
+      redirect_back(fallback_location: lines_user_bot_settings_staff_path(owner_id, params[:id]))
+      return
+    end
+
     outcome = Notifiers::Users::Notifications::ActivateStaffAccount.run(receiver: @staff.staff_account, user: @staff.staff_account.owner)
 
     if outcome.valid?
@@ -120,7 +163,7 @@ class Lines::UserBot::Settings::StaffsController < Lines::UserBotDashboardContro
   private
 
   def set_staff
-    if compat_read_data_plane? && %w[show edit].include?(action_name)
+    if compat_read_data_plane? && %w[show edit destroy resend_activation].include?(action_name)
       return
     end
 

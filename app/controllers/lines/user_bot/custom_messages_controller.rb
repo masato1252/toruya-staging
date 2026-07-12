@@ -1,5 +1,7 @@
 class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardController
   def update
+    return compat_custom_message_mutation(:update) if compat_read_data_plane?
+
     service = params[:service_type].constantize.find_by(id: params[:service_id])
 
     if params[:id]
@@ -44,6 +46,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
   end
 
   def demo
+    return compat_custom_message_mutation(:demo) if compat_read_data_plane?
+
     service = params[:service_type].constantize.find_by(id: params[:service_id])
 
     message = CustomMessage.new(
@@ -59,6 +63,8 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
   end
 
   def destroy
+    return compat_custom_message_mutation(:destroy) if compat_read_data_plane?
+
     service = params[:service_type].constantize.find_by(id: params[:service_id])
     message = CustomMessage.find_by!(id: params[:id], service: service)
 
@@ -89,5 +95,54 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
       flex_template: params[:flex_template],
       params: params.permit!.to_h
     )
+  end
+
+  def compat_custom_message_mutation(action)
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+    service_type = params[:service_type].to_s
+    service_id = params[:service_id].to_i
+    message_id = params[:id].to_i
+    base_path =
+      if service_type == "BookingPage" && service_id.positive?
+        "/lines/user_bot/owner/#{owner_id}/booking_pages/#{service_id}/custom_messages"
+      else
+        "/lines/user_bot/owner/#{owner_id}/custom_messages"
+      end
+    body = {
+      service_type: service_type,
+      service_id: service_id,
+      scenario: params[:scenario],
+      content: action == :demo ? message_content : params[:content],
+      after_days: params[:after_days],
+      before_minutes: params[:before_minutes],
+      locale: params[:locale],
+      content_type: params[:content_type]
+    }.compact
+
+    result =
+      case action
+      when :update
+        body[:id] = message_id if params[:id].present?
+        compat_v1_put(base_path, body)
+      when :demo
+        compat_v1_post("#{base_path}/demo", body)
+      when :destroy
+        compat_v1_delete("#{base_path}/#{message_id}", body)
+      end
+
+    redirect_path = result&.dig("data", "redirect_to")
+    if result&.dig("status") == "successful"
+      return head :ok if action == :demo
+
+      redirect_to redirect_path.presence || lines_user_bot_settings_path(business_owner_id: owner_id),
+        notice: I18n.t(action == :destroy ? "common.delete_successfully_message" : "common.update_successfully_message")
+    else
+      if action == :demo
+        head :unprocessable_entity
+      else
+        redirect_to redirect_path.presence || lines_user_bot_settings_path(business_owner_id: owner_id),
+          alert: result&.dig("error_message") || I18n.t("common.operation_failed", default: "操作に失敗しました")
+      end
+    end
   end
 end

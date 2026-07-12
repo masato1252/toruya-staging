@@ -10,6 +10,7 @@ export default function PublicOnlineServiceMemberBootstrap({
   episodeId,
   customerId,
   lessonId,
+  encryptedCustomerId,
   encryptedSocialServiceUserId,
 }) {
   const [ctx, setCtx] = useState(null);
@@ -21,6 +22,10 @@ export default function PublicOnlineServiceMemberBootstrap({
     const params = new URLSearchParams();
     if (episodeId) params.set("episode_id", episodeId);
     if (customerId) params.set("customer_id", customerId);
+    if (encryptedCustomerId) params.set("encrypted_customer_id", encryptedCustomerId);
+    if (encryptedSocialServiceUserId) {
+      params.set("encrypted_social_service_user_id", encryptedSocialServiceUserId);
+    }
     const suffix = params.toString() ? `?${params.toString()}` : "";
     compatRead(`/online_services/${slug}/page_context${suffix}`)
       .then((body) => {
@@ -36,7 +41,7 @@ export default function PublicOnlineServiceMemberBootstrap({
     return () => {
       cancelled = true;
     };
-  }, [slug, episodeId, customerId]);
+  }, [slug, episodeId, customerId, encryptedCustomerId, encryptedSocialServiceUserId]);
 
   if (loading) return <p className="margin-around centerize">Loading...</p>;
   if (error) return <p className="danger margin-around">{error}</p>;
@@ -84,5 +89,6 @@ PublicOnlineServiceMemberBootstrap.propTypes = {
   episodeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   lessonId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  encryptedCustomerId: PropTypes.string,
   encryptedSocialServiceUserId: PropTypes.string,
 };

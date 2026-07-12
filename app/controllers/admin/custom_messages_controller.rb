@@ -3,7 +3,7 @@
 module Admin
   class CustomMessagesController < AdminController
     def scenarios
-      return if ENV["COMPAT_API_READ_ENABLED"] != "true"
+      return if ENV["COMPAT_API_READ_ENABLED"] == "true"
     end
 
     def scenario
@@ -26,6 +26,8 @@ module Admin
     end
 
     def create
+      return compat_create if ENV["COMPAT_API_READ_ENABLED"] == "true"
+
       outcome =
         CustomMessages::Users::Create.run(
           scenario: params[:scenario],
@@ -41,6 +43,8 @@ module Admin
     end
 
     def update
+      return compat_update if ENV["COMPAT_API_READ_ENABLED"] == "true"
+
       message = CustomMessage.find(params[:id])
       outcome = CustomMessages::Users::Update.run(
         custom_message: message,
@@ -123,6 +127,44 @@ module Admin
     end
 
     private
+
+    def compat_create
+      render_compat_message_response(
+        compat_v1_post_response(
+          "/admin/custom_messages/scenario/#{params[:scenario]}",
+          compat_message_payload
+        )
+      )
+    end
+
+    def compat_update
+      render_compat_message_response(
+        compat_v1_put_response(
+          "/admin/custom_messages/scenario/#{params[:scenario]}/#{params[:id]}",
+          compat_message_payload
+        )
+      )
+    end
+
+    def compat_message_payload
+      {
+        content: message_content,
+        flex_template: params[:flex_template],
+        after_days: params[:after_days],
+        nth_time: params[:nth_time],
+        content_type: params[:content_type],
+        locale: params[:locale]
+      }
+    end
+
+    def render_compat_message_response(response)
+      unless response
+        render json: { status: "failed", error_message: "メッセージの保存に失敗しました" }, status: :bad_gateway
+        return
+      end
+
+      render json: response[:body], status: response[:status]
+    end
 
     def message_content
       CustomMessages::BuildContent.run!(

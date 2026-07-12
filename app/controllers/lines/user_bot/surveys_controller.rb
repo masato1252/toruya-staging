@@ -79,6 +79,20 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def destroy
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_delete("/lines/user_bot/owner/#{owner_id}/surveys/#{params[:id]}")
+
+      if result&.dig("status") == "successful"
+        redirect_to lines_user_bot_surveys_path(business_owner_id: owner_id),
+                    notice: I18n.t("common.delete_successfully_message")
+      else
+        redirect_to lines_user_bot_survey_path(business_owner_id: owner_id, id: params[:id]),
+                    alert: result&.dig("error_message")
+      end
+      return
+    end
+
     @survey = current_user.surveys.find(params[:id])
     outcome = Surveys::Delete.run(survey: @survey)
 

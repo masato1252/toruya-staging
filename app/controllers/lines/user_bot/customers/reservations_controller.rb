@@ -47,6 +47,8 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def accept
+    return compat_reservation_customer_transition("accept") if compat_read_data_plane?
+
     outcome = ReservationCustomers::Accept.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id], current_staff: current_user_staff)
 
     if outcome.invalid?
@@ -60,6 +62,8 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def pend
+    return compat_reservation_customer_transition("pend") if compat_read_data_plane?
+
     outcome = ReservationCustomers::Pend.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
 
     if outcome.invalid?
@@ -73,6 +77,8 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def cancel
+    return compat_reservation_customer_transition("cancel") if compat_read_data_plane?
+
     outcome = ReservationCustomers::Cancel.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
 
     if outcome.invalid?
@@ -91,7 +97,46 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     render layout: false
   end
 
+  def compat_reservation_customer_transition(action)
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+    result = compat_v1_post(
+      "/lines/user_bot/owner/#{owner_id}/customer/reservations/#{params[:reservation_id]}/#{action}/#{params[:customer_id]}",
+      { current_user_id: resolve_compat_current_user_id(nil) }
+    )
+    flash[:alert] = I18n.t("common.operation_failed", default: "更新に失敗しました") unless result&.dig("status") == "successful"
+    redirect_back fallback_location: SiteRouting.new(view_context).customers_path(owner_id, customer_id: params[:customer_id])
+  end
+
   def refund
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/customer/reservations/#{params[:reservation_id]}/refund/#{params[:customer_id]}",
+        { amount: params[:amount] }
+      )
+      failure_path = lines_user_bot_customers_path(
+        business_owner_id: owner_id,
+        customer_id: params[:customer_id],
+        reservation_id: params[:reservation_id],
+        user_id: owner_id,
+        target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations]
+      )
+      success_path = lines_user_bot_customers_path(
+        business_owner_id: owner_id,
+        customer_id: params[:customer_id],
+        reservation_id: params[:reservation_id],
+        user_id: owner_id,
+        target_view: Customer::DASHBOARD_TARGET_VIEWS[:payments]
+      )
+
+      if result&.dig("status") == "successful"
+        redirect_to success_path
+      else
+        redirect_to failure_path, alert: I18n.t("common.operation_failed", default: "返金に失敗しました")
+      end
+      return
+    end
+
     reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
     customer = reservation_customer.customer
     paid_payment = customer.customer_payments.completed.where(product: reservation_customer).first
