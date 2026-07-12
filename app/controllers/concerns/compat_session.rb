@@ -195,6 +195,11 @@ module CompatSession
   def apply_compat_admin_proxy_headers(request, uri, method)
     secret = ENV["COMPAT_ADMIN_PROXY_SECRET"].presence
     admin_user = privileged_session_user if respond_to?(:privileged_session_user, true)
+    # Admin::CompatReadsController has already enforced AdminController's
+    # Devise authorization. Some valid admin roles are not included in the
+    # super-admin/chat-operator convenience predicate, so sign that verified
+    # session rather than turning the browser read into a 502.
+    admin_user ||= warden.authenticate(scope: :user) if respond_to?(:warden, true)
     raise "COMPAT_ADMIN_PROXY_SECRET is required for admin compat requests" if secret.blank?
     raise "Admin session is required for admin compat requests" unless admin_user
 
