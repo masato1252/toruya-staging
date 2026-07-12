@@ -15,6 +15,9 @@ import I18n from 'i18n-js/index.js.erb';
 import { compatRead } from "../../../../libraries/compat_api";
 import { PaymentServices } from "user_bot/api";
 
+const PLAN_ORDER = ["free", "basic", "premium"];
+
+// Loader shell: keep hooks stable across async page_context fetch (React #310).
 const Plans = ({props: initialProps}) => {
   const [readyProps, setReadyProps] = useState(
     initialProps.pageContextPath ? null : initialProps,
@@ -48,11 +51,13 @@ const Plans = ({props: initialProps}) => {
     };
   }, [initialProps]);
 
-  const props = readyProps;
-
   if (loadError) return <p className="danger">{loadError}</p>;
-  if (!props) return <p>{I18n.t("common.processing")}</p>;
+  if (!readyProps) return <p>{I18n.t("common.processing")}</p>;
 
+  return <PlansLoaded props={readyProps} />;
+};
+
+const PlansLoaded = ({props}) => {
   const freePlan = props.plans["free"];
   const basicPlan = props.plans["basic"];
   const premiumPlan = props.plans["premium"];
@@ -177,8 +182,8 @@ const Plans = ({props: initialProps}) => {
     window.location = response.data.redirect_path || Routes.lines_user_bot_settings_plans_path(props.business_owner_id);
   };
 
-  const subscriptionPlanIndex = (planLevel) => Plans.planOrder.indexOf(planLevel)
-  const currentPlanIndex = () => Plans.planOrder.indexOf(props.current_plan_level)
+  const subscriptionPlanIndex = (planLevel) => PLAN_ORDER.indexOf(planLevel)
+  const currentPlanIndex = () => PLAN_ORDER.indexOf(props.current_plan_level)
   const isUpgrade = (planLevel) => subscriptionPlanIndex(planLevel) > currentPlanIndex()
   const handleFailure = (error) => {
     toastr.error(error.message)
@@ -193,7 +198,7 @@ const Plans = ({props: initialProps}) => {
     
     // 現在のプランと選択したプランが異なる場合、制限を適用
     const currentLevel = props.current_plan_level;
-    const planOrder = Plans.planOrder;
+    const planOrder = PLAN_ORDER;
     const currentIndex = planOrder.indexOf(currentLevel);
     const selectedIndex = planOrder.indexOf(planLevel);
     
@@ -480,5 +485,5 @@ const Plans = ({props: initialProps}) => {
   )
 }
 
-Plans.planOrder = ["free", "basic", "premium"]
+Plans.planOrder = PLAN_ORDER
 export default Plans;
