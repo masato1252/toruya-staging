@@ -463,6 +463,14 @@ const SchedulesCalendar = ({ props }) => {
         const modalElement = document.querySelector('#dummyModal');
         if (modalElement) {
           modalElement.innerHTML = html;
+
+          // The compat reservation modal is a React shell inserted after the
+          // initial ReactRailsUJS scan. Mount it before showing the Bootstrap
+          // modal; otherwise only the backdrop is displayed.
+          if (window.ReactRailsUJS) {
+            window.ReactRailsUJS.mountComponents(modalElement);
+          }
+
           $('#dummyModal').modal('show');
         }
       })
