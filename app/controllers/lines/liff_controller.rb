@@ -4,7 +4,8 @@ require "liff_routing"
 
 class Lines::LiffController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
-  layout "user_bot_guest"
+  # Minimal layout: avoid loading the full user_bot pack before LIFF redirect.
+  layout "liff_redirect"
   skip_before_action :track_ahoy_visit
 
   # lines/liff

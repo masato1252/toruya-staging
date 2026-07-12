@@ -59,11 +59,19 @@ module ViewHelpers
         _social_user = User.find_by(id: user_id).social_user
         write_user_bot_cookies(:social_service_user_id, _social_user.social_service_user_id)
         _social_user
-      elsif respond_to?(:user_bot_cookies, true) && user_bot_cookies(:social_service_user_id)
-        ssid = user_bot_cookies(:social_service_user_id)
-        SocialUser.linked_for_line(ssid) || SocialUser.find_by(social_service_user_id: ssid)
       else
-        privileged_session_user&.social_user
+        # LIFF rich-menu entry: /.../social_service_user_id/:id (param, path, then cookie)
+        social_service_user_id =
+          params[:social_service_user_id].presence ||
+          extract_social_service_user_id_from_path ||
+          (respond_to?(:user_bot_cookies, true) && user_bot_cookies(:social_service_user_id).presence)
+
+        if social_service_user_id.present?
+          write_user_bot_cookies(:social_service_user_id, social_service_user_id) if respond_to?(:write_user_bot_cookies, true)
+          SocialUser.linked_for_line(social_service_user_id) || SocialUser.find_by(social_service_user_id: social_service_user_id)
+        else
+          privileged_session_user&.social_user
+        end
       end
   end
   alias_method :current_social_user, :social_user
@@ -326,5 +334,14 @@ module ViewHelpers
 
     time_range_outcome = Reservable::Time.run(shop: shop, date: date)
     @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
+  end
+
+  private
+
+  def extract_social_service_user_id_from_path
+    return nil unless respond_to?(:request) && request&.path
+
+    path_match = request.path.match(%r{social_service_user_id/([^/?]+)})
+    path_match && path_match[1]
   end
 end

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><%= t("meta.title") %></title>
+    <%# LIFF redirect must not wait on the full user_bot pack (~3MB). %>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.3.1/sdk.js"></script>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

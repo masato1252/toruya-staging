@@ -1,18 +1,58 @@
-<% content_for :title do %>
-  <title><%= t('meta.title') %></title>
-<% end %>
-
-<% content_for :script do %>
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.3.1/sdk.js"></script>
-<% end %>
-
-<div
-  id="line-user-redirector"
-  data-controller="line-user-redirector"
-  data-line-user-redirector-liff-id=<%= @liff_id %>
-  data-line-user-redirector-url=<%= @redirect_to %>
->
-  <h3 class="centerize margin-around">
-    Loading <i class="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+<div id="line-user-redirector" class="centerize" style="margin: 2rem;">
+  <h3>
+    Loading <span aria-hidden="true">…</span>
   </h3>
+  <p id="line-user-redirector-error" style="display:none;color:#b00020;margin-top:1rem;"></p>
 </div>
+
+<script>
+  (function () {
+    var liffId = <%= raw @liff_id.to_json %>;
+    var redirectBase = <%= raw @redirect_to.to_json %>;
+    var errorEl = document.getElementById("line-user-redirector-error");
+
+    function showError(message) {
+      if (!errorEl) return;
+      errorEl.style.display = "block";
+      errorEl.textContent = message;
+    }
+
+    function redirectWithProfile(userId) {
+      if (!userId) {
+        showError("LINE user id を取得できませんでした。");
+        return;
+      }
+      window.location.replace(
+        redirectBase +
+          "/social_service_user_id/" +
+          encodeURIComponent(userId) +
+          "?redirect_from_rich_menu=true"
+      );
+    }
+
+    if (!window.liff) {
+      showError("LIFF SDK の読み込みに失敗しました。");
+      return;
+    }
+
+    if (!liffId || !redirectBase) {
+      showError("リダイレクト設定が不正です。");
+      return;
+    }
+
+    liff
+      .init({ liffId: liffId, withLoginOnExternalBrowser: true })
+      .then(function () {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
+        return liff.getProfile().then(function (profile) {
+          redirectWithProfile(profile && profile.userId);
+        });
+      })
+      .catch(function (err) {
+        showError((err && err.message) || "LIFF の初期化に失敗しました。");
+      });
+  })();
+</script>
