@@ -446,6 +446,12 @@ Rails.application.routes.draw do
 
           resources :shops, only: [] do
             resources :reservations, except: [:index, :edit, :new] do
+              member do
+                # The calendar/detail UI links to the member-shaped form URL.
+                # Keep the original collection route below for legacy callers.
+                get :form
+              end
+
               collection do
                 post :validate
                 post :add_customer
