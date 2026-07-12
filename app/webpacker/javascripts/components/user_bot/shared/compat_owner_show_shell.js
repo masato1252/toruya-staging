@@ -243,10 +243,13 @@ export default function CompatOwnerShowShell({
   }, [pageContextPath, postProcessVm]);
 
   const labels = actionLabels || {};
-  const loadingText = labels.loading || "Loading...";
-  const deleteLabel = labels.delete || "Delete";
-  const cloneLabel = labels.clone || "Clone";
-  const confirmDelete = labels.confirm_delete || "Are you sure?";
+  const loadingText = labels.loading || "処理中...";
+  const deleteLabel = labels.delete || "削除";
+  const cloneLabel = labels.clone || "複製";
+  const activateLabel = labels.activate || "有効化";
+  const draftLabel = labels.draft || "配信中止";
+  const confirmDelete = labels.confirm_delete || "よろしいですか？";
+  const confirmDraft = labels.confirm_draft || labels.confirm_delete || "よろしいですか？";
 
   if (loading) return <p>{loadingText}</p>;
   if (error) return <p className="danger">{error}</p>;
@@ -306,15 +309,39 @@ export default function CompatOwnerShowShell({
         </div>
       )}
 
-      {vm.actions?.clone_href && (
-        <div className="action-block margin-around">
-          <a
-            className="btn btn-yellow"
-            href={vm.actions.clone_href}
-            data-method={vm.actions.clone_method || "post"}
-          >
-            <i className="fa fa-copy" /> {cloneLabel}
-          </a>
+      {(vm.actions?.clone_href || vm.actions?.activate_href || vm.actions?.draft_href) && (
+        <div className="action-block margin-around centerize">
+          {vm.actions?.clone_href ? (
+            <a
+              className="btn btn-yellow btn-circle btn-tweak btn-with-word"
+              href={vm.actions.clone_href}
+              data-method={vm.actions.clone_method || "post"}
+            >
+              <i className="fa fa-copy fa-2x" />
+              <div className="word">{cloneLabel}</div>
+            </a>
+          ) : null}
+          {vm.actions?.activate_href ? (
+            <a
+              className="btn btn-tarco btn-circle btn-save btn-tweak btn-with-word"
+              href={vm.actions.activate_href}
+              data-method={vm.actions.activate_method || "put"}
+            >
+              <i className="fa fa-envelope fa-2x" />
+              <div className="word">{activateLabel}</div>
+            </a>
+          ) : null}
+          {vm.actions?.draft_href ? (
+            <a
+              className="btn btn-orange btn-circle btn-save btn-tweak btn-with-word"
+              href={vm.actions.draft_href}
+              data-method={vm.actions.draft_method || "put"}
+              data-confirm={vm.actions.draft_confirm || confirmDraft}
+            >
+              <i className="fa fa-ban fa-2x" />
+              <div className="word">{draftLabel}</div>
+            </a>
+          ) : null}
         </div>
       )}
 

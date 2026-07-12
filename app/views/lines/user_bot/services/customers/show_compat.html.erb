@@ -10,6 +10,22 @@
           groupLabels: {
             relation: t("user_bot.dashboards.settings.service_customer_relation.register"),
           },
+          rowLabels: {
+            name: t("common.customer_name", default: "お客様名"),
+            email: t("common.email", default: "メール"),
+            phone: t("common.phone_number", default: "電話番号"),
+            state: t("user_bot.dashboards.broadcasts.state"),
+            registered_at: t("common.updated_date", default: "登録日"),
+            expire_at: t("user_bot.dashboards.settings.service_customer_relation.expire_at", default: "有効期限"),
+          },
+          valueLabels: {
+            state: {
+              pending: t("user_bot.dashboards.settings.service_customer_relation.pending", default: "承認待ち"),
+              accessible: t("user_bot.dashboards.settings.service_customer_relation.accessible", default: "利用可"),
+              available: t("user_bot.dashboards.settings.service_customer_relation.available", default: "利用中"),
+              inactive: t("user_bot.dashboards.settings.service_customer_relation.inactive", default: "停止"),
+            },
+          },
           actionLabels: {
             loading: t("common.processing"),
             approve: I18n.t("action.approve"),

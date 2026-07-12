@@ -10,19 +10,19 @@
           pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/surveys/#{params[:id]}/page_context",
           showQrForUrl: true,
           groupLabels: {
-            about: t("user_bot.dashboards.surveys.about", default: "About"),
-            questions: t("user_bot.dashboards.surveys.questions", default: "Questions"),
+            about: t("user_bot.dashboards.surveys.about"),
+            questions: t("user_bot.dashboards.surveys.questions"),
           },
           rowLabels: {
-            title: t("user_bot.dashboards.surveys.new_page_header", default: "Title"),
-            description: t("user_bot.dashboards.surveys.description_desc", default: "Description"),
+            title: t("user_bot.dashboards.surveys.new_page_header"),
+            description: t("user_bot.dashboards.surveys.description_desc"),
             active: t("user_bot.dashboards.broadcasts.state"),
-            question_count: t("user_bot.dashboards.surveys.question_desc", default: "Questions"),
+            question_count: t("user_bot.dashboards.surveys.questions"),
             responses: t("user_bot.dashboards.surveys.responses.title"),
             public_url: t("action.share"),
           },
           warningLabels: {
-            no_questions: t("user_bot.dashboards.surveys.question_desc", default: "No questions configured"),
+            no_questions: t("user_bot.dashboards.surveys.no_questions"),
           },
           actionLabels: {
             delete: t("action.delete"),

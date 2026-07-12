@@ -11,11 +11,13 @@
           groupLabels: {
             content: t("user_bot.dashboards.broadcasts.content"),
             audiences: t("user_bot.dashboards.broadcasts.audiences"),
+            recipients: t("user_bot.dashboards.broadcasts.recipients_count"),
             state: t("user_bot.dashboards.broadcasts.state"),
           },
           rowLabels: {
             content: t("user_bot.dashboards.broadcasts.content"),
             query_type: t("user_bot.dashboards.broadcasts.audiences"),
+            recipients_count: t("user_bot.dashboards.broadcasts.recipients_count"),
             state: t("user_bot.dashboards.broadcasts.state"),
             deliver_at: t("user_bot.dashboards.broadcasts.time"),
           },
@@ -26,9 +28,12 @@
             customers_permission_warning: t("user_bot.dashboards.broadcast_creation.customers_permission_warning_description"),
           },
           actionLabels: {
-            delete: t("action.delete"),
+            clone: t("action.duplicate"),
+            activate: t("action.activate"),
+            draft: t("user_bot.dashboards.broadcasts.stop_send"),
             loading: t("common.processing"),
             confirm_delete: t("common.are_you_sure"),
+            confirm_draft: t("user_bot.dashboards.broadcasts.are_you_sure_to_stop"),
           },
         }, { camelize_props: false }) %>
       </div>

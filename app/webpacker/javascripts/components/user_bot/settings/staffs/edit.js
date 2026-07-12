@@ -328,9 +328,9 @@ const StaffEdit = ({props: initialProps}) => {
   }
 
   return (
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-6 px-0 settings-view">
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 px-0 settings-view">
           <div className="form with-top-bar">
             <TopNavigationBar
               leading={

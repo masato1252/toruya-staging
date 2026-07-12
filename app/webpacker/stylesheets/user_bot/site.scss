@@ -211,6 +211,26 @@ a {
   display: flex;
   flex-flow: column;
   height: 100%;
+  // Tablet+: keep the sidebar fixed while the content pane scrolls.
+  // Compat shells that omit .settings-view used to grow the document and
+  // scroll the whole layout (sidebar included).
+  @include media-breakpoint-up(tablet) {
+    &.flex-row {
+      min-height: 0;
+      max-height: 100%;
+      overflow: hidden;
+    }
+  }
+}
+
+.mobile-content {
+  @include media-breakpoint-up(tablet) {
+    &.extend {
+      min-height: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
 }
 
 .drag-handler {
@@ -646,6 +666,10 @@ h3.header {
 
 .with-function-bar {
   margin-top: 38px;
+
+  @include media-breakpoint-up(tablet) {
+    min-height: 0;
+  }
 }
 
 .mobile {

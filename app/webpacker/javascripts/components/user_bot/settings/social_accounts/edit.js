@@ -56,8 +56,30 @@ const SocialAccountEdit =({props: initialProps}) => {
     });
   }, [props, setValue]);
 
-  if (loadError) return <p className="danger">{loadError}</p>;
-  if (!props?.social_account || !i18n) return <p>Loading...</p>;
+  if (loadError) {
+    return (
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-6 px-0 settings-view">
+            <p className="danger">{loadError}</p>
+          </div>
+          <div className="col-sm-6 px-0 hidden-xs preview-view" />
+        </div>
+      </div>
+    );
+  }
+  if (!props?.social_account || !i18n) {
+    return (
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-6 px-0 settings-view">
+            <p>処理中...</p>
+          </div>
+          <div className="col-sm-6 px-0 hidden-xs preview-view" />
+        </div>
+      </div>
+    );
+  }
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;

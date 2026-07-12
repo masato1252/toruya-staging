@@ -88,8 +88,30 @@ const SocialAccountEdit =({props: initialProps}) => {
     setValue("address_details[city]", address?.city);
   }, [address?.prefecture, address?.city, setValue]);
 
-  if (loadError) return <p className="danger">{loadError}</p>;
-  if (!props?.shop) return <p>{I18n.t("common.processing")}</p>;
+  if (loadError) {
+    return (
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-6 px-0 settings-view">
+            <p className="danger">{loadError}</p>
+          </div>
+          <div className="col-sm-6 px-0 hidden-xs preview-view" />
+        </div>
+      </div>
+    );
+  }
+  if (!props?.shop) {
+    return (
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-6 px-0 settings-view">
+            <p>{I18n.t("common.processing")}</p>
+          </div>
+          <div className="col-sm-6 px-0 hidden-xs preview-view" />
+        </div>
+      </div>
+    );
+  }
 
   const title =
     props.title ??

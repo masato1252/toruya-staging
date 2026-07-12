@@ -467,6 +467,9 @@ ja:
           hint_2_html: サービスに必要な機器を指定することができます。<br>サービスに必要な機器が全て使用中の場合は、スタッフの空きがあっても予約できません。
       surveys:
         title: アンケート
+        about: 概要
+        questions: 質問
+        no_questions: 質問が設定されていません
         activity_title: イベント申し込み表
         activity_description: イベント申し込みページを作成し、顧客が参加したいイベントを選択できるようにします。複数日のイベントもサポートし、複数時間帯をまとめて申し込み可能です。
         new_page_title: 新規アンケート

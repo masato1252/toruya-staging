@@ -120,7 +120,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @reservations_approval_flow = []
     @my_calendar = mine
     @schedules_for_calendar = []
-    @schedule_mode = "list"
+    @schedule_mode = Current.business_owner.schedule_mode.presence || "list"
     render :index_compat
   end
 

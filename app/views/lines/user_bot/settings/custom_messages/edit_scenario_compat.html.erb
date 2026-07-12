@@ -1,15 +1,22 @@
-<%= react_component("user_bot/booking_pages/custom_messages/edit", {
-  props: {
-    scenario: params[:scenario],
-    business_owner_id: business_owner_id,
-    previous_path: lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:shop_id], business_owner_id: business_owner_id),
-    title: t("user_bot.dashboards.settings.custom_messages.auto_message"),
-    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/shops/#{params[:shop_id]}/custom_messages/scenario_context?scenario=#{CGI.escape(params[:scenario].to_s)}#{%Q(&id=#{params[:id]}) if params[:id].present?}",
-    message: {
-      service_id: params[:shop_id].to_i,
-      service_type: "Shop",
-    },
-  }
-},
-{ camelize_props: false }
-) %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 px-0 settings-view">
+      <%= react_component("user_bot/booking_pages/custom_messages/edit", {
+        props: {
+          scenario: params[:scenario],
+          business_owner_id: business_owner_id,
+          previous_path: lines_user_bot_settings_shop_custom_messages_path(shop_id: params[:shop_id], business_owner_id: business_owner_id),
+          title: t("user_bot.dashboards.settings.custom_messages.auto_message"),
+          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/settings/shops/#{params[:shop_id]}/custom_messages/scenario_context?scenario=#{CGI.escape(params[:scenario].to_s)}#{%Q(&id=#{params[:id]}) if params[:id].present?}",
+          message: {
+            service_id: params[:shop_id].to_i,
+            service_type: "Shop",
+          },
+        }
+      },
+      { camelize_props: false }
+      ) %>
+    </div>
+    <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
+  </div>
+</div>
