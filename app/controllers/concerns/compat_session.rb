@@ -204,7 +204,9 @@ module CompatSession
     raise "Admin session is required for admin compat requests" unless admin_user
 
     timestamp = (Time.now.to_f * 1000).to_i.to_s
-    payload = [timestamp, admin_user.id, method, uri.path].join(".")
+    # V1 verifies the path after the compat prefix has been mounted.
+    compat_path = uri.path.start_with?("/v1/compat/") ? uri.path : "/v1/compat#{uri.path}"
+    payload = [timestamp, admin_user.id, method, compat_path].join(".")
     request["X-Compat-Admin-User-Id"] = admin_user.id.to_s
     request["X-Compat-Admin-Timestamp"] = timestamp
     request["X-Compat-Admin-Signature"] = OpenSSL::HMAC.hexdigest("SHA256", secret, payload)
