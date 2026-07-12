@@ -1,22 +1,8 @@
-<%= react_component("user_bot/shared/compat_owner_show_shell", {
+<%= react_component("user_bot/dashboards/reservation_show_compat_modal", {
   pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/reservations/#{params[:id]}/page_context",
-  groupLabels: {
-    reservation: t("common.reservation_details"),
-    customers: t("common.customers", default: "お客様"),
-    staffs: t("common.staffs", default: "スタッフ"),
-  },
-  rowLabels: {
-    state: t("user_bot.dashboards.broadcasts.state"),
-    shop: t("common.shop", default: "店舗"),
-    start: t("common.start_time", default: "開始"),
-    end: t("common.end_time", default: "終了"),
-    menus: t("common.menu"),
-    online: t("common.method", default: "形式"),
-    memo: t("common.memo", default: "メモ"),
-    meeting_url: t("common.meeting_url", default: "ミーティングURL"),
-  },
-  actionLabels: {
+  labels: {
+    close: t("action.close", default: "閉じる"),
     loading: t("common.processing"),
-    clone: t("action.details"),
+    withWarnings: t("reservation.contain_some_warnings"),
   },
 }, { camelize_props: false }) %>
