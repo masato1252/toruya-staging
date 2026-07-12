@@ -1,5 +1,8 @@
 <%= render "admin/features" %>
 
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+  <%= react_component("admin/docs/show", { docId: params[:id].to_i, docsHref: admin_docs_path }) %>
+<% else %>
 <div class="admin-event-detail">
   <div class="admin-detail-header">
     <h2><%= @doc.title %></h2>
@@ -83,3 +86,4 @@
     <%= link_to "一覧に戻る", admin_docs_path, class: "btn btn-gray" %>
   </div>
 </div>
+<% end %>

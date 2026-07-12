@@ -30,6 +30,10 @@ export default function PublicOnlineServiceMemberBootstrap({
     compatRead(`/online_services/${slug}/page_context${suffix}`)
       .then((body) => {
         if (cancelled) return;
+        if (!body?.data) {
+          setError(body?.error_message || "Online service not found.");
+          return;
+        }
         setCtx({ data: body.data, includes: body.includes || {} });
       })
       .catch((err) => {
@@ -45,7 +49,7 @@ export default function PublicOnlineServiceMemberBootstrap({
 
   if (loading) return <p className="margin-around centerize">Loading...</p>;
   if (error) return <p className="danger margin-around">{error}</p>;
-  if (!ctx?.data) return null;
+  if (!ctx?.data) return <p className="danger margin-around">Online service not found.</p>;
 
   const { data, includes } = ctx;
   const hash = data.online_service_hash || {};

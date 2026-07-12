@@ -123,7 +123,7 @@ export default function PublicReservationShell({ slug, shellProps, customerId })
       .then((body) => {
         if (cancelled) return;
         if (!body?.data) {
-          setError("Booking page not found.");
+          setError(body?.error_message || "Booking page not found.");
           return;
         }
         applyMetaTags(body.includes?.meta);
