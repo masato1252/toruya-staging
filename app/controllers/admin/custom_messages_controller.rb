@@ -3,11 +3,11 @@
 module Admin
   class CustomMessagesController < AdminController
     def scenarios
-      return if !compat_read_enabled?
+      return if ENV["COMPAT_API_READ_ENABLED"] != "true"
     end
 
     def scenario
-      if compat_read_enabled?
+      if ENV["COMPAT_API_READ_ENABLED"] == "true"
         @sequence_messages = []
         return
       end

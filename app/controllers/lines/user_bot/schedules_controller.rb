@@ -28,14 +28,9 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @schedules = schedules_events(schedules)
     @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
 
-    if compat_read_enabled?
-      @notification_messages = []
-      @reservations_approval_flow = []
-    else
-      notification_presenter = NotificationsPresenter.new(view_context, Current.user, params.merge(my_calendar: true))
-      @notification_messages = notification_presenter.data
-      @reservations_approval_flow = notification_presenter.reservations_approval_flow
-    end
+    notification_presenter = NotificationsPresenter.new(view_context, Current.user, params.merge(my_calendar: true))
+    @notification_messages = notification_presenter.data
+    @reservations_approval_flow = notification_presenter.reservations_approval_flow
 
     @my_calendar = true
     @schedules_for_calendar = @schedules
@@ -68,14 +63,9 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @schedules = schedules_events(schedules)
     @related_user_ids = Current.business_owner.related_users.map(&:id)
     @reservation = schedules[:reservations].find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
-    if compat_read_enabled?
-      @notification_messages = []
-      @reservations_approval_flow = []
-    else
-      notification_presenter = NotificationsPresenter.new(view_context, Current.business_owner, params)
-      @notification_messages = notification_presenter.data
-      @reservations_approval_flow = notification_presenter.reservations_approval_flow
-    end
+    notification_presenter = NotificationsPresenter.new(view_context, Current.business_owner, params)
+    @notification_messages = notification_presenter.data
+    @reservations_approval_flow = notification_presenter.reservations_approval_flow
 
     @schedules_for_calendar = @schedules
 
@@ -115,11 +105,10 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
 
   def render_compat_schedules(mine:)
     @related_user_ids = []
-    @notification_messages = []
-    @reservations_approval_flow = []
     @my_calendar = mine
     @schedule_mode = compat_schedule_mode
     owner_id = resolve_compat_owner_id(nil) || resolve_compat_id(current_user&.id) || Current.business_owner&.id
+    compat_assign_notification_banners(owner_id)
 
     if @schedule_mode == "calendar"
       @month_date =
@@ -160,6 +149,61 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     end
   end
 
+  def compat_assign_notification_banners(owner_id)
+    @notification_messages = []
+    @reservations_approval_flow = false
+    return if owner_id.blank?
+
+    payload = fetch_v1_json(
+      "/lines/user_bot/owner/#{owner_id}/notifications",
+      { current_user_id: current_user&.id }.compact
+    )
+    data = payload.is_a?(Hash) ? (payload["data"] || payload[:data] || payload) : {}
+    data = data.deep_stringify_keys if data.respond_to?(:deep_stringify_keys)
+
+    staff_pending = Array(data["pending_reservations"])
+    customer_pending = Array(data["pending_customer_reservations"])
+
+    if staff_pending.present?
+      count = staff_pending.size
+      message = I18n.t("notifications.pending_reservation_need_confirm", number: count)
+      reservation_id = params[:reservation_id].presence
+
+      if reservation_id
+        ids = staff_pending.map { |row| row["id"] }
+        matched_index = ids.index { |id| id.to_s == reservation_id.to_s }
+        if matched_index
+          @reservations_approval_flow = true
+          text = "<strong>#{matched_index + 1}/#{ids.size}</strong>"
+          previous_path = matched_index.positive? ? staff_pending[matched_index - 1]["href"] : nil
+          next_path = matched_index + 1 < ids.size ? staff_pending[matched_index + 1]["href"] : nil
+          @notification_messages << [
+            message,
+            (view_context.link_to('<i class="fa fa-caret-square-left fa-2x" aria-hidden="true"></i>'.html_safe, previous_path) if previous_path),
+            text,
+            (view_context.link_to('<i class="fa fa-caret-square-right fa-2x" aria-hidden="true"></i>'.html_safe, next_path) if next_path),
+          ].compact.join(" ")
+        end
+      else
+        href = staff_pending.first["href"]
+        text = I18n.t("notifications.pending_reservation_confirm")
+        @notification_messages << "#{message} #{view_context.link_to(text, href)}"
+      end
+    end
+
+    if customer_pending.present?
+      count = customer_pending.size
+      message = I18n.t("notifications.pending_customer_reservation_need_confirm", number: count)
+      href = customer_pending.first["href"]
+      text = I18n.t("notifications.pending_customer_reservation_confirm")
+      @notification_messages << "#{message} #{view_context.link_to(text, href)}"
+    end
+  rescue StandardError => e
+    Rails.logger.warn("[SchedulesController] compat notifications failed: #{e.message}")
+    @notification_messages = []
+    @reservations_approval_flow = false
+  end
+
   def compat_fetch_schedule_events(owner_id:, start_date:, end_date:, mine:)
     return [] if owner_id.blank?
 
@@ -175,7 +219,12 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
       "/lines/user_bot/owner/#{owner_id}/schedules/events",
       query.compact
     )
-    events = body.is_a?(Array) ? body : Array(body)
+    events =
+      if body.is_a?(Array)
+        body
+      else
+        Array(body&.dig("data") || body&.dig(:data))
+      end
     events.map { |event| normalize_compat_schedule_event(event) }.compact
   rescue StandardError => e
     Rails.logger.warn("[SchedulesController] compat events failed: #{e.message}")

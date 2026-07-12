@@ -76,7 +76,10 @@ export default function NotificationsIndex({ businessOwnerId, schedulesPath, lab
       />
       <NotificationSection
         title={labels.pendingReservations}
-        items={data.pending_reservations}
+        items={[
+          ...(data.pending_reservations || []),
+          ...(data.pending_customer_reservations || []),
+        ]}
       />
       <NotificationSection
         title={labels.pendingCustomerServices || "承認待ちサービス"}

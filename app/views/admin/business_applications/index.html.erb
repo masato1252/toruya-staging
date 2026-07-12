@@ -1,4 +1,4 @@
-<% if compat_read_enabled? %>
+<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
   <%= react_component("admin/business_applications/index", {
     title: I18n.t("admin.all_business_applications.title"),
   }) %>

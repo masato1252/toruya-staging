@@ -4,7 +4,7 @@ class Admin::DocsController < AdminController
   before_action :set_doc, only: [:show, :edit, :update, :destroy]
 
   def index
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       @docs = []
       return
     end

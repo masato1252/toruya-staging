@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../libraries/compat_api";
+import CoursePage from "user_bot/services/online_service_page/course";
+import MembershipPage from "user_bot/services/online_service_page/membership";
+import OnlineServicePage from "user_bot/services/online_service_page";
 
-export default function PublicOnlineServiceMemberBootstrap({ slug, episodeId, customerId }) {
+export default function PublicOnlineServiceMemberBootstrap({
+  slug,
+  episodeId,
+  customerId,
+  lessonId,
+  encryptedSocialServiceUserId,
+}) {
   const [ctx, setCtx] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,32 +45,44 @@ export default function PublicOnlineServiceMemberBootstrap({ slug, episodeId, cu
   const { data, includes } = ctx;
   const hash = data.online_service_hash || {};
   const member = includes.service_member;
+  const watchedLessonIds = member?.watched_lesson_ids || [];
+  const goalType = data.goal_type;
 
-  return (
-    <div className="margin-around">
-      <h1>{hash.name || data.name}</h1>
-      {member && (
-        <p className="text-gray-600">
-          {member.active ? "Active member" : "Inactive"} · {member.watched_lesson_ids?.length ?? 0} lessons watched
-        </p>
-      )}
-      {Array.isArray(hash.chapters) && hash.chapters.length > 0 && (
-        <div className="mt-4">
-          <h3>Chapters</h3>
-          <ul>
-            {hash.chapters.map((chapter) => (
-              <li key={chapter.id}>{chapter.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {hash.note && <p className="mt-4">{hash.note}</p>}
-    </div>
-  );
+  if (goalType === "course" || goalType === "free_course" || goalType === "bundled_course") {
+    return (
+      <CoursePage
+        course={hash}
+        lesson_id={lessonId}
+        lesson_ids={watchedLessonIds}
+        preview={false}
+        encrypted_social_service_user_id={encryptedSocialServiceUserId}
+      />
+    );
+  }
+
+  if (goalType === "membership") {
+    return (
+      <MembershipPage
+        membership={{
+          ...hash,
+          tags: hash.tags || [],
+          company_info: hash.company_info || {},
+        }}
+        default_episode={includes.episode || (hash.episodes && hash.episodes[0]) || null}
+        done_episode_ids={member?.watched_episode_ids || []}
+        preview={false}
+        no_available_episodes={!hash.episodes || hash.episodes.length === 0}
+      />
+    );
+  }
+
+  return <OnlineServicePage {...hash} demo={false} light={false} />;
 }
 
 PublicOnlineServiceMemberBootstrap.propTypes = {
   slug: PropTypes.string.isRequired,
   episodeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  lessonId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  encryptedSocialServiceUserId: PropTypes.string,
 };

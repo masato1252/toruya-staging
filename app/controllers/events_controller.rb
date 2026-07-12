@@ -14,7 +14,7 @@ class EventsController < ActionController::Base
   def show
     @current_event_line_user = current_event_line_user
 
-    if compat_read_enabled?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true"
       return
     end
 

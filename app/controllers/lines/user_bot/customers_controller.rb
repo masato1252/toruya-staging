@@ -13,7 +13,8 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       @customer = nil
       @reservation = nil
       @total_customers_number = nil
-      @notification_messages = []
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_id(current_user&.id) || Current.business_owner&.id
+      @notification_messages = compat_customer_notification_messages(owner_id)
       draft_message_content = Rails.cache.read(draft_message_content_hash_cache_key)
       @draft_message_content = draft_message_content ? JSON.parse(draft_message_content) : {}
       return
@@ -232,6 +233,30 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   private
+
+  def compat_customer_notification_messages(owner_id)
+    return [] if owner_id.blank?
+
+    payload = fetch_v1_json(
+      "/lines/user_bot/owner/#{owner_id}/notifications",
+      { current_user_id: current_user&.id }.compact
+    )
+    data = payload.is_a?(Hash) ? (payload["data"] || payload[:data] || {}) : {}
+    data = data.deep_stringify_keys if data.respond_to?(:deep_stringify_keys)
+    pending = Array(data["pending_customer_reservations"])
+    return [] if pending.blank?
+
+    message = I18n.t(
+      "notifications.pending_customer_reservation_need_confirm",
+      number: pending.size
+    )
+    href = pending.first["href"]
+    text = I18n.t("notifications.pending_customer_reservation_confirm")
+    ["#{message} #{view_context.link_to(text, href)}"]
+  rescue StandardError => e
+    Rails.logger.warn("[CustomersController] compat notifications failed: #{e.message}")
+    []
+  end
 
   def render_customers_json(customers)
     render json: { customers: customers.map { |customer| CustomerOptionSerializer.new(customer).attributes_hash } }
