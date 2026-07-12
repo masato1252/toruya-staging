@@ -441,7 +441,11 @@ const SchedulesCalendar = ({ props }) => {
       console.log('🛑 Stopped event propagation');
     }
     if (event.type === 'reservation') {
-      const reservationOwnerId = event.user_id || business_owner_id;
+      // `event.user_id` can be the staff member who created or owns the
+      // reservation. The modal route must remain scoped to the calendar's
+      // business owner so the compat migration gate and page context resolve
+      // the correct data plane.
+      const reservationOwnerId = business_owner_id;
       const shopId = event.shop_id ?? (typeof event.shop === 'object' ? event.shop?.id : event.shop);
       const modalUrl = Routes.lines_user_bot_shop_reservation_path(reservationOwnerId, shopId, event.id, {
         reservations_approval_flow: reservations_approval_flow,
