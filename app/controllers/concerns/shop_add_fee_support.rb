@@ -6,6 +6,8 @@ module ShopAddFeeSupport
   private
 
   def shop_fee_required_for_add?(owner)
+    return false if owner.is_a?(CompatBusinessOwner) || (defined?(compat_read_enabled?) && compat_read_enabled?)
+
     owner.permission_level != Plan::ENTERPRISE_LEVEL &&
       owner.shops.count >= Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD &&
       Plans::Fee.chargeable_for?(owner, owner.subscription.plan)

@@ -79,7 +79,7 @@
 
         <div class="field-header"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
 
-        <% use_compat = @compat_settings.present? %>
+        <% use_compat = compat_read_enabled? || @compat_settings.present? %>
         <% team_plan = use_compat ? @team_plan_member : Current.business_owner.team_plan_member? %>
         <% member_plan_name = @member_plan_name.presence || (use_compat ? "" : Current.business_owner.member_plan_name) %>
         <% if team_plan %>

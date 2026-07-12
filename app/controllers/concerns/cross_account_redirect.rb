@@ -15,6 +15,9 @@ module CrossAccountRedirect
 
   def ensure_correct_owner(resource, resource_id)
     return if resource_id.blank?
+    # Under compat, ownership lives in Supabase — never query Heroku AR relations.
+    return if compat_read_data_plane? || (defined?(compat_read_enabled?) && compat_read_enabled?)
+
     return if Current.business_owner.public_send(resource).exists?(id: resource_id)
 
     correct_owner = current_social_user&.manage_accounts&.find do |owner|

@@ -103,7 +103,8 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   def require_complete_shop_profile!
     return if current_user.blank?
-    return unless Current.business_owner == current_user
+    owner_id = Current.business_owner.respond_to?(:id) ? Current.business_owner.id : nil
+    return unless owner_id && current_user.id.to_i == owner_id.to_i
     return if compat_read_enabled? && current_user.is_a?(CompatCurrentUser) && current_user.session_data["works_as_external_staff"]
 
     if compat_read_enabled?

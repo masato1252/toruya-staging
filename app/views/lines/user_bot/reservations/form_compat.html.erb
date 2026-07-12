@@ -17,7 +17,7 @@
             monthNames: I18n.t("date.abbr_month_names").compact,
           },
           reservation_properties: {
-            current_staff_name: current_user.current_staff&.name,
+            current_staff_name: (current_user.respond_to?(:current_staff) ? current_user.current_staff&.name : nil),
             is_editable: true,
             existing_staff_states: [],
             menu_group_options: [],
@@ -40,7 +40,7 @@
             menu_staffs_list: [],
             staff_states: [],
             customers_list: [],
-            by_staff_id: current_user.current_staff&.id,
+            by_staff_id: (current_user.respond_to?(:current_staff) ? current_user.current_staff&.id : nil),
           },
           i18n: {}.merge!([
             t("reservation"),

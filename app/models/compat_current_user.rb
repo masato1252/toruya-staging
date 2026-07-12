@@ -22,16 +22,25 @@ class CompatStaffAccountProxy
 end
 
 class CompatStaffProxy
-  def initialize(staff_id)
+  def initialize(staff_id, name: nil)
     @staff_id = staff_id
+    @name = name
   end
 
   def id
     @staff_id
   end
 
+  def name
+    @name.presence || "Staff"
+  end
+
   def present?
     @staff_id.present?
+  end
+
+  def shops
+    CompatEmptyRelation.new
   end
 end
 
@@ -47,6 +56,13 @@ class CompatCurrentUser
     session_data["current_user_id"]
   end
 
+  def name
+    session_data["display_name"].presence ||
+      session_data["social_user_name"].presence ||
+      session_data["staff_name"].presence ||
+      "User"
+  end
+
   def current_staff_account(owner = nil)
     owner_id = owner.is_a?(CompatBusinessOwner) ? owner.id : owner&.id
     return nil unless owner_id
@@ -58,7 +74,7 @@ class CompatCurrentUser
     staff_id = session_data["staff_id"]
     return nil unless staff_id
 
-    CompatStaffProxy.new(staff_id)
+    CompatStaffProxy.new(staff_id, name: session_data["staff_name"].presence || session_data["display_name"])
   end
 
   def staff_accounts
@@ -88,6 +104,8 @@ class CompatCurrentUser
       id == other.id
     when CompatCurrentUser
       id == other.id
+    when CompatBusinessOwner
+      id == other.id
     else
       false
     end
@@ -102,7 +120,7 @@ class CompatCurrentUser
   end
 
   def method_missing(method_name, *args, &block)
-    if ar_user.respond_to?(method_name)
+    if ar_user&.respond_to?(method_name)
       ar_user.public_send(method_name, *args, &block)
     else
       super
@@ -110,7 +128,7 @@ class CompatCurrentUser
   end
 
   def respond_to_missing?(method_name, include_private = false)
-    ar_user.respond_to?(method_name, include_private) || super
+    ar_user&.respond_to?(method_name, include_private) || super
   end
 end
 

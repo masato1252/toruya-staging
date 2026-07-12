@@ -12,6 +12,57 @@ class CompatSubscriptionProxy
   def active?
     @session_data.dig("plan", "active") != false
   end
+
+  def in_paid_plan?
+    active? && plan_level.to_i.positive?
+  end
+
+  def charge_required
+    @session_data.dig("plan", "charge_required") == true
+  end
+
+  def expired_date
+    raw = @session_data.dig("plan", "trial_expired_date") || @session_data.dig("plan", "expired_date")
+    return nil if raw.blank?
+
+    Time.zone.parse(raw.to_s)
+  rescue ArgumentError, TypeError
+    nil
+  end
+
+  def next_plan
+    nil
+  end
+
+  def plan
+    CompatPlanProxy.new(@session_data)
+  end
+
+  def plan_level
+    @session_data.dig("plan", "level").to_i
+  end
+
+  def stripe_customer_id
+    nil
+  end
+end
+
+class CompatPlanProxy
+  def initialize(session_data)
+    @session_data = session_data
+  end
+
+  def level
+    @session_data.dig("plan", "level").to_i
+  end
+
+  def name
+    @session_data.dig("plan", "name").presence || "plan"
+  end
+
+  def present?
+    true
+  end
 end
 
 # Lightweight stand-in for User when COMPAT_API_READ_ENABLED — no business AR reads.
@@ -57,6 +108,14 @@ class CompatSocialUserProxy
   def present?
     social_service_user_id.present?
   end
+
+  def single_owner?
+    !@session_data["works_as_external_staff"] && @session_data["shops_count"].to_i <= 1
+  end
+
+  def manage_accounts
+    []
+  end
 end
 
 class CompatBusinessOwner
@@ -72,6 +131,10 @@ class CompatBusinessOwner
 
   def locale
     session_data["locale"] || "ja"
+  end
+
+  def locale_is?(target)
+    locale.to_s.to_sym == target.to_s.to_sym
   end
 
   def timezone
@@ -106,6 +169,30 @@ class CompatBusinessOwner
     session_data.dig("plan", "active") == true
   end
 
+  def has_single_shop?
+    if session_data.key?("multi_shop")
+      session_data["multi_shop"] != true
+    else
+      session_data["shops_count"].to_i <= 1
+    end
+  end
+
+  def team_plan_member?
+    session_data["team_plan_member"] == true
+  end
+
+  def member_plan_name
+    session_data.dig("plan", "name").presence || ""
+  end
+
+  def permission_level
+    session_data.dig("plan", "level").to_i
+  end
+
+  def booking_options_menu_concept
+    nil
+  end
+
   def subscription
     @subscription ||= CompatSubscriptionProxy.new(session_data)
   end
@@ -122,11 +209,22 @@ class CompatBusinessOwner
     @social_user ||= CompatSocialUserProxy.new(session_data)
   end
 
+  # Empty relation stubs — never touch Heroku AR for ownership checks under compat.
+  def customers
+    CompatEmptyRelation.new
+  end
+
+  def shops
+    CompatEmptyRelation.new
+  end
+
   def ==(other)
     case other
     when User
       id == other.id
     when CompatBusinessOwner
+      id == other.id
+    when CompatCurrentUser
       id == other.id
     else
       false
