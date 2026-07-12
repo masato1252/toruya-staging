@@ -90,7 +90,10 @@ module CompatSession
   end
 
   def resolve_compat_owner_id(owner_id)
-    resolve_compat_id(owner_id) || resolve_compat_id(params[:business_owner_id])
+    resolve_compat_id(owner_id) ||
+      resolve_compat_id(params[:business_owner_id]) ||
+      (respond_to?(:user_bot_cookies, true) ? resolve_compat_id(user_bot_cookies(:current_user_id)) : nil) ||
+      (respond_to?(:current_user, true) ? resolve_compat_id(current_user&.id) : nil)
   end
 
   def resolve_compat_current_user_id(current_user_id)

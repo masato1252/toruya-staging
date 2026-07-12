@@ -119,7 +119,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @reservations_approval_flow = []
     @my_calendar = mine
     @schedules_for_calendar = []
-    @schedule_mode = Current.business_owner.schedule_mode.presence || "list"
+    @schedule_mode = compat_schedule_mode
 
     if @schedule_mode == "calendar"
       # Match legacy get_date calendar branch — FullCalendar needs @month_date.
@@ -135,6 +135,20 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
       compat_get_date
       render :index_compat
     end
+  end
+
+  # Always read schedule_mode from Supabase-backed auth/session — never Heroku AR.
+  def compat_schedule_mode
+    if Current.business_owner.is_a?(CompatBusinessOwner)
+      return Current.business_owner.schedule_mode
+    end
+
+    payload = @compat_session_payload
+    payload ||= compat_auth_session(
+      owner_id: Current.business_owner&.id || resolve_compat_owner_id(nil),
+      current_user_id: current_user&.id
+    )
+    payload&.dig("schedule_mode") == "calendar" ? "calendar" : "list"
   end
 
   def compat_get_date

@@ -60,6 +60,13 @@ class CompatBusinessOwner
     session_data["customer_notification_channel"] || "email"
   end
 
+  # Prefer Supabase-backed session (toggle_mode writes there). Never fall through
+  # to Heroku AR via method_missing — that is a stale clone on staging.
+  def schedule_mode
+    mode = session_data["schedule_mode"].presence
+    mode == "calendar" ? "calendar" : "list"
+  end
+
   def support_toruya_message_reply?
     session_data["toruya_message_reply"] == true
   end
