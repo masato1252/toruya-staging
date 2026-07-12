@@ -2,13 +2,13 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="form with-top-bar">
-        <%= react_component("user_bot/shared/compat_owner_show_shell", {
+        <%= react_component("user_bot/bookings/new_compat", {
+          businessOwnerId: business_owner_id,
           pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/bookings/page_context?wizard=new",
-          groupLabels: {
-            new: I18n.t("user_bot.dashboards.booking.booking_page_creation.label"),
-          },
-          actionLabels: {
+          labels: {
+            chooseShop: I18n.t("common.select_a_shop"),
             loading: I18n.t("common.processing"),
+            failed: I18n.t("user_bot.dashboards.booking_page_creation.create_booking_page_failed", default: "予約ページの作成に失敗しました"),
           },
         }, { camelize_props: false }) %>
       </div>
