@@ -10,7 +10,14 @@
           pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:id]}/page_context",
           groupLabels: {
             service_about: I18n.t("user_bot.dashboards.services.service_about"),
+            chapters: t("user_bot.dashboards.settings.course.chapters.title"),
+            card_image: I18n.t("user_bot.dashboards.services.card_image"),
             service_content: I18n.t("user_bot.dashboards.services.content"),
+            available_period: I18n.t("user_bot.dashboards.services.available_period"),
+            customer_address: I18n.t("user_bot.dashboards.services.form.customer_address_required"),
+            custom_messages: t("user_bot.dashboards.settings.custom_message.line_message_title"),
+            broadcasts: t("sidebar.broadcast.title"),
+            registers: t("user_bot.dashboards.settings.service_customer_relation.service_register"),
           },
           rowLabels: {
             name: I18n.t("user_bot.dashboards.services.name"),
@@ -20,13 +27,25 @@
             content_url: I18n.t("user_bot.dashboards.services.provided_content"),
             note: I18n.t("user_bot.dashboards.services.form.note_title"),
             external_purchase_url: I18n.t("user_bot.dashboards.services.form.external_purchase_url_title"),
-            registers_count: I18n.t("user_bot.dashboards.services.registers"),
-            broadcasts: I18n.t("user_bot.dashboards.broadcasts.title", default: "配信"),
-            start_at: I18n.t("user_bot.dashboards.services.start_at"),
-            end_at: I18n.t("user_bot.dashboards.services.end_at"),
-            upsell_sale_page: I18n.t("user_bot.dashboards.services.form.upsell_sale_page_title"),
-            bundled_services: I18n.t("user_bot.dashboards.services.form.bundled_services_title"),
-            message_template: I18n.t("user_bot.dashboards.services.form.message_template_title"),
+            upsell_sale_page: I18n.t("user_bot.dashboards.services.upsell"),
+            bundled_services: I18n.t("user_bot.dashboards.services.provided_content"),
+            card_image: I18n.t("user_bot.dashboards.services.card_image"),
+            start_at: I18n.t("user_bot.dashboards.services.start_time"),
+            end_at: I18n.t("user_bot.dashboards.services.end_time"),
+            customer_address_required: I18n.t("user_bot.dashboards.services.form.customer_address_required"),
+            message_template: t("user_bot.dashboards.settings.custom_message.auto_message_service_label"),
+            broadcasts: t("user_bot.dashboards.services.form.broadcast_to_customers", default: "登録顧客へ一括配信"),
+            registers_count: t("user_bot.dashboards.settings.service_customer_relation.register"),
+          },
+          warningLabels: {
+            no_sale_pages: I18n.t("user_bot.dashboards.services.warning.no_sale_pages"),
+            no_content: I18n.t("user_bot.dashboards.settings.course.no_content"),
+          },
+          actionLabels: {
+            delete: I18n.t("action.delete"),
+            loading: I18n.t("common.processing"),
+            confirm_delete: I18n.t("common.are_you_sure"),
+            updated_at_prefix: I18n.t("common.updated_date"),
           },
         }, { camelize_props: false }) %>
       </div>
@@ -36,6 +55,7 @@
       <%= react_component("user_bot/shared/compat_owner_show_preview", {
         pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/services/#{params[:id]}/page_context",
         supportFeatureFlags: support_feature_flags,
+        shareButtonText: I18n.t("action.share"),
       }, { camelize_props: false }) %>
     </div>
   </div>

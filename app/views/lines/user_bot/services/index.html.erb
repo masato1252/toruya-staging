@@ -6,18 +6,17 @@
       <div class="booking-options form with-top-bar">
         <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.services.online_service") %>
 
-
         <div class="field-header"><%= I18n.t("user_bot.dashboards.services.service_page") %></div>
         <% if compat_read_enabled? %>
           <%= react_component("user_bot/services/index", {
-            businessOwnerId: business_owner_id,
-            newServicePath: (is_not_phone? ? new_lines_user_bot_service_path(business_owner_id: business_owner_id) : nil),
-            newSaleForServicePath: new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id),
-            goalTypeLabels: I18n.t("user_bot.dashboards.online_service_creation.goals").transform_values { |v| v[:title] },
-            noSalePageWarning: I18n.t("user_bot.dashboards.services.warning.no_sale_pages"),
-            draftSalePageWarning: I18n.t("user_bot.dashboards.services.warning.draft_sale_page"),
-            noContentWarning: I18n.t("user_bot.dashboards.settings.course.no_content"),
-          }) %>
+            business_owner_id: business_owner_id,
+            new_sale_for_service_path: new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id),
+            goal_type_labels: I18n.t("user_bot.dashboards.online_service_creation.goals").transform_values { |v| v[:title] },
+            no_sale_page_warning: I18n.t("user_bot.dashboards.services.warning.no_sale_pages"),
+            draft_sale_page_warning: I18n.t("user_bot.dashboards.services.warning.draft_sale_page"),
+            no_content_warning: I18n.t("user_bot.dashboards.settings.course.no_content"),
+            continue_editing_label: I18n.t("action.continue_editing"),
+          }, { camelize_props: false }) %>
         <% else %>
         <div class="booking-pages-list">
           <% @online_services.each do |service| %>
@@ -57,16 +56,16 @@
               <i class="fa fa-angle-right"></i>
             <% end %>
           <% end %>
-
-          <% if is_not_phone? %>
-            <div class="margin-around centerize">
-              <%= link_to new_lines_user_bot_service_path(business_owner_id: business_owner_id), class: "btn btn-yellow" do %>
-            <i class="fa fa-plus"></i>
-                <%= t("action.add_more") %>
-              <% end %>
-            </div>
-          <% end %>
         </div>
+        <% end %>
+
+        <% if is_not_phone? %>
+          <div class="margin-around centerize">
+            <%= link_to new_lines_user_bot_service_path(business_owner_id: business_owner_id), class: "btn btn-yellow" do %>
+              <i class="fa fa-plus"></i>
+              <%= t("action.add_more") %>
+            <% end %>
+          </div>
         <% end %>
 
         <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>

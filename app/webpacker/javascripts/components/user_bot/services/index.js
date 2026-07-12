@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
 export default function ServicesIndex({
-  businessOwnerId,
-  newServicePath,
-  newSaleForServicePath,
-  goalTypeLabels,
-  noSalePageWarning,
-  draftSalePageWarning,
-  noContentWarning,
+  business_owner_id: businessOwnerId,
+  new_sale_for_service_path: newSaleForServicePath,
+  goal_type_labels: goalTypeLabels,
+  no_sale_page_warning: noSalePageWarning,
+  draft_sale_page_warning: draftSalePageWarning,
+  no_content_warning: noContentWarning,
+  continue_editing_label: continueEditingLabel,
 }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ export default function ServicesIndex({
                 <small><i className="fas fa-exclamation-triangle" /> {draftSalePageWarning}</small>
                 {service.draft_sale_pages.map((page) => (
                   <a key={page.id} className="btn btn-yellow btn-save btn-tweak" href={`/sale_pages/${page.slug}`}>
-                    Continue
+                    {continueEditingLabel || "続けて編集"}
                   </a>
                 ))}
               </div>
@@ -75,21 +75,16 @@ export default function ServicesIndex({
           <i className="fa fa-angle-right" />
         </div>
       ))}
-      {newServicePath && (
-        <div className="margin-around centerize hidden-xs">
-          <a className="btn btn-yellow" href={newServicePath}><i className="fa fa-plus" /> Add more</a>
-        </div>
-      )}
     </div>
   );
 }
 
 ServicesIndex.propTypes = {
-  businessOwnerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  newServicePath: PropTypes.string,
-  newSaleForServicePath: PropTypes.string,
-  goalTypeLabels: PropTypes.object.isRequired,
-  noSalePageWarning: PropTypes.string.isRequired,
-  draftSalePageWarning: PropTypes.string.isRequired,
-  noContentWarning: PropTypes.string.isRequired,
+  business_owner_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  new_sale_for_service_path: PropTypes.string,
+  goal_type_labels: PropTypes.object.isRequired,
+  no_sale_page_warning: PropTypes.string.isRequired,
+  draft_sale_page_warning: PropTypes.string.isRequired,
+  no_content_warning: PropTypes.string.isRequired,
+  continue_editing_label: PropTypes.string,
 };
