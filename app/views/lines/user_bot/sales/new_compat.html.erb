@@ -2,17 +2,34 @@
   <div class="row">
     <div class="col-sm-6 px-0 settings-view">
       <div class="form with-top-bar">
-        <%= react_component("user_bot/shared/compat_owner_show_shell", {
-          pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/sales/page_context?wizard=new",
-          groupLabels: {
-            new: I18n.t("user_bot.dashboards.sales.new.what_to_sale"),
-          },
-          actionLabels: {
-            loading: I18n.t("common.processing"),
-          },
-        }, { camelize_props: false }) %>
+        <h3 class="centerize header"><%= I18n.t("user_bot.dashboards.sales.new.what_to_sale") %></h3>
+        <div class="action-block centerize">
+          <%= link_to new_lines_user_bot_sales_booking_page_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
+            <i class="fa fa-calendar-alt fa-4x"></i>
+            <h4><%= I18n.t("user_bot.dashboards.sales.new.online_booking") %></h4>
+            <p class="break-line-content">
+            <%= I18n.t("user_bot.dashboards.sales.new.add_sale_page_to_sell_more") %>
+            </p>
+          <% end %>
+        </div>
+        <% if support_online_service? %>
+          <div class="action-block centerize">
+            <%= link_to new_lines_user_bot_sales_online_service_path(business_owner_id: business_owner_id), class: "btn btn-tarco btn-extend btn-flexible" do %>
+              <i class="fa fa-mobile-alt fa-4x"></i>
+              <h4><%= I18n.t("user_bot.dashboards.sales.new.online_service") %></h4>
+              <p class="break-line-content">
+              <%= I18n.t("user_bot.dashboards.sales.new.online_service_to_sell_more") %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="margin-around centerize warning">
+          <%= t("user_bot.dashboards.sales.new.how_to_sell_html") %>
+        </div>
       </div>
     </div>
+
     <div class="col-sm-6 px-0 hidden-xs preview-view"></div>
   </div>
 </div>
