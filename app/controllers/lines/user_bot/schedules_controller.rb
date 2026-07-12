@@ -112,7 +112,6 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   private
 
   def render_compat_schedules(mine:)
-    compat_get_date
     @schedules = []
     @related_user_ids = []
     @reservation = nil
@@ -121,7 +120,21 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     @my_calendar = mine
     @schedules_for_calendar = []
     @schedule_mode = Current.business_owner.schedule_mode.presence || "list"
-    render :index_compat
+
+    if @schedule_mode == "calendar"
+      # Match legacy get_date calendar branch — FullCalendar needs @month_date.
+      @month_date =
+        if params[:reservation_date].present? || params[:month_date].present?
+          Time.zone.parse(params[:reservation_date] || params[:month_date]).to_date
+        else
+          Time.zone.now.to_date
+        end
+      @date = Time.zone.now.to_date
+      render :calendar
+    else
+      compat_get_date
+      render :index_compat
+    end
   end
 
   def compat_get_date
