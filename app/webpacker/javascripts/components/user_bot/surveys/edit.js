@@ -64,6 +64,14 @@ const SurveyEdit =({props: initialProps}) => {
   if (loadError) return <p className="danger">{loadError}</p>;
   if (!props?.survey) return <p>{I18n.t("common.processing")}</p>;
 
+  const editTitleMap = {
+    active: I18n.t("user_bot.dashboards.surveys.edit.active_title"),
+    title: I18n.t("user_bot.dashboards.surveys.new_page_header"),
+    description: I18n.t("user_bot.dashboards.surveys.description_desc"),
+    questions: I18n.t("user_bot.dashboards.surveys.question_desc"),
+  };
+  const editTitle = editTitleMap[props.attribute] || props.attribute;
+
   const renderCorrespondField = () => {
     switch(props.attribute) {
       case "active":
@@ -78,6 +86,46 @@ const SurveyEdit =({props: initialProps}) => {
               {I18n.t("common.private")}
             </label>
           </>
+        )
+      case "title":
+        return (
+          <div className="field-row">
+            <input
+              className="extend"
+              name="title"
+              type="text"
+              defaultValue={props.survey.title || ""}
+              ref={register({ required: true })}
+            />
+          </div>
+        )
+      case "description":
+        return (
+          <div className="field-row">
+            <textarea
+              className="extend"
+              name="description"
+              rows={6}
+              defaultValue={props.survey.description || ""}
+              ref={register()}
+            />
+          </div>
+        )
+      case "questions":
+        return (
+          <div className="margin-around">
+            <p className="desc">
+              {I18n.t("user_bot.dashboards.surveys.question_desc")}
+            </p>
+            {(props.survey.questions || []).map((question) => (
+              <div key={question.id} className="field-row">
+                <span className="text-gray-500">{question.description || `Question #${question.id}`}</span>
+              </div>
+            ))}
+            {!(props.survey.questions || []).length ? (
+              <p className="desc warning">{I18n.t("user_bot.dashboards.surveys.question_desc")}</p>
+            ) : null}
+          </div>
         )
       default:
         return null
@@ -107,9 +155,9 @@ const SurveyEdit =({props: initialProps}) => {
                   <i className="fa fa-angle-left fa-2x"></i>
                 </a>
               }
-              title={I18n.t(`user_bot.dashboards.surveys.edit.${props.attribute}_title`)}
+              title={editTitle}
             />
-            <div className="field-header">{I18n.t(`user_bot.dashboards.surveys.edit.${props.attribute}_title`)}</div>
+            <div className="field-header">{editTitle}</div>
             {renderCorrespondField()}
             <BottomNavigationBar klassName="centerize transparent">
               <span></span>

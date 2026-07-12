@@ -22,26 +22,38 @@ RowLink.propTypes = {
   dataConfirm: PropTypes.string,
 };
 
+function asDisplayText(value) {
+  if (value == null) return null;
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+  // Rails I18n sometimes returns nested hashes like { title: "..." }.
+  if (typeof value === "object" && value.title != null) return String(value.title);
+  return null;
+}
+
 function resolveRowTitle(row, valueLabels) {
-  if (!row?.title || !row.header || !valueLabels?.[row.header]) return row?.title;
-  return valueLabels[row.header][row.title] ?? row.title;
+  const rawTitle = asDisplayText(row?.title) ?? row?.title;
+  if (!rawTitle || !row.header || !valueLabels?.[row.header]) return rawTitle;
+  return valueLabels[row.header][rawTitle] ?? rawTitle;
 }
 
 function FieldRow({ row, label, warningLabels, valueLabels }) {
   const displayTitle = resolveRowTitle(row, valueLabels);
+  const displayLabel = asDisplayText(label);
   const display = row.row_display || (row.row_class === "option-row" ? "option" : "inline");
 
   if (display === "option") {
-    const descLines = (row.title || "").split("\n").filter(Boolean);
+    const descLines = (displayTitle || "").split("\n").filter(Boolean);
     return (
       <div className={`field-row option-row${row.href ? " with-next-arrow" : ""}`}>
         <div className="option-info">
           {row.href ? (
             <a href={row.href} className="break-line-content underline">
-              {row.link_title || row.title}
+              {row.link_title || displayTitle}
             </a>
           ) : (
-            <span className="break-line-content underline">{row.link_title || row.title}</span>
+            <span className="break-line-content underline">{row.link_title || displayTitle}</span>
           )}
           {descLines.length ? (
             <div className="desc">
@@ -69,7 +81,7 @@ function FieldRow({ row, label, warningLabels, valueLabels }) {
                   className="btn btn-orange"
                   data-method="delete"
                 >
-                  <i className="fa fa-minus" /> {block.title}
+                  <i className="fa fa-minus" /> {asDisplayText(block.title) || block.title}
                 </a>
               ) : null,
             )}
@@ -80,11 +92,11 @@ function FieldRow({ row, label, warningLabels, valueLabels }) {
   }
 
   if (display === "split") {
-    const closeClass = row.title === "CLOSE" ? "danger" : "";
+    const closeClass = displayTitle === "CLOSE" ? "danger" : "";
     return (
       <RowLink href={row.href} className="field-row with-next-arrow with-format">
-        <span>{row.link_title || label}</span>
-        <span className={closeClass}>{row.title}</span>
+        <span>{row.link_title || displayLabel}</span>
+        <span className={closeClass}>{displayTitle}</span>
       </RowLink>
     );
   }
@@ -92,7 +104,7 @@ function FieldRow({ row, label, warningLabels, valueLabels }) {
   if (display === "header_link") {
     return (
       <RowLink href={row.href} className="field-row with-next-arrow with-format header-row">
-        <span>{row.title}</span>
+        <span>{displayTitle}</span>
       </RowLink>
     );
   }
@@ -127,8 +139,8 @@ function FieldRow({ row, label, warningLabels, valueLabels }) {
       className={`field-row with-next-arrow with-format${row.row_class ? ` ${row.row_class}` : ""}`}
     >
       <span>
-        {label ? <span>{label}: </span> : null}
-        <span className="text-gray-500">{displayTitle ?? row.title}</span>
+        {displayLabel ? <span>{displayLabel}: </span> : null}
+        <span className="text-gray-500">{displayTitle}</span>
       </span>
       {row.warnings?.map((code) => (
         <div key={code} className="danger warning">
