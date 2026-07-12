@@ -36,7 +36,7 @@ class BookingPagesController < ActionController::Base
       end
     end
 
-    if compat_read_data_plane? && !booking_page.draft
+    if compat_public_read_for_owner?(booking_page.user_id) && !booking_page.draft
       load_compat_booking_customer_context
       render :show_compat
       return

@@ -84,5 +84,7 @@ class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
     @first_shop_id = form["first_shop_id"]
     @line_settings_verified = form["line_settings_verified"] == true
     @using_line_official_account = form["using_line_official_account"] == true
+    @stripe_default_payment = form["stripe_default_payment"] == true
+    @square_default_payment = form["square_default_payment"] == true
   end
 end

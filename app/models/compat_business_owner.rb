@@ -111,14 +111,15 @@ class CompatBusinessOwner
   end
 
   def method_missing(method_name, *args, &block)
-    if ar_user.respond_to?(method_name)
-      ar_user.public_send(method_name, *args, &block)
+    user = ar_user
+    if user&.respond_to?(method_name)
+      user.public_send(method_name, *args, &block)
     else
       super
     end
   end
 
   def respond_to_missing?(method_name, include_private = false)
-    ar_user.respond_to?(method_name, include_private) || super
+    ar_user&.respond_to?(method_name, include_private) || super
   end
 end

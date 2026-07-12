@@ -9,20 +9,22 @@
       </div>
       <div class="modal-body">
         <div class="edit-worktime">
-          <% if defined?(@compat_shops) && @compat_shops.present? %>
-            <% if @compat_shops.size == 1 %>
-              <% shop = @compat_shops.first %>
-              <%= link_to t("action.new_reservation"),
-                form_lines_user_bot_shop_reservations_path(
-                  business_owner_id: shop.user_id,
-                  shop_id: shop.id,
-                  start_time_date_part: @date
-                ),
-                class: "btn btn-yellow btn-tweak btn-big" %>
-            <% else %>
-              <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="btn btn-yellow btn-tweak btn-big">
-                <%= I18n.t("action.new_reservation") %>
-              </a>
+          <% if defined?(@compat_shops) %>
+            <% if @compat_shops.present? %>
+              <% if @compat_shops.size == 1 %>
+                <% shop = @compat_shops.first %>
+                <%= link_to t("action.new_reservation"),
+                  form_lines_user_bot_shop_reservations_path(
+                    business_owner_id: shop.user_id,
+                    shop_id: shop.id,
+                    start_time_date_part: @date
+                  ),
+                  class: "btn btn-yellow btn-tweak btn-big" %>
+              <% else %>
+                <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="btn btn-yellow btn-tweak btn-big">
+                  <%= I18n.t("action.new_reservation") %>
+                </a>
+              <% end %>
             <% end %>
           <% elsif my_calendar %>
             <% if working_shop_options(shops: Current.user.social_user.shops).present? %>

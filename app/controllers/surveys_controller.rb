@@ -5,10 +5,10 @@ class SurveysController < Lines::CustomersController
   include ProductLocale
   before_action :reject_activity_survey
 
-  skip_before_action :reject_activity_survey, if: -> { compat_read_enabled? }
+  skip_before_action :reject_activity_survey, if: -> { compat_public_read_for_owner?(survey.user_id) }
 
   def show
-    if compat_read_enabled?
+    if compat_public_read_for_owner?(survey.user_id)
       render :show_compat, layout: "booking"
       return
     end

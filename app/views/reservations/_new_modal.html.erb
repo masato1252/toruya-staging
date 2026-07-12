@@ -15,7 +15,7 @@
       </div>
       <div class="modal-body">
         <div class="shops-list centerize">
-          <% if defined?(@compat_shops) && @compat_shops.present? %>
+          <% if defined?(@compat_shops) %>
             <% @compat_shops.each do |shop| %>
               <div class="shop-cell">
                 <%= link_to(

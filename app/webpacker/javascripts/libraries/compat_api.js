@@ -142,6 +142,11 @@ export function shouldRewriteCompatRequest(url, input, init) {
   if (/\/line_notice_requests\/\d+\/approve\/?$/.test(pathname)) return false;
   // Reservation state transitions (accept/cancel/checkout) stay on Rails AASM.
   if (/\/reservations\/\d+\/states\//.test(pathname)) return false;
+  // Admin mutations not yet on v1 — keep Rails until write cutover.
+  if (/\/admin\/business_applications\/\d+\/(approve|reject|mark_paid)\/?$/.test(pathname)) return false;
+  if (/\/admin\/chats(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
+  if (/\/admin\/custom_messages(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
+  if (/\/admin\/docs(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
 
   const headers = getRequestHeaders(input, init);
   const accept = (headers.get("Accept") || "").toLowerCase();

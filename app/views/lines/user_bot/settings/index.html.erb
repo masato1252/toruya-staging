@@ -81,7 +81,7 @@
 
         <% use_compat = @compat_settings.present? %>
         <% team_plan = use_compat ? @team_plan_member : Current.business_owner.team_plan_member? %>
-        <% member_plan_name = @member_plan_name.presence || Current.business_owner.member_plan_name %>
+        <% member_plan_name = @member_plan_name.presence || (use_compat ? "" : Current.business_owner.member_plan_name) %>
         <% if team_plan %>
           <div class="field-row" id="plans-menu-item">
             <div>
@@ -166,13 +166,13 @@
         <% if support_stripe_payment? %>
         <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
           <%= link_to lines_user_bot_settings_stripe_path(business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= "Stripe" %> <%= "(#{t("common.default")})" if business_owner.stripe_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
+            <span><%= "Stripe" %> <%= "(#{t("common.default")})" if (use_compat ? @stripe_default_payment : business_owner.stripe_provider&.default_payment?) %></span><i class="fa fa-angle-right"></i>
           <% end %>
         <% end %>
 
         <% if support_square_payment? %>
           <%= link_to lines_user_bot_settings_square_path(business_owner_id: business_owner_id), class: "field-row" do %>
-            <span><%= "Square" %> <%= "(#{t("common.default")})" if business_owner.square_provider&.default_payment? %></span><i class="fa fa-angle-right"></i>
+            <span><%= "Square" %> <%= "(#{t("common.default")})" if (use_compat ? @square_default_payment : business_owner.square_provider&.default_payment?) %></span><i class="fa fa-angle-right"></i>
           <% end %>
         <% end %>
 

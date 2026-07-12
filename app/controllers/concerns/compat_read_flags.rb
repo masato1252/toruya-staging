@@ -5,7 +5,7 @@ module CompatReadFlags
   extend ActiveSupport::Concern
 
   included do
-    helper_method :compat_read_enabled?, :compat_read_data_plane? if respond_to?(:helper_method)
+    helper_method :compat_read_enabled?, :compat_read_data_plane?, :compat_public_read_for_owner? if respond_to?(:helper_method)
   end
 
   def compat_api_configured?
@@ -18,6 +18,16 @@ module CompatReadFlags
 
     owner_id = current_data_plane_owner_id
     owner_id.present? && DataPlaneMigration.migrated?(owner_id)
+  end
+
+  # Public customer surfaces (booking/sale/OS/survey) have no owner cookie —
+  # gate by product owner id instead of Current.business_owner.
+  def compat_public_read_for_owner?(owner_id)
+    return false unless ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return false unless compat_api_configured?
+
+    id = resolve_compat_id(owner_id)
+    id.present? && DataPlaneMigration.migrated?(id)
   end
 
   def compat_read_enabled?

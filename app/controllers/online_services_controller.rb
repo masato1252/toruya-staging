@@ -9,12 +9,12 @@ class OnlineServicesController < Lines::CustomersController
   skip_before_action :verify_authenticity_token, only: [:watch_lesson, :watch_episode]
 
   def show
-    if compat_read_data_plane? && current_customer.blank?
+    if compat_public_read_for_owner?(online_service.user_id) && current_customer.blank?
       render :show_compat_guest
       return
     end
 
-    if compat_read_data_plane? && current_customer.present?
+    if compat_public_read_for_owner?(online_service.user_id) && current_customer.present?
       render :show_compat_member
       return
     end

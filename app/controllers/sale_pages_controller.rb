@@ -12,7 +12,7 @@ class SalePagesController < ActionController::Base
       return
     end
 
-    if compat_read_data_plane?
+    if compat_public_read_for_owner?(sale_page.user_id)
       render :show_compat
       return
     end
