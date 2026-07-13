@@ -4,7 +4,10 @@ import { GlobalContext } from "context/chats/global_state"
 export default () => {
   const { props } = useContext(GlobalContext)
 
-  if (!props) return <></>
+  // Compat chat contexts do not include legacy web-push configuration.
+  // Do not let the optional notification prompt prevent the chat screen
+  // from mounting in that case.
+  if (!props?.web_push?.subscriber_key || !props?.web_push?.subscriber_path) return null
 
   return (
     <div className="notification-permission"
