@@ -14,21 +14,30 @@ const ReservationCustomersList = () =>  {
 
   const addCustomer = async () => {
     setProcessing(true)
-    const params = _.merge(
-      getValues(),
-      {
-        reservation_id: props.reservation_form.reservation_id,
-        end_time_date_part: start_time_date_part,
-        end_time_time_part: end_at()?.format("HH:mm"),
-        menu_staffs_list,
-        staff_states,
-        customers_list
-      }
-    )
+    try {
+      const params = _.merge(
+        getValues(),
+        {
+          reservation_id: props.reservation_form.reservation_id,
+          end_time_date_part: start_time_date_part,
+          end_time_time_part: end_at()?.format("HH:mm"),
+          menu_staffs_list,
+          staff_states,
+          customers_list
+        }
+      )
 
-    const [error, response] = await ReservationServices.addCustomer({business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, data: params})
-    window.location = response.data.redirect_to;
-    setProcessing(false)
+      const [error, response] = await ReservationServices.addCustomer({business_owner_id: props.business_owner_id, shop_id: props.reservation_form.shop.id, data: params})
+      if (error || !response?.data?.redirect_to) {
+        throw error || new Error("顧客追加画面へ移動できませんでした")
+      }
+      window.location.assign(response.data.redirect_to)
+    } catch (error) {
+      console.error("[reservation] add customer failed", error)
+      alert(error?.response?.data?.error_message || error?.message || "顧客追加画面へ移動できませんでした")
+    } finally {
+      setProcessing(false)
+    }
   }
 
   const customers_number = () => customers_list.filter((customer) => customer.state === accepted_state || customer.state === pending_state ).length
@@ -88,7 +97,7 @@ const ReservationCustomersList = () =>  {
         <div
           className="add-menu-block"
           onClick={addCustomer}>
-          <button className="btn btn-yellow">
+          <button type="button" className="btn btn-yellow">
             <i className="fa fa-plus" aria-hidden="true" ></i> <span>{i18n.add_customer_btn}</span>
           </button>
           {warning_content()}

@@ -145,6 +145,9 @@ export function shouldRewriteCompatRequest(url, input, init) {
   if (pathname === "/admin/memo" && getRequestMethod(input, init) !== "GET") return false;
   if (/\/admin\/custom_messages(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
   if (/\/admin\/docs(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
+  // This action stores transient form state in Rails.cache before navigating
+  // to the Rails customer picker; keep both sides on the same cache backend.
+  if (/\/lines\/user_bot\/owner(?:\/\d+)?\/shops\/\d+\/reservations\/add_customer(?:\.json)?$/.test(pathname)) return false;
 
   const headers = getRequestHeaders(input, init);
   const accept = (headers.get("Accept") || "").toLowerCase();
