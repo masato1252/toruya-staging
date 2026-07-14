@@ -47,6 +47,17 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def update
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_v1_put(
+        "/lines/user_bot/owner/#{owner_id}/surveys/#{params[:id]}",
+        params.permit!.to_h
+      )
+      render json: result || { status: "failed", error_message: "アンケートを更新できませんでした" },
+             status: result ? :ok : :bad_gateway
+      return
+    end
+
     @survey = current_user.surveys.find(params[:id])
     @attribute = params[:attribute]
     outcome = Surveys::Update.run(
@@ -60,6 +71,17 @@ class Lines::UserBot::SurveysController < Lines::UserBotDashboardController
   end
 
   def upsert
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/surveys/upsert",
+        params.permit!.to_h
+      )
+      render json: result || { status: "failed", error_message: "アンケートを保存できませんでした" },
+             status: result ? :ok : :bad_gateway
+      return
+    end
+
     outcome = Surveys::Upsert.run(
       user: Current.business_owner,
       owner: Current.business_owner,

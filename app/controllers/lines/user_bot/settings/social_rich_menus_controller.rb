@@ -57,6 +57,28 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def upsert
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      body = params.permit(
+        :social_name,
+        :internal_name,
+        :bar_label,
+        :layout_type,
+        :current,
+        :default
+      ).to_h
+      body[:actions] = params[:actions].to_json if params[:actions].present?
+      response = owner_id && compat_v1_multipart_response(
+        Net::HTTP::Post,
+        "/lines/user_bot/owner/#{owner_id}/settings/social_account/social_rich_menus/upsert",
+        body,
+        { image: params[:image] }
+      )
+      render json: response&.dig(:body) || { status: "failed", error_message: "リッチメニューを保存できませんでした" },
+             status: response&.dig(:status) || :bad_gateway
+      return
+    end
+
     if params[:image].blank? &&
         params[:social_name].present? &&
         (menu = Current.business_owner.social_account.social_rich_menus.find_by(social_name: params[:social_name])) && menu.image.attached?
@@ -118,6 +140,19 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def current
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_v1_put(
+        "/lines/user_bot/owner/#{owner_id}/settings/social_account/social_rich_menus/#{params[:id]}/current"
+      )
+      redirect_to(
+        result&.dig("data", "redirect_to") ||
+          lines_user_bot_settings_social_account_social_rich_menus_path(business_owner_id: owner_id),
+        alert: (result ? nil : I18n.t("common.operation_failed", default: "更新に失敗しました"))
+      )
+      return
+    end
+
     rich_menu = Current.business_owner.social_account.social_rich_menus.find(params[:id])
     RichMenus::SetDefault.run(social_rich_menu: rich_menu)
     RichMenus::SetCurrent.run(social_rich_menu: rich_menu)
@@ -127,6 +162,15 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   end
 
   def keyword_rich_menu_size
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/settings/social_account/social_rich_menus/keyword_rich_menu_size"
+      )
+      render json: result || {}, status: result ? :ok : :bad_gateway
+      return
+    end
+
     keyword_booking_pages_size = Current.business_owner.line_keyword_booking_pages.count
     keyword_booking_options_size = Current.business_owner.line_keyword_booking_options.count
 
@@ -139,7 +183,7 @@ class Lines::UserBot::Settings::SocialRichMenusController < Lines::UserBotDashbo
   private
 
   def redirect_to_correct_rich_menu_owner
-    return if compat_read_data_plane? && %w[edit show].include?(action_name)
+    return if compat_read_data_plane? && %w[edit show destroy current].include?(action_name)
     return if params[:id].blank?
     return if Current.business_owner.social_account&.social_rich_menus&.exists?(id: params[:id])
 

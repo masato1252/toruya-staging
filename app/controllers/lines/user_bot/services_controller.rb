@@ -12,6 +12,17 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def create
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/services",
+        params.permit!.to_h
+      )
+      render json: result || { status: "failed", error_message: "サービスを作成できませんでした" },
+             status: result ? :ok : :bad_gateway
+      return
+    end
+
     outcome = ::OnlineServices::Create.run(
       user: Current.business_owner,
       name: params[:name],
@@ -77,6 +88,17 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def update
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_v1_put(
+        "/lines/user_bot/owner/#{owner_id}/services/#{params[:id]}",
+        params.permit!.to_h
+      )
+      render json: result || { status: "failed", error_message: "サービスを更新できませんでした" },
+             status: result ? :ok : :bad_gateway
+      return
+    end
+
     service = Current.business_owner.online_services.find(params[:id])
 
     outcome = OnlineServices::Update.run(online_service: service, attrs: params.permit!.to_h, update_attribute: params[:attribute])

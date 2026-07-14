@@ -33,6 +33,17 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def upgrade_preview
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/settings/payments/upgrade_preview",
+        { plan: params[:plan], rank: params[:rank] }
+      )
+      render json: result || { error: "情報の取得に失敗しました" },
+             status: result ? :ok : :bad_gateway
+      return
+    end
+
     begin
       Rails.logger.info "Upgrade preview called with params: #{params.inspect}"
       
