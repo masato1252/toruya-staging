@@ -326,7 +326,10 @@ class BookingPagesController < ActionController::Base
     customer_id = params[:customer_id].presence || cookies[:booking_customer_id] || cookies[:verified_customer_id]
     @compat_booking_page_context = compat_fetch_v1_json(
       "/booking/#{params[:id]}/page_context",
-      customer_id: customer_id
+      {
+        customer_id: customer_id,
+        social_user_id: params[:social_user_id].presence || cookies[:line_social_user_id_of_customer]
+      }.compact
     )
     owner_id = @compat_booking_page_context&.dig("data", "user_id")
     unless @compat_booking_page_context&.dig("data") &&
