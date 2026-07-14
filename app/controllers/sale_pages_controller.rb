@@ -7,7 +7,7 @@ class SalePagesController < ActionController::Base
   layout "booking"
 
   def show
-    if compat_read_data_plane?
+    if ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
       response = compat_fetch_v1_json("/sale_pages/#{params[:slug]}/page_context")
       data = response&.dig("data")
       if data && compat_public_read_for_owner?(data["owner_user_id"])
