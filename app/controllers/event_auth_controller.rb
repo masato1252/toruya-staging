@@ -3,14 +3,23 @@
 class EventAuthController < ActionController::Base
   include ControllerHelpers
   include LineAuthGateway
+  include CompatReadFlags
+  include CompatSession
 
   def authorize
     apply_intent_params!(default_purpose: "event")
     event_slug = params[:event_slug]
     return redirect_to root_path, alert: "イベントが指定されていません" if event_slug.blank?
+    session.delete(:event_viewer_data_plane)
 
-    event = Event.published.undeleted.find_by(slug: event_slug)
-    return redirect_to root_path, alert: "イベントが見つかりません" unless event
+    if compat_event_enabled?
+      context = compat_fetch_v1_json("/events/#{event_slug}/page_context")&.dig("data")
+      return redirect_to root_path, alert: "イベントが見つかりません" unless context &&
+        compat_public_event_for_owner?(context["owner_user_id"])
+    else
+      event = Event.published.undeleted.find_by(slug: event_slug)
+      return redirect_to root_path, alert: "イベントが見つかりません" unless event
+    end
 
     clear_line_oauth_state!
 

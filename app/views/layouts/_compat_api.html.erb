@@ -3,6 +3,12 @@
   <% if compat_read_enabled? %>
     <meta name="compat-api-read-enabled" content="true" />
   <% end %>
+  <% if compat_admin_enabled? %>
+    <meta name="compat-api-admin-enabled" content="true" />
+  <% end %>
+  <% if compat_event_frontend_enabled? %>
+    <meta name="compat-api-event-enabled" content="true" />
+  <% end %>
   <% if defined?(current_social_user) && current_social_user&.social_service_user_id.present? %>
     <meta name="compat-api-social-service-user-id" content="<%= current_social_user.social_service_user_id %>" />
   <% end %>

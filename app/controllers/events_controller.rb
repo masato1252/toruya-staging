@@ -21,7 +21,7 @@ class EventsController < ActionController::Base
     end
 
     @current_event_line_user = current_event_line_user
-    @compat_public_read = compat_public_read_for_owner?(@event.user_id)
+    @compat_public_read = compat_public_event_for_viewer?(@event.user_id)
 
     if @compat_public_read
       return
@@ -62,12 +62,12 @@ class EventsController < ActionController::Base
   end
 
   def set_event
-    if ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
+    if compat_event_enabled?
       context = compat_fetch_v1_json(
         "/events/#{params[:slug]}/page_context",
-        event_line_user_id: session[:event_line_user_id]
+        compat_event_context_query
       )&.dig("data")
-      if context && compat_public_read_for_owner?(context["owner_user_id"])
+      if context && compat_public_event_for_viewer?(context["owner_user_id"])
         @compat_event = context
         return
       end

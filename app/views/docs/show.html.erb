@@ -1,31 +1,43 @@
+<%
+  doc_title = @compat_doc&.dig("title") || @doc.title
+  doc_description = @compat_doc&.dig("description") || @doc.description
+  doc_slug = @compat_doc&.dig("slug") || @doc.slug
+  thumbnail_url =
+    if @compat_doc
+      @compat_doc["thumbnail_url"]
+    else
+      @doc.thumbnail.attached? ? rails_blob_path(@doc.thumbnail, only_path: true) : nil
+    end
+  logged_in = @compat_doc ? @compat_doc["is_logged_in"] : current_doc_line_user.present?
+%>
 <%= content_for :title do %>
-  <title><%= @doc.title %> | 資料ダウンロード</title>
+  <title><%= doc_title %> | 資料ダウンロード</title>
 <% end %>
 
 <%= content_for :meta_tags do %>
   <meta property="og:site_name" content="Toruya">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="<%= @doc.title %>">
-  <meta property="og:url" content="<%= doc_url(slug: @doc.slug) %>">
-  <% if @doc.description.present? %>
-    <meta property="og:description" content="<%= @doc.description.squish.truncate(120) %>">
+  <meta property="og:title" content="<%= doc_title %>">
+  <meta property="og:url" content="<%= doc_url(slug: doc_slug) %>">
+  <% if doc_description.present? %>
+    <meta property="og:description" content="<%= doc_description.squish.truncate(120) %>">
   <% end %>
-  <% if @doc.thumbnail.attached? %>
-    <meta property="og:image" content="<%= rails_blob_url(@doc.thumbnail) %>">
+  <% if thumbnail_url.present? %>
+    <meta property="og:image" content="<%= thumbnail_url %>">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="<%= rails_blob_url(@doc.thumbnail) %>">
+    <meta name="twitter:image" content="<%= thumbnail_url %>">
   <% end %>
 <% end %>
 
 <%= react_component("docs/show", {
   props: {
     doc: {
-      title: @doc.title,
-      description: @doc.description,
-      thumbnail_url: @doc.thumbnail.attached? ? rails_blob_path(@doc.thumbnail, only_path: true) : nil
+      title: doc_title,
+      description: doc_description,
+      thumbnail_url: thumbnail_url
     },
-    is_logged_in: current_doc_line_user.present?,
-    line_login_url: current_doc_line_user ? nil : doc_auth_line_path(doc_slug: @doc.slug, return_to: request.path),
-    download_url: download_doc_path(slug: @doc.slug)
+    is_logged_in: logged_in,
+    line_login_url: logged_in ? nil : doc_auth_line_path(doc_slug: doc_slug, return_to: request.path),
+    download_url: download_doc_path(slug: doc_slug)
   }
 }, { camelize_props: false }) %>

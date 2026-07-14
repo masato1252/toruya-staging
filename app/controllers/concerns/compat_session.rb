@@ -135,6 +135,7 @@ module CompatSession
     request["X-CSRF-Token"] = form_authenticity_token if respond_to?(:form_authenticity_token, true)
     apply_compat_admin_proxy_headers(request, uri, request_class.name.demodulize.delete_prefix("Net::HTTP").upcase) if compat_admin_proxy_path?(path)
     request.body = body.to_json if body.present?
+    apply_compat_event_callback_headers(request, uri, body) if compat_event_callback_path?(path)
 
     response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https", open_timeout: 5, read_timeout: 10) do |http|
       http.request(request)
@@ -184,6 +185,7 @@ module CompatSession
     request["Cookie"] = cookies.map { |k, v| "#{k}=#{v}" }.join("; ") if cookies.present?
     request["Accept"] = "application/json"
     apply_compat_admin_proxy_headers(request, uri, "GET") if compat_admin_proxy_path?(path)
+    apply_compat_event_context_headers(request, uri) if query[:legacy_shop_ids].present?
 
     response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https", open_timeout: 5, read_timeout: 10) do |http|
       http.request(request)
@@ -209,6 +211,36 @@ module CompatSession
   # session. Owner session and impersonation traffic remain Rails-owned.
   def compat_admin_proxy_path?(path)
     path.start_with?("/admin/") || path == "/auth/admin/session"
+  end
+
+  def compat_event_callback_path?(path)
+    path.match?(%r{\A/events/[^/]+/(?:line_login|participation)\z}) ||
+      path.match?(%r{\A/events/[^/]+/contents/\d+/(?:start_usage|upsell_consultation|monitor_apply|track_activity)\z}) ||
+      path.match?(%r{\A/docs/[^/]+/(?:line_login|visit|download)\z})
+  end
+
+  def apply_compat_event_callback_headers(request, uri, body)
+    secret = ENV["COMPAT_ADMIN_PROXY_SECRET"].presence
+    raise "COMPAT_ADMIN_PROXY_SECRET is required for event callback requests" if secret.blank?
+
+    timestamp = (Time.now.to_f * 1000).to_i.to_s
+    line_user_id = body[:line_user_id] || body["line_user_id"] ||
+      body[:event_line_user_id] || body["event_line_user_id"] ||
+      body[:doc_line_user_id] || body["doc_line_user_id"]
+    compat_path = uri.path.start_with?("/v1/compat/") ? uri.path : "/v1/compat#{uri.path}"
+    payload = [timestamp, "POST", compat_path, line_user_id].join(".")
+    request["X-Compat-Event-Timestamp"] = timestamp
+    request["X-Compat-Event-Signature"] = OpenSSL::HMAC.hexdigest("SHA256", secret, payload)
+  end
+
+  def apply_compat_event_context_headers(request, uri)
+    secret = ENV["COMPAT_ADMIN_PROXY_SECRET"].presence
+    raise "COMPAT_ADMIN_PROXY_SECRET is required for mixed event context requests" if secret.blank?
+
+    timestamp = (Time.now.to_f * 1000).to_i.to_s
+    payload = [timestamp, "GET", uri.path, uri.query].join(".")
+    request["X-Compat-Event-Timestamp"] = timestamp
+    request["X-Compat-Event-Signature"] = OpenSSL::HMAC.hexdigest("SHA256", secret, payload)
   end
 
   # Admin requests are authenticated by the existing Devise session in Rails,

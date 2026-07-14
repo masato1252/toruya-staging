@@ -4,6 +4,7 @@ class DocsController < ActionController::Base
   layout "booking"
 
   include ControllerHelpers
+  include CompatSession
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -11,10 +12,38 @@ class DocsController < ActionController::Base
   before_action :capture_doc_referrer, only: [:show]
 
   def show
+    if @compat_doc
+      if session[:doc_line_user_id].present?
+        compat_v1_post(
+          "/docs/#{@compat_doc["slug"]}/visit",
+          doc_line_user_id: session[:doc_line_user_id],
+          referrer: session_doc_referrer
+        )
+      end
+      return
+    end
+
     record_visit_if_logged_in
   end
 
   def download
+    if @compat_doc
+      unless session[:doc_line_user_id].present?
+        redirect_to doc_path(slug: @compat_doc["slug"]), alert: "LINEログインが必要です"
+        return
+      end
+      result = compat_v1_post(
+        "/docs/#{@compat_doc["slug"]}/download",
+        doc_line_user_id: session[:doc_line_user_id],
+        referrer: session_doc_referrer
+      )
+      document_url = result&.dig("data", "document_url")
+      return redirect_to(document_url, allow_other_host: true) if document_url.present?
+
+      redirect_to doc_path(slug: @compat_doc["slug"]), alert: "資料をダウンロードできませんでした"
+      return
+    end
+
     doc_line_user = current_doc_line_user
     unless doc_line_user
       redirect_to doc_path(slug: @doc.slug), alert: "LINEログインが必要です"
@@ -30,6 +59,17 @@ class DocsController < ActionController::Base
   private
 
   def set_doc
+    if compat_admin_enabled?
+      @compat_doc = compat_fetch_v1_json(
+        "/docs/#{params[:slug]}/page_context",
+        doc_line_user_id: session[:doc_line_user_id]
+      )&.dig("data")
+      return if @compat_doc
+
+      render plain: "資料が見つかりません", status: :not_found
+      return
+    end
+
     @doc = Doc.status_published.active.find_by!(slug: params[:slug])
   rescue ActiveRecord::RecordNotFound
     render plain: "資料が見つかりません", status: :not_found
@@ -43,7 +83,7 @@ class DocsController < ActionController::Base
   helper_method :current_doc_line_user
 
   def capture_doc_referrer
-    capture_doc_landing_referrer(@doc.slug)
+    capture_doc_landing_referrer(@compat_doc&.dig("slug") || @doc.slug)
   end
 
   def session_doc_referrer
@@ -51,7 +91,7 @@ class DocsController < ActionController::Base
   end
 
   def doc_referrer_session_key
-    doc_referrer_session_key_for(@doc.slug)
+    doc_referrer_session_key_for(@compat_doc&.dig("slug") || @doc.slug)
   end
 
   def record_visit_if_logged_in

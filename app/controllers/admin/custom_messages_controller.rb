@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "ostruct"
 
 module Admin
   class CustomMessagesController < AdminController
@@ -98,12 +99,47 @@ module Admin
 
     def bulk_send
       @bulk_type = params[:bulk_type]
+      if compat_admin_enabled?
+        context = compat_fetch_v1_json(
+          "/admin/custom_messages/bulk/#{@bulk_type}",
+          locale: I18n.locale
+        )&.dig("data")
+        unless context
+          redirect_to scenarios_admin_custom_messages_path, alert: "送信対象を読み込めませんでした"
+          return
+        end
+        @scenario = context["scenario"]
+        @saved_message = OpenStruct.new(context["saved_message"]) if context["saved_message"]
+        @target_users = Array(context["target_users"]).map do |user|
+          OpenStruct.new(
+            id: user["id"],
+            profile: user["profile"] ? OpenStruct.new(user["profile"]) : nil,
+            social_user: user["social_user"] ? OpenStruct.new(user["social_user"]) : nil
+          )
+        end
+        return
+      end
+
       @scenario = bulk_scenario(@bulk_type)
       @saved_message = CustomMessage.find_by(scenario: @scenario, locale: I18n.locale)
       @target_users = bulk_target_users(@bulk_type)
     end
 
     def save_bulk_message
+      if compat_admin_enabled?
+        response = compat_v1_post_response(
+          "/admin/custom_messages/bulk/#{params[:bulk_type]}/save",
+          content: params[:content].presence || "",
+          locale: I18n.locale
+        )
+        if response&.dig(:success)
+          redirect_to bulk_send_admin_custom_messages_path(params[:bulk_type]), notice: "メッセージを保存しました"
+        else
+          redirect_to bulk_send_admin_custom_messages_path(params[:bulk_type]), alert: "メッセージを保存できませんでした"
+        end
+        return
+      end
+
       bulk_type = params[:bulk_type]
       scenario = bulk_scenario(bulk_type)
       content = params[:content].presence || ""
@@ -126,6 +162,23 @@ module Admin
     end
 
     def execute_bulk_send
+      if compat_admin_enabled?
+        response = compat_v1_post_response(
+          "/admin/custom_messages/bulk/#{params[:bulk_type]}/execute",
+          content: params[:content],
+          user_ids: params[:user_ids] || [],
+          locale: I18n.locale
+        )
+        if response&.dig(:success)
+          data = response.dig(:body, "data") || {}
+          redirect_to bulk_send_admin_custom_messages_path(params[:bulk_type]),
+            notice: "送信完了: 成功 #{data["success"] || 0}件 / 失敗 #{data["failed"] || 0}件"
+        else
+          redirect_to bulk_send_admin_custom_messages_path(params[:bulk_type]), alert: "送信エラーが発生しました"
+        end
+        return
+      end
+
       bulk_type = params[:bulk_type]
       scenario = bulk_scenario(bulk_type)
       content = params[:content].presence

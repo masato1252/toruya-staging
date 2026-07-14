@@ -13,6 +13,25 @@ class Events::ParticipationsController < ActionController::Base
   helper ApplicationHelper
 
   def new
+    if @compat_event_context
+      event_line_user = @compat_event_context["event_line_user"] || {}
+      unless @compat_event_context["is_logged_in"]
+        redirect_to event_path(slug: params[:event_slug])
+        return
+      end
+      if @compat_event_context["is_participant"] && @compat_event_context["basic_profile_complete"]
+        redirect_to event_path(slug: params[:event_slug])
+        return
+      end
+
+      @profile_completion_mode = @compat_event_context["is_participant"]
+      @initial_first_name = event_line_user["first_name"]
+      @initial_last_name = event_line_user["last_name"]
+      @initial_phone_number = event_line_user["phone_number"]
+      @initial_email = event_line_user["email"]
+      return
+    end
+
     @current_event_line_user = current_event_line_user
     redirect_to event_path(slug: @event.slug) and return unless @current_event_line_user
 
@@ -31,7 +50,7 @@ class Events::ParticipationsController < ActionController::Base
   end
 
   def create
-    if compat_public_event_create?
+    if compat_public_event?
       event_line_user_id = session[:event_line_user_id]
       return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless event_line_user_id
 
@@ -95,7 +114,7 @@ class Events::ParticipationsController < ActionController::Base
   private
 
   def set_event
-    return if compat_public_event_create?
+    return if compat_public_event?
 
     @event = Event.published.undeleted.find_by!(slug: params[:event_slug])
   rescue ActiveRecord::RecordNotFound
@@ -108,13 +127,19 @@ class Events::ParticipationsController < ActionController::Base
     @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
 
-  def compat_public_event_create?
-    return false unless action_name == "create"
-    return @_compat_public_event_create if defined?(@_compat_public_event_create)
+  def compat_public_event?
+    return @_compat_public_event if defined?(@_compat_public_event)
+    return @_compat_public_event = false unless compat_event_enabled?
 
-    context = compat_fetch_v1_json("/events/#{params[:event_slug]}/page_context")&.dig("data")
-    @_compat_public_event_create = context.present? &&
-      compat_public_read_for_owner?(context["owner_user_id"])
+    context = compat_fetch_v1_json(
+      "/events/#{params[:event_slug]}/page_context",
+      compat_event_context_query
+    )&.dig("data")
+    @_compat_public_event = context.present? &&
+      compat_public_event_for_viewer?(context["owner_user_id"])
+    @compat_event_context = context if @_compat_public_event
+    @compat_event = context if @_compat_public_event
+    @_compat_public_event
   end
 
   helper_method :current_event_line_user

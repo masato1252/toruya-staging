@@ -22,7 +22,7 @@ class EventContentsController < ActionController::Base
     end
 
     @current_event_line_user = current_event_line_user
-    @compat_public_read = compat_public_read_for_owner?(@event.user_id)
+    @compat_public_read = compat_public_event_for_viewer?(@event.user_id)
 
     if @compat_public_read
       return
@@ -224,22 +224,27 @@ class EventContentsController < ActionController::Base
   def compat_event_mutation?
     return false unless %w[start_usage upsell_consultation monitor_apply track_activity].include?(action_name)
     return @_compat_event_mutation if defined?(@_compat_event_mutation)
+    return @_compat_event_mutation = false unless compat_event_enabled?
 
-    context = compat_fetch_v1_json("/events/#{params[:event_slug]}/page_context")&.dig("data")
+    context = compat_fetch_v1_json(
+      "/events/#{params[:event_slug]}/page_context",
+      compat_event_context_query
+    )&.dig("data")
     @_compat_event_mutation = context.present? &&
-      compat_public_read_for_owner?(context["owner_user_id"])
+      compat_public_event_for_viewer?(context["owner_user_id"])
   end
 
   def load_compat_event_content_context
     return false unless action_name == "show"
+    return false unless compat_event_enabled?
     return true if @compat_event_content_context
 
     payload = compat_fetch_v1_json(
       "/events/#{params[:event_slug]}/contents/#{params[:id]}/page_context",
-      event_line_user_id: session[:event_line_user_id]
+      compat_event_context_query
     )&.dig("data")
     owner_id = payload&.dig("event", "owner_user_id")
-    return false unless payload && compat_public_read_for_owner?(owner_id)
+    return false unless payload && compat_public_event_for_viewer?(owner_id)
 
     @compat_event_content_context = payload
     @compat_event = { "slug" => payload.dig("event", "slug") }

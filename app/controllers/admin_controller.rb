@@ -109,4 +109,10 @@ class AdminController < ApplicationController
   def compat_read_enabled?
     compat_admin_enabled?
   end
+
+  def require_compat_admin!
+    return if compat_admin_enabled?
+
+    render json: { status: "failed", error_message: "Admin compat is disabled" }, status: :not_found
+  end
 end

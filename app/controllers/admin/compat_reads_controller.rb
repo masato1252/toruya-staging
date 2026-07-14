@@ -4,6 +4,8 @@ module Admin
   # Same-origin gateway for browser admin reads. AdminController authenticates
   # the Devise session before CompatSession signs and forwards this request.
   class CompatReadsController < AdminController
+    before_action :require_compat_admin!
+
     def show
       path = params[:path].to_s
       unless path.start_with?("/admin/") && !path.include?("://") && !path.include?("\\")

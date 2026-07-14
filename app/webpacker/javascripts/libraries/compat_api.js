@@ -29,6 +29,11 @@ function readCompatApiReadEnabled() {
   return meta?.content === "true";
 }
 
+function readCompatScopeEnabled(scope) {
+  const meta = document.querySelector(`meta[name="compat-api-${scope}-enabled"]`);
+  return meta?.content === "true";
+}
+
 export { readCompatApiReadEnabled };
 
 function readCompatApiContext() {
@@ -138,6 +143,8 @@ export function shouldRewriteCompatRequest(url, input, init) {
   const pathname = extractPathname(url);
   if (!pathname || isExcludedPath(pathname)) return false;
   if (!isCompatCandidatePath(pathname)) return false;
+  if (pathname.startsWith("/admin/") && !readCompatScopeEnabled("admin")) return false;
+  if (pathname.startsWith("/events/") && !readCompatScopeEnabled("event")) return false;
 
   // Admin writes use thin same-origin Rails controllers so the proxy secret is
   // never exposed to the browser.

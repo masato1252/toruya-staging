@@ -3,14 +3,20 @@
 class DocAuthController < ActionController::Base
   include ControllerHelpers
   include LineAuthGateway
+  include CompatSession
 
   def authorize
     apply_intent_params!(default_purpose: "doc")
     doc_slug = params[:doc_slug]
     return redirect_to root_path, alert: "資料が指定されていません" if doc_slug.blank?
 
-    doc = Doc.status_published.active.find_by(slug: doc_slug)
-    return redirect_to root_path, alert: "資料が見つかりません" unless doc
+    if compat_admin_enabled?
+      doc = compat_fetch_v1_json("/docs/#{doc_slug}/page_context")&.dig("data")
+      return redirect_to root_path, alert: "資料が見つかりません" unless doc
+    else
+      doc = Doc.status_published.active.find_by(slug: doc_slug)
+      return redirect_to root_path, alert: "資料が見つかりません" unless doc
+    end
 
     clear_line_oauth_state!
 

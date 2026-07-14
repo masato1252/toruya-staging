@@ -5,7 +5,17 @@ module CompatReadFlags
   extend ActiveSupport::Concern
 
   included do
-    helper_method :compat_read_enabled?, :compat_read_data_plane?, :compat_admin_enabled?, :compat_public_read_for_owner? if respond_to?(:helper_method)
+    helper_method(
+      :compat_read_enabled?,
+      :compat_read_data_plane?,
+      :compat_admin_enabled?,
+      :compat_event_enabled?,
+      :compat_public_read_for_owner?,
+      :compat_public_event_for_owner?,
+      :compat_public_event_for_viewer?,
+      :compat_event_frontend_enabled?,
+      :compat_event_context_query
+    ) if respond_to?(:helper_method)
   end
 
   def compat_api_configured?
@@ -23,7 +33,13 @@ module CompatReadFlags
   # Admin reads and writes are authorized by the Rails admin session and the
   # signed server proxy. They must not depend on an owner migration cookie.
   def compat_admin_enabled?
-    ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
+    ENV["COMPAT_ADMIN_ENABLED"] == "true" && compat_api_configured?
+  end
+
+  # Public event auth/SSR entry points check the env flag before owner migration
+  # is known. Owner migration is enforced by compat_public_event_for_owner?.
+  def compat_event_enabled?
+    ENV["COMPAT_EVENT_ENABLED"] == "true" && compat_api_configured?
   end
 
   # Public customer surfaces (booking/sale/OS/survey) have no owner cookie —
@@ -34,6 +50,36 @@ module CompatReadFlags
 
     id = resolve_compat_id(owner_id)
     id.present? && DataPlaneMigration.migrated?(id)
+  end
+
+  # Event administration and its public frontend are switched independently
+  # from booking/customer compat. The event owner must also be migrated so
+  # disabling the flag always restores the complete legacy event route.
+  def compat_public_event_for_owner?(owner_id)
+    return false unless compat_event_enabled?
+
+    id = resolve_compat_id(owner_id)
+    id.present? && DataPlaneMigration.migrated?(id)
+  end
+
+  # Registered Toruya users keep the data plane of their own owner/shop data
+  # during migration for affiliation resolution. Event/content records still
+  # follow the event owner's plane; legacy shop ids are signed into API reads.
+  def compat_public_event_for_viewer?(owner_id)
+    compat_public_event_for_owner?(owner_id)
+  end
+
+  def compat_event_frontend_enabled?
+    return true if @compat_public_read
+
+    @compat_event.present? || @compat_event_content_context.present?
+  end
+
+  def compat_event_context_query
+    {
+      event_line_user_id: session[:event_line_user_id],
+      legacy_shop_ids: Array(session[:event_legacy_shop_ids]).presence&.join(",")
+    }.compact
   end
 
   def compat_read_enabled?

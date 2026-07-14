@@ -12,6 +12,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   include Devise::Controllers::Rememberable
   include UserBotCookies
   include ControllerHelpers
+  include CompatSession
 
   def google_oauth2
     param = request.env["omniauth.params"]
@@ -368,9 +369,22 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     doc_line_user.save! if doc_line_user.changed?
 
-    session[:doc_line_user_id] = doc_line_user.id
-
     doc_auth = session.delete(:doc_auth_pending)
+    if doc_auth.present? && compat_admin_enabled?
+      compat_login = compat_v1_post(
+        "/docs/#{doc_auth["doc_slug"]}/line_login",
+        line_user_id: line_user_id,
+        display_name: doc_line_user.display_name,
+        picture_url: doc_line_user.picture_url,
+        email: doc_line_user.email
+      )
+      compat_doc_line_user_id = compat_login&.dig("data", "doc_line_user_id")
+      raise "Compat doc LINE user sync failed" if compat_doc_line_user_id.blank?
+
+      session[:doc_line_user_id] = compat_doc_line_user_id
+    else
+      session[:doc_line_user_id] = doc_line_user.id
+    end
 
     oauth_redirect_to_url = param.is_a?(Hash) ? param.delete("oauth_redirect_to_url") : nil
     oauth_redirect_to_url ||= session[:oauth_redirect_to_url]
@@ -421,10 +435,39 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     event_line_user.save! if event_line_user.changed?
 
-    session[:event_line_user_id] = event_line_user.id
-
     # event_auth_pending からイベント情報を取得 (ゲートウェイ経由の場合)
     event_auth = session.delete(:event_auth_pending)
+    toruya_user_ids = event_line_user.toruya_user_ids
+    legacy_toruya_user_ids = toruya_user_ids.reject { |id| DataPlaneMigration.migrated?(id) }
+    session[:event_legacy_shop_ids] = legacy_event_shop_ids(legacy_toruya_user_ids)
+    session[:event_viewer_data_plane] =
+      if legacy_toruya_user_ids.empty?
+        "compat"
+      else
+        "legacy"
+      end
+    compat_event_context =
+      if event_auth.present? && compat_event_enabled?
+        compat_fetch_v1_json("/events/#{event_auth["event_slug"]}/page_context")&.dig("data")
+      end
+    compat_event_context = nil unless compat_event_context &&
+      compat_public_event_for_viewer?(compat_event_context["owner_user_id"])
+
+    if compat_event_context
+      compat_login = compat_v1_post(
+        "/events/#{event_auth["event_slug"]}/line_login",
+        line_user_id: line_user_id,
+        display_name: event_line_user.display_name,
+        picture_url: event_line_user.picture_url,
+        email: event_line_user.email
+      )
+      compat_event_line_user_id = compat_login&.dig("data", "event_line_user_id")
+      raise "Compat event LINE user sync failed" if compat_event_line_user_id.blank?
+
+      session[:event_line_user_id] = compat_event_line_user_id
+    else
+      session[:event_line_user_id] = event_line_user.id
+    end
 
     # OAuth 関連セッション/Cookie のクリーンアップ
     oauth_redirect_to_url = param.is_a?(Hash) ? param.delete("oauth_redirect_to_url") : nil
@@ -438,9 +481,17 @@ class CallbacksController < Devise::OmniauthCallbacksController
     if event_auth.present?
       event_slug = event_auth["event_slug"]
       return_to = event_auth["return_to"]
-      event = Event.published.undeleted.find_by(slug: event_slug)
-
-      if event
+      if compat_event_context
+        refreshed = compat_fetch_v1_json(
+          "/events/#{event_slug}/page_context",
+          compat_event_context_query
+        )&.dig("data")
+        if refreshed&.dig("is_participant") && refreshed["basic_profile_complete"]
+          redirect_to return_to.presence || "/#{event_slug}"
+        else
+          redirect_to new_event_participation_path(event_slug: event_slug)
+        end
+      elsif (event = Event.published.undeleted.find_by(slug: event_slug))
         Events::SendLineLoginMessages.run(event: event, event_line_user: event_line_user)
 
         participant = event.event_participants.find_by(event_line_user_id: event_line_user.id)
@@ -478,5 +529,23 @@ class CallbacksController < Devise::OmniauthCallbacksController
   rescue => e
     Rollbar.info("Event LINE email retrieval failed", error: e.message, line_user_id: auth&.uid)
     nil
+  end
+
+  def legacy_event_shop_ids(user_ids)
+    return [] if user_ids.empty?
+
+    owned = Shop.active.where(user_id: user_ids).pluck(:id)
+    staffed = Shop.active
+                  .joins(:shop_staffs)
+                  .joins("INNER JOIN staffs ON staffs.id = shop_staffs.staff_id")
+                  .where(staffs: { user_id: user_ids, deleted_at: nil })
+                  .pluck(:id)
+    account_staffed = Shop.active
+                          .joins(shop_staffs: { staff: :staff_account })
+                          .merge(StaffAccount.active)
+                          .where(staff_accounts: { user_id: user_ids })
+                          .where(staffs: { deleted_at: nil })
+                          .pluck(:id)
+    (owned + staffed + account_staffed).uniq
   end
 end
