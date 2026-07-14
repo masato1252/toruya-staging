@@ -2,7 +2,17 @@
   page = @compat_booking_page_context["data"]
   includes = @compat_booking_page_context["includes"] || {}
   meta = includes["meta"] || {}
+  customer = includes["customer"] || {}
+  social_account = includes["social_account"] || {}
   slug = page["slug"] || params[:id]
+  booking_url = booking_page_url(slug)
+  social_login_url = if social_account["login_available"] && social_account["id"]
+                       shop_auth_line_path(
+                         social_account_id: MessageEncryptor.encrypt(social_account["id"]),
+                         return_to: booking_url,
+                         customer_id: customer["id"]
+                       )
+                     end
 %>
 <% content_for :title do %>
   <title><%= meta["title"] || page["name"] %></title>
@@ -25,15 +35,15 @@
   shellProps: {
     timezone: Time.zone.tzinfo.name,
     toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
-    social_account_add_friend_url: nil,
-    social_account_login_url: nil,
-    social_account_login_required: false,
+    social_account_add_friend_url: social_account["add_friend_url"],
+    social_account_login_url: social_login_url,
+    social_account_login_required: social_account["login_available"] && !customer["social_customer_exists"],
     social_account_skippable: page["social_account_skippable"],
-    is_shop_owner: false,
+    is_shop_owner: customer["is_shop_owner"],
     booking_options_quota: includes["booking_options_quota"] || {},
     lowest_online_charge_required_amount: BookingOption::LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT,
     product_requirement: includes["product_requirement"],
-    social_customer_exists: false,
+    social_customer_exists: customer["social_customer_exists"],
     support_feature_flags: support_feature_flags,
     function_access_id: params[:function_access_id],
     money_sample: money_sample(I18n.locale),
@@ -42,13 +52,13 @@
     customer_notification_channel: nil,
     is_free_plan: false,
     is_trial_member: false,
-    line_settings_verified: false,
+    line_settings_verified: social_account["line_settings_verified"],
     booking_page: page.merge({
       shop_logo_url: includes["shop_logo_url"],
       shop_name: includes.dig("shop", "short_name") || includes.dig("shop", "name"),
       is_single_option: includes["is_single_booking_option"],
       survey: includes["survey"],
-      url: booking_page_url(slug),
+      url: booking_url,
     }),
     calendar: {
       dayNames: I18n.t("date.abbr_day_names"),
@@ -59,19 +69,27 @@
     },
     booking_reservation_form: {
       regular: @compat_booking_customer_id ? "yes" : nil,
-      use_default_customer: false,
-      found_customer: false,
+      use_default_customer: customer["customer_phone_number"].present?,
+      found_customer: customer["id"].present?,
       booking_flow: "booking_option_first",
       remember_me: true,
-      customer_id: @compat_booking_customer_id,
-      reminder_permission: true,
-      customer_info: {},
-      present_customer_info: {},
+      customer_first_name: customer["first_name"],
+      customer_last_name: customer["last_name"],
+      customer_phonetic_last_name: customer["phonetic_last_name"],
+      customer_phonetic_first_name: customer["phonetic_first_name"],
+      customer_phone_number: customer["customer_phone_number"],
+      customer_email: cookies[:line_customer_email] || customer["customer_email"],
+      customer_id: customer["id"] || @compat_booking_customer_id,
+      reminder_permission: customer.key?("reminder_permission") ? customer["reminder_permission"] : true,
+      customer_info: customer,
+      present_customer_info: customer,
       last_selected_option_ids: [],
       booking_option_ids: [],
       booking_option_selected_flow_done: false,
       booking_date: params[:booking_date],
       booking_at: params[:booking_at],
+      social_user_id: customer["social_user_id"],
+      customer_social_user_id: customer["social_user_id"],
       user_id: page["user_id"],
       available_staffs: includes["available_staffs"] || [],
       staff_selection_required: includes["staff_selection_required"],
