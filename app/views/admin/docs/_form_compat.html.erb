@@ -24,6 +24,11 @@
     <div class="admin-form-group">
       <label class="admin-form-label">サムネイル画像</label>
       <div class="admin-form-input">
+        <% if doc["thumbnail_url"].present? %>
+          <div style="margin-bottom: 8px;">
+            <%= image_tag doc["thumbnail_url"], style: "max-width: 320px; max-height: 180px; border-radius: 8px; object-fit: cover;" %>
+          </div>
+        <% end %>
         <%= f.file_field :thumbnail, accept: "image/*", class: "form-control" %>
       </div>
     </div>

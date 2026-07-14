@@ -64,6 +64,48 @@ export default function AdminDocShow({ docId, docsHref }) {
             <div className="admin-detail-value" style={{ whiteSpace: "pre-wrap" }}>{doc.description}</div>
           </div>
         ) : null}
+        {doc.thumbnail_url ? (
+          <div className="admin-detail-row">
+            <div className="admin-detail-label">サムネイル</div>
+            <div className="admin-detail-value">
+              <img src={doc.thumbnail_url} alt="" style={{ maxWidth: 320, borderRadius: 8 }} />
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="admin-detail-section">
+        <div className="admin-form-section-title">リード一覧（{doc.downloads?.length || 0}件）</div>
+        {doc.downloads?.length ? (
+          <div className="admin-participant-table-wrap">
+            <table className="admin-participant-table">
+              <thead>
+                <tr>
+                  <th>LINE表示名</th>
+                  <th>メール</th>
+                  <th>初回訪問</th>
+                  <th>初回DL</th>
+                  <th>DL回数</th>
+                  <th>リファラ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {doc.downloads.map((download) => (
+                  <tr key={download.id}>
+                    <td>{download.display_name}</td>
+                    <td>{download.email || "—"}</td>
+                    <td>{download.first_visited_at ? new Date(download.first_visited_at).toLocaleString("ja-JP") : "—"}</td>
+                    <td>{download.first_downloaded_at ? new Date(download.first_downloaded_at).toLocaleString("ja-JP") : "—"}</td>
+                    <td>{download.download_count}</td>
+                    <td style={{ maxWidth: 240, wordBreak: "break-all" }}>{download.referrer || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="admin-event-empty">リードはまだありません</div>
+        )}
       </div>
 
       <div style={{ marginTop: 16 }}>
