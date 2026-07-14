@@ -1,17 +1,18 @@
 <%= render "admin/features" %>
 <% event = @compat_event %>
+<% persisted = event["id"].present? %>
 
-<h2>イベント編集</h2>
-<%= form_with url: admin_event_path(event["id"]), method: :put, local: true, multipart: true, scope: :event, html: { class: "admin-event-form" } do |f| %>
+<h2><%= persisted ? "イベント編集" : "イベント新規作成" %></h2>
+<%= form_with url: persisted ? admin_event_path(event["id"]) : admin_events_path, method: persisted ? :put : :post, local: true, multipart: true, scope: :event, html: { class: "admin-event-form" } do |f| %>
   <div class="admin-form-section">
     <div class="admin-form-section-title">基本情報</div>
     <div class="admin-form-group">
       <label class="admin-form-label">タイトル<span class="required-mark">*</span></label>
-      <div class="admin-form-input"><%= f.text_field :title, value: event["title"], class: "form-control" %></div>
+      <div class="admin-form-input"><%= f.text_field :title, value: event["title"], class: "form-control", required: true %></div>
     </div>
     <div class="admin-form-group">
       <label class="admin-form-label">スラッグ<span class="required-mark">*</span></label>
-      <div class="admin-form-input"><%= f.text_field :slug, value: event["slug"], class: "form-control" %></div>
+      <div class="admin-form-input"><%= f.text_field :slug, value: event["slug"], class: "form-control", required: true %></div>
     </div>
     <div class="admin-form-group">
       <label class="admin-form-label">概要</label>
@@ -19,7 +20,14 @@
     </div>
     <div class="admin-form-group">
       <label class="admin-form-label">ロゴ画像</label>
-      <div class="admin-form-input"><%= f.file_field :logo_image, accept: "image/*", class: "form-control" %></div>
+      <div class="admin-form-input">
+        <% if event["logo_image_url"].present? %>
+          <div style="margin-bottom: 8px; background: #464342; padding: 16px; border-radius: 8px; display: inline-block;">
+            <%= image_tag event["logo_image_url"], style: "max-width: 300px; max-height: 160px; object-fit: contain; display: block;" %>
+          </div>
+        <% end %>
+        <%= f.file_field :logo_image, accept: "image/*", class: "form-control" %>
+      </div>
     </div>
   </div>
   <div class="admin-form-section">
@@ -66,13 +74,19 @@
     <div class="admin-form-group">
       <label class="admin-form-label">全コンテンツプレビュー権限店舗ID</label>
       <div class="admin-form-input">
+        <% if event["master_preview_shop"] %>
+          <div class="admin-form-help" style="margin-bottom: 6px;">
+            現在: <%= event.dig("master_preview_shop", "name") %>
+            （ユーザID: <%= event.dig("master_preview_shop", "user_id") %>）
+          </div>
+        <% end %>
         <%= f.number_field :master_preview_shop_id, value: event["master_preview_shop_id"], class: "form-control", min: 1 %>
       </div>
     </div>
   </div>
   <div class="admin-form-actions">
-    <%= f.submit "更新する", class: "btn btn-tarco" %>
-    <%= link_to "キャンセル", admin_event_path(event["id"]), class: "btn btn-gray" %>
+    <%= f.submit persisted ? "更新する" : "作成する", class: "btn btn-tarco" %>
+    <%= link_to "キャンセル", persisted ? admin_event_path(event["id"]) : admin_events_path, class: "btn btn-gray" %>
   </div>
 <% end %>
 

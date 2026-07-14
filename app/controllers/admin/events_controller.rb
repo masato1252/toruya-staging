@@ -20,6 +20,15 @@ class Admin::EventsController < AdminController
   end
 
   def new
+    if compat_read_data_plane?
+      @compat_event = {
+        "published" => false,
+        "stamp_rally_phases" => []
+      }
+      render :edit_compat
+      return
+    end
+
     @event = Event.new
   end
 
