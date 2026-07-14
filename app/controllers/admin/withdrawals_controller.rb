@@ -11,12 +11,22 @@ module Admin
     end
 
     def receipt
-      @withdrawal = PaymentWithdrawal.find(params[:id])
+      if ENV["COMPAT_API_READ_ENABLED"] == "true"
+        @compat_withdrawal = compat_fetch_v1_json(
+          "/admin/withdrawals/#{params[:id]}/receipt_context"
+        )&.dig("data")
+        unless @compat_withdrawal
+          redirect_to admin_path, alert: "出金明細を取得できませんでした"
+          return
+        end
+      else
+        @withdrawal = PaymentWithdrawal.find(params[:id])
+      end
 
       options = {
         template: "settings/withdrawals/show",
         pdf: "payment_receipt",
-        title: @withdrawal.created_at.to_date.to_s,
+        title: @compat_withdrawal&.dig("created_date") || @withdrawal.created_at.to_date.to_s,
         show_as_html: params.key?('debug'),
         page_width: 210,
         page_height: 297,

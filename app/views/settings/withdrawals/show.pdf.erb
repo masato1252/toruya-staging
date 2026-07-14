@@ -1,6 +1,13 @@
 <% content_for :style do %>
   <%= stylesheet_link_tag wicked_pdf_asset_base64("payments/printing") %>
 <% end %>
+<%
+  completed = @compat_withdrawal ? @compat_withdrawal["completed"] : @withdrawal.completed?
+  transfer_date = @compat_withdrawal ? @compat_withdrawal["transfer_date"] : @withdrawal.details["transfer_date"]
+  order_id = @compat_withdrawal ? @compat_withdrawal["order_id"] : @withdrawal.order_id
+  user_name = @compat_withdrawal ? @compat_withdrawal["user_name"] : @withdrawal.details["user_name"]
+  amount_formatted = @compat_withdrawal ? @compat_withdrawal["amount_formatted"] : @withdrawal.amount.format
+%>
 
 <div class="receipt">
   <div class="content">
@@ -8,16 +15,16 @@
       <div class="logo">
         <%= image_tag wicked_pdf_asset_base64("toruya_logo.png") %>
       </div>
-      <div class="receipt-type"><%= @withdrawal.completed? ? I18n.t("settings.subscription.receipt.label") : I18n.t("settings.subscription.receipt.refund.label") %></div>
+      <div class="receipt-type"><%= completed ? I18n.t("settings.subscription.receipt.label") : I18n.t("settings.subscription.receipt.refund.label") %></div>
     </div>
 
-    <div class="charge-date"><%= I18n.t("settings.subscription.receipt.date") %> <%= @withdrawal.details["transfer_date"] %></div>
-    <div class="transaction-id"><%= I18n.t("settings.subscription.receipt.transaction_id") %> <%= @withdrawal.order_id %></div>
-    <div class="user-name"><%= @withdrawal.details["user_name"] %> 様</div>
+    <div class="charge-date"><%= I18n.t("settings.subscription.receipt.date") %> <%= transfer_date %></div>
+    <div class="transaction-id"><%= I18n.t("settings.subscription.receipt.transaction_id") %> <%= order_id %></div>
+    <div class="user-name"><%= user_name %> 様</div>
 
     <div class="center">
       <div class="plan-amount">
-        <%= @withdrawal.amount.format %>
+        <%= amount_formatted %>
       </div>
       <div>
         <%= raw I18n.t("settings.subscription.receipt.desc2_html") %>
@@ -45,7 +52,19 @@
         </tr>
       </thead>
       <tbody>
-        <% @withdrawal.payments.includes(:charge).each do |payment| %>
+        <% if @compat_withdrawal %>
+          <% @compat_withdrawal["payments"].each do |payment| %>
+            <tr>
+              <td><%= I18n.l(Date.parse(payment["created_date"])) %></td>
+              <td><%= payment["plan_name"] %></td>
+              <td>
+                (<%= l(Date.parse(payment["charge_date"]), format: :year_month_date) if payment["charge_date"] %> ~ <%= l(Date.parse(payment["expired_date"]), format: :year_month_date) if payment["expired_date"] %>)
+              </td>
+              <td><%= payment["amount_formatted"] %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <% @withdrawal.payments.includes(:charge).each do |payment| %>
           <tr>
             <td><%= I18n.l(payment.created_at.to_date) %></td>
             <td><%= payment.charge.details["plan_name"] %></td>
@@ -54,6 +73,7 @@
             </td>
             <td><%= payment.amount.format %></td>
           </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>
