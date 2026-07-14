@@ -1,18 +1,24 @@
 <div class="modal-dialog" role="document">
+  <%
+    provider = @compat_refund&.dig("provider") || @payment.provider
+    owner_user_id = @compat_refund&.dig("owner_user_id") || @payment.customer.user_id
+    payment_id = @compat_refund&.dig("payment_id") || @payment.id
+    amount_cents = @compat_refund&.dig("amount_cents") || @payment.amount.fractional
+  %>
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title">
         <%= t("reservation.modal.refund.title") %>
       </h4>
     </div>
-    <%= form_with url: refund_lines_user_bot_customer_payment_path(@payment.customer.user_id, @payment), local: true do |form| %>
+    <%= form_with url: refund_lines_user_bot_customer_payment_path(owner_user_id, payment_id), local: true do |form| %>
       <div class="modal-body">
-        <%= t("reservation.modal.refund.message", provider: payment_provider_label(@payment.provider)) %><br />
-        <%= t("common.price") %><%= text_field_tag :amount, @payment.amount.fractional %><%= t("common.unit") %>
+        <%= t("reservation.modal.refund.message", provider: payment_provider_label(provider)) %><br />
+        <%= t("common.price") %><%= text_field_tag :amount, amount_cents %><%= t("common.unit") %>
       </div>
       <div class="modal-footer centerize">
         <button type="button" class="btn btn-yellow" data-dismiss="modal"><%= t("common.close") %></button>
-        <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message", provider: payment_provider_label(@payment.provider))  } %>
+        <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message", provider: payment_provider_label(provider))  } %>
       </div>
     <% end %>
   </div>

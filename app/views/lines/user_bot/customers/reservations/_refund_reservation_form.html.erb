@@ -1,4 +1,11 @@
-<%= form_with url: refund_lines_user_bot_customer_reservations_path(reservation_customer.customer.user_id, reservation_customer.reservation_id, reservation_customer.customer_id), local: true do |form| %>
-  <%= text_field_tag :amount, reservation_customer.booking_amount.fractional %><%= t("common.unit") %>
-  <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message", provider: payment_provider_label(paid_payment.provider))  } %>
+<%
+  owner_user_id = compat_refund&.dig("owner_user_id") || reservation_customer.customer.user_id
+  reservation_id = compat_refund&.dig("reservation_id") || reservation_customer.reservation_id
+  customer_id = compat_refund&.dig("customer_id") || reservation_customer.customer_id
+  amount_cents = compat_refund&.dig("amount_cents") || reservation_customer.booking_amount.fractional
+  provider = compat_refund&.dig("paid_payment", "provider") || paid_payment.provider
+%>
+<%= form_with url: refund_lines_user_bot_customer_reservations_path(owner_user_id, reservation_id, customer_id), local: true do |form| %>
+  <%= text_field_tag :amount, amount_cents %><%= t("common.unit") %>
+  <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message", provider: payment_provider_label(provider))  } %>
 <% end %>

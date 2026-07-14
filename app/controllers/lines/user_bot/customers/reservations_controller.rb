@@ -102,6 +102,17 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def refund_modal
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      @compat_refund = compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/customer/reservations/#{params[:reservation_id]}/refund_context/#{params[:customer_id]}"
+      )&.dig("data")
+      return render(layout: false) if @compat_refund&.dig("paid_payment")
+
+      head :not_found
+      return
+    end
+
     @reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
     @paid_payment = @reservation_customer.paid_payment
     render layout: false

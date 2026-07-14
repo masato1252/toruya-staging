@@ -1,4 +1,5 @@
 <div class="modal-dialog" role="document">
+  <% provider = @compat_refund&.dig("paid_payment", "provider") || @paid_payment.provider %>
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title">
@@ -6,8 +7,8 @@
       </h4>
     </div>
     <div class="modal-body">
-      <%= t("reservation.modal.refund.message", provider: payment_provider_label(@paid_payment.provider)) %>
-      <%= render "refund_reservation_form", reservation_customer: @reservation_customer, paid_payment: @paid_payment %>
+      <%= t("reservation.modal.refund.message", provider: payment_provider_label(provider)) %>
+      <%= render "refund_reservation_form", reservation_customer: @reservation_customer, paid_payment: @paid_payment, compat_refund: @compat_refund %>
     </div>
   </div>
 </div>
