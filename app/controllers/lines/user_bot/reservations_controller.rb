@@ -41,8 +41,18 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def form
-    if compat_read_data_plane? && params[:from] != "adding_customer"
-      @compat_reservation_id = params[:id].presence || params[:reservation_id].presence
+    if compat_read_data_plane?
+      cached_form =
+        if params[:from] == "adding_customer"
+          Rails.cache.read(reservation_params_hash_cache_key)
+        end
+      @compat_initial_reservation_form =
+        cached_form.present? ? JSON.parse(cached_form).with_indifferent_access : {}
+      @compat_reservation_id =
+        @compat_initial_reservation_form[:reservation_id].presence ||
+        params[:id].presence ||
+        params[:reservation_id].presence
+      Rails.cache.delete(reservation_params_hash_cache_key) if cached_form.present?
       render :form_compat
       return
     end

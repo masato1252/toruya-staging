@@ -12,7 +12,13 @@ function defaultTimePart() {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
-export default function ReservationFormShell({ businessOwnerId, shopId, reservationId, shellProps }) {
+export default function ReservationFormShell({
+  businessOwnerId,
+  shopId,
+  reservationId,
+  initialForm,
+  shellProps,
+}) {
   const [formProps, setFormProps] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,27 +28,41 @@ export default function ReservationFormShell({ businessOwnerId, shopId, reservat
     let cancelled = false;
     const resolvedReservationId =
       reservationId || searchParams.get("id") || searchParams.get("reservation_id");
-    const query = resolvedReservationId ? `?reservation_id=${resolvedReservationId}` : "";
+    const query = new URLSearchParams();
+    if (resolvedReservationId) query.set("reservation_id", resolvedReservationId);
+    if (searchParams.get("customer_id")) query.set("customer_id", searchParams.get("customer_id"));
 
     compatRead(
-      `/lines/user_bot/owner/${businessOwnerId}/shops/${shopId}/reservations/form_context${query}`,
+      `/lines/user_bot/owner/${businessOwnerId}/shops/${shopId}/reservations/form_context${
+        query.toString() ? `?${query}` : ""
+      }`,
     )
       .then((body) => {
         if (cancelled) return;
         const ctx = body.data || {};
         const reservation = ctx.reservation || {};
+        const hydratedReservation = { ...reservation, ...(initialForm || {}) };
         const isEdit = Boolean(resolvedReservationId && reservation.id);
+        const initialCustomers = initialForm?.customers_list || [];
+        const customers = [...initialCustomers, ...(ctx.customers_list || [])].filter(
+          (customer, index, list) =>
+            list.findIndex(
+              (candidate) =>
+                String(candidate.customer_id || candidate.value) ===
+                String(customer.customer_id || customer.value),
+            ) === index,
+        );
 
         const startDate =
-          reservation.start_time_date_part ||
+          hydratedReservation.start_time_date_part ||
           searchParams.get("start_time_date_part") ||
           defaultDatePart();
         const startTime =
-          reservation.start_time_time_part ||
+          hydratedReservation.start_time_time_part ||
           searchParams.get("start_time_time_part") ||
           defaultTimePart();
-        const endDate = reservation.end_time_date_part || startDate;
-        const endTime = reservation.end_time_time_part || startTime;
+        const endDate = hydratedReservation.end_time_date_part || startDate;
+        const endTime = hydratedReservation.end_time_time_part || startTime;
 
         const defaultMenuRow = {
           menu: null,
@@ -68,23 +88,34 @@ export default function ReservationFormShell({ businessOwnerId, shopId, reservat
           reservation_form: {
             ...shellProps.reservation_form,
             shop: ctx.shop || shellProps.reservation_form?.shop,
-            id: reservation.id ?? shellProps.reservation_form?.id,
-            reservation_id: reservation.reservation_id ?? reservation.id ?? null,
-            memo: reservation.memo ?? shellProps.reservation_form?.memo,
-            meeting_url: reservation.meeting_url ?? shellProps.reservation_form?.meeting_url,
-            by_staff_id: reservation.by_staff_id ?? shellProps.reservation_form?.by_staff_id,
+            id: hydratedReservation.id ?? shellProps.reservation_form?.id,
+            reservation_id:
+              hydratedReservation.reservation_id ?? hydratedReservation.id ?? null,
+            memo: hydratedReservation.memo ?? shellProps.reservation_form?.memo,
+            meeting_url:
+              hydratedReservation.meeting_url ?? shellProps.reservation_form?.meeting_url,
+            by_staff_id:
+              hydratedReservation.by_staff_id ?? shellProps.reservation_form?.by_staff_id,
             start_time_date_part: startDate,
             start_time_time_part: startTime,
             end_time_date_part: endDate,
             end_time_time_part: endTime,
             menu_staffs_list:
-              isEdit && ctx.menu_staffs_list?.length
+              initialForm?.menu_staffs_list?.length
+                ? initialForm.menu_staffs_list
+                : isEdit && ctx.menu_staffs_list?.length
                 ? ctx.menu_staffs_list
                 : shellProps.reservation_form?.menu_staffs_list?.length
                   ? shellProps.reservation_form.menu_staffs_list
                   : [defaultMenuRow],
-            staff_states: ctx.staff_states || shellProps.reservation_form?.staff_states || [],
-            customers_list: ctx.customers_list || shellProps.reservation_form?.customers_list || [],
+            staff_states:
+              initialForm?.staff_states?.length
+                ? initialForm.staff_states
+                : ctx.staff_states || shellProps.reservation_form?.staff_states || [],
+            customers_list:
+              customers.length > 0
+                ? customers
+                : shellProps.reservation_form?.customers_list || [],
           },
         });
       })
@@ -97,7 +128,7 @@ export default function ReservationFormShell({ businessOwnerId, shopId, reservat
     return () => {
       cancelled = true;
     };
-  }, [businessOwnerId, shopId, reservationId, shellProps, searchParams]);
+  }, [businessOwnerId, shopId, reservationId, initialForm, shellProps, searchParams]);
 
   if (loading) return <p className="margin-around centerize">Loading...</p>;
   if (error) return <p className="danger margin-around">{error}</p>;
@@ -110,5 +141,6 @@ ReservationFormShell.propTypes = {
   businessOwnerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   shopId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   reservationId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  initialForm: PropTypes.object,
   shellProps: PropTypes.object.isRequired,
 };

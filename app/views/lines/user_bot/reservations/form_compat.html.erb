@@ -5,6 +5,7 @@
         businessOwnerId: business_owner_id,
         shopId: params[:shop_id],
         reservationId: @compat_reservation_id,
+        initialForm: @compat_initial_reservation_form || {},
         shellProps: {
           business_owner_id: business_owner_id,
           params: params,
