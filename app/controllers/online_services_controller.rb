@@ -83,12 +83,30 @@ class OnlineServicesController < Lines::CustomersController
   end
 
   def tagged_episodes
+    if compat_read_data_plane?
+      result = compat_fetch_v1_json(
+        "/online_services/#{params[:slug]}/episodes/#{ERB::Util.url_encode(params[:tag].to_s)}"
+      )
+      render json: result || { status: "failed", error_message: "コンテンツを取得できませんでした" },
+             status: result ? :ok : :bad_gateway
+      return
+    end
+
     episodes = Episodes::Tagged.run!(online_service: online_service, tag: params[:tag])
 
     render json: { episodes: episodes.map { |episode| EpisodeSerializer.new(episode).attributes_hash } }
   end
 
   def search_episodes
+    if compat_read_data_plane?
+      result = compat_fetch_v1_json(
+        "/online_services/#{params[:slug]}/search/#{ERB::Util.url_encode(params[:keyword].to_s)}"
+      )
+      render json: result || { status: "failed", error_message: "コンテンツを取得できませんでした" },
+             status: result ? :ok : :bad_gateway
+      return
+    end
+
     episodes = Episodes::Search.run!(online_service: online_service, keyword: params[:keyword])
 
     render json: { episodes: episodes.map { |episode| EpisodeSerializer.new(episode).attributes_hash } }
@@ -99,6 +117,7 @@ class OnlineServicesController < Lines::CustomersController
   def online_service
     compat_bootstrap_action =
       action_name == "customer_status" ||
+      %w[tagged_episodes search_episodes].include?(action_name) ||
       (controller_path == "online_services/customer_payments" && action_name == "new")
     return nil if compat_bootstrap_action && compat_read_data_plane? && !@force_legacy_online_service
 
