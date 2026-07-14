@@ -23,7 +23,16 @@ class BookingPagesController < ActionController::Base
     Rails.logger.info("[BookingPagesController] show action - params: #{params.keys.join(', ')}")
     Rails.logger.info("[BookingPagesController]   social_user_id: #{params[:social_user_id].present? ? params[:social_user_id] : 'nil'}")
     Rails.logger.info("[BookingPagesController]   cookie line_social_user_id_of_customer: #{cookies[:line_social_user_id_of_customer].present? ? 'present' : 'nil'}")
-    
+
+    if load_compat_booking_page_context
+      unless @compat_booking_page_context.dig("includes", "subscription_active")
+        render inline: t("common.no_service_warning_html")
+        return
+      end
+      render :show_compat_api
+      return
+    end
+
     unless subscription_active_for_public_booking?(booking_page)
       render inline: t("common.no_service_warning_html")
       return
@@ -310,6 +319,25 @@ class BookingPagesController < ActionController::Base
   end
 
   private
+
+  def load_compat_booking_page_context
+    return false unless ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
+
+    customer_id = cookies[:booking_customer_id] || cookies[:verified_customer_id]
+    @compat_booking_page_context = compat_fetch_v1_json(
+      "/booking/#{params[:id]}/page_context",
+      customer_id: customer_id
+    )
+    owner_id = @compat_booking_page_context&.dig("data", "user_id")
+    unless @compat_booking_page_context&.dig("data") &&
+           compat_public_read_for_owner?(owner_id)
+      @compat_booking_page_context = nil
+      return false
+    end
+
+    @compat_booking_customer_id = customer_id&.to_i
+    true
+  end
 
   def load_compat_booking_customer_context
     @booking_page = booking_page

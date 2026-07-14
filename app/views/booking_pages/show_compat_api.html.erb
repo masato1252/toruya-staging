@@ -1,0 +1,100 @@
+<%
+  page = @compat_booking_page_context["data"]
+  includes = @compat_booking_page_context["includes"] || {}
+  meta = includes["meta"] || {}
+  slug = page["slug"] || params[:id]
+%>
+<% content_for :title do %>
+  <title><%= meta["title"] || page["name"] %></title>
+<% end %>
+<% content_for :meta_tags do %>
+  <meta name="description" content="<%= meta["description"] %>">
+  <meta name="keywords" content="<%= meta["keywords"] %>">
+  <meta property="og:site_name" content="Toruya">
+  <meta property="og:title" content="<%= meta["og_title"] || meta["title"] %>">
+  <meta property="og:url" content="<%= booking_page_url(slug) %>">
+  <meta property="og:description" content="<%= meta["description"] %>">
+  <% if meta["og_image"].present? %>
+    <meta property="og:image" content="<%= meta["og_image"] %>">
+  <% end %>
+<% end %>
+
+<%= react_component("booking/public_reservation_shell", {
+  slug: slug,
+  customerId: @compat_booking_customer_id,
+  shellProps: {
+    timezone: Time.zone.tzinfo.name,
+    toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
+    social_account_add_friend_url: nil,
+    social_account_login_url: nil,
+    social_account_login_required: false,
+    social_account_skippable: page["social_account_skippable"],
+    is_shop_owner: false,
+    booking_options_quota: includes["booking_options_quota"] || {},
+    lowest_online_charge_required_amount: BookingOption::LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT,
+    product_requirement: includes["product_requirement"],
+    social_customer_exists: false,
+    support_feature_flags: support_feature_flags,
+    function_access_id: params[:function_access_id],
+    money_sample: money_sample(I18n.locale),
+    locale: I18n.locale,
+    business_owner_id: page["user_id"],
+    customer_notification_channel: nil,
+    is_free_plan: false,
+    is_trial_member: false,
+    line_settings_verified: false,
+    booking_page: page.merge({
+      shop_logo_url: includes["shop_logo_url"],
+      shop_name: includes.dig("shop", "short_name") || includes.dig("shop", "name"),
+      is_single_option: includes["is_single_booking_option"],
+      survey: includes["survey"],
+      url: booking_page_url(slug),
+    }),
+    calendar: {
+      dayNames: I18n.t("date.abbr_day_names"),
+      monthNames: I18n.t("date.abbr_month_names").compact,
+      dateSelectedCallbackPath: "/booking/#{slug}/booking_times",
+      schedulePath: "/booking/#{slug}/calendar.json",
+      selectedDate: includes["default_selected_date"],
+    },
+    booking_reservation_form: {
+      regular: @compat_booking_customer_id ? "yes" : nil,
+      use_default_customer: false,
+      found_customer: false,
+      booking_flow: "booking_option_first",
+      remember_me: true,
+      customer_id: @compat_booking_customer_id,
+      reminder_permission: true,
+      customer_info: {},
+      present_customer_info: {},
+      last_selected_option_ids: [],
+      booking_option_ids: [],
+      booking_option_selected_flow_done: false,
+      booking_date: params[:booking_date],
+      booking_at: params[:booking_at],
+      user_id: page["user_id"],
+      available_staffs: includes["available_staffs"] || [],
+      staff_selection_required: includes["staff_selection_required"],
+      selected_staff_id: nil,
+      staff_booking_options_map: includes["staff_booking_options_map"] || {},
+      booking_options: includes["booking_page_options"] || [],
+    },
+    path: {
+      save: "/booking/#{slug}/booking_reservation",
+      find_customer: find_customer_booking_page_path(slug),
+      ask_confirmation_code: ask_confirmation_code_booking_page_path(slug),
+      confirm_code: confirm_code_booking_page_path(slug),
+    },
+    i18n: {
+      errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),
+    }.merge!([
+      t("settings.booking_page.form"),
+      t("booking_page"),
+      t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time, :repeat_email),
+      t("action").slice(:save, :confirm, :verify_identity),
+      t("customer").slice(:select_region),
+      t("errors").slice(:email_mismatch),
+      t("booking_page.done").merge(add_friend_messages_html: I18n.t("booking_page.done.add_friend_messages_html", shop_name: includes.dig("shop", "name"))),
+    ].inject(:merge)),
+  },
+}, { camelize_props: false }) %>
