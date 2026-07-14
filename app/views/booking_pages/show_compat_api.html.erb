@@ -39,6 +39,7 @@
     social_account_login_url: social_login_url,
     social_account_login_required: social_account["login_available"] && !customer["social_customer_exists"],
     social_account_skippable: page["social_account_skippable"],
+    payment_solution: includes["payment_solution"] || {},
     is_shop_owner: customer["is_shop_owner"],
     booking_options_quota: includes["booking_options_quota"] || {},
     lowest_online_charge_required_amount: BookingOption::LOWEST_ONLINE_CHARGE_REQUIRED_AMOUNT,

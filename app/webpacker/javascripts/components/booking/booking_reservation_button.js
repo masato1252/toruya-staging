@@ -25,7 +25,7 @@ const BookingReservationButton = ({
   }
 
   const isPaymentSolutionReady = () => {
-    return !!payment_solution.stripe_key || !!payment_solution.square_location_id
+    return !!payment_solution?.stripe_key || !!payment_solution?.square_location_id
   }
 
   const isButtonDisabled = submitting || isEmailInvalid;
@@ -45,7 +45,7 @@ const BookingReservationButton = ({
           if (isAnyErrors()) {
             $("#customer-info-modal").modal("show");
           }
-          else if (tickets.length !== booking_reservation_form_values.booking_option_ids.length && isPaymentSolutionReady() && isOnlinePayment) {
+          else if (isOnlinePayment && tickets.length !== booking_reservation_form_values.booking_option_ids.length && isPaymentSolutionReady()) {
             set_booking_reservation_form_values(prev => ({...prev, is_paying_booking: true}))
           }
           else if (!isOnlinePayment && isCustomerAddressRequired && !isCustomerAddressFilled) {
