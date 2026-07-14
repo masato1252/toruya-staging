@@ -1,0 +1,19 @@
+<% meta = @compat_sale_page_meta %>
+<% content_for :title do %>
+  <title><%= meta["title"] %></title>
+<% end %>
+<%= content_for :meta_tags do %>
+  <meta name="description" content="<%= meta["description"] %>" />
+  <meta property="og:site_name" content="Toruya">
+  <meta property="og:title" content="<%= meta["og_title"] || meta["title"] %>">
+  <meta property="og:url" content="<%= sale_page_url(params[:slug]) %>">
+  <meta property="og:description" content="<%= meta["og_description"] || meta["description"] %>">
+  <% if meta["og_image"].present? %>
+    <meta property="og:image" content="<%= meta["og_image"] %>">
+  <% end %>
+<% end %>
+
+<%= react_component("sale_pages/public_sale_shell", {
+  slug: params[:slug],
+  supportFeatureFlags: support_feature_flags,
+}) %>

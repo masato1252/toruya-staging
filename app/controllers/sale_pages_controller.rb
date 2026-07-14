@@ -7,6 +7,21 @@ class SalePagesController < ActionController::Base
   layout "booking"
 
   def show
+    if compat_read_data_plane?
+      response = compat_fetch_v1_json("/sale_pages/#{params[:slug]}/page_context")
+      data = response&.dig("data")
+      if data && compat_public_read_for_owner?(data["owner_user_id"])
+        unless response.dig("includes", "subscription_active")
+          render inline: t("common.no_service_warning_html")
+          return
+        end
+        @compat_sale_page = data
+        @compat_sale_page_meta = response.dig("includes", "meta") || {}
+        render :show_api_compat
+        return
+      end
+    end
+
     unless subscription_active_for_public_sale?(sale_page)
       render inline: t("common.no_service_warning_html")
       return

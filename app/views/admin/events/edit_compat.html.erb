@@ -1,0 +1,101 @@
+<%= render "admin/features" %>
+<% event = @compat_event %>
+
+<h2>イベント編集</h2>
+<%= form_with url: admin_event_path(event["id"]), method: :put, local: true, multipart: true, scope: :event, html: { class: "admin-event-form" } do |f| %>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">基本情報</div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">タイトル<span class="required-mark">*</span></label>
+      <div class="admin-form-input"><%= f.text_field :title, value: event["title"], class: "form-control" %></div>
+    </div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">スラッグ<span class="required-mark">*</span></label>
+      <div class="admin-form-input"><%= f.text_field :slug, value: event["slug"], class: "form-control" %></div>
+    </div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">概要</label>
+      <div class="admin-form-input"><%= f.text_area :description, value: event["description"], class: "form-control", rows: 4 %></div>
+    </div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">ロゴ画像</label>
+      <div class="admin-form-input"><%= f.file_field :logo_image, accept: "image/*", class: "form-control" %></div>
+    </div>
+  </div>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">開催期間</div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">開催開始日時</label>
+      <div class="admin-form-input">
+        <%= f.datetime_local_field :start_at, value: event["start_at"]&.then { |value| Time.iso8601(value).in_time_zone("Asia/Tokyo").strftime("%Y-%m-%dT%H:%M") }, class: "form-control" %>
+      </div>
+    </div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">開催終了日時</label>
+      <div class="admin-form-input">
+        <%= f.datetime_local_field :end_at, value: event["end_at"]&.then { |value| Time.iso8601(value).in_time_zone("Asia/Tokyo").strftime("%Y-%m-%dT%H:%M") }, class: "form-control" %>
+      </div>
+    </div>
+    <div class="admin-form-group">
+      <label class="admin-form-label"><%= f.check_box :published, checked: event["published"] %> 公開する</label>
+    </div>
+  </div>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">スタンプラリー</div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">スタンプラリー説明文</label>
+      <div class="admin-form-input">
+        <%= f.text_area :stamp_rally_description, value: event["stamp_rally_description"], class: "form-control", rows: 4 %>
+      </div>
+    </div>
+    <%= hidden_field_tag "event[stamp_rally_phases_present]", "1" %>
+    <div id="compat-stamp-rally-phases">
+      <% Array(event["stamp_rally_phases"]).each do |phase| %>
+        <div class="phase-row" style="display:flex;gap:8px;margin-bottom:8px;">
+          <input type="text" name="event[stamp_rally_phases][][title]" value="<%= phase["title"] %>" placeholder="第一弾" class="form-control">
+          <input type="date" name="event[stamp_rally_phases][][start_on]" value="<%= phase["start_on"] %>" class="form-control">
+          <input type="date" name="event[stamp_rally_phases][][end_on]" value="<%= phase["end_on"] %>" class="form-control">
+          <button type="button" class="compat-delete-phase btn btn-gray">削除</button>
+        </div>
+      <% end %>
+    </div>
+    <button type="button" id="compat-add-phase" class="btn btn-gray">＋ 期間を追加</button>
+  </div>
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">開催前の限定プレビュー</div>
+    <div class="admin-form-group">
+      <label class="admin-form-label">全コンテンツプレビュー権限店舗ID</label>
+      <div class="admin-form-input">
+        <%= f.number_field :master_preview_shop_id, value: event["master_preview_shop_id"], class: "form-control", min: 1 %>
+      </div>
+    </div>
+  </div>
+  <div class="admin-form-actions">
+    <%= f.submit "更新する", class: "btn btn-tarco" %>
+    <%= link_to "キャンセル", admin_event_path(event["id"]), class: "btn btn-gray" %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var list = document.getElementById("compat-stamp-rally-phases");
+    var add = document.getElementById("compat-add-phase");
+    if (!list || !add) return;
+    add.addEventListener("click", function() {
+      var row = document.createElement("div");
+      row.className = "phase-row";
+      row.style.cssText = "display:flex;gap:8px;margin-bottom:8px;";
+      row.innerHTML =
+        '<input type="text" name="event[stamp_rally_phases][][title]" placeholder="第一弾" class="form-control">' +
+        '<input type="date" name="event[stamp_rally_phases][][start_on]" class="form-control">' +
+        '<input type="date" name="event[stamp_rally_phases][][end_on]" class="form-control">' +
+        '<button type="button" class="compat-delete-phase btn btn-gray">削除</button>';
+      list.appendChild(row);
+    });
+    list.addEventListener("click", function(event) {
+      if (event.target.classList.contains("compat-delete-phase")) {
+        event.target.closest(".phase-row").remove();
+      }
+    });
+  });
+</script>

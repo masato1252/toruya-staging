@@ -82,6 +82,13 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
   end
 
   def change_expire_at
+    if compat_read_data_plane?
+      return compat_service_customer_mutation(
+        "change_expire_at",
+        body: { expire_at: params[:expire_at], memo: params[:memo] }
+      )
+    end
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     relation = online_service.online_service_customer_relations.find(params[:id])
 
@@ -95,6 +102,13 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
   end
 
   def change_stripe_subscription_id
+    if compat_read_data_plane?
+      return compat_service_customer_mutation(
+        "change_stripe_subscription_id",
+        body: { stripe_subscription_id: params[:stripe_subscription_id] }
+      )
+    end
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     relation = online_service.online_service_customer_relations.find(params[:id])
     CustomerPayments::ChangeStripeSubscriptionId.run!(
@@ -106,15 +120,17 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
   private
 
-  def compat_service_customer_mutation(action, customer_id: nil)
+  def compat_service_customer_mutation(action, customer_id: nil, body: nil)
     owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
     path = "/lines/user_bot/owner/#{owner_id}/services/#{params[:service_id]}/customers"
     path = "#{path}/assign" if action == "assign"
     path = "#{path}/#{params[:id]}/#{action}" unless action == "assign"
-    body = customer_id ? { customer_id: customer_id } : {}
+    body ||= customer_id ? { customer_id: customer_id } : {}
     result =
       if action == "cancel"
         compat_v1_delete(path, body)
+      elsif %w[change_expire_at change_stripe_subscription_id].include?(action)
+        compat_v1_put(path, body)
       else
         compat_v1_post(path, body)
       end

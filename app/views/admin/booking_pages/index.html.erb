@@ -1,6 +1,7 @@
 <% if compat_read_enabled? %>
   <%= react_component("admin/booking_pages/index", {
     userId: @lookup_user_id,
+    socialServiceUserId: @lookup_social_service_user_id,
     bookingPagePathPrefix: booking_page_path("").sub(%r{/$}, ""),
   }) %>
 <% else %>

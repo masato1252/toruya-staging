@@ -3,6 +3,7 @@
 class Events::ParticipationsController < ActionController::Base
   layout "booking"
   include ControllerHelpers
+  include CompatSession
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -30,6 +31,38 @@ class Events::ParticipationsController < ActionController::Base
   end
 
   def create
+    if compat_read_data_plane?
+      event_line_user_id = session[:event_line_user_id]
+      return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless event_line_user_id
+
+      ref = cookies.encrypted["event_ref_#{params[:event_slug]}"]
+      ref = ref.is_a?(Hash) ? ref : {}
+      result = compat_v1_post(
+        "/events/#{params[:event_slug]}/participation",
+        {
+          event_line_user_id: event_line_user_id,
+          business_types: params[:business_types],
+          business_age: params[:business_age],
+          concern_labels: params[:concern_labels],
+          concern_other: params[:concern_other],
+          first_name: params[:first_name],
+          last_name: params[:last_name],
+          phone_number: params[:phone_number],
+          email: params[:email],
+          referrer_shop_id: ref["rs"],
+          referrer_event_line_user_id: ref["ru"]
+        }
+      )
+      if result&.dig("status") == "successful"
+        render json: result["data"] || { success: true, redirect_to: event_path(slug: params[:event_slug]) }
+      else
+        render json: {
+          error_message: result&.dig("error_message") || "参加登録に失敗しました"
+        }, status: :unprocessable_entity
+      end
+      return
+    end
+
     @current_event_line_user = current_event_line_user
     return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless @current_event_line_user
 
@@ -62,6 +95,8 @@ class Events::ParticipationsController < ActionController::Base
   private
 
   def set_event
+    return if compat_read_data_plane? && action_name == "create"
+
     @event = Event.published.undeleted.find_by!(slug: params[:event_slug])
   rescue ActiveRecord::RecordNotFound
     render plain: "イベントが見つかりません", status: :not_found

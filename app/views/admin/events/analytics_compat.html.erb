@@ -1,0 +1,63 @@
+<%= render "admin/features" %>
+<% analytics = @compat_analytics %>
+<% event = analytics["event"] %>
+<% overall = analytics["overall_access_counts"] %>
+
+<div class="admin-event-detail">
+  <div class="admin-detail-header">
+    <h2><%= event["title"] %> - アクセス解析</h2>
+    <div class="admin-detail-actions"><%= link_to "イベント詳細に戻る", admin_event_path(event["id"]), class: "btn btn-gray" %></div>
+  </div>
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">アクセス数（全体）</div>
+    <div class="admin-analytics-grid">
+      <% [["全体", overall["total"], "text-tarco"], ["参加登録前", overall["before_registration"], "text-blue"], ["参加登録後", overall["after_registration"], "text-green"]].each do |label, counts, color| %>
+        <div class="admin-analytics-card">
+          <div class="analytics-value <%= color %>"><%= counts["pv"] %> / <%= counts["uu"] %></div>
+          <div class="analytics-label"><%= label %> PV / UU</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">アクティビティ全体集計</div>
+    <div class="admin-analytics-grid">
+      <div class="admin-analytics-card"><div class="analytics-value text-indigo"><%= analytics.dig("seminar_activity_counts", "seminar_view") || 0 %></div><div class="analytics-label">セミナー講演 動画閲覧</div></div>
+      <div class="admin-analytics-card"><div class="analytics-value text-blue"><%= analytics.dig("booth_activity_counts", "material_download") || 0 %></div><div class="analytics-label">展示ブース 資料DL</div></div>
+      <div class="admin-analytics-card"><div class="analytics-value text-tarco"><%= analytics.dig("booth_activity_counts", "online_service_click") || 0 %></div><div class="analytics-label">展示ブース サービス遷移</div></div>
+    </div>
+  </div>
+  <% analytics["contents"].each do |content| %>
+    <% counts = content["access_counts"] %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title"><%= content["title"] %> <span class="admin-badge admin-badge-info"><%= content["content_type"] == "seminar" ? "セミナー講演" : "展示ブース" %></span></div>
+      <div class="admin-analytics-grid">
+        <% [["全体 PV / UU", counts["total"]["pv"], counts["total"]["uu"]], ["参加登録前 PV / UU", counts["before_registration"]["pv"], counts["before_registration"]["uu"]], ["参加登録後 PV / UU", counts["after_registration"]["pv"], counts["after_registration"]["uu"]]].each do |label, pv, uu| %>
+          <div class="admin-analytics-card"><div class="analytics-value text-tarco"><%= pv %> / <%= uu %></div><div class="analytics-label"><%= label %></div></div>
+        <% end %>
+        <div class="admin-analytics-card"><div class="analytics-value text-teal"><%= content["registration_count"] %></div><div class="analytics-label">本ブース経由の参加登録</div></div>
+        <div class="admin-analytics-card"><div class="analytics-value text-green"><%= content["usage_count"] %></div><div class="analytics-label">リード</div></div>
+        <div class="admin-analytics-card"><div class="analytics-value text-orange"><%= content["upsell_consultations_count"] %></div><div class="analytics-label">相談予約</div></div>
+        <div class="admin-analytics-card"><div class="analytics-value text-purple"><%= content["monitor_applications_count"] %></div><div class="analytics-label">モニター応募</div></div>
+      </div>
+    </div>
+  <% end %>
+  <% if analytics["activity_logs"].present? %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title">アクティビティ履歴（直近100件）</div>
+      <table class="admin-participant-table">
+        <thead><tr><th>日時</th><th>参加者</th><th>コンテンツ</th><th>アクション</th></tr></thead>
+        <tbody>
+          <% analytics["activity_logs"].each do |log| %>
+            <tr>
+              <td><%= l(Time.iso8601(log["created_at"]), format: :short) %></td>
+              <td><%= log["participant_name"] %></td>
+              <td><%= log["content_title"] %></td>
+              <td><span class="admin-badge admin-badge-info"><%= { "seminar_view" => "動画閲覧", "material_download" => "資料DL", "online_service_click" => "サービス遷移", "upsell_click" => "アップセル" }[log["activity_type"]] || log["activity_type"] %></span></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

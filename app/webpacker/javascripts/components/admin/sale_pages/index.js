@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
-export default function AdminSalePagesIndex({ userId, salePagePathPrefix }) {
+export default function AdminSalePagesIndex({ userId, socialServiceUserId, salePagePathPrefix }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId && !socialServiceUserId) {
       setLoading(false);
       return;
     }
     let cancelled = false;
-    compatRead(`/admin/sale_pages?user_id=${userId}`)
+    const params = new URLSearchParams();
+    if (userId) params.set("user_id", userId);
+    else params.set("social_service_user_id", socialServiceUserId);
+    compatRead(`/admin/sale_pages?${params}`)
       .then((body) => {
         if (cancelled) return;
         setItems(body.data || []);
@@ -27,7 +30,7 @@ export default function AdminSalePagesIndex({ userId, salePagePathPrefix }) {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, socialServiceUserId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="danger">{error}</p>;
@@ -54,5 +57,6 @@ export default function AdminSalePagesIndex({ userId, salePagePathPrefix }) {
 
 AdminSalePagesIndex.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  socialServiceUserId: PropTypes.string,
   salePagePathPrefix: PropTypes.string,
 };

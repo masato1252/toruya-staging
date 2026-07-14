@@ -3,6 +3,21 @@
 module OnlineServices
   class CustomerPaymentsController < ::OnlineServicesController
     def new
+      if compat_read_data_plane?
+        customer_id = cookies[:verified_customer_id] || cookies[:booking_customer_id]
+        context = customer_id.present? ? compat_fetch_v1_json(
+          "/online_services/#{params[:slug]}/customer_payments/page_context",
+          customer_id: customer_id,
+          order_id: params[:order_id]
+        )&.dig("data") : nil
+        if context && compat_public_read_for_owner?(context["owner_user_id"])
+          @compat_customer_payment = context
+          render :new_compat
+          return
+        end
+      end
+
+      @force_legacy_online_service = true
       @relation = online_service.online_service_customer_relations.where(customer: current_customer).last
       # subscription there is no order_id for each payment
       @price =

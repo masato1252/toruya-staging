@@ -4,6 +4,7 @@ class EventContentsController < ActionController::Base
   layout "booking"
   include ControllerHelpers
   include CompatReadFlags
+  include CompatSession
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -46,6 +47,8 @@ class EventContentsController < ActionController::Base
   end
 
   def start_usage
+    return proxy_compat_event_action("start_usage") if compat_event_mutation?
+
     @current_event_line_user = current_event_line_user
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_event_line_user
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @event.event_participants.exists?(event_line_user_id: @current_event_line_user.id)
@@ -76,6 +79,8 @@ class EventContentsController < ActionController::Base
   end
 
   def upsell_consultation
+    return proxy_compat_event_action("upsell_consultation") if compat_event_mutation?
+
     @current_event_line_user = current_event_line_user
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_event_line_user
     if @event_content.ended? || !@event_content.started?
@@ -94,6 +99,8 @@ class EventContentsController < ActionController::Base
   end
 
   def monitor_apply
+    return proxy_compat_event_action("monitor_apply") if compat_event_mutation?
+
     @current_event_line_user = current_event_line_user
     return render json: { error: "参加登録が必要です" }, status: :unauthorized unless @current_event_line_user
     if @event_content.ended? || !@event_content.started?
@@ -112,6 +119,12 @@ class EventContentsController < ActionController::Base
   end
 
   def track_activity
+    return proxy_compat_event_action(
+      "track_activity",
+      activity_type: params[:activity_type],
+      metadata: params[:metadata]&.to_unsafe_h || {}
+    ) if compat_event_mutation?
+
     @current_event_line_user = current_event_line_user
     return render json: { error: "ログインが必要です" }, status: :unauthorized unless @current_event_line_user
 
@@ -175,12 +188,16 @@ class EventContentsController < ActionController::Base
   end
 
   def set_event
+    return if compat_event_mutation?
+
     @event = Event.published.undeleted.find_by!(slug: params[:event_slug])
   rescue ActiveRecord::RecordNotFound
     render plain: "イベントが見つかりません", status: :not_found
   end
 
   def set_event_content
+    return if compat_event_mutation?
+
     # 公開コンテンツ(status=1)は誰でも閲覧可能。
     # 下書き(status=0)はプレビュー権限を持つ viewer のみ閲覧可能(下記 visible_event_contents_for 内で制御)。
     # 権限のない viewer が下書きの URL を直叩きした場合は 404 を返す。
@@ -195,6 +212,32 @@ class EventContentsController < ActionController::Base
     @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
   helper_method :current_event_line_user
+
+  def compat_event_mutation?
+    compat_read_data_plane? &&
+      %w[start_usage upsell_consultation monitor_apply track_activity].include?(action_name)
+  end
+
+  def proxy_compat_event_action(action, extra = {})
+    event_line_user_id = session[:event_line_user_id]
+    unless event_line_user_id
+      render json: { error: action == "track_activity" ? "ログインが必要です" : "参加登録が必要です" },
+             status: :unauthorized
+      return
+    end
+
+    result = compat_v1_post(
+      "/events/#{params[:event_slug]}/contents/#{params[:id]}/#{action}",
+      { event_line_user_id: event_line_user_id }.merge(extra)
+    )
+    if result&.dig("status") == "successful"
+      render json: result["data"] || { success: true }
+    else
+      render json: {
+        error: result&.dig("error_message") || "処理に失敗しました"
+      }, status: :unprocessable_entity
+    end
+  end
 
   def record_stamp(action_type)
     return unless @current_event_line_user

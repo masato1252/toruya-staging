@@ -13,6 +13,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def create
+    if compat_read_data_plane?
+      response = compat_event_content_request(
+        Net::HTTP::Post,
+        "/admin/events/#{params[:event_id]}/event_contents"
+      )
+      render_compat_event_content_response(response)
+      return
+    end
+
     @event_content = @event.event_contents.build(event_content_params)
     # position はカラムデフォルトが 0 (not null) のため ||= では採番されない。
     # 新規作成時は常に末尾に追加する（既存コンテンツの position は触らない）。
@@ -43,6 +52,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def update
+    if compat_read_data_plane?
+      response = compat_event_content_request(
+        Net::HTTP::Put,
+        "/admin/event_contents/#{params[:id]}"
+      )
+      render_compat_event_content_response(response)
+      return
+    end
+
     if params[:event_content][:thumbnail].present?
       @event_content.thumbnail.attach(params[:event_content][:thumbnail])
     end
@@ -59,6 +77,16 @@ class Admin::EventContentsController < AdminController
   end
 
   def sort
+    if compat_read_data_plane?
+      response = compat_v1_json_response(
+        Net::HTTP::Put,
+        "/admin/events/#{params[:event_id]}/event_contents/sort",
+        ids: params[:ids]
+      )
+      response&.dig(:success) ? head(:ok) : head(:unprocessable_entity)
+      return
+    end
+
     ids = params[:ids]
     return head :bad_request unless ids.is_a?(Array)
 
@@ -70,6 +98,20 @@ class Admin::EventContentsController < AdminController
   end
 
   def destroy
+    if compat_read_data_plane?
+      response = compat_v1_json_response(
+        Net::HTTP::Delete,
+        "/admin/event_contents/#{params[:id]}"
+      )
+      if response&.dig(:success)
+        redirect_to response.dig(:body, "redirect_to") || admin_events_path,
+                    notice: "コンテンツを削除しました"
+      else
+        redirect_to admin_events_path, alert: "コンテンツを削除できませんでした"
+      end
+      return
+    end
+
     event = @event_content.event
     @event_content.soft_delete!
     redirect_to admin_event_path(event), notice: "コンテンツを削除しました"
@@ -78,6 +120,18 @@ class Admin::EventContentsController < AdminController
   # --- Slide images ---
 
   def upload_image
+    if compat_read_data_plane?
+      response = compat_v1_multipart_response(
+        Net::HTTP::Post,
+        "/admin/event_contents/#{params[:id]}/images",
+        {},
+        image: params[:image]
+      )
+      render json: response&.dig(:body) || { status: "failed", error_message: "画像を保存できませんでした" },
+             status: response&.dig(:status) || :bad_gateway
+      return
+    end
+
     image = @event_content.event_content_images.create!(
       position: @event_content.event_content_images.count
     )
@@ -89,6 +143,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def destroy_image
+    if compat_read_data_plane?
+      response = compat_v1_delete(
+        "/admin/event_contents/#{params[:id]}/images/#{params[:image_id]}"
+      )
+      render json: response || { status: "failed" },
+             status: response&.dig("status") == "successful" ? :ok : :unprocessable_entity
+      return
+    end
+
     image = @event_content.event_content_images.find(params[:image_id])
     image.image.purge
     image.destroy!
@@ -96,6 +159,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def sort_images
+    if compat_read_data_plane?
+      response = compat_v1_put(
+        "/admin/event_contents/#{params[:id]}/sort_images",
+        ids: params[:ids]
+      )
+      response&.dig("status") == "successful" ? head(:ok) : head(:unprocessable_entity)
+      return
+    end
+
     ids = params[:ids]
     return head :bad_request unless ids.is_a?(Array)
 
@@ -109,6 +181,16 @@ class Admin::EventContentsController < AdminController
   # --- Speakers ---
 
   def add_speaker
+    if compat_read_data_plane?
+      response = compat_speaker_request(
+        Net::HTTP::Post,
+        "/admin/event_contents/#{params[:id]}/speakers"
+      )
+      render json: response&.dig(:body) || { status: "failed", error_message: "登壇者を保存できませんでした" },
+             status: response&.dig(:status) || :bad_gateway
+      return
+    end
+
     speaker = @event_content.event_content_speakers.build(
       name: params[:name],
       position_title: params[:position_title],
@@ -128,6 +210,16 @@ class Admin::EventContentsController < AdminController
   end
 
   def update_speaker
+    if compat_read_data_plane?
+      response = compat_speaker_request(
+        Net::HTTP::Put,
+        "/admin/event_contents/#{params[:id]}/speakers/#{params[:speaker_id]}"
+      )
+      render json: response&.dig(:body) || { status: "failed", error_message: "登壇者を保存できませんでした" },
+             status: response&.dig(:status) || :bad_gateway
+      return
+    end
+
     speaker = @event_content.event_content_speakers.find(params[:speaker_id])
     speaker.update!(
       name: params[:name],
@@ -146,6 +238,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def destroy_speaker
+    if compat_read_data_plane?
+      response = compat_v1_delete(
+        "/admin/event_contents/#{params[:id]}/speakers/#{params[:speaker_id]}"
+      )
+      render json: response || { status: "failed" },
+             status: response&.dig("status") == "successful" ? :ok : :unprocessable_entity
+      return
+    end
+
     speaker = @event_content.event_content_speakers.find(params[:speaker_id])
     speaker.profile_image.purge if speaker.profile_image.attached?
     speaker.destroy!
@@ -153,6 +254,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def sort_speakers
+    if compat_read_data_plane?
+      response = compat_v1_put(
+        "/admin/event_contents/#{params[:id]}/sort_speakers",
+        ids: params[:ids]
+      )
+      response&.dig("status") == "successful" ? head(:ok) : head(:unprocessable_entity)
+      return
+    end
+
     ids = params[:ids]
     return head :bad_request unless ids.is_a?(Array)
 
@@ -166,6 +276,15 @@ class Admin::EventContentsController < AdminController
   # --- Lookup APIs ---
 
   def shops_by_user
+    if compat_read_data_plane?
+      rows = compat_fetch_v1_json(
+        "/admin/events/#{params[:event_id]}/event_contents/shops_by_user",
+        user_id: params[:user_id]
+      )
+      render json: rows || []
+      return
+    end
+
     user = User.find_by(id: params[:user_id])
     return render json: [] unless user
 
@@ -174,6 +293,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def online_services_for_shop
+    if compat_read_data_plane?
+      rows = compat_fetch_v1_json(
+        "/admin/events/#{params[:event_id]}/event_contents/online_services_for_shop",
+        shop_id: params[:shop_id]
+      )
+      render json: rows || []
+      return
+    end
+
     shop = Shop.find_by(id: params[:shop_id])
     return render json: [] unless shop
 
@@ -182,6 +310,15 @@ class Admin::EventContentsController < AdminController
   end
 
   def booking_pages_for_shop
+    if compat_read_data_plane?
+      rows = compat_fetch_v1_json(
+        "/admin/events/#{params[:event_id]}/event_contents/booking_pages_for_shop",
+        shop_id: params[:shop_id]
+      )
+      render json: rows || []
+      return
+    end
+
     shop = Shop.find_by(id: params[:shop_id])
     return render json: [] unless shop
 
@@ -191,6 +328,15 @@ class Admin::EventContentsController < AdminController
 
   # 紐付け先 shop の、このイベントにおける集客数 (直接 + 間接) を返す。
   def shop_acquisition_counts
+    if compat_read_data_plane?
+      counts = compat_fetch_v1_json(
+        "/admin/events/#{params[:event_id]}/event_contents/shop_acquisition_counts",
+        shop_id: params[:shop_id]
+      )
+      render json: counts || { direct: 0, indirect: 0, total: 0 }
+      return
+    end
+
     shop_id = params[:shop_id]
     return render json: { direct: 0, indirect: 0, total: 0 } if shop_id.blank?
 
@@ -201,12 +347,22 @@ class Admin::EventContentsController < AdminController
   private
 
   def set_event
+    return if compat_read_data_plane? && %w[
+      create sort shops_by_user online_services_for_shop booking_pages_for_shop
+      shop_acquisition_counts
+    ].include?(action_name)
+
     @event = Event.undeleted.find(params[:event_id])
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_events_path, alert: "イベントが見つかりません"
   end
 
   def set_event_content
+    return if compat_read_data_plane? && %w[
+      update destroy upload_image destroy_image sort_images
+      add_speaker update_speaker destroy_speaker sort_speakers
+    ].include?(action_name)
+
     @event_content = EventContent.undeleted.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_events_path, alert: "コンテンツが見つかりません"
@@ -234,5 +390,44 @@ class Admin::EventContentsController < AdminController
       doc.respond_to?(:permit) ? doc.permit(:id, :title, :url).to_h : doc
     end
     permitted
+  end
+
+  def compat_event_content_request(request_class, path)
+    permitted = event_content_params
+    thumbnail = params.dig(:event_content, :thumbnail)
+    exhibitor_logo = permitted.delete(:exhibitor_logo)
+    payload = permitted.to_h
+    payload.each do |key, value|
+      payload[key] = value.to_json if value.is_a?(Array) || value.is_a?(Hash)
+    end
+    files = { thumbnail: thumbnail, exhibitor_logo: exhibitor_logo }
+    if files.values.any?(&:present?)
+      compat_v1_multipart_response(request_class, path, payload, files)
+    else
+      compat_v1_json_response(request_class, path, payload)
+    end
+  end
+
+  def render_compat_event_content_response(response)
+    if response&.dig(:success) && response.dig(:body, "status") == "successful"
+      redirect_to response.dig(:body, "redirect_to") || admin_events_path,
+                  notice: "コンテンツを保存しました"
+    else
+      redirect_back fallback_location: admin_events_path,
+                    alert: response&.dig(:body, "error_message") || "コンテンツを保存できませんでした"
+    end
+  end
+
+  def compat_speaker_request(request_class, path)
+    compat_v1_multipart_response(
+      request_class,
+      path,
+      {
+        name: params[:name],
+        position_title: params[:position_title],
+        introduction: params[:introduction]
+      },
+      profile_image: params[:profile_image]
+    )
   end
 end

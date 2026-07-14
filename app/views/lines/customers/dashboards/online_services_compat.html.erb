@@ -1,0 +1,32 @@
+<%= render "lines/customers/dashboards/nav_compat", active: :online_services %>
+
+<% if @compat_dashboard["online_services"].present? %>
+  <div>
+    <% @compat_dashboard["online_services"].each do |relation| %>
+      <%= link_to relation["status_url"], class: "text-gray-700 no-underline" do %>
+        <div class="p-6 border border-solid border-gray-500 rounded-md my-1">
+          <h3 class="text-lg font-bold mb-2" data-id="<%= relation["id"] %>">
+            <%= relation["service_name"] %>
+          </h3>
+          <div class="text-sm text-gray-500">
+            <%= t("user_bot.dashboards.settings.service_customer_relation.permission_state") %>:
+            <%= t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{relation["state"]}") %>
+          </div>
+          <div class="text-sm text-gray-500 mb-2">
+            <%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %>:
+            <%= relation["never_expires"] ? t("sales.never_expire") : relation["expire_at"] %>
+          </div>
+          <div class="mt-2 border-0 border-t border-solid border-gray-300 py-3">
+            <%= link_to t("common.status"), relation["status_url"], class: "btn btn-tarco my-1" %>
+            <%= link_to t("common.content"), relation["content_url"], class: "btn btn-tarco my-1" if relation["content_url"].present? %>
+            <%= link_to t("action.repurchase"), relation["repurchase_url"], class: "btn btn-tarco my-1" if relation["repurchase_url"].present? %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="margin-around centerize text-gray-500 border border-solid border-gray-500 rounded-md py-3">
+    <%= t("customer_dashboard.no_online_services") %>
+  </div>
+<% end %>

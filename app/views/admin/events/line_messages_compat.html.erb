@@ -1,0 +1,125 @@
+<%= render "admin/features" %>
+<% context = @compat_line_messages %>
+<% event = context["event"] %>
+<% editing = context["broadcasts"].find { |broadcast| broadcast["editing"] } %>
+
+<div class="admin-event-form">
+  <div class="admin-detail-header">
+    <h2><%= event["title"] %> - LINEメッセージ設定</h2>
+    <div class="admin-detail-actions">
+      <%= link_to "イベント詳細に戻る", admin_event_path(event["id"]), class: "btn btn-gray" %>
+    </div>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">参加登録完了時のLINEメッセージ</div>
+    <%= form_with url: line_messages_admin_event_path(event["id"]), method: :patch, local: true do %>
+      <div id="compat-line-message-settings">
+        <% context["settings"].each_with_index do |setting, index| %>
+          <div class="admin-form-group">
+            <%= hidden_field_tag "event[event_line_message_settings_attributes][#{index}][id]", setting["id"] %>
+            <%= hidden_field_tag "event[event_line_message_settings_attributes][#{index}][position]", index %>
+            <label>
+              <%= check_box_tag "event[event_line_message_settings_attributes][#{index}][enabled]", "1", setting["enabled"] %>
+              有効
+            </label>
+            <div class="admin-form-input">
+              <%= datetime_local_field_tag "event[event_line_message_settings_attributes][#{index}][starts_at]",
+                                           Time.iso8601(setting["starts_at"]).in_time_zone("Asia/Tokyo").strftime("%Y-%m-%dT%H:%M"),
+                                           class: "form-control" %>
+              <%= datetime_local_field_tag "event[event_line_message_settings_attributes][#{index}][ends_at]",
+                                           setting["ends_at"]&.then { |value| Time.iso8601(value).in_time_zone("Asia/Tokyo").strftime("%Y-%m-%dT%H:%M") },
+                                           class: "form-control" %>
+              <%= text_area_tag "event[event_line_message_settings_attributes][#{index}][message]",
+                                setting["message"], class: "form-control", rows: 3 %>
+              <label>
+                <%= check_box_tag "event[event_line_message_settings_attributes][#{index}][_destroy]", "1", false %>
+                削除
+              </label>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <button type="button" id="compat-add-line-setting" class="btn btn-gray">＋ 設定を追加</button>
+      <div class="admin-form-actions">
+        <%= submit_tag "保存", class: "btn btn-tarco" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="admin-form-section">
+    <div class="admin-form-section-title">参加登録済みユーザーへの一括配信</div>
+    <div class="admin-form-help">配信対象: <%= context["registered_event_line_users_count"] %>名</div>
+    <% target = editing || {} %>
+    <% form_url = editing ? line_message_broadcast_admin_event_path(event["id"], editing["id"]) : line_message_broadcasts_admin_event_path(event["id"]) %>
+    <%= form_with url: form_url, method: editing ? :patch : :post, local: true, scope: :event_line_message_broadcast do |f| %>
+      <div class="admin-form-group">
+        <label class="admin-form-label">配信方法</label>
+        <label><%= radio_button_tag :delivery_type, "immediate", !editing %> 即時配信</label>
+        <label><%= radio_button_tag :delivery_type, "scheduled", editing.present? %> 予約配信</label>
+      </div>
+      <div class="admin-form-group">
+        <label class="admin-form-label">配信予定日時</label>
+        <%= f.datetime_local_field :scheduled_at,
+                                   value: target["scheduled_at"]&.then { |value| Time.iso8601(value).in_time_zone("Asia/Tokyo").strftime("%Y-%m-%dT%H:%M") },
+                                   class: "form-control" %>
+      </div>
+      <div class="admin-form-group">
+        <label class="admin-form-label">メッセージ</label>
+        <%= f.text_area :message, value: target["message"], class: "form-control", rows: 5 %>
+      </div>
+      <%= f.submit editing ? "一括配信を更新" : "一括配信を作成", class: "btn btn-tarco" %>
+      <%= link_to "編集をやめる", line_messages_admin_event_path(event["id"]), class: "btn btn-gray" if editing %>
+    <% end %>
+
+    <div class="admin-form-section-title" style="margin-top:28px;">一括配信リスト</div>
+    <% if context["broadcasts"].present? %>
+      <table class="admin-participant-table">
+        <thead><tr><th>ステータス</th><th>配信予定日時</th><th>配信完了日時</th><th>配信数</th><th>メッセージ</th><th>操作</th></tr></thead>
+        <tbody>
+          <% context["broadcasts"].each do |broadcast| %>
+            <tr>
+              <td><span class="admin-badge"><%= broadcast["status_label"] %></span></td>
+              <td><%= l(Time.iso8601(broadcast["scheduled_at"]), format: :short) %></td>
+              <td><%= broadcast["sent_at"] ? l(Time.iso8601(broadcast["sent_at"]), format: :short) : "-" %></td>
+              <td><%= broadcast["delivered_count"] %>名<%= "（失敗 #{broadcast["failed_count"]}名）" if broadcast["failed_count"].to_i.positive? %></td>
+              <td><%= simple_format(broadcast["message"]) %></td>
+              <td>
+                <% if broadcast["editable"] %>
+                  <%= link_to "編集", edit_line_message_broadcast_admin_event_path(event["id"], broadcast["id"]), class: "btn btn-gray" %>
+                  <%= link_to "取消", line_message_broadcast_admin_event_path(event["id"], broadcast["id"]), method: :delete, data: { confirm: "この一括配信を取り消しますか？" }, class: "btn btn-danger" %>
+                <% else %>
+                  -
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div style="padding:20px;text-align:center;color:#8f8f8f;">一括配信はまだありません</div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var list = document.getElementById("compat-line-message-settings");
+    var button = document.getElementById("compat-add-line-setting");
+    if (!list || !button) return;
+    button.addEventListener("click", function() {
+      var index = list.children.length;
+      var wrapper = document.createElement("div");
+      wrapper.className = "admin-form-group";
+      wrapper.innerHTML =
+        '<input type="hidden" name="event[event_line_message_settings_attributes][' + index + '][position]" value="' + index + '">' +
+        '<label><input type="checkbox" name="event[event_line_message_settings_attributes][' + index + '][enabled]" value="1" checked> 有効</label>' +
+        '<div class="admin-form-input">' +
+        '<input type="datetime-local" name="event[event_line_message_settings_attributes][' + index + '][starts_at]" class="form-control">' +
+        '<input type="datetime-local" name="event[event_line_message_settings_attributes][' + index + '][ends_at]" class="form-control">' +
+        '<textarea name="event[event_line_message_settings_attributes][' + index + '][message]" class="form-control" rows="3"></textarea>' +
+        '</div>';
+      list.appendChild(wrapper);
+    });
+  });
+</script>

@@ -40,6 +40,17 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def update
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_put(
+        "/lines/user_bot/owner/#{owner_id}/sales/#{params[:id]}",
+        params.permit!.to_h
+      )
+      render json: result || { status: "failed", error_message: "販売ページを更新できませんでした" },
+             status: (result&.dig("status") == "successful" ? :ok : :unprocessable_entity)
+      return
+    end
+
     sale_page = Current.business_owner.sale_pages.find(params[:id])
 
     outcome = SalePages::Update.run(sale_page: sale_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
@@ -70,6 +81,18 @@ class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   end
 
   def clone
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_post("/lines/user_bot/owner/#{owner_id}/sales/#{params[:id]}/clone", {})
+      if result&.dig("status") == "successful"
+        redirect_to result["redirect_to"], notice: I18n.t("common.create_successfully_message")
+      else
+        redirect_to lines_user_bot_sale_path(params[:id], business_owner_id: owner_id),
+                    alert: result&.dig("error_message")
+      end
+      return
+    end
+
     sale_page = Current.business_owner.sale_pages.find(params[:id])
 
     outcome = SalePages::Clone.run(sale_page: sale_page)

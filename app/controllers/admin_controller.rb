@@ -9,12 +9,25 @@ class AdminController < ApplicationController
   include AdminAccess
 
   def as_user
-    user = User.find(params[:as_user_id])
+    target_social_service_user_id = nil
+    if compat_read_enabled?
+      target = compat_fetch_v1_json("/admin/as_user", as_user_id: params[:as_user_id])&.dig("data")
+      unless target&.dig("id")
+        redirect_back fallback_location: root_path, alert: "ユーザーが見つかりません"
+        return
+      end
+      user = User.find(target["id"])
+      target_social_service_user_id = target["social_service_user_id"]
+    else
+      user = User.find(params[:as_user_id])
+      target_social_service_user_id = user.social_user&.social_service_user_id
+    end
+
     sign_out
     remember_me(user)
     sign_in(user)
     write_user_bot_cookies(:current_user_id, user.id)
-    write_user_bot_cookies(:social_service_user_id, user.social_user&.social_service_user_id)
+    write_user_bot_cookies(:social_service_user_id, target_social_service_user_id)
 
     redirect_to lines_user_bot_settings_path(user.id)
   end

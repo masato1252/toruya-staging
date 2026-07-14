@@ -7,6 +7,16 @@ class BookingsController < ActionController::Base
   layout "booking"
 
   def show
+    if compat_read_data_plane?
+      @compat_booking = compat_fetch_v1_json("/bookings/#{params[:slug]}/page_context")&.dig("data")
+      unless @compat_booking
+        head :not_found
+        return
+      end
+      render :show_compat
+      return
+    end
+
     @reservation = reservation_customer.reservation
     @customer = reservation_customer.customer
     @shop = reservation_customer.customer.user.shops.first

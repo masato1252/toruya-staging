@@ -1,0 +1,81 @@
+<%= render "admin/features" %>
+<% event = @compat_event %>
+
+<div class="admin-event-detail">
+  <div class="admin-detail-header">
+    <h2><%= event["title"] %></h2>
+    <div class="admin-detail-actions">
+      <%= link_to "LINEメッセージ設定", event.dig("actions", "line_messages_href"), class: "btn btn-gray", style: "margin-right: 12px;" %>
+      <%= link_to "編集", event.dig("actions", "edit_href"), class: "btn btn-tarco" %>
+      <%= link_to "解析", event.dig("actions", "analytics_href"), class: "btn btn-gray" %>
+      <%= link_to "削除", event.dig("actions", "delete_href"), method: :delete, data: { confirm: "このイベントを削除しますか？" }, class: "btn btn-danger" %>
+    </div>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">基本情報</div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">ステータス</div>
+      <div class="admin-detail-value">
+        <span class="admin-badge <%= event["published"] ? "admin-badge-success" : "admin-badge-secondary" %>">
+          <%= event["published"] ? "公開中" : "非公開" %>
+        </span>
+      </div>
+    </div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">スラッグ</div>
+      <div class="admin-detail-value"><code>/<%= event["slug"] %></code></div>
+    </div>
+    <% if event["description"].present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">概要</div>
+        <div class="admin-detail-value"><%= simple_format(event["description"]) %></div>
+      </div>
+    <% end %>
+    <% if event["start_at"].present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">開催期間</div>
+        <div class="admin-detail-value">
+          <%= l(Time.iso8601(event["start_at"]), format: :date_with_wday, locale: :ja) %>
+          〜
+          <%= event["end_at"].present? ? l(Time.iso8601(event["end_at"]), format: :date_with_wday, locale: :ja) : "未設定" %>
+        </div>
+      </div>
+    <% end %>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">参加者／行動ログ</div>
+      <div class="admin-detail-value"><%= event["participant_count"] %>人／<%= event["activity_count"] %>件</div>
+    </div>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">
+      コンテンツ一覧
+      <span style="float: right;">
+        <%= link_to "＋ コンテンツ追加", event.dig("actions", "new_content_href"), style: "font-size: 12px; font-weight: normal;" %>
+      </span>
+    </div>
+    <% if event["contents"].present? %>
+      <% event["contents"].each do |content| %>
+        <div class="admin-content-card-sortable" data-id="<%= content["id"] %>">
+          <%= link_to content["edit_href"], class: "admin-content-card-body" do %>
+            <div class="admin-content-card-title">
+              <%= content["title"] %>
+              <span class="admin-badge <%= content["status"] == "published" ? "admin-badge-success" : "admin-badge-secondary" %>">
+                <%= content["status"] == "published" ? "公開" : "下書き" %>
+              </span>
+              <span class="admin-badge admin-badge-info"><%= content["content_type"] == "seminar" ? "セミナー講演" : "展示ブース" %></span>
+            </div>
+            <div class="admin-content-card-meta">
+              <% if content["capacity"] %>
+                上限: <%= content["capacity"] %>人（利用済: <%= content["usage_count"] %>人）
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div style="padding: 20px 16px; text-align: center; color: #8f8f8f;">コンテンツはまだありません</div>
+    <% end %>
+  </div>
+</div>

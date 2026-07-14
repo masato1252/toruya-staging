@@ -1,0 +1,37 @@
+<%= render "lines/customers/dashboards/nav_compat", active: :reservations %>
+
+<% if @compat_dashboard["reservations"].present? %>
+  <div>
+    <% @compat_dashboard["reservations"].each do |reservation| %>
+      <%= link_to reservation["booking_info_url"] || "#", class: "text-gray-700 no-underline" do %>
+        <div class="p-6 border border-solid border-gray-500 rounded-md my-1">
+          <h3 class="text-lg font-bold mb-2"><%= reservation["booking_time"] %></h3>
+          <div class="text-sm text-gray-500">
+            <%= t("common.reservation_details") %>:
+            <%= t("reservation.#{reservation["reservation_state"]}") %>
+          </div>
+          <div class="text-sm text-gray-500 mb-2"><%= reservation["products_sentence"] %></div>
+          <div class="text-sm text-gray-500 mb-2"><%= reservation["shop_name"] %></div>
+          <div class="description"><%= reservation["shop_address"] %></div>
+          <% if reservation["booking_page"] || reservation["shop_phone_number"].present? %>
+            <div class="mt-2 border-0 border-t border-solid border-gray-300 py-3">
+              <% if reservation["booking_page"] %>
+                <%= link_to t("booking_page.done.back_to_book"), reservation.dig("booking_page", "url"), class: "btn btn-tarco my-1" %>
+              <% end %>
+              <% if reservation["shop_phone_number"].present? %>
+                <%= link_to "tel:#{reservation["shop_phone_number"].gsub(/\D/, '')}", class: "btn btn-gray text-white" do %>
+                  <i class="fa fa-phone"></i>
+                  <span class="text-sm"><%= reservation["shop_phone_number"] %></span>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="margin-around centerize text-gray-500 border border-solid border-gray-500 rounded-md py-3">
+    <%= t("customer_dashboard.no_reservations") %>
+  </div>
+<% end %>

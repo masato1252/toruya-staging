@@ -3,6 +3,24 @@ import PropTypes from "prop-types";
 import { compatRead } from "../../libraries/compat_api";
 import EventContentShow from "./show";
 
+function applyMetaTags(meta) {
+  if (!meta) return;
+  if (meta.title) document.title = meta.title;
+  [
+    ["meta[property='og:title']", "og:title", meta.og_title],
+    ["meta[property='og:description']", "og:description", meta.og_description],
+  ].forEach(([selector, property, content]) => {
+    if (!content) return;
+    let node = document.head.querySelector(selector);
+    if (!node) {
+      node = document.createElement("meta");
+      node.setAttribute("property", property);
+      document.head.appendChild(node);
+    }
+    node.setAttribute("content", content);
+  });
+}
+
 export default function EventContentShowBootstrap({
   eventSlug,
   contentId,
@@ -23,7 +41,10 @@ export default function EventContentShowBootstrap({
 
   useEffect(() => {
     let cancelled = false;
-    compatRead(`/events/${encodeURIComponent(eventSlug)}/contents/${contentId}/page_context`)
+    const query = currentEventLineUserId
+      ? `?event_line_user_id=${encodeURIComponent(currentEventLineUserId)}`
+      : "";
+    compatRead(`/events/${encodeURIComponent(eventSlug)}/contents/${contentId}/page_context${query}`)
       .then((body) => {
         if (cancelled) return;
         const data = body.data || null;
@@ -31,10 +52,10 @@ export default function EventContentShowBootstrap({
           setError("コンテンツが見つかりません");
           return;
         }
+        applyMetaTags(data.meta);
 
         const eventContent = {
           ...data.event_content,
-          is_logged_in: Boolean(currentEventLineUserId),
         };
 
         setProps({

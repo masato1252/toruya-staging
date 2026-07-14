@@ -4,7 +4,7 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   include CrossAccountRedirect
   redirect_to_correct_owner_for :line_notice_requests, only: [:show, :approve, :success]
 
-  before_action :proxy_compat_free_approval, only: [:approve]
+  before_action :proxy_compat_approval, only: [:approve]
   before_action :set_line_notice_request, only: [:show, :approve, :success]
 
   # GET /lines/user_bot/owner/:business_owner_id/line_notice_requests/:id
@@ -136,6 +136,14 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   # GET /lines/user_bot/owner/:business_owner_id/line_notice_requests/:id/success
   # 承認完了画面
   def success
+    if compat_read_data_plane?
+      redirect_to lines_user_bot_line_notice_request_path(
+        business_owner_id: business_owner_id,
+        id: params[:id]
+      ), notice: "リクエストを承認しました"
+      return
+    end
+
     @reservation = @line_notice_request.reservation
     @customer = @line_notice_request.customer
     @line_notice_charge = @line_notice_request.line_notice_charge
@@ -143,25 +151,28 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
 
   private
 
-  # The browser intentionally keeps this endpoint on Rails: paid approval owns
-  # the existing Stripe/3DS interaction. For a migrated owner, proxy only the
-  # no-charge free-trial mutation to v1 so Rails never falls back to an AR write
-  # after v1 has identified the request as a free trial.
-  def proxy_compat_free_approval
+  # Non-JavaScript form submissions still reach Rails. Forward both free and
+  # paid approvals to v1; normal fetch calls are rewritten before reaching here.
+  def proxy_compat_approval
     return unless compat_read_data_plane?
 
     request_id = params[:id].to_i
-    return unless request_id.positive?
+    unless request_id.positive?
+      head :not_found
+      return
+    end
 
     path = "/lines/user_bot/owner/#{business_owner_id}/line_notice_requests/#{request_id}"
-    context = compat_fetch_v1_json("#{path}/page_context")
-    form = context&.dig("data", "edit_form") || {}
-    return unless form["can_approve"] && form["is_free_trial"]
+    payload = params.permit(:payment_method_id, :setup_intent_id, :payment_intent_id).to_h
+    response = compat_v1_post_response("#{path}/approve", payload)
 
-    result = compat_v1_post("#{path}/approve", {})
-    if result&.dig("status") == "successful"
-      # The success page still renders legacy AR associations. Return to the
-      # v1-backed show page instead, which now displays the approved state.
+    if request.format.json?
+      body = response&.dig(:body) || {
+        status: "failed",
+        error_message: I18n.t("line_notice_requests.errors.cannot_be_approved")
+      }
+      render json: body, status: response&.dig(:status) || :bad_gateway
+    elsif response&.dig(:success)
       redirect_to lines_user_bot_line_notice_request_path(
         business_owner_id: business_owner_id,
         id: request_id
@@ -176,7 +187,7 @@ class Lines::UserBot::LineNoticeRequestsController < Lines::UserBotDashboardCont
   end
 
   def set_line_notice_request
-    if compat_read_data_plane? && action_name == "show"
+    if compat_read_data_plane? && %w[show success].include?(action_name)
       return
     end
 

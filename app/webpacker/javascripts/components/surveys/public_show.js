@@ -3,6 +3,25 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { compatRead } from "../../libraries/compat_api";
 
+function applyMetaTags(meta) {
+  if (!meta) return;
+  if (meta.title) document.title = meta.title;
+  [
+    ["meta[name='description']", "name", "description", meta.description],
+    ["meta[property='og:title']", "property", "og:title", meta.title],
+    ["meta[property='og:description']", "property", "og:description", meta.description],
+  ].forEach(([selector, attribute, key, content]) => {
+    if (!content) return;
+    let node = document.head.querySelector(selector);
+    if (!node) {
+      node = document.createElement("meta");
+      node.setAttribute(attribute, key);
+      document.head.appendChild(node);
+    }
+    node.setAttribute("content", content);
+  });
+}
+
 function QuestionField({ question, value, onChange }) {
   const label = (
     <>
@@ -26,6 +45,50 @@ function QuestionField({ question, value, onChange }) {
     );
   }
 
+  if (question.question_type === "single_selection") {
+    return (
+      <fieldset className="field-row margin-around">
+        <legend>{label}</legend>
+        {(question.options || []).map((option) => (
+          <label key={option.id} className="block mb-2">
+            <input
+              type="radio"
+              name={`survey-question-${question.id}`}
+              value={option.id}
+              checked={String(value || "") === String(option.id)}
+              onChange={(e) => onChange(e.target.value)}
+              required={question.required}
+            />{" "}
+            {option.content}
+          </label>
+        ))}
+      </fieldset>
+    );
+  }
+
+  if (question.question_type === "multiple_selection") {
+    const selected = Array.isArray(value) ? value.map(String) : [];
+    return (
+      <fieldset className="field-row margin-around">
+        <legend>{label}</legend>
+        {(question.options || []).map((option) => (
+          <label key={option.id} className="block mb-2">
+            <input
+              type="checkbox"
+              value={option.id}
+              checked={selected.includes(String(option.id))}
+              onChange={(e) => {
+                const id = String(option.id);
+                onChange(e.target.checked ? [...selected, id] : selected.filter((item) => item !== id));
+              }}
+            />{" "}
+            {option.content}
+          </label>
+        ))}
+      </fieldset>
+    );
+  }
+
   return (
     <div className="field-row margin-around">
       <label className="block mb-2">{label}</label>
@@ -41,7 +104,7 @@ function QuestionField({ question, value, onChange }) {
 
 QuestionField.propTypes = {
   question: PropTypes.object.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   onChange: PropTypes.func.isRequired,
 };
 
@@ -60,6 +123,7 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath,
       .then((body) => {
         if (cancelled) return;
         setSurvey(body.data || null);
+        applyMetaTags(body.data?.meta);
       })
       .catch((err) => {
         if (!cancelled) setError(err.message);
@@ -86,10 +150,19 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath,
     setSubmitting(true);
     setError(null);
     try {
-      const surveyAnswers = Object.entries(answers).map(([questionId, value]) => ({
-        survey_question_id: Number(questionId),
-        text_answer: value,
-      }));
+      const surveyAnswers = Object.entries(answers).map(([questionId, value]) => {
+        const question = survey.questions.find((item) => String(item.id) === String(questionId));
+        const selection =
+          question?.question_type === "single_selection" ||
+          question?.question_type === "multiple_selection";
+        return {
+          survey_question_id: Number(questionId),
+          text_answer: selection ? null : value,
+          survey_option_ids: selection
+            ? (Array.isArray(value) ? value : [value]).map(Number)
+            : [],
+        };
+      });
       await axios.post(`/surveys/${slug}`, {
         customer_id: customerId,
         survey_answers: surveyAnswers,

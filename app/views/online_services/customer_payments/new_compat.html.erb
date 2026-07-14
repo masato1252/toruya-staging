@@ -1,0 +1,16 @@
+<% context = @compat_customer_payment %>
+<%= react_component("lines/new_customer_payment", {
+  props: {
+    stripe_key: context["stripe_key"],
+    slug: context["slug"],
+    encrypted_social_service_user_id: params[:encrypted_social_service_user_id],
+    order_id: context["order_id"],
+    company_name: context["company_name"],
+    service_name: context["service_name"],
+    price: context["price"],
+    is_subscription: context["is_subscription"],
+    business_owner_id: context["business_owner_id"]
+  }
+},
+{ camelize_props: false }
+) %>

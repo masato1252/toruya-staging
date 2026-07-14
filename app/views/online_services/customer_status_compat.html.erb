@@ -1,0 +1,68 @@
+<% context = @compat_customer_status %>
+<% relation = context["relation"] %>
+
+<div class="service-show form">
+  <div class="online-service-header">
+    <% if context.dig("company", "logo_url").present? %>
+      <%= image_tag context.dig("company", "logo_url"), class: "logo" %>
+    <% else %>
+      <h2><%= context.dig("company", "name") %></h2>
+    <% end %>
+  </div>
+  <div class="p6 centerize border-0 border-t border-solid border-gray-500">
+    <h1><%= context.dig("service", "name") %></h1>
+    <h1><%= t("common.usage_status") %></h1>
+  </div>
+
+  <% if relation %>
+    <div class="field-header"><%= t("common.customer_name") %></div>
+    <div class="field-row"><%= context.dig("customer", "name") %></div>
+
+    <div class="field-header"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_state") %></div>
+    <div class="flex">
+      <span class="state <%= relation["display_state"] %>"></span>
+      <div class="field-row">
+        <%= t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{relation["display_state"]}") %>
+      </div>
+    </div>
+
+    <div class="field-header"><%= t("user_bot.dashboards.settings.service_customer_relation.signup_date") %></div>
+    <div class="field-row"><%= relation["approved_at"] %></div>
+
+    <div class="field-header"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
+    <div class="field-row">
+      <%= relation["never_expires"] ? t("sales.never_expire") : relation["expire_at"] %>
+    </div>
+
+    <div class="field-header"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_state") %></div>
+    <% relation["payments"].each do |payment| %>
+      <div class="flex">
+        <span class="state <%= payment["state"] %>"></span>
+        <div class="field-row">
+          <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment["state"]}", default: payment["state"]) %>
+          <%= "(#{payment["memo"]})" if payment["memo"].present? %>
+          <%= l(Time.iso8601(payment["charge_at"])) rescue payment["charge_at"] %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if context["able_to_change_credit_card"] %>
+      <%= link_to t("action.change_credit_card"), "#", data: { toggle: "modal", target: "#change-card-modal" }, class: "btn btn-yellow" %>
+    <% end %>
+  <% else %>
+    <div class="field-row"><%= t("common.not_found", default: "ご利用情報が見つかりません") %></div>
+  <% end %>
+</div>
+
+<%= react_component("shared/stripe_change_card_modal", {
+  stripe_key: context["stripe_key"],
+  header: context.dig("service", "name"),
+  pay_btn: I18n.t("plans.actions.change_card"),
+  change_card_path: change_card_customer_payments_path(
+    slug: params[:slug],
+    encrypted_social_service_user_id: params[:encrypted_social_service_user_id],
+    format: "json"
+  )
+},
+{ camelize_props: false }
+) if context["able_to_change_credit_card"] %>

@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
-export default function AdminBookingPagesIndex({ userId, bookingPagePathPrefix }) {
+export default function AdminBookingPagesIndex({ userId, socialServiceUserId, bookingPagePathPrefix }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
-    const suffix = userId ? `?user_id=${userId}` : "";
+    const params = new URLSearchParams();
+    if (userId) params.set("user_id", userId);
+    else if (socialServiceUserId) params.set("social_service_user_id", socialServiceUserId);
+    const suffix = params.toString() ? `?${params}` : "";
     compatRead(`/admin/booking_pages${suffix}`)
       .then((body) => {
         if (cancelled) return;
@@ -22,7 +25,7 @@ export default function AdminBookingPagesIndex({ userId, bookingPagePathPrefix }
         if (!cancelled) setLoading(false);
       });
     return () => { cancelled = true; };
-  }, [userId]);
+  }, [userId, socialServiceUserId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="danger">{error}</p>;
@@ -43,5 +46,6 @@ export default function AdminBookingPagesIndex({ userId, bookingPagePathPrefix }
 
 AdminBookingPagesIndex.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  socialServiceUserId: PropTypes.string,
   bookingPagePathPrefix: PropTypes.string.isRequired,
 };

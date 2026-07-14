@@ -79,12 +79,12 @@ const PaymentModal = ({ props }) => {
 
       const data = await response.json();
 
-      if (response.ok && data.status === 'success') {
-        window.location.href = data.redirect_url;
+      if (response.ok && (data.status === 'success' || data.status === 'successful')) {
+        window.location.href = data.redirect_url || data.redirect_path;
       } else if (data.client_secret) {
         await handle3DSAuthentication(data, paymentMethodId);
       } else {
-        showError(data.message || data.error || "決済に失敗しました。");
+        showError(data.message || data.error_message || data.error || "決済に失敗しました。");
       }
     } catch (error) {
       showError("決済の再試行中にエラーが発生しました。");
@@ -106,12 +106,12 @@ const PaymentModal = ({ props }) => {
 
       const data = await response.json();
 
-      if (response.ok && data.status === 'success') {
-        window.location.href = data.redirect_url;
+      if (response.ok && (data.status === 'success' || data.status === 'successful')) {
+        window.location.href = data.redirect_url || data.redirect_path;
       } else if (data.client_secret) {
         await handle3DSAuthentication(data, paymentMethodId);
       } else {
-        showError(data.message || data.error || "決済に失敗しました。");
+        showError(data.message || data.error_message || data.error || "決済に失敗しました。");
       }
     } catch (err) {
       showError("決済処理中にエラーが発生しました。");

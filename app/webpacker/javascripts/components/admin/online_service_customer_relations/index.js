@@ -2,19 +2,22 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
-export default function AdminOnlineServiceRelationsIndex({ userId, salePagePathPrefix }) {
+export default function AdminOnlineServiceRelationsIndex({ userId, socialServiceUserId, salePagePathPrefix }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId && !socialServiceUserId) {
       setLoading(false);
       return undefined;
     }
 
     let cancelled = false;
-    compatRead(`/admin/online_service_customer_relations?user_id=${userId}`)
+    const params = new URLSearchParams();
+    if (userId) params.set("user_id", userId);
+    else params.set("social_service_user_id", socialServiceUserId);
+    compatRead(`/admin/online_service_customer_relations?${params}`)
       .then((body) => {
         if (cancelled) return;
         setItems(body.data || []);
@@ -28,7 +31,7 @@ export default function AdminOnlineServiceRelationsIndex({ userId, salePagePathP
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, socialServiceUserId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="danger">{error}</p>;
@@ -52,5 +55,6 @@ export default function AdminOnlineServiceRelationsIndex({ userId, salePagePathP
 
 AdminOnlineServiceRelationsIndex.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  socialServiceUserId: PropTypes.string,
   salePagePathPrefix: PropTypes.string.isRequired,
 };

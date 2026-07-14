@@ -131,46 +131,15 @@ function getRequestMethod(input, init) {
   return "GET";
 }
 
-function isSquareBookingRequest(pathname, input, init) {
-  if (!/^\/(?:booking|booking_pages)\/[^/]+\/booking_reservation\/?$/.test(pathname)) return false;
-
-  const body = init?.body ?? init?.data ?? (input instanceof Request ? null : undefined);
-  if (!body) return false;
-
-  if (typeof body === "string") {
-    try {
-      const payload = JSON.parse(body);
-      return Boolean(payload.square_token);
-    } catch (_error) {
-      return /(?:^|[&?])square_token=/.test(body);
-    }
-  }
-
-  if (body instanceof FormData) {
-    return Boolean(body.get("square_token"));
-  }
-
-  if (typeof body === "object") {
-    return Boolean(body.square_token);
-  }
-
-  return false;
-}
-
 export function shouldRewriteCompatRequest(url, input, init) {
   if (!readCompatApiOrigin()) return false;
 
   const pathname = extractPathname(url);
   if (!pathname || isExcludedPath(pathname)) return false;
   if (!isCompatCandidatePath(pathname)) return false;
-  // V1 owns Stripe public reservations. Preserve the Rails request for Square
-  // until its payment adapter is migrated so a token is never ignored.
-  if (isSquareBookingRequest(pathname, input, init)) return false;
 
-  // Paid LINE notice approval stays on Rails for its Stripe/3DS flow. Rails
-  // proxies a migrated owner's free-trial approval to v1 server-side.
-  if (/\/line_notice_requests\/\d+\/approve\/?$/.test(pathname)) return false;
-  // Admin mutations not yet on v1 — keep Rails until write cutover.
+  // Admin writes use thin same-origin Rails controllers so the proxy secret is
+  // never exposed to the browser.
   if (/\/admin\/business_applications\/\d+\/(approve|reject|mark_paid)\/?$/.test(pathname)) return false;
   if (/\/admin\/chats(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
   if (/\/admin\/custom_messages(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
