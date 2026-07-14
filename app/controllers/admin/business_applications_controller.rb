@@ -12,7 +12,7 @@ module Admin
   end
 
     def approve
-      return compat_transition(:approve) if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return compat_transition(:approve) if compat_admin_enabled?
 
       BusinessApplications::Approve.run!(user: BusinessApplication.find(params[:id]).user)
 
@@ -20,7 +20,7 @@ module Admin
     end
 
     def reject
-      return compat_transition(:reject) if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return compat_transition(:reject) if compat_admin_enabled?
 
       BusinessApplications::Reject.run!(user: BusinessApplication.find(params[:id]).user)
 

@@ -3,7 +3,7 @@
 module Admin
   class ChatsController < AdminController
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_admin_enabled?
       @selected_social_user = nil
       @lookup_social_service_user_id = params[:social_service_user_id]
       @lookup_user_id = params[:user_id]
@@ -14,7 +14,7 @@ module Admin
   end
 
     def create
-      return compat_create if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return compat_create if compat_admin_enabled?
 
       if params[:message].present?
         SocialUserMessages::Create.run!(
@@ -50,7 +50,7 @@ module Admin
     end
 
     def destroy
-      return compat_destroy if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return compat_destroy if compat_admin_enabled?
 
       message = SocialUserMessage.find(params[:id])
 

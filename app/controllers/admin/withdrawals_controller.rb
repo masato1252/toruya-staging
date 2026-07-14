@@ -3,7 +3,7 @@
 module Admin
   class WithdrawalsController < AdminController
     def mark_paid
-      return compat_mark_paid if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return compat_mark_paid if compat_admin_enabled?
 
       PaymentWithdrawals::MarkPaid.run!(payment_withdrawal: PaymentWithdrawal.find(params[:id]))
 
@@ -11,7 +11,7 @@ module Admin
     end
 
     def receipt
-      if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      if compat_admin_enabled?
         @compat_withdrawal = compat_fetch_v1_json(
           "/admin/withdrawals/#{params[:id]}/receipt_context"
         )&.dig("data")

@@ -3,11 +3,11 @@
 module Admin
   class CustomMessagesController < AdminController
     def scenarios
-      return if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return if compat_admin_enabled?
     end
 
     def scenario
-      if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      if compat_admin_enabled?
         @sequence_messages = []
         return
       end
@@ -26,7 +26,7 @@ module Admin
     end
 
     def create
-      return compat_create if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return compat_create if compat_admin_enabled?
 
       outcome =
         CustomMessages::Users::Create.run(
@@ -43,7 +43,7 @@ module Admin
     end
 
     def update
-      return compat_update if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      return compat_update if compat_admin_enabled?
 
       message = CustomMessage.find(params[:id])
       outcome = CustomMessages::Users::Update.run(

@@ -1,6 +1,6 @@
 <%= render "admin/features" %>
 
-<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<% if compat_admin_enabled? %>
   <%= react_component("admin/custom_messages/scenarios", { locale: I18n.locale }) %>
 <% else %>
 <h1>Scenarios</h1>

@@ -3,7 +3,7 @@
 module Admin
   class SubscriptionsController < AdminController
     def destroy
-      if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      if compat_admin_enabled?
         result = compat_v1_delete("/admin/subscription", user_id: params[:user_id])
         render json: result || { status: "failed" }, status: result ? :ok : :bad_gateway
         return
@@ -31,7 +31,7 @@ module Admin
     end
 
     def update
-      if ENV["COMPAT_API_READ_ENABLED"] == "true"
+      if compat_admin_enabled?
         result = compat_v1_put("/admin/subscription", user_id: params[:user_id])
         render json: result || { status: "failed" }, status: result ? :ok : :bad_gateway
         return
