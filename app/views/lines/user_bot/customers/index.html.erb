@@ -26,7 +26,7 @@
     draft_message_content: @draft_message_content,
     customer_tags: compat_read ? [] : current_user.user_setting.customer_tags,
     support_feature_flags: support_feature_flags,
-    block_toruya_message_reply: compat_read ? true : !Current.business_owner.support_toruya_message_reply?,
+    block_toruya_message_reply: compat_read ? false : !Current.business_owner.support_toruya_message_reply?,
     upgrade_url: lines_user_bot_settings_plans_path(business_owner_id, upgrade: Plan::PREMIUM_LEVEL),
     is_customer_notification_channel_line: compat_read ? false : Current.business_owner.customer_notification_channel == "line",
     locale: Current.business_owner.locale,

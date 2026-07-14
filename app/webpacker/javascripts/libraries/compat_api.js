@@ -10,6 +10,7 @@ const COMPAT_PATH_PREFIXES = [
   "/customer_verification/",
   "/booking/",
   "/booking_pages/",
+  "/events/",
   "/sale_pages/",
   "/admin/",
 ];
@@ -258,6 +259,19 @@ export function configureCompatAxios() {
       config.url = rewriteCompatUrl(config.url, config.url, config);
     }
     return config;
+  });
+  axios.interceptors.response.use((response) => {
+    const responseUrl = response?.config?.url;
+    const customerId = response?.data?.customer_id;
+    if (
+      typeof responseUrl === "string" &&
+      responseUrl.includes("/v1/compat/customer_verification/create_or_update_customer") &&
+      customerId
+    ) {
+      const secure = window.location.protocol === "https:" ? "; Secure" : "";
+      document.cookie = `verified_customer_id=${encodeURIComponent(customerId)}; Path=/; Max-Age=630720000; SameSite=Lax${secure}`;
+    }
+    return response;
   });
 }
 

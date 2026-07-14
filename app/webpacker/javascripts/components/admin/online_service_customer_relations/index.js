@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { compatRead } from "../../../libraries/compat_api";
 
-export default function AdminOnlineServiceRelationsIndex({ userId, socialServiceUserId, salePagePathPrefix }) {
+export default function AdminOnlineServiceRelationsIndex({ userId, socialServiceUserId }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,8 +41,8 @@ export default function AdminOnlineServiceRelationsIndex({ userId, socialService
       {items.map((item) => (
         <li key={item.id}>
           {new Date(item.created_at).toLocaleDateString()} — {item.online_service_name}{" "}
-          {item.sale_page_id ? (
-            <a href={`${salePagePathPrefix}/${item.sale_page_id}`} target="_blank" rel="noreferrer">
+          {item.sale_page_public_path ? (
+            <a href={item.sale_page_public_path} target="_blank" rel="noreferrer">
               sale page
             </a>
           ) : null}{" "}
@@ -56,5 +56,4 @@ export default function AdminOnlineServiceRelationsIndex({ userId, socialService
 AdminOnlineServiceRelationsIndex.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   socialServiceUserId: PropTypes.string,
-  salePagePathPrefix: PropTypes.string.isRequired,
 };

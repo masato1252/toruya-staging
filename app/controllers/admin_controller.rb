@@ -34,6 +34,10 @@ class AdminController < ApplicationController
 
   def logs
     user = User.find_by(id: params[:user_id])
+    unless user
+      redirect_to admin_chats_path, alert: "ユーザーが見つかりません"
+      return
+    end
     social_account = user.social_account
     booking_pages = BookingPage.where(user_id: user.id).where("created_at > ?", 1.months.ago).map do |booking_page|
       { label: "予約ページ作成 (#{ApplicationController.helpers.link_to(booking_page.id, Rails.application.routes.url_helpers.booking_page_url(booking_page))})".html_safe, time: booking_page.created_at }

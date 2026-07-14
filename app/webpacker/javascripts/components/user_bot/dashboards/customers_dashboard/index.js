@@ -50,6 +50,7 @@ const DashboardView = () => {
 
 const UserBotCustomersDashboard = ({props}) => {
   const [readyProps, setReadyProps] = useState(props.compat_read_enabled ? null : props);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     if (!props.compat_read_enabled) return;
@@ -75,7 +76,7 @@ const UserBotCustomersDashboard = ({props}) => {
         }
       })
       .catch(() => {
-        if (!cancelled) setReadyProps(props);
+        if (!cancelled) setLoadError(true);
       });
 
     return () => {
@@ -83,6 +84,14 @@ const UserBotCustomersDashboard = ({props}) => {
     };
   }, [props.compat_read_enabled, props.business_owner_id, props.current_user_id]);
 
+  if (loadError) {
+    return (
+      <div className="centerize">
+        <p className="danger">顧客情報を読み込めませんでした。</p>
+        <button className="btn btn-tarco" onClick={() => window.location.reload()}>再読み込み</button>
+      </div>
+    );
+  }
   if (!readyProps) return <p>Loading...</p>;
 
   return (
