@@ -91,33 +91,14 @@ export const LineLoginBtn = ({social_account_login_url, btn_text, children}) => 
   if (!social_account_login_url) return <></>;
   
   const url = new URL(social_account_login_url, window.location.origin);
-  const params = Object.fromEntries(url.searchParams);
-  const formRef = React.useRef(null);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const form = formRef.current;
-    if (!form) return;
-    const tokenInput = form.querySelector('input[name="authenticity_token"]');
-    if (tokenInput) {
-      tokenInput.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-    }
-    form.submit();
-  };
   
   return (
     <div className="message centerize">
       {children}
-      <form ref={formRef} method="post" action={url.pathname} onSubmit={handleSubmit}>
-        <input type="hidden" name="authenticity_token" value="" />
-        {Object.entries(params).map(([key, value]) => (
-          <input key={key} type="hidden" name={key} value={value} />
-        ))}
-        <button type="submit" className="btn line-button with-wording with-logo" style={{border: 'none', cursor: 'pointer', padding: '10px 20px'}}>
+      <a href={url.toString()} className="btn line-button with-wording with-logo" style={{border: 'none', cursor: 'pointer', padding: '10px 20px'}}>
           <img src={LineIconBaseImg} />
           {btn_text || I18n.t("common.line_login_btn_word")}
-        </button>
-      </form>
+      </a>
     </div>
   );
 }

@@ -269,7 +269,7 @@ export function configureCompatAxios() {
       customerId
     ) {
       const secure = window.location.protocol === "https:" ? "; Secure" : "";
-      document.cookie = `verified_customer_id=${encodeURIComponent(customerId)}; Path=/; Max-Age=630720000; SameSite=Lax${secure}`;
+      document.cookie = `verified_customer_id=${encodeURIComponent(customerId)}; Path=/; Max-Age=34560000; SameSite=Lax${secure}`;
     }
     return response;
   });
