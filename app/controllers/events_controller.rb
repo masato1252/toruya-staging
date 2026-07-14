@@ -4,6 +4,7 @@ class EventsController < ActionController::Base
   layout "booking"
   include ControllerHelpers
   include CompatReadFlags
+  include CompatSession
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -13,6 +14,12 @@ class EventsController < ActionController::Base
   helper ApplicationHelper
 
   def show
+    if @compat_event
+      @current_event_line_user_id = session[:event_line_user_id].presence&.to_i
+      render :show_compat
+      return
+    end
+
     @current_event_line_user = current_event_line_user
     @compat_public_read = compat_public_read_for_owner?(@event.user_id)
 
@@ -55,6 +62,17 @@ class EventsController < ActionController::Base
   end
 
   def set_event
+    if ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
+      context = compat_fetch_v1_json(
+        "/events/#{params[:slug]}/page_context",
+        event_line_user_id: session[:event_line_user_id]
+      )&.dig("data")
+      if context && compat_public_read_for_owner?(context["owner_user_id"])
+        @compat_event = context
+        return
+      end
+    end
+
     @event = Event.published.undeleted.find_by!(slug: params[:slug])
   rescue ActiveRecord::RecordNotFound
     render plain: "イベントが見つかりません", status: :not_found

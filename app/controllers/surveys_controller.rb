@@ -2,13 +2,15 @@
 
 class SurveysController < Lines::CustomersController
   include CompatReadFlags
+  include CompatSession
   include ProductLocale
-  before_action :reject_activity_survey
 
-  skip_before_action :reject_activity_survey, if: -> { compat_public_read_for_owner?(survey.user_id) }
+  before_action :load_compat_survey
+  before_action :reject_activity_survey, unless: -> { @compat_survey.present? }
 
   def show
-    if compat_public_read_for_owner?(survey.user_id)
+    if @compat_survey
+      @compat_social_account = SocialAccount.find_by(user_id: @compat_survey["owner_user_id"])
       render :show_compat, layout: "booking"
       return
     end
@@ -33,6 +35,31 @@ class SurveysController < Lines::CustomersController
   end
 
   private
+
+  def load_compat_survey
+    return unless action_name == "show"
+    return unless ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
+
+    customer_id = cookies[:verified_customer_id]
+    if params[:encrypted_customer_id].present?
+      customer_id = MessageEncryptor.decrypt(params[:encrypted_customer_id])
+      cookies.clear_across_domains(:verified_customer_id)
+      cookies.set_across_domains(:verified_customer_id, customer_id, expires: 20.years.from_now)
+    end
+    social_user_id =
+      params[:social_user_id].presence ||
+      params[:social_service_user_id].presence ||
+      cookies[:temp_line_social_user_id_of_customer].presence ||
+      cookies[:line_social_user_id_of_customer].presence
+    context = compat_fetch_v1_json(
+      "/surveys/#{params[:slug]}/page_context",
+      { customer_id: customer_id, social_user_id: social_user_id }.compact
+    )&.dig("data")
+    return unless context && compat_public_read_for_owner?(context["owner_user_id"])
+
+    @compat_survey = context
+    @compat_customer_id = context["customer_id"]
+  end
 
   def survey
     @survey ||= Survey.find_by!(slug: params[:slug])
