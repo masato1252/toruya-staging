@@ -31,7 +31,7 @@ class Events::ParticipationsController < ActionController::Base
   end
 
   def create
-    if compat_read_data_plane?
+    if compat_public_event_create?
       event_line_user_id = session[:event_line_user_id]
       return render json: { error: "LINEログインが必要です" }, status: :unauthorized unless event_line_user_id
 
@@ -95,7 +95,7 @@ class Events::ParticipationsController < ActionController::Base
   private
 
   def set_event
-    return if compat_read_data_plane? && action_name == "create"
+    return if compat_public_event_create?
 
     @event = Event.published.undeleted.find_by!(slug: params[:event_slug])
   rescue ActiveRecord::RecordNotFound
@@ -107,5 +107,15 @@ class Events::ParticipationsController < ActionController::Base
 
     @_current_event_line_user = session[:event_line_user_id] ? EventLineUser.find_by(id: session[:event_line_user_id]) : nil
   end
+
+  def compat_public_event_create?
+    return false unless action_name == "create"
+    return @_compat_public_event_create if defined?(@_compat_public_event_create)
+
+    context = compat_fetch_v1_json("/events/#{params[:event_slug]}/page_context")&.dig("data")
+    @_compat_public_event_create = context.present? &&
+      compat_public_read_for_owner?(context["owner_user_id"])
+  end
+
   helper_method :current_event_line_user
 end

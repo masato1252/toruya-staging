@@ -214,8 +214,12 @@ class EventContentsController < ActionController::Base
   helper_method :current_event_line_user
 
   def compat_event_mutation?
-    compat_read_data_plane? &&
-      %w[start_usage upsell_consultation monitor_apply track_activity].include?(action_name)
+    return false unless %w[start_usage upsell_consultation monitor_apply track_activity].include?(action_name)
+    return @_compat_event_mutation if defined?(@_compat_event_mutation)
+
+    context = compat_fetch_v1_json("/events/#{params[:event_slug]}/page_context")&.dig("data")
+    @_compat_event_mutation = context.present? &&
+      compat_public_read_for_owner?(context["owner_user_id"])
   end
 
   def proxy_compat_event_action(action, extra = {})

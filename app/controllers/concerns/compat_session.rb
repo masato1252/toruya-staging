@@ -38,6 +38,27 @@ module CompatSession
     fetch_v1_json(path, query)
   end
 
+  def compat_fetch_v1_text(path, query = {})
+    origin = ENV["COMPAT_API_ORIGIN"].to_s.sub(%r{/$}, "")
+    uri = URI("#{origin}/v1/compat#{path}")
+    uri.query = URI.encode_www_form(query) if query.any?
+    request = Net::HTTP::Get.new(uri)
+    request["Cookie"] = cookies.map { |key, value| "#{key}=#{value}" }.join("; ") if cookies.present?
+    request["Accept"] = "text/html"
+
+    response = Net::HTTP.start(
+      uri.hostname,
+      uri.port,
+      use_ssl: uri.scheme == "https",
+      open_timeout: 5,
+      read_timeout: 10
+    ) { |http| http.request(request) }
+    response.body if response.is_a?(Net::HTTPSuccess)
+  rescue StandardError => e
+    Rails.logger.warn("[CompatSession] text GET #{path} failed: #{e.message}")
+    nil
+  end
+
   def compat_v1_put(path, body = {})
     compat_v1_json_request(Net::HTTP::Put, path, body)
   end

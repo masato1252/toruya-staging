@@ -8,7 +8,17 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
 
   def index
     if compat_read_enabled?
-      render json: { reservations: [] }
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      payload = owner_id && compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/customer/reservations",
+        { customer_id: params[:customer_id] }
+      )
+
+      if payload
+        render json: payload
+      else
+        render json: { status: "failed", error_message: "利用履歴の取得に失敗しました" }, status: :bad_gateway
+      end
       return
     end
 

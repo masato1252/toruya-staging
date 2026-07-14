@@ -92,4 +92,17 @@ class AdminController < ApplicationController
       menus
     ].flatten.compact.sort_by {|event| event[:time] }
   end
+
+  protected
+
+  # Existing admin controllers and views call the owner-named gates. Keep
+  # those call sites compatible while ensuring admin access is never tied to
+  # DataPlaneMigration or an owner cookie.
+  def compat_read_data_plane?
+    compat_admin_enabled?
+  end
+
+  def compat_read_enabled?
+    compat_admin_enabled?
+  end
 end

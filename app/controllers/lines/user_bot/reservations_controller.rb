@@ -267,6 +267,20 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def schedule
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      html = owner_id && compat_fetch_v1_text(
+        "/lines/user_bot/owner/#{owner_id}/shops/#{params[:shop_id]}/reservations/schedule",
+        reservation_date: params[:reservation_date]
+      )
+      if html
+        render html: html.html_safe, layout: false
+      else
+        render plain: "予約状況を取得できませんでした", status: :bad_gateway
+      end
+      return
+    end
+
     working_shop_ids = Current.business_owner.shop_ids
 
     @date = Time.zone.parse(params[:reservation_date]).to_date

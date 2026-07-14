@@ -5,7 +5,7 @@ module CompatReadFlags
   extend ActiveSupport::Concern
 
   included do
-    helper_method :compat_read_enabled?, :compat_read_data_plane?, :compat_public_read_for_owner? if respond_to?(:helper_method)
+    helper_method :compat_read_enabled?, :compat_read_data_plane?, :compat_admin_enabled?, :compat_public_read_for_owner? if respond_to?(:helper_method)
   end
 
   def compat_api_configured?
@@ -18,6 +18,12 @@ module CompatReadFlags
 
     owner_id = current_data_plane_owner_id
     owner_id.present? && DataPlaneMigration.migrated?(owner_id)
+  end
+
+  # Admin reads and writes are authorized by the Rails admin session and the
+  # signed server proxy. They must not depend on an owner migration cookie.
+  def compat_admin_enabled?
+    ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
   end
 
   # Public customer surfaces (booking/sale/OS/survey) have no owner cookie —

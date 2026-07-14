@@ -77,6 +77,20 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   end
 
   def events
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      payload = owner_id && compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/schedules/events",
+        {
+          schedule_start_date: params[:schedule_start_date],
+          schedule_end_date: params[:schedule_end_date],
+          current_user_id: resolve_compat_current_user_id(nil)
+        }
+      )
+      render json: payload || [], status: payload ? :ok : :bad_gateway
+      return
+    end
+
     working_shop_ids = Current.business_owner.shop_ids
     get_date(working_shop_ids)
 
@@ -93,6 +107,15 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   end
 
   def toggle_mode
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = owner_id && compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/schedules/toggle_mode"
+      )
+      head(result ? :ok : :bad_gateway)
+      return
+    end
+
     current_mode = Current.business_owner.schedule_mode
     new_mode = current_mode == "calendar" ? "list" : "calendar"
 
