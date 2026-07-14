@@ -323,7 +323,7 @@ class BookingPagesController < ActionController::Base
   def load_compat_booking_page_context
     return false unless ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
 
-    customer_id = cookies[:booking_customer_id] || cookies[:verified_customer_id]
+    customer_id = params[:customer_id].presence || cookies[:booking_customer_id] || cookies[:verified_customer_id]
     @compat_booking_page_context = compat_fetch_v1_json(
       "/booking/#{params[:id]}/page_context",
       customer_id: customer_id

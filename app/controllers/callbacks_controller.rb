@@ -276,6 +276,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       Rails.logger.info("[CallbacksController]   social_customer_id: #{outcome.result.id}")
       Rails.logger.info("[CallbacksController]   social_user_id: #{outcome.result.social_user_id}")
       Rails.logger.info("[CallbacksController]   customer_id: #{outcome.result.customer_id}")
+      param["customer_id"] = outcome.result.customer_id if outcome.result.customer_id.present?
     else
       Rails.logger.error("[CallbacksController]   errors: #{outcome.errors.full_messages.join(', ')}")
     end
@@ -318,6 +319,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
     if outcome.result&.social_user_id.present?
       cookies.clear_across_domains(:line_social_user_id_of_customer)
       cookies.set_across_domains(:line_social_user_id_of_customer, outcome.result.social_user_id, expires: 20.years.from_now)
+      if outcome.result.customer_id.present?
+        cookies.clear_across_domains(:booking_customer_id, :verified_customer_id)
+        cookies.set_across_domains(:booking_customer_id, outcome.result.customer_id, expires: 20.years.from_now)
+        cookies.set_across_domains(:verified_customer_id, outcome.result.customer_id, expires: 20.years.from_now)
+      end
 
       if outcome.respond_to?(:compositions) && outcome.compositions[:line_email].present?
         cookies.set_across_domains(:line_customer_email, outcome.compositions[:line_email], expires: 20.years.from_now)
