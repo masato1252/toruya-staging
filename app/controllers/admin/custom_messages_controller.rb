@@ -16,10 +16,36 @@ module Admin
     end
 
     def new
+      if compat_admin_enabled?
+        @compat_message = {
+          "content" => "",
+          "content_type" => "text",
+          "after_days" => 3,
+          "flex_template" => "video_description_card",
+          "nth_time" => 1,
+          "locale" => I18n.locale.to_s,
+          "scenario" => params[:scenario],
+          "flex_attributes" => {}
+        }
+        return
+      end
+
       @message = CustomMessage.new(content_type: CustomMessage::TEXT_TYPE, after_days: 3, flex_template: "video_description_card", nth_time: 1, locale: I18n.locale)
     end
 
     def edit
+      if compat_admin_enabled?
+        @compat_message = compat_fetch_v1_json(
+          "/admin/custom_messages/#{params[:id]}/page_context"
+        )&.dig("data")
+        unless @compat_message
+          redirect_to scenarios_admin_custom_messages_path, alert: "メッセージが見つかりません"
+          return
+        end
+        render action: :new
+        return
+      end
+
       @message = CustomMessage.find(params[:id])
 
       render action: :new

@@ -1,8 +1,9 @@
 <%= render "admin/features" %>
+<% message = @compat_message || CustomMessageSerializer.new(@message).attributes_hash %>
 <%= react_component("management/custom_messages/edit", {
   props: {
-    scenario: params[:scenario],
-    message: CustomMessageSerializer.new(@message).attributes_hash
+    scenario: message["scenario"] || message[:scenario] || params[:scenario],
+    message: message
   }
 },
 { camelize_props: false }
