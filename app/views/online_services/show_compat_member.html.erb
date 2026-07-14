@@ -1,7 +1,19 @@
+<% if @compat_online_service %>
+  <% meta = @compat_online_service["meta"] || {} %>
+  <% content_for :title do %>
+    <title><%= meta["title"] %></title>
+  <% end %>
+  <% content_for :meta_tags do %>
+    <meta name="description" content="<%= meta["description"] %>">
+    <meta name="robots" content="<%= meta["robots"] %>">
+    <meta property="og:title" content="<%= meta["title"] %>">
+    <meta property="og:description" content="<%= meta["description"] %>">
+  <% end %>
+<% end %>
 <%= react_component("online_services/public_member_bootstrap", {
   slug: params[:slug],
   episodeId: params[:episode_id],
-  customerId: current_customer&.id,
+  customerId: @compat_customer_id || current_customer&.id,
   lessonId: params[:lesson_id],
   encryptedCustomerId: params[:encrypted_customer_id],
   encryptedSocialServiceUserId: params[:encrypted_social_service_user_id],

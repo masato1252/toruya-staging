@@ -9,6 +9,15 @@ class OnlineServicesController < Lines::CustomersController
   skip_before_action :verify_authenticity_token, only: [:watch_lesson, :watch_episode]
 
   def show
+    if @compat_online_service
+      if @compat_online_service.dig("includes", "service_member")
+        render :show_compat_member
+      else
+        render :show_compat_guest
+      end
+      return
+    end
+
     if compat_public_read_for_owner?(online_service.user_id) && current_customer.blank?
       render :show_compat_guest
       return
@@ -115,6 +124,8 @@ class OnlineServicesController < Lines::CustomersController
   private
 
   def online_service
+    return nil if action_name == "show" && load_compat_online_service
+
     compat_bootstrap_action =
       action_name == "customer_status" ||
       %w[tagged_episodes search_episodes].include?(action_name) ||
@@ -122,6 +133,27 @@ class OnlineServicesController < Lines::CustomersController
     return nil if compat_bootstrap_action && compat_read_data_plane? && !@force_legacy_online_service
 
     @online_service ||= OnlineService.find_by!(slug: params[:slug])
+  end
+
+  def load_compat_online_service
+    return false unless ENV["COMPAT_API_READ_ENABLED"] == "true" && compat_api_configured?
+
+    customer_id = cookies[:verified_customer_id] || cookies[:booking_customer_id]
+    @compat_online_service = compat_fetch_v1_json(
+      "/online_services/#{params[:slug]}/page_context",
+      {
+        episode_id: params[:episode_id],
+        customer_id: customer_id
+      }.compact
+    )&.dig("data")
+    owner_id = @compat_online_service&.dig("includes", "owner_user_id")
+    unless @compat_online_service && compat_public_read_for_owner?(owner_id)
+      @compat_online_service = nil
+      return false
+    end
+
+    @compat_customer_id = customer_id&.to_i
+    true
   end
 
   def current_owner

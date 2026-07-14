@@ -183,11 +183,44 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def edit_ticket_modal
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      @compat_ticket_context = compat_fetch_v1_json(
+        "/lines/user_bot/owner/#{owner_id}/customer/reservations/#{params[:reservation_id]}/ticket_context/#{params[:customer_id]}"
+      )&.dig("data")
+      return render(layout: false) if @compat_ticket_context
+
+      head :not_found
+      return
+    end
+
     @reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
     render layout: false
   end
 
   def update_ticket
+    if compat_read_data_plane?
+      owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+      result = compat_v1_post(
+        "/lines/user_bot/owner/#{owner_id}/customer/reservations/#{params[:reservation_id]}/update_ticket/#{params[:customer_id]}",
+        customer_ticket_id: params[:customer_ticket_id],
+        expire_at: params[:expire_at]
+      )
+      redirect_path = lines_user_bot_customers_path(
+        business_owner_id: owner_id,
+        customer_id: params[:customer_id],
+        reservation_id: params[:reservation_id],
+        user_id: owner_id,
+        target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations]
+      )
+      if result&.dig("status") == "successful"
+        redirect_to redirect_path
+      else
+        redirect_to redirect_path, alert: I18n.t("common.operation_failed", default: "更新に失敗しました")
+      end
+      return
+    end
+
     reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
     outcome = CustomerTickets::Update.run(customer_ticket: reservation_customer.customer_tickets.find(params[:customer_ticket_id]), expire_at: params[:expire_at])
 

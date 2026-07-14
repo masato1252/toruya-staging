@@ -1,5 +1,21 @@
+<% if @compat_online_service %>
+  <% meta = @compat_online_service["meta"] || {} %>
+  <% social_account_id = @compat_online_service.dig("includes", "social_account_id") %>
+  <% line_login_path = if social_account_id && @compat_online_service.dig("includes", "line_login_available")
+                         shop_auth_line_path(social_account_id: MessageEncryptor.encrypt(social_account_id), return_to: request.url)
+                       end %>
+  <% content_for :title do %>
+    <title><%= meta["title"] %></title>
+  <% end %>
+  <% content_for :meta_tags do %>
+    <meta name="description" content="<%= meta["description"] %>">
+    <meta name="robots" content="<%= meta["robots"] %>">
+    <meta property="og:title" content="<%= meta["title"] %>">
+    <meta property="og:description" content="<%= meta["description"] %>">
+  <% end %>
+<% end %>
 <%= react_component("online_services/public_guest_bootstrap", {
   slug: params[:slug],
   episodeId: params[:episode_id],
-  lineLoginPath: line_login_url(current_owner.social_account, request.url),
+  lineLoginPath: @compat_online_service ? line_login_path : line_login_url(current_owner.social_account, request.url),
 }) %>

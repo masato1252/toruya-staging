@@ -6,9 +6,17 @@
       </h4>
     </div>
     <div class="modal-body">
-      <% @reservation_customer.customer_tickets.each do |customer_ticket| %>
-        <%= form_with url: update_ticket_lines_user_bot_customer_reservations_path(business_owner_id: @reservation_customer.reservation.user_id, reservation_id: @reservation_customer.reservation_id, customer_id: @reservation_customer.customer_id, customer_ticket_id: customer_ticket.id), local: true do |form| %>
-          <%= date_field_tag :expire_at, customer_ticket.expire_at.to_date %>
+      <%
+        tickets = @compat_ticket_context&.dig("tickets") || @reservation_customer.customer_tickets
+        owner_user_id = @compat_ticket_context&.dig("owner_user_id") || @reservation_customer.reservation.user_id
+        reservation_id = @compat_ticket_context&.dig("reservation_id") || @reservation_customer.reservation_id
+        customer_id = @compat_ticket_context&.dig("customer_id") || @reservation_customer.customer_id
+      %>
+      <% tickets.each do |customer_ticket| %>
+        <% ticket_id = customer_ticket.respond_to?(:id) ? customer_ticket.id : customer_ticket["id"] %>
+        <% expire_at = customer_ticket.respond_to?(:expire_at) ? customer_ticket.expire_at&.to_date : customer_ticket["expire_at"] %>
+        <%= form_with url: update_ticket_lines_user_bot_customer_reservations_path(business_owner_id: owner_user_id, reservation_id: reservation_id, customer_id: customer_id, customer_ticket_id: ticket_id), local: true do |form| %>
+          <%= date_field_tag :expire_at, expire_at %>
           <%= form.submit t("action.change_and_save"), class: "btn btn-tarco" %>
         <% end %>
       <% end %>
