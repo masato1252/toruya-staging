@@ -359,7 +359,7 @@ class Admin::EventsController < AdminController
   def render_compat_broadcast_response(response)
     if response&.dig("status") == "successful"
       broadcast = EventLineMessageBroadcast.find_by(id: response["id"])
-      enqueue_line_message_broadcast(broadcast) if broadcast
+      enqueue_line_message_broadcast(broadcast) if broadcast && !response["job_enqueued"]
       redirect_to response["redirect_to"] || line_messages_admin_event_path(params[:id]),
                   notice: "一括配信を保存しました"
     else
