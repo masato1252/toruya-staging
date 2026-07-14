@@ -47,6 +47,8 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   end
 
   def create
+    return proxy_compat_episode(:post, "/episodes") if compat_read_data_plane?
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
 
     outcome = Episodes::Create.run(
@@ -63,6 +65,8 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   end
 
   def update
+    return proxy_compat_episode(:put, "/episodes/#{params[:id]}") if compat_read_data_plane?
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     episode = online_service.episodes.find(params[:id])
 
@@ -91,5 +95,15 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
     episode.destroy!
 
     redirect_to lines_user_bot_service_episodes_path(business_owner_id, params[:service_id])
+  end
+
+  private
+
+  def proxy_compat_episode(method, suffix)
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+    path = "/lines/user_bot/owner/#{owner_id}/services/#{params[:service_id]}#{suffix}"
+    result = method == :post ? compat_v1_post(path, params.permit!.to_h) : compat_v1_put(path, params.permit!.to_h)
+    render json: result || { status: "failed", error_message: "エピソードを保存できませんでした" },
+           status: result ? :ok : :bad_gateway
   end
 end

@@ -16,6 +16,13 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   end
 
   def create
+    if compat_read_data_plane?
+      return proxy_compat_lesson(
+        :post,
+        "/chapters/#{params[:chapter_id]}/lessons"
+      )
+    end
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = online_service.chapters.find(params[:chapter_id])
 
@@ -56,6 +63,8 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   end
 
   def update
+    return proxy_compat_lesson(:put, "/lessons/#{params[:id]}") if compat_read_data_plane?
+
     lesson = Lesson.find(params[:id])
 
     outcome = ::Lessons::Update.run(lesson: lesson, attrs: params.permit!.to_h, update_attribute: params[:attribute])
@@ -82,5 +91,16 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
     lesson.destroy!
 
     redirect_to lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id])
+  end
+
+  private
+
+  def proxy_compat_lesson(method, suffix)
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+    path = "/lines/user_bot/owner/#{owner_id}/services/#{params[:service_id]}#{suffix}"
+    body = params.permit!.to_h.merge(chapter_id: params[:chapter_id])
+    result = method == :post ? compat_v1_post(path, body) : compat_v1_put(path, body)
+    render json: result || { status: "failed", error_message: "レッスンを保存できませんでした" },
+           status: result ? :ok : :bad_gateway
   end
 end

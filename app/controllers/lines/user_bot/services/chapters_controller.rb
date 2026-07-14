@@ -37,6 +37,8 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
   end
 
   def create
+    return proxy_compat_chapter(:post, "/chapters") if compat_read_data_plane?
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
 
     outcome = Chapters::Create.run(
@@ -48,6 +50,8 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
   end
 
   def update
+    return proxy_compat_chapter(:put, "/chapters/#{params[:id]}") if compat_read_data_plane?
+
     online_service = Current.business_owner.online_services.find(params[:service_id])
     chapter = online_service.chapters.find(params[:id])
 
@@ -86,6 +90,8 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
   end
 
   def reorder
+    return proxy_compat_chapter(:put, "/chapters/reorder") if compat_read_data_plane?
+
     # {
     #   "items" => [
     #     {
@@ -106,5 +112,15 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
     )
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id], business_owner_id: params[:business_owner_id]) })
+  end
+
+  private
+
+  def proxy_compat_chapter(method, suffix)
+    owner_id = resolve_compat_owner_id(nil) || resolve_compat_current_user_id(nil)
+    path = "/lines/user_bot/owner/#{owner_id}/services/#{params[:service_id]}#{suffix}"
+    result = method == :post ? compat_v1_post(path, params.permit!.to_h) : compat_v1_put(path, params.permit!.to_h)
+    render json: result || { status: "failed", error_message: "チャプターを保存できませんでした" },
+           status: result ? :ok : :bad_gateway
   end
 end
