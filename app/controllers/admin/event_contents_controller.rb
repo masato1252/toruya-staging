@@ -44,6 +44,18 @@ class Admin::EventContentsController < AdminController
   end
 
   def show
+    if compat_admin_enabled?
+      @compat_event_content = compat_fetch_v1_json(
+        "/admin/event_contents/#{params[:id]}/page_context"
+      )&.dig("data")
+      unless @compat_event_content
+        redirect_to admin_events_path, alert: "コンテンツが見つかりません"
+        return
+      end
+      render :show_compat
+      return
+    end
+
     @event = @event_content.event
   end
 
@@ -359,7 +371,7 @@ class Admin::EventContentsController < AdminController
 
   def set_event_content
     return if compat_read_data_plane? && %w[
-      update destroy upload_image destroy_image sort_images
+      show update destroy upload_image destroy_image sort_images
       add_speaker update_speaker destroy_speaker sort_speakers
     ].include?(action_name)
 

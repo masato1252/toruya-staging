@@ -1,0 +1,83 @@
+<%= render "admin/features" %>
+<%
+  event = @compat_event_content["event"]
+  content = @compat_event_content["event_content"]
+  start_at = Time.zone.parse(content["start_at"]) if content["start_at"].present?
+  end_at = Time.zone.parse(content["end_at"]) if content["end_at"].present?
+%>
+
+<div class="admin-event-detail">
+  <div class="admin-detail-header">
+    <h2><%= content["title"] %></h2>
+    <div class="admin-detail-actions">
+      <%= link_to "編集", edit_admin_event_content_path(content["id"]), class: "btn btn-tarco" %>
+      <%= link_to "削除", admin_event_content_path(content["id"]), method: :delete, data: { confirm: "このコンテンツを削除しますか？" }, class: "btn btn-danger" %>
+      <%= link_to "イベントに戻る", admin_event_path(event["id"]), class: "btn btn-gray" %>
+    </div>
+  </div>
+
+  <div class="admin-detail-section">
+    <div class="admin-form-section-title">コンテンツ情報</div>
+    <div class="admin-detail-row">
+      <div class="admin-detail-label">種別</div>
+      <div class="admin-detail-value">
+        <span class="admin-badge admin-badge-info"><%= content["content_type"] == "seminar" ? "セミナー講演" : "展示ブース" %></span>
+      </div>
+    </div>
+    <% if content["thumbnail_url"].present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">サムネイル</div>
+        <div class="admin-detail-value"><%= image_tag content["thumbnail_url"], style: "max-height: 150px; border-radius: 4px;" %></div>
+      </div>
+    <% end %>
+    <% if content["introduction"].present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">紹介文</div>
+        <div class="admin-detail-value"><%= simple_format(content["introduction"]) %></div>
+      </div>
+    <% end %>
+    <% if content["description"].present? %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">説明文</div>
+        <div class="admin-detail-value"><%= simple_format(content["description"]) %></div>
+      </div>
+    <% end %>
+    <% if start_at %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">開催期間</div>
+        <div class="admin-detail-value"><%= l(start_at, format: :long) %> 〜 <%= end_at ? l(end_at, format: :long) : "未設定" %></div>
+      </div>
+    <% end %>
+    <% if content["capacity"] %>
+      <div class="admin-detail-row">
+        <div class="admin-detail-label">上限人数</div>
+        <div class="admin-detail-value"><%= content["capacity"] %>人（利用済: <%= content["analytics_usage_count"] %>人）</div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if content["content_type"] == "seminar" %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title">動画・資料</div>
+      <% [["広告動画（前）", "pre_ad_video_url"], ["広告動画（後）", "post_ad_video_url"], ["資料DL", "direct_download_url"]].each do |label, key| %>
+        <% if content[key].present? %>
+          <div class="admin-detail-row">
+            <div class="admin-detail-label"><%= label %></div>
+            <div class="admin-detail-value"><%= link_to content[key], content[key], target: "_blank", rel: "noopener" %></div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if content["slide_image_urls"].present? %>
+    <div class="admin-detail-section">
+      <div class="admin-form-section-title">スライド画像</div>
+      <div style="padding: 16px; display: flex; flex-wrap: wrap; gap: 8px;">
+        <% content["slide_image_urls"].each do |url| %>
+          <%= image_tag url, style: "width: 120px; height: 80px; object-fit: cover; border-radius: 4px;" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
