@@ -9,6 +9,18 @@ class Admin::EventContentsController < AdminController
   ]
 
   def new
+    if compat_read_data_plane?
+      @compat_event_content_context = compat_fetch_v1_json(
+        "/admin/events/#{params[:event_id]}/event_contents/page_context"
+      )&.dig("data")
+      unless @compat_event_content_context
+        redirect_to admin_events_path, alert: "イベントが見つかりません"
+        return
+      end
+      render :new_compat
+      return
+    end
+
     @event_content = @event.event_contents.new
   end
 
@@ -60,6 +72,18 @@ class Admin::EventContentsController < AdminController
   end
 
   def edit
+    if compat_read_data_plane?
+      @compat_event_content_context = compat_fetch_v1_json(
+        "/admin/event_contents/#{params[:id]}/page_context"
+      )&.dig("data")
+      unless @compat_event_content_context
+        redirect_to admin_events_path, alert: "コンテンツが見つかりません"
+        return
+      end
+      render :edit_compat
+      return
+    end
+
     @event = @event_content.event
   end
 
@@ -360,7 +384,7 @@ class Admin::EventContentsController < AdminController
 
   def set_event
     return if compat_read_data_plane? && %w[
-      create sort shops_by_user online_services_for_shop booking_pages_for_shop
+      new create sort shops_by_user online_services_for_shop booking_pages_for_shop
       shop_acquisition_counts
     ].include?(action_name)
 
@@ -371,7 +395,7 @@ class Admin::EventContentsController < AdminController
 
   def set_event_content
     return if compat_read_data_plane? && %w[
-      show update destroy upload_image destroy_image sort_images
+      show edit update destroy upload_image destroy_image sort_images
       add_speaker update_speaker destroy_speaker sort_speakers
     ].include?(action_name)
 

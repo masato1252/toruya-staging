@@ -1,0 +1,5 @@
+<%= render "admin/features" %>
+<%= render "form_compat",
+           context: @compat_event_content_context,
+           form_url: admin_event_event_contents_path(@compat_event_content_context.dig("event", "id")),
+           form_method: :post %>
