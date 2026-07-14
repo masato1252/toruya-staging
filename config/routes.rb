@@ -871,6 +871,8 @@ Rails.application.routes.draw do
 
     root to: "lines/user_bot/schedules#mine"
 
+    get "booking/:id", to: "booking_pages#show"
+
     resources :booking_pages, only: [:show] do
       member do
         post "booking_reservation"
