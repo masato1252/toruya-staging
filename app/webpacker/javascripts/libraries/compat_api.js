@@ -142,6 +142,7 @@ export function shouldRewriteCompatRequest(url, input, init) {
   // never exposed to the browser.
   if (/\/admin\/business_applications\/\d+\/(approve|reject|mark_paid)\/?$/.test(pathname)) return false;
   if (/\/admin\/chats(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
+  if (pathname === "/admin/memo" && getRequestMethod(input, init) !== "GET") return false;
   if (/\/admin\/custom_messages(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
   if (/\/admin\/docs(\/|$)/.test(pathname) && getRequestMethod(input, init) !== "GET") return false;
 
