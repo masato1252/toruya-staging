@@ -1,9 +1,9 @@
-<%= react_component("user_bot/surveys/index", {
+<%= react_component("user_bot/surveys/form_shell", {
   props: {
     mode: params[:mode] || "survey",
-    preview: true,
     business_owner_id: Current.business_owner.id,
-    currency: Current.business_owner.currency
+    currency: Current.business_owner.currency,
+    initialData: SurveySerializer.new(@survey).attributes_hash,
   }
 },
 { camelize_props: false }

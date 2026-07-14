@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import { compatRead } from "../../libraries/compat_api";
+import SurveyForm from "components/shared/survey/form";
 
 function applyMetaTags(meta) {
   if (!meta) return;
@@ -22,95 +23,8 @@ function applyMetaTags(meta) {
   });
 }
 
-function QuestionField({ question, value, onChange }) {
-  const label = (
-    <>
-      {question.title}
-      {question.required && <span className="text-danger"> *</span>}
-    </>
-  );
-
-  if (question.question_type === "text" || question.question_type === "textarea") {
-    const Tag = question.question_type === "textarea" ? "textarea" : "input";
-    return (
-      <div className="field-row margin-around">
-        <label className="block mb-2">{label}</label>
-        <Tag
-          className="extend"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          required={question.required}
-        />
-      </div>
-    );
-  }
-
-  if (question.question_type === "single_selection") {
-    return (
-      <fieldset className="field-row margin-around">
-        <legend>{label}</legend>
-        {(question.options || []).map((option) => (
-          <label key={option.id} className="block mb-2">
-            <input
-              type="radio"
-              name={`survey-question-${question.id}`}
-              value={option.id}
-              checked={String(value || "") === String(option.id)}
-              onChange={(e) => onChange(e.target.value)}
-              required={question.required}
-            />{" "}
-            {option.content}
-          </label>
-        ))}
-      </fieldset>
-    );
-  }
-
-  if (question.question_type === "multiple_selection") {
-    const selected = Array.isArray(value) ? value.map(String) : [];
-    return (
-      <fieldset className="field-row margin-around">
-        <legend>{label}</legend>
-        {(question.options || []).map((option) => (
-          <label key={option.id} className="block mb-2">
-            <input
-              type="checkbox"
-              value={option.id}
-              checked={selected.includes(String(option.id))}
-              onChange={(e) => {
-                const id = String(option.id);
-                onChange(e.target.checked ? [...selected, id] : selected.filter((item) => item !== id));
-              }}
-            />{" "}
-            {option.content}
-          </label>
-        ))}
-      </fieldset>
-    );
-  }
-
-  return (
-    <div className="field-row margin-around">
-      <label className="block mb-2">{label}</label>
-      <input
-        className="extend"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={question.required}
-      />
-    </div>
-  );
-}
-
-QuestionField.propTypes = {
-  question: PropTypes.object.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  onChange: PropTypes.func.isRequired,
-};
-
 export default function PublicSurveyShow({ slug, labels, lineIdentificationPath, customerId }) {
   const [survey, setSurvey] = useState(null);
-  const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -140,8 +54,8 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath,
   if (error) return <p className="danger">{error}</p>;
   if (!survey) return null;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (surveyAnswers) => {
+    if (submitting) return;
     if (!customerId) {
       setError(labels.loginRequired || "LINE login is required before submitting.");
       return;
@@ -150,19 +64,6 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath,
     setSubmitting(true);
     setError(null);
     try {
-      const surveyAnswers = Object.entries(answers).map(([questionId, value]) => {
-        const question = survey.questions.find((item) => String(item.id) === String(questionId));
-        const selection =
-          question?.question_type === "single_selection" ||
-          question?.question_type === "multiple_selection";
-        return {
-          survey_question_id: Number(questionId),
-          text_answer: selection ? null : value,
-          survey_option_ids: selection
-            ? (Array.isArray(value) ? value : [value]).map(Number)
-            : [],
-        };
-      });
       await axios.post(`/surveys/${slug}`, {
         customer_id: customerId,
         survey_answers: surveyAnswers,
@@ -187,10 +88,22 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath,
     );
   }
 
+  const legacySurvey = {
+    ...survey,
+    title: survey.name,
+    questions: (survey.questions || []).map((question, index) => ({
+      ...question,
+      description: question.title || question.description || "",
+      position: question.position ?? index,
+      options: (question.options || []).map((option, optionIndex) => ({
+        ...option,
+        position: option.position ?? optionIndex,
+      })),
+    })),
+  };
+
   return (
     <div className="container margin-around">
-      <h1>{survey.name}</h1>
-      {survey.description && <p>{survey.description}</p>}
       {lineIdentificationPath && (
         <p className="margin-around">
           <a className="btn btn-tarco" href={lineIdentificationPath}>
@@ -198,24 +111,15 @@ export default function PublicSurveyShow({ slug, labels, lineIdentificationPath,
           </a>
         </p>
       )}
-      <form onSubmit={handleSubmit} className="survey-questions">
-        {(survey.questions || []).map((q) => (
-          <QuestionField
-            key={q.id}
-            question={q}
-            value={answers[q.id] || ""}
-            onChange={(val) => setAnswers((prev) => ({ ...prev, [q.id]: val }))}
-          />
-        ))}
-        {!survey.questions?.length && <p>{labels.noQuestions}</p>}
-        {survey.questions?.length > 0 && (
-          <div className="margin-around">
-            <button type="submit" className="btn btn-yellow" disabled={submitting}>
-              {submitting ? (labels.submitting || "Submitting...") : (labels.submit || "Submit")}
-            </button>
-          </div>
-        )}
-      </form>
+      {!legacySurvey.questions.length ? (
+        <p>{labels.noQuestions}</p>
+      ) : (
+        <SurveyForm
+          survey={legacySurvey}
+          onSubmit={handleSubmit}
+          submit_text={submitting ? (labels.submitting || "Submitting...") : (labels.submit || "Submit")}
+        />
+      )}
     </div>
   );
 }

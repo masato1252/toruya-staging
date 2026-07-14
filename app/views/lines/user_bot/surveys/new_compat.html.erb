@@ -1,9 +1,8 @@
-<%= react_component("user_bot/surveys/new_wizard", {
+<%= react_component("user_bot/surveys/form_shell", {
   props: {
     mode: params[:mode] || "survey",
-    preview: true,
     business_owner_id: business_owner_id,
-    pageContextPath: "/lines/user_bot/owner/#{business_owner_id}/surveys/page_context?wizard=new",
+    currency: Current.business_owner.currency,
   }
 },
 { camelize_props: false }
