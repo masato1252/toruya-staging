@@ -15,6 +15,12 @@ class EventContentsController < ActionController::Base
   helper ApplicationHelper
 
   def show
+    if @compat_event_content_context
+      @current_event_line_user_id = session[:event_line_user_id]&.to_i
+      @compat_public_read = true
+      return
+    end
+
     @current_event_line_user = current_event_line_user
     @compat_public_read = compat_public_read_for_owner?(@event.user_id)
 
@@ -189,6 +195,7 @@ class EventContentsController < ActionController::Base
 
   def set_event
     return if compat_event_mutation?
+    return if load_compat_event_content_context
 
     @event = Event.published.undeleted.find_by!(slug: params[:event_slug])
   rescue ActiveRecord::RecordNotFound
@@ -197,6 +204,7 @@ class EventContentsController < ActionController::Base
 
   def set_event_content
     return if compat_event_mutation?
+    return if @compat_event_content_context
 
     # 公開コンテンツ(status=1)は誰でも閲覧可能。
     # 下書き(status=0)はプレビュー権限を持つ viewer のみ閲覧可能(下記 visible_event_contents_for 内で制御)。
@@ -220,6 +228,22 @@ class EventContentsController < ActionController::Base
     context = compat_fetch_v1_json("/events/#{params[:event_slug]}/page_context")&.dig("data")
     @_compat_event_mutation = context.present? &&
       compat_public_read_for_owner?(context["owner_user_id"])
+  end
+
+  def load_compat_event_content_context
+    return false unless action_name == "show"
+    return true if @compat_event_content_context
+
+    payload = compat_fetch_v1_json(
+      "/events/#{params[:event_slug]}/contents/#{params[:id]}/page_context",
+      event_line_user_id: session[:event_line_user_id]
+    )&.dig("data")
+    owner_id = payload&.dig("event", "owner_user_id")
+    return false unless payload && compat_public_read_for_owner?(owner_id)
+
+    @compat_event_content_context = payload
+    @compat_event = { "slug" => payload.dig("event", "slug") }
+    true
   end
 
   def proxy_compat_event_action(action, extra = {})

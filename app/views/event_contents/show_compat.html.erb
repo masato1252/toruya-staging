@@ -1,31 +1,43 @@
+<%
+  compat_event = @compat_event_content_context&.dig("event")
+  compat_content = @compat_event_content_context&.dig("event_content")
+  event_slug = compat_event&.dig("slug") || @event.slug
+  event_title = compat_event&.dig("title") || @event.title
+  event_description = compat_event&.dig("description") || @event.description
+  content_id = compat_content&.dig("id") || @event_content.id
+  content_title = compat_content&.dig("title") || @event_content.title
+  content_description = compat_content&.dig("description") || @event_content.description
+  thumbnail_url = compat_content&.dig("thumbnail_url")
+%>
 <%= content_for :title do %>
-  <title><%= @event_content.title %> | <%= @event.title %></title>
+  <title><%= content_title %> | <%= event_title %></title>
 <% end %>
 
 <%= content_for :meta_tags do %>
   <meta property="og:site_name" content="Toruya">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="<%= @event_content.title %>">
-  <meta property="og:url" content="<%= event_event_content_url(event_slug: @event.slug, id: @event_content.id) %>">
-  <meta property="og:description" content="<%= @event_content.description&.squish&.truncate(120) || @event.description&.squish&.truncate(120) %>">
-  <% if @event_content.thumbnail.attached? %>
-    <meta property="og:image" content="<%= rails_blob_url(@event_content.thumbnail) %>">
+  <meta property="og:title" content="<%= content_title %>">
+  <meta property="og:url" content="<%= event_event_content_url(event_slug: event_slug, id: content_id) %>">
+  <meta property="og:description" content="<%= content_description&.squish&.truncate(120) || event_description&.squish&.truncate(120) %>">
+  <% if thumbnail_url || @event_content&.thumbnail&.attached? %>
+    <% resolved_thumbnail_url = thumbnail_url || rails_blob_url(@event_content.thumbnail) %>
+    <meta property="og:image" content="<%= resolved_thumbnail_url %>">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="<%= rails_blob_url(@event_content.thumbnail) %>">
+    <meta name="twitter:image" content="<%= resolved_thumbnail_url %>">
   <% end %>
 <% end %>
 
 <%= react_component("event_contents/show_bootstrap", {
-  eventSlug: @event.slug,
-  contentId: @event_content.id,
-  startUsageUrl: start_usage_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
-  upsellConsultationUrl: upsell_consultation_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
-  monitorApplyUrl: monitor_apply_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
-  trackActivityUrl: track_activity_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
-  backUrl: event_path(slug: @event.slug),
-  lineLoginUrl: @current_event_line_user ? nil : event_auth_line_path(event_slug: @event.slug, return_to: request.path),
-  participationUrl: new_event_participation_path(event_slug: @event.slug),
-  captureRegistrationSourceUrl: capture_registration_source_event_event_content_path(event_slug: @event.slug, id: @event_content.id, format: "json"),
+  eventSlug: event_slug,
+  contentId: content_id,
+  startUsageUrl: start_usage_event_event_content_path(event_slug: event_slug, id: content_id, format: "json"),
+  upsellConsultationUrl: upsell_consultation_event_event_content_path(event_slug: event_slug, id: content_id, format: "json"),
+  monitorApplyUrl: monitor_apply_event_event_content_path(event_slug: event_slug, id: content_id, format: "json"),
+  trackActivityUrl: track_activity_event_event_content_path(event_slug: event_slug, id: content_id, format: "json"),
+  backUrl: event_path(slug: event_slug),
+  lineLoginUrl: (@current_event_line_user || @current_event_line_user_id) ? nil : event_auth_line_path(event_slug: event_slug, return_to: request.path),
+  participationUrl: new_event_participation_path(event_slug: event_slug),
+  captureRegistrationSourceUrl: capture_registration_source_event_event_content_path(event_slug: event_slug, id: content_id, format: "json"),
   addFriendUrl: Rails.application.secrets.dig(:ja, :toruya_official_line_add_friend_url),
-  currentEventLineUserId: @current_event_line_user&.id,
+  currentEventLineUserId: @current_event_line_user_id || @current_event_line_user&.id,
 }) %>
