@@ -1,6 +1,6 @@
 <%= render "admin/features" %>
 
-<% if ENV["COMPAT_API_READ_ENABLED"] == "true" %>
+<% if compat_admin_enabled? %>
   <%= react_component("admin/docs/show", { docId: params[:id].to_i, docsHref: admin_docs_path }) %>
 <% else %>
 <div class="admin-event-detail">

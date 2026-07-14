@@ -4,7 +4,7 @@ class Admin::DocsController < AdminController
   before_action :set_doc, only: [:show, :edit, :update, :destroy]
 
   def index
-    if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    if compat_admin_enabled?
       @docs = []
       return
     end
@@ -13,11 +13,16 @@ class Admin::DocsController < AdminController
   end
 
   def new
+    if compat_admin_enabled?
+      @compat_doc = { "status" => "published" }
+      return
+    end
+
     @doc = Doc.new(status: :published)
   end
 
   def create
-    return compat_create if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return compat_create if compat_admin_enabled?
 
     @doc = Doc.new(doc_params)
 
@@ -29,16 +34,21 @@ class Admin::DocsController < AdminController
   end
 
   def show
+    return if compat_admin_enabled?
+
     @doc_downloads = @doc.doc_downloads
                            .includes(:doc_line_user)
                            .order(first_visited_at: :desc, created_at: :desc)
   end
 
   def edit
+    return unless compat_admin_enabled?
+
+    load_compat_doc
   end
 
   def update
-    return compat_update if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return compat_update if compat_admin_enabled?
 
     if @doc.update(doc_params)
       redirect_to admin_doc_path(@doc), notice: "資料を更新しました"
@@ -48,7 +58,7 @@ class Admin::DocsController < AdminController
   end
 
   def destroy
-    return compat_destroy if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return compat_destroy if compat_admin_enabled?
 
     @doc.soft_delete!
     redirect_to admin_docs_path, notice: "資料を削除しました"
@@ -57,7 +67,7 @@ class Admin::DocsController < AdminController
   private
 
   def set_doc
-    return if ENV["COMPAT_API_READ_ENABLED"] == "true"
+    return if compat_admin_enabled?
 
     @doc = Doc.active.find(params[:id])
   rescue ActiveRecord::RecordNotFound
@@ -66,6 +76,13 @@ class Admin::DocsController < AdminController
 
   def doc_params
     params.require(:doc).permit(:status, :title, :description, :document_url, :thumbnail)
+  end
+
+  def load_compat_doc
+    @compat_doc = compat_fetch_v1_json("/admin/docs/#{params[:id]}/page_context")&.dig("data")
+    return if @compat_doc
+
+    redirect_to admin_docs_path, alert: "資料が見つかりません"
   end
 
   def compat_create

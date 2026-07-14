@@ -1,2 +1,6 @@
 <%= render "admin/features" %>
-<%= render "form", doc: @doc %>
+<% if @compat_doc %>
+  <%= render "form_compat", doc: @compat_doc, persisted: true %>
+<% else %>
+  <%= render "form", doc: @doc %>
+<% end %>
